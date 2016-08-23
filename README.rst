@@ -1,7 +1,7 @@
 swacmod
 =======
 
-Python library for Surface Water Accounting Modeling (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing ``setup.py``.
+Development Repo for Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing ``setup.py``.
 
 The only dependency that needs to be installed is ``xlrd``, used to read the Excel input file. In order to install it, I recommend first installing ``pip``, a python package manager, if you haven't already done so (instructions `here <https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py>`_). Then run
 
