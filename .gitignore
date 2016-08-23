@@ -1,0 +1,10 @@
+*.py[co]
+dist/
+*.coverage*
+deploy
+deploy.py
+output_files/*.log
+swacmod/deploy.py
+pylint.conf
+swacmod.egg-info/
+dist/
