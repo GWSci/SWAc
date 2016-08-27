@@ -5,11 +5,17 @@
 # Standard Library
 import os
 import csv
+import sys
 import logging
 import datetime
 
+# Third Party Libraries
+import yaml
+
 # Internal modules
 from . import utils as u
+from . import checks as c
+from . import validation as v
 
 
 ###############################################################################
@@ -48,9 +54,85 @@ def dump_output(data):
 
 
 ###############################################################################
+def convert_all_yaml_to_csv():
+    """Convert all YAML files to CSV for parameters that accept this option."""
+    specs = yaml.load(open(u.CONSTANTS['SPECS_FILE'], 'r'))
+    to_csv = [i for i in specs if 'alt_format' in specs[i] and 'csv' in
+              specs[i]['alt_format']]
+    for filein in os.listdir(u.CONSTANTS['INPUT_DIR']):
+        if filein.endswith('.yml'):
+            path = os.path.join(u.CONSTANTS['INPUT_DIR'], filein)
+            loaded = yaml.load(open(path, 'r'))
+            param = loaded.items()[0][0]
+            if len(loaded.items()) == 1 and param in to_csv:
+                print path
+                convert_one_yaml_to_csv(path)
+
+
+###############################################################################
+def convert_one_yaml_to_csv(filein):
+    """Convert a YAML file to a CSV file.
+
+    The opposite function is tricky, as CSV reader does not understand types.
+    """
+    fileout = filein.replace('.yml', '.csv')
+    readin = yaml.load(open(filein, 'r')).items()[0][1]
+
+    with open(fileout, 'wb') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+        for item in readin.items():
+            row = [item[0]]
+            if isinstance(item[1], list):
+                row += item[1]
+            elif isinstance(item[1], (float, int, long, str)):
+                row += [item[1]]
+            else:
+                print 'Could not recognize object: %s' % type(item[1])
+            writer.writerow(row)
+
+
+###############################################################################
 def load_params_from_yaml():
     """Load model parameters."""
-    pass
+    specs = yaml.load(open(u.CONSTANTS['SPECS_FILE'], 'r'))
+    params = yaml.load(open(u.CONSTANTS['INPUT_FILE'], 'r'))
+
+    for param in params:
+        if isinstance(params[param], str) and 'alt_format' in specs[param]:
+            absolute = os.path.join(u.CONSTANTS['INPUT_DIR'], params[param])
+            ext = params[param].split('.')[-1]
+            if ext not in specs[param]['alt_format']:
+                continue
+            if ext == 'csv':
+                try:
+                    reader = csv.reader(open(absolute, 'r'))
+                except IOError as err:
+                    print '---> Validation failed: %s' % err
+                params[param] = dict((row[0], row[1]) for row in reader)
+            elif ext == 'yml':
+                try:
+                    params[param] = yaml.load(open(absolute, 'r'))[param]
+                except (IOError, KeyError) as err:
+                    print '---> Validation failed: %s' % err
+
+    series = {}
+    keys = [i for i in params if i.endswith('_ts')]
+    for key in keys:
+        series[key] = params.pop(key)
+
+    return series, params
+
+
+###############################################################################
+def validate_all(data):
+    """Load model parameters."""
+    try:
+        c.check_required(data)
+        v.validate_params(data)
+        v.validate_series(data)
+    except u.ValidationError as err:
+        print '---> Validation failed: %s' % err
+        sys.exit()
 
 
 ###############################################################################
@@ -67,7 +149,7 @@ def load_params_from_excel():
     params['snowfall_degrees'] = sheet.row(7)[1].value
     params['snowmelt_degrees'] = sheet.row(8)[1].value
 
-    params['rainfall_to_runoff'] = {
+    params['rapid_runoff_params'] = {
         'class_smd': [i.value for i in sheet.row(14)[2:7]],
         'class_ri': [sheet.row(i)[1].value for i in range(15, 22)],
         'values': [[i.value for i in sheet.row(j)[2:7]] for j in range(15, 22)]

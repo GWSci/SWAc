@@ -182,9 +182,9 @@ def get_ae(data):
         var0 = (col['p_smd'][num-1] if num > 0 else params['starting_SMD'])
         var1 = (col['smd'][num-1] if num > 0 else params['starting_SMD'])
         var2 = output['net_rainfall'][num]
-        class_smd = params['rainfall_to_runoff']['class_smd']
-        class_ri = params['rainfall_to_runoff']['class_ri']
-        values = params['rainfall_to_runoff']['values']
+        class_smd = params['rapid_runoff_params']['class_smd']
+        class_ri = params['rapid_runoff_params']['class_ri']
+        values = params['rapid_runoff_params']['values']
         cond1 = var1 > (class_smd[-1] - 1)
         cond2 = var2 > (class_ri[-1] - 1)
         if cond1 or cond2:

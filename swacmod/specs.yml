@@ -1,0 +1,403 @@
+###############################################################################
+#                   YAML Specification file for SWAcMod
+#
+#  Every parameter in the root object can have 4 attributes here:
+#  1) "required":   boolean, if true the parameter is required, otherwise it's
+#                   optional
+#  2) "default":    value in case an optional parameter is not specified
+#  3) "alt_format": list of alternative formats accepted for that parameter
+#                   (yml, csv)
+#  4) "type":       hierarchical list of python types
+#                   (e.g. [dict, str] means "dictionary of strings")
+#
+###############################################################################
+
+
+#########
+# Paths #
+#########
+
+run_name:
+    required: true
+    type:
+        - !!python/name:str
+
+log_file:
+    required: false
+    default: "{run_name}.log"
+    type:
+        -!!python/name:str
+
+
+#####################
+# Global parameters #
+#####################
+
+num_nodes:
+    required: true
+    type:
+        - !!python/name:int
+
+start_date:
+    required: true
+    type:
+        - !!python/name:str
+
+time_periods:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:int
+
+
+###############
+# Time series #
+###############
+
+rainfall_ts:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+pe_ts:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+temperature_ts:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+subroot_leakage_ts:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+
+###############################################
+# Model parameters: Nodes, zones and mappings #
+###############################################
+
+node_areas:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+reporting_zone_names:
+    required: true
+    default: unspecified
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:basestring
+
+reporting_zone_mapping:
+    required: false
+    default: 1
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
+rainfall_zone_names:
+    required: true
+    default: unspecified
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:basestring
+
+rainfall_zone_mapping:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+pe_zone_names:
+    required: true
+    default: unspecified
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:basestring
+
+pe_zone_mapping:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+temperature_zone_names:
+    required: true
+    default: unspecified
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:basestring
+
+temperature_zone_mapping:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+subroot_zone_names:
+    required: true
+    default: unspecified
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:basestring
+
+subroot_zone_mapping:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+rapid_runoff_zone_names:
+    required: true
+    default: unspecified
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:basestring
+
+rapid_runoff_zone_mapping:
+    required: false
+    default:
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
+ror_zone_names:
+    required: true
+    default: unspecified
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:basestring
+
+ror_zone_mapping:
+    required: false
+    default: 1
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
+macropore_zone_names:
+    required: true
+    default: unspecified
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:basestring
+
+macropore_zone_mapping:
+    required: false
+    default: 1
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
+soil_zone_names:
+    required: true
+    default: unspecified
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:basestring
+
+land_zone_names:
+    required: true
+    default: unspecified
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:basestring
+
+#####################################################
+# Model parameters: Canopy interception and storage #
+#####################################################
+
+free_throughfall:
+    required: false
+    default: 1.0
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+max_canopy_storage:
+    required: false
+    default: 0.0
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+
+##########################
+# Model parameters: Snow #
+##########################
+
+snow_params:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+
+##################################
+# Model parameters: Rapid Runoff #
+##################################
+
+rapid_runoff_params:
+    required: false
+    default: 0
+    alt_format: [yml]
+    type:
+        - !!python/name:list
+        - !!python/name:dict
+
+
+#################################################
+# Model parameters: Runoff Recharge & Macropore #
+#################################################
+
+recharge_proportion:
+    required: false
+    default: 0.0
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+recharge_limit:
+    required: false
+    default: 99999
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+macropore_proportion:
+    required: false
+    default: 0.0
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+macropore_limit:
+    required: false
+    default: 99999
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+
+###############################
+# Model parameters: Interflow #
+###############################
+
+interflow_params:
+    required: false
+    default: [0, 1, 99999, 0]
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+soil_static_params:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+leakage:
+    required: false
+    default: 0
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+soil_spatial:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+lu_spatial:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+zr:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+kc:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+release_params:
+    required: false
+    default: [0, 1, 99999, 0]
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float

@@ -4,6 +4,8 @@
 
 # Standard Library
 import os
+import re
+import logging
 import datetime
 
 # Third Party Libraries
@@ -18,7 +20,8 @@ CONSTANTS['INPUT_DIR'] = os.path.join(CONSTANTS['ROOT_DIR'], 'input_files')
 CONSTANTS['OUTPUT_DIR'] = os.path.join(CONSTANTS['ROOT_DIR'], 'output_files')
 CONSTANTS['EXCEL_PATH'] = os.path.join(CONSTANTS['INPUT_DIR'], 'input.xls')
 CONSTANTS['EXCEL_BOOK'] = xlrd.open_workbook(CONSTANTS['EXCEL_PATH'])
-CONSTANTS['INI_FILE'] = os.path.join(CONSTANTS['INPUT_DIR'], 'input.yml')
+CONSTANTS['INPUT_FILE'] = os.path.join(CONSTANTS['INPUT_DIR'], 'input.yml')
+CONSTANTS['SPECS_FILE'] = os.path.join(CONSTANTS['CODE_DIR'], 'specs.yml')
 
 CONSTANTS['COL_ORDER'] = [
     'date', '', 'rainfall', 'PE', 'pefac', 'canopy_storage',
@@ -35,7 +38,26 @@ CONSTANTS['COL_ORDER'] = [
 
 
 ###############################################################################
+class ValidationError(Exception):
+    """General exception for validation errors."""
+
+    pass
+
+
+###############################################################################
 def convert_cell_to_date(value):
     """Convert a cell in an Excel Spreadsheet to a Python datetime object."""
     date = xlrd.xldate_as_tuple(value, CONSTANTS['EXCEL_BOOK'].datemode)
     return datetime.datetime(date[0], date[1], date[2])
+
+
+###############################################################################
+def normalize_default_value(data, param):
+    """Normalize default value for a parameter."""
+    default = data['specs'][param]['default']
+    pattern = re.findall(r'\{.*?\}', default)
+    if pattern:
+        new_value = re.sub(r'[\{\}]', '', pattern[0])
+        data['params'][param] = re.sub(pattern[0], data['params'][new_value],
+                                       default)
+        logging.info('\t\tDefaulted "%s" to %s', param, data['params'][param])
