@@ -79,6 +79,7 @@ class EndToEndTests(unittest.TestCase):
 
     def test_twod_get_output(self):
         """Test for get_output() function (2d model)."""
+        pass
 
 
 ###############################################################################
