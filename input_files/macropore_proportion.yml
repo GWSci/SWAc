@@ -1,14 +1,14 @@
 # Columns are macropore zones
 macropore_proportion:
-     1: [0, 0.1]   # January
-     2: [0, 0.1]   # February
-     3: [0, 0.1]   # March
-     4: [0, 0.1]   # April
-     5: [0, 0.1]   # May
-     6: [0, 0.1]   # June
-     7: [0, 0.1]   # July
-     8: [0, 0.1]   # August
-     9: [0, 0.1]   # September
-     10: [0, 0.1]  # October
-     11: [0, 0.1]  # November
-     12: [0, 0.1]  # December
+     1: [0.05, 0.05]   # January
+     2: [0.05, 0.05]   # February
+     3: [0.05, 0.05]   # March
+     4: [0.05, 0.05]   # April
+     5: [0.05, 0.05]   # May
+     6: [0.05, 0.05]   # June
+     7: [0.05, 0.05]   # July
+     8: [0.05, 0.05]   # August
+     9: [0.05, 0.05]   # September
+     10: [0.05, 0.05]  # October
+     11: [0.05, 0.05]  # November
+     12: [0.05, 0.05]  # December

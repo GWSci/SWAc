@@ -558,18 +558,21 @@ def val_snow_params(data, name):
 def val_rapid_runoff_params(data, name):
     """Validate rapid_runoff_params.
 
-    1) type has to be a list of dictionaries
-    2) dictionaries need 4 keys: name, class_smd, class_ri, values
-    3) the value of "values" has dimensions class_smd x class_ri
-    4) all values are floats between 0 < x < 1
+    1) type has to be a list of dictionaries of lists
+    2) list needs to have length equal to the number of zones
+    3) dictionaries need 3 keys: class_smd, class_ri, values
+    4) the value of "values" has dimensions class_smd x class_ri
+    5) all values are floats between 0 < x < 1
     """
     rrp = data['params'][name]
+    rzn = data['params']['rapid_runoff_zone_names']
 
     c.check_type(param=rrp,
                  name=name,
-                 t_types=data['specs'][name]['type'])
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(rzn)])
 
-    keys = ['name', 'class_smd', 'class_ri', 'values']
+    keys = ['class_smd', 'class_ri', 'values']
     for zone in rrp:
 
         c.check_type(param=zone,

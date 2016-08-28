@@ -16,18 +16,14 @@ from . import validation as v
 class EndToEndTests(unittest.TestCase):
     """Test suite for the SWAcMod project."""
 
-    def test_load_params_from_yaml(self):
-        """Test for load_params_from_yaml() function."""
-        specs = io.yaml.load(open(u.CONSTANTS['SPECS_FILE'], 'r'))
-        series, params = io.load_params_from_yaml()
-        for key in params.keys() + series.keys():
-            self.assertTrue(key in specs)
-        self.assertEqual(len(specs), 44)
-
     def test_validate_all(self):
         """Test for validate_all() function."""
-        data = {'specs': io.yaml.load(open(u.CONSTANTS['SPECS_FILE'], 'r'))}
+        data = {}
+        data['specs'] = io.yaml.load(open(u.CONSTANTS['SPECS_FILE'], 'r'))
         data['series'], data['params'] = io.load_params_from_yaml()
+        for key in data['series'].keys() + data['params'].keys():
+            self.assertTrue(key in data['specs'])
+        self.assertEqual(len(data['specs']), 44)
         io.validate_all(data)
 
     def test_validate_functions(self):

@@ -101,9 +101,7 @@ node_areas: node_areas.yml
 # Reporting zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-reporting_zone_names:
-    1: Catchment1
-    2: Catchment2
+reporting_zone_names: reporting_zone_names.yml
 
 # Reporting zone mapping.
 # This parameter is optional
@@ -113,9 +111,7 @@ reporting_zone_mapping: reporting_zone_mapping.yml
 # Rainfall zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-rainfall_zone_names:
-    1: Catchment1
-    2: Catchment2
+rainfall_zone_names: rainfall_zone_names.yml
 
 # Rainfall zone mapping.
 # This parameter is optional
@@ -125,9 +121,7 @@ rainfall_zone_mapping: rainfall_zone_mapping.yml
 # PE zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-pe_zone_names:
-    1: Catchment1
-    2: Catchment2
+pe_zone_names: pe_zone_names.yml
 
 # PE zone mapping.
 # This parameter is optional
@@ -137,9 +131,7 @@ pe_zone_mapping: pe_zone_mapping.yml
 # PE zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-temperature_zone_names:
-    1: Catchment1
-    2: Catchment2
+temperature_zone_names: temperature_zone_names.yml
 
 # PE zone mapping.
 # This parameter is optional
@@ -149,9 +141,7 @@ temperature_zone_mapping: temperature_zone_mapping.yml
 # PE zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-subroot_zone_names:
-    1: Catchment1
-    2: Catchment2
+subroot_zone_names: subroot_zone_names.yml
 
 # PE zone mapping.
 # This parameter is optional
@@ -161,9 +151,7 @@ subroot_zone_mapping: subroot_zone_mapping.yml
 # Rapid runoff zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-rapid_runoff_zone_names:
-    1: Catchment1
-    2: Catchment2
+rapid_runoff_zone_names: rapid_runoff_zone_names.yml
 
 # Rapid Runoff Zone Mapping
 # This parameter is optional
@@ -173,9 +161,7 @@ rapid_runoff_zone_mapping: rapid_runoff_zone_mapping.yml
 # Runoff recharge zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-ror_zone_names:
-    1: Catchment1
-    2: Catchment2
+ror_zone_names: ror_zone_names.yml
 
 # Runoff Recharge Zone Mapping
 # This parameter is optional
@@ -185,9 +171,7 @@ ror_zone_mapping: ror_zone_mapping.yml
 # Macropore zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-macropore_zone_names:
-    1: Catchment1
-    2: Catchment2
+macropore_zone_names: macropore_zone_names.yml
 
 # Macropore Zone Mapping
 # This parameter is optional
@@ -197,18 +181,12 @@ macropore_zone_mapping: macropore_zone_mapping.yml
 # Soil zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-soil_zone_names:
-    1: Catchment1
-    2: Catchment2
+soil_zone_names: soil_zone_names.yml
 
 # Land zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-land_zone_names:
-    1: Catchment1
-    2: Catchment2
-    3: Catchment3
-    4: Catchment4
+land_zone_names: land_zone_names.yml
 
 #####################################################
 # Model parameters: Canopy interception and storage #
