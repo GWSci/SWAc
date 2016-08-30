@@ -11,6 +11,7 @@ import datetime
 
 # Third Party Libraries
 import yaml
+from dateutil import parser
 
 # Internal modules
 from . import utils as u
@@ -34,9 +35,9 @@ def start_logging(level=logging.INFO):
 
 
 ###############################################################################
-def dump_output(data):
+def dump_output(data, node):
     """Write output to file."""
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], 'output.csv')
+    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], 'output_%d.csv' % node)
     logging.info('\tDumping output to "%s"', path)
 
     with open(path, 'wb') as csvfile:
@@ -80,26 +81,39 @@ def convert_one_yaml_to_csv(filein):
 
     with open(fileout, 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-        for item in readin.items():
-            row = [item[0]]
-            if isinstance(item[1], list):
-                row += item[1]
-            elif isinstance(item[1], (float, int, long, str)):
-                row += [item[1]]
-            else:
-                print 'Could not recognize object: %s' % type(item[1])
-            writer.writerow(row)
+        if isinstance(readin, dict):
+            for item in readin.items():
+                row = [item[0]]
+                if isinstance(item[1], list):
+                    row += item[1]
+                elif isinstance(item[1], (float, int, long, str)):
+                    row += [item[1]]
+                else:
+                    print 'Could not recognize object: %s' % type(item[1])
+                writer.writerow(row)
+        elif isinstance(readin, list):
+            for item in readin:
+                row = []
+                if isinstance(item, list):
+                    row += item
+                elif isinstance(item, (float, int, long, str)):
+                    row += [item]
+                else:
+                    print 'Could not recognize object: %s' % type(item)
+                writer.writerow(row)
 
 
 ###############################################################################
-def load_params_from_yaml():
-    """Load model parameters."""
-    specs = yaml.load(open(u.CONSTANTS['SPECS_FILE'], 'r'))
-    params = yaml.load(open(u.CONSTANTS['INPUT_FILE'], 'r'))
+def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
+                          input_file=u.CONSTANTS['INPUT_FILE'],
+                          input_dir=u.CONSTANTS['INPUT_DIR']):
+    """Load model specifications, parameters and time series."""
+    specs = yaml.load(open(specs_file, 'r'))
+    params = yaml.load(open(input_file, 'r'))
 
     for param in params:
         if isinstance(params[param], str) and 'alt_format' in specs[param]:
-            absolute = os.path.join(u.CONSTANTS['INPUT_DIR'], params[param])
+            absolute = os.path.join(input_dir, params[param])
             ext = params[param].split('.')[-1]
             if ext not in specs[param]['alt_format']:
                 continue
@@ -120,12 +134,36 @@ def load_params_from_yaml():
     for key in keys:
         series[key] = params.pop(key)
 
-    return series, params
+    try:
+        params['start_date'] = date = parser.parse(params['start_date'])
+    except Exception as err:
+        print '---> Validation failed: %s' % err
+
+    max_time = max([i for j in params['time_periods'].values() for i in j])
+    day = datetime.timedelta(1)
+    series['date'] = [date + day * num for num in range(max_time)]
+
+    params['TAW'], params['RAW'] = {}, {}
+    for node in range(1, params['num_nodes'] + 1):
+        params['TAW'][node], params['RAW'][node] = [], []
+        fcp = params['soil_static_params']['FC']
+        wpp = params['soil_static_params']['WP']
+        ppp = params['soil_static_params']['p']
+        pss = params['soil_spatial'][node]
+        lus = params['lu_spatial'][node]
+        var1 = [(fcp[i] - wpp[i]) * pss[i] * 1000 for i in range(len(pss))]
+        var2 = [ppp[i] * pss[i] for i in range(len(pss))]
+        for num in range(12):
+            var3 = [params['zr'][num+1][i] * lus[i] for i in range(len(lus))]
+            params['TAW'][node].append(sum(var1) * sum(var3))
+            params['RAW'][node].append(params['TAW'][node][num] * sum(var2))
+
+    return specs, series, params
 
 
 ###############################################################################
 def validate_all(data):
-    """Load model parameters."""
+    """Validate model parameters and time series."""
     try:
         c.check_required(data)
         v.validate_params(data)
@@ -207,17 +245,18 @@ def load_input_from_excel():
     """Load input time series."""
     logging.info('\tLoading input time series')
     sheet = u.CONSTANTS['EXCEL_BOOK'].sheets()[0]
-    columns = ['date', 'rainfall', 'PE', 'T', 'SZL']
+    columns = ['date', 'rainfall_ts', 'pe_ts', 'temperature_ts',
+               'subroot_leakage_ts']
     series = dict((k, []) for k in columns)
 
     for row in range(1, sheet.nrows):
         values = [i.value for i in sheet.row(row)]
         values[0] = u.convert_cell_to_date(values[0])
         series['date'].append(values[0])
-        series['rainfall'].append(values[1])
-        series['PE'].append(values[2])
-        series['T'].append(values[3])
-        series['SZL'].append(values[4])
+        series['rainfall_ts'].append(values[1])
+        series['pe_ts'].append(values[2])
+        series['temperature_ts'].append(values[3])
+        series['subroot_leakage_ts'].append(values[4])
 
     return series
 

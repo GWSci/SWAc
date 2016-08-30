@@ -24,7 +24,7 @@ setup(
     author=swacmod.__authors__,
     author_email=swacmod.__author_email__,
     license=swacmod.__license__,
-    test_suite='swacmod.tests.EndToEndTests',
+    test_suite='tests.tests.EndToEndTests',
     keywords=['water management', 'water accounting'],
     install_requires=[],
     classifiers=['Intended Audience :: Developers',

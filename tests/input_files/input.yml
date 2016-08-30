@@ -1,0 +1,292 @@
+###############################################################################
+#                   YAML Configuration file for SWAcMod
+#
+# Variables marked as "This parameter can accept a path to [extension]"
+# (see "rapid_runoff_params") can also contain a path to a file with that
+# extention in their place.
+#
+# Example, for the "time_period" parameter, this can be:
+#
+# 1) a YAML object
+#    time_period:
+#      1: [1, 31]
+#      2: [32, 60]
+#      3: [61, 92]
+#
+# 2) A reference to a YAML file with the same object
+#    time_period: time_period.yml
+#
+# 3) A reference to a CSV file with an analogous object
+#    time_period: time_period.csv
+#
+#    where the CSV file contains (no header)
+#    1,1,31
+#    2,32,60
+#    3,62,92
+#
+#    Rules for converting YAML to CSV:
+#    - If the object is a dictionary (see "time_period"), keys will be the
+#      first column in the CSV file.
+#
+# Finally, all paths can be either absolute or relative to this file. If the
+# path is invalid, e.g. one of the directories does not exist, the program will
+# not try to create it.
+#
+###############################################################################
+
+
+#########
+# Paths #
+#########
+
+# Pattern for output file names.
+# This parameter is required.
+run_name: mypattern
+
+# Log file path.
+# This parameter is optional.
+# This parameter has a default value: {run_name}.log
+log_file:
+
+
+#####################
+# Global parameters #
+#####################
+
+# Number of nodes in the 2D water accounting model
+# This parameter is required.
+num_nodes: 10
+
+# Start date for the time series. Can be in format "1/1/1970", "Jan 1, 1970",
+# "1 January 1970", "1970-1-1"... but also in Excel timestamp, e.g. "25569".
+# This parameter is required.
+start_date: 1980-1-1
+
+# Output data will be aggregated according to these time windows.
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+time_periods: time_periods.yml
+
+
+###############
+# Time series #
+###############
+
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+rainfall_ts: rainfall_ts.yml
+
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+pe_ts: pe_ts.yml
+
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+temperature_ts: temperature_ts.yml
+
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+subroot_leakage_ts: subroot_leakage_ts.yml
+
+
+###############################################
+# Model parameters: Nodes, zones and mappings #
+###############################################
+
+# Area of each node.
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+node_areas: node_areas.yml
+
+# Reporting zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+reporting_zone_names: reporting_zone_names.yml
+
+# Reporting zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+reporting_zone_mapping: reporting_zone_mapping.yml
+
+# Rainfall zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+rainfall_zone_names: rainfall_zone_names.yml
+
+# Rainfall zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+rainfall_zone_mapping: rainfall_zone_mapping.yml
+
+# PE zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+pe_zone_names: pe_zone_names.yml
+
+# PE zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+pe_zone_mapping: pe_zone_mapping.yml
+
+# PE zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+temperature_zone_names: temperature_zone_names.yml
+
+# PE zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+temperature_zone_mapping: temperature_zone_mapping.yml
+
+# PE zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+subroot_zone_names: subroot_zone_names.yml
+
+# PE zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+subroot_zone_mapping: subroot_zone_mapping.yml
+
+# Rapid runoff zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+rapid_runoff_zone_names: rapid_runoff_zone_names.yml
+
+# Rapid Runoff Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+rapid_runoff_zone_mapping: rapid_runoff_zone_mapping.yml
+
+# Runoff recharge zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+ror_zone_names: ror_zone_names.yml
+
+# Runoff Recharge Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+ror_zone_mapping: ror_zone_mapping.yml
+
+# Macropore zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+macropore_zone_names: macropore_zone_names.yml
+
+# Macropore Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+macropore_zone_mapping: macropore_zone_mapping.yml
+
+# Soil zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+soil_zone_names: soil_zone_names.yml
+
+# Land zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+land_zone_names: land_zone_names.yml
+
+#####################################################
+# Model parameters: Canopy interception and storage #
+#####################################################
+
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+free_throughfall: free_throughfall.yml
+
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+max_canopy_storage: max_canopy_storage.yml
+
+
+##########################
+# Model parameters: Snow #
+##########################
+
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+snow_params: snow_params.yml
+
+
+##################################
+# Model parameters: Rapid Runoff #
+##################################
+
+# Proportion of rainfall converted to runoff.
+# This parameter is optional
+# This parameter can accept a path to YAML
+rapid_runoff_params: rapid_runoff_params.yml
+
+
+#################################################
+# Model parameters: Runoff Recharge & Macropore #
+#################################################
+
+# Runoff Recharge Proportion of RO
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+recharge_proportion: recharge_proportion.yml
+
+# Runoff Recharge Limit [mm]
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+recharge_limit: recharge_limit.yml
+
+# MacroPore: Proportion of Percolating Water Bypassing Root Zone
+# and Interflow [mm]
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+macropore_proportion: macropore_proportion.yml
+
+# MacroPore Bypass Limit [mm]
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+macropore_limit: macropore_limit.yml
+
+
+###############################
+# Model parameters: Interflow #
+###############################
+
+# Interflow parameters (Initial interflow store, Store bypass, Infiltration,
+#                       Interflow to rivers )
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+interflow_params: interflow_params.yml
+
+# Soil Properties (FC, WP, p, starting SMD)
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+soil_static_params: soil_static_params.yml
+
+# Fraction of leakage to Permit
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+leakage: leakage.yml
+
+# Soil Spatial
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+soil_spatial: soil_spatial.yml
+
+# LU Spatial
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+lu_spatial: lu_spatial.yml
+
+# LU Time Variant: Zr
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+zr: zr.yml
+
+# LU Time Variant: Kc
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+kc: kc.yml
+
+# Recharge Parameters
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+release_params: release_params.yml

@@ -6,9 +6,6 @@
 import re
 import logging
 
-# Third Party Libraries
-from dateutil import parser
-
 # Internal modules
 from . import utils as u
 from . import checks as c
@@ -67,17 +64,10 @@ def val_start_date(data, name):
     NOTE: 1/12/70 is ambiguous
           if Excel conversion I need the datemode of the file
 
-    1) type has to be str
-    2) value has to be parsable by dateutil.parser
+    1) type has to be datetime object (string is parsed in io module)
     """
     dat = data['params'][name]
     c.check_type(param=dat, name=name, t_types=data['specs'][name]['type'])
-
-    try:
-        data['params'][name] = parser.parse(dat)
-    except Exception:
-        msg = 'Parameter "%s" shoud be in the format "1980-01-01"'
-        raise u.ValidationError(msg % name)
 
 
 ###############################################################################
@@ -121,7 +111,7 @@ def val_rainfall_ts(data, name):
     """Validate rainfall_ts.
 
     1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of zones
+    2) list length has to be equal to the number of days x number of zones
     """
     rts = data['series'][name]
     rzn = data['params']['rainfall_zone_names']
@@ -129,7 +119,7 @@ def val_rainfall_ts(data, name):
     c.check_type(param=rts,
                  name=name,
                  t_types=data['specs'][name]['type'],
-                 len_list=[len(rzn)])
+                 len_list=[len(data['series']['date']), len(rzn)])
 
 
 ###############################################################################
@@ -137,7 +127,7 @@ def val_pe_ts(data, name):
     """Validate pe_ts.
 
     1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of zones
+    2) list length has to be equal to the number of days x number of zones
     """
     pts = data['series'][name]
     pzn = data['params']['pe_zone_names']
@@ -145,7 +135,7 @@ def val_pe_ts(data, name):
     c.check_type(param=pts,
                  name=name,
                  t_types=data['specs'][name]['type'],
-                 len_list=[len(pzn)])
+                 len_list=[len(data['series']['date']), len(pzn)])
 
 
 ###############################################################################
@@ -153,7 +143,7 @@ def val_temperature_ts(data, name):
     """Validate temperature_ts.
 
     1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of zones
+    2) list length has to be equal to the number of days x number of zones
     """
     tts = data['series'][name]
     tzn = data['params']['temperature_zone_names']
@@ -161,7 +151,7 @@ def val_temperature_ts(data, name):
     c.check_type(param=tts,
                  name=name,
                  t_types=data['specs'][name]['type'],
-                 len_list=[len(tzn)])
+                 len_list=[len(data['series']['date']), len(tzn)])
 
 
 ###############################################################################
@@ -169,7 +159,7 @@ def val_subroot_leakage_ts(data, name):
     """Validate subroot_leakage_ts.
 
     1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of zones
+    2) list length has to be equal to the number of days x number of zones
     """
     sts = data['series'][name]
     szn = data['params']['subroot_zone_names']
@@ -177,7 +167,7 @@ def val_subroot_leakage_ts(data, name):
     c.check_type(param=sts,
                  name=name,
                  t_types=data['specs'][name]['type'],
-                 len_list=[len(szn)])
+                 len_list=[len(data['series']['date']), len(szn)])
 
 
 ###############################################################################
@@ -218,8 +208,7 @@ def val_reporting_zone_mapping(data, name):
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
-    3) values (i.e. zone ids) have to be >= 0
-    4) number of distinct zone ids has to be equal to number of zone names
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
     """
     rzm = data['params'][name]
     tot = data['params']['num_nodes']
@@ -233,13 +222,9 @@ def val_reporting_zone_mapping(data, name):
     c.check_values_limits(values=rzm.values(),
                           name=name,
                           low_l=0,
-                          include_low=True)
-
-    zones = [i for i in rzm.values() if i != 0]
-    if len(set(zones)) != len(rzn):
-        msg = ('Parameter "zone_mapping" has to include a number of zones'
-               ' equal to the one in "zone_names"')
-        raise u.ValidationError(msg)
+                          include_low=True,
+                          high_l=len(rzn),
+                          include_high=True)
 
 
 ###############################################################################
@@ -258,20 +243,23 @@ def val_rainfall_zone_mapping(data, name):
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
-    3) values (i.e. zone ids) have to be >= 0
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
     """
     rzm = data['params'][name]
     tot = data['params']['num_nodes']
+    rzn = data['params']['rainfall_zone_names']
 
     c.check_type(param=rzm,
                  name=name,
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1))
 
-    c.check_values_limits(values=rzm.values(),
+    c.check_values_limits(values=[i[0] for i in rzm.values()],
                           name=name,
-                          low_l=0,
-                          include_low=True)
+                          low_l=1,
+                          include_low=True,
+                          high_l=len(rzn),
+                          include_high=True)
 
 
 ###############################################################################
@@ -290,20 +278,23 @@ def val_pe_zone_mapping(data, name):
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
-    3) values (i.e. zone ids) have to be >= 0
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
     """
     pzm = data['params'][name]
     tot = data['params']['num_nodes']
+    pzn = data['params']['pe_zone_names']
 
     c.check_type(param=pzm,
                  name=name,
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1))
 
-    c.check_values_limits(values=pzm.values(),
+    c.check_values_limits(values=[i[0] for i in pzm.values()],
                           name=name,
                           low_l=0,
-                          include_low=True)
+                          include_low=True,
+                          high_l=len(pzn),
+                          include_high=True)
 
 
 ###############################################################################
@@ -322,10 +313,11 @@ def val_temperature_zone_mapping(data, name):
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
-    3) values (i.e. zone ids) have to be >= 0
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
     """
     tzm = data['params'][name]
     tot = data['params']['num_nodes']
+    tzn = data['params']['temperature_zone_names']
 
     c.check_type(param=tzm,
                  name=name,
@@ -335,7 +327,9 @@ def val_temperature_zone_mapping(data, name):
     c.check_values_limits(values=tzm.values(),
                           name=name,
                           low_l=0,
-                          include_low=True)
+                          include_low=True,
+                          high_l=len(tzn),
+                          include_high=True)
 
 
 ###############################################################################
@@ -354,20 +348,23 @@ def val_subroot_zone_mapping(data, name):
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
-    3) values (i.e. zone ids) have to be >= 0
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
     """
     szm = data['params'][name]
     tot = data['params']['num_nodes']
+    szn = data['params']['subroot_zone_names']
 
     c.check_type(param=szm,
                  name=name,
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1))
 
-    c.check_values_limits(values=szm.values(),
+    c.check_values_limits(values=[i[0] for i in szm.values()],
                           name=name,
                           low_l=0,
-                          include_low=True)
+                          include_low=True,
+                          high_l=len(szn),
+                          include_high=True)
 
 
 ###############################################################################
@@ -386,10 +383,11 @@ def val_rapid_runoff_zone_mapping(data, name):
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
-    3) values (i.e. zone ids) have to be >= 0
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
     """
     rrzm = data['params'][name]
     tot = data['params']['num_nodes']
+    rzn = data['params']['rapid_runoff_zone_names']
 
     c.check_type(param=rrzm,
                  name=name,
@@ -399,7 +397,9 @@ def val_rapid_runoff_zone_mapping(data, name):
     c.check_values_limits(values=rrzm.values(),
                           name=name,
                           low_l=0,
-                          include_low=True)
+                          include_low=True,
+                          high_l=len(rzn),
+                          include_high=True)
 
 
 ###############################################################################
@@ -418,10 +418,11 @@ def val_ror_zone_mapping(data, name):
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
-    3) values (i.e. zone ids) have to be >= 0
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
     """
     rorzm = data['params'][name]
     tot = data['params']['num_nodes']
+    rzn = data['params']['ror_zone_names']
 
     c.check_type(param=rorzm,
                  name=name,
@@ -431,7 +432,9 @@ def val_ror_zone_mapping(data, name):
     c.check_values_limits(values=rorzm.values(),
                           name=name,
                           low_l=0,
-                          include_low=True)
+                          include_low=True,
+                          high_l=len(rzn),
+                          include_high=True)
 
 
 ###############################################################################
@@ -450,10 +453,11 @@ def val_macropore_zone_mapping(data, name):
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
-    3) values (i.e. zone ids) have to be >= 0
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
     """
     mzm = data['params'][name]
     tot = data['params']['num_nodes']
+    mzn = data['params']['macropore_zone_names']
 
     c.check_type(param=mzm,
                  name=name,
@@ -463,7 +467,9 @@ def val_macropore_zone_mapping(data, name):
     c.check_values_limits(values=mzm.values(),
                           name=name,
                           low_l=0,
-                          include_low=True)
+                          include_low=True,
+                          high_l=len(mzn),
+                          include_high=True)
 
 
 ###############################################################################
@@ -560,9 +566,9 @@ def val_rapid_runoff_params(data, name):
 
     1) type has to be a list of dictionaries of lists
     2) list needs to have length equal to the number of zones
-    3) dictionaries need 3 keys: class_smd, class_ri, values
-    4) the value of "values" has dimensions class_smd x class_ri
-    5) all values are floats between 0 < x < 1
+    3) all dictionaries need 3 keys: class_smd, class_ri, values
+    4) all "values" has dimensions class_smd x class_ri
+    5) all values are floats between 0 <= x <= 1
     """
     rrp = data['params'][name]
     rzn = data['params']['rapid_runoff_zone_names']
@@ -672,6 +678,7 @@ def val_interflow_params(data, name):
     1) type has to be a dictionary of lists of floats
     2) all node ids have to be present
     3) values have to be lists with 4 elements
+    4) floats need to be >= 0
     """
     ifp = data['params'][name]
     tot = data['params']['num_nodes']
@@ -729,6 +736,7 @@ def val_soil_spatial(data, name):
     1) type has to be a dictionary of lists of floats
     2) all node ids have to be present
     3) values have to be lists with length equal to the number of zones
+    4) the sum of each row has to be 1.0
     """
     sos = data['params'][name]
     soz = data['params']['soil_zone_names']
@@ -740,6 +748,10 @@ def val_soil_spatial(data, name):
                  keys=range(1, tot + 1),
                  len_list=[len(soz)])
 
+    if not all(sum(i) == 1.0 for i in sos.values()):
+        msg = 'Parameter "%s" requires the sum of its values to be 1.0'
+        raise u.ValidationError(msg % name)
+
 
 ###############################################################################
 def val_lu_spatial(data, name):
@@ -748,6 +760,7 @@ def val_lu_spatial(data, name):
     1) type has to be a dictionary of lists of floats
     2) all node ids have to be present
     3) values have to be lists with length equal to the number of zones
+    4) the sum of each row has to be 1.0
     """
     lus = data['params'][name]
     lzn = data['params']['land_zone_names']
@@ -759,13 +772,18 @@ def val_lu_spatial(data, name):
                  keys=range(1, tot + 1),
                  len_list=[len(lzn)])
 
+    if not all(sum(i) == 1.0 for i in lus.values()):
+        msg = 'Parameter "%s" requires the sum of its values to be 1.0'
+        raise u.ValidationError(msg % name)
+
 
 ###############################################################################
 def val_zr(data, name):
     """Validate ZR.
 
-    1) type has to be a list of lists of floats
-    2) dimensionds = 12 x number of zones
+    1) type has to be a dict of lists of floats
+    2) dictionary needs to have integer keys, from 1 to 12
+    3) lists need to have length equal to the number of zones
     """
     zrn = data['params'][name]
     lzn = data['params']['land_zone_names']
@@ -781,8 +799,9 @@ def val_zr(data, name):
 def val_kc(data, name):
     """Validate KC.
 
-    1) type has to be a list of lists of floats
-    2) dimensionds = 12 x number of zones
+    1) type has to be a dict of lists of floats
+    2) dictionary needs to have integer keys, from 1 to 12
+    3) lists need to have length equal to the number of zones
     """
     kcn = data['params'][name]
     lzn = data['params']['land_zone_names']

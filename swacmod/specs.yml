@@ -41,7 +41,7 @@ num_nodes:
 start_date:
     required: true
     type:
-        - !!python/name:str
+        - !!python/name:datetime.datetime
 
 time_periods:
     required: true
@@ -60,7 +60,7 @@ rainfall_ts:
     required: true
     alt_format: [yml, csv]
     type:
-        - !!python/name:dict
+        - !!python/name:list
         - !!python/name:list
         - !!python/name:float
 
@@ -68,7 +68,7 @@ pe_ts:
     required: true
     alt_format: [yml, csv]
     type:
-        - !!python/name:dict
+        - !!python/name:list
         - !!python/name:list
         - !!python/name:float
 
@@ -76,7 +76,7 @@ temperature_ts:
     required: true
     alt_format: [yml, csv]
     type:
-        - !!python/name:dict
+        - !!python/name:list
         - !!python/name:list
         - !!python/name:float
 
@@ -84,7 +84,7 @@ subroot_leakage_ts:
     required: true
     alt_format: [yml, csv]
     type:
-        - !!python/name:dict
+        - !!python/name:list
         - !!python/name:list
         - !!python/name:float
 
@@ -161,7 +161,6 @@ temperature_zone_mapping:
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
-        - !!python/name:list
         - !!python/name:float
 
 subroot_zone_names:

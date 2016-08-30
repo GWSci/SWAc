@@ -11,11 +11,9 @@ from . import model as m
 
 
 ###############################################################################
-def get_output(data):
+def get_output(data, node):
     """Run the model."""
-    logging.info('\tRunning water accounting model')
-
-    data['output'] = {}
+    logging.info('\tRunning water accounting model for node %d', node)
 
     for function in [m.get_pefac,              # Column E
                      m.get_canopy_storage,     # Column F
@@ -43,24 +41,28 @@ def get_output(data):
                      m.get_average_out,        # Column AN
                      m.get_balance]:           # Column AO
 
-        columns = function(data)
-        data['output'].update(columns)
+        columns = function(data, node)
+        data['output'][node].update(columns)
         logging.info('\t\t"%s()" done', function.__name__)
-
-    logging.info('\tWater accounting model done')
 
 
 ###############################################################################
 def run():
     """Main function."""
     io.start_logging()
-
     logging.info('Start SWAcMod run')
+
     data = {}
-    data['series'] = io.load_input_from_excel()
-    data['params'] = io.load_params_from_excel()
-    get_output(data)
-    io.dump_output(data)
+    data['specs'], data['series'], data['params'] = io.load_params_from_yaml()
+    data['output'] = [{} for _ in range(data['params']['num_nodes'])]
+
+    io.validate_all(data)
+    for node in range(1, data['params']['num_nodes'] + 1):
+        if data['params']['reporting_zone_mapping'][node] == 0:
+            continue
+        get_output(data, node)
+        io.dump_output(data, node)
+
     logging.info('End SWAcMod run')
 
     return data

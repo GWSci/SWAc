@@ -22,9 +22,14 @@ CONSTANTS['EXCEL_PATH'] = os.path.join(CONSTANTS['INPUT_DIR'], 'input.xls')
 CONSTANTS['EXCEL_BOOK'] = xlrd.open_workbook(CONSTANTS['EXCEL_PATH'])
 CONSTANTS['INPUT_FILE'] = os.path.join(CONSTANTS['INPUT_DIR'], 'input.yml')
 CONSTANTS['SPECS_FILE'] = os.path.join(CONSTANTS['CODE_DIR'], 'specs.yml')
+CONSTANTS['TEST_DIR'] = os.path.join(CONSTANTS['ROOT_DIR'], 'tests')
+CONSTANTS['TEST_INPUT_DIR'] = os.path.join(CONSTANTS['TEST_DIR'],
+                                           'input_files')
+CONSTANTS['TEST_INPUT_FILE'] = os.path.join(CONSTANTS['TEST_INPUT_DIR'],
+                                            'input.yml')
 
 CONSTANTS['COL_ORDER'] = [
-    'date', '', 'rainfall', 'PE', 'pefac', 'canopy_storage',
+    'date', '', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage',
     'veg_diff', 'precipitation', 'snowfall_o', 'rainfall_o', 'snowpack',
     'snowmelt', 'net_rainfall', 'rapid_runoff_c', 'rapid_runoff',
     'runoff_recharge', 'macropore', 'perc_in_root', 'rawrew',
@@ -61,3 +66,13 @@ def normalize_default_value(data, param):
         data['params'][param] = re.sub(pattern[0], data['params'][new_value],
                                        default)
         logging.info('\t\tDefaulted "%s" to %s', param, data['params'][param])
+
+
+###############################################################################
+def weighted_sum(to_sum, weights):
+    """Get the weighted sum for a list and its weights."""
+    if len(to_sum) != len(weights):
+        logging.error('Could not complete weighted sum, different lengths')
+        return
+    temp = [to_sum[i] * weights[i] for i in range(len(to_sum))]
+    return sum(temp)

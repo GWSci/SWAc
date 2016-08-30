@@ -6,25 +6,32 @@
 import unittest
 
 # Internal modules
-from . import io
-from . import swacmod
-from . import utils as u
-from . import validation as v
+from swacmod import io
+from swacmod import swacmod
+from swacmod import utils as u
+from swacmod import validation as v
 
 
 ###############################################################################
 class EndToEndTests(unittest.TestCase):
     """Test suite for the SWAcMod project."""
 
+    data = {}
+    input_file = u.CONSTANTS['TEST_INPUT_FILE']
+    input_dir = u.CONSTANTS['TEST_INPUT_DIR']
+    specs, series, params = io.load_params_from_yaml(input_file=input_file,
+                                                     input_dir=input_dir)
+    data['specs'], data['series'], data['params'] = specs, series, params
+    data['output'] = [{} for _ in range(data['params']['num_nodes'])]
+
     def test_validate_all(self):
         """Test for validate_all() function."""
-        data = {}
-        data['specs'] = io.yaml.load(open(u.CONSTANTS['SPECS_FILE'], 'r'))
-        data['series'], data['params'] = io.load_params_from_yaml()
-        for key in data['series'].keys() + data['params'].keys():
-            self.assertTrue(key in data['specs'])
-        self.assertEqual(len(data['specs']), 44)
-        io.validate_all(data)
+        for key in self.data['series'].keys() + self.data['params'].keys():
+            if key in ['date', 'TAW', 'RAW']:
+                continue
+            self.assertTrue(key in self.data['specs'])
+        self.assertEqual(len(self.data['specs']), 44)
+        io.validate_all(self.data)
 
     def test_validate_functions(self):
         """Test that all parameters and series have a validation function."""
@@ -46,23 +53,26 @@ class EndToEndTests(unittest.TestCase):
                     'macropore_proportion', 'macropore_limit', 'ZR', 'KC']:
             self.assertEqual(len(params[key]), 12)
 
-    def test_oned_get_output(self):
-        """Test for get_output() function (1d model)."""
-        data = {}
-        data['series'] = io.load_input_from_excel()
-        data['params'] = io.load_params_from_excel()
-        swacmod.get_output(data)
+    def test_get_output(self):
+        """Test for get_output() function."""
+        node = 1
+        swacmod.get_output(self.data, node)
         results = io.load_results()
         for key in u.CONSTANTS['COL_ORDER']:
-            if key == '':
+            if key in ['', 'date']:
                 continue
             self.assertTrue(key in results)
-            self.assertTrue(key in data['series'] or key in data['output'])
-            self.assertEqual(len(results) - 2, len(data['output']) + 2)
-            if key in data['series']:
-                new_list = data['series'][key]
+            self.assertTrue(key in self.data['series'] or
+                            key in self.data['output'][node])
+            self.assertEqual(len(results) - 2,
+                             len(self.data['output'][node]) + 2)
+            if key in self.data['series']:
+                if isinstance(self.data['series'][key][0], list):
+                    new_list = [i[0] for i in self.data['series'][key]]
+                else:
+                    new_list = self.data['series'][key]
             else:
-                new_list = data['output'][key]
+                new_list = self.data['output'][node][key]
             self.assertEqual(len(new_list), len(results[key]))
             for num, item in enumerate(new_list):
                 try:
@@ -70,12 +80,8 @@ class EndToEndTests(unittest.TestCase):
                                            item,
                                            places=5)
                 except AssertionError as err:
-                    print '\n---> Failed at "%s", row %d\n' % (key, num)
+                    print '\n\n---> Failed at "%s", row %d\n' % (key, num)
                     raise AssertionError(err)
-
-    def test_twod_get_output(self):
-        """Test for get_output() function (2d model)."""
-        pass
 
 
 ###############################################################################

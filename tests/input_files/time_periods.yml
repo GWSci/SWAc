@@ -1,0 +1,7 @@
+# Output data will be aggregated according to these time windows.
+# Columns are
+# 1) start
+# 2) end
+time_periods:
+    1: [1, 5]
+    2: [6, 12692]

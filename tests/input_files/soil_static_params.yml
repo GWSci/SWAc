@@ -1,0 +1,6 @@
+# Columns are zones
+soil_static_params:
+    FC: [0.36, 0.36]            # in [m3/m3]
+    WP: [0.15, 0.15]            # in [m3/m3]
+    p: [0.55, 0.55]             # in [m]
+    starting_SMD: [100, 100]
