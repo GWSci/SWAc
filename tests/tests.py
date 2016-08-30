@@ -39,20 +39,6 @@ class EndToEndTests(unittest.TestCase):
         params = io.yaml.load(open(u.CONSTANTS['SPECS_FILE'], 'r')).keys()
         self.assertEqual(set(params), set(funcs))
 
-    def test_load_input_from_excel(self):
-        """Test for load_input_from_excel() function."""
-        series = io.load_input_from_excel()
-        self.assertTrue('date' in series)
-        for key in series:
-            self.assertEqual(len(series[key]), len(series['date']))
-
-    def test_load_params_from_excel(self):
-        """Test for load_params_from_excel() function."""
-        params = io.load_params_from_excel()
-        for key in ['recharge_proportion', 'recharge_limit',
-                    'macropore_proportion', 'macropore_limit', 'ZR', 'KC']:
-            self.assertEqual(len(params[key]), 12)
-
     def test_get_output(self):
         """Test for get_output() function."""
         node = 1
@@ -64,7 +50,7 @@ class EndToEndTests(unittest.TestCase):
             self.assertTrue(key in results)
             self.assertTrue(key in self.data['series'] or
                             key in self.data['output'][node])
-            self.assertEqual(len(results) - 2,
+            self.assertEqual(len(results) - 1,
                              len(self.data['output'][node]) + 2)
             if key in self.data['series']:
                 if isinstance(self.data['series'][key][0], list):

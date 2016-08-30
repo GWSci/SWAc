@@ -6,11 +6,6 @@
 import os
 import re
 import logging
-import datetime
-
-# Third Party Libraries
-import xlrd
-
 
 CONSTANTS = {}
 
@@ -18,8 +13,6 @@ CONSTANTS['CODE_DIR'] = os.path.dirname(os.path.abspath(__file__))
 CONSTANTS['ROOT_DIR'] = os.path.join(CONSTANTS['CODE_DIR'], '../')
 CONSTANTS['INPUT_DIR'] = os.path.join(CONSTANTS['ROOT_DIR'], 'input_files')
 CONSTANTS['OUTPUT_DIR'] = os.path.join(CONSTANTS['ROOT_DIR'], 'output_files')
-CONSTANTS['EXCEL_PATH'] = os.path.join(CONSTANTS['INPUT_DIR'], 'input.xls')
-CONSTANTS['EXCEL_BOOK'] = xlrd.open_workbook(CONSTANTS['EXCEL_PATH'])
 CONSTANTS['INPUT_FILE'] = os.path.join(CONSTANTS['INPUT_DIR'], 'input.yml')
 CONSTANTS['SPECS_FILE'] = os.path.join(CONSTANTS['CODE_DIR'], 'specs.yml')
 CONSTANTS['TEST_DIR'] = os.path.join(CONSTANTS['ROOT_DIR'], 'tests')
@@ -27,9 +20,11 @@ CONSTANTS['TEST_INPUT_DIR'] = os.path.join(CONSTANTS['TEST_DIR'],
                                            'input_files')
 CONSTANTS['TEST_INPUT_FILE'] = os.path.join(CONSTANTS['TEST_INPUT_DIR'],
                                             'input.yml')
+CONSTANTS['TEST_RESULTS_FILE'] = os.path.join(CONSTANTS['TEST_DIR'],
+                                              'results.csv')
 
 CONSTANTS['COL_ORDER'] = [
-    'date', '', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage',
+    'date', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage',
     'veg_diff', 'precipitation', 'snowfall_o', 'rainfall_o', 'snowpack',
     'snowmelt', 'net_rainfall', 'rapid_runoff_c', 'rapid_runoff',
     'runoff_recharge', 'macropore', 'perc_in_root', 'rawrew',
@@ -47,13 +42,6 @@ class ValidationError(Exception):
     """General exception for validation errors."""
 
     pass
-
-
-###############################################################################
-def convert_cell_to_date(value):
-    """Convert a cell in an Excel Spreadsheet to a Python datetime object."""
-    date = xlrd.xldate_as_tuple(value, CONSTANTS['EXCEL_BOOK'].datemode)
-    return datetime.datetime(date[0], date[1], date[2])
 
 
 ###############################################################################
