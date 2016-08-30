@@ -42,27 +42,27 @@ def dump_output(data, node):
 
     with open(path, 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-        order = [i for i in u.CONSTANTS['COL_ORDER'] if i != '']
-        writer.writerow(order)
-        for num in range(len(data['series']['rainfall'])):
+        writer.writerow(u.CONSTANTS['COL_ORDER'])
+        for num in range(len(data['series']['date'])):
             row = []
-            for key in order:
+            for key in u.CONSTANTS['COL_ORDER']:
                 try:
-                    row.append(data['series'][key][num])
+                    row.append(data['output'][node][key][num])
                 except KeyError:
-                    row.append(data['output'][key][num])
+                    continue
             writer.writerow(row)
 
 
 ###############################################################################
-def convert_all_yaml_to_csv():
+def convert_all_yaml_to_csv(specs_file=u.CONSTANTS['SPECS_FILE'],
+                            input_dir=u.CONSTANTS['INPUT_DIR']):
     """Convert all YAML files to CSV for parameters that accept this option."""
-    specs = yaml.load(open(u.CONSTANTS['SPECS_FILE'], 'r'))
+    specs = yaml.load(open(specs_file, 'r'))
     to_csv = [i for i in specs if 'alt_format' in specs[i] and 'csv' in
               specs[i]['alt_format']]
-    for filein in os.listdir(u.CONSTANTS['INPUT_DIR']):
+    for filein in os.listdir(input_dir):
         if filein.endswith('.yml'):
-            path = os.path.join(u.CONSTANTS['INPUT_DIR'], filein)
+            path = os.path.join(input_dir, filein)
             loaded = yaml.load(open(path, 'r'))
             param = loaded.items()[0][0]
             if len(loaded.items()) == 1 and param in to_csv:

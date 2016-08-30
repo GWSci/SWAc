@@ -3,12 +3,13 @@ swacmod
 
 Development Repo for Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing ``setup.py``.
 
-The only dependency that needs to be installed is ``xlrd``, used to read the Excel input file. In order to install it, I recommend first installing ``pip``, a python package manager, if you haven't already done so (instructions `here <https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py>`_). Then run
+The only dependencies that needs to be installed are ``dateutil`` and ``PyYAML``. In order to install them, I recommend first installing ``pip``, a python package manager, if you haven't already done so (instructions `here <https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py>`_). Then run
 
 .. code-block:: bash
 
-    $ pip install xlrd
+    $ pip install python-dateutil pyyaml
 
+Then download this Git repo.
 To **confirm that all modules are installed correctly**: navigate to ``ROOT``, launch a python shell and run
 
 .. code-block:: python
@@ -36,15 +37,15 @@ If they succeed, you will see an output like the following:
     reading manifest file 'swacmod.egg-info/SOURCES.txt'
     writing manifest file 'swacmod.egg-info/SOURCES.txt'
     running build_ext
-    test_get_output (swacmod.tests.EndToEndTests)
+    test_get_output (tests.tests.EndToEndTests)
     Test for get_output() function. ... ok
-    test_load_input (swacmod.tests.EndToEndTests)
-    Test for load_input_from_excel() function. ... ok
-    test_load_params (swacmod.tests.EndToEndTests)
-    Test for load_params_from_excel() function. ... ok
+    test_validate_all (tests.tests.EndToEndTests)
+    Test for validate_all() function. ... ok
+    test_validate_functions (tests.tests.EndToEndTests)
+    Test that all parameters and series have a validation function. ... ok
 
     ----------------------------------------------------------------------
-    Ran 3 tests in 1.281s
+    Ran 3 tests in 3.023s
 
     OK
 

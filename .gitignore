@@ -4,6 +4,7 @@ dist/
 deploy
 deploy.py
 output_files/*.log
+output_files/*.csv
 swacmod/deploy.py
 pylint.conf
 swacmod.egg-info/

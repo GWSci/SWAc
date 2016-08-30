@@ -54,10 +54,12 @@ def run():
 
     data = {}
     data['specs'], data['series'], data['params'] = io.load_params_from_yaml()
-    data['output'] = [{} for _ in range(data['params']['num_nodes'])]
+
+    ids = range(1, data['params']['num_nodes'] + 1)
+    data['output'] = dict((k, {}) for k in ids)
 
     io.validate_all(data)
-    for node in range(1, data['params']['num_nodes'] + 1):
+    for node in ids:
         if data['params']['reporting_zone_mapping'][node] == 0:
             continue
         get_output(data, node)
