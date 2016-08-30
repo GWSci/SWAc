@@ -55,4 +55,4 @@ Finally, to **run the model**: navigate to ``ROOT``, then run
 
     $ python -m swacmod.swacmod
 
-This will produce ``output.csv`` file and a ``.log`` file in the ``output_files/`` directory.
+This will produce an ``output.csv`` file for each node and a ``.log`` file in the ``output_files/`` directory.
