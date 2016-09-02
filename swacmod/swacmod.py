@@ -66,6 +66,10 @@ def run(test=False):
     else:
         specs, series, params = io.load_params_from_yaml()
 
+    if specs is None:
+        print
+        sys.exit()
+
     data['specs'], data['series'], data['params'] = specs, series, params
     ids = range(1, data['params']['num_nodes'] + 1)
 

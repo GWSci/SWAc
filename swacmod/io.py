@@ -4,6 +4,7 @@
 
 # Standard Library
 import os
+import re
 import csv
 import sys
 import logging
@@ -139,13 +140,15 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                 try:
                     reader = csv.reader(open(absolute, 'r'))
                 except IOError as err:
-                    print '---> Validation failed: %s' % err
+                    print '---> Validation failed: %s (%s)' % (err, param)
+                    return None, None, None
                 params[param] = dict((row[0], row[1]) for row in reader)
             elif ext == 'yml':
                 try:
                     params[param] = load_yaml(absolute)[param]
                 except (IOError, KeyError) as err:
-                    print '---> Validation failed: %s' % err
+                    print '---> Validation failed: %s (%s)' % (err, param)
+                    return None, None, None
 
     series = {}
     keys = [i for i in params if i.endswith('_ts')]
@@ -153,9 +156,15 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
         series[key] = params.pop(key)
 
     try:
-        params['start_date'] = date = parser.parse(params['start_date'])
+        new_date = str(params['start_date'])
+        if not re.findall(r'^\d{4}-\d{2}-\d{2}$', new_date):
+            msg = ('start_date has to be in the format YYYY-MM-DD '
+                   '(e.g. 1980-01-13)')
+            raise u.ValidationError(msg)
+        params['start_date'] = date = parser.parse(new_date)
     except Exception as err:
-        print '---> Validation failed: %s' % err
+        print '---> Validation failed: %s (start_date)' % err
+        return None, None, None
 
     max_time = max([i for j in params['time_periods'].values() for i in j])
     day = datetime.timedelta(1)

@@ -60,10 +60,9 @@ log_file:
 # This parameter is required.
 num_nodes: 1
 
-# Start date for the time series. Can be in format "1/1/1970", "Jan 1, 1970",
-# "1 January 1970", "1970-1-1"... but also in Excel timestamp, e.g. "25569".
+# Start date for the time series. Has to be in format "YYYY-MM-DD".
 # This parameter is required.
-start_date: 1980-1-1
+start_date: 1980-01-01
 
 # Output data will be aggregated according to these time windows.
 # This parameter is required.

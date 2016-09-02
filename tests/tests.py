@@ -4,6 +4,7 @@
 
 # Standard Library
 import os
+import sys
 import unittest
 
 # Third Party Libraries
@@ -83,6 +84,10 @@ class EndToEndTests(unittest.TestCase):
     input_dir = u.CONSTANTS['TEST_INPUT_DIR']
     specs, series, params = io.load_params_from_yaml(input_file=input_file,
                                                      input_dir=input_dir)
+    if specs is None:
+        print
+        sys.exit()
+
     data = {'specs': specs,
             'series': series,
             'params': params}
