@@ -403,8 +403,8 @@ def val_rapid_runoff_zone_mapping(data, name):
 
 
 ###############################################################################
-def val_ror_zone_names(data, name):
-    """Validate ror_zone_names.
+def val_rorecharge_zone_names(data, name):
+    """Validate rorecharge_zone_names.
 
     1) type has to be a dictionary of strings
     """
@@ -413,8 +413,8 @@ def val_ror_zone_names(data, name):
 
 
 ###############################################################################
-def val_ror_zone_mapping(data, name):
-    """Validate ror_zone_mapping.
+def val_rorecharge_zone_mapping(data, name):
+    """Validate rorecharge_zone_mapping.
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
@@ -422,7 +422,7 @@ def val_ror_zone_mapping(data, name):
     """
     rorzm = data['params'][name]
     tot = data['params']['num_nodes']
-    rzn = data['params']['ror_zone_names']
+    rzn = data['params']['rorecharge_zone_names']
 
     c.check_type(param=rorzm,
                  name=name,
@@ -483,8 +483,8 @@ def val_soil_zone_names(data, name):
 
 
 ###############################################################################
-def val_land_zone_names(data, name):
-    """Validate land_zone_names.
+def val_landuse_zone_names(data, name):
+    """Validate landuse_zone_names.
 
     1) type has to be a dictionary of strings
     """
@@ -600,15 +600,15 @@ def val_rapid_runoff_params(data, name):
 
 
 ###############################################################################
-def val_recharge_proportion(data, name):
-    """Validate recharge_proportion.
+def val_rorecharge_proportion(data, name):
+    """Validate rorecharge_proportion.
 
     1) type has to be a list of lists
     2) the top list requires length 12 (months)
     3) the bottom list requires lenght equal to the number of zones
     """
     rrp = data['params'][name]
-    rzn = data['params']['ror_zone_names']
+    rzn = data['params']['rorecharge_zone_names']
 
     c.check_type(param=rrp,
                  name=name,
@@ -618,15 +618,15 @@ def val_recharge_proportion(data, name):
 
 
 ###############################################################################
-def val_recharge_limit(data, name):
-    """Validate recharge_limit.
+def val_rorecharge_limit(data, name):
+    """Validate rorecharge_limit.
 
     1) type has to be a list of lists
     2) the top list requires length 12 (months)
     3) the bottom list requires lenght equal to the number of zones
     """
     rrl = data['params'][name]
-    rzn = data['params']['ror_zone_names']
+    rzn = data['params']['rorecharge_zone_names']
 
     c.check_type(param=rrl,
                  name=name,
@@ -714,8 +714,8 @@ def val_soil_static_params(data, name):
 
 
 ###############################################################################
-def val_leakage(data, name):
-    """Validate leakage.
+def val_subsoilzone_leakage_fraction(data, name):
+    """Validate subsoilzone_leakage_fraction.
 
     1) type has to be a dictionary of lists of floats
     2) all node ids have to be present
@@ -763,7 +763,7 @@ def val_lu_spatial(data, name):
     4) the sum of each row has to be 1.0
     """
     lus = data['params'][name]
-    lzn = data['params']['land_zone_names']
+    lzn = data['params']['landuse_zone_names']
     tot = data['params']['num_nodes']
 
     c.check_type(param=lus,
@@ -786,7 +786,7 @@ def val_zr(data, name):
     3) lists need to have length equal to the number of zones
     """
     zrn = data['params'][name]
-    lzn = data['params']['land_zone_names']
+    lzn = data['params']['landuse_zone_names']
 
     c.check_type(param=zrn,
                  name=name,
@@ -804,7 +804,7 @@ def val_kc(data, name):
     3) lists need to have length equal to the number of zones
     """
     kcn = data['params'][name]
-    lzn = data['params']['land_zone_names']
+    lzn = data['params']['landuse_zone_names']
 
     c.check_type(param=kcn,
                  name=name,
@@ -814,8 +814,8 @@ def val_kc(data, name):
 
 
 ###############################################################################
-def val_release_params(data, name):
-    """Validate release_params.
+def val_recharge_attenuation_params(data, name):
+    """Validate recharge_attenuation_params.
 
     1) type has to be a dictionary of lists of floats
     2) all node ids have to be present
@@ -854,28 +854,28 @@ def validate_params(data):
                      val_temperature_zone_mapping,
                      val_subroot_zone_names,
                      val_subroot_zone_mapping,
-                     val_ror_zone_names,
-                     val_ror_zone_mapping,
+                     val_rorecharge_zone_names,
+                     val_rorecharge_zone_mapping,
                      val_macropore_zone_names,
                      val_macropore_zone_mapping,
                      val_soil_zone_names,
-                     val_land_zone_names,
+                     val_landuse_zone_names,
                      val_free_throughfall,
                      val_max_canopy_storage,
                      val_snow_params,
                      val_rapid_runoff_params,
-                     val_recharge_proportion,
-                     val_recharge_limit,
+                     val_rorecharge_proportion,
+                     val_rorecharge_limit,
                      val_macropore_proportion,
                      val_macropore_limit,
                      val_interflow_params,
                      val_soil_static_params,
-                     val_leakage,
+                     val_subsoilzone_leakage_fraction,
                      val_soil_spatial,
                      val_lu_spatial,
                      val_zr,
                      val_kc,
-                     val_release_params]:
+                     val_recharge_attenuation_params]:
 
         param = function.__name__.replace('val_', '')
         function(data, param)

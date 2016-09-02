@@ -47,10 +47,11 @@ def generate_test_files(num_nodes=10):
     for name in ['node_areas', 'reporting_zone_mapping',
                  'rainfall_zone_mapping', 'pe_zone_mapping',
                  'temperature_zone_mapping', 'subroot_zone_mapping',
-                 'rapid_runoff_zone_mapping', 'ror_zone_mapping',
+                 'rapid_runoff_zone_mapping', 'rorecharge_zone_mapping',
                  'macropore_zone_mapping', 'free_throughfall',
                  'max_canopy_storage', 'snow_params', 'interflow_params',
-                 'leakage', 'soil_spatial', 'lu_spatial', 'release_params']:
+                 'subsoilzone_leakage_fraction', 'soil_spatial', 'lu_spatial',
+                 'recharge_attenuation_params']:
         generate_test_file(name, num_nodes)
 
     filein = open(u.CONSTANTS['TEST_INPUT_FILE'], 'r').readlines()

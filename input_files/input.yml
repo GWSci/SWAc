@@ -161,12 +161,12 @@ rapid_runoff_zone_mapping: rapid_runoff_zone_mapping.yml
 # Runoff recharge zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-ror_zone_names: ror_zone_names.yml
+rorecharge_zone_names: rorecharge_zone_names.yml
 
 # Runoff Recharge Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-ror_zone_mapping: ror_zone_mapping.yml
+rorecharge_zone_mapping: rorecharge_zone_mapping.yml
 
 # Macropore zone names.
 # This parameter is optional
@@ -186,7 +186,7 @@ soil_zone_names: soil_zone_names.yml
 # Land zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-land_zone_names: land_zone_names.yml
+landuse_zone_names: landuse_zone_names.yml
 
 #####################################################
 # Model parameters: Canopy interception and storage #
@@ -227,12 +227,12 @@ rapid_runoff_params: rapid_runoff_params.yml
 # Runoff Recharge Proportion of RO
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-recharge_proportion: recharge_proportion.yml
+rorecharge_proportion: rorecharge_proportion.yml
 
 # Runoff Recharge Limit [mm]
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-recharge_limit: recharge_limit.yml
+rorecharge_limit: rorecharge_limit.yml
 
 # MacroPore: Proportion of Percolating Water Bypassing Root Zone
 # and Interflow [mm]
@@ -264,7 +264,7 @@ soil_static_params: soil_static_params.yml
 # Fraction of leakage to Permit
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-leakage: leakage.yml
+subsoilzone_leakage_fraction: subsoilzone_leakage_fraction.yml
 
 # Soil Spatial
 # This parameter is optional
@@ -289,4 +289,4 @@ kc: kc.yml
 # Recharge Parameters
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-release_params: release_params.yml
+recharge_attenuation_params: recharge_attenuation_params.yml

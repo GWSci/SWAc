@@ -2,7 +2,7 @@
 # 1) init_recharge_store
 # 2) release_proportion
 # 3) release_limit
-release_params:
+recharge_attenuation_params:
     1: [1.0, 0.05, 2.0]
     2: [1.0, 0.05, 2.0]
     4: [1.0, 0.05, 2.0]

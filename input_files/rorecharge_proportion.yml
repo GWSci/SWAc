@@ -1,5 +1,5 @@
 # Columns are zones
-recharge_proportion:
+rorecharge_proportion:
      1: [0.1, 0.1]   # January
      2: [0.1, 0.1]   # February
      3: [0.1, 0.1]   # March

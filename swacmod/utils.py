@@ -28,14 +28,14 @@ CONSTANTS['TEST_RESULTS_FILE'] = os.path.join(CONSTANTS['TEST_DIR'],
 
 CONSTANTS['COL_ORDER'] = [
     'date', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage',
-    'veg_diff', 'precipitation', 'snowfall_o', 'rainfall_o', 'snowpack',
+    'net_pefac', 'precip_to_ground', 'snowfall_o', 'rainfall_o', 'snowpack',
     'snowmelt', 'net_rainfall', 'rapid_runoff_c', 'rapid_runoff',
-    'runoff_recharge', 'macropore', 'perc_in_root', 'rawrew',
-    'tawrew', 'p_smd', 'smd', 'k_s', 'ae', 'unutilized_pe',
+    'runoff_recharge', 'macropore', 'percol_in_root', 'rawrew',
+    'tawrew', 'p_smd', 'smd', 'k_slope', 'ae', 'unutilised_pe',
     'perc_through_root', 'subroot_leak', 'interflow_bypass',
-    'interflow_input', 'interflow_volume', 'infiltration_recharge',
-    'interflow_to_rivers', 'recharge_input', 'recharge_store',
-    'combined_recharge', 'str', 'combined_ae', 'evt', 'average_in',
+    'interflow_store_input', 'interflow_volume', 'infiltration_recharge',
+    'interflow_to_rivers', 'recharge_store_input', 'recharge_store',
+    'combined_recharge', 'combined_str', 'combined_ae', 'evt', 'average_in',
     'average_out', 'balance'
 ]
 

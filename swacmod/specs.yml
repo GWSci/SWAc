@@ -195,7 +195,7 @@ rapid_runoff_zone_mapping:
         - !!python/name:dict
         - !!python/name:int
 
-ror_zone_names:
+rorecharge_zone_names:
     required: true
     default: unspecified
     alt_format: [yml]
@@ -203,7 +203,7 @@ ror_zone_names:
         - !!python/name:dict
         - !!python/name:basestring
 
-ror_zone_mapping:
+rorecharge_zone_mapping:
     required: false
     default: 1
     alt_format: [yml, csv]
@@ -235,7 +235,7 @@ soil_zone_names:
         - !!python/name:dict
         - !!python/name:basestring
 
-land_zone_names:
+landuse_zone_names:
     required: true
     default: unspecified
     alt_format: [yml]
@@ -295,7 +295,7 @@ rapid_runoff_params:
 # Model parameters: Runoff Recharge & Macropore #
 #################################################
 
-recharge_proportion:
+rorecharge_proportion:
     required: false
     default: 0.0
     alt_format: [yml, csv]
@@ -304,7 +304,7 @@ recharge_proportion:
         - !!python/name:list
         - !!python/name:float
 
-recharge_limit:
+rorecharge_limit:
     required: false
     default: 99999
     alt_format: [yml, csv]
@@ -353,7 +353,7 @@ soil_static_params:
         - !!python/name:list
         - !!python/name:float
 
-leakage:
+subsoilzone_leakage_fraction:
     required: false
     default: 0
     alt_format: [yml, csv]
@@ -393,7 +393,7 @@ kc:
         - !!python/name:list
         - !!python/name:float
 
-release_params:
+recharge_attenuation_params:
     required: false
     default: [0, 1, 99999, 0]
     alt_format: [yml, csv]

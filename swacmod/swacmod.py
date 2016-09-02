@@ -18,31 +18,31 @@ def get_output(data, node):
     logging.info('\tRunning model for node %d', node)
 
     data['output'] = {}
-    for function in [m.get_pefac,              # Column E
-                     m.get_canopy_storage,     # Column F
-                     m.get_veg_diff,           # Column G
-                     m.get_precipitation,      # Column H
-                     m.get_snowfall_o,         # Column I
-                     m.get_rainfall_o,         # Column J
-                     m.get_snow,               # Column K-L
-                     m.get_net_rainfall,       # Column M
-                     m.get_rawrew,             # Column S
-                     m.get_tawrew,             # Column T
-                     m.get_ae,                 # Column N-X
-                     m.get_unutilized_pe,      # Column Y
-                     m.get_perc_through_root,  # Column Z
-                     m.get_subroot_leak,       # Column AA
-                     m.get_interflow_bypass,   # Column AB
-                     m.get_interflow_input,    # Column AC
-                     m.get_interflow,          # Column AD-AF
-                     m.get_recharge_input,     # Column AG
-                     m.get_recharge,           # Column AH-AI
-                     m.get_str,                # Column AJ
-                     m.get_combined_ae,        # Column AK
-                     m.get_evt,                # Column AL
-                     m.get_average_in,         # Column AM
-                     m.get_average_out,        # Column AN
-                     m.get_balance]:           # Column AO
+    for function in [m.get_pefac,                  # Column E
+                     m.get_canopy_storage,         # Column F
+                     m.get_net_pefac,              # Column G
+                     m.get_precip_to_ground,       # Column H
+                     m.get_snowfall_o,             # Column I
+                     m.get_rainfall_o,             # Column J
+                     m.get_snow,                   # Column K-L
+                     m.get_net_rainfall,           # Column M
+                     m.get_rawrew,                 # Column S
+                     m.get_tawrew,                 # Column T
+                     m.get_ae,                     # Column N-X
+                     m.get_unutilised_pe,          # Column Y
+                     m.get_perc_through_root,      # Column Z
+                     m.get_subroot_leak,           # Column AA
+                     m.get_interflow_bypass,       # Column AB
+                     m.get_interflow_store_input,  # Column AC
+                     m.get_interflow,              # Column AD-AF
+                     m.get_recharge_store_input,   # Column AG
+                     m.get_recharge,               # Column AH-AI
+                     m.get_combined_str,           # Column AJ
+                     m.get_combined_ae,            # Column AK
+                     m.get_evt,                    # Column AL
+                     m.get_average_in,             # Column AM
+                     m.get_average_out,            # Column AN
+                     m.get_balance]:               # Column AO
 
         columns = function(data, node)
         data['output'].update(columns)
