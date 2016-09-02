@@ -75,8 +75,8 @@ def val_time_periods(data, name):
     """Validate time_periods.
 
     1) type has to be a dictionary of lists of integers
-    2) all node ids have to be present
-    3) values have to lists with 2 elements
+    2) all time ids have to be present
+    3) values have to be lists with 2 elements
     4) start and end times have to be positive
     5) start time has to be smaller than end time
     6) all days are assigned to a time period
@@ -554,7 +554,7 @@ def val_snow_params(data, name):
                  len_list=[3],
                  keys=range(1, tot + 1))
 
-    c.check_values_limits(values=[i for j in snp.values() for i in j],
+    c.check_values_limits(values=[i[0] for i in snp.values()],
                           name='starting_snow_pack',
                           low_l=0,
                           include_low=True)
@@ -879,7 +879,7 @@ def validate_params(data):
 
         param = function.__name__.replace('val_', '')
         function(data, param)
-        logging.info('\t\t"%s" validated', param)
+        logging.debug('\t\t"%s" validated', param)
 
     logging.info('\tDone.')
 
@@ -896,6 +896,6 @@ def validate_series(data):
 
         series = function.__name__.replace('val_', '')
         function(data, series)
-        logging.info('\t\t"%s" validated', series)
+        logging.debug('\t\t"%s" validated', series)
 
     logging.info('\tDone.')

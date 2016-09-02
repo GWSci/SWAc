@@ -4,6 +4,7 @@
 
 # Standard Library
 import os
+import datetime
 
 # Internal modules
 from . import utils as u
@@ -15,7 +16,8 @@ MAPPING = {(int, long): ['an integer', 'integers'],
            dict: ['a dictionary', 'dictionaries'],
            list: ['a list', 'lists'],
            set: ['a set', 'sets'],
-           basestring: ['a string', 'strings']}
+           basestring: ['a string', 'strings'],
+           datetime.datetime: ['a datetime', 'datetimes']}
 
 
 ###############################################################################
@@ -74,18 +76,21 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
 def check_values_limits(values=None, name=None, low_l=None, high_l=None,
                         include_low=False, include_high=False):
     """Check the values are all within two limits."""
-    if low_l and not include_low and not all(i > low_l for i in values):
-        msg = 'Parameter "%s" requires values > %s'
-        raise u.ValidationError(msg % (name, low_l))
-    if low_l and include_low and not all(i >= low_l for i in values):
-        msg = 'Parameter "%s" requires values >= %s'
-        raise u.ValidationError(msg % (name, low_l))
-    if high_l and not include_high and not all(i < high_l for i in values):
-        msg = 'Parameter "%s" requires values < %s'
-        raise u.ValidationError(msg % (name, high_l))
-    if high_l and include_high and not all(i <= high_l for i in values):
-        msg = 'Parameter "%s" requires values <= %s'
-        raise u.ValidationError(msg % (name, high_l))
+    if low_l is not None:
+        if not include_low and not all(i > low_l for i in values):
+            msg = 'Parameter "%s" requires values > %s'
+            raise u.ValidationError(msg % (name, low_l))
+        elif include_low and not all(i >= low_l for i in values):
+            msg = 'Parameter "%s" requires values >= %s'
+            raise u.ValidationError(msg % (name, low_l))
+
+    if high_l is not None:
+        if not include_high and not all(i < high_l for i in values):
+            msg = 'Parameter "%s" requires values < %s'
+            raise u.ValidationError(msg % (name, high_l))
+        elif include_high and not all(i <= high_l for i in values):
+            msg = 'Parameter "%s" requires values <= %s'
+            raise u.ValidationError(msg % (name, high_l))
 
 
 ###############################################################################

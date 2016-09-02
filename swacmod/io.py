@@ -35,6 +35,24 @@ def start_logging(level=logging.INFO):
 
 
 ###############################################################################
+def load_yaml(filein):
+    """Load a YAML file, lowercase its keys."""
+    yml = yaml.load(open(filein, 'r'))
+    try:
+        keys = yml.keys()
+    except AttributeError:
+        return yml
+
+    for key in keys:
+        if not key.islower():
+            new_key = key.lower()
+            value = yml.pop(key)
+            yml[new_key] = value
+
+    return yml
+
+
+###############################################################################
 def dump_output(data, node):
     """Write output to file."""
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], 'output_%d.csv' % node)
@@ -47,7 +65,7 @@ def dump_output(data, node):
             row = []
             for key in u.CONSTANTS['COL_ORDER']:
                 try:
-                    row.append(data['output'][node][key][num])
+                    row.append(data['output'][key][num])
                 except KeyError:
                     continue
             writer.writerow(row)
@@ -57,13 +75,13 @@ def dump_output(data, node):
 def convert_all_yaml_to_csv(specs_file=u.CONSTANTS['SPECS_FILE'],
                             input_dir=u.CONSTANTS['INPUT_DIR']):
     """Convert all YAML files to CSV for parameters that accept this option."""
-    specs = yaml.load(open(specs_file, 'r'))
+    specs = load_yaml(specs_file)
     to_csv = [i for i in specs if 'alt_format' in specs[i] and 'csv' in
               specs[i]['alt_format']]
     for filein in os.listdir(input_dir):
         if filein.endswith('.yml'):
             path = os.path.join(input_dir, filein)
-            loaded = yaml.load(open(path, 'r'))
+            loaded = load_yaml(path)
             param = loaded.items()[0][0]
             if len(loaded.items()) == 1 and param in to_csv:
                 print path
@@ -77,7 +95,7 @@ def convert_one_yaml_to_csv(filein):
     The opposite function is tricky, as CSV reader does not understand types.
     """
     fileout = filein.replace('.yml', '.csv')
-    readin = yaml.load(open(filein, 'r')).items()[0][1]
+    readin = load_yaml(filein).items()[0][1]
 
     with open(fileout, 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
@@ -108,8 +126,8 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                           input_file=u.CONSTANTS['INPUT_FILE'],
                           input_dir=u.CONSTANTS['INPUT_DIR']):
     """Load model specifications, parameters and time series."""
-    specs = yaml.load(open(specs_file, 'r'))
-    params = yaml.load(open(input_file, 'r'))
+    specs = load_yaml(specs_file)
+    params = load_yaml(input_file)
 
     for param in params:
         if isinstance(params[param], str) and 'alt_format' in specs[param]:
@@ -125,7 +143,7 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                 params[param] = dict((row[0], row[1]) for row in reader)
             elif ext == 'yml':
                 try:
-                    params[param] = yaml.load(open(absolute, 'r'))[param]
+                    params[param] = load_yaml(absolute)[param]
                 except (IOError, KeyError) as err:
                     print '---> Validation failed: %s' % err
 

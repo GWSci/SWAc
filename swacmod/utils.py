@@ -7,6 +7,9 @@ import os
 import re
 import logging
 
+# Third Party Libraries
+import psutil
+
 CONSTANTS = {}
 
 CONSTANTS['CODE_DIR'] = os.path.dirname(os.path.abspath(__file__))
@@ -42,6 +45,20 @@ class ValidationError(Exception):
     """General exception for validation errors."""
 
     pass
+
+
+###############################################################################
+def get_ram_usage_for_process(pid=None):
+    """Get memory usage for process given its id.
+
+    If none is given, get memory usage of current process.
+    Returns a float (Mb).
+    """
+    if not pid:
+        pid = os.getpid()
+    process = psutil.Process(pid)
+    mem = process.memory_info()[0] / float(2 ** 20)
+    return mem
 
 
 ###############################################################################

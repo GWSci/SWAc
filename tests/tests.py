@@ -3,7 +3,11 @@
 """SWAcMod tests."""
 
 # Standard Library
+import os
 import unittest
+
+# Third Party Libraries
+import yaml
 
 # Internal modules
 from swacmod import io
@@ -11,20 +15,78 @@ from swacmod import swacmod
 from swacmod import utils as u
 from swacmod import validation as v
 
+##############################################################################
+def generate_test_file(name, num_nodes):
+    """Generate input files for tests."""
+    if num_nodes < 1:
+        print 'Parameter "num_nodes" has to be >= 1.'
+        return
+
+    path = os.path.join(u.CONSTANTS['TEST_INPUT_DIR'], name + '.yml')
+    obj = io.load_yaml(path)
+    comments = [i for i in open(path, 'r').readlines() if i.startswith('#')]
+
+    fileout = open(path, 'w')
+    for comment in comments:
+        fileout.write('%s' % comment)
+
+    fileout.write('%s:\n' % name)
+    for node in range(1, num_nodes+1):
+        fileout.write('    %d: %s\n' % (node, obj[name][1]))
+
+    fileout.close()
+
+
+###############################################################################
+def generate_test_files(num_nodes=10):
+    """Generate input files for tests."""
+    if not isinstance(num_nodes, int) or not num_nodes >= 1:
+        print 'Parameter "num_nodes" has to be >= 1.'
+        return
+
+    for name in ['node_areas', 'reporting_zone_mapping',
+                 'rainfall_zone_mapping', 'pe_zone_mapping',
+                 'temperature_zone_mapping', 'subroot_zone_mapping',
+                 'rapid_runoff_zone_mapping', 'ror_zone_mapping',
+                 'macropore_zone_mapping', 'free_throughfall',
+                 'max_canopy_storage', 'snow_params', 'interflow_params',
+                 'leakage', 'soil_spatial', 'lu_spatial', 'release_params']:
+        generate_test_file(name, num_nodes)
+
+    filein = open(u.CONSTANTS['TEST_INPUT_FILE'], 'r').readlines()
+    fileout = open(u.CONSTANTS['TEST_INPUT_FILE'], 'w')
+    for line in filein:
+        if line.lower().startswith('num_nodes:'):
+            new_line = 'num_nodes: %d\n' % num_nodes
+        else:
+            new_line = line
+        fileout.write(new_line)
+    fileout.close()
+
+
+###############################################################################
+def benchmark():
+    """Run SWAcMod on a log scale of nodes."""
+    print
+    for num_nodes in [1, 10, 100, 1000, 10000]:
+        print 'Running benchmark: %d nodes' % num_nodes
+        generate_test_files(num_nodes=num_nodes)
+        os.system('python -m swacmod.swacmod test')
+    print
 
 ###############################################################################
 class EndToEndTests(unittest.TestCase):
     """Test suite for the SWAcMod project."""
 
-    data = {}
     input_file = u.CONSTANTS['TEST_INPUT_FILE']
     input_dir = u.CONSTANTS['TEST_INPUT_DIR']
     specs, series, params = io.load_params_from_yaml(input_file=input_file,
                                                      input_dir=input_dir)
-    data['specs'], data['series'], data['params'] = specs, series, params
+    data = {'specs': specs,
+            'series': series,
+            'params': params}
 
     ids = range(1, data['params']['num_nodes'] + 1)
-    data['output'] = dict((k, {}) for k in ids)
 
     def test_validate_all(self):
         """Test for validate_all() function."""
@@ -35,10 +97,28 @@ class EndToEndTests(unittest.TestCase):
         self.assertEqual(len(self.data['specs']), 44)
         io.validate_all(self.data)
 
+    def test_val_num_nodes(self):
+        """Test for val_num_nodes() function."""
+        name = 'num_nodes'
+        old = self.data['params'][name]
+        self.data['params'][name] = 1.0
+        self.assertRaises(u.ValidationError, v.val_num_nodes, self.data, name)
+        self.data['params'][name] = -1
+        self.assertRaises(u.ValidationError, v.val_num_nodes, self.data, name)
+        self.data['params'][name] = old
+
+    def test_val_start_date(self):
+        """Test for val_start_date() function."""
+        name = 'start_date'
+        old = self.data['params'][name]
+        self.data['params'][name] = 1.0
+        self.assertRaises(u.ValidationError, v.val_num_nodes, self.data, name)
+        self.data['params'][name] = old
+
     def test_validate_functions(self):
         """Test that all parameters and series have a validation function."""
         funcs = [i.replace('val_', '') for i in dir(v) if i.startswith('val_')]
-        params = io.yaml.load(open(u.CONSTANTS['SPECS_FILE'], 'r')).keys()
+        params = io.load_yaml(u.CONSTANTS['SPECS_FILE']).keys()
         self.assertEqual(set(params), set(funcs))
 
     def test_get_output(self):
@@ -51,16 +131,16 @@ class EndToEndTests(unittest.TestCase):
                     continue
                 self.assertTrue(key in results)
                 self.assertTrue(key in self.data['series'] or
-                                key in self.data['output'][node])
+                                key in self.data['output'])
                 self.assertEqual(len(results) - 1,
-                                 len(self.data['output'][node]) + 2)
+                                 len(self.data['output']) + 2)
                 if key in self.data['series']:
                     if isinstance(self.data['series'][key][0], list):
                         new_list = [i[0] for i in self.data['series'][key]]
                     else:
                         new_list = self.data['series'][key]
                 else:
-                    new_list = self.data['output'][node][key]
+                    new_list = self.data['output'][key]
                 self.assertEqual(len(new_list), len(results[key]))
                 for num, item in enumerate(new_list):
                     try:

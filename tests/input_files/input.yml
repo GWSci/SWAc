@@ -1,9 +1,12 @@
 ###############################################################################
 #                   YAML Configuration file for SWAcMod
 #
+# Variables marked as "This parameter can be disabled" (see "pe_ts") can also
+# contain the value "disabled".
+#
 # Variables marked as "This parameter can accept a path to [extension]"
 # (see "rapid_runoff_params") can also contain a path to a file with that
-# extention in their place.
+# extension in their place.
 #
 # Example, for the "time_period" parameter, this can be:
 #
@@ -55,7 +58,7 @@ log_file:
 
 # Number of nodes in the 2D water accounting model
 # This parameter is required.
-num_nodes: 10
+num_nodes: 1
 
 # Start date for the time series. Can be in format "1/1/1970", "Jan 1, 1970",
 # "1 January 1970", "1970-1-1"... but also in Excel timestamp, e.g. "25569".

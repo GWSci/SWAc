@@ -3,18 +3,21 @@
 """SWAcMod main."""
 
 # Standard Library
+import sys
 import logging
 
 # Internal modules
 from . import io
+from . import utils as u
 from . import model as m
 
 
 ###############################################################################
 def get_output(data, node):
     """Run the model."""
-    logging.info('\tRunning water accounting model for node %d', node)
+    logging.info('\tRunning model for node %d', node)
 
+    data['output'] = {}
     for function in [m.get_pefac,              # Column E
                      m.get_canopy_storage,     # Column F
                      m.get_veg_diff,           # Column G
@@ -42,28 +45,38 @@ def get_output(data, node):
                      m.get_balance]:           # Column AO
 
         columns = function(data, node)
-        data['output'][node].update(columns)
-        logging.info('\t\t"%s()" done', function.__name__)
+        data['output'].update(columns)
+        logging.debug('\t\t"%s()" done', function.__name__)
+
+    logging.info('\tDone.')
 
 
 ###############################################################################
-def run():
+def run(test=False):
     """Main function."""
     io.start_logging()
     logging.info('Start SWAcMod run')
 
     data = {}
-    data['specs'], data['series'], data['params'] = io.load_params_from_yaml()
+    if test:
+        input_file = u.CONSTANTS['TEST_INPUT_FILE']
+        input_dir = u.CONSTANTS['TEST_INPUT_DIR']
+        specs, series, params = io.load_params_from_yaml(input_file=input_file,
+                                                         input_dir=input_dir)
+    else:
+        specs, series, params = io.load_params_from_yaml()
 
+    data['specs'], data['series'], data['params'] = specs, series, params
     ids = range(1, data['params']['num_nodes'] + 1)
-    data['output'] = dict((k, {}) for k in ids)
 
     io.validate_all(data)
     for node in ids:
         if data['params']['reporting_zone_mapping'][node] == 0:
             continue
         get_output(data, node)
-        io.dump_output(data, node)
+        logging.info('RAM usage is %.2fMb', u.get_ram_usage_for_process())
+        if not test:
+            io.dump_output(data, node)
 
     logging.info('End SWAcMod run')
 
@@ -72,4 +85,8 @@ def run():
 
 ###############################################################################
 if __name__ == "__main__":
-    run()
+    try:
+        ARG = (True if sys.argv[1] == 'test' else False)
+    except IndexError:
+        ARG = False
+    run(test=ARG)

@@ -39,7 +39,7 @@ def get_canopy_storage(data, node):
     for num in range(len(series['date'])):
         var1 = series['rainfall_ts'][num][zone_rf] * coef_rf * (1 - ftf)
         var2 = params['max_canopy_storage'][node]
-        var3 = output[node]['pefac'][num]
+        var3 = output['pefac'][num]
         var4 = (var2 if var1 > var2 else var1)
         canopy_storage.append(var3 if var4 > var3 else var4)
 
@@ -53,7 +53,7 @@ def get_veg_diff(data, node):
 
     veg_diff = []
     for num in range(len(series['date'])):
-        var1 = output[node]['pefac'][num] - output[node]['canopy_storage'][num]
+        var1 = output['pefac'][num] - output['canopy_storage'][num]
         veg_diff.append(var1)
 
     return {'veg_diff': veg_diff}
@@ -69,7 +69,7 @@ def get_precipitation(data, node):
     precipitation = []
     for num in range(len(series['date'])):
         var1 = series['rainfall_ts'][num][zone_rf] * coef_rf
-        var2 = var1 - output[node]['canopy_storage'][num]
+        var2 = var1 - output['canopy_storage'][num]
         precipitation.append(var2)
 
     return {'precipitation': precipitation}
@@ -89,7 +89,7 @@ def get_snowfall_o(data, node):
         var2 = sfd - smd
         var3 = 1 - (math.exp(- var1 / var2))**2
         var4 = (0 if var3 > 0 else var3)
-        var5 = (1 if -var4 > 1 else -var4) * output[node]['precipitation'][num]
+        var5 = (1 if -var4 > 1 else -var4) * output['precipitation'][num]
         snowfall_o.append(var5)
 
     return {'snowfall_o': snowfall_o}
@@ -102,8 +102,8 @@ def get_rainfall_o(data, node):
 
     rainfall_o = []
     for num in range(len(series['date'])):
-        var1 = output[node]['precipitation'][num]
-        var2 = output[node]['snowfall_o'][num]
+        var1 = output['precipitation'][num]
+        var2 = output['snowfall_o'][num]
         rainfall_o.append(var1 - var2)
 
     return {'rainfall_o': rainfall_o}
@@ -133,7 +133,7 @@ def get_snow(data, node):
         var5 = 1 - (math.exp(- var3 / var4))**2
         col['snowmelt'][num] = var2 * (0 if var5 < 0 else var5)
         col['snowpack'][num] = var2
-        col['snowpack'][num] += output[node]['snowfall_o'][num]
+        col['snowpack'][num] += output['snowfall_o'][num]
         col['snowpack'][num] -= col['snowmelt'][num]
 
     return col
@@ -146,7 +146,7 @@ def get_net_rainfall(data, node):
 
     net_rainfall = []
     for num in range(len(series['date'])):
-        var1 = output[node]['snowmelt'][num] + output[node]['rainfall_o'][num]
+        var1 = output['snowmelt'][num] + output['rainfall_o'][num]
         net_rainfall.append(var1)
 
     return {'net_rainfall': net_rainfall}
@@ -213,7 +213,7 @@ def get_ae(data, node):
     for num in range(len(series['date'])):
         var0 = (col['p_smd'][num-1] if num > 0 else ssmd)
         var1 = (col['smd'][num-1] if num > 0 else ssmd)
-        var2 = output[node]['net_rainfall'][num]
+        var2 = output['net_rainfall'][num]
         cond1 = var1 > (class_smd[-1] - 1)
         cond2 = var2 > (class_ri[-1] - 1)
         if cond1 or cond2:
@@ -222,7 +222,7 @@ def get_ae(data, node):
             var3 = len([i for i in class_ri if i < var2])
             var4 = len([i for i in class_smd if i < var1])
             col['rapid_runoff_c'][num] = values[var3][var4]
-        var5 = output[node]['net_rainfall'][num] * col['rapid_runoff_c'][num]
+        var5 = output['net_rainfall'][num] * col['rapid_runoff_c'][num]
         col['rapid_runoff'][num] = (0 if var2 < 0 else var5)
         var6 = series['date'][num].month
         var7 = prop[var6][zone_ror] * col['rapid_runoff'][num]
@@ -236,25 +236,25 @@ def get_ae(data, node):
         col['perc_in_root'][num] -= col['rapid_runoff'][num]
         col['perc_in_root'][num] -= col['macropore'][num]
         col['smd'][num] = (var0 if var0 > 0 else 0.0)
-        if col['perc_in_root'][num] > output[node]['veg_diff'][num]:
+        if col['perc_in_root'][num] > output['veg_diff'][num]:
             var11 = -1
         else:
-            var12 = (output[node]['tawrew'][num] - col['smd'][num]) / \
-                    (output[node]['tawrew'][num] - output[node]['rawrew'][num])
+            var12 = (output['tawrew'][num] - col['smd'][num]) / \
+                    (output['tawrew'][num] - output['rawrew'][num])
             if var12 >= 1:
                 var11 = 1
             else:
                 var11 = (var12 if var12 >= 0 else 0.0)
         col['k_s'][num] = var11
-        cond3 = col['smd'][num] < output[node]['rawrew'][num]
-        cond4 = col['perc_in_root'][num] > output[node]['veg_diff'][num]
+        cond3 = col['smd'][num] < output['rawrew'][num]
+        cond4 = col['perc_in_root'][num] > output['veg_diff'][num]
         if cond3 or cond4:
-            var13 = output[node]['veg_diff'][num]
+            var13 = output['veg_diff'][num]
         else:
-            cond5 = col['smd'][num] >= output[node]['rawrew'][num]
-            cond6 = col['smd'][num] <= output[node]['tawrew'][num]
+            cond5 = col['smd'][num] >= output['rawrew'][num]
+            cond6 = col['smd'][num] <= output['tawrew'][num]
             if cond5 and cond6:
-                var14 = (output[node]['veg_diff'][num] -
+                var14 = (output['veg_diff'][num] -
                          col['perc_in_root'][num])
                 var13 = col['perc_in_root'][num] + col['k_s'][num] * var14
             else:
@@ -273,7 +273,7 @@ def get_unutilized_pe(data, node):
 
     unutilized_pe = []
     for num in range(len(series['date'])):
-        var1 = output[node]['veg_diff'][num] - output[node]['ae'][num]
+        var1 = output['veg_diff'][num] - output['ae'][num]
         var2 = (0 if var1 < 0 else var1)
         unutilized_pe.append(var2)
 
@@ -287,7 +287,7 @@ def get_perc_through_root(data, node):
 
     perc_through_root = []
     for num in range(len(series['date'])):
-        var1 = output[node]['p_smd'][num]
+        var1 = output['p_smd'][num]
         var2 = (-var1 if var1 < 0 else 0)
         perc_through_root.append(var2)
 
@@ -317,8 +317,8 @@ def get_interflow_bypass(data, node):
 
     interflow_bypass = []
     for num in range(len(series['date'])):
-        var1 = output[node]['perc_through_root'][num]
-        var1 += output[node]['subroot_leak'][num]
+        var1 = output['perc_through_root'][num]
+        var1 += output['subroot_leak'][num]
         var2 = params['interflow_params'][node][1] * var1
         interflow_bypass.append(var2)
 
@@ -332,9 +332,9 @@ def get_interflow_input(data, node):
 
     interflow_input = []
     for num in range(len(series['date'])):
-        var1 = output[node]['perc_through_root'][num]
-        var1 += output[node]['subroot_leak'][num]
-        var2 = var1 - output[node]['interflow_bypass'][num]
+        var1 = output['perc_through_root'][num]
+        var1 += output['subroot_leak'][num]
+        var2 = var1 - output['interflow_bypass'][num]
         interflow_input.append(var2)
 
     return {'interflow_input': interflow_input}
@@ -360,7 +360,7 @@ def get_interflow(data, node):
     var8 = params['interflow_params'][node][3]
 
     for num in range(len(series['date'])):
-        var1 = (output[node]['interflow_input'][num-1] if num > 0 else 0.0)
+        var1 = (output['interflow_input'][num-1] if num > 0 else 0.0)
         var2 = (col['interflow_volume'][num-1] if num > 0 else var0)
         var3 = (col['infiltration_recharge'][num-1] if num > 0 else 0.0)
         var4 = (col['interflow_to_rivers'][num-1] if num > 0 else 0.0)
@@ -380,10 +380,10 @@ def get_recharge_input(data, node):
 
     recharge_input = []
     for num in range(len(series['date'])):
-        var1 = output[node]['infiltration_recharge'][num]
-        var1 += output[node]['interflow_bypass'][num]
-        var1 += output[node]['macropore'][num]
-        var1 += output[node]['runoff_recharge'][num]
+        var1 = output['infiltration_recharge'][num]
+        var1 += output['interflow_bypass'][num]
+        var1 += output['macropore'][num]
+        var1 += output['runoff_recharge'][num]
         recharge_input.append(var1)
 
     return {'recharge_input': recharge_input}
@@ -408,7 +408,7 @@ def get_recharge(data, node):
 
     for num in range(len(series['date'])):
         var1 = (col['recharge_store'][num-1] if num > 0 else irs)
-        var2 = (output[node]['recharge_input'][num-1] if num > 0 else 0.0)
+        var2 = (output['recharge_input'][num-1] if num > 0 else 0.0)
         var3 = (col['combined_recharge'][num-1] if num > 0 else 0.0)
         col['recharge_store'][num] = var1 + var2 - var3
         var4 = col['recharge_store'][num] * rlp
@@ -424,9 +424,9 @@ def get_str(data, node):
 
     out_str = []
     for num in range(len(series['date'])):
-        var1 = output[node]['interflow_to_rivers'][num]
-        var1 += output[node]['rapid_runoff'][num]
-        var1 -= output[node]['runoff_recharge'][num]
+        var1 = output['interflow_to_rivers'][num]
+        var1 += output['rapid_runoff'][num]
+        var1 -= output['runoff_recharge'][num]
         out_str.append(var1)
 
     return {'str': out_str}
@@ -439,7 +439,7 @@ def get_combined_ae(data, node):
 
     combined_ae = []
     for num in range(len(series['date'])):
-        var1 = output[node]['canopy_storage'][num] + output[node]['ae'][num]
+        var1 = output['canopy_storage'][num] + output['ae'][num]
         combined_ae.append(var1)
 
     return {'combined_ae': combined_ae}
@@ -450,7 +450,7 @@ def get_evt(data, node):
     """AL) EVT: Unitilised PE [mm/d]."""
     output = data['output']
 
-    return {'evt': output[node]['unutilized_pe']}
+    return {'evt': output['unutilized_pe']}
 
 
 ###############################################################################
@@ -463,7 +463,7 @@ def get_average_in(data, node):
     average_in = []
     for num in range(len(series['date'])):
         var1 = series['rainfall_ts'][num][zone_rf] * coef_rf
-        var1 += output[node]['subroot_leak'][num]
+        var1 += output['subroot_leak'][num]
         average_in.append(var1)
 
     return {'average_in': average_in}
@@ -476,10 +476,10 @@ def get_average_out(data, node):
 
     average_out = []
     for num in range(len(series['date'])):
-        var1 = output[node]['str'][num]
-        var1 += output[node]['combined_recharge'][num]
-        var1 += output[node]['ae'][num]
-        var1 += output[node]['canopy_storage'][num]
+        var1 = output['str'][num]
+        var1 += output['combined_recharge'][num]
+        var1 += output['ae'][num]
+        var1 += output['canopy_storage'][num]
         average_out.append(var1)
     return {'average_out': average_out}
 
@@ -491,8 +491,8 @@ def get_balance(data, node):
 
     balance = []
     for num in range(len(series['date'])):
-        var1 = output[node]['average_in'][num]
-        var1 -= output[node]['average_out'][num]
+        var1 = output['average_in'][num]
+        var1 -= output['average_out'][num]
         balance.append(var1)
 
     return {'balance': balance}
