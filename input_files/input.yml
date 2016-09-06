@@ -55,7 +55,7 @@ log_file:
 
 # Number of nodes in the 2D water accounting model
 # This parameter is required.
-num_nodes: 10
+num_nodes: 1
 
 # Start date for the time series. Has to be in format "YYYY-MM-DD".
 # This parameter is required.
@@ -75,15 +75,18 @@ time_periods: time_periods.yml
 # This parameter can accept a path to YAML or CSV
 rainfall_ts: rainfall_ts.yml
 
-# This parameter is required.
+# This parameter is optional.
+# This parameter is required only if the FAO or the Canopy process is enabled.
 # This parameter can accept a path to YAML or CSV
 pe_ts: pe_ts.yml
 
 # This parameter is required.
+# This parameter is required only if the Snow process is enabled.
 # This parameter can accept a path to YAML or CSV
 temperature_ts: temperature_ts.yml
 
 # This parameter is required.
+# This parameter is required only if the Leakage process is enabled.
 # This parameter can accept a path to YAML or CSV
 subroot_leakage_ts: subroot_leakage_ts.yml
 
@@ -187,9 +190,14 @@ soil_zone_names: soil_zone_names.yml
 # This parameter can accept a path to YAML or CSV
 landuse_zone_names: landuse_zone_names.yml
 
-#####################################################
-# Model parameters: Canopy interception and storage #
-#####################################################
+
+############################################
+# Process: Canopy interception and storage #
+############################################
+
+# Canopy process: can be either "enabled" or "disabled"
+# This parameter is required
+canopy_process: disabled
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
@@ -200,18 +208,26 @@ free_throughfall: free_throughfall.yml
 max_canopy_storage: max_canopy_storage.yml
 
 
-##########################
-# Model parameters: Snow #
-##########################
+#################
+# Process: Snow #
+#################
+
+# Snow process: can be either "enabled" or "disabled"
+# This parameter is required
+snow_process: disabled
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 snow_params: snow_params.yml
 
 
-##################################
-# Model parameters: Rapid Runoff #
-##################################
+#######################################################
+# Process: Proportion of rainfall converted to Runoff #
+#######################################################
+
+# Rapid runoff process: can be either "enabled" or "disabled"
+# This parameter is required
+rapid_runoff_process: enabled
 
 # Proportion of rainfall converted to runoff.
 # This parameter is optional
@@ -219,9 +235,13 @@ snow_params: snow_params.yml
 rapid_runoff_params: rapid_runoff_params.yml
 
 
-#################################################
-# Model parameters: Runoff Recharge & Macropore #
-#################################################
+############################
+# Process: Runoff Recharge #
+############################
+
+# Runoff Recharge process: can be either "enabled" or "disabled"
+# This parameter is required
+rorecharge_process: enabled
 
 # Runoff Recharge Proportion of RO
 # This parameter is optional
@@ -232,6 +252,15 @@ rorecharge_proportion: rorecharge_proportion.yml
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 rorecharge_limit: rorecharge_limit.yml
+
+
+######################
+# Process: Macropore #
+######################
+
+# Macropore process: can be either "enabled" or "disabled"
+# This parameter is required
+macropore_process: enabled
 
 # MacroPore: Proportion of Percolating Water Bypassing Root Zone
 # and Interflow [mm]
@@ -245,25 +274,18 @@ macropore_proportion: macropore_proportion.yml
 macropore_limit: macropore_limit.yml
 
 
-###############################
-# Model parameters: Interflow #
-###############################
+###################################
+# Process: FAO: SMD-AE Accounting #
+###################################
 
-# Interflow parameters (Initial interflow store, Store bypass, Infiltration,
-#                       Interflow to rivers )
-# This parameter is optional
-# This parameter can accept a path to YAML or CSV
-interflow_params: interflow_params.yml
+# FAO process: can be either "enabled" or "disabled"
+# This parameter is required
+fao_process: enabled
 
 # Soil Properties (FC, WP, p, starting SMD)
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 soil_static_params: soil_static_params.yml
-
-# Fraction of leakage to Permit
-# This parameter is optional
-# This parameter can accept a path to YAML or CSV
-subsoilzone_leakage_fraction: subsoilzone_leakage_fraction.yml
 
 # Soil Spatial
 # This parameter is optional
@@ -284,6 +306,44 @@ zr: zr.yml
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 kc: kc.yml
+
+
+############################################
+# Process: Percentage of leakage to Permit #
+############################################
+
+# Leakage process: can be either "enabled" or "disabled"
+# This parameter is required
+leakage_process: enabled
+
+# Fraction of leakage to Permit
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+subsoilzone_leakage_fraction: subsoilzone_leakage_fraction.yml
+
+
+######################
+# Process: Interflow #
+######################
+
+# Interflow process: can be either "enabled" or "disabled"
+# This parameter is required
+interflow_process: disabled
+
+# Interflow parameters (Initial interflow store, Store bypass, Infiltration,
+#                       Interflow to rivers )
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+interflow_params: interflow_params.yml
+
+
+###############################################
+# Process: Recharge Release to Saturated Zone #
+###############################################
+
+# Interflow process: can be either "enabled" or "disabled"
+# This parameter is required
+recharge_attenuation_process: enabled
 
 # Recharge Parameters
 # This parameter is optional

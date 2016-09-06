@@ -493,6 +493,24 @@ def val_landuse_zone_names(data, name):
 
 
 ###############################################################################
+def val_canopy_process(data, name):
+    """Validate canopy_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    cpr = data['params'][name]
+
+    c.check_type(param=cpr,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[cpr],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
 def val_free_throughfall(data, name):
     """Validate free_throughfall.
 
@@ -537,6 +555,24 @@ def val_max_canopy_storage(data, name):
 
 
 ###############################################################################
+def val_snow_process(data, name):
+    """Validate snow_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    spr = data['params'][name]
+
+    c.check_type(param=spr,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[spr],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
 def val_snow_params(data, name):
     """Validate snow_params.
 
@@ -558,6 +594,24 @@ def val_snow_params(data, name):
                           name='starting_snow_pack',
                           low_l=0,
                           include_low=True)
+
+
+###############################################################################
+def val_rapid_runoff_process(data, name):
+    """Validate rapid_runoff_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    rrp = data['params'][name]
+
+    c.check_type(param=rrp,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[rrp],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
 
 
 ###############################################################################
@@ -600,6 +654,24 @@ def val_rapid_runoff_params(data, name):
 
 
 ###############################################################################
+def val_rorecharge_process(data, name):
+    """Validate rorecharge_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    rop = data['params'][name]
+
+    c.check_type(param=rop,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[rop],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
 def val_rorecharge_proportion(data, name):
     """Validate rorecharge_proportion.
 
@@ -636,6 +708,24 @@ def val_rorecharge_limit(data, name):
 
 
 ###############################################################################
+def val_macropore_process(data, name):
+    """Validate macropore_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    mpp = data['params'][name]
+
+    c.check_type(param=mpp,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[mpp],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
 def val_macropore_proportion(data, name):
     """Validate macropore_proportion.
 
@@ -669,6 +759,42 @@ def val_macropore_limit(data, name):
                  t_types=data['specs'][name]['type'],
                  len_list=[len(mzn)],
                  keys=range(1, 13))
+
+
+###############################################################################
+def val_fao_process(data, name):
+    """Validate fao_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    fao = data['params'][name]
+
+    c.check_type(param=fao,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[fao],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
+def val_interflow_process(data, name):
+    """Validate interflow_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    ifp = data['params'][name]
+
+    c.check_type(param=ifp,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[ifp],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
 
 
 ###############################################################################
@@ -711,6 +837,24 @@ def val_soil_static_params(data, name):
                  t_types=data['specs'][name]['type'],
                  len_list=[len(szn)],
                  keys=['FC', 'WP', 'p', 'starting_SMD'])
+
+
+###############################################################################
+def val_leakage_process(data, name):
+    """Validate leakage_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    lep = data['params'][name]
+
+    c.check_type(param=lep,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[lep],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
 
 
 ###############################################################################
@@ -814,6 +958,24 @@ def val_kc(data, name):
 
 
 ###############################################################################
+def val_recharge_attenuation_process(data, name):
+    """Validate interflow_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    rap = data['params'][name]
+
+    c.check_type(param=rap,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[rap],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
 def val_recharge_attenuation_params(data, name):
     """Validate recharge_attenuation_params.
 
@@ -860,21 +1022,30 @@ def validate_params(data):
                      val_macropore_zone_mapping,
                      val_soil_zone_names,
                      val_landuse_zone_names,
+                     val_canopy_process,
                      val_free_throughfall,
                      val_max_canopy_storage,
+                     val_snow_process,
                      val_snow_params,
+                     val_rapid_runoff_process,
                      val_rapid_runoff_params,
+                     val_rorecharge_process,
                      val_rorecharge_proportion,
                      val_rorecharge_limit,
+                     val_macropore_process,
                      val_macropore_proportion,
                      val_macropore_limit,
-                     val_interflow_params,
+                     val_fao_process,
                      val_soil_static_params,
-                     val_subsoilzone_leakage_fraction,
                      val_soil_spatial,
                      val_lu_spatial,
                      val_zr,
                      val_kc,
+                     val_leakage_process,
+                     val_subsoilzone_leakage_fraction,
+                     val_interflow_process,
+                     val_interflow_params,
+                     val_recharge_attenuation_process,
                      val_recharge_attenuation_params]:
 
         param = function.__name__.replace('val_', '')

@@ -2,13 +2,14 @@
 #                   YAML Specification file for SWAcMod
 #
 #  Every parameter in the root object can have 4 attributes:
-#  1) "required":   boolean, if true the parameter is required, otherwise it's
-#                   optional
-#  2) "default":    value in case an optional parameter is not specified
-#  3) "alt_format": list of alternative formats accepted for that parameter
-#                   (can be [yml], [csv] or both)
-#  4) "type":       hierarchical list of python types
-#                   (e.g. [dict, str] means "dictionary of strings")
+#  1) "required":    boolean, if true the parameter is required, otherwise it's
+#                    optional
+#  2) "default":     value in case an optional parameter is not specified
+#  3) "alt_format":  list of alternative formats accepted for that parameter
+#                    (can be [yml], [csv] or both)
+#  4) "type":        hierarchical list of python types
+#                    (e.g. [dict, str] means "dictionary of strings")
+#  5) "constraints": list of values that the parameter is allowed to have
 #
 ###############################################################################
 
@@ -26,7 +27,7 @@ log_file:
     required: false
     default: "{run_name}.log"
     type:
-        -!!python/name:str
+        - !!python/name:str
 
 
 #####################
@@ -243,9 +244,16 @@ landuse_zone_names:
         - !!python/name:dict
         - !!python/name:basestring
 
-#####################################################
-# Model parameters: Canopy interception and storage #
-#####################################################
+
+############################################
+# Process: Canopy interception and storage #
+############################################
+
+canopy_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
 
 free_throughfall:
     required: false
@@ -264,9 +272,15 @@ max_canopy_storage:
         - !!python/name:float
 
 
-##########################
-# Model parameters: Snow #
-##########################
+#################
+# Process: Snow #
+#################
+
+snow_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
 
 snow_params:
     required: true
@@ -277,9 +291,15 @@ snow_params:
         - !!python/name:float
 
 
-##################################
-# Model parameters: Rapid Runoff #
-##################################
+#######################################################
+# Process: Proportion of rainfall converted to Runoff #
+#######################################################
+
+rapid_runoff_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
 
 rapid_runoff_params:
     required: false
@@ -291,9 +311,15 @@ rapid_runoff_params:
         - !!python/name:list
 
 
-#################################################
-# Model parameters: Runoff Recharge & Macropore #
-#################################################
+############################
+# Process: Runoff Recharge #
+############################
+
+rorecharge_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
 
 rorecharge_proportion:
     required: false
@@ -312,6 +338,17 @@ rorecharge_limit:
         - !!python/name:dict
         - !!python/name:list
         - !!python/name:float
+
+
+######################
+# Process: Macropore #
+######################
+
+macropore_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
 
 macropore_proportion:
     required: false
@@ -332,18 +369,15 @@ macropore_limit:
         - !!python/name:float
 
 
-###############################
-# Model parameters: Interflow #
-###############################
+###################################
+# Process: FAO: SMD-AE Accounting #
+###################################
 
-interflow_params:
-    required: false
-    default: [0, 1, 99999, 0]
-    alt_format: [yml, csv]
+fao_process:
+    required: true
     type:
-        - !!python/name:dict
-        - !!python/name:list
-        - !!python/name:float
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
 
 soil_static_params:
     required: true
@@ -351,14 +385,6 @@ soil_static_params:
     type:
         - !!python/name:dict
         - !!python/name:list
-        - !!python/name:float
-
-subsoilzone_leakage_fraction:
-    required: false
-    default: 0
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:dict
         - !!python/name:float
 
 soil_spatial:
@@ -392,6 +418,56 @@ kc:
         - !!python/name:dict
         - !!python/name:list
         - !!python/name:float
+
+
+############################################
+# Process: Percentage of leakage to Permit #
+############################################
+
+leakage_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+subsoilzone_leakage_fraction:
+    required: false
+    default: 0
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+
+###############################
+# Model parameters: Interflow #
+###############################
+
+interflow_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+interflow_params:
+    required: false
+    default: [0, 1, 99999, 0]
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+
+###############################################
+# Process: Recharge Release to Saturated Zone #
+###############################################
+
+recharge_attenuation_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
 
 recharge_attenuation_params:
     required: false

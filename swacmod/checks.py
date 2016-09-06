@@ -74,7 +74,8 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
 
 ###############################################################################
 def check_values_limits(values=None, name=None, low_l=None, high_l=None,
-                        include_low=False, include_high=False):
+                        include_low=False, include_high=False,
+                        constraints=None):
     """Check the values are all within two limits."""
     if low_l is not None:
         if not include_low and not all(i > low_l for i in values):
@@ -91,6 +92,11 @@ def check_values_limits(values=None, name=None, low_l=None, high_l=None,
         elif include_high and not all(i <= high_l for i in values):
             msg = 'Parameter "%s" requires values <= %s'
             raise u.ValidationError(msg % (name, high_l))
+
+    if constraints is not None:
+        if not all(i in constraints for i in values):
+            msg = 'Parameter "%s" requires to be one in %s'
+            raise u.ValidationError(msg % (name, constraints))
 
 
 ###############################################################################

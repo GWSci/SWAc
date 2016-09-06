@@ -96,11 +96,11 @@ class EndToEndTests(unittest.TestCase):
 
     def test_validate_all(self):
         """Test for validate_all() function."""
-        for key in self.data['series'].keys() + self.data['params'].keys():
+        all_keys = self.data['series'].keys() + self.data['params'].keys()
+        for key in all_keys:
             if key in ['date', 'TAW', 'RAW']:
                 continue
             self.assertTrue(key in self.data['specs'])
-        self.assertEqual(len(self.data['specs']), 44)
         io.validate_all(self.data)
 
     def test_val_num_nodes(self):
