@@ -4,12 +4,11 @@
 #  Every parameter in the root object can have 4 attributes:
 #  1) "required":    boolean, if true the parameter is required, otherwise it's
 #                    optional
-#  2) "default":     value in case an optional parameter is not specified
-#  3) "alt_format":  list of alternative formats accepted for that parameter
+#  2) "alt_format":  list of alternative formats accepted for that parameter
 #                    (can be [yml], [csv] or both)
-#  4) "type":        hierarchical list of python types
+#  3) "type":        hierarchical list of python types
 #                    (e.g. [dict, str] means "dictionary of strings")
-#  5) "constraints": list of values that the parameter is allowed to have
+#  4) "constraints": list of values that the parameter is allowed to have
 #
 ###############################################################################
 
@@ -25,7 +24,6 @@ run_name:
 
 log_file:
     required: false
-    default: "{run_name}.log"
     type:
         - !!python/name:str
 
@@ -66,7 +64,7 @@ rainfall_ts:
         - !!python/name:float
 
 pe_ts:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:list
@@ -74,7 +72,7 @@ pe_ts:
         - !!python/name:float
 
 temperature_ts:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:list
@@ -82,7 +80,7 @@ temperature_ts:
         - !!python/name:float
 
 subroot_leakage_ts:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:list
@@ -102,8 +100,7 @@ node_areas:
         - !!python/name:float
 
 reporting_zone_names:
-    required: true
-    default: unspecified
+    required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -111,15 +108,13 @@ reporting_zone_names:
 
 reporting_zone_mapping:
     required: false
-    default: 1
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
         - !!python/name:int
 
 rainfall_zone_names:
-    required: true
-    default: unspecified
+    required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -134,8 +129,7 @@ rainfall_zone_mapping:
         - !!python/name:float
 
 pe_zone_names:
-    required: true
-    default: unspecified
+    required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -150,8 +144,7 @@ pe_zone_mapping:
         - !!python/name:float
 
 temperature_zone_names:
-    required: true
-    default: unspecified
+    required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -165,8 +158,7 @@ temperature_zone_mapping:
         - !!python/name:float
 
 subroot_zone_names:
-    required: true
-    default: unspecified
+    required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -181,8 +173,7 @@ subroot_zone_mapping:
         - !!python/name:float
 
 rapid_runoff_zone_names:
-    required: true
-    default: unspecified
+    required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -190,7 +181,6 @@ rapid_runoff_zone_names:
 
 rapid_runoff_zone_mapping:
     required: false
-    default:
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -198,7 +188,6 @@ rapid_runoff_zone_mapping:
 
 rorecharge_zone_names:
     required: true
-    default: unspecified
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -206,7 +195,6 @@ rorecharge_zone_names:
 
 rorecharge_zone_mapping:
     required: false
-    default: 1
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -214,7 +202,6 @@ rorecharge_zone_mapping:
 
 macropore_zone_names:
     required: true
-    default: unspecified
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -222,7 +209,6 @@ macropore_zone_names:
 
 macropore_zone_mapping:
     required: false
-    default: 1
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -230,7 +216,6 @@ macropore_zone_mapping:
 
 soil_zone_names:
     required: true
-    default: unspecified
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -238,7 +223,6 @@ soil_zone_names:
 
 landuse_zone_names:
     required: true
-    default: unspecified
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -257,7 +241,6 @@ canopy_process:
 
 free_throughfall:
     required: false
-    default: 1.0
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -265,7 +248,6 @@ free_throughfall:
 
 max_canopy_storage:
     required: false
-    default: 0.0
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -283,7 +265,7 @@ snow_process:
     constraints: ["enabled", "disabled"]
 
 snow_params:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -303,7 +285,6 @@ rapid_runoff_process:
 
 rapid_runoff_params:
     required: false
-    default: 0
     alt_format: [yml]
     type:
         - !!python/name:list
@@ -323,7 +304,6 @@ rorecharge_process:
 
 rorecharge_proportion:
     required: false
-    default: 0.0
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -332,7 +312,6 @@ rorecharge_proportion:
 
 rorecharge_limit:
     required: false
-    default: 99999
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -352,7 +331,6 @@ macropore_process:
 
 macropore_proportion:
     required: false
-    default: 0.0
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -361,7 +339,6 @@ macropore_proportion:
 
 macropore_limit:
     required: false
-    default: 99999
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -380,7 +357,7 @@ fao_process:
     constraints: ["enabled", "disabled"]
 
 soil_static_params:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -388,7 +365,7 @@ soil_static_params:
         - !!python/name:float
 
 soil_spatial:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -396,7 +373,7 @@ soil_spatial:
         - !!python/name:float
 
 lu_spatial:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -404,7 +381,7 @@ lu_spatial:
         - !!python/name:float
 
 zr:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -412,7 +389,7 @@ zr:
         - !!python/name:float
 
 kc:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -432,7 +409,6 @@ leakage_process:
 
 subsoilzone_leakage_fraction:
     required: false
-    default: 0
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -451,7 +427,6 @@ interflow_process:
 
 interflow_params:
     required: false
-    default: [0, 1, 99999, 0]
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -471,7 +446,6 @@ recharge_attenuation_process:
 
 recharge_attenuation_params:
     required: false
-    default: [0, 1, 99999, 0]
     alt_format: [yml, csv]
     type:
         - !!python/name:dict

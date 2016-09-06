@@ -4,7 +4,6 @@
 
 # Standard Library
 import os
-import re
 import logging
 
 # Third Party Libraries
@@ -59,18 +58,6 @@ def get_ram_usage_for_process(pid=None):
     process = psutil.Process(pid)
     mem = process.memory_info()[0] / float(2 ** 20)
     return mem
-
-
-###############################################################################
-def normalize_default_value(data, param):
-    """Normalize default value for a parameter."""
-    default = data['specs'][param]['default']
-    pattern = re.findall(r'\{.*?\}', default)
-    if pattern:
-        new_value = re.sub(r'[\{\}]', '', pattern[0])
-        data['params'][param] = re.sub(pattern[0], data['params'][new_value],
-                                       default)
-        logging.info('\t\tDefaulted "%s" to %s', param, data['params'][param])
 
 
 ###############################################################################

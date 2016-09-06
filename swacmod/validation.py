@@ -39,6 +39,10 @@ def val_log_file(data, name):
     1) path has to be absolute, convert it otherwise
     """
     log = data['params'][name]
+    if log is None:
+        log = '%s.log' % data['params']['run_name']
+        logging.info('\t\tDefaulted "%s" to "%s"', name, log)
+
     data['params'][name] = c.check_path(path=log)
     if data['params'][name] != log:
         logging.info('\t\tNormalized "%s" path to %s', name,
@@ -520,6 +524,9 @@ def val_free_throughfall(data, name):
     """
     fth = data['params'][name]
     tot = data['params']['num_nodes']
+    if fth is None:
+        fth = dict((k, 1.0) for k in range(1, tot + 1))
+        logging.info('\t\tDefaulted "%s" to 1.0', name)
 
     c.check_type(param=fth,
                  name=name,
@@ -542,6 +549,9 @@ def val_max_canopy_storage(data, name):
     """
     mcs = data['params'][name]
     tot = data['params']['num_nodes']
+    if mcs is None:
+        mcs = dict((k, 0.0) for k in range(1, tot + 1))
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
     c.check_type(param=mcs,
                  name=name,
@@ -681,6 +691,9 @@ def val_rorecharge_proportion(data, name):
     """
     rrp = data['params'][name]
     rzn = data['params']['rorecharge_zone_names']
+    if rrp is None:
+        rrp = dict((k, [0.0 for _ in range(len(rzn))]) for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
     c.check_type(param=rrp,
                  name=name,
@@ -699,6 +712,9 @@ def val_rorecharge_limit(data, name):
     """
     rrl = data['params'][name]
     rzn = data['params']['rorecharge_zone_names']
+    if rrl is None:
+        rrl = dict((k, [99999 for _ in range(len(rzn))]) for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to 99999', name)
 
     c.check_type(param=rrl,
                  name=name,
@@ -735,6 +751,9 @@ def val_macropore_proportion(data, name):
     """
     mpp = data['params'][name]
     mzn = data['params']['macropore_zone_names']
+    if mpp is None:
+        mpp = dict((k, [0.0 for _ in range(len(mzn))]) for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
     c.check_type(param=mpp,
                  name=name,
@@ -753,6 +772,9 @@ def val_macropore_limit(data, name):
     """
     mpl = data['params'][name]
     mzn = data['params']['macropore_zone_names']
+    if mpl is None:
+        mpl = dict((k, [99999 for _ in range(len(mzn))]) for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to 99999', name)
 
     c.check_type(param=mpl,
                  name=name,
@@ -777,6 +799,175 @@ def val_fao_process(data, name):
     c.check_values_limits(values=[fao],
                           name=name,
                           constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
+def val_soil_static_params(data, name):
+    """Validate soil_static_params.
+
+    1) type has to be a dictionary of lists of floats
+    2) values have to be lists with length equal to the number of zones
+    3) dictionary needs 4 keys: FC, WP, p, starting_SMD
+    """
+    ssp = data['params'][name]
+    if ssp is None:
+        data['params']['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
+        return
+
+    szn = data['params']['soil_zone_names']
+
+    c.check_type(param=ssp,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(szn)],
+                 keys=['FC', 'WP', 'p', 'starting_SMD'])
+
+
+###############################################################################
+def val_soil_spatial(data, name):
+    """Validate soil_spatial.
+
+    1) type has to be a dictionary of lists of floats
+    2) all node ids have to be present
+    3) values have to be lists with length equal to the number of zones
+    4) the sum of each row has to be 1.0
+    """
+    sos = data['params'][name]
+    if sos is None:
+        data['params']['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
+        return
+
+    soz = data['params']['soil_zone_names']
+    tot = data['params']['num_nodes']
+
+    c.check_type(param=sos,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 keys=range(1, tot + 1),
+                 len_list=[len(soz)])
+
+    if not all(sum(i) == 1.0 for i in sos.values()):
+        msg = 'Parameter "%s" requires the sum of its values to be 1.0'
+        raise u.ValidationError(msg % name)
+
+
+###############################################################################
+def val_lu_spatial(data, name):
+    """Validate lu_spatial.
+
+    1) type has to be a dictionary of lists of floats
+    2) all node ids have to be present
+    3) values have to be lists with length equal to the number of zones
+    4) the sum of each row has to be 1.0
+    """
+    lus = data['params'][name]
+    if lus is None:
+        data['params']['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
+        return
+
+    lzn = data['params']['landuse_zone_names']
+    tot = data['params']['num_nodes']
+
+    c.check_type(param=lus,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 keys=range(1, tot + 1),
+                 len_list=[len(lzn)])
+
+    if not all(sum(i) == 1.0 for i in lus.values()):
+        msg = 'Parameter "%s" requires the sum of its values to be 1.0'
+        raise u.ValidationError(msg % name)
+
+
+###############################################################################
+def val_zr(data, name):
+    """Validate ZR.
+
+    1) type has to be a dict of lists of floats
+    2) dictionary needs to have integer keys, from 1 to 12
+    3) lists need to have length equal to the number of zones
+    """
+    zrn = data['params'][name]
+    if zrn is None:
+        data['params']['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
+        return
+
+    lzn = data['params']['landuse_zone_names']
+
+    c.check_type(param=zrn,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(lzn)],
+                 keys=range(1, 13))
+
+
+###############################################################################
+def val_kc(data, name):
+    """Validate KC.
+
+    1) type has to be a dict of lists of floats
+    2) dictionary needs to have integer keys, from 1 to 12
+    3) lists need to have length equal to the number of zones
+    """
+    kcn = data['params'][name]
+    if kcn is None:
+        data['params']['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
+        return
+
+    lzn = data['params']['landuse_zone_names']
+
+    c.check_type(param=kcn,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(lzn)],
+                 keys=range(1, 13))
+
+
+###############################################################################
+def val_leakage_process(data, name):
+    """Validate leakage_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    lep = data['params'][name]
+
+    c.check_type(param=lep,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[lep],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
+def val_subsoilzone_leakage_fraction(data, name):
+    """Validate subsoilzone_leakage_fraction.
+
+    1) type has to be a dictionary of lists of floats
+    2) all node ids have to be present
+    """
+    lea = data['params'][name]
+    tot = data['params']['num_nodes']
+    if lea is None:
+        lea = dict((k, 0.0) for k in range(1, tot + 1))
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
+
+    c.check_type(param=lea,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 keys=range(1, tot + 1))
 
 
 ###############################################################################
@@ -808,6 +999,10 @@ def val_interflow_params(data, name):
     """
     ifp = data['params'][name]
     tot = data['params']['num_nodes']
+    if ifp is None:
+        default = [0.0, 1.0, 99999.0, 0.0]
+        ifp = dict((k, default) for k in range(1, tot + 1))
+        logging.info('\t\tDefaulted "%s" to %s', name, default)
 
     c.check_type(param=ifp,
                  name=name,
@@ -819,142 +1014,6 @@ def val_interflow_params(data, name):
                           name=name,
                           low_l=0,
                           include_low=True)
-
-
-###############################################################################
-def val_soil_static_params(data, name):
-    """Validate soil_static_params.
-
-    1) type has to be a dictionary of lists of floats
-    2) values have to be lists with length equal to the number of zones
-    3) dictionary needs 4 keys: FC, WP, p, starting_SMD
-    """
-    ssp = data['params'][name]
-    szn = data['params']['soil_zone_names']
-
-    c.check_type(param=ssp,
-                 name=name,
-                 t_types=data['specs'][name]['type'],
-                 len_list=[len(szn)],
-                 keys=['FC', 'WP', 'p', 'starting_SMD'])
-
-
-###############################################################################
-def val_leakage_process(data, name):
-    """Validate leakage_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    lep = data['params'][name]
-
-    c.check_type(param=lep,
-                 name=name,
-                 t_types=data['specs'][name]['type'])
-
-    c.check_values_limits(values=[lep],
-                          name=name,
-                          constraints=data['specs'][name]['constraints'])
-
-
-###############################################################################
-def val_subsoilzone_leakage_fraction(data, name):
-    """Validate subsoilzone_leakage_fraction.
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    """
-    lea = data['params'][name]
-    tot = data['params']['num_nodes']
-
-    c.check_type(param=lea,
-                 name=name,
-                 t_types=data['specs'][name]['type'],
-                 keys=range(1, tot + 1))
-
-
-###############################################################################
-def val_soil_spatial(data, name):
-    """Validate soil_spatial.
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    3) values have to be lists with length equal to the number of zones
-    4) the sum of each row has to be 1.0
-    """
-    sos = data['params'][name]
-    soz = data['params']['soil_zone_names']
-    tot = data['params']['num_nodes']
-
-    c.check_type(param=sos,
-                 name=name,
-                 t_types=data['specs'][name]['type'],
-                 keys=range(1, tot + 1),
-                 len_list=[len(soz)])
-
-    if not all(sum(i) == 1.0 for i in sos.values()):
-        msg = 'Parameter "%s" requires the sum of its values to be 1.0'
-        raise u.ValidationError(msg % name)
-
-
-###############################################################################
-def val_lu_spatial(data, name):
-    """Validate lu_spatial.
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    3) values have to be lists with length equal to the number of zones
-    4) the sum of each row has to be 1.0
-    """
-    lus = data['params'][name]
-    lzn = data['params']['landuse_zone_names']
-    tot = data['params']['num_nodes']
-
-    c.check_type(param=lus,
-                 name=name,
-                 t_types=data['specs'][name]['type'],
-                 keys=range(1, tot + 1),
-                 len_list=[len(lzn)])
-
-    if not all(sum(i) == 1.0 for i in lus.values()):
-        msg = 'Parameter "%s" requires the sum of its values to be 1.0'
-        raise u.ValidationError(msg % name)
-
-
-###############################################################################
-def val_zr(data, name):
-    """Validate ZR.
-
-    1) type has to be a dict of lists of floats
-    2) dictionary needs to have integer keys, from 1 to 12
-    3) lists need to have length equal to the number of zones
-    """
-    zrn = data['params'][name]
-    lzn = data['params']['landuse_zone_names']
-
-    c.check_type(param=zrn,
-                 name=name,
-                 t_types=data['specs'][name]['type'],
-                 len_list=[len(lzn)],
-                 keys=range(1, 13))
-
-
-###############################################################################
-def val_kc(data, name):
-    """Validate KC.
-
-    1) type has to be a dict of lists of floats
-    2) dictionary needs to have integer keys, from 1 to 12
-    3) lists need to have length equal to the number of zones
-    """
-    kcn = data['params'][name]
-    lzn = data['params']['landuse_zone_names']
-
-    c.check_type(param=kcn,
-                 name=name,
-                 t_types=data['specs'][name]['type'],
-                 len_list=[len(lzn)],
-                 keys=range(1, 13))
 
 
 ###############################################################################
@@ -985,6 +1044,10 @@ def val_recharge_attenuation_params(data, name):
     """
     rpn = data['params'][name]
     tot = data['params']['num_nodes']
+    if rpn is None:
+        default = [0.0, 1.0, 99999.0]
+        rpn = dict((k, default) for k in range(1, tot + 1))
+        logging.info('\t\tDefaulted "%s" to %s', name, default)
 
     c.check_type(param=rpn,
                  name=name,

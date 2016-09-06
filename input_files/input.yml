@@ -55,7 +55,7 @@ log_file:
 
 # Number of nodes in the 2D water accounting model
 # This parameter is required.
-num_nodes: 1
+num_nodes: 10
 
 # Start date for the time series. Has to be in format "YYYY-MM-DD".
 # This parameter is required.
@@ -197,7 +197,7 @@ landuse_zone_names: landuse_zone_names.yml
 
 # Canopy process: can be either "enabled" or "disabled"
 # This parameter is required
-canopy_process: disabled
+canopy_process: enabled
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
@@ -214,7 +214,7 @@ max_canopy_storage: max_canopy_storage.yml
 
 # Snow process: can be either "enabled" or "disabled"
 # This parameter is required
-snow_process: disabled
+snow_process: enabled
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
@@ -328,7 +328,7 @@ subsoilzone_leakage_fraction: subsoilzone_leakage_fraction.yml
 
 # Interflow process: can be either "enabled" or "disabled"
 # This parameter is required
-interflow_process: disabled
+interflow_process: enabled
 
 # Interflow parameters (Initial interflow store, Store bypass, Infiltration,
 #                       Interflow to rivers )

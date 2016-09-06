@@ -13,16 +13,21 @@ from . import utils as u
 def get_pefac(data, node):
     """E) Vegitation Factored PE (PEfac) [mm/d]."""
     series, params = data['series'], data['params']
-    zone_pe = params['pe_zone_mapping'][node][0] - 1
-    coef_pe = params['pe_zone_mapping'][node][1]
-    zone_lu = params['lu_spatial'][node]
+    fao = params['fao_process']
+    canopy = params['canopy_process']
 
-    pefac = []
-    for num in range(len(series['date'])):
-        var1 = series['date'][num].month
-        var2 = series['pe_ts'][num][zone_pe] * coef_pe
-        var3 = u.weighted_sum(params['kc'][var1], zone_lu)
-        pefac.append(var2 * var3)
+    if fao == 'enabled' or canopy == 'enabled':
+        zone_pe = params['pe_zone_mapping'][node][0] - 1
+        coef_pe = params['pe_zone_mapping'][node][1]
+        zone_lu = params['lu_spatial'][node]
+        pefac = []
+        for num in range(len(series['date'])):
+            var1 = series['date'][num].month
+            var2 = series['pe_ts'][num][zone_pe] * coef_pe
+            var3 = u.weighted_sum(params['kc'][var1], zone_lu)
+            pefac.append(var2 * var3)
+    else:
+        pefac = [0.0 for _ in series['date']]
 
     return {'pefac': pefac}
 
@@ -31,17 +36,20 @@ def get_pefac(data, node):
 def get_canopy_storage(data, node):
     """F) Canopy Storage and PEfac Limited Interception [mm/d]."""
     series, params, output = data['series'], data['params'], data['output']
-    zone_rf = params['rainfall_zone_mapping'][node][0] - 1
-    coef_rf = params['rainfall_zone_mapping'][node][1]
-    ftf = params['free_throughfall'][node]
 
-    canopy_storage = []
-    for num in range(len(series['date'])):
-        var1 = series['rainfall_ts'][num][zone_rf] * coef_rf * (1 - ftf)
-        var2 = params['max_canopy_storage'][node]
-        var3 = output['pefac'][num]
-        var4 = (var2 if var1 > var2 else var1)
-        canopy_storage.append(var3 if var4 > var3 else var4)
+    if params['canopy_process'] == 'enabled':
+        zone_rf = params['rainfall_zone_mapping'][node][0] - 1
+        coef_rf = params['rainfall_zone_mapping'][node][1]
+        ftf = params['free_throughfall'][node]
+        canopy_storage = []
+        for num in range(len(series['date'])):
+            var1 = series['rainfall_ts'][num][zone_rf] * coef_rf * (1 - ftf)
+            var2 = params['max_canopy_storage'][node]
+            var3 = output['pefac'][num]
+            var4 = (var2 if var1 > var2 else var1)
+            canopy_storage.append(var3 if var4 > var3 else var4)
+    else:
+        canopy_storage = [0.0 for _ in series['date']]
 
     return {'canopy_storage': canopy_storage}
 
@@ -79,18 +87,22 @@ def get_precip_to_ground(data, node):
 def get_snowfall_o(data, node):
     """I) Snowfall [mm/d]."""
     series, params, output = data['series'], data['params'], data['output']
-    zone_tm = params['temperature_zone_mapping'][node] - 1
-    snow_fall_temp = params['snow_params'][node][1]
-    snow_melt_temp = params['snow_params'][node][2]
 
-    snowfall_o = []
-    for num in range(len(series['date'])):
-        var1 = series['temperature_ts'][num][zone_tm] - snow_fall_temp
-        var2 = snow_fall_temp - snow_melt_temp
-        var3 = 1 - (math.exp(- var1 / var2))**2
-        var4 = (0 if var3 > 0 else var3)
-        var5 = (1 if -var4 > 1 else -var4) * output['precip_to_ground'][num]
-        snowfall_o.append(var5)
+    if params['snow_process'] == 'enabled':
+        zone_tm = params['temperature_zone_mapping'][node] - 1
+        snow_fall_temp = params['snow_params'][node][1]
+        snow_melt_temp = params['snow_params'][node][2]
+        snowfall_o = []
+        for num in range(len(series['date'])):
+            var1 = series['temperature_ts'][num][zone_tm] - snow_fall_temp
+            var2 = snow_fall_temp - snow_melt_temp
+            var3 = 1 - (math.exp(- var1 / var2))**2
+            var4 = (0 if var3 > 0 else var3)
+            var5 = (1 if -var4 > 1 else -var4)
+            var5 *= output['precip_to_ground'][num]
+            snowfall_o.append(var5)
+    else:
+        snowfall_o = [0.0 for _ in series['date']]
 
     return {'snowfall_o': snowfall_o}
 
@@ -117,24 +129,26 @@ def get_snow(data, node):
     L) SnowMelt [mm/d].
     """
     series, params, output = data['series'], data['params'], data['output']
+
+    col = {}
+    for key in ['snowpack', 'snowmelt']:
+        col[key] = [0.0 for _ in series['date']]
+
     start_snow_pack = params['snow_params'][node][0]
     snow_fall_temp = params['snow_params'][node][1]
     snow_melt_temp = params['snow_params'][node][2]
     zone_tm = params['temperature_zone_mapping'][node] - 1
 
-    col = {}
-    for key in ['snowpack', 'snowmelt']:
-        col[key] = [0 for _ in series['date']]
-
-    for num in range(len(series['date'])):
-        var2 = (col['snowpack'][num-1] if num > 0 else start_snow_pack)
-        var3 = series['temperature_ts'][num][zone_tm] - snow_melt_temp
-        var4 = snow_fall_temp - snow_melt_temp
-        var5 = 1 - (math.exp(- var3 / var4))**2
-        col['snowmelt'][num] = var2 * (0 if var5 < 0 else var5)
-        col['snowpack'][num] = var2
-        col['snowpack'][num] += output['snowfall_o'][num]
-        col['snowpack'][num] -= col['snowmelt'][num]
+    if params['snow_process'] == 'enabled':
+        for num in range(len(series['date'])):
+            var2 = (col['snowpack'][num-1] if num > 0 else start_snow_pack)
+            var3 = series['temperature_ts'][num][zone_tm] - snow_melt_temp
+            var4 = snow_fall_temp - snow_melt_temp
+            var5 = 1 - (math.exp(- var3 / var4))**2
+            col['snowmelt'][num] = var2 * (0 if var5 < 0 else var5)
+            col['snowpack'][num] = var2
+            col['snowpack'][num] += output['snowfall_o'][num]
+            col['snowpack'][num] -= col['snowmelt'][num]
 
     return col
 

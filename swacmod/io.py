@@ -123,6 +123,78 @@ def convert_one_yaml_to_csv(filein):
 
 
 ###############################################################################
+def finalize_start_date(params):
+    """Finalize the "start_date" parameter i/o."""
+    new_date = str(params['start_date'])
+    fields = re.findall(r'^(\d{4})-(\d{2})-(\d{2})$', new_date)
+    if not fields:
+        msg = ('start_date has to be in the format YYYY-MM-DD '
+               '(e.g. 1980-01-13)')
+        raise u.ValidationError(msg)
+    params['start_date'] = datetime.datetime(int(fields[0][0]),
+                                             int(fields[0][1]),
+                                             int(fields[0][2]))
+
+
+###############################################################################
+def finalize_date(params, series):
+    """Finalize the "date" series i/o."""
+    max_time = max([i for j in params['time_periods'].values() for i in j])
+    day = datetime.timedelta(1)
+    series['date'] = [params['start_date'] + day * num for num in
+                      range(max_time)]
+
+
+###############################################################################
+def finalize_taw_and_raw(params):
+    """Finalize the "TAW" and "RAW" parameters i/o."""
+    params['TAW'], params['RAW'] = {}, {}
+
+    for node in range(1, params['num_nodes'] + 1):
+        params['TAW'][node], params['RAW'][node] = [], []
+        fcp = params['soil_static_params']['FC']
+        wpp = params['soil_static_params']['WP']
+        ppp = params['soil_static_params']['p']
+        pss = params['soil_spatial'][node]
+        lus = params['lu_spatial'][node]
+        var1 = [(fcp[i] - wpp[i]) * pss[i] * 1000 for i in range(len(pss))]
+        var2 = [ppp[i] * pss[i] for i in range(len(pss))]
+        for num in range(12):
+            var3 = [params['zr'][num+1][i] * lus[i] for i in range(len(lus))]
+            params['TAW'][node].append(sum(var1) * sum(var3))
+            params['RAW'][node].append(params['TAW'][node][num] * sum(var2))
+
+
+###############################################################################
+def finalize_pe_ts(specs, params, series):
+    """Finalize the "pe_ts" series i/o."""
+    fao = params['fao_process']
+    canopy = params['canopy_process']
+    if fao != 'enabled' and canopy != 'enabled':
+        series['pe_ts'] = [0.0 for _ in series['date']]
+        logging.info('\t\tDefaulted "pe_ts" to 0.0')
+    else:
+        specs['pe_ts']['required'] = True
+        logging.info('\t\tSwitched "pe_ts" to "required"')
+
+
+###############################################################################
+def finalize_temperature_ts(specs, params):
+    """Finalize the "temperature_ts" series i/o."""
+    if params['snow_process'] == 'enabled':
+        specs['temperature_ts']['required'] = True
+        logging.info('\t\tSwitched "temperature_ts" to "required"')
+
+
+###############################################################################
+def finalize_subroot_leakage_ts(specs, params):
+    """Finalize the "subroot_leakage_ts" series i/o."""
+    if params['leakage_process'] == 'enabled':
+        specs['subroot_leakage_ts']['required'] = True
+        logging.info('\t\tSwitched "subroot_leakage_ts" to "required"')
+
+
+###############################################################################
 def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                           input_file=u.CONSTANTS['INPUT_FILE'],
                           input_dir=u.CONSTANTS['INPUT_DIR']):
@@ -150,40 +222,21 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                     print '---> Validation failed: %s (%s)' % (err, param)
                     return None, None, None
 
+    for key in specs:
+        if key not in params:
+            params[key] = None
+
     series = {}
     keys = [i for i in params if i.endswith('_ts')]
     for key in keys:
         series[key] = params.pop(key)
 
-    try:
-        new_date = str(params['start_date'])
-        if not re.findall(r'^\d{4}-\d{2}-\d{2}$', new_date):
-            msg = ('start_date has to be in the format YYYY-MM-DD '
-                   '(e.g. 1980-01-13)')
-            raise u.ValidationError(msg)
-        params['start_date'] = date = parser.parse(new_date)
-    except Exception as err:
-        print '---> Validation failed: %s (start_date)' % err
-        return None, None, None
-
-    max_time = max([i for j in params['time_periods'].values() for i in j])
-    day = datetime.timedelta(1)
-    series['date'] = [date + day * num for num in range(max_time)]
-
-    params['TAW'], params['RAW'] = {}, {}
-    for node in range(1, params['num_nodes'] + 1):
-        params['TAW'][node], params['RAW'][node] = [], []
-        fcp = params['soil_static_params']['FC']
-        wpp = params['soil_static_params']['WP']
-        ppp = params['soil_static_params']['p']
-        pss = params['soil_spatial'][node]
-        lus = params['lu_spatial'][node]
-        var1 = [(fcp[i] - wpp[i]) * pss[i] * 1000 for i in range(len(pss))]
-        var2 = [ppp[i] * pss[i] for i in range(len(pss))]
-        for num in range(12):
-            var3 = [params['zr'][num+1][i] * lus[i] for i in range(len(lus))]
-            params['TAW'][node].append(sum(var1) * sum(var3))
-            params['RAW'][node].append(params['TAW'][node][num] * sum(var2))
+    finalize_start_date(params)
+    finalize_date(params, series)
+    finalize_taw_and_raw(params)
+    finalize_pe_ts(specs, params, series)
+    finalize_temperature_ts(specs, params)
+    finalize_subroot_leakage_ts(specs, params)
 
     return specs, series, params
 

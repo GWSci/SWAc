@@ -45,7 +45,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             raise u.ValidationError(msg % (name, new_len, len(param)))
 
         if t_type == dict and keys and set(keys) != set(param.keys()):
-            msg = 'Parameter "%s" is missing the following ids: %s'
+            msg = 'Parameter "%s" is missing the following keys: %s'
             diff = set(keys) - set(param.keys())
             raise u.ValidationError(msg % (name, diff))
 
@@ -112,9 +112,8 @@ def check_path(path):
 def check_required(data):
     """Check that all required parameters have been provided."""
     for param in data['specs']:
+        if not data['specs'][param]['required']:
+            continue
         key = ('series' if param.endswith('ts') else 'params')
         if param not in data[key] or not data[key][param]:
-            if data['specs'][param]['required']:
-                raise u.ValidationError('Parameter "%s" is required' % param)
-            else:
-                u.normalize_default_value(data, param)
+            raise u.ValidationError('Parameter "%s" is required' % param)
