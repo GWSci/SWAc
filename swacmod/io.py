@@ -38,7 +38,7 @@ def start_logging(level=logging.INFO):
 ###############################################################################
 def load_yaml(filein):
     """Load a YAML file, lowercase its keys."""
-    logging.info('\t\tLoading %s', filein)
+    logging.debug('\t\tLoading %s', filein)
 
     yml = yaml.load(open(filein, 'r'), Loader=yaml.CLoader)
     try:

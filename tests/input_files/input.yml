@@ -53,6 +53,11 @@ log_file:
 # Global parameters #
 #####################
 
+# Number of cores to be used
+# This parameter is optional. If not specified, the number of cores of the
+# machine will be used
+num_cores: 4
+
 # Number of nodes in the 2D water accounting model
 # This parameter is required.
 num_nodes: 1

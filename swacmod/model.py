@@ -5,6 +5,9 @@
 # Standard Library
 import math
 
+# Third Party Libraries
+import numpy as np
+
 # Internal modules
 from . import utils as u
 

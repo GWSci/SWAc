@@ -6,6 +6,10 @@
 import sys
 import time
 import logging
+import multiprocessing
+
+# Third Party Libraries
+import numpy as np
 
 # Internal modules
 from . import io
@@ -16,48 +20,62 @@ from . import model as m
 ###############################################################################
 def get_output(data, node):
     """Run the model."""
-    logging.info('\tRunning model for node %d', node)
+    logging.debug('\tRunning model for node %d', node)
 
     start = time.time()
 
     data['output'] = {}
-    for function in [m.get_pefac,                  # Column E
-                     m.get_canopy_storage,         # Column F
-                     m.get_net_pefac,              # Column G
-                     m.get_precip_to_ground,       # Column H
-                     m.get_snowfall_o,             # Column I
-                     m.get_rainfall_o,             # Column J
-                     m.get_snow,                   # Column K-L
-                     m.get_net_rainfall,           # Column M
-                     m.get_rawrew,                 # Column S
-                     m.get_tawrew,                 # Column T
-                     m.get_ae,                     # Column N-X
-                     m.get_unutilised_pe,          # Column Y
-                     m.get_perc_through_root,      # Column Z
-                     m.get_subroot_leak,           # Column AA
-                     m.get_interflow_bypass,       # Column AB
-                     m.get_interflow_store_input,  # Column AC
-                     m.get_interflow,              # Column AD-AF
-                     m.get_recharge_store_input,   # Column AG
-                     m.get_recharge,               # Column AH-AI
-                     m.get_combined_str,           # Column AJ
-                     m.get_combined_ae,            # Column AK
-                     m.get_evt,                    # Column AL
-                     m.get_average_in,             # Column AM
-                     m.get_average_out,            # Column AN
-                     m.get_balance]:               # Column AO
+    for function in [m.get_pefac,
+                     m.get_canopy_storage,
+                     m.get_net_pefac,
+                     m.get_precip_to_ground,
+                     m.get_snowfall_o,
+                     m.get_rainfall_o,
+                     m.get_snow,
+                     m.get_net_rainfall,
+                     m.get_rawrew,
+                     m.get_tawrew,
+                     m.get_ae,
+                     m.get_unutilised_pe,
+                     m.get_perc_through_root,
+                     m.get_subroot_leak,
+                     m.get_interflow_bypass,
+                     m.get_interflow_store_input,
+                     m.get_interflow,
+                     m.get_recharge_store_input,
+                     m.get_recharge,
+                     m.get_combined_str,
+                     m.get_combined_ae,
+                     m.get_evt,
+                     m.get_average_in,
+                     m.get_average_out,
+                     m.get_balance]:
 
         columns = function(data, node)
         data['output'].update(columns)
         logging.debug('\t\t"%s()" done', function.__name__)
 
     end = time.time()
-    logging.info('\tDone (%dms).', (end - start) * 1000)
+    logging.info('\tNode %d done (%dms).', node, (end - start) * 1000)
+
+
+###############################################################################
+def run_process(num, ids, data, test):
+    """Run model for a chunk of nodes."""
+    logging.info('Process %d started', num)
+    for node in ids:
+        if data['params']['reporting_zone_mapping'][node] == 0:
+            continue
+        get_output(data, node)
+        logging.debug('RAM usage is %.2fMb', u.get_ram_usage_for_process())
+        if not test:
+            io.dump_output(data, node)
+    logging.info('Process %d ended', num)
 
 
 ###############################################################################
 def run(test=False):
-    """Main function."""
+    """Run model for all nodes."""
     io.start_logging()
     logging.info('Start SWAcMod run')
 
@@ -75,16 +93,21 @@ def run(test=False):
         sys.exit()
 
     data['specs'], data['series'], data['params'] = specs, series, params
-    ids = range(1, data['params']['num_nodes'] + 1)
-
     io.validate_all(data)
-    for node in ids:
-        if data['params']['reporting_zone_mapping'][node] == 0:
+
+    ids = range(1, data['params']['num_nodes'] + 1)
+    chunks = np.array_split(ids, data['params']['num_cores'])
+
+    procs = {}
+    for num, chunk in enumerate(chunks):
+        if chunk.size == 0:
             continue
-        get_output(data, node)
-        logging.info('RAM usage is %.2fMb', u.get_ram_usage_for_process())
-        if not test:
-            io.dump_output(data, node)
+        procs[num] = multiprocessing.Process(target=run_process,
+                                             args=(num, chunk, data, test, ))
+        procs[num].start()
+
+    while all(i.is_alive() for i in procs.values()):
+        time.sleep(0.5)
 
     logging.info('End SWAcMod run')
 

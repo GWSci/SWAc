@@ -5,6 +5,7 @@
 # Standard Library
 import re
 import logging
+import multiprocessing
 
 # Internal modules
 from . import utils as u
@@ -47,6 +48,25 @@ def val_log_file(data, name):
     if data['params'][name] != log:
         logging.info('\t\tNormalized "%s" path to %s', name,
                      data['params'][name])
+
+
+###############################################################################
+def val_num_cores(data, name):
+    """Validate num_cores.
+
+    1) type has to be integer
+    2) value has to be 0 < x <= number of machine cores
+    """
+    num = data['params'][name]
+    if num is None:
+        data['params'][name] = multiprocessing.cpu_count()
+
+    c.check_type(param=num, name=name, t_types=data['specs'][name]['type'])
+    c.check_values_limits(values=[num],
+                          name=name,
+                          low_l=0,
+                          high_l=multiprocessing.cpu_count(),
+                          include_high=True)
 
 
 ###############################################################################
@@ -1071,6 +1091,7 @@ def validate_params(data):
 
     for function in [val_run_name,
                      val_log_file,
+                     val_num_cores,
                      val_num_nodes,
                      val_node_areas,
                      val_start_date,

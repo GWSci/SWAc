@@ -32,6 +32,11 @@ log_file:
 # Global parameters #
 #####################
 
+num_cores:
+    required: false
+    type:
+        - !!python/name:int
+
 num_nodes:
     required: true
     type:
