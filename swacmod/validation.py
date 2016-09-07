@@ -671,6 +671,10 @@ def val_rorecharge_process(data, name):
     2) value has to be one in ['enabled', 'disabled']
     """
     rop = data['params'][name]
+    rrp = data['params']['rapid_runoff_process']
+    if rop == 'enabled' and rrp == 'disabled':
+        msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
+        raise u.ValidationError(msg % (name, 'rapid_runoff_process'))
 
     c.check_type(param=rop,
                  name=name,
@@ -731,6 +735,10 @@ def val_macropore_process(data, name):
     2) value has to be one in ['enabled', 'disabled']
     """
     mpp = data['params'][name]
+    rrp = data['params']['rapid_runoff_process']
+    if mpp == 'enabled' and rrp == 'disabled':
+        msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
+        raise u.ValidationError(msg % (name, 'rapid_runoff_process'))
 
     c.check_type(param=mpp,
                  name=name,

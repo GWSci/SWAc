@@ -11,7 +11,7 @@ from . import utils as u
 
 ###############################################################################
 def get_pefac(data, node):
-    """E) Vegitation Factored PE (PEfac) [mm/d]."""
+    """E) Vegitation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
     series, params = data['series'], data['params']
     fao = params['fao_process']
     canopy = params['canopy_process']
@@ -56,7 +56,7 @@ def get_canopy_storage(data, node):
 
 ###############################################################################
 def get_net_pefac(data, node):
-    """G) Vegitation Factored PE less Canopy Evaporation [mm/d]."""
+    """G) Vegitation-factored PE less Canopy Evaporation [mm/d]."""
     series, output = data['series'], data['output']
 
     net_pefac = []
@@ -168,26 +168,32 @@ def get_net_rainfall(data, node):
 
 ###############################################################################
 def get_rawrew(data, node):
-    """S) RAWREW."""
+    """S) RAWREW (Readily Available Water, Readily Evaporable Water)."""
     series, params = data['series'], data['params']
 
-    rawrew = []
-    for num in range(len(series['date'])):
-        var1 = series['date'][num].month - 1
-        rawrew.append(params['RAW'][node][var1])
+    if params['fao_process'] == 'enabled':
+        rawrew = []
+        for num in range(len(series['date'])):
+            var1 = series['date'][num].month - 1
+            rawrew.append(params['RAW'][node][var1])
+    else:
+        rawrew = [0.0 for _ in series['date']]
 
     return {'rawrew': rawrew}
 
 
 ###############################################################################
 def get_tawrew(data, node):
-    """T) TAWREW."""
+    """T) TAWREW (Total Available Water, Readily Evaporable Water)."""
     series, params = data['series'], data['params']
 
-    tawrew = []
-    for num in range(len(series['date'])):
-        var1 = series['date'][num].month - 1
-        tawrew.append(params['TAW'][node][var1])
+    if params['fao_process'] == 'enabled':
+        tawrew = []
+        for num in range(len(series['date'])):
+            var1 = series['date'][num].month - 1
+            tawrew.append(params['TAW'][node][var1])
+    else:
+        tawrew = [0.0 for _ in series['date']]
 
     return {'tawrew': tawrew}
 
@@ -204,7 +210,7 @@ def get_ae(data, node):
     U) Potential Soil Moisture Defecit (pSMD) [mm]
     V) Soil Moisture Defecit (SMD) [mm]
     W) Ks (slope factor) [-]
-    X) AE [mm/d]
+    X) AE (actual evapotranspiration) [mm/d]
     """
     series, params, output = data['series'], data['params'], data['output']
     order = ['rapid_runoff_c', 'rapid_runoff', 'runoff_recharge', 'macropore',
@@ -222,61 +228,75 @@ def get_ae(data, node):
     prop = params['rorecharge_proportion']
     class_smd = params['rapid_runoff_params'][zone_rro]['class_smd']
     class_ri = params['rapid_runoff_params'][zone_rro]['class_ri']
-    values = params['rapid_runoff_params'][zone_rro]['values']
 
     for num in range(len(series['date'])):
         var0 = (col['p_smd'][num-1] if num > 0 else ssmd)
-        var1 = (col['smd'][num-1] if num > 0 else ssmd)
         var2 = output['net_rainfall'][num]
-        cond1 = var1 > (class_smd[-1] - 1)
-        cond2 = var2 > (class_ri[-1] - 1)
-        if cond1 or cond2:
-            col['rapid_runoff_c'][num] = values[-1][0]
-        else:
-            var3 = len([i for i in class_ri if i < var2])
-            var4 = len([i for i in class_smd if i < var1])
-            col['rapid_runoff_c'][num] = values[var3][var4]
-        var5 = output['net_rainfall'][num] * col['rapid_runoff_c'][num]
-        col['rapid_runoff'][num] = (0 if var2 < 0 else var5)
+
+        if params['rapid_runoff_process'] == 'enabled':
+            values = params['rapid_runoff_params'][zone_rro]['values']
+            var1 = (col['smd'][num-1] if num > 0 else ssmd)
+            cond1 = var1 > (class_smd[-1] - 1)
+            cond2 = var2 > (class_ri[-1] - 1)
+            if cond1 or cond2:
+                col['rapid_runoff_c'][num] = values[-1][0]
+            else:
+                var3 = len([i for i in class_ri if i < var2])
+                var4 = len([i for i in class_smd if i < var1])
+                col['rapid_runoff_c'][num] = values[var3][var4]
+            var5 = output['net_rainfall'][num] * col['rapid_runoff_c'][num]
+            col['rapid_runoff'][num] = (0 if var2 < 0 else var5)
+
         var6 = series['date'][num].month
-        var7 = prop[var6][zone_ror] * col['rapid_runoff'][num]
-        var8 = params['rorecharge_limit'][var6][zone_ror]
-        col['runoff_recharge'][num] = (var8 if var7 > var8 else var7)
-        var8a = var2 - col['rapid_runoff'][num]
-        var9 = params['macropore_proportion'][var6][zone_mac] * var8a
-        var10 = params['macropore_limit'][var6][zone_mac]
-        col['macropore'][num] = (var10 if var9 > var10 else var9)
+
+        if params['rorecharge_process'] == 'enabled':
+            var7 = prop[var6][zone_ror] * col['rapid_runoff'][num]
+            var8 = params['rorecharge_limit'][var6][zone_ror]
+            col['runoff_recharge'][num] = (var8 if var7 > var8 else var7)
+
+        if params['macropore_process'] == 'enabled':
+            var8a = var2 - col['rapid_runoff'][num]
+            var9 = params['macropore_proportion'][var6][zone_mac] * var8a
+            var10 = params['macropore_limit'][var6][zone_mac]
+            col['macropore'][num] = (var10 if var9 > var10 else var9)
+
         col['percol_in_root'][num] = var2
         col['percol_in_root'][num] -= col['rapid_runoff'][num]
         col['percol_in_root'][num] -= col['macropore'][num]
-        col['smd'][num] = (var0 if var0 > 0 else 0.0)
-        if col['percol_in_root'][num] > output['net_pefac'][num]:
-            var11 = -1
-        else:
-            var12 = (output['tawrew'][num] - col['smd'][num]) / \
-                    (output['tawrew'][num] - output['rawrew'][num])
-            if var12 >= 1:
-                var11 = 1
+
+        if params['fao_process'] == 'enabled':
+
+            col['smd'][num] = (var0 if var0 > 0 else 0.0)
+
+            if col['percol_in_root'][num] > output['net_pefac'][num]:
+                var11 = -1
             else:
-                var11 = (var12 if var12 >= 0 else 0.0)
-        col['k_slope'][num] = var11
-        cond3 = col['smd'][num] < output['rawrew'][num]
-        cond4 = col['percol_in_root'][num] > output['net_pefac'][num]
-        if cond3 or cond4:
-            var13 = output['net_pefac'][num]
-        else:
-            cond5 = col['smd'][num] >= output['rawrew'][num]
-            cond6 = col['smd'][num] <= output['tawrew'][num]
-            if cond5 and cond6:
-                var14 = (output['net_pefac'][num] -
-                         col['percol_in_root'][num])
-                var13 = col['k_slope'][num] * var14
-                var13 += col['percol_in_root'][num]
+                var12 = (output['tawrew'][num] - col['smd'][num]) / \
+                        (output['tawrew'][num] - output['rawrew'][num])
+                if var12 >= 1:
+                    var11 = 1
+                else:
+                    var11 = (var12 if var12 >= 0 else 0.0)
+            col['k_slope'][num] = var11
+
+            cond3 = col['smd'][num] < output['rawrew'][num]
+            cond4 = col['percol_in_root'][num] > output['net_pefac'][num]
+            if cond3 or cond4:
+                var13 = output['net_pefac'][num]
             else:
-                var13 = col['percol_in_root'][num]
-        col['ae'][num] = var13
-        var14 = col['smd'][num] + col['ae'][num] - col['percol_in_root'][num]
-        col['p_smd'][num] = var14
+                cond5 = col['smd'][num] >= output['rawrew'][num]
+                cond6 = col['smd'][num] <= output['tawrew'][num]
+                if cond5 and cond6:
+                    var14 = (output['net_pefac'][num] -
+                             col['percol_in_root'][num])
+                    var13 = col['k_slope'][num] * var14
+                    var13 += col['percol_in_root'][num]
+                else:
+                    var13 = col['percol_in_root'][num]
+            col['ae'][num] = var13
+
+            var14 = col['smd'][num] + col['ae'][num]
+            col['p_smd'][num] = var14 - col['percol_in_root'][num]
 
     return col
 
@@ -284,13 +304,16 @@ def get_ae(data, node):
 ###############################################################################
 def get_unutilised_pe(data, node):
     """Y) Unutilised PE [mm/d]."""
-    series, output = data['series'], data['output']
+    series, params, output = data['series'], data['params'], data['output']
 
-    unutilised_pe = []
-    for num in range(len(series['date'])):
-        var1 = output['net_pefac'][num] - output['ae'][num]
-        var2 = (0 if var1 < 0 else var1)
-        unutilised_pe.append(var2)
+    if params['fao_process'] == 'enabled':
+        unutilised_pe = []
+        for num in range(len(series['date'])):
+            var1 = output['net_pefac'][num] - output['ae'][num]
+            var2 = (0 if var1 < 0 else var1)
+            unutilised_pe.append(var2)
+    else:
+        unutilised_pe = [0.0 for _ in series['date']]
 
     return {'unutilised_pe': unutilised_pe}
 
@@ -298,13 +321,16 @@ def get_unutilised_pe(data, node):
 ###############################################################################
 def get_perc_through_root(data, node):
     """Z) Percolation Through the Root Zone [mm/d]."""
-    series, output = data['series'], data['output']
+    series, params, output = data['series'], data['params'], data['output']
 
-    perc_through_root = []
-    for num in range(len(series['date'])):
-        var1 = output['p_smd'][num]
-        var2 = (-var1 if var1 < 0 else 0)
-        perc_through_root.append(var2)
+    if params['fao_process'] == 'enabled':
+        perc_through_root = []
+        for num in range(len(series['date'])):
+            var1 = output['p_smd'][num]
+            var2 = (-var1 if var1 < 0 else 0)
+            perc_through_root.append(var2)
+    else:
+        perc_through_root = [i for i in output['percol_in_root']]
 
     return {'perc_through_root': perc_through_root}
 
@@ -316,11 +342,14 @@ def get_subroot_leak(data, node):
     zone_sr = params['subroot_zone_mapping'][node][0] - 1
     coef_sr = params['subroot_zone_mapping'][node][1]
 
-    subroot_leak = []
-    for num in range(len(series['date'])):
-        var1 = series['subroot_leakage_ts'][num][zone_sr] * coef_sr
-        var2 = var1 * params['subsoilzone_leakage_fraction'][node]
-        subroot_leak.append(var2)
+    if params['leakage_process'] == 'enabled':
+        subroot_leak = []
+        for num in range(len(series['date'])):
+            var1 = series['subroot_leakage_ts'][num][zone_sr] * coef_sr
+            var2 = var1 * params['subsoilzone_leakage_fraction'][node]
+            subroot_leak.append(var2)
+    else:
+        subroot_leak = [0.0 for _ in series['date']]
 
     return {'subroot_leak': subroot_leak}
 
@@ -334,7 +363,10 @@ def get_interflow_bypass(data, node):
     for num in range(len(series['date'])):
         var1 = output['perc_through_root'][num]
         var1 += output['subroot_leak'][num]
-        var2 = params['interflow_params'][node][1] * var1
+        if params['interflow_process'] == 'enabled':
+            var2 = var1 * params['interflow_params'][node][1]
+        else:
+            var2 = var1
         interflow_bypass.append(var2)
 
     return {'interflow_bypass': interflow_bypass}
@@ -375,11 +407,12 @@ def get_interflow(data, node):
     var8 = params['interflow_params'][node][3]
 
     for num in range(len(series['date'])):
-        var1 = (output['interflow_store_input'][num-1] if num > 0 else 0.0)
-        var2 = (col['interflow_volume'][num-1] if num > 0 else var0)
-        var3 = (col['infiltration_recharge'][num-1] if num > 0 else 0.0)
-        var4 = (col['interflow_to_rivers'][num-1] if num > 0 else 0.0)
-        col['interflow_volume'][num] = var1 + var2 - var3 - var4
+        if params['interflow_process'] == 'enabled':
+            var1 = (output['interflow_store_input'][num-1] if num > 0 else 0.0)
+            var2 = (col['interflow_volume'][num-1] if num > 0 else var0)
+            var3 = (col['infiltration_recharge'][num-1] if num > 0 else 0.0)
+            var4 = (col['interflow_to_rivers'][num-1] if num > 0 else 0.0)
+            col['interflow_volume'][num] = var1 + var2 - var3 - var4
         var6 = col['interflow_volume'][num]
         col['infiltration_recharge'][num] = (var5 if var6 >= var5 else var6)
         var7 = col['interflow_volume'][num] - col['infiltration_recharge'][num]
@@ -421,13 +454,14 @@ def get_recharge(data, node):
     rlp = params['recharge_attenuation_params'][node][1]
     rll = params['recharge_attenuation_params'][node][2]
 
-    for num in range(len(series['date'])):
-        var1 = (col['recharge_store'][num-1] if num > 0 else irs)
-        var2 = (output['recharge_store_input'][num-1] if num > 0 else 0.0)
-        var3 = (col['combined_recharge'][num-1] if num > 0 else 0.0)
-        col['recharge_store'][num] = var1 + var2 - var3
-        var4 = col['recharge_store'][num] * rlp
-        col['combined_recharge'][num] = (rll if var4 > rll else var4)
+    if params['recharge_attenuation_process'] == 'enabled':
+        for num in range(len(series['date'])):
+            var1 = (col['recharge_store'][num-1] if num > 0 else irs)
+            var2 = (output['recharge_store_input'][num-1] if num > 0 else 0.0)
+            var3 = (col['combined_recharge'][num-1] if num > 0 else 0.0)
+            col['recharge_store'][num] = var1 + var2 - var3
+            var4 = col['recharge_store'][num] * rlp
+            col['combined_recharge'][num] = (rll if var4 > rll else var4)
 
     return col
 
