@@ -38,7 +38,9 @@ def start_logging(level=logging.INFO):
 ###############################################################################
 def load_yaml(filein):
     """Load a YAML file, lowercase its keys."""
-    yml = yaml.load(open(filein, 'r'))
+    logging.info('\t\tLoading %s', filein)
+
+    yml = yaml.load(open(filein, 'r'), Loader=yaml.CLoader)
     try:
         keys = yml.keys()
     except AttributeError:
@@ -199,6 +201,8 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                           input_file=u.CONSTANTS['INPUT_FILE'],
                           input_dir=u.CONSTANTS['INPUT_DIR']):
     """Load model specifications, parameters and time series."""
+    logging.info('\tLoading parameters and time series')
+
     specs = load_yaml(specs_file)
     params = load_yaml(input_file)
 
@@ -231,6 +235,7 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
     for key in keys:
         series[key] = params.pop(key)
 
+    logging.info('\tFinalize load')
     finalize_start_date(params)
     finalize_date(params, series)
     finalize_taw_and_raw(params)

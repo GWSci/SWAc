@@ -1129,7 +1129,7 @@ def validate_params(data):
 ###############################################################################
 def validate_series(data):
     """Validate all time series using their specifications."""
-    logging.info('\tValidating series')
+    logging.info('\tValidating time series')
 
     for function in [val_rainfall_ts,
                      val_pe_ts,

@@ -4,6 +4,7 @@
 
 # Standard Library
 import sys
+import time
 import logging
 
 # Internal modules
@@ -16,6 +17,8 @@ from . import model as m
 def get_output(data, node):
     """Run the model."""
     logging.info('\tRunning model for node %d', node)
+
+    start = time.time()
 
     data['output'] = {}
     for function in [m.get_pefac,                  # Column E
@@ -48,7 +51,8 @@ def get_output(data, node):
         data['output'].update(columns)
         logging.debug('\t\t"%s()" done', function.__name__)
 
-    logging.info('\tDone.')
+    end = time.time()
+    logging.info('\tDone (%dms).', (end - start) * 1000)
 
 
 ###############################################################################
