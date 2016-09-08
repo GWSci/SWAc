@@ -126,11 +126,13 @@ def get_snow(data, node):
         snowpack = (start_snow_pack + output['snowfall_o'][0] -
                     start_snow_pack * var5[0])
         col['snowpack'][0] = snowpack
+
         for num in range(1, len(series['date'])):
-            snowmelt = snowpack * var5[num]
-            col['snowmelt'][num] = snowmelt
-            snowpack += output['snowfall_o'][num] - snowmelt
+            snowpack = (1 - var5[num]) * snowpack + output['snowfall_o'][num]
             col['snowpack'][num] = snowpack
+
+        col['snowmelt'] = np.append(col['snowmelt'][0],
+                                    col['snowpack'][:-1] * var5[1:])
 
     return col
 
@@ -229,10 +231,10 @@ def get_ae(data, node):
             var8a = var2 - rapid_runoff
             var9 = params['macropore_proportion'][var6][zone_mac] * var8a
             var10 = params['macropore_limit'][var6][zone_mac]
-            marcopore = (var10 if var9 > var10 else var9)
-            col['macropore'][num] = marcopore
+            macropore = (var10 if var9 > var10 else var9)
+            col['macropore'][num] = macropore
 
-        percol_in_root = (var2 - rapid_runoff - marcopore)
+        percol_in_root = (var2 - rapid_runoff - macropore)
         col['percol_in_root'][num] = percol_in_root
 
         if params['fao_process'] == 'enabled':
@@ -369,15 +371,14 @@ def get_interflow(data, node):
 
     for num in range(1, len(series['date'])):
         if params['interflow_process'] == 'enabled':
-            var1 = output['interflow_store_input'][num-1]
-            volume = var1 + volume - recharge - rivers
+            var1 = volume - min(var5, volume)
+            volume = output['interflow_store_input'][num-1] + var1 * (1 - var8)
             col['interflow_volume'][num] = volume
-        else:
-            volume = 0
-        recharge = (var5 if volume >= var5 else volume)
-        col['infiltration_recharge'][num] = recharge
-        rivers = (volume - recharge) * var8
-        col['interflow_to_rivers'][num] = rivers
+
+    col['infiltration_recharge'] = np.copy(col['interflow_volume'])
+    col['infiltration_recharge'][col['infiltration_recharge'] >= var5] = var5
+    col['interflow_to_rivers'] = (col['interflow_volume'] -
+                                  col['infiltration_recharge']) * var8
 
     return col
 
@@ -417,11 +418,12 @@ def get_recharge(data, node):
         col['recharge_store'][0] = recharge
         col['combined_recharge'][0] = combined
         for num in range(1, len(series['date'])):
-            recharge += output['recharge_store_input'][num-1] - combined
+            recharge = (recharge + output['recharge_store_input'][num-1] -
+                        min(recharge * rlp, rll))
             col['recharge_store'][num] = recharge
-            var4 = recharge * rlp
-            combined = (rll if var4 > rll else var4)
-            col['combined_recharge'][num] = combined
+
+        col['combined_recharge'] = col['recharge_store'] * rlp
+        col['combined_recharge'][col['combined_recharge'] > rll] = rll
 
     return col
 
