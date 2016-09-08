@@ -6,6 +6,9 @@
 import os
 import datetime
 
+# Third Party Libraries
+import numpy as np
+
 # Internal modules
 from . import utils as u
 
@@ -17,7 +20,8 @@ MAPPING = {(int, long): ['an integer', 'integers'],
            list: ['a list', 'lists'],
            set: ['a set', 'sets'],
            basestring: ['a string', 'strings'],
-           datetime.datetime: ['a datetime', 'datetimes']}
+           datetime.datetime: ['a datetime', 'datetimes'],
+           np.ndarray: ['a numpy array', 'numpy arrays']}
 
 
 ###############################################################################
@@ -30,9 +34,11 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             t_type = (float, int, long)
         elif t_type == int:
             t_type = (int, long)
+        elif t_type == list:
+            t_type = (list, np.ndarray)
 
         new_len = None
-        if t_type == list and len_list:
+        if t_type == (list, np.ndarray) and len_list:
             new_len = len_list.pop(0)
 
         if not isinstance(param, t_type):
@@ -40,7 +46,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             raise u.ValidationError(msg % (name, MAPPING[t_type][0],
                                            type(param)))
 
-        if t_type == list and new_len and len(param) != new_len:
+        if t_type == (list, np.ndarray) and new_len and len(param) != new_len:
             msg = 'Parameter "%s" has to be a list of length %d, found %d'
             raise u.ValidationError(msg % (name, new_len, len(param)))
 
@@ -60,7 +66,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             t_types = []
             len_list = []
 
-        elif len(t_types) > 0 and t_type == list:
+        elif len(t_types) > 0 and t_type == (list, np.ndarray):
             for value in param:
                 copy_t = [i for i in t_types]
                 copy_l = []
@@ -115,5 +121,5 @@ def check_required(data):
         if not data['specs'][param]['required']:
             continue
         key = ('series' if param.endswith('ts') else 'params')
-        if param not in data[key] or not data[key][param]:
+        if param not in data[key] or data[key][param] is None:
             raise u.ValidationError('Parameter "%s" is required' % param)

@@ -9,6 +9,7 @@ import unittest
 
 # Third Party Libraries
 import yaml
+import numpy as np
 
 # Internal modules
 from swacmod import io
@@ -98,7 +99,7 @@ class EndToEndTests(unittest.TestCase):
         """Test for validate_all() function."""
         all_keys = self.data['series'].keys() + self.data['params'].keys()
         for key in all_keys:
-            if key in ['date', 'TAW', 'RAW']:
+            if key in ['date', 'months', 'kc_list', 'TAW', 'RAW']:
                 continue
             self.assertTrue(key in self.data['specs'])
         io.validate_all(self.data)
@@ -141,7 +142,8 @@ class EndToEndTests(unittest.TestCase):
                 self.assertEqual(len(results) - 1,
                                  len(self.data['output']) + 2)
                 if key in self.data['series']:
-                    if isinstance(self.data['series'][key][0], list):
+                    types = (list, np.ndarray)
+                    if isinstance(self.data['series'][key][0], types):
                         new_list = [i[0] for i in self.data['series'][key]]
                     else:
                         new_list = self.data['series'][key]

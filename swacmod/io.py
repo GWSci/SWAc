@@ -13,6 +13,7 @@ import datetime
 # Third Party Libraries
 import yaml
 from dateutil import parser
+import numpy as np
 
 # Internal modules
 from . import utils as u
@@ -145,6 +146,8 @@ def finalize_date(params, series):
     day = datetime.timedelta(1)
     series['date'] = [params['start_date'] + day * num for num in
                       range(max_time)]
+    dates = np.array([np.datetime64(str(i.date())) for i in series['date']])
+    series['months'] = dates.astype('datetime64[M]').astype(int) % 12
 
 
 ###############################################################################
@@ -165,6 +168,8 @@ def finalize_taw_and_raw(params):
             var3 = [params['zr'][num+1][i] * lus[i] for i in range(len(lus))]
             params['TAW'][node].append(sum(var1) * sum(var3))
             params['RAW'][node].append(params['TAW'][node][num] * sum(var2))
+        params['TAW'][node] = np.array(params['TAW'][node])
+        params['RAW'][node] = np.array(params['RAW'][node])
 
 
 ###############################################################################
@@ -233,7 +238,7 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
     series = {}
     keys = [i for i in params if i.endswith('_ts')]
     for key in keys:
-        series[key] = params.pop(key)
+        series[key] = np.array(params.pop(key))
 
     logging.info('\tFinalize load')
     finalize_start_date(params)
@@ -242,6 +247,9 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
     finalize_pe_ts(specs, params, series)
     finalize_temperature_ts(specs, params)
     finalize_subroot_leakage_ts(specs, params)
+
+    params['kc_list'] = sorted(params['kc'].items(), key=lambda x: x[0])
+    params['kc_list'] = np.array([i[1] for i in params['kc_list']])
 
     return specs, series, params
 

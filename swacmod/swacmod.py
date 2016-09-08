@@ -53,7 +53,7 @@ def get_output(data, node):
 
         columns = function(data, node)
         data['output'].update(columns)
-        logging.debug('\t\t"%s()" done', function.__name__)
+        logging.info('\t\t"%s()" done', function.__name__)
 
     end = time.time()
     logging.info('\tNode %d done (%dms).', node, (end - start) * 1000)
