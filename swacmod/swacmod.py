@@ -53,7 +53,7 @@ def get_output(data, node):
 
         columns = function(data, node)
         data['output'].update(columns)
-        logging.info('\t\t"%s()" done', function.__name__)
+        logging.debug('\t\t"%s()" done', function.__name__)
 
     end = time.time()
     logging.info('\tNode %d done (%dms).', node, (end - start) * 1000)
@@ -62,7 +62,7 @@ def get_output(data, node):
 ###############################################################################
 def run_process(num, ids, data, test):
     """Run model for a chunk of nodes."""
-    logging.info('Process %d started', num)
+    logging.info('Process %d started (test is %s)', num, test)
     for node in ids:
         if data['params']['reporting_zone_mapping'][node] == 0:
             continue
