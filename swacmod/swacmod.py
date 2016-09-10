@@ -9,6 +9,8 @@ import logging
 import multiprocessing
 
 # Third Party Libraries
+import pyximport
+pyximport.install()
 import numpy as np
 
 # Internal modules
@@ -53,10 +55,10 @@ def get_output(data, node):
 
         columns = function(data, node)
         data['output'].update(columns)
-        logging.info('\t\t"%s()" done', function.__name__)
+        logging.debug('\t\t"%s()" done', function.__name__)
 
     end = time.time()
-    logging.info('\tNode %d done (%dms).', node, (end - start) * 1000)
+    logging.debug('\tNode %d done (%dms).', node, (end - start) * 1000)
 
 
 ###############################################################################

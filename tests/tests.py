@@ -99,7 +99,8 @@ class EndToEndTests(unittest.TestCase):
         """Test for validate_all() function."""
         all_keys = self.data['series'].keys() + self.data['params'].keys()
         for key in all_keys:
-            if key in ['date', 'months', 'kc_list', 'TAW', 'RAW']:
+            if key in ['date', 'months', 'kc_list', 'TAW', 'RAW', 'ror_prop',
+                       'ror_limit', 'macro_prop', 'macro_limit']:
                 continue
             self.assertTrue(key in self.data['specs'])
         io.validate_all(self.data)

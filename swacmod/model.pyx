@@ -1,9 +1,9 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""SWAcMod model functions."""
+"""SWAcMod model functions in Cython."""
 
 # Third Party Libraries
 import numpy as np
+cimport numpy as np
 
 # Internal modules
 from . import utils as u
@@ -109,30 +109,36 @@ def get_snow(data, node):
     """
     series, params, output = data['series'], data['params'], data['output']
 
-    col = {}
-    for key in ['snowpack', 'snowmelt']:
-        col[key] = np.zeros(len(series['date']))
+    cdef:
+        size_t num
+        size_t length = len(series['date'])
+        double [:] col_snowpack = np.zeros(length)
+        double [:] col_snowmelt = np.zeros(len(series['date']))
+        double start_snow_pack = params['snow_params'][node][0]
+        double snow_fall_temp = params['snow_params'][node][1]
+        double snow_melt_temp = params['snow_params'][node][2]
+        double diff = snow_fall_temp - snow_melt_temp
+        size_t zone_tm = params['temperature_zone_mapping'][node] - 1
+        double [:] var3 = (snow_melt_temp -
+                           series['temperature_ts'][:, zone_tm])/diff
+        double [:] var5 = 1 - (np.exp(var3))**2
+        double [:] snowfall_o = output['snowfall_o']
+        double var6 = (var5[0] if var5[0] > 0 else 0)
+        double snowpack = (1 - var6) * start_snow_pack + snowfall_o[0]
 
     if params['snow_process'] == 'enabled':
-        start_snow_pack = params['snow_params'][node][0]
-        snow_fall_temp = params['snow_params'][node][1]
-        snow_melt_temp = params['snow_params'][node][2]
-        diff = snow_fall_temp - snow_melt_temp
-        zone_tm = params['temperature_zone_mapping'][node] - 1
-        var3 = series['temperature_ts'][:, zone_tm] - snow_melt_temp
-        var5 = 1 - (np.exp(- var3 / diff))**2
-        var5[var5 < 0] = 0
-        col['snowmelt'][0] = start_snow_pack * var5[0]
-        snowpack = (start_snow_pack + output['snowfall_o'][0] -
-                    start_snow_pack * var5[0])
-        col['snowpack'][0] = snowpack
+        col_snowmelt[0] = start_snow_pack * var6
+        col_snowpack[0] = snowpack
+        for num in range(1, length):
+            if var5[num] < 0:
+                var5[num] = 0
+            col_snowmelt[num] = snowpack * var5[num]
+            snowpack = (1 - var5[num]) * snowpack + snowfall_o[num]
+            col_snowpack[num] = snowpack
 
-        for num in range(1, len(series['date'])):
-            snowpack = (1 - var5[num]) * snowpack + output['snowfall_o'][num]
-            col['snowpack'][num] = snowpack
-
-        col['snowmelt'] = np.append(col['snowmelt'][0],
-                                    col['snowpack'][:-1] * var5[1:])
+    col = {}
+    col['snowpack'] = col_snowpack.base
+    col['snowmelt'] = col_snowmelt.base
 
     return col
 
@@ -184,66 +190,94 @@ def get_ae(data, node):
     X) AE (actual evapotranspiration) [mm/d]
     """
     series, params, output = data['series'], data['params'], data['output']
-    order = ['rapid_runoff_c', 'rapid_runoff', 'runoff_recharge', 'macropore',
-             'percol_in_root', 'p_smd', 'smd', 'k_slope', 'ae']
-    col = {}
-    for key in order:
-        col[key] = np.zeros(len(series['date']))
+    ssp = params['soil_static_params']
+    rrp = params['rapid_runoff_params']
 
-    ssmd = u.weighted_sum(params['soil_spatial'][node],
-                          params['soil_static_params']['starting_SMD'])
+    cdef:
+        double [:] col_rapid_runoff_c = np.zeros(len(series['date']))
+        double [:] col_rapid_runoff = np.zeros(len(series['date']))
+        double [:] col_runoff_recharge = np.zeros(len(series['date']))
+        double [:] col_macropore = np.zeros(len(series['date']))
+        double [:] col_percol_in_root = np.zeros(len(series['date']))
+        double [:] col_p_smd = np.zeros(len(series['date']))
+        double [:] col_smd = np.zeros(len(series['date']))
+        double [:] col_k_slope = np.zeros(len(series['date']))
+        double [:] col_ae = np.zeros(len(series['date']))
+        size_t zone_mac = params['macropore_zone_mapping'][node] - 1
+        size_t zone_ror = params['rorecharge_zone_mapping'][node] - 1
+        size_t zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
+        double ssmd = u.weighted_sum(params['soil_spatial'][node],
+                                     ssp['starting_SMD'])
+        long long [:] class_smd = np.array(rrp[zone_rro]['class_smd'])
+        long long [:] class_ri = np.array(rrp[zone_rro]['class_ri'])
+        double [:, :] ror_prop = params['ror_prop']
+        double [:, :] ror_limit = params['ror_limit']
+        double [:, :] macro_prop = params['macro_prop']
+        double [:, :] macro_limit = params['macro_limit']
+        double [:, :] values = np.array(rrp[zone_rro]['values'])
+        size_t len_class_smd = len(class_smd)
+        size_t len_class_ri = len(class_ri)
+        double last_smd = class_smd[-1] - 1
+        double last_ri = class_ri[-1] - 1
+        double value = values[-1][0]
+        double p_smd = ssmd
+        double smd = ssmd
+        double var2, var5, var7, var8, var8a, var9, var10, var11, var12, var13
+        double rapid_runoff_c, rapid_runoff, macropore, percol_in_root
+        double net_pefac, tawrew, rawrew
+        size_t num, i, var3, var4, var6
+        size_t length = len(series['date'])
+        double [:] net_rainfall = output['net_rainfall']
+        double [:] net_pefac_a = output['net_pefac']
+        double [:] tawrew_a = output['tawrew']
+        double [:] rawrew_a = output['rawrew']
+        long long [:] months = series['months']
 
-    zone_mac = params['macropore_zone_mapping'][node] - 1
-    zone_ror = params['rorecharge_zone_mapping'][node] - 1
-    zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
-    prop = params['rorecharge_proportion']
-    class_smd = params['rapid_runoff_params'][zone_rro]['class_smd']
-    class_ri = params['rapid_runoff_params'][zone_rro]['class_ri']
-    values = params['rapid_runoff_params'][zone_rro]['values']
-    last_smd = class_smd[-1]
-    last_ri = class_ri[-1]
-    value = values[-1][0]
-
-    p_smd, smd = ssmd, ssmd
-    for num in range(len(series['date'])):
-        var2 = output['net_rainfall'][num]
+    for num in range(length):
+        var2 = net_rainfall[num]
 
         if params['rapid_runoff_process'] == 'enabled':
-            if smd > (last_smd - 1) or var2 > (last_ri - 1):
+            if smd > last_smd or var2 > last_ri:
                 rapid_runoff_c = value
             else:
-                var3 = len([i for i in class_ri if i < var2])
-                var4 = len([i for i in class_smd if i < smd])
+                var3 = 0
+                for i in range(len_class_ri):
+                    if class_ri[i] < var2:
+                        var3 += 1
+                var4 = 0
+                for i in range(len_class_smd):
+                    if class_smd[i] < smd:
+                        var4 += 1
                 rapid_runoff_c = values[var3][var4]
-            col['rapid_runoff_c'][num] = rapid_runoff_c
-            var5 = output['net_rainfall'][num] * rapid_runoff_c
+            col_rapid_runoff_c[num] = rapid_runoff_c
+            var5 = var2 * rapid_runoff_c
             rapid_runoff = (0 if var2 < 0 else var5)
-            col['rapid_runoff'][num] = rapid_runoff
+            col_rapid_runoff[num] = rapid_runoff
 
-        var6 = series['months'][num] + 1
+        var6 = months[num]
 
         if params['rorecharge_process'] == 'enabled':
-            var7 = prop[var6][zone_ror] * rapid_runoff
-            var8 = params['rorecharge_limit'][var6][zone_ror]
-            col['runoff_recharge'][num] = (var8 if var7 > var8 else var7)
+            var7 = ror_prop[var6][zone_ror] * rapid_runoff
+            var8 = ror_limit[var6][zone_ror]
+            col_runoff_recharge[num] = (var8 if var7 > var8 else var7)
 
         if params['macropore_process'] == 'enabled':
             var8a = var2 - rapid_runoff
-            var9 = params['macropore_proportion'][var6][zone_mac] * var8a
-            var10 = params['macropore_limit'][var6][zone_mac]
+            var9 = macro_prop[var6][zone_mac] * var8a
+            var10 = macro_limit[var6][zone_mac]
             macropore = (var10 if var9 > var10 else var9)
-            col['macropore'][num] = macropore
+            col_macropore[num] = macropore
 
         percol_in_root = (var2 - rapid_runoff - macropore)
-        col['percol_in_root'][num] = percol_in_root
+        col_percol_in_root[num] = percol_in_root
 
         if params['fao_process'] == 'enabled':
 
             smd = (p_smd if p_smd > 0 else 0.0)
-            col['smd'][num] = smd
-            net_pefac = output['net_pefac'][num]
-            tawrew = output['tawrew'][num]
-            rawrew = output['rawrew'][num]
+            col_smd[num] = smd
+            net_pefac = net_pefac_a[num]
+            tawrew = tawrew_a[num]
+            rawrew = rawrew_a[num]
 
             if percol_in_root > net_pefac:
                 var11 = -1
@@ -253,20 +287,28 @@ def get_ae(data, node):
                     var11 = 1
                 else:
                     var11 = (var12 if var12 >= 0 else 0.0)
-            col['k_slope'][num] = var11
+            col_k_slope[num] = var11
 
+            var13 = percol_in_root
             if smd < rawrew or percol_in_root > net_pefac:
                 var13 = net_pefac
-            else:
-                if smd >= rawrew and smd <= tawrew:
-                    var14 = net_pefac - percol_in_root
-                    var13 = var11 * var14 + percol_in_root
-                else:
-                    var13 = percol_in_root
-            col['ae'][num] = var13
+            elif smd >= rawrew and smd <= tawrew:
+                var13 = var11 * (net_pefac - percol_in_root) + percol_in_root
+            col_ae[num] = var13
 
             p_smd = smd + var13 - percol_in_root
-            col['p_smd'][num] = p_smd
+            col_p_smd[num] = p_smd
+
+    col = {}
+    col['rapid_runoff_c'] = col_rapid_runoff_c.base
+    col['rapid_runoff'] = col_rapid_runoff.base
+    col['runoff_recharge'] = col_runoff_recharge.base
+    col['macropore'] = col_macropore.base
+    col['percol_in_root'] = col_percol_in_root.base
+    col['p_smd'] = col_p_smd.base
+    col['smd'] = col_smd.base
+    col['k_slope'] = col_k_slope.base
+    col['ae'] = col_ae.base
 
     return col
 
@@ -353,32 +395,42 @@ def get_interflow(data, node):
     """
     series, params, output = data['series'], data['params'], data['output']
 
-    col = {}
-    for key in ['interflow_volume', 'infiltration_recharge',
-                'interflow_to_rivers']:
-        col[key] = np.zeros(len(series['date']))
+    cdef:
+        size_t length = len(series['date'])
+        double [:] col_interflow_volume = np.zeros(length)
+        double [:] col_infiltration_recharge = np.zeros(length)
+        double [:] col_interflow_to_rivers = np.zeros(length)
+        double [:] interflow_store_input = output['interflow_store_input']
+        double var0 = params['interflow_params'][node][0]
+        double var5 = params['interflow_params'][node][2]
+        double var8 = params['interflow_params'][node][3]
+        double volume = var0
+        double recharge = (var5 if volume >= var5 else volume)
+        double rivers = (volume - recharge) * var8
+        size_t num
 
-    var0 = params['interflow_params'][node][0]
-    var5 = params['interflow_params'][node][2]
-    var8 = params['interflow_params'][node][3]
+    if params['interflow_process'] == 'enabled':
+        col_interflow_volume[0] = volume
 
-    volume = var0
-    col['interflow_volume'][0] = volume
-    recharge = (var5 if volume >= var5 else volume)
-    col['infiltration_recharge'][0] = recharge
-    rivers = (volume - recharge) * var8
-    col['interflow_to_rivers'][0] = rivers
+    col_infiltration_recharge[0] = recharge
+    col_interflow_to_rivers[0] = rivers
 
-    for num in range(1, len(series['date'])):
+    for num in range(1, length):
         if params['interflow_process'] == 'enabled':
-            var1 = volume - min(var5, volume)
-            volume = output['interflow_store_input'][num-1] + var1 * (1 - var8)
-            col['interflow_volume'][num] = volume
+            var1 = volume - (var5 if var5 < volume else volume)
+            volume = interflow_store_input[num-1] + var1 * (1 - var8)
+            col_interflow_volume[num] = volume
+        if volume >= var5:
+            col_infiltration_recharge[num] = var5
+        else:
+            col_infiltration_recharge[num] = volume
+        col_interflow_to_rivers[num] = (col_interflow_volume[num] -
+                                        col_infiltration_recharge[num]) * var8
 
-    col['infiltration_recharge'] = np.copy(col['interflow_volume'])
-    col['infiltration_recharge'][col['infiltration_recharge'] >= var5] = var5
-    col['interflow_to_rivers'] = (col['interflow_volume'] -
-                                  col['infiltration_recharge']) * var8
+    col = {}
+    col['interflow_volume'] = col_interflow_volume.base
+    col['infiltration_recharge'] = col_infiltration_recharge.base
+    col['interflow_to_rivers'] = col_interflow_to_rivers.base
 
     return col
 
@@ -405,25 +457,36 @@ def get_recharge(data, node):
     """
     series, params, output = data['series'], data['params'], data['output']
 
-    col = {}
-    for key in ['recharge_store', 'combined_recharge']:
-        col[key] = np.zeros(len(series['date']))
+    cdef:
+        size_t length = len(series['date'])
+        double [:] col_recharge_store = np.zeros(length)
+        double [:] col_combined_recharge = np.zeros(length)
+        double irs = params['recharge_attenuation_params'][node][0]
+        double rlp = params['recharge_attenuation_params'][node][1]
+        double rll = params['recharge_attenuation_params'][node][2]
+        double recharge = irs
+        double combined = recharge * rlp
+        double [:] recharge_store_input = output['recharge_store_input']
+        size_t num
+        double var1, var2
 
     if params['recharge_attenuation_process'] == 'enabled':
-        irs = params['recharge_attenuation_params'][node][0]
-        rlp = params['recharge_attenuation_params'][node][1]
-        rll = params['recharge_attenuation_params'][node][2]
-        recharge = irs
-        combined = recharge * rlp
-        col['recharge_store'][0] = recharge
-        col['combined_recharge'][0] = combined
-        for num in range(1, len(series['date'])):
-            recharge = (recharge + output['recharge_store_input'][num-1] -
-                        min(recharge * rlp, rll))
-            col['recharge_store'][num] = recharge
+        col_recharge_store[0] = recharge
+        col_combined_recharge[0] = combined
+        for num in range(1, length):
+            var1 = recharge * rlp
+            recharge = (recharge + recharge_store_input[num-1] -
+                        (var1 if var1 < rll else rll))
+            col_recharge_store[num] = recharge
+            var2 = recharge * rlp
+            if var2 > rll:
+                col_combined_recharge[num] = rll
+            else:
+                col_combined_recharge[num] = var2
 
-        col['combined_recharge'] = col['recharge_store'] * rlp
-        col['combined_recharge'][col['combined_recharge'] > rll] = rll
+    col = {}
+    col['recharge_store'] = col_recharge_store.base
+    col['combined_recharge'] = col_combined_recharge.base
 
     return col
 
@@ -487,3 +550,4 @@ def get_balance(data, node):
     output = data['output']
     balance = output['average_in'] - output['average_out']
     return {'balance': balance}
+

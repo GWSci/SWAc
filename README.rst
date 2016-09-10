@@ -1,13 +1,13 @@
 swacmod
 =======
 
-Development Repo for Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing ``setup.py``.
+Development repo for the Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing ``setup.py``.
 
-The only dependencies that needs to be installed are ``dateutil`` and ``PyYAML``. In order to install them, I recommend first installing ``pip``, a python package manager, if you haven't already done so (instructions `here <https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py>`_). Then run
+The dependencies that need to be installed are `numpy`, ``dateutil`` and ``PyYAML``. In order to install them, I recommend first installing ``pip``, a python package manager, if you haven't already done so (instructions `here <https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py>`_). Then run
 
 .. code-block:: bash
 
-    $ pip install python-dateutil pyyaml
+    $ pip install numpy python-dateutil pyyaml
 
 Then download this Git repo.
 To **confirm that all modules are installed correctly**: navigate to ``ROOT``, launch a python shell and run

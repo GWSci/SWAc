@@ -202,6 +202,29 @@ def finalize_subroot_leakage_ts(specs, params):
 
 
 ###############################################################################
+def finalize_numpy_arrays(params):
+    """Convert dictionaries to numpy arrays for efficiency."""
+    params['kc_list'] = sorted(params['kc'].items(), key=lambda x: x[0])
+    params['kc_list'] = np.array([i[1] for i in params['kc_list']])
+
+    params['ror_prop'] = sorted(params['rorecharge_proportion'].items(),
+                                key=lambda x: x[0])
+    params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
+
+    params['ror_limit'] = sorted(params['rorecharge_limit'].items(),
+                                 key=lambda x: x[0])
+    params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
+
+    params['macro_prop'] = sorted(params['macropore_proportion'].items(),
+                                  key=lambda x: x[0])
+    params['macro_prop'] = np.array([i[1] for i in params['macro_prop']])
+
+    params['macro_limit'] = sorted(params['macropore_limit'].items(),
+                                   key=lambda x: x[0])
+    params['macro_limit'] = np.array([i[1] for i in params['macro_limit']])
+
+
+###############################################################################
 def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                           input_file=u.CONSTANTS['INPUT_FILE'],
                           input_dir=u.CONSTANTS['INPUT_DIR']):
@@ -247,9 +270,7 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
     finalize_pe_ts(specs, params, series)
     finalize_temperature_ts(specs, params)
     finalize_subroot_leakage_ts(specs, params)
-
-    params['kc_list'] = sorted(params['kc'].items(), key=lambda x: x[0])
-    params['kc_list'] = np.array([i[1] for i in params['kc_list']])
+    finalize_numpy_arrays(params)
 
     return specs, series, params
 
