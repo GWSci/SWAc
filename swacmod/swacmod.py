@@ -6,7 +6,7 @@
 import sys
 import time
 import logging
-import multiprocessing
+from multiprocessing import Process, Manager
 
 # Third Party Libraries
 import pyximport
@@ -26,7 +26,11 @@ def get_output(data, node):
 
     start = time.time()
 
-    data['output'] = {}
+    zone_r = data['params']['rainfall_zone_mapping'][node][0] - 1
+    zone_p = data['params']['pe_zone_mapping'][node][0] - 1
+    output = {'rainfall_ts': data['series']['rainfall_ts'][:, zone_r],
+              'pe_ts': data['series']['pe_ts'][:, zone_p]}
+
     for function in [m.get_pefac,
                      m.get_canopy_storage,
                      m.get_net_pefac,
@@ -53,25 +57,35 @@ def get_output(data, node):
                      m.get_average_out,
                      m.get_balance]:
 
-        columns = function(data, node)
-        data['output'].update(columns)
+        columns = function(data, output, node)
+        output.update(columns)
         logging.debug('\t\t"%s()" done', function.__name__)
 
     end = time.time()
     logging.debug('\tNode %d done (%dms).', node, (end - start) * 1000)
+    return output
 
 
 ###############################################################################
-def run_process(num, ids, data, test):
+def run_process(num, ids, data, test, reporting, recharge):
     """Run model for a chunk of nodes."""
-    logging.info('Process %d started (test is %s)', num, test)
+    logging.info('Process %d started (%d nodes, test is %s)',
+                 num, len(ids), test)
     for node in ids:
-        if data['params']['reporting_zone_mapping'][node] == 0:
+        rep_zone = data['params']['reporting_zone_mapping'][node]
+        if rep_zone == 0:
             continue
-        get_output(data, node)
+        output = get_output(data, node)
         logging.debug('RAM usage is %.2fMb', u.get_ram_usage_for_process())
         if not test:
-            io.dump_output(data, node)
+            if node in data['params']['output_individual']:
+                io.dump_water_balance(data, output, node=node)
+            if rep_zone not in reporting:
+                reporting[rep_zone] = output.copy()
+            else:
+                for key in output:
+                    reporting[rep_zone][key] += output[key]
+            recharge[node] = output['combined_recharge'].copy()
     logging.info('Process %d ended', num)
 
 
@@ -80,6 +94,10 @@ def run(test=False):
     """Run model for all nodes."""
     io.start_logging()
     logging.info('Start SWAcMod run')
+
+    manager = Manager()
+    reporting = manager.dict()
+    recharge = manager.dict()
 
     data = {}
     if test:
@@ -104,16 +122,20 @@ def run(test=False):
     for num, chunk in enumerate(chunks):
         if chunk.size == 0:
             continue
-        procs[num] = multiprocessing.Process(target=run_process,
-                                             args=(num, chunk, data, test, ))
+        procs[num] = Process(target=run_process,
+                             args=(num, chunk, data, test, reporting,
+                                   recharge))
         procs[num].start()
 
-    while all(i.is_alive() for i in procs.values()):
-        time.sleep(0.5)
+    for num in procs:
+        procs[num].join()
+
+    if not test:
+        for key in reporting.keys():
+            io.dump_water_balance(data, reporting[key], zone=key)
+        io.dump_recharge_file(data, recharge)
 
     logging.info('End SWAcMod run')
-
-    return data
 
 
 ###############################################################################

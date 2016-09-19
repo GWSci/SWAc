@@ -51,8 +51,19 @@ time_periods:
     required: true
     alt_format: [yml, csv]
     type:
-        - !!python/name:dict
         - !!python/name:list
+        - !!python/name:list
+        - !!python/name:int
+
+output_individual:
+    required: false
+    type:
+        - !!python/name:set
+        - !!python/name:int
+
+irchcb:
+    required: false
+    type:
         - !!python/name:int
 
 

@@ -99,8 +99,8 @@ class EndToEndTests(unittest.TestCase):
         """Test for validate_all() function."""
         all_keys = self.data['series'].keys() + self.data['params'].keys()
         for key in all_keys:
-            if key in ['date', 'months', 'kc_list', 'TAW', 'RAW', 'ror_prop',
-                       'ror_limit', 'macro_prop', 'macro_limit']:
+            if key in ['date', 'months', 'kc_list', 'TAW', 'RAW',
+                       'ror_prop', 'ror_limit', 'macro_prop', 'macro_limit']:
                 continue
             self.assertTrue(key in self.data['specs'])
         io.validate_all(self.data)
@@ -132,16 +132,16 @@ class EndToEndTests(unittest.TestCase):
     def test_get_output(self):
         """Test for get_output() function."""
         for node in self.ids:
-            swacmod.get_output(self.data, node)
+            output = swacmod.get_output(self.data, node)
             results = io.load_results()
             for key in u.CONSTANTS['COL_ORDER']:
                 if key in ['', 'date']:
                     continue
                 self.assertTrue(key in results)
                 self.assertTrue(key in self.data['series'] or
-                                key in self.data['output'])
+                                key in output)
                 self.assertEqual(len(results) - 1,
-                                 len(self.data['output']) + 2)
+                                 len(output))
                 if key in self.data['series']:
                     types = (list, np.ndarray)
                     if isinstance(self.data['series'][key][0], types):
@@ -149,7 +149,7 @@ class EndToEndTests(unittest.TestCase):
                     else:
                         new_list = self.data['series'][key]
                 else:
-                    new_list = self.data['output'][key]
+                    new_list = output[key]
                 self.assertEqual(len(new_list), len(results[key]))
                 for num, item in enumerate(new_list):
                     try:

@@ -98,36 +98,76 @@ def val_start_date(data, name):
 def val_time_periods(data, name):
     """Validate time_periods.
 
-    1) type has to be a dictionary of lists of integers
-    2) all time ids have to be present
-    3) values have to be lists with 2 elements
-    4) start and end times have to be positive
-    5) start time has to be smaller than end time
-    6) all days are assigned to a time period
+    1) type has to be a list of lists of integers
+    2) start and end times have to be positive and less than the # of days
+    3) time periods need to be lists of length 2
+    4) start time has to be smaller than end time
+    5) all days are assigned to a time period
     """
     tmp = data['params'][name]
 
     c.check_type(param=tmp,
                  name=name,
-                 t_types=data['specs'][name]['type'],
-                 len_list=[2],
-                 keys=range(1, len(tmp) + 1))
+                 t_types=data['specs'][name]['type'])
 
-    c.check_values_limits(values=[i for j in tmp.values() for i in j],
+    c.check_values_limits(values=[i for j in tmp for i in j],
                           name=name,
-                          low_l=0)
+                          low_l=0,
+                          high_l=len(data['series']['date']),
+                          include_high=True)
 
     all_days = []
-    for time_range in tmp.values():
+    for time_range in tmp:
+        if len(time_range) != 2:
+            msg = 'Parameter "%s" requires arrays of length 2'
+            raise u.ValidationError(msg % name)
         if not time_range[0] < time_range[1]:
             msg = 'Parameter "%s" requires start_date < end_date'
             raise u.ValidationError(msg % name)
         all_days += range(time_range[0], time_range[1] + 1)
 
-    if set(all_days) != set(range(1, len(data['series']['rainfall_ts']) + 1)):
+    if set(all_days) != set(range(1, len(data['series']['date']) + 1)):
         msg = ('Parameter "%s" requires all days to be included'
                ' in one of the periods')
         raise u.ValidationError(msg % name)
+
+
+###############################################################################
+def val_output_individual(data, name):
+    """Validate output_individual.
+
+    1) type has to be a set of integers
+    2) all ids in the list have also to be node ids
+    """
+    oin = data['params'][name]
+
+    c.check_type(param=oin,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    ids = set(range(1, data['params']['num_nodes'] + 1))
+
+    if not all(i in ids for i in oin):
+        msg = ('Parameter "%s" requires all node ids to be 1 <= x <= '
+               'num_nodes')
+        raise u.ValidationError(msg % name)
+
+
+###############################################################################
+def val_irchcb(data, name):
+    """Validate irchcb.
+
+    1) type has to be a positive integer
+    """
+    irc = data['params'][name]
+
+    c.check_type(param=irc,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[irc],
+                          name=name,
+                          low_l=0)
 
 
 ###############################################################################
@@ -1096,6 +1136,7 @@ def validate_params(data):
                      val_node_areas,
                      val_start_date,
                      val_time_periods,
+                     val_output_individual,
                      val_reporting_zone_names,
                      val_reporting_zone_mapping,
                      val_rainfall_zone_names,

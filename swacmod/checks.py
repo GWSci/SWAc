@@ -66,7 +66,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             t_types = []
             len_list = []
 
-        elif len(t_types) > 0 and t_type == (list, np.ndarray):
+        elif len(t_types) > 0 and t_type in [set, (list, np.ndarray)]:
             for value in param:
                 copy_t = [i for i in t_types]
                 copy_l = []

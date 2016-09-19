@@ -57,21 +57,84 @@ def load_yaml(filein):
 
 
 ###############################################################################
-def dump_output(data, node):
+def format_recharge_row(row):
+    """Convert list of values to output string."""
+    final = []
+    for value in row:
+        if value >= 0:
+            string = '%.6e' % value/1000.0
+        else:
+            string = '%.5e' % value/1000.0
+        splitter = ('e+' if 'e+' in string else 'e-')
+        split = string.split(splitter)
+        if len(split[1]) == 2:
+            split[1] = '0%s' % split[1]
+        final.append(splitter.join(split))
+    return ' '.join(final) + '\n'
+
+
+###############################################################################
+def dump_recharge_file(data, recharge):
+    """Write recharge to file."""
+    nrchop, inrech = 3, 1
+
+    fileout = '%s_recharge.rch' % data['params']['run_name']
+    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    logging.debug('\tDumping recharge to "%s"', path)
+
+    with open(path, 'w') as rech_file:
+        rech_file.write('# MODFLOW-USGs Recharge Package\n')
+        rech_file.write(' %d %d\n' % (nrchop, data['params']['irchcb']))
+
+        final = {}
+        for node in recharge.keys():
+            final[node] = u.aggregate_output_col(data,
+                                                 {'recharge': recharge[node]},
+                                                 'recharge', method='average')
+
+        for num in range(len(data['params']['time_periods'])):
+            rech_file.write(' %d\n' % inrech)
+            rech_file.write('INTERNAL  1.000000e+000  (FREE)  -1  RECHARGE\n')
+            row = []
+            for node in sorted(recharge.keys()):
+                if len(row) < data['params']['irchcb']:
+                    row.append(final[node][num])
+                else:
+                    rech_file.write(format_recharge_row(row))
+                    row = []
+            if row:
+                rech_file.write(format_recharge_row(row))
+
+
+###############################################################################
+def dump_water_balance(data, output, node=None, zone=None):
     """Write output to file."""
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], 'output_%d.csv' % node)
-    logging.info('\tDumping output to "%s"', path)
+    areas = data['params']['node_areas']
+    periods = data['params']['time_periods']
+
+    if node:
+        fileout = 'output_node_%d.csv' % node
+        area = areas[node]
+    elif zone:
+        fileout = 'output_zone_%d.csv' % zone
+        items = data['params']['reporting_zone_mapping'].items()
+        area = sum([areas[i[0]] for i in items if i[1] == zone])
+
+    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    logging.debug('\tDumping output to "%s"', path)
+    aggregated = u.aggregate_output(data, output, method='sum')
 
     with open(path, 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(u.CONSTANTS['COL_ORDER'])
-        for num in range(len(data['series']['date'])):
-            row = []
-            for key in u.CONSTANTS['COL_ORDER']:
-                try:
-                    row.append(data['output'][key][num])
-                except KeyError:
-                    continue
+        writer.writerow([i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS']])
+        for num in range(len(periods)):
+            row = [aggregated[key][num] for key in u.CONSTANTS['COL_ORDER'] if
+                   key not in ['unutilised_pe', 'k_slope', 'rapid_runoff_c']]
+            row.insert(1, periods[num][1] - periods[num][0] + 1)
+            row.insert(2, area)
+            for num2, element in enumerate(row):
+                if u.CONSTANTS['BALANCE_CONVERSIONS'][num][1]:
+                    row[num2] = element / 1000.0 * area
             writer.writerow(row)
 
 
@@ -142,12 +205,41 @@ def finalize_start_date(params):
 ###############################################################################
 def finalize_date(params, series):
     """Finalize the "date" series i/o."""
-    max_time = max([i for j in params['time_periods'].values() for i in j])
+    max_time = max([i for j in params['time_periods'] for i in j])
     day = datetime.timedelta(1)
     series['date'] = [params['start_date'] + day * num for num in
                       range(max_time)]
     dates = np.array([np.datetime64(str(i.date())) for i in series['date']])
     series['months'] = dates.astype('datetime64[M]').astype(int) % 12
+
+
+###############################################################################
+def finalize_output_individual(params):
+    """Finalize the "output_individual" parameter i/o."""
+    oip = str(params['output_individual']).lower()
+    sections = [i.strip() for i in oip.split(',')]
+    final = []
+    for section in sections:
+        if section == 'all':
+            final = range(1, params['num_nodes'] + 1)
+            break
+        elif section == 'none':
+            final = []
+            break
+        if '-' in section:
+            try:
+                first = int(section.split('-')[0].strip())
+                second = int(section.split('-')[1].strip())
+                final += range(first, second + 1)
+            except (TypeError, ValueError):
+                pass
+        else:
+            try:
+                final.append(int(section))
+            except (TypeError, ValueError):
+                pass
+
+    params['output_individual'] = set(final)
 
 
 ###############################################################################
@@ -178,7 +270,7 @@ def finalize_pe_ts(specs, params, series):
     fao = params['fao_process']
     canopy = params['canopy_process']
     if fao != 'enabled' and canopy != 'enabled':
-        series['pe_ts'] = [0.0 for _ in series['date']]
+        series['pe_ts'] = np.zeros(len(series['date']))
         logging.info('\t\tDefaulted "pe_ts" to 0.0')
     else:
         specs['pe_ts']['required'] = True
@@ -266,6 +358,7 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
     logging.info('\tFinalize load')
     finalize_start_date(params)
     finalize_date(params, series)
+    finalize_output_individual(params)
     finalize_taw_and_raw(params)
     finalize_pe_ts(specs, params, series)
     finalize_temperature_ts(specs, params)
