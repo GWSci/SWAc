@@ -6,6 +6,7 @@
 import re
 import logging
 import datetime
+import multiprocessing
 
 # Third Party Libraries
 import numpy as np
@@ -16,7 +17,10 @@ from . import utils as u
 
 ###############################################################################
 def fin_start_date(data, name):
-    """Finalize the "start_date" parameter i/o."""
+    """Finalize the "start_date" parameter.
+
+    1) if in the right format, convert it to datetime object.
+    """
     params = data['params']
 
     new_date = str(params['start_date'])
@@ -31,24 +35,59 @@ def fin_start_date(data, name):
 
 
 ###############################################################################
-def fin_date(data, name):
-    """Finalize the "date" series i/o."""
-    series, params = data['series'], data['params']
+def fin_run_name(data, name):
+    """Finalize the "run_name" parameter.
 
-    max_time = max([i for j in params['time_periods'] for i in j])
-    day = datetime.timedelta(1)
-    series['date'] = [params['start_date'] + day * num for num in
-                      range(max_time)]
-    dates = np.array([np.datetime64(str(i.date())) for i in series['date']])
-    series['months'] = dates.astype('datetime64[M]').astype(int) % 12
+    1) if not a string, convert it.
+    2) replace non-alphanumeric characters with underscores.
+    """
+    params = data['params']
+    rnm = params[name]
+
+    if not isinstance(rnm, basestring):
+        params[name] = str(rnm)
+        logging.info('\t\tConverted "%s" to string', name)
+
+    new_value = re.sub(r'[^a-zA-Z\-0-9]', '_', params[name])
+    if new_value != data['params'][name]:
+        params[name] = new_value
+        logging.info('\t\tNew "%s": %s', name, new_value)
+
+
+###############################################################################
+def fin_num_cores(data, name):
+    """Finalize the "num_cores" parameter.
+
+    1) if not provided, use the number of cores of the machine.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = multiprocessing.cpu_count()
+
+
+###############################################################################
+def fin_output_recharge(data, name):
+    """Finalize the "output_recharge" parameter.
+
+    1) if not provided, set it to True.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = True
 
 
 ###############################################################################
 def fin_output_individual(data, name):
-    """Finalize the "output_individual" parameter i/o."""
+    """Finalize the "output_individual" parameter.
+
+    1) if not provided, set it to "none".
+    2) convert it to a string if it's not.
+    3) parse it into a set of integers.
+    """
     params = data['params']
 
-    oip = str(params['output_individual']).lower()
+    if params[name] is None:
+        params[name] = 'none'
+
+    oip = str(params[name]).lower()
     sections = [i.strip() for i in oip.split(',')]
     final = []
     for section in sections:
@@ -71,14 +110,410 @@ def fin_output_individual(data, name):
             except (TypeError, ValueError):
                 pass
 
-    params['output_individual'] = set(final)
+    params[name] = set(final)
+
+
+###############################################################################
+def fin_irchcb(data, name):
+    """Finalize the "irchcb" parameter.
+
+    1) if not provided, set it to 50.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = 50
+
+
+###############################################################################
+def fin_nodes_per_line(data, name):
+    """Finalize the "nodes_per_line" parameter.
+
+    1) if not provided, set it to 10.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = 10
+
+
+###############################################################################
+def fin_reporting_zone_mapping(data, name):
+    """Finalize the "reporting_zone_mapping" parameter.
+
+    1) if not provided, set it to all 1s.
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_reporting_zone_names(data, name):
+    """Finalize the "reporting_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        zones = len(set(params['reporting_zone_mapping'].values()))
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_rainfall_zone_names(data, name):
+    """Finalize the "rainfall_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        zones = len(set(params['rainfall_zone_mapping'].values()))
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_pe_zone_names(data, name):
+    """Finalize the "pe_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        zones = len(set(params['pe_zone_mapping'].values()))
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_temperature_zone_mapping(data, name):
+    """Finalize the "temperature_zone_mapping" parameter.
+
+    1) if not provided, set it to all 1s.
+    """
+    params = data['params']
+    if params[name] is None:
+        nodes = params['num_nodes']
+        params[name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_temperature_zone_names(data, name):
+    """Finalize the "temperature_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        zones = len(set(params['temperature_zone_mapping'].values()))
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_subroot_zone_mapping(data, name):
+    """Finalize the "subroot_zone_mapping" parameter.
+
+    1) if not provided, set it to all 1s.
+    """
+    params = data['params']
+    if params[name] is None:
+        nodes = params['num_nodes']
+        params[name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_subroot_zone_names(data, name):
+    """Finalize the "subroot_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        zones = len(set(params['subroot_zone_mapping'].values()))
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_rapid_runoff_zone_mapping(data, name):
+    """Finalize the "rapid_runoff_zone_mapping" parameter.
+
+    1) if not provided, set it to all 0s.
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, 0) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_rapid_runoff_zone_names(data, name):
+    """Finalize the "rapid_runoff_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        zones = len(set(params['rapid_runoff_zone_mapping'].values()))
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_rorecharge_zone_mapping(data, name):
+    """Finalize the "rorecharge_zone_mapping" parameter.
+
+    1) if not provided, set it to all 0s.
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, 0) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_rorecharge_zone_names(data, name):
+    """Finalize the "rorecharge_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        zones = len(set(params['rorecharge_zone_mapping'].values()))
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_macropore_zone_mapping(data, name):
+    """Finalize the "macropore_zone_mapping" parameter.
+
+    1) if not provided, set it to all 1s.
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_macropore_zone_names(data, name):
+    """Finalize the "macropore_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        zones = len(set(params['macropore_zone_mapping'].values()))
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_soil_zone_names(data, name):
+    """Finalize the "macropore_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        try:
+            zones = len(params['soil_spatial'].items()[0][1])
+        except (TypeError, KeyError, IndexError):
+            zones = 1
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_landuse_zone_names(data, name):
+    """Finalize the "macropore_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        try:
+            zones = len(params['lu_spatial'].items()[0][1])
+        except (TypeError, KeyError, IndexError):
+            zones = 1
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_free_throughfall(data, name):
+    """Finalize the "free_throughfall" parameter.
+
+    1) if not provided, set it to all 1s.
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, 1.0) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_max_canopy_storage(data, name):
+    """Finalize the "max_canopy_storage" parameter.
+
+    1) if not provided, set it to all 1s.
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, 0.0) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_rapid_runoff_params(data, name):
+    """Finalize the "max_canopy_storage" parameter.
+
+    1) if not provided, set it to 0.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = [{'class_smd': [0],
+                                 'class_ri': [0],
+                                 'values': [[0.0], [0.0]]}]
+
+
+###############################################################################
+def fin_rorecharge_proportion(data, name):
+    """Finalize the "rorecharge_proportion" parameter.
+
+    1) if not provided, set it to 0.
+    """
+    params = data['params']
+    if params[name] is None:
+        params[name] = dict((k, [0.0]) for k in range(1, 13))
+    else:
+        params['ror_prop'] = sorted(params['rorecharge_proportion'].items(),
+                                    key=lambda x: x[0])
+        params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
+
+
+###############################################################################
+def fin_rorecharge_limit(data, name):
+    """Finalize the "rorecharge_limit" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data['params']
+    if params[name] is None:
+        params[name] = dict((k, [99999]) for k in range(1, 13))
+    else:
+        params['ror_limit'] = sorted(params['rorecharge_limit'].items(),
+                                     key=lambda x: x[0])
+        params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
+
+
+###############################################################################
+def fin_macropore_proportion(data, name):
+    """Finalize the "macropore_proportion" parameter.
+
+    1) if not provided, set it to 0.
+    """
+    params = data['params']
+    if params[name] is None:
+        params[name] = dict((k, [0.0]) for k in range(1, 13))
+    else:
+        params['macro_prop'] = sorted(params['macropore_proportion'].items(),
+                                      key=lambda x: x[0])
+        params['macro_prop'] = np.array([i[1] for i in params['macro_prop']])
+
+
+###############################################################################
+def fin_macropore_limit(data, name):
+    """Finalize the "macropore_limit" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data['params']
+    if params[name] is None:
+        params[name] = dict((k, [99999]) for k in range(1, 13))
+    else:
+        params['macro_limit'] = sorted(params['macropore_limit'].items(),
+                                       key=lambda x: x[0])
+        params['macro_limit'] = np.array([i[1] for i in params['macro_limit']])
+
+
+###############################################################################
+def fin_soil_static_params(data, name):
+    """Finalize the "soil_static_params" parameter.
+
+    1) if not provided, set "fao_process" to "disabled".
+    """
+    if data['params'][name] is None:
+        data['params']['fao_process'] = 'disabled'
+
+
+###############################################################################
+def fin_soil_spatial(data, name):
+    """Finalize the "soil_spatial" parameter.
+
+    1) if not provided, set "fao_process" to "disabled".
+    """
+    if data['params'][name] is None:
+        data['params']['fao_process'] = 'disabled'
+
+
+###############################################################################
+def fin_lu_spatial(data, name):
+    """Finalize the "lu_spatial" parameter.
+
+    1) if not provided, set "fao_process" to "disabled".
+    """
+    if data['params'][name] is None:
+        data['params']['fao_process'] = 'disabled'
+
+
+###############################################################################
+def fin_zr(data, name):
+    """Finalize the "zr" parameter.
+
+    1) if not provided, set "fao_process" to "disabled".
+    """
+    if data['params'][name] is None:
+        data['params']['fao_process'] = 'disabled'
+
+
+###############################################################################
+def fin_kc(data, name):
+    """Finalize the "kc" parameter.
+
+    1) if not provided, set "fao_process" to "disabled".
+    """
+    params = data['params']
+    if params[name] is None:
+        params['fao_process'] = 'disabled'
+    else:
+        params['kc_list'] = sorted(params[name].items(), key=lambda x: x[0])
+        params['kc_list'] = np.array([i[1] for i in params['kc_list']])
+
+
+###############################################################################
+def fin_subsoilzone_leakage_fraction(data, name):
+    """Finalize the "subsoilzone_leakage_fraction" parameter.
+
+    1) if not provided, set it to all 0s.
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, 0.0) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_interflow_params(data, name):
+    """Finalize the "interflow_params" parameter.
+
+    1) if not provided, set it to all [0, 1, 999999, 0].
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, [0, 1, 999999, 0]) for k in
+                                    range(1, nodes + 1))
+
+
+###############################################################################
+def fin_recharge_attenuation_params(data, name):
+    """Finalize the "recharge_attenuation_params" parameter.
+
+    1) if not provided, set it to all [0, 1, 999999].
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, [0, 1, 999999]) for k in
+                                    range(1, nodes + 1))
 
 
 ###############################################################################
 def fin_taw_and_raw(data, name):
-    """Finalize the "TAW" and "RAW" parameters i/o."""
+    """Finalize the "TAW" and "RAW" parameters."""
     params = data['params']
-
     params['TAW'], params['RAW'] = {}, {}
 
     for node in range(1, params['num_nodes'] + 1):
@@ -99,64 +534,29 @@ def fin_taw_and_raw(data, name):
 
 
 ###############################################################################
-def fin_kc_list(data, name):
-    """Convert dictionaries to numpy arrays for efficiency."""
-    params = data['params']
+def fin_date(data, name):
+    """Finalize the "date" series."""
+    series, params = data['series'], data['params']
 
-    params['kc_list'] = sorted(params['kc'].items(), key=lambda x: x[0])
-    params['kc_list'] = np.array([i[1] for i in params['kc_list']])
-
-
-###############################################################################
-def fin_ror_prop(data, name):
-    """Convert dictionaries to numpy arrays for efficiency."""
-    params = data['params']
-
-    params['ror_prop'] = sorted(params['rorecharge_proportion'].items(),
-                                key=lambda x: x[0])
-    params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
-
-
-###############################################################################
-def fin_ror_limit(data, name):
-    """Convert dictionaries to numpy arrays for efficiency."""
-    params = data['params']
-
-    params['ror_limit'] = sorted(params['rorecharge_limit'].items(),
-                                 key=lambda x: x[0])
-    params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
-
-
-###############################################################################
-def fin_macro_prop(data, name):
-    """Convert dictionaries to numpy arrays for efficiency."""
-    params = data['params']
-
-    params['macro_prop'] = sorted(params['macropore_proportion'].items(),
-                                  key=lambda x: x[0])
-    params['macro_prop'] = np.array([i[1] for i in params['macro_prop']])
-
-
-###############################################################################
-def fin_macro_limit(data, name):
-    """Convert dictionaries to numpy arrays for efficiency."""
-    params = data['params']
-
-    params['macro_limit'] = sorted(params['macropore_limit'].items(),
-                                   key=lambda x: x[0])
-    params['macro_limit'] = np.array([i[1] for i in params['macro_limit']])
+    max_time = max([i for j in params['time_periods'] for i in j])
+    day = datetime.timedelta(1)
+    series['date'] = [params['start_date'] + day * num for num in
+                      range(max_time)]
+    dates = np.array([np.datetime64(str(i.date())) for i in series['date']])
+    series['months'] = dates.astype('datetime64[M]').astype(int) % 12
 
 
 ###############################################################################
 def fin_pe_ts(data, name):
-    """Finalize the "pe_ts" series i/o."""
+    """Finalize the "pe_ts" series."""
     series, specs, params = data['series'], data['specs'], data['params']
 
     fao = params['fao_process']
     canopy = params['canopy_process']
     if fao != 'enabled' and canopy != 'enabled':
-        series[name] = np.zeros(len(series['date']))
-        logging.info('\t\tDefaulted "%s" to 0.0', series)
+        zones = len(set(params['pe_zone_mapping'].values()))
+        series[name] = np.zeros([len(series['date']), zones])
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
     else:
         specs[name]['required'] = True
         logging.info('\t\tSwitched "%s" to "required"', name)
@@ -164,22 +564,76 @@ def fin_pe_ts(data, name):
 
 ###############################################################################
 def fin_temperature_ts(data, name):
-    """Finalize the "temperature_ts" series i/o."""
-    specs, params = data['specs'], data['params']
+    """Finalize the "temperature_ts" series."""
+    series, specs, params = data['series'], data['specs'], data['params']
 
     if params['snow_process'] == 'enabled':
         specs[name]['required'] = True
         logging.info('\t\tSwitched "%s" to "required"', name)
+    else:
+        zones = len(set(params['temperature_zone_mapping'].values()))
+        series[name] = np.zeros([len(series['date']), zones])
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
 
 ###############################################################################
 def fin_subroot_leakage_ts(data, name):
-    """Finalize the "subroot_leakage_ts" series i/o."""
-    specs, params = data['specs'], data['params']
+    """Finalize the "subroot_leakage_ts" series."""
+    series, specs, params = data['series'], data['specs'], data['params']
 
     if params['leakage_process'] == 'enabled':
         specs[name]['required'] = True
         logging.info('\t\tSwitched "%s" to "required"', name)
+    else:
+        zones = len(set(params['subroot_zone_mapping'].values()))
+        series[name] = np.zeros([len(series['date']), zones])
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
+
+
+FUNC_PARAMS = [fin_start_date,
+               fin_run_name,
+               fin_num_cores,
+               fin_output_recharge,
+               fin_output_individual,
+               fin_irchcb,
+               fin_nodes_per_line,
+               fin_reporting_zone_mapping,
+               fin_reporting_zone_names,
+               fin_rainfall_zone_names,
+               fin_pe_zone_names,
+               fin_temperature_zone_mapping,
+               fin_temperature_zone_names,
+               fin_subroot_zone_mapping,
+               fin_subroot_zone_names,
+               fin_rapid_runoff_zone_mapping,
+               fin_rapid_runoff_zone_names,
+               fin_rorecharge_zone_mapping,
+               fin_rorecharge_zone_names,
+               fin_macropore_zone_mapping,
+               fin_macropore_zone_names,
+               fin_soil_zone_names,
+               fin_landuse_zone_names,
+               fin_free_throughfall,
+               fin_max_canopy_storage,
+               fin_rapid_runoff_params,
+               fin_rorecharge_proportion,
+               fin_rorecharge_limit,
+               fin_macropore_proportion,
+               fin_macropore_limit,
+               fin_soil_static_params,
+               fin_soil_spatial,
+               fin_lu_spatial,
+               fin_zr,
+               fin_kc,
+               fin_subsoilzone_leakage_fraction,
+               fin_interflow_params,
+               fin_recharge_attenuation_params,
+               fin_taw_and_raw]
+
+FUNC_SERIES = [fin_date,
+               fin_pe_ts,
+               fin_temperature_ts,
+               fin_subroot_leakage_ts]
 
 
 ###############################################################################
@@ -187,18 +641,12 @@ def finalize_params(data):
     """Finalize all parameters."""
     logging.info('\tFinalizing parameters')
 
-    for function in [fin_start_date,
-                     fin_date,
-                     fin_output_individual,
-                     fin_taw_and_raw,
-                     fin_kc_list,
-                     fin_ror_prop,
-                     fin_ror_limit,
-                     fin_macro_prop,
-                     fin_macro_limit]:
-
+    for function in FUNC_PARAMS:
         param = function.__name__.replace('fin_', '')
-        function(data, param)
+        try:
+            function(data, param)
+        except Exception as err:
+            u.ValidationError('Could not finalize "%s": %s', param, err)
         logging.debug('\t\t"%s" finalized', param)
 
     logging.info('\tDone.')
@@ -209,10 +657,7 @@ def finalize_series(data):
     """Finalize all time series."""
     logging.info('\tFinalizing time series')
 
-    for function in [fin_pe_ts,
-                     fin_temperature_ts,
-                     fin_subroot_leakage_ts]:
-
+    for function in FUNC_SERIES:
         series = function.__name__.replace('fin_', '')
         function(data, series)
         logging.debug('\t\t"%s" finalized', series)

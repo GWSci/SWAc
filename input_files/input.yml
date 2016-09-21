@@ -43,14 +43,14 @@
 # This parameter is required.
 run_name: mypattern
 
-# Number of cores to be used
-# This parameter is optional. If not specified, the number of cores of the
-# machine will be used
-num_cores: 4
-
 # Number of nodes in the 2D water accounting model
 # This parameter is required.
 num_nodes: 10
+
+# Area of each node.
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+node_areas: node_areas.yml
 
 # Start date for the time series. Has to be in format "YYYY-MM-DD".
 # This parameter is required.
@@ -61,140 +61,116 @@ start_date: 1980-01-01
 # This parameter can accept a path to YAML or CSV
 time_periods: time_periods.yml
 
+# Number of cores to be used
+# This parameter is optional. If not specified, the number of cores of the
+# machine will be used
+num_cores: 4
+
 # Output recharge file switch
 # Can be either true or false
-# This parameter is optional
+# This parameter is optional. If not specified, it will be set to "true".
 output_recharge: true
 
 # Output balance file for individual nodes. Accepts comma-separated values,
 # ranges and overlapping values, e.g. "1, 3, 68-83, 5-7, 6".
 # It also accepts "all" and "none" values.
-# This parameter is optional
+# This parameter is optional. If not specified, it will be set to "none".
 output_individual: "1"
 
 # IRCHCB.
 # Has to be an integer.
-# This parameter is optional
+# This parameter is optional. If not specified, it will be set to 50.
 irchcb: 50
 
 # Number of nodes per line of recharge file.
 # It has to be a positive integer.
-# This parameter is optional
+# This parameter is optional. If not specified, it will be set to 10.
 nodes_per_line: 5
 
 
-###############
-# Time series #
-###############
-
-# This parameter is required.
-# This parameter can accept a path to YAML or CSV
-rainfall_ts: rainfall_ts.yml
-
-# This parameter is optional.
-# This parameter is required only if the FAO or the Canopy process is enabled.
-# This parameter can accept a path to YAML or CSV
-pe_ts: pe_ts.yml
-
-# This parameter is required.
-# This parameter is required only if the Snow process is enabled.
-# This parameter can accept a path to YAML or CSV
-temperature_ts: temperature_ts.yml
-
-# This parameter is required.
-# This parameter is required only if the Leakage process is enabled.
-# This parameter can accept a path to YAML or CSV
-subroot_leakage_ts: subroot_leakage_ts.yml
-
-
-###############################################
-# Model parameters: Nodes, zones and mappings #
-###############################################
-
-# Area of each node.
-# This parameter is required.
-# This parameter can accept a path to YAML or CSV
-node_areas: node_areas.yml
-
-# Reporting zone names.
-# This parameter is optional
-# This parameter can accept a path to YAML or CSV
-reporting_zone_names: reporting_zone_names.yml
+##############################################
+# Model parameters: Zones names and mappings #
+##############################################
 
 # Reporting zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 reporting_zone_mapping: reporting_zone_mapping.yml
 
+# Reporting zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+reporting_zone_names: reporting_zone_names.yml
+
+# Rainfall zone mapping.
+# This parameter is required
+# This parameter can accept a path to YAML or CSV
+rainfall_zone_mapping: rainfall_zone_mapping.yml
+
 # Rainfall zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 rainfall_zone_names: rainfall_zone_names.yml
 
-# Rainfall zone mapping.
-# This parameter is optional
-# This parameter can accept a path to YAML or CSV
-rainfall_zone_mapping: rainfall_zone_mapping.yml
-
-# PE zone names.
-# This parameter is optional
-# This parameter can accept a path to YAML or CSV
-pe_zone_names: pe_zone_names.yml
-
 # PE zone mapping.
-# This parameter is optional
+# This parameter is required.
 # This parameter can accept a path to YAML or CSV
 pe_zone_mapping: pe_zone_mapping.yml
 
 # PE zone names.
-# This parameter is optional
+# This parameter is optional.
 # This parameter can accept a path to YAML or CSV
-temperature_zone_names: temperature_zone_names.yml
+pe_zone_names: pe_zone_names.yml
 
-# PE zone mapping.
+# Temperature zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 temperature_zone_mapping: temperature_zone_mapping.yml
 
-# PE zone names.
+# Temperature zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-subroot_zone_names: subroot_zone_names.yml
+temperature_zone_names: temperature_zone_names.yml
 
-# PE zone mapping.
+# Subroot zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 subroot_zone_mapping: subroot_zone_mapping.yml
 
-# Rapid runoff zone names.
+# Subroot zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-rapid_runoff_zone_names: rapid_runoff_zone_names.yml
+subroot_zone_names: subroot_zone_names.yml
 
 # Rapid Runoff Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 rapid_runoff_zone_mapping: rapid_runoff_zone_mapping.yml
 
-# Runoff recharge zone names.
+# Rapid runoff zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-rorecharge_zone_names: rorecharge_zone_names.yml
+rapid_runoff_zone_names: rapid_runoff_zone_names.yml
 
 # Runoff Recharge Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 rorecharge_zone_mapping: rorecharge_zone_mapping.yml
 
-# Macropore zone names.
+# Runoff recharge zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-macropore_zone_names: macropore_zone_names.yml
+rorecharge_zone_names: rorecharge_zone_names.yml
 
 # Macropore Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 macropore_zone_mapping: macropore_zone_mapping.yml
+
+# Macropore zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+macropore_zone_names: macropore_zone_names.yml
 
 # Soil zone names.
 # This parameter is optional
@@ -299,27 +275,32 @@ macropore_limit: macropore_limit.yml
 fao_process: enabled
 
 # Soil Properties (FC, WP, p, starting SMD)
-# This parameter is optional
+# This parameter is optional. If not specified, "fao_process" will be set to
+# "disabled"
 # This parameter can accept a path to YAML or CSV
 soil_static_params: soil_static_params.yml
 
 # Soil Spatial
-# This parameter is optional
+# This parameter is optional. If not specified, "fao_process" will be set to
+# "disabled"
 # This parameter can accept a path to YAML or CSV
 soil_spatial: soil_spatial.yml
 
 # LU Spatial
-# This parameter is optional
+# This parameter is optional. If not specified, "fao_process" will be set to
+# "disabled"
 # This parameter can accept a path to YAML or CSV
 lu_spatial: lu_spatial.yml
 
 # LU Time Variant: Zr
-# This parameter is optional
+# This parameter is optional. If not specified, "fao_process" will be set to
+# "disabled"
 # This parameter can accept a path to YAML or CSV
 zr: zr.yml
 
 # LU Time Variant: Kc
-# This parameter is optional
+# This parameter is optional. If not specified, "fao_process" will be set to
+# "disabled"
 # This parameter can accept a path to YAML or CSV
 kc: kc.yml
 
@@ -365,3 +346,27 @@ recharge_attenuation_process: enabled
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 recharge_attenuation_params: recharge_attenuation_params.yml
+
+
+###############
+# Time series #
+###############
+
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+rainfall_ts: rainfall_ts.yml
+
+# This parameter is optional.
+# This parameter is required only if the FAO or the Canopy process is enabled.
+# This parameter can accept a path to YAML or CSV
+pe_ts: pe_ts.yml
+
+# This parameter is optional.
+# This parameter is required only if the Snow process is enabled.
+# This parameter can accept a path to YAML or CSV
+temperature_ts: temperature_ts.yml
+
+# This parameter is optional.
+# This parameter is required only if the Leakage process is enabled.
+# This parameter can accept a path to YAML or CSV
+subroot_leakage_ts: subroot_leakage_ts.yml

@@ -3,7 +3,6 @@
 """SWAcMod validation functions."""
 
 # Standard Library
-import re
 import logging
 import multiprocessing
 
@@ -16,19 +15,10 @@ from . import checks as c
 def val_run_name(data, name):
     """Validate run_name.
 
-    1) type has to be string, convert it otherwise
-    2) replace spaces and non-alphanumeric characters with underscores
+    1) type has to be string
     """
     rnm = data['params'][name]
-
-    if not isinstance(rnm, basestring):
-        data['params'][name] = str(rnm)
-        logging.info('\t\tConverted "%s" to string', name)
-
-    new_value = re.sub(r'[^a-zA-Z\-0-9]', '_', data['params'][name])
-    if new_value != data['params'][name]:
-        data['params'][name] = new_value
-        logging.info('\t\tNew "%s": %s', name, new_value)
+    c.check_type(param=rnm, name=name, t_types=data['specs'][name]['type'])
 
 
 ###############################################################################
@@ -39,9 +29,6 @@ def val_num_cores(data, name):
     2) value has to be 0 < x <= number of machine cores
     """
     num = data['params'][name]
-    if num is None:
-        data['params'][name] = multiprocessing.cpu_count()
-
     c.check_type(param=num, name=name, t_types=data['specs'][name]['type'])
     c.check_values_limits(values=[num],
                           name=name,
@@ -86,10 +73,7 @@ def val_time_periods(data, name):
     5) all days are assigned to a time period
     """
     tmp = data['params'][name]
-
-    c.check_type(param=tmp,
-                 name=name,
-                 t_types=data['specs'][name]['type'])
+    c.check_type(param=tmp, name=name, t_types=data['specs'][name]['type'])
 
     c.check_values_limits(values=[i for j in tmp for i in j],
                           name=name,
@@ -1131,65 +1115,72 @@ def val_recharge_attenuation_params(data, name):
                  len_list=[3])
 
 
+FUNC_PARAMS = [val_run_name,
+               val_num_cores,
+               val_num_nodes,
+               val_node_areas,
+               val_start_date,
+               val_time_periods,
+               val_output_recharge,
+               val_output_individual,
+               val_irchcb,
+               val_nodes_per_line,
+               val_reporting_zone_names,
+               val_reporting_zone_mapping,
+               val_rainfall_zone_names,
+               val_rainfall_zone_mapping,
+               val_rapid_runoff_zone_names,
+               val_rapid_runoff_zone_mapping,
+               val_pe_zone_names,
+               val_pe_zone_mapping,
+               val_temperature_zone_names,
+               val_temperature_zone_mapping,
+               val_subroot_zone_names,
+               val_subroot_zone_mapping,
+               val_rorecharge_zone_names,
+               val_rorecharge_zone_mapping,
+               val_macropore_zone_names,
+               val_macropore_zone_mapping,
+               val_soil_zone_names,
+               val_landuse_zone_names,
+               val_canopy_process,
+               val_free_throughfall,
+               val_max_canopy_storage,
+               val_snow_process,
+               val_snow_params,
+               val_rapid_runoff_process,
+               val_rapid_runoff_params,
+               val_rorecharge_process,
+               val_rorecharge_proportion,
+               val_rorecharge_limit,
+               val_macropore_process,
+               val_macropore_proportion,
+               val_macropore_limit,
+               val_fao_process,
+               val_soil_static_params,
+               val_soil_spatial,
+               val_lu_spatial,
+               val_zr,
+               val_kc,
+               val_leakage_process,
+               val_subsoilzone_leakage_fraction,
+               val_interflow_process,
+               val_interflow_params,
+               val_recharge_attenuation_process,
+               val_recharge_attenuation_params]
+
+FUNC_SERIES = [val_rainfall_ts,
+               val_pe_ts,
+               val_temperature_ts,
+               val_subroot_leakage_ts]
+
+
 ###############################################################################
 def validate_params(data):
     """Validate all parameters using their specifications."""
     logging.info('\tValidating parameters')
 
-    for function in [val_run_name,
-                     val_num_cores,
-                     val_num_nodes,
-                     val_node_areas,
-                     val_start_date,
-                     val_time_periods,
-                     val_output_recharge,
-                     val_output_individual,
-                     val_irchcb,
-                     val_nodes_per_line,
-                     val_reporting_zone_names,
-                     val_reporting_zone_mapping,
-                     val_rainfall_zone_names,
-                     val_rainfall_zone_mapping,
-                     val_rapid_runoff_zone_names,
-                     val_rapid_runoff_zone_mapping,
-                     val_pe_zone_names,
-                     val_pe_zone_mapping,
-                     val_temperature_zone_names,
-                     val_temperature_zone_mapping,
-                     val_subroot_zone_names,
-                     val_subroot_zone_mapping,
-                     val_rorecharge_zone_names,
-                     val_rorecharge_zone_mapping,
-                     val_macropore_zone_names,
-                     val_macropore_zone_mapping,
-                     val_soil_zone_names,
-                     val_landuse_zone_names,
-                     val_canopy_process,
-                     val_free_throughfall,
-                     val_max_canopy_storage,
-                     val_snow_process,
-                     val_snow_params,
-                     val_rapid_runoff_process,
-                     val_rapid_runoff_params,
-                     val_rorecharge_process,
-                     val_rorecharge_proportion,
-                     val_rorecharge_limit,
-                     val_macropore_process,
-                     val_macropore_proportion,
-                     val_macropore_limit,
-                     val_fao_process,
-                     val_soil_static_params,
-                     val_soil_spatial,
-                     val_lu_spatial,
-                     val_zr,
-                     val_kc,
-                     val_leakage_process,
-                     val_subsoilzone_leakage_fraction,
-                     val_interflow_process,
-                     val_interflow_params,
-                     val_recharge_attenuation_process,
-                     val_recharge_attenuation_params]:
-
+    for function in FUNC_PARAMS:
         param = function.__name__.replace('val_', '')
         function(data, param)
         logging.debug('\t\t"%s" validated', param)
@@ -1202,11 +1193,7 @@ def validate_series(data):
     """Validate all time series using their specifications."""
     logging.info('\tValidating time series')
 
-    for function in [val_rainfall_ts,
-                     val_pe_ts,
-                     val_temperature_ts,
-                     val_subroot_leakage_ts]:
-
+    for function in FUNC_SERIES:
         series = function.__name__.replace('val_', '')
         function(data, series)
         logging.debug('\t\t"%s" validated', series)

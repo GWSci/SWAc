@@ -22,15 +22,17 @@ run_name:
     type:
         - !!python/name:str
 
-num_cores:
-    required: false
-    type:
-        - !!python/name:int
-
 num_nodes:
     required: true
     type:
         - !!python/name:int
+
+node_areas:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
 
 start_date:
     required: true
@@ -43,6 +45,11 @@ time_periods:
     type:
         - !!python/name:list
         - !!python/name:list
+        - !!python/name:int
+
+num_cores:
+    required: false
+    type:
         - !!python/name:int
 
 output_recharge:
@@ -67,53 +74,9 @@ nodes_per_line:
         - !!python/name:int
 
 
-###############
-# Time series #
-###############
-
-rainfall_ts:
-    required: true
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:list
-        - !!python/name:list
-        - !!python/name:float
-
-pe_ts:
-    required: false
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:list
-        - !!python/name:list
-        - !!python/name:float
-
-temperature_ts:
-    required: false
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:list
-        - !!python/name:list
-        - !!python/name:float
-
-subroot_leakage_ts:
-    required: false
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:list
-        - !!python/name:list
-        - !!python/name:float
-
-
-###############################################
-# Model parameters: Nodes, zones and mappings #
-###############################################
-
-node_areas:
-    required: true
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:dict
-        - !!python/name:float
+##############################################
+# Model parameters: Zones names and mappings #
+##############################################
 
 reporting_zone_names:
     required: false
@@ -167,7 +130,7 @@ temperature_zone_names:
         - !!python/name:basestring
 
 temperature_zone_mapping:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -181,7 +144,7 @@ subroot_zone_names:
         - !!python/name:basestring
 
 subroot_zone_mapping:
-    required: true
+    required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
@@ -203,7 +166,7 @@ rapid_runoff_zone_mapping:
         - !!python/name:int
 
 rorecharge_zone_names:
-    required: true
+    required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -217,7 +180,7 @@ rorecharge_zone_mapping:
         - !!python/name:int
 
 macropore_zone_names:
-    required: true
+    required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -231,14 +194,14 @@ macropore_zone_mapping:
         - !!python/name:int
 
 soil_zone_names:
-    required: true
+    required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
         - !!python/name:basestring
 
 landuse_zone_names:
-    required: true
+    required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
@@ -465,5 +428,42 @@ recharge_attenuation_params:
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+
+###############
+# Time series #
+###############
+
+rainfall_ts:
+    required: true
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:float
+
+pe_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:float
+
+temperature_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:float
+
+subroot_leakage_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
         - !!python/name:list
         - !!python/name:float
