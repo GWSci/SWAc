@@ -3,7 +3,9 @@ dist/
 *.coverage*
 deploy
 deploy.py
-output_files/
+output_files/*.log
+output_files/*.csv
+output_files/*.rch
 swacmod/deploy.py
 pylint.conf
 swacmod.egg-info/
