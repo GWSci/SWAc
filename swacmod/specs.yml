@@ -13,24 +13,14 @@
 ###############################################################################
 
 
-#########
-# Paths #
-#########
+#####################
+# Global parameters #
+#####################
 
 run_name:
     required: true
     type:
         - !!python/name:str
-
-log_file:
-    required: false
-    type:
-        - !!python/name:str
-
-
-#####################
-# Global parameters #
-#####################
 
 num_cores:
     required: false
@@ -55,6 +45,11 @@ time_periods:
         - !!python/name:list
         - !!python/name:int
 
+output_recharge:
+    required: false
+    type:
+        - !!python/name:bool
+
 output_individual:
     required: false
     type:
@@ -62,6 +57,11 @@ output_individual:
         - !!python/name:int
 
 irchcb:
+    required: false
+    type:
+        - !!python/name:int
+
+nodes_per_line:
     required: false
     type:
         - !!python/name:int

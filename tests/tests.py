@@ -83,15 +83,11 @@ class EndToEndTests(unittest.TestCase):
 
     input_file = u.CONSTANTS['TEST_INPUT_FILE']
     input_dir = u.CONSTANTS['TEST_INPUT_DIR']
-    specs, series, params = io.load_params_from_yaml(input_file=input_file,
-                                                     input_dir=input_dir)
-    if specs is None:
+    data = io.load_params_from_yaml(input_file=input_file,
+                                    input_dir=input_dir)
+    if not data:
         print
         sys.exit()
-
-    data = {'specs': specs,
-            'series': series,
-            'params': params}
 
     ids = range(1, data['params']['num_nodes'] + 1)
 

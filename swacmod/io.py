@@ -4,7 +4,6 @@
 
 # Standard Library
 import os
-import re
 import csv
 import sys
 import logging
@@ -19,6 +18,7 @@ import numpy as np
 from . import utils as u
 from . import checks as c
 from . import validation as v
+from . import finalization as f
 
 
 ###############################################################################
@@ -97,7 +97,7 @@ def dump_recharge_file(data, recharge):
             rech_file.write('INTERNAL  1.000000e+000  (FREE)  -1  RECHARGE\n')
             row = []
             for node in sorted(recharge.keys()):
-                if len(row) < data['params']['irchcb']:
+                if len(row) < data['params']['nodes_per_line']:
                     row.append(final[node][num])
                 else:
                     rech_file.write(format_recharge_row(row))
@@ -189,134 +189,6 @@ def convert_one_yaml_to_csv(filein):
 
 
 ###############################################################################
-def finalize_start_date(params):
-    """Finalize the "start_date" parameter i/o."""
-    new_date = str(params['start_date'])
-    fields = re.findall(r'^(\d{4})-(\d{2})-(\d{2})$', new_date)
-    if not fields:
-        msg = ('start_date has to be in the format YYYY-MM-DD '
-               '(e.g. 1980-01-13)')
-        raise u.ValidationError(msg)
-    params['start_date'] = datetime.datetime(int(fields[0][0]),
-                                             int(fields[0][1]),
-                                             int(fields[0][2]))
-
-
-###############################################################################
-def finalize_date(params, series):
-    """Finalize the "date" series i/o."""
-    max_time = max([i for j in params['time_periods'] for i in j])
-    day = datetime.timedelta(1)
-    series['date'] = [params['start_date'] + day * num for num in
-                      range(max_time)]
-    dates = np.array([np.datetime64(str(i.date())) for i in series['date']])
-    series['months'] = dates.astype('datetime64[M]').astype(int) % 12
-
-
-###############################################################################
-def finalize_output_individual(params):
-    """Finalize the "output_individual" parameter i/o."""
-    oip = str(params['output_individual']).lower()
-    sections = [i.strip() for i in oip.split(',')]
-    final = []
-    for section in sections:
-        if section == 'all':
-            final = range(1, params['num_nodes'] + 1)
-            break
-        elif section == 'none':
-            final = []
-            break
-        if '-' in section:
-            try:
-                first = int(section.split('-')[0].strip())
-                second = int(section.split('-')[1].strip())
-                final += range(first, second + 1)
-            except (TypeError, ValueError):
-                pass
-        else:
-            try:
-                final.append(int(section))
-            except (TypeError, ValueError):
-                pass
-
-    params['output_individual'] = set(final)
-
-
-###############################################################################
-def finalize_taw_and_raw(params):
-    """Finalize the "TAW" and "RAW" parameters i/o."""
-    params['TAW'], params['RAW'] = {}, {}
-
-    for node in range(1, params['num_nodes'] + 1):
-        params['TAW'][node], params['RAW'][node] = [], []
-        fcp = params['soil_static_params']['FC']
-        wpp = params['soil_static_params']['WP']
-        ppp = params['soil_static_params']['p']
-        pss = params['soil_spatial'][node]
-        lus = params['lu_spatial'][node]
-        var1 = [(fcp[i] - wpp[i]) * pss[i] * 1000 for i in range(len(pss))]
-        var2 = [ppp[i] * pss[i] for i in range(len(pss))]
-        for num in range(12):
-            var3 = [params['zr'][num+1][i] * lus[i] for i in range(len(lus))]
-            params['TAW'][node].append(sum(var1) * sum(var3))
-            params['RAW'][node].append(params['TAW'][node][num] * sum(var2))
-        params['TAW'][node] = np.array(params['TAW'][node])
-        params['RAW'][node] = np.array(params['RAW'][node])
-
-
-###############################################################################
-def finalize_pe_ts(specs, params, series):
-    """Finalize the "pe_ts" series i/o."""
-    fao = params['fao_process']
-    canopy = params['canopy_process']
-    if fao != 'enabled' and canopy != 'enabled':
-        series['pe_ts'] = np.zeros(len(series['date']))
-        logging.info('\t\tDefaulted "pe_ts" to 0.0')
-    else:
-        specs['pe_ts']['required'] = True
-        logging.info('\t\tSwitched "pe_ts" to "required"')
-
-
-###############################################################################
-def finalize_temperature_ts(specs, params):
-    """Finalize the "temperature_ts" series i/o."""
-    if params['snow_process'] == 'enabled':
-        specs['temperature_ts']['required'] = True
-        logging.info('\t\tSwitched "temperature_ts" to "required"')
-
-
-###############################################################################
-def finalize_subroot_leakage_ts(specs, params):
-    """Finalize the "subroot_leakage_ts" series i/o."""
-    if params['leakage_process'] == 'enabled':
-        specs['subroot_leakage_ts']['required'] = True
-        logging.info('\t\tSwitched "subroot_leakage_ts" to "required"')
-
-
-###############################################################################
-def finalize_numpy_arrays(params):
-    """Convert dictionaries to numpy arrays for efficiency."""
-    params['kc_list'] = sorted(params['kc'].items(), key=lambda x: x[0])
-    params['kc_list'] = np.array([i[1] for i in params['kc_list']])
-
-    params['ror_prop'] = sorted(params['rorecharge_proportion'].items(),
-                                key=lambda x: x[0])
-    params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
-
-    params['ror_limit'] = sorted(params['rorecharge_limit'].items(),
-                                 key=lambda x: x[0])
-    params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
-
-    params['macro_prop'] = sorted(params['macropore_proportion'].items(),
-                                  key=lambda x: x[0])
-    params['macro_prop'] = np.array([i[1] for i in params['macro_prop']])
-
-    params['macro_limit'] = sorted(params['macropore_limit'].items(),
-                                   key=lambda x: x[0])
-    params['macro_limit'] = np.array([i[1] for i in params['macro_limit']])
-
-
-###############################################################################
 def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                           input_file=u.CONSTANTS['INPUT_FILE'],
                           input_dir=u.CONSTANTS['INPUT_DIR']):
@@ -337,14 +209,14 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                     reader = csv.reader(open(absolute, 'r'))
                 except IOError as err:
                     print '---> Validation failed: %s (%s)' % (err, param)
-                    return None, None, None
+                    return {}
                 params[param] = dict((row[0], row[1]) for row in reader)
             elif ext == 'yml':
                 try:
                     params[param] = load_yaml(absolute)[param]
                 except (IOError, KeyError) as err:
                     print '---> Validation failed: %s (%s)' % (err, param)
-                    return None, None, None
+                    return {}
 
     for key in specs:
         if key not in params:
@@ -355,17 +227,14 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
     for key in keys:
         series[key] = np.array(params.pop(key))
 
-    logging.info('\tFinalize load')
-    finalize_start_date(params)
-    finalize_date(params, series)
-    finalize_output_individual(params)
-    finalize_taw_and_raw(params)
-    finalize_pe_ts(specs, params, series)
-    finalize_temperature_ts(specs, params)
-    finalize_subroot_leakage_ts(specs, params)
-    finalize_numpy_arrays(params)
+    data = {'specs': specs,
+            'series': series,
+            'params': params}
 
-    return specs, series, params
+    f.finalize_params(data)
+    f.finalize_series(data)
+
+    return data
 
 
 ###############################################################################

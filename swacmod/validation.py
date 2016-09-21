@@ -32,25 +32,6 @@ def val_run_name(data, name):
 
 
 ###############################################################################
-def val_log_file(data, name):
-    """Validate log_file.
-
-    NOTE: made this optional
-
-    1) path has to be absolute, convert it otherwise
-    """
-    log = data['params'][name]
-    if log is None:
-        log = '%s.log' % data['params']['run_name']
-        logging.info('\t\tDefaulted "%s" to "%s"', name, log)
-
-    data['params'][name] = c.check_path(path=log)
-    if data['params'][name] != log:
-        logging.info('\t\tNormalized "%s" path to %s', name,
-                     data['params'][name])
-
-
-###############################################################################
 def val_num_cores(data, name):
     """Validate num_cores.
 
@@ -133,6 +114,19 @@ def val_time_periods(data, name):
 
 
 ###############################################################################
+def val_output_recharge(data, name):
+    """Validate output_recharge.
+
+    1) type has to be a boolean
+    """
+    opr = data['params'][name]
+
+    c.check_type(param=opr,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+
+###############################################################################
 def val_output_individual(data, name):
     """Validate output_individual.
 
@@ -157,7 +151,7 @@ def val_output_individual(data, name):
 def val_irchcb(data, name):
     """Validate irchcb.
 
-    1) type has to be a positive integer
+    1) type has to be an integer
     """
     irc = data['params'][name]
 
@@ -165,7 +159,20 @@ def val_irchcb(data, name):
                  name=name,
                  t_types=data['specs'][name]['type'])
 
-    c.check_values_limits(values=[irc],
+
+###############################################################################
+def val_nodes_per_line(data, name):
+    """Validate nodes_per_line.
+
+    1) type has to be a positive integer
+    """
+    npl = data['params'][name]
+
+    c.check_type(param=npl,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[npl],
                           name=name,
                           low_l=0)
 
@@ -1130,13 +1137,15 @@ def validate_params(data):
     logging.info('\tValidating parameters')
 
     for function in [val_run_name,
-                     val_log_file,
                      val_num_cores,
                      val_num_nodes,
                      val_node_areas,
                      val_start_date,
                      val_time_periods,
+                     val_output_recharge,
                      val_output_individual,
+                     val_irchcb,
+                     val_nodes_per_line,
                      val_reporting_zone_names,
                      val_reporting_zone_mapping,
                      val_rainfall_zone_names,

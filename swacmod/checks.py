@@ -121,5 +121,5 @@ def check_required(data):
         if not data['specs'][param]['required']:
             continue
         key = ('series' if param.endswith('ts') else 'params')
-        if param not in data[key] or data[key][param] is None:
+        if data[key][param] is None:
             raise u.ValidationError('Parameter "%s" is required' % param)

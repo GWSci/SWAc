@@ -99,22 +99,19 @@ def run(test=False):
     reporting = manager.dict()
     recharge = manager.dict()
 
-    data = {}
     if test:
         input_file = u.CONSTANTS['TEST_INPUT_FILE']
         input_dir = u.CONSTANTS['TEST_INPUT_DIR']
-        specs, series, params = io.load_params_from_yaml(input_file=input_file,
-                                                         input_dir=input_dir)
+        data = io.load_params_from_yaml(input_file=input_file,
+                                        input_dir=input_dir)
     else:
-        specs, series, params = io.load_params_from_yaml()
+        data = io.load_params_from_yaml()
 
     if specs is None:
         print
         sys.exit()
 
-    data['specs'], data['series'], data['params'] = specs, series, params
     io.validate_all(data)
-
     ids = range(1, data['params']['num_nodes'] + 1)
     chunks = np.array_split(ids, data['params']['num_cores'])
 
@@ -133,7 +130,8 @@ def run(test=False):
     if not test:
         for key in reporting.keys():
             io.dump_water_balance(data, reporting[key], zone=key)
-        io.dump_recharge_file(data, recharge)
+        if data['params']['output_recharge']:
+            io.dump_recharge_file(data, recharge)
 
     logging.info('End SWAcMod run')
 
