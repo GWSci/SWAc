@@ -3,6 +3,31 @@ swacmod
 
 Development repo for the Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing ``setup.py``.
 
+Installation on Windows
+
+- install Git using default options
+- launch Git Bash
+- install virtualenv with:
+
+    $ pip install virtualenv
+
+- create a new virtualenv with:
+
+    $ cd Dektop
+    $ virtualenv SWAcMod_env
+
+- clone repo in SWAcMod_env/SWAcMod/
+- activate virtualenv
+
+    $ cd SWAcMod_env
+    $ source Scripts/activate
+
+- install module
+
+    $ python setup.py install
+
+Installation on UNIX
+
 The dependencies that need to be installed are `numpy`, ``dateutil`` and ``PyYAML``. In order to install them, I recommend first installing ``pip``, a python package manager, if you haven't already done so (instructions `here <https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py>`_). Then run
 
 .. code-block:: bash
