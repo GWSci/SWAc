@@ -5,41 +5,19 @@ Development repo for the Surface Water Accounting Model (SWAcMod). In the follow
 
 Installation on Windows
 
-- install Git using default options
-- launch Git Bash
-- install virtualenv with:
-
-    $ pip install virtualenv
-
-- create a new virtualenv with:
-
-    $ cd Dektop
-    $ virtualenv SWAcMod_env
-
-- clone repo in SWAcMod_env/SWAcMod/
-- activate virtualenv
-
-    $ cd SWAcMod_env
-    $ source Scripts/activate
-
-- install module
+- install Microsoft Visual C++ Compiler for Python 2.7 (https://www.microsoft.com/en-us/download/details.aspx?id=44266)
+- install Anaconda for Python 2.7, 32-bit (https://www.continuum.io/downloads)
+- install Git (https://git-scm.com/download/win)
+- clone repo using Git GUI in SWAcMod/
+- from an Anaconda Prompt, install SWAcMod with
 
     $ python setup.py install
 
-Installation on UNIX
-
-The dependencies that need to be installed are `numpy`, ``dateutil`` and ``PyYAML``. In order to install them, I recommend first installing ``pip``, a python package manager, if you haven't already done so (instructions `here <https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py>`_). Then run
-
-.. code-block:: bash
-
-    $ pip install numpy python-dateutil pyyaml
-
-Then download this Git repo.
 To **confirm that all modules are installed correctly**: navigate to ``ROOT``, launch a python shell and run
 
 .. code-block:: python
 
-    >>> from swacmod import io, swacmod, model
+    >>> from swacmod import input_output, swacmod, model
 
 This should not produce errors.
 

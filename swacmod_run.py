@@ -3,20 +3,22 @@
 """SWAcMod main."""
 
 # Standard Library
+import os
 import sys
 import time
 import logging
 from multiprocessing import Process, Manager
 
 # Third Party Libraries
-import pyximport
-pyximport.install()
 import numpy as np
 
 # Internal modules
-from . import io
-from . import utils as u
-from . import model as m
+from swacmod import utils as u
+from swacmod import input_output as io
+
+# Compile and import model
+u.compile_model()
+from swacmod import model as m
 
 
 ###############################################################################
@@ -67,8 +69,9 @@ def get_output(data, node):
 
 
 ###############################################################################
-def run_process(num, ids, data, test, reporting, recharge):
+def run_process(num, ids, data, test, reporting, recharge, log_path):
     """Run model for a chunk of nodes."""
+    io.start_logging(path=log_path)
     logging.info('Process %d started (%d nodes, test is %s)',
                  num, len(ids), test)
     for node in ids:
@@ -92,7 +95,7 @@ def run_process(num, ids, data, test, reporting, recharge):
 ###############################################################################
 def run(test=False):
     """Run model for all nodes."""
-    io.start_logging()
+    log_path = io.start_logging()
     logging.info('Start SWAcMod run')
 
     manager = Manager()
@@ -107,7 +110,7 @@ def run(test=False):
     else:
         data = io.load_params_from_yaml()
 
-    if specs is None:
+    if data['specs'] is None:
         print
         sys.exit()
 
@@ -121,7 +124,7 @@ def run(test=False):
             continue
         procs[num] = Process(target=run_process,
                              args=(num, chunk, data, test, reporting,
-                                   recharge))
+                                   recharge, log_path))
         procs[num].start()
 
     for num in procs:

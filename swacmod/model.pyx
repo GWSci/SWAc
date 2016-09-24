@@ -205,8 +205,10 @@ def get_ae(data, output, node):
         size_t zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
         double ssmd = u.weighted_sum(params['soil_spatial'][node],
                                      ssp['starting_SMD'])
-        long long [:] class_smd = np.array(rrp[zone_rro]['class_smd'])
-        long long [:] class_ri = np.array(rrp[zone_rro]['class_ri'])
+        long long [:] class_smd = np.array(rrp[zone_rro]['class_smd'],
+                                           dtype=np.int64)
+        long long [:] class_ri = np.array(rrp[zone_rro]['class_ri'],
+                                          dtype=np.int64)
         double [:, :] ror_prop = params['ror_prop']
         double [:, :] ror_limit = params['ror_limit']
         double [:, :] macro_prop = params['macro_prop']
@@ -228,7 +230,7 @@ def get_ae(data, output, node):
         double [:] net_pefac_a = output['net_pefac']
         double [:] tawrew_a = output['tawrew']
         double [:] rawrew_a = output['rawrew']
-        long long [:] months = series['months']
+        long long [:] months = np.array(series['months'], dtype=np.int64)
 
     for num in range(length):
         var2 = net_rainfall[num]

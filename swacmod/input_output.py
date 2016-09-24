@@ -22,18 +22,22 @@ from . import finalization as f
 
 
 ###############################################################################
-def start_logging(level=logging.INFO):
+def start_logging(level=logging.INFO, path=None):
     """Start logging output."""
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
 
-    now = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], '%s.log' % now)
     log_format = ('%(asctime)s --- (%(process)d) %(levelname)s - %(message)s')
+
+    if path is None:
+        now = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
+        path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], '%s.log' % now)
 
     logging.basicConfig(filename=path,
                         format=log_format,
                         level=level)
+
+    return path
 
 
 ###############################################################################
@@ -62,9 +66,9 @@ def format_recharge_row(row):
     final = []
     for value in row:
         if value >= 0:
-            string = '%.6e' % value/1000.0
+            string = '%.6e' % (value/1000.0)
         else:
-            string = '%.5e' % value/1000.0
+            string = '%.5e' % (value/1000.0)
         splitter = ('e+' if 'e+' in string else 'e-')
         split = string.split(splitter)
         if len(split[1]) == 2:

@@ -64,7 +64,7 @@ time_periods: time_periods.yml
 # Number of cores to be used
 # This parameter is optional. If not specified, the number of cores of the
 # machine will be used
-num_cores: 4
+num_cores: 1
 
 # Output recharge file switch
 # Can be either true or false

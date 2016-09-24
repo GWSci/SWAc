@@ -4,7 +4,10 @@
 
 # Standard Library
 import os
+import sys
 import logging
+import datetime
+import subprocess as sp
 
 # Third Party Libraries
 import psutil
@@ -141,3 +144,33 @@ def aggregate_output_col(data, output, column, method='sum'):
             final[num] /= (time[1] - time[0] + 1)
 
     return final
+
+
+###############################################################################
+def get_modified_time(path):
+    """Get the datetime a file was modified."""
+    try:
+        mod = datetime.datetime.fromtimestamp(os.path.getmtime(path))
+    except OSError:
+        logging.error('Could not find %s, set modified time to 1/1/1901', path)
+        mod = datetime.datetime(1901, 1, 1)
+    return mod
+
+
+###############################################################################
+def compile_model():
+    """Compile Cython model."""
+    mod_c = get_modified_time('swacmod/model.c')
+    mod_pyx = get_modified_time('swacmod/model.pyx')
+    if mod_pyx > mod_c:
+        print 'model.pyx modified, recompiling'
+        proc = sp.Popen(['python', 'setup.py', 'build_ext', '--inplace'],
+                        cwd=CONSTANTS['CODE_DIR'],
+                        stdout=sp.PIPE,
+                        stderr=sp.PIPE)
+        proc.wait()
+        if proc.returncode != 0:
+            print 'Could not compile C extensions:'
+            print '%s' % proc.stdout.read()
+            print '%s' % proc.stderr.read()
+            sys.exit(proc.returncode)

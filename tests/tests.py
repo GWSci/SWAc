@@ -12,10 +12,10 @@ import yaml
 import numpy as np
 
 # Internal modules
-from swacmod import io
-from swacmod import swacmod
+import swacmod_run as swacmod
 from swacmod import utils as u
 from swacmod import validation as v
+from swacmod import input_output as io
 
 ##############################################################################
 def generate_test_file(name, num_nodes):
