@@ -8,7 +8,8 @@ Installation on win32 systems (tested on Windows 7):
 - install `Microsoft Visual C++ Compiler <https://www.microsoft.com/en-us/download/details.aspx?id=44266>`_ (for Python 2.7)
 - install `Anaconda <https://www.continuum.io/downloads>`_ (for Python 2.7, 32-bit)
 - install `Git <https://git-scm.com/download/win>`_
-- launch ``Start`` > ``All Programs`` > ``Git`` > ``Git GUI`` > ``Clone Existing Repository`` with 
+- launch ``Start`` > ``All Programs`` > ``Git`` > ``Git GUI`` > ``Clone Existing Repository``
+- when prompted, use as parameters:
 
     source location: https://github.com/AlastairBlack/SWAcMod
     
