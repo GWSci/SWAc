@@ -3,18 +3,18 @@ swacmod
 
 Development repo for the Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing this file.
 
-Installation on win32 systems (tested on Windows 7)
+Installation on win32 systems (tested on Windows 7):
 
 - install `Microsoft Visual C++ Compiler <https://www.microsoft.com/en-us/download/details.aspx?id=44266>`_ (for Python 2.7)
 - install `Anaconda <https://www.continuum.io/downloads>`_ (for Python 2.7, 32-bit)
 - install `Git <https://git-scm.com/download/win>`_
-- launch ``All Programs`` > ``Git`` > ``Git GUI`` > ``Clone Existing Repository`` with 
+- launch ``Start`` > ``All Programs`` > ``Git`` > ``Git GUI`` > ``Clone Existing Repository`` with 
 
-    ``source location``: ``https://github.com/AlastairBlack/SWAcMod``
+    source location: https://github.com/AlastairBlack/SWAcMod
     
-    ``target``: ``C:/Users/Marco/Desktop/SWAcMod``
+    target: C:/Users/Marco/Desktop/SWAcMod
     
-- launch ``All Programs`` > ``Anaconda2`` > ``Anaconda Prompt`` and install ``SWAcMod`` with
+- launch ``Start`` > ``All Programs`` > ``Anaconda2`` > ``Anaconda Prompt`` and install ``SWAcMod`` with
 
 .. code-block:: bash
 
