@@ -14,8 +14,7 @@ Installation on win32 systems (tested on Windows 7)
     
     target: C:/Users/Marco/Desktop/SWAcMod
     
-- launch All Programs > Anaconda2 > Anaconda Prompt
-- install SWAcMod with
+- launch All Programs > Anaconda2 > Anaconda Prompt and install SWAcMod with
 
 .. code-block:: bash
 
@@ -67,7 +66,13 @@ If they succeed, you will see an output like the following:
 
     OK
 
-Finally, to **run the model**: navigate to ``ROOT``, then run
+To **run the model without output files** (but with a log file): navigate to ``ROOT``, then run
+
+.. code-block:: bash
+
+    $ python swacmod_run.py test
+
+Finally, to simply **run the model**: navigate to ``ROOT``, then run
 
 .. code-block:: bash
 
