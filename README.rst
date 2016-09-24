@@ -38,21 +38,27 @@ If they succeed, you will see an output like the following:
 
     running test
     running egg_info
+    writing requirements to swacmod.egg-info/requires.txt
     writing swacmod.egg-info/PKG-INFO
     writing top-level names to swacmod.egg-info/top_level.txt
     writing dependency_links to swacmod.egg-info/dependency_links.txt
     reading manifest file 'swacmod.egg-info/SOURCES.txt'
     writing manifest file 'swacmod.egg-info/SOURCES.txt'
     running build_ext
+    model.pyx modified, recompiling
     test_get_output (tests.tests.EndToEndTests)
     Test for get_output() function. ... ok
+    test_val_num_nodes (tests.tests.EndToEndTests)
+    Test for val_num_nodes() function. ... ok
+    test_val_start_date (tests.tests.EndToEndTests)
+    Test for val_start_date() function. ... ok
     test_validate_all (tests.tests.EndToEndTests)
     Test for validate_all() function. ... ok
     test_validate_functions (tests.tests.EndToEndTests)
     Test that all parameters and series have a validation function. ... ok
 
     ----------------------------------------------------------------------
-    Ran 3 tests in 3.023s
+    Ran 5 tests in 3.064s
 
     OK
 
@@ -60,6 +66,6 @@ Finally, to **run the model**: navigate to ``ROOT``, then run
 
 .. code-block:: bash
 
-    $ python -m swacmod.swacmod
+    $ python swacmod_run.py
 
-This will produce an ``output.csv`` file for each node and a ``.log`` file in the ``output_files/`` directory.
+This will write the output files in the ``output_files/`` directory.
