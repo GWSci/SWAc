@@ -151,9 +151,11 @@ def get_modified_time(path):
     """Get the datetime a file was modified."""
     try:
         mod = datetime.datetime.fromtimestamp(os.path.getmtime(path))
+        mod = datetime.datetime(mod.year, mod.month, mod.day, mod.hour,
+                                mod.minute)
     except OSError:
         logging.error('Could not find %s, set modified time to 1/1/1901', path)
-        mod = datetime.datetime(1901, 1, 1)
+        mod = datetime.datetime(1901, 1, 1, 0, 0, 0)
     return mod
 
 
@@ -162,7 +164,7 @@ def compile_model():
     """Compile Cython model."""
     mod_c = get_modified_time('swacmod/model.c')
     mod_pyx = get_modified_time('swacmod/model.pyx')
-    if mod_pyx > mod_c:
+    if mod_pyx >= mod_c:
         print 'model.pyx modified, recompiling'
         proc = sp.Popen(['python', 'setup.py', 'build_ext', '--inplace'],
                         cwd=CONSTANTS['CODE_DIR'],

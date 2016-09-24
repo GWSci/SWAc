@@ -1,23 +1,27 @@
 swacmod
 =======
 
-Development repo for the Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing ``setup.py``.
+Development repo for the Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing this file.
 
-Installation on Windows
+Installation on win32 systems (tested on Windows 7)
 
-- install Microsoft Visual C++ Compiler for Python 2.7 (https://www.microsoft.com/en-us/download/details.aspx?id=44266)
-- install Anaconda for Python 2.7, 32-bit (https://www.continuum.io/downloads)
-- install Git (https://git-scm.com/download/win)
-- clone repo using Git GUI in SWAcMod/
-- from an Anaconda Prompt, install SWAcMod with
+- install `Microsoft Visual C++ Compiler <https://www.microsoft.com/en-us/download/details.aspx?id=44266>`_ (for Python 2.7)
+- install `Anaconda <https://www.continuum.io/downloads>`_ (for Python 2.7, 32-bit)
+- install `Git <https://git-scm.com/download/win>`_
+- launch All Programs > Git > Git GUI > Clone Existing Repository
+    - source location: https://github.com/AlastairBlack/SWAcMod
+    - target: C:/Users/Marco/Desktop/SWAcMod
+- launch All Programs > Anaconda2 > Anaconda Prompt
+- install SWAcMod with
 
-    $ python setup.py install
+    > cd Desktop/SWAcMod
+    > python setup.py install
 
 To **confirm that all modules are installed correctly**: navigate to ``ROOT``, launch a python shell and run
 
 .. code-block:: python
 
-    >>> from swacmod import input_output, swacmod, model
+    >>> from swacmod import input_output, utils, validation, finalization
 
 This should not produce errors.
 
