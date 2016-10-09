@@ -3,16 +3,21 @@ swacmod
 
 Development repo for the Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing this file.
 
-Installation on win32 systems (tested on Windows 7)
+Installation on win32 systems (tested on Windows 7):
 
 - install `Microsoft Visual C++ Compiler <https://www.microsoft.com/en-us/download/details.aspx?id=44266>`_ (for Python 2.7)
 - install `Anaconda <https://www.continuum.io/downloads>`_ (for Python 2.7, 32-bit)
 - install `Git <https://git-scm.com/download/win>`_
-- launch All Programs > Git > Git GUI > Clone Existing Repository
-    - source location: https://github.com/AlastairBlack/SWAcMod
-    - target: C:/Users/Marco/Desktop/SWAcMod
-- launch All Programs > Anaconda2 > Anaconda Prompt
-- install SWAcMod with
+- launch ``Start`` > ``All Programs`` > ``Git`` > ``Git GUI`` > ``Clone Existing Repository``
+- when prompted, use as parameters:
+
+    source location: https://github.com/AlastairBlack/SWAcMod
+    
+    target: C:/Users/Marco/Desktop/SWAcMod
+    
+- launch ``Start`` > ``All Programs`` > ``Anaconda2`` > ``Anaconda Prompt`` and install ``SWAcMod`` with
+
+.. code-block:: bash
 
     > cd Desktop/SWAcMod
     > python setup.py install
@@ -62,7 +67,13 @@ If they succeed, you will see an output like the following:
 
     OK
 
-Finally, to **run the model**: navigate to ``ROOT``, then run
+To **run the model without output files** (but with a log file): navigate to ``ROOT``, then run
+
+.. code-block:: bash
+
+    $ python swacmod_run.py test
+
+Finally, to simply **run the model**: navigate to ``ROOT``, then run
 
 .. code-block:: bash
 
