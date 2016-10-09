@@ -153,7 +153,7 @@ def get_rawrew(data, output, node):
     """S) RAWREW (Readily Available Water, Readily Evaporable Water)."""
     series, params = data['series'], data['params']
     if params['fao_process'] == 'enabled':
-        rawrew = params['RAW'][node][series['months']]
+        rawrew = params['raw'][node][series['months']]
     else:
         rawrew = np.zeros(len(series['date']))
     return {'rawrew': rawrew}
@@ -165,7 +165,7 @@ def get_tawrew(data, output, node):
     series, params = data['series'], data['params']
 
     if params['fao_process'] == 'enabled':
-        tawrew = params['TAW'][node][series['months']]
+        tawrew = params['taw'][node][series['months']]
     else:
         tawrew = np.zeros(len(series['date']))
 

@@ -11,8 +11,8 @@ except ImportError:
     from distutils.extension import Extension
 
 # Third Party Libraries
-from Cython.Build import cythonize
 import numpy
+from Cython.Build import cythonize
 
 EXTENSIONS = [Extension('model',
                         ['model.pyx'],

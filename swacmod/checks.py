@@ -25,17 +25,26 @@ MAPPING = {(int, long): ['an integer', 'integers'],
 
 
 ###############################################################################
+def expand_t_type(t_type):
+    """Expand t_type to all allowed types."""
+    if t_type == float:
+        t_type = (float, int, long)
+    elif t_type == int:
+        t_type = (int, long)
+    elif t_type == list:
+        t_type = (list, np.ndarray)
+
+    return t_type
+
+
+###############################################################################
 def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     """Check the parameter is of type t_type."""
-    while t_types:
+    types = [i for i in t_types]
+    while types:
 
-        t_type = t_types.pop(0)
-        if t_type == float:
-            t_type = (float, int, long)
-        elif t_type == int:
-            t_type = (int, long)
-        elif t_type == list:
-            t_type = (list, np.ndarray)
+        t_type = types.pop(0)
+        t_type = expand_t_type(t_type)
 
         new_len = None
         if t_type == (list, np.ndarray) and len_list:
@@ -55,26 +64,26 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             diff = set(keys) - set(param.keys())
             raise u.ValidationError(msg % (name, diff))
 
-        if len(t_types) > 0 and t_type == dict:
+        if len(types) > 0 and t_type == dict:
             for value in param.values():
-                copy_t = [i for i in t_types]
+                copy_t = [i for i in types]
                 copy_l = []
                 if len_list:
                     copy_l = [i for i in len_list]
                 check_type(param=value, name=name, t_types=copy_t,
                            len_list=copy_l, keys=keys)
-            t_types = []
+            types = []
             len_list = []
 
-        elif len(t_types) > 0 and t_type in [set, (list, np.ndarray)]:
+        elif len(types) > 0 and t_type in [set, (list, np.ndarray)]:
             for value in param:
-                copy_t = [i for i in t_types]
+                copy_t = [i for i in types]
                 copy_l = []
                 if len_list:
                     copy_l = [i for i in len_list]
                 check_type(param=value, name=name, t_types=copy_t,
                            len_list=copy_l, keys=keys)
-            t_types = []
+            types = []
             len_list = []
 
 

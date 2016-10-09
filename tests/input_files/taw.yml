@@ -1,0 +1,3 @@
+# Columns are soil zones, rows are months
+taw:
+    1: [231, 231, 231, 231, 231, 231, 231, 231, 231, 231, 231, 231]

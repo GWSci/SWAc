@@ -105,16 +105,11 @@ def run(test=False):
     if test:
         input_file = u.CONSTANTS['TEST_INPUT_FILE']
         input_dir = u.CONSTANTS['TEST_INPUT_DIR']
-        data = io.load_params_from_yaml(input_file=input_file,
-                                        input_dir=input_dir)
+        data = io.load_and_validate(input_file=input_file,
+                                    input_dir=input_dir)
     else:
-        data = io.load_params_from_yaml()
+        data = io.load_and_validate()
 
-    if data['specs'] is None:
-        print
-        sys.exit()
-
-    io.validate_all(data)
     ids = range(1, data['params']['num_nodes'] + 1)
     chunks = np.array_split(ids, data['params']['num_cores'])
 

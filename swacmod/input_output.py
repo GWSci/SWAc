@@ -12,7 +12,6 @@ import datetime
 # Third Party Libraries
 import yaml
 from dateutil import parser
-import numpy as np
 
 # Internal modules
 from . import utils as u
@@ -131,10 +130,10 @@ def dump_water_balance(data, output, node=None, zone=None):
     with open(path, 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
         writer.writerow([i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS']])
-        for num in range(len(periods)):
+        for num, period in enumerate(periods):
             row = [aggregated[key][num] for key in u.CONSTANTS['COL_ORDER'] if
                    key not in ['unutilised_pe', 'k_slope', 'rapid_runoff_c']]
-            row.insert(1, periods[num][1] - periods[num][0] + 1)
+            row.insert(1, period[1] - period[0] + 1)
             row.insert(2, area)
             for num2, element in enumerate(row):
                 if u.CONSTANTS['BALANCE_CONVERSIONS'][num][1]:
@@ -212,15 +211,15 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                 try:
                     reader = csv.reader(open(absolute, 'r'))
                 except IOError as err:
-                    print '---> Validation failed: %s (%s)' % (err, param)
-                    return {}
+                    msg = 'Could not import %s: %s' % (param, err)
+                    raise u.InputOutputError(msg)
                 params[param] = dict((row[0], row[1]) for row in reader)
             elif ext == 'yml':
                 try:
                     params[param] = load_yaml(absolute)[param]
                 except (IOError, KeyError) as err:
-                    print '---> Validation failed: %s (%s)' % (err, param)
-                    return {}
+                    msg = 'Could not import %s: %s' % (param, err)
+                    raise u.InputOutputError(msg)
 
     for key in specs:
         if key not in params:
@@ -229,21 +228,35 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
     series = {}
     keys = [i for i in params if i.endswith('_ts')]
     for key in keys:
-        series[key] = np.array(params.pop(key))
+        series[key] = params.pop(key)
 
     data = {'specs': specs,
             'series': series,
             'params': params}
 
-    f.finalize_params(data)
-    f.finalize_series(data)
-
     return data
 
 
 ###############################################################################
-def validate_all(data):
-    """Validate model parameters and time series."""
+def load_and_validate(specs_file=u.CONSTANTS['SPECS_FILE'],
+                      input_file=u.CONSTANTS['INPUT_FILE'],
+                      input_dir=u.CONSTANTS['INPUT_DIR']):
+    """Load, finalize and validate model parameters and time series."""
+    try:
+        data = load_params_from_yaml(specs_file=specs_file,
+                                     input_file=input_file,
+                                     input_dir=input_dir)
+    except u.InputOutputError as err:
+        print '---> InputOutput failed: %s' % err
+        sys.exit()
+
+    try:
+        f.finalize_params(data)
+        f.finalize_series(data)
+    except u.FinalizationError as err:
+        print '---> Finalization failed: %s' % err
+        sys.exit()
+
     try:
         c.check_required(data)
         v.validate_params(data)
@@ -251,6 +264,8 @@ def validate_all(data):
     except u.ValidationError as err:
         print '---> Validation failed: %s' % err
         sys.exit()
+
+    return data
 
 
 ###############################################################################

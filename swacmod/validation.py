@@ -575,9 +575,6 @@ def val_free_throughfall(data, name):
     """
     fth = data['params'][name]
     tot = data['params']['num_nodes']
-    if fth is None:
-        fth = dict((k, 1.0) for k in range(1, tot + 1))
-        logging.info('\t\tDefaulted "%s" to 1.0', name)
 
     c.check_type(param=fth,
                  name=name,
@@ -600,9 +597,6 @@ def val_max_canopy_storage(data, name):
     """
     mcs = data['params'][name]
     tot = data['params']['num_nodes']
-    if mcs is None:
-        mcs = dict((k, 0.0) for k in range(1, tot + 1))
-        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
     c.check_type(param=mcs,
                  name=name,
@@ -746,9 +740,6 @@ def val_rorecharge_proportion(data, name):
     """
     rrp = data['params'][name]
     rzn = data['params']['rorecharge_zone_names']
-    if rrp is None:
-        rrp = dict((k, [0.0 for _ in range(len(rzn))]) for k in range(1, 13))
-        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
     c.check_type(param=rrp,
                  name=name,
@@ -767,9 +758,6 @@ def val_rorecharge_limit(data, name):
     """
     rrl = data['params'][name]
     rzn = data['params']['rorecharge_zone_names']
-    if rrl is None:
-        rrl = dict((k, [99999 for _ in range(len(rzn))]) for k in range(1, 13))
-        logging.info('\t\tDefaulted "%s" to 99999', name)
 
     c.check_type(param=rrl,
                  name=name,
@@ -810,9 +798,6 @@ def val_macropore_proportion(data, name):
     """
     mpp = data['params'][name]
     mzn = data['params']['macropore_zone_names']
-    if mpp is None:
-        mpp = dict((k, [0.0 for _ in range(len(mzn))]) for k in range(1, 13))
-        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
     c.check_type(param=mpp,
                  name=name,
@@ -831,9 +816,6 @@ def val_macropore_limit(data, name):
     """
     mpl = data['params'][name]
     mzn = data['params']['macropore_zone_names']
-    if mpl is None:
-        mpl = dict((k, [99999 for _ in range(len(mzn))]) for k in range(1, 13))
-        logging.info('\t\tDefaulted "%s" to 99999', name)
 
     c.check_type(param=mpl,
                  name=name,
@@ -861,6 +843,24 @@ def val_fao_process(data, name):
 
 
 ###############################################################################
+def val_fao_input(data, name):
+    """Validate fao_input.
+
+    1) type has to be a string
+    2) value has to be one in ['ls', 'l']
+    """
+    fao = data['params'][name]
+
+    c.check_type(param=fao,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[fao],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
 def val_soil_static_params(data, name):
     """Validate soil_static_params.
 
@@ -868,13 +868,10 @@ def val_soil_static_params(data, name):
     2) values have to be lists with length equal to the number of zones
     3) dictionary needs 4 keys: FC, WP, p, starting_SMD
     """
-    ssp = data['params'][name]
-    if ssp is None:
-        data['params']['fao_process'] = 'disabled'
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
-                     name)
+    if data['params']['fao_process'] == 'disabled':
         return
 
+    ssp = data['params'][name]
     szn = data['params']['soil_zone_names']
 
     c.check_type(param=ssp,
@@ -893,13 +890,10 @@ def val_soil_spatial(data, name):
     3) values have to be lists with length equal to the number of zones
     4) the sum of each row has to be 1.0
     """
-    sos = data['params'][name]
-    if sos is None:
-        data['params']['fao_process'] = 'disabled'
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
-                     name)
+    if data['params']['fao_process'] == 'disabled':
         return
 
+    sos = data['params'][name]
     soz = data['params']['soil_zone_names']
     tot = data['params']['num_nodes']
 
@@ -923,13 +917,10 @@ def val_lu_spatial(data, name):
     3) values have to be lists with length equal to the number of zones
     4) the sum of each row has to be 1.0
     """
-    lus = data['params'][name]
-    if lus is None:
-        data['params']['fao_process'] = 'disabled'
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
-                     name)
+    if data['params']['fao_process'] == 'disabled':
         return
 
+    lus = data['params'][name]
     lzn = data['params']['landuse_zone_names']
     tot = data['params']['num_nodes']
 
@@ -952,13 +943,10 @@ def val_zr(data, name):
     2) dictionary needs to have integer keys, from 1 to 12
     3) lists need to have length equal to the number of zones
     """
-    zrn = data['params'][name]
-    if zrn is None:
-        data['params']['fao_process'] = 'disabled'
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
-                     name)
+    if data['params']['fao_process'] == 'disabled':
         return
 
+    zrn = data['params'][name]
     lzn = data['params']['landuse_zone_names']
 
     c.check_type(param=zrn,
@@ -976,13 +964,10 @@ def val_kc(data, name):
     2) dictionary needs to have integer keys, from 1 to 12
     3) lists need to have length equal to the number of zones
     """
-    kcn = data['params'][name]
-    if kcn is None:
-        data['params']['fao_process'] = 'disabled'
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
-                     name)
+    if data['params']['fao_process'] == 'disabled':
         return
 
+    kcn = data['params'][name]
     lzn = data['params']['landuse_zone_names']
 
     c.check_type(param=kcn,
@@ -990,6 +975,48 @@ def val_kc(data, name):
                  t_types=data['specs'][name]['type'],
                  len_list=[len(lzn)],
                  keys=range(1, 13))
+
+
+###############################################################################
+def val_taw(data, name):
+    """Validate TAW.
+
+    1) type has to be a dict of lists of floats
+    2) dictionary needs to have integer keys, from 1 to 12
+    3) lists need to have length equal to the number of zones
+    """
+    if data['params']['fao_process'] == 'disabled':
+        return
+
+    taw = data['params'][name]
+    tot = data['params']['num_nodes']
+
+    c.check_type(param=taw,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[12],
+                 keys=range(1, tot + 1))
+
+
+###############################################################################
+def val_raw(data, name):
+    """Validate RAW.
+
+    1) type has to be a dict of lists of floats
+    2) dictionary needs to have integer keys, from 1 to 12
+    3) lists need to have length equal to the number of zones
+    """
+    if data['params']['fao_process'] == 'disabled':
+        return
+
+    raw = data['params'][name]
+    tot = data['params']['num_nodes']
+
+    c.check_type(param=raw,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[12],
+                 keys=range(1, tot + 1))
 
 
 ###############################################################################
@@ -1019,9 +1046,6 @@ def val_subsoilzone_leakage_fraction(data, name):
     """
     lea = data['params'][name]
     tot = data['params']['num_nodes']
-    if lea is None:
-        lea = dict((k, 0.0) for k in range(1, tot + 1))
-        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
     c.check_type(param=lea,
                  name=name,
@@ -1058,10 +1082,6 @@ def val_interflow_params(data, name):
     """
     ifp = data['params'][name]
     tot = data['params']['num_nodes']
-    if ifp is None:
-        default = [0.0, 1.0, 99999.0, 0.0]
-        ifp = dict((k, default) for k in range(1, tot + 1))
-        logging.info('\t\tDefaulted "%s" to %s', name, default)
 
     c.check_type(param=ifp,
                  name=name,
@@ -1103,10 +1123,6 @@ def val_recharge_attenuation_params(data, name):
     """
     rpn = data['params'][name]
     tot = data['params']['num_nodes']
-    if rpn is None:
-        default = [0.0, 1.0, 99999.0]
-        rpn = dict((k, default) for k in range(1, tot + 1))
-        logging.info('\t\tDefaulted "%s" to %s', name, default)
 
     c.check_type(param=rpn,
                  name=name,
@@ -1157,11 +1173,14 @@ FUNC_PARAMS = [val_run_name,
                val_macropore_proportion,
                val_macropore_limit,
                val_fao_process,
+               val_fao_input,
                val_soil_static_params,
                val_soil_spatial,
                val_lu_spatial,
                val_zr,
                val_kc,
+               val_taw,
+               val_raw,
                val_leakage_process,
                val_subsoilzone_leakage_fraction,
                val_interflow_process,

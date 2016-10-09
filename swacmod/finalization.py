@@ -336,6 +336,7 @@ def fin_free_throughfall(data, name):
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
         data['params'][name] = dict((k, 1.0) for k in range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to 1.0', name)
 
 
 ###############################################################################
@@ -347,6 +348,7 @@ def fin_max_canopy_storage(data, name):
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
         data['params'][name] = dict((k, 0.0) for k in range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
 
 ###############################################################################
@@ -370,10 +372,11 @@ def fin_rorecharge_proportion(data, name):
     params = data['params']
     if params[name] is None:
         params[name] = dict((k, [0.0]) for k in range(1, 13))
-    else:
-        params['ror_prop'] = sorted(params['rorecharge_proportion'].items(),
-                                    key=lambda x: x[0])
-        params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
+
+    params['ror_prop'] = sorted(params['rorecharge_proportion'].items(),
+                                key=lambda x: x[0])
+    params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
 
 
 ###############################################################################
@@ -385,10 +388,11 @@ def fin_rorecharge_limit(data, name):
     params = data['params']
     if params[name] is None:
         params[name] = dict((k, [99999]) for k in range(1, 13))
-    else:
-        params['ror_limit'] = sorted(params['rorecharge_limit'].items(),
-                                     key=lambda x: x[0])
-        params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
+        logging.info('\t\tDefaulted "%s" to 99999', name)
+
+    params['ror_limit'] = sorted(params['rorecharge_limit'].items(),
+                                 key=lambda x: x[0])
+    params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
 
 
 ###############################################################################
@@ -400,10 +404,11 @@ def fin_macropore_proportion(data, name):
     params = data['params']
     if params[name] is None:
         params[name] = dict((k, [0.0]) for k in range(1, 13))
-    else:
-        params['macro_prop'] = sorted(params['macropore_proportion'].items(),
-                                      key=lambda x: x[0])
-        params['macro_prop'] = np.array([i[1] for i in params['macro_prop']])
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
+
+    params['macro_prop'] = sorted(params['macropore_proportion'].items(),
+                                  key=lambda x: x[0])
+    params['macro_prop'] = np.array([i[1] for i in params['macro_prop']])
 
 
 ###############################################################################
@@ -415,10 +420,11 @@ def fin_macropore_limit(data, name):
     params = data['params']
     if params[name] is None:
         params[name] = dict((k, [99999]) for k in range(1, 13))
-    else:
-        params['macro_limit'] = sorted(params['macropore_limit'].items(),
-                                       key=lambda x: x[0])
-        params['macro_limit'] = np.array([i[1] for i in params['macro_limit']])
+        logging.info('\t\tDefaulted "%s" to 99999', name)
+
+    params['macro_limit'] = sorted(params['macropore_limit'].items(),
+                                   key=lambda x: x[0])
+    params['macro_limit'] = np.array([i[1] for i in params['macro_limit']])
 
 
 ###############################################################################
@@ -427,8 +433,11 @@ def fin_soil_static_params(data, name):
 
     1) if not provided, set "fao_process" to "disabled".
     """
-    if data['params'][name] is None:
-        data['params']['fao_process'] = 'disabled'
+    params = data['params']
+    if params[name] is None and params['fao_process'] == 'enabled':
+        params['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
 
 
 ###############################################################################
@@ -437,8 +446,11 @@ def fin_soil_spatial(data, name):
 
     1) if not provided, set "fao_process" to "disabled".
     """
-    if data['params'][name] is None:
-        data['params']['fao_process'] = 'disabled'
+    params = data['params']
+    if params[name] is None and params['fao_process'] == 'enabled':
+        params['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
 
 
 ###############################################################################
@@ -447,8 +459,11 @@ def fin_lu_spatial(data, name):
 
     1) if not provided, set "fao_process" to "disabled".
     """
-    if data['params'][name] is None:
-        data['params']['fao_process'] = 'disabled'
+    params = data['params']
+    if params[name] is None and params['fao_process'] == 'enabled':
+        params['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
 
 
 ###############################################################################
@@ -457,8 +472,11 @@ def fin_zr(data, name):
 
     1) if not provided, set "fao_process" to "disabled".
     """
-    if data['params'][name] is None:
-        data['params']['fao_process'] = 'disabled'
+    params = data['params']
+    if params[name] is None and params['fao_process'] == 'enabled':
+        params['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
 
 
 ###############################################################################
@@ -470,9 +488,48 @@ def fin_kc(data, name):
     params = data['params']
     if params[name] is None:
         params['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
     else:
         params['kc_list'] = sorted(params[name].items(), key=lambda x: x[0])
         params['kc_list'] = np.array([i[1] for i in params['kc_list']])
+
+
+###############################################################################
+def fin_taw_and_raw(data, name):
+    """Finalize the "taw" and "raw" parameters."""
+    params = data['params']
+    if params['taw'] is None and params['fao_input'] == 'l':
+        params['fao_input'] = 'ls'
+        logging.info('\t\tSwitched "fao_input" to "ls", "taw" is missing')
+
+    if params['raw'] is None and params['fao_input'] == 'l':
+        params['fao_input'] = 'ls'
+        logging.info('\t\tSwitched "fao_input" to "ls", "raw" is missing')
+
+    if params['fao_input'] == 'ls':
+        params['taw'], params['raw'] = {}, {}
+        for node in range(1, params['num_nodes'] + 1):
+            params['taw'][node], params['raw'][node] = [], []
+            fcp = params['soil_static_params']['FC']
+            wpp = params['soil_static_params']['WP']
+            ppp = params['soil_static_params']['p']
+            pss = params['soil_spatial'][node]
+            lus = params['lu_spatial'][node]
+            var1 = [(fcp[i] - wpp[i]) * pss[i] * 1000 for i in range(len(pss))]
+            var2 = [ppp[i] * pss[i] for i in range(len(pss))]
+            for num in range(12):
+                var3 = [params['zr'][num+1][i] * lus[i] for i in
+                        range(len(lus))]
+                params['taw'][node].append(sum(var1) * sum(var3))
+                raw = params['taw'][node][num] * sum(var2)
+                params['raw'][node].append(raw)
+        logging.info('\t\tInferred "taw" and "raw" from soil params')
+
+    if params['taw'] is not None and params['raw'] is not None:
+        for node in range(1, params['num_nodes'] + 1):
+            params['taw'][node] = np.array(params['taw'][node]).astype(float)
+            params['raw'][node] = np.array(params['raw'][node]).astype(float)
 
 
 ###############################################################################
@@ -484,6 +541,7 @@ def fin_subsoilzone_leakage_fraction(data, name):
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
         data['params'][name] = dict((k, 0.0) for k in range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
 
 ###############################################################################
@@ -496,6 +554,7 @@ def fin_interflow_params(data, name):
         nodes = data['params']['num_nodes']
         data['params'][name] = dict((k, [0, 1, 999999, 0]) for k in
                                     range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to %s', name, [0, 1, 999999, 0])
 
 
 ###############################################################################
@@ -508,29 +567,7 @@ def fin_recharge_attenuation_params(data, name):
         nodes = data['params']['num_nodes']
         data['params'][name] = dict((k, [0, 1, 999999]) for k in
                                     range(1, nodes + 1))
-
-
-###############################################################################
-def fin_taw_and_raw(data, name):
-    """Finalize the "TAW" and "RAW" parameters."""
-    params = data['params']
-    params['TAW'], params['RAW'] = {}, {}
-
-    for node in range(1, params['num_nodes'] + 1):
-        params['TAW'][node], params['RAW'][node] = [], []
-        fcp = params['soil_static_params']['FC']
-        wpp = params['soil_static_params']['WP']
-        ppp = params['soil_static_params']['p']
-        pss = params['soil_spatial'][node]
-        lus = params['lu_spatial'][node]
-        var1 = [(fcp[i] - wpp[i]) * pss[i] * 1000 for i in range(len(pss))]
-        var2 = [ppp[i] * pss[i] for i in range(len(pss))]
-        for num in range(12):
-            var3 = [params['zr'][num+1][i] * lus[i] for i in range(len(lus))]
-            params['TAW'][node].append(sum(var1) * sum(var3))
-            params['RAW'][node].append(params['TAW'][node][num] * sum(var2))
-        params['TAW'][node] = np.array(params['TAW'][node])
-        params['RAW'][node] = np.array(params['RAW'][node])
+        logging.info('\t\tDefaulted "%s" to %s', name, [0, 1, 999999])
 
 
 ###############################################################################
@@ -547,6 +584,13 @@ def fin_date(data, name):
 
 
 ###############################################################################
+def fin_rainfall_ts(data, name):
+    """Finalize the "rainfall_ts" series."""
+    series = data['series']
+    series[name] = np.array(series[name])
+
+
+###############################################################################
 def fin_pe_ts(data, name):
     """Finalize the "pe_ts" series."""
     series, specs, params = data['series'], data['specs'], data['params']
@@ -557,8 +601,9 @@ def fin_pe_ts(data, name):
         zones = len(set(params['pe_zone_mapping'].values()))
         series[name] = np.zeros([len(series['date']), zones])
         logging.info('\t\tDefaulted "%s" to 0.0', name)
-    else:
+    elif not specs[name]['required']:
         specs[name]['required'] = True
+        series[name] = np.array(series[name])
         logging.info('\t\tSwitched "%s" to "required"', name)
 
 
@@ -567,8 +612,9 @@ def fin_temperature_ts(data, name):
     """Finalize the "temperature_ts" series."""
     series, specs, params = data['series'], data['specs'], data['params']
 
-    if params['snow_process'] == 'enabled':
+    if params['snow_process'] == 'enabled' and not specs[name]['required']:
         specs[name]['required'] = True
+        series[name] = np.array(series[name])
         logging.info('\t\tSwitched "%s" to "required"', name)
     else:
         zones = len(set(params['temperature_zone_mapping'].values()))
@@ -581,8 +627,9 @@ def fin_subroot_leakage_ts(data, name):
     """Finalize the "subroot_leakage_ts" series."""
     series, specs, params = data['series'], data['specs'], data['params']
 
-    if params['leakage_process'] == 'enabled':
+    if params['leakage_process'] == 'enabled' and not specs[name]['required']:
         specs[name]['required'] = True
+        series[name] = np.array(series[name])
         logging.info('\t\tSwitched "%s" to "required"', name)
     else:
         zones = len(set(params['subroot_zone_mapping'].values()))
@@ -625,12 +672,13 @@ FUNC_PARAMS = [fin_start_date,
                fin_lu_spatial,
                fin_zr,
                fin_kc,
+               fin_taw_and_raw,
                fin_subsoilzone_leakage_fraction,
                fin_interflow_params,
-               fin_recharge_attenuation_params,
-               fin_taw_and_raw]
+               fin_recharge_attenuation_params]
 
 FUNC_SERIES = [fin_date,
+               fin_rainfall_ts,
                fin_pe_ts,
                fin_temperature_ts,
                fin_subroot_leakage_ts]
@@ -646,7 +694,8 @@ def finalize_params(data):
         try:
             function(data, param)
         except Exception as err:
-            u.ValidationError('Could not finalize "%s": %s', param, err)
+            raise u.FinalizationError('Could not finalize "%s": %s' %
+                                      (param, err))
         logging.debug('\t\t"%s" finalized', param)
 
     logging.info('\tDone.')
@@ -659,7 +708,11 @@ def finalize_series(data):
 
     for function in FUNC_SERIES:
         series = function.__name__.replace('fin_', '')
-        function(data, series)
+        try:
+            function(data, series)
+        except Exception as err:
+            raise u.FinalizationError('Could not finalize "%s": %s' %
+                                      (series, err))
         logging.debug('\t\t"%s" finalized', series)
 
     logging.info('\tDone.')

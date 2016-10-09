@@ -1759,8 +1759,6 @@ static const char __pyx_k_u[] = "u";
 static const char __pyx_k_ae[] = "ae";
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_np[] = "np";
-static const char __pyx_k_RAW[] = "RAW";
-static const char __pyx_k_TAW[] = "TAW";
 static const char __pyx_k__27[] = "";
 static const char __pyx_k_col[] = "col";
 static const char __pyx_k_evt[] = "evt";
@@ -1771,6 +1769,7 @@ static const char __pyx_k_irs[] = "irs";
 static const char __pyx_k_mcs[] = "mcs";
 static const char __pyx_k_num[] = "num";
 static const char __pyx_k_obj[] = "obj";
+static const char __pyx_k_raw[] = "raw";
 static const char __pyx_k_rll[] = "rll";
 static const char __pyx_k_rlp[] = "rlp";
 static const char __pyx_k_rrp[] = "rrp";
@@ -1778,6 +1777,7 @@ static const char __pyx_k_slf[] = "slf";
 static const char __pyx_k_smd[] = "smd";
 static const char __pyx_k_ssp[] = "ssp";
 static const char __pyx_k_sum[] = "sum";
+static const char __pyx_k_taw[] = "taw";
 static const char __pyx_k_axis[] = "axis";
 static const char __pyx_k_base[] = "base";
 static const char __pyx_k_coef[] = "coef";
@@ -2041,9 +2041,7 @@ static PyObject *__pyx_kp_s_MemoryView_of_r_object;
 static PyObject *__pyx_kp_u_Non_native_byte_order_not_suppor;
 static PyObject *__pyx_n_b_O;
 static PyObject *__pyx_kp_s_Out_of_bounds_on_buffer_access_a;
-static PyObject *__pyx_n_s_RAW;
 static PyObject *__pyx_n_s_RuntimeError;
-static PyObject *__pyx_n_s_TAW;
 static PyObject *__pyx_n_s_TypeError;
 static PyObject *__pyx_kp_s_Unable_to_convert_item_to_object;
 static PyObject *__pyx_kp_s_Users_marco_Code_upwork_water_m;
@@ -2207,6 +2205,7 @@ static PyObject *__pyx_n_s_rapid_runoff_c;
 static PyObject *__pyx_n_s_rapid_runoff_params;
 static PyObject *__pyx_n_s_rapid_runoff_process;
 static PyObject *__pyx_n_s_rapid_runoff_zone_mapping;
+static PyObject *__pyx_n_s_raw;
 static PyObject *__pyx_n_s_rawrew;
 static PyObject *__pyx_n_s_rawrew_a;
 static PyObject *__pyx_n_s_recharge;
@@ -2254,6 +2253,7 @@ static PyObject *__pyx_n_s_subroot_zone_mapping;
 static PyObject *__pyx_n_s_subsoilzone_leakage_fraction;
 static PyObject *__pyx_n_s_sum;
 static PyObject *__pyx_n_s_swacmod_model;
+static PyObject *__pyx_n_s_taw;
 static PyObject *__pyx_n_s_tawrew;
 static PyObject *__pyx_n_s_tawrew_a;
 static PyObject *__pyx_n_s_temperature_ts;
@@ -5194,7 +5194,7 @@ static PyObject *__pyx_pf_7swacmod_5model_16get_rawrew(CYTHON_UNUSED PyObject *_
  *     """S) RAWREW (Readily Available Water, Readily Evaporable Water)."""
  *     series, params = data['series'], data['params']             # <<<<<<<<<<<<<<
  *     if params['fao_process'] == 'enabled':
- *         rawrew = params['RAW'][node][series['months']]
+ *         rawrew = params['raw'][node][series['months']]
  */
   __pyx_t_1 = PyObject_GetItem(__pyx_v_data, __pyx_n_s_series); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 154, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -5209,7 +5209,7 @@ static PyObject *__pyx_pf_7swacmod_5model_16get_rawrew(CYTHON_UNUSED PyObject *_
  *     """S) RAWREW (Readily Available Water, Readily Evaporable Water)."""
  *     series, params = data['series'], data['params']
  *     if params['fao_process'] == 'enabled':             # <<<<<<<<<<<<<<
- *         rawrew = params['RAW'][node][series['months']]
+ *         rawrew = params['raw'][node][series['months']]
  *     else:
  */
   __pyx_t_2 = PyObject_GetItem(__pyx_v_params, __pyx_n_s_fao_process); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 155, __pyx_L1_error)
@@ -5221,11 +5221,11 @@ static PyObject *__pyx_pf_7swacmod_5model_16get_rawrew(CYTHON_UNUSED PyObject *_
     /* "swacmod/model.pyx":156
  *     series, params = data['series'], data['params']
  *     if params['fao_process'] == 'enabled':
- *         rawrew = params['RAW'][node][series['months']]             # <<<<<<<<<<<<<<
+ *         rawrew = params['raw'][node][series['months']]             # <<<<<<<<<<<<<<
  *     else:
  *         rawrew = np.zeros(len(series['date']))
  */
-    __pyx_t_2 = PyObject_GetItem(__pyx_v_params, __pyx_n_s_RAW); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 156, __pyx_L1_error)
+    __pyx_t_2 = PyObject_GetItem(__pyx_v_params, __pyx_n_s_raw); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 156, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_1 = PyObject_GetItem(__pyx_t_2, __pyx_v_node); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 156, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -5243,14 +5243,14 @@ static PyObject *__pyx_pf_7swacmod_5model_16get_rawrew(CYTHON_UNUSED PyObject *_
  *     """S) RAWREW (Readily Available Water, Readily Evaporable Water)."""
  *     series, params = data['series'], data['params']
  *     if params['fao_process'] == 'enabled':             # <<<<<<<<<<<<<<
- *         rawrew = params['RAW'][node][series['months']]
+ *         rawrew = params['raw'][node][series['months']]
  *     else:
  */
     goto __pyx_L3;
   }
 
   /* "swacmod/model.pyx":158
- *         rawrew = params['RAW'][node][series['months']]
+ *         rawrew = params['raw'][node][series['months']]
  *     else:
  *         rawrew = np.zeros(len(series['date']))             # <<<<<<<<<<<<<<
  *     return {'rawrew': rawrew}
@@ -5452,7 +5452,7 @@ static PyObject *__pyx_pf_7swacmod_5model_18get_tawrew(CYTHON_UNUSED PyObject *_
  *     series, params = data['series'], data['params']
  * 
  *     if params['fao_process'] == 'enabled':             # <<<<<<<<<<<<<<
- *         tawrew = params['TAW'][node][series['months']]
+ *         tawrew = params['taw'][node][series['months']]
  *     else:
  */
   __pyx_t_2 = PyObject_GetItem(__pyx_v_params, __pyx_n_s_fao_process); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 167, __pyx_L1_error)
@@ -5464,11 +5464,11 @@ static PyObject *__pyx_pf_7swacmod_5model_18get_tawrew(CYTHON_UNUSED PyObject *_
     /* "swacmod/model.pyx":168
  * 
  *     if params['fao_process'] == 'enabled':
- *         tawrew = params['TAW'][node][series['months']]             # <<<<<<<<<<<<<<
+ *         tawrew = params['taw'][node][series['months']]             # <<<<<<<<<<<<<<
  *     else:
  *         tawrew = np.zeros(len(series['date']))
  */
-    __pyx_t_2 = PyObject_GetItem(__pyx_v_params, __pyx_n_s_TAW); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 168, __pyx_L1_error)
+    __pyx_t_2 = PyObject_GetItem(__pyx_v_params, __pyx_n_s_taw); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 168, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_1 = PyObject_GetItem(__pyx_t_2, __pyx_v_node); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 168, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -5486,14 +5486,14 @@ static PyObject *__pyx_pf_7swacmod_5model_18get_tawrew(CYTHON_UNUSED PyObject *_
  *     series, params = data['series'], data['params']
  * 
  *     if params['fao_process'] == 'enabled':             # <<<<<<<<<<<<<<
- *         tawrew = params['TAW'][node][series['months']]
+ *         tawrew = params['taw'][node][series['months']]
  *     else:
  */
     goto __pyx_L3;
   }
 
   /* "swacmod/model.pyx":170
- *         tawrew = params['TAW'][node][series['months']]
+ *         tawrew = params['taw'][node][series['months']]
  *     else:
  *         tawrew = np.zeros(len(series['date']))             # <<<<<<<<<<<<<<
  * 
@@ -26226,9 +26226,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_Non_native_byte_order_not_suppor, __pyx_k_Non_native_byte_order_not_suppor, sizeof(__pyx_k_Non_native_byte_order_not_suppor), 0, 1, 0, 0},
   {&__pyx_n_b_O, __pyx_k_O, sizeof(__pyx_k_O), 0, 0, 0, 1},
   {&__pyx_kp_s_Out_of_bounds_on_buffer_access_a, __pyx_k_Out_of_bounds_on_buffer_access_a, sizeof(__pyx_k_Out_of_bounds_on_buffer_access_a), 0, 0, 1, 0},
-  {&__pyx_n_s_RAW, __pyx_k_RAW, sizeof(__pyx_k_RAW), 0, 0, 1, 1},
   {&__pyx_n_s_RuntimeError, __pyx_k_RuntimeError, sizeof(__pyx_k_RuntimeError), 0, 0, 1, 1},
-  {&__pyx_n_s_TAW, __pyx_k_TAW, sizeof(__pyx_k_TAW), 0, 0, 1, 1},
   {&__pyx_n_s_TypeError, __pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 0, 1, 1},
   {&__pyx_kp_s_Unable_to_convert_item_to_object, __pyx_k_Unable_to_convert_item_to_object, sizeof(__pyx_k_Unable_to_convert_item_to_object), 0, 0, 1, 0},
   {&__pyx_kp_s_Users_marco_Code_upwork_water_m, __pyx_k_Users_marco_Code_upwork_water_m, sizeof(__pyx_k_Users_marco_Code_upwork_water_m), 0, 0, 1, 0},
@@ -26392,6 +26390,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_rapid_runoff_params, __pyx_k_rapid_runoff_params, sizeof(__pyx_k_rapid_runoff_params), 0, 0, 1, 1},
   {&__pyx_n_s_rapid_runoff_process, __pyx_k_rapid_runoff_process, sizeof(__pyx_k_rapid_runoff_process), 0, 0, 1, 1},
   {&__pyx_n_s_rapid_runoff_zone_mapping, __pyx_k_rapid_runoff_zone_mapping, sizeof(__pyx_k_rapid_runoff_zone_mapping), 0, 0, 1, 1},
+  {&__pyx_n_s_raw, __pyx_k_raw, sizeof(__pyx_k_raw), 0, 0, 1, 1},
   {&__pyx_n_s_rawrew, __pyx_k_rawrew, sizeof(__pyx_k_rawrew), 0, 0, 1, 1},
   {&__pyx_n_s_rawrew_a, __pyx_k_rawrew_a, sizeof(__pyx_k_rawrew_a), 0, 0, 1, 1},
   {&__pyx_n_s_recharge, __pyx_k_recharge, sizeof(__pyx_k_recharge), 0, 0, 1, 1},
@@ -26439,6 +26438,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_subsoilzone_leakage_fraction, __pyx_k_subsoilzone_leakage_fraction, sizeof(__pyx_k_subsoilzone_leakage_fraction), 0, 0, 1, 1},
   {&__pyx_n_s_sum, __pyx_k_sum, sizeof(__pyx_k_sum), 0, 0, 1, 1},
   {&__pyx_n_s_swacmod_model, __pyx_k_swacmod_model, sizeof(__pyx_k_swacmod_model), 0, 0, 1, 1},
+  {&__pyx_n_s_taw, __pyx_k_taw, sizeof(__pyx_k_taw), 0, 0, 1, 1},
   {&__pyx_n_s_tawrew, __pyx_k_tawrew, sizeof(__pyx_k_tawrew), 0, 0, 1, 1},
   {&__pyx_n_s_tawrew_a, __pyx_k_tawrew_a, sizeof(__pyx_k_tawrew_a), 0, 0, 1, 1},
   {&__pyx_n_s_temperature_ts, __pyx_k_temperature_ts, sizeof(__pyx_k_temperature_ts), 0, 0, 1, 1},

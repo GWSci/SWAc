@@ -95,6 +95,20 @@ class ValidationError(Exception):
 
 
 ###############################################################################
+class FinalizationError(Exception):
+    """General exception for validation errors."""
+
+    pass
+
+
+###############################################################################
+class InputOutputError(Exception):
+    """General exception for validation errors."""
+
+    pass
+
+
+###############################################################################
 def get_ram_usage_for_process(pid=None):
     """Get memory usage for process given its id.
 

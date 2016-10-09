@@ -335,6 +335,12 @@ fao_process:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
+fao_input:
+    required: false
+    type:
+        - !!python/name:str
+    constraints: ["ls", "l"]
+
 soil_static_params:
     required: false
     alt_format: [yml, csv]
@@ -368,6 +374,22 @@ zr:
         - !!python/name:float
 
 kc:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+taw:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+raw:
     required: false
     alt_format: [yml, csv]
     type:

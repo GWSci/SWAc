@@ -83,23 +83,22 @@ class EndToEndTests(unittest.TestCase):
 
     input_file = u.CONSTANTS['TEST_INPUT_FILE']
     input_dir = u.CONSTANTS['TEST_INPUT_DIR']
-    data = io.load_params_from_yaml(input_file=input_file,
-                                    input_dir=input_dir)
+    data = io.load_and_validate(input_file=input_file,
+                                input_dir=input_dir)
     if not data:
-        print
+        print 'Loading failed, interrupting tests now.'
         sys.exit()
 
     ids = range(1, data['params']['num_nodes'] + 1)
 
-    def test_validate_all(self):
+    def test_keys(self):
         """Test for validate_all() function."""
         all_keys = self.data['series'].keys() + self.data['params'].keys()
         for key in all_keys:
-            if key in ['date', 'months', 'kc_list', 'TAW', 'RAW',
-                       'ror_prop', 'ror_limit', 'macro_prop', 'macro_limit']:
+            if key in ['date', 'months', 'kc_list', 'ror_prop', 'ror_limit',
+                       'macro_prop', 'macro_limit']:
                 continue
             self.assertTrue(key in self.data['specs'])
-        io.validate_all(self.data)
 
     def test_val_num_nodes(self):
         """Test for val_num_nodes() function."""
@@ -116,7 +115,7 @@ class EndToEndTests(unittest.TestCase):
         name = 'start_date'
         old = self.data['params'][name]
         self.data['params'][name] = 1.0
-        self.assertRaises(u.ValidationError, v.val_num_nodes, self.data, name)
+        self.assertRaises(u.ValidationError, v.val_start_date, self.data, name)
         self.data['params'][name] = old
 
     def test_validate_functions(self):

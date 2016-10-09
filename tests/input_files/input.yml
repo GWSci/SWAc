@@ -274,6 +274,10 @@ macropore_limit: macropore_limit.yml
 # This parameter is required
 fao_process: enabled
 
+# Input landuse and soil with "ls" or just landuse with "l"
+# This parameter is optional. If not specified, it defaults to "ls".
+fao_input: 'l'
+
 # Soil Properties (FC, WP, p, starting SMD)
 # This parameter is optional. If not specified, "fao_process" will be set to
 # "disabled"
@@ -303,6 +307,18 @@ zr: zr.yml
 # "disabled"
 # This parameter can accept a path to YAML or CSV
 kc: kc.yml
+
+# TAW
+# This parameter is optional. If not specified and "fao_input" is "l",
+# "fao_input" will be set to "ls".
+# This parameter can accept a path to YAML or CSV
+taw: taw.yml
+
+# RAW
+# This parameter is optional. If not specified and "fao_input" is "l",
+# "fao_input" will be set to "ls".
+# This parameter can accept a path to YAML or CSV
+raw: raw.yml
 
 
 ############################################
