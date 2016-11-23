@@ -43,7 +43,7 @@ CONSTANTS['COL_ORDER'] = [
     'average_out', 'balance'
 ]
 
-# Header, Column needs conversion, Column needs aggregation
+# Header, Column needs conversion
 CONSTANTS['BALANCE_CONVERSIONS'] = [
     ('DATE', False),
     ('nDays', False),
@@ -150,12 +150,12 @@ def aggregate_output_col(data, output, column, method='sum'):
 
     for num, time in enumerate(times):
         if column == 'date':
-            date = data['series']['date'][time[1]-1]
+            date = data['series']['date'][time[1]-2]
             final[num] = date.strftime('%d/%m/%Y')
         else:
-            final[num] = np.sum(output[column][time[0]-1:time[1]])
+            final[num] = np.sum(output[column][time[0]-1:time[1]-1])
         if method == 'average':
-            final[num] /= (time[1] - time[0] + 1)
+            final[num] /= (time[1] - time[0])
 
     return final
 
@@ -171,6 +171,44 @@ def get_modified_time(path):
         logging.error('Could not find %s, set modified time to 1/1/1901', path)
         mod = datetime.datetime(1901, 1, 1, 0, 0, 0)
     return mod
+
+
+###############################################################################
+def build_taw_raw(params):
+    """Build the TAW and RAW matrices."""
+    taw, raw = {}, {}
+
+    for node in range(1, params['num_nodes'] + 1):
+        taw[node], raw[node] = [], []
+        fcp = params['soil_static_params']['FC']
+        wpp = params['soil_static_params']['WP']
+        ppp = params['soil_static_params']['p']
+        pss = params['soil_spatial'][node]
+        lus = params['lu_spatial'][node]
+        var1 = [(fcp[i] - wpp[i]) * pss[i] * 1000 for i in range(len(pss))]
+        var2 = [ppp[i] * pss[i] for i in range(len(pss))]
+        for num in range(12):
+            var3 = [params['zr'][num+1][i] * lus[i] for i in range(len(lus))]
+            taw[node].append(sum(var1) * sum(var3))
+            raw = taw[node][num] * sum(var2)
+            raw[node].append(raw)
+
+    return taw, raw
+
+
+###############################################################################
+def invert_taw_raw(param, params):
+    """Invert the TAW and RAW matrices, from month by zone to node by month."""
+    new_param = {}
+
+    for node in range(1, params['num_nodes'] + 1):
+        new_param[node] = []
+        lus = params['lu_spatial'][node]
+        for num in range(1, 13):
+            value = [param[num][i] * lus[i] for i in range(len(lus))]
+            new_param[node].append(sum(value))
+
+    return new_param
 
 
 ###############################################################################

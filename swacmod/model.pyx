@@ -112,6 +112,14 @@ def get_snow(data, output, node):
         size_t length = len(series['date'])
         double [:] col_snowpack = np.zeros(length)
         double [:] col_snowmelt = np.zeros(len(series['date']))
+
+    if params['snow_process'] == 'disabled':
+        col = {}
+        col['snowpack'] = col_snowpack.base
+        col['snowmelt'] = col_snowmelt.base
+        return col
+
+    cdef:
         double start_snow_pack = params['snow_params'][node][0]
         double snow_fall_temp = params['snow_params'][node][1]
         double snow_melt_temp = params['snow_params'][node][2]
@@ -124,21 +132,16 @@ def get_snow(data, output, node):
         double var6 = (var5[0] if var5[0] > 0 else 0)
         double snowpack = (1 - var6) * start_snow_pack + snowfall_o[0]
 
-    if params['snow_process'] == 'enabled':
-        col_snowmelt[0] = start_snow_pack * var6
-        col_snowpack[0] = snowpack
-        for num in range(1, length):
-            if var5[num] < 0:
-                var5[num] = 0
-            col_snowmelt[num] = snowpack * var5[num]
-            snowpack = (1 - var5[num]) * snowpack + snowfall_o[num]
-            col_snowpack[num] = snowpack
+    col_snowmelt[0] = start_snow_pack * var6
+    col_snowpack[0] = snowpack
+    for num in range(1, length):
+        if var5[num] < 0:
+            var5[num] = 0
+        col_snowmelt[num] = snowpack * var5[num]
+        snowpack = (1 - var5[num]) * snowpack + snowfall_o[num]
+        col_snowpack[num] = snowpack
 
-    col = {}
-    col['snowpack'] = col_snowpack.base
-    col['snowmelt'] = col_snowmelt.base
-
-    return col
+    return {'snowpack': col_snowpack.base, 'snowmelt': col_snowmelt.base}
 
 
 ###############################################################################
@@ -189,6 +192,7 @@ def get_ae(data, output, node):
     series, params = data['series'], data['params']
     ssp = params['soil_static_params']
     rrp = params['rapid_runoff_params']
+    s_smd = params['smd']
 
     cdef:
         double [:] col_rapid_runoff_c = np.zeros(len(series['date']))
@@ -204,7 +208,7 @@ def get_ae(data, output, node):
         size_t zone_ror = params['rorecharge_zone_mapping'][node] - 1
         size_t zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
         double ssmd = u.weighted_sum(params['soil_spatial'][node],
-                                     ssp['starting_SMD'])
+                                     s_smd['starting_SMD'])
         long long [:] class_smd = np.array(rrp[zone_rro]['class_smd'],
                                            dtype=np.int64)
         long long [:] class_ri = np.array(rrp[zone_rro]['class_ri'],

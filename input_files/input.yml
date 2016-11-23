@@ -278,45 +278,55 @@ fao_process: enabled
 # This parameter is optional. If not specified, it defaults to "ls".
 fao_input: 'l'
 
-# Soil Properties (FC, WP, p, starting SMD)
-# This parameter is optional. If not specified, "fao_process" will be set to
+# Soil Properties (FC, WP, p)
+# This parameter is optional.
+# If not specified and "fao_input" is "ls", "fao_process" will be set to
 # "disabled"
 # This parameter can accept a path to YAML or CSV
 soil_static_params: soil_static_params.yml
 
+# SMD Properties (starting SMD)
+# This parameter is optional.
+# If not specified and "fao_input" is "ls", "fao_process" will be set to
+# "disabled"
+# This parameter can accept a path to YAML or CSV
+smd: smd.yml
+
 # Soil Spatial
-# This parameter is optional. If not specified, "fao_process" will be set to
+# This parameter is optional.
+# If not specified and "fao_input" is "ls", "fao_process" will be set to
 # "disabled"
 # This parameter can accept a path to YAML or CSV
 soil_spatial: soil_spatial.yml
 
 # LU Spatial
-# This parameter is optional. If not specified, "fao_process" will be set to
-# "disabled"
+# This parameter is optional.
+# If not specified, "fao_process" will be set to "disabled"
 # This parameter can accept a path to YAML or CSV
 lu_spatial: lu_spatial.yml
 
 # LU Time Variant: Zr
-# This parameter is optional. If not specified, "fao_process" will be set to
+# This parameter is optional.
+# If not specified and "fao_input" is "ls", "fao_process" will be set to
 # "disabled"
 # This parameter can accept a path to YAML or CSV
 zr: zr.yml
 
 # LU Time Variant: Kc
-# This parameter is optional. If not specified, "fao_process" will be set to
-# "disabled"
+# This parameter is optional.
+# If not specified, "fao_process" will be set to "disabled"
 # This parameter can accept a path to YAML or CSV
 kc: kc.yml
 
 # TAW
-# This parameter is optional. If not specified and "fao_input" is "l",
-# "fao_input" will be set to "ls".
+# This parameter is optional.
+# If not specified and "fao_input" is "l", "fao_input" will be set to "ls".
 # This parameter can accept a path to YAML or CSV
 taw: taw.yml
 
 # RAW
-# This parameter is optional. If not specified and "fao_input" is "l",
-# "fao_input" will be set to "ls".
+# This parameter is optional.
+# If not specified and "fao_input" is "l", "fao_input" will be set to "ls".
 # This parameter can accept a path to YAML or CSV
 raw: raw.yml
 

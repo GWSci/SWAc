@@ -12,9 +12,9 @@ Installation on win32 systems (tested on Windows 7):
 - when prompted, use as parameters:
 
     source location: https://github.com/AlastairBlack/SWAcMod
-    
+
     target: C:/Users/Marco/Desktop/SWAcMod
-    
+
 - launch ``Start`` > ``All Programs`` > ``Anaconda2`` > ``Anaconda Prompt`` and install ``SWAcMod`` with
 
 .. code-block:: bash
@@ -67,11 +67,11 @@ If they succeed, you will see an output like the following:
 
     OK
 
-To **run the model without output files** (but with a log file): navigate to ``ROOT``, then run
+To **run a test version of the model without output files** (but with a log file): navigate to ``ROOT``, then run
 
 .. code-block:: bash
 
-    $ python swacmod_run.py test
+    $ python swacmod_run.py --test
 
 Finally, to simply **run the model**: navigate to ``ROOT``, then run
 
@@ -79,4 +79,11 @@ Finally, to simply **run the model**: navigate to ``ROOT``, then run
 
     $ python swacmod_run.py
 
-This will write the output files in the ``output_files/`` directory.
+This will read the input files from 'input_files/' and write the output files in ``output_files/``. In order to specify different paths for these two folders,
+
+.. code-block:: bash
+
+    $ python swacmod_run.py --input_dir [PATH_TO_INPUT_DIR] --output_dir [PATH_TO_OUTPUT_DIR]
+
+
+

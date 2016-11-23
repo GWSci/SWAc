@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import logging
+import argparse
 from multiprocessing import Process, Manager
 
 # Third Party Libraries
@@ -102,13 +103,15 @@ def run(test=False):
     reporting = manager.dict()
     recharge = manager.dict()
 
+    specs_file = u.CONSTANTS['SPECS_FILE']
     if test:
         input_file = u.CONSTANTS['TEST_INPUT_FILE']
         input_dir = u.CONSTANTS['TEST_INPUT_DIR']
-        data = io.load_and_validate(input_file=input_file,
-                                    input_dir=input_dir)
     else:
-        data = io.load_and_validate()
+        input_file = u.CONSTANTS['INPUT_FILE']
+        input_dir = u.CONSTANTS['INPUT_DIR']
+
+    data = io.load_and_validate(specs_file, input_file, input_dir)
 
     ids = range(1, data['params']['num_nodes'] + 1)
     chunks = np.array_split(ids, data['params']['num_cores'])
@@ -136,8 +139,31 @@ def run(test=False):
 
 ###############################################################################
 if __name__ == "__main__":
-    try:
-        ARG = (True if sys.argv[1] == 'test' else False)
-    except IndexError:
-        ARG = False
-    run(test=ARG)
+
+    # Parser for command line arguments
+    DESCRIPTION = """
+    Invoke this script to run SWAcMod.
+    e.g. 'python swacmod_run.py'"""
+    FORM = argparse.RawTextHelpFormatter
+
+    PARSER = argparse.ArgumentParser(description=DESCRIPTION)
+    PARSER.add_argument('-t',
+                        '--test',
+                        help='run with no output',
+                        action='store_true')
+    PARSER.add_argument('-i',
+                        '--input_dir',
+                        help='path to input directory')
+    PARSER.add_argument('-o',
+                        '--output_dir',
+                        help='path to output directory')
+
+    ARGS = PARSER.parse_args()
+    if ARGS.input_dir:
+        u.CONSTANTS['INPUT_DIR'] = ARGS.input_dir
+        u.CONSTANTS['INPUT_FILE'] = os.path.join(ARGS.input_dir, 'input.yml')
+    if ARGS.output_dir:
+        u.CONSTANTS['OUTPUT_DIR'] = ARGS.output_dir
+
+    run(test=ARGS.test)
+

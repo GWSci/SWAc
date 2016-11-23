@@ -349,6 +349,14 @@ soil_static_params:
         - !!python/name:list
         - !!python/name:float
 
+smd:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
 soil_spatial:
     required: false
     alt_format: [yml, csv]

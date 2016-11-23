@@ -70,7 +70,8 @@ def val_time_periods(data, name):
     2) start and end times have to be positive and less than the # of days
     3) time periods need to be lists of length 2
     4) start time has to be smaller than end time
-    5) all days are assigned to a time period
+    5) end time is not inclusive
+    6) all days are assigned to a time period
     """
     tmp = data['params'][name]
     c.check_type(param=tmp, name=name, t_types=data['specs'][name]['type'])
@@ -78,7 +79,7 @@ def val_time_periods(data, name):
     c.check_values_limits(values=[i for j in tmp for i in j],
                           name=name,
                           low_l=0,
-                          high_l=len(data['series']['date']),
+                          high_l=len(data['series']['date']) + 1,
                           include_high=True)
 
     all_days = []
@@ -89,11 +90,11 @@ def val_time_periods(data, name):
         if not time_range[0] < time_range[1]:
             msg = 'Parameter "%s" requires start_date < end_date'
             raise u.ValidationError(msg % name)
-        all_days += range(time_range[0], time_range[1] + 1)
+        all_days += range(time_range[0], time_range[1])
 
     if set(all_days) != set(range(1, len(data['series']['date']) + 1)):
         msg = ('Parameter "%s" requires all days to be included'
-               ' in one of the periods')
+               ' in one (and only one) of the periods')
         raise u.ValidationError(msg % name)
 
 
@@ -636,6 +637,9 @@ def val_snow_params(data, name):
     3) values have to lists with 3 elements
     4) the first element (starting_snow_pack) is a number >= 0
     """
+    if data['params']['snow_process'] == 'disabled':
+        return
+
     snp = data['params'][name]
     tot = data['params']['num_nodes']
 
@@ -866,9 +870,10 @@ def val_soil_static_params(data, name):
 
     1) type has to be a dictionary of lists of floats
     2) values have to be lists with length equal to the number of zones
-    3) dictionary needs 4 keys: FC, WP, p, starting_SMD
+    3) dictionary needs 4 keys: FC, WP, p
     """
-    if data['params']['fao_process'] == 'disabled':
+    if data['params']['fao_process'] == 'disabled' or \
+            data['params']['fao_input'] == 'l':
         return
 
     ssp = data['params'][name]
@@ -878,7 +883,28 @@ def val_soil_static_params(data, name):
                  name=name,
                  t_types=data['specs'][name]['type'],
                  len_list=[len(szn)],
-                 keys=['FC', 'WP', 'p', 'starting_SMD'])
+                 keys=['FC', 'WP', 'p'])
+
+
+###############################################################################
+def val_smd(data, name):
+    """Validate smd.
+
+    1) type has to be a dictionary of lists of floats
+    2) values have to be lists with length equal to the number of zones
+    3) dictionary needs 1 key: starting_SMD
+    """
+    if data['params']['fao_process'] == 'disabled':
+        return
+
+    smd = data['params'][name]
+    szn = data['params']['soil_zone_names']
+
+    c.check_type(param=smd,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(szn)],
+                 keys=['starting_SMD'])
 
 
 ###############################################################################
@@ -890,7 +916,8 @@ def val_soil_spatial(data, name):
     3) values have to be lists with length equal to the number of zones
     4) the sum of each row has to be 1.0
     """
-    if data['params']['fao_process'] == 'disabled':
+    if data['params']['fao_process'] == 'disabled' or \
+            data['params']['fao_input'] == 'l':
         return
 
     sos = data['params'][name]
@@ -943,7 +970,8 @@ def val_zr(data, name):
     2) dictionary needs to have integer keys, from 1 to 12
     3) lists need to have length equal to the number of zones
     """
-    if data['params']['fao_process'] == 'disabled':
+    if data['params']['fao_process'] == 'disabled' or \
+            data['params']['fao_input'] == 'l':
         return
 
     zrn = data['params'][name]
@@ -1175,6 +1203,7 @@ FUNC_PARAMS = [val_run_name,
                val_fao_process,
                val_fao_input,
                val_soil_static_params,
+               val_smd,
                val_soil_spatial,
                val_lu_spatial,
                val_zr,

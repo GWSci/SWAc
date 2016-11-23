@@ -81,10 +81,11 @@ def benchmark():
 class EndToEndTests(unittest.TestCase):
     """Test suite for the SWAcMod project."""
 
+    specs_file = u.CONSTANTS['SPECS_FILE']
     input_file = u.CONSTANTS['TEST_INPUT_FILE']
     input_dir = u.CONSTANTS['TEST_INPUT_DIR']
-    data = io.load_and_validate(input_file=input_file,
-                                input_dir=input_dir)
+
+    data = io.load_and_validate(specs_file, input_file, input_dir)
     if not data:
         print 'Loading failed, interrupting tests now.'
         sys.exit()

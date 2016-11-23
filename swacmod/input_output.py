@@ -5,6 +5,7 @@
 # Standard Library
 import os
 import csv
+import ast
 import sys
 import logging
 import datetime
@@ -136,14 +137,19 @@ def dump_water_balance(data, output, node=None, zone=None):
             row.insert(1, period[1] - period[0] + 1)
             row.insert(2, area)
             for num2, element in enumerate(row):
-                if u.CONSTANTS['BALANCE_CONVERSIONS'][num][1]:
-                    row[num2] = element / 1000.0 * area
+                if u.CONSTANTS['BALANCE_CONVERSIONS'][num2][1]:
+                    try:
+                        row[num2] = element / 1000.0 * area
+                    except TypeError:
+                        print num2
+                        print element, type(element)
+                        print num
+                        print row
             writer.writerow(row)
 
 
 ###############################################################################
-def convert_all_yaml_to_csv(specs_file=u.CONSTANTS['SPECS_FILE'],
-                            input_dir=u.CONSTANTS['INPUT_DIR']):
+def convert_all_yaml_to_csv(specs_file, input_dir):
     """Convert all YAML files to CSV for parameters that accept this option."""
     specs = load_yaml(specs_file)
     to_csv = [i for i in specs if 'alt_format' in specs[i] and 'csv' in
@@ -201,6 +207,13 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
     specs = load_yaml(specs_file)
     params = load_yaml(input_file)
 
+    no_list = ['node_areas', 'free_throughfall', 'max_canopy_storage',
+               'subsoilzone_leakage_fraction'] + \
+              [i for i in params if 'zone_names' in i] + \
+              [i for i in params if 'zone_mapping' in i and i not in
+               ['rainfall_zone_mapping', 'pe_zone_mapping',
+                'subroot_zone_mapping']]
+
     for param in params:
         if isinstance(params[param], str) and 'alt_format' in specs[param]:
             absolute = os.path.join(input_dir, params[param])
@@ -213,7 +226,21 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                 except IOError as err:
                     msg = 'Could not import %s: %s' % (param, err)
                     raise u.InputOutputError(msg)
-                params[param] = dict((row[0], row[1]) for row in reader)
+                try:
+                    rows = [[ast.literal_eval(j) for j in row]
+                            for row in reader]
+                    if param.endswith('_ts') or param == 'time_periods':
+                        params[param] = rows
+                    else:
+                        if param not in no_list:
+                            params[param] = dict((row[0], row[1:]) for row in
+                                                 rows)
+                        else:
+                            params[param] = dict((row[0], row[1]) for row in
+                                                 rows)
+                except IndexError as err:
+                    msg = 'Could not import %s: %s' % (param, err)
+                    raise u.InputOutputError(msg)
             elif ext == 'yml':
                 try:
                     params[param] = load_yaml(absolute)[param]
@@ -238,9 +265,7 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
 
 
 ###############################################################################
-def load_and_validate(specs_file=u.CONSTANTS['SPECS_FILE'],
-                      input_file=u.CONSTANTS['INPUT_FILE'],
-                      input_dir=u.CONSTANTS['INPUT_DIR']):
+def load_and_validate(specs_file, input_file, input_dir):
     """Load, finalize and validate model parameters and time series."""
     try:
         data = load_params_from_yaml(specs_file=specs_file,
