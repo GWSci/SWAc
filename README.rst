@@ -79,7 +79,7 @@ Finally, to simply **run the model**: navigate to ``ROOT``, then run
 
     $ python swacmod_run.py
 
-This will read the input files from 'input_files/' and write the output files in ``output_files/``. In order to specify different paths for these two folders,
+This will read the input files from ``input_files/`` and write the output files in ``output_files/``. In order to specify different paths for these two folders,
 
 .. code-block:: bash
 

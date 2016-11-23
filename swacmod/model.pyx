@@ -543,3 +543,10 @@ def get_balance(data, output, node):
     balance = output['average_in'] - output['average_out']
     return {'balance': balance}
 
+
+###############################################################################
+def aggregate(reporting, output):
+    """Aggregate reporting."""
+    for key in output:
+        reporting[key] += output[key]
+    return reporting

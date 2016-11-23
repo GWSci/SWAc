@@ -61,7 +61,9 @@ def fin_num_cores(data, name):
     1) if not provided, use the number of cores of the machine.
     """
     if data['params'][name] is None:
-        data['params'][name] = multiprocessing.cpu_count()
+        count = multiprocessing.cpu_count()
+        data['params'][name] = count
+        logging.info('\t\tDefaulted "%s" to %s', name, count)
 
 
 ###############################################################################
@@ -336,8 +338,9 @@ def fin_free_throughfall(data, name):
     """
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
-        data['params'][name] = dict((k, 1.0) for k in range(1, nodes + 1))
-        logging.info('\t\tDefaulted "%s" to 1.0', name)
+        default = 1.0
+        data['params'][name] = dict((k, default) for k in range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
 ###############################################################################
@@ -348,8 +351,9 @@ def fin_max_canopy_storage(data, name):
     """
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
-        data['params'][name] = dict((k, 0.0) for k in range(1, nodes + 1))
-        logging.info('\t\tDefaulted "%s" to 0.0', name)
+        default = 0.0
+        data['params'][name] = dict((k, default) for k in range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
 ###############################################################################
@@ -377,7 +381,7 @@ def fin_rorecharge_proportion(data, name):
     params = data['params']
     if params[name] is None:
         params[name] = dict((k, [0.0]) for k in range(1, 13))
-        logging.info('\t\tDefaulted "%s" to 0.0', name)
+        logging.info('\t\tDefaulted "%s" to [0.0]', name)
 
     params['ror_prop'] = sorted(params['rorecharge_proportion'].items(),
                                 key=lambda x: x[0])
@@ -393,7 +397,7 @@ def fin_rorecharge_limit(data, name):
     params = data['params']
     if params[name] is None:
         params[name] = dict((k, [99999]) for k in range(1, 13))
-        logging.info('\t\tDefaulted "%s" to 99999', name)
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
 
     params['ror_limit'] = sorted(params['rorecharge_limit'].items(),
                                  key=lambda x: x[0])
@@ -409,7 +413,7 @@ def fin_macropore_proportion(data, name):
     params = data['params']
     if params[name] is None:
         params[name] = dict((k, [0.0]) for k in range(1, 13))
-        logging.info('\t\tDefaulted "%s" to 0.0', name)
+        logging.info('\t\tDefaulted "%s" to [0.0]', name)
 
     params['macro_prop'] = sorted(params['macropore_proportion'].items(),
                                   key=lambda x: x[0])
@@ -425,7 +429,7 @@ def fin_macropore_limit(data, name):
     params = data['params']
     if params[name] is None:
         params[name] = dict((k, [99999.9]) for k in range(1, 13))
-        logging.info('\t\tDefaulted "%s" to 99999.9', name)
+        logging.info('\t\tDefaulted "%s" to [99999.9]', name)
 
     params['macro_limit'] = sorted(params['macropore_limit'].items(),
                                    key=lambda x: x[0])
@@ -538,8 +542,9 @@ def fin_subsoilzone_leakage_fraction(data, name):
     """
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
-        data['params'][name] = dict((k, 0.0) for k in range(1, nodes + 1))
-        logging.info('\t\tDefaulted "%s" to 0.0', name)
+        default = 0.0
+        data['params'][name] = dict((k, default) for k in range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
 ###############################################################################

@@ -70,11 +70,10 @@ def get_output(data, node):
 
 
 ###############################################################################
-def run_process(num, ids, data, test, reporting, recharge, log_path):
+def run_process(num, ids, data, test, reporting, recharge, log_path, level):
     """Run model for a chunk of nodes."""
-    io.start_logging(path=log_path)
-    logging.info('Process %d started (%d nodes, test is %s)',
-                 num, len(ids), test)
+    io.start_logging(path=log_path, level=level)
+    logging.info('Process %d started (%d nodes)', num, len(ids))
     for node in ids:
         rep_zone = data['params']['reporting_zone_mapping'][node]
         if rep_zone == 0:
@@ -87,16 +86,16 @@ def run_process(num, ids, data, test, reporting, recharge, log_path):
             if rep_zone not in reporting:
                 reporting[rep_zone] = output.copy()
             else:
-                for key in output:
-                    reporting[rep_zone][key] += output[key]
+                reporting[rep_zone] = m.aggregate(reporting[rep_zone], output)
             recharge[node] = output['combined_recharge'].copy()
     logging.info('Process %d ended', num)
 
 
 ###############################################################################
-def run(test=False):
+def run(test=False, debug=False):
     """Run model for all nodes."""
-    log_path = io.start_logging()
+    level = (logging.DEBUG if debug else logging.INFO)
+    log_path = io.start_logging(level=level)
     logging.info('Start SWAcMod run')
 
     manager = Manager()
@@ -122,7 +121,7 @@ def run(test=False):
             continue
         procs[num] = Process(target=run_process,
                              args=(num, chunk, data, test, reporting,
-                                   recharge, log_path))
+                                   recharge, log_path, level))
         procs[num].start()
 
     for num in procs:
@@ -151,6 +150,10 @@ if __name__ == "__main__":
                         '--test',
                         help='run with no output',
                         action='store_true')
+    PARSER.add_argument('-d',
+                        '--debug',
+                        help='verbose log',
+                        action='store_true')
     PARSER.add_argument('-i',
                         '--input_dir',
                         help='path to input directory')
@@ -165,5 +168,5 @@ if __name__ == "__main__":
     if ARGS.output_dir:
         u.CONSTANTS['OUTPUT_DIR'] = ARGS.output_dir
 
-    run(test=ARGS.test)
+    run(test=ARGS.test, debug=ARGS.debug)
 

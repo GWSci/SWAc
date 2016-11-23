@@ -134,17 +134,11 @@ def dump_water_balance(data, output, node=None, zone=None):
         for num, period in enumerate(periods):
             row = [aggregated[key][num] for key in u.CONSTANTS['COL_ORDER'] if
                    key not in ['unutilised_pe', 'k_slope', 'rapid_runoff_c']]
-            row.insert(1, period[1] - period[0] + 1)
+            row.insert(1, period[1] - period[0])
             row.insert(2, area)
             for num2, element in enumerate(row):
                 if u.CONSTANTS['BALANCE_CONVERSIONS'][num2][1]:
-                    try:
-                        row[num2] = element / 1000.0 * area
-                    except TypeError:
-                        print num2
-                        print element, type(element)
-                        print num
-                        print row
+                    row[num2] = element / 1000.0 * area
             writer.writerow(row)
 
 

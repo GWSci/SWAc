@@ -1766,6 +1766,7 @@ static const char __pyx_k_exp[] = "exp";
 static const char __pyx_k_fao[] = "fao";
 static const char __pyx_k_ftf[] = "ftf";
 static const char __pyx_k_irs[] = "irs";
+static const char __pyx_k_key[] = "key";
 static const char __pyx_k_mcs[] = "mcs";
 static const char __pyx_k_num[] = "num";
 static const char __pyx_k_obj[] = "obj";
@@ -1884,12 +1885,14 @@ static const char __pyx_k_zone_mac[] = "zone_mac";
 static const char __pyx_k_zone_ror[] = "zone_ror";
 static const char __pyx_k_zone_rro[] = "zone_rro";
 static const char __pyx_k_TypeError[] = "TypeError";
+static const char __pyx_k_aggregate[] = "aggregate";
 static const char __pyx_k_class_smd[] = "class_smd";
 static const char __pyx_k_col_p_smd[] = "col_p_smd";
 static const char __pyx_k_enumerate[] = "enumerate";
 static const char __pyx_k_get_pefac[] = "get_pefac";
 static const char __pyx_k_macropore[] = "macropore";
 static const char __pyx_k_net_pefac[] = "net_pefac";
+static const char __pyx_k_reporting[] = "reporting";
 static const char __pyx_k_ror_limit[] = "ror_limit";
 static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_ValueError[] = "ValueError";
@@ -2050,6 +2053,7 @@ static PyObject *__pyx_kp_s_Users_marco_Code_upwork_water_m;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s__27;
 static PyObject *__pyx_n_s_ae;
+static PyObject *__pyx_n_s_aggregate;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_array;
 static PyObject *__pyx_n_s_average_in;
@@ -2156,6 +2160,7 @@ static PyObject *__pyx_n_s_itemsize;
 static PyObject *__pyx_kp_s_itemsize_0_for_cython_array;
 static PyObject *__pyx_n_s_k_slope;
 static PyObject *__pyx_n_s_kc_list;
+static PyObject *__pyx_n_s_key;
 static PyObject *__pyx_n_s_last_ri;
 static PyObject *__pyx_n_s_last_smd;
 static PyObject *__pyx_n_s_leakage_process;
@@ -2216,6 +2221,7 @@ static PyObject *__pyx_n_s_recharge_attenuation_params;
 static PyObject *__pyx_n_s_recharge_attenuation_process;
 static PyObject *__pyx_n_s_recharge_store;
 static PyObject *__pyx_n_s_recharge_store_input;
+static PyObject *__pyx_n_s_reporting;
 static PyObject *__pyx_n_s_rivers;
 static PyObject *__pyx_n_s_rll;
 static PyObject *__pyx_n_s_rlp;
@@ -2324,6 +2330,7 @@ static PyObject *__pyx_pf_7swacmod_5model_42get_evt(CYTHON_UNUSED PyObject *__py
 static PyObject *__pyx_pf_7swacmod_5model_44get_average_in(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_data, PyObject *__pyx_v_output, PyObject *__pyx_v_node); /* proto */
 static PyObject *__pyx_pf_7swacmod_5model_46get_average_out(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_data, PyObject *__pyx_v_output, CYTHON_UNUSED PyObject *__pyx_v_node); /* proto */
 static PyObject *__pyx_pf_7swacmod_5model_48get_balance(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_data, PyObject *__pyx_v_output, CYTHON_UNUSED PyObject *__pyx_v_node); /* proto */
+static PyObject *__pyx_pf_7swacmod_5model_50aggregate(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_reporting, PyObject *__pyx_v_output); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
@@ -2419,10 +2426,11 @@ static PyObject *__pyx_tuple__72;
 static PyObject *__pyx_tuple__74;
 static PyObject *__pyx_tuple__76;
 static PyObject *__pyx_tuple__78;
-static PyObject *__pyx_tuple__79;
 static PyObject *__pyx_tuple__80;
 static PyObject *__pyx_tuple__81;
 static PyObject *__pyx_tuple__82;
+static PyObject *__pyx_tuple__83;
+static PyObject *__pyx_tuple__84;
 static PyObject *__pyx_codeobj__29;
 static PyObject *__pyx_codeobj__31;
 static PyObject *__pyx_codeobj__33;
@@ -2448,6 +2456,7 @@ static PyObject *__pyx_codeobj__71;
 static PyObject *__pyx_codeobj__73;
 static PyObject *__pyx_codeobj__75;
 static PyObject *__pyx_codeobj__77;
+static PyObject *__pyx_codeobj__79;
 
 /* "swacmod/model.pyx":13
  * 
@@ -11841,6 +11850,7 @@ static PyObject *__pyx_pf_7swacmod_5model_48get_balance(CYTHON_UNUSED PyObject *
  *     balance = output['average_in'] - output['average_out']
  *     return {'balance': balance}             # <<<<<<<<<<<<<<
  * 
+ * 
  */
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 544, __pyx_L1_error)
@@ -11867,6 +11877,200 @@ static PyObject *__pyx_pf_7swacmod_5model_48get_balance(CYTHON_UNUSED PyObject *
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_balance);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "swacmod/model.pyx":548
+ * 
+ * ###############################################################################
+ * def aggregate(reporting, output):             # <<<<<<<<<<<<<<
+ *     """Aggregate reporting."""
+ *     for key in output:
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_7swacmod_5model_51aggregate(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_7swacmod_5model_50aggregate[] = "Aggregate reporting.";
+static PyMethodDef __pyx_mdef_7swacmod_5model_51aggregate = {"aggregate", (PyCFunction)__pyx_pw_7swacmod_5model_51aggregate, METH_VARARGS|METH_KEYWORDS, __pyx_doc_7swacmod_5model_50aggregate};
+static PyObject *__pyx_pw_7swacmod_5model_51aggregate(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_reporting = 0;
+  PyObject *__pyx_v_output = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("aggregate (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_reporting,&__pyx_n_s_output,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_reporting)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_output)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("aggregate", 1, 2, 2, 1); __PYX_ERR(0, 548, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "aggregate") < 0)) __PYX_ERR(0, 548, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_reporting = values[0];
+    __pyx_v_output = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("aggregate", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 548, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("swacmod.model.aggregate", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_7swacmod_5model_50aggregate(__pyx_self, __pyx_v_reporting, __pyx_v_output);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_7swacmod_5model_50aggregate(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_reporting, PyObject *__pyx_v_output) {
+  PyObject *__pyx_v_key = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  Py_ssize_t __pyx_t_2;
+  PyObject *(*__pyx_t_3)(PyObject *);
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  __Pyx_RefNannySetupContext("aggregate", 0);
+
+  /* "swacmod/model.pyx":550
+ * def aggregate(reporting, output):
+ *     """Aggregate reporting."""
+ *     for key in output:             # <<<<<<<<<<<<<<
+ *         reporting[key] += output[key]
+ *     return reporting
+ */
+  if (likely(PyList_CheckExact(__pyx_v_output)) || PyTuple_CheckExact(__pyx_v_output)) {
+    __pyx_t_1 = __pyx_v_output; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
+    __pyx_t_3 = NULL;
+  } else {
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_output); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 550, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 550, __pyx_L1_error)
+  }
+  for (;;) {
+    if (likely(!__pyx_t_3)) {
+      if (likely(PyList_CheckExact(__pyx_t_1))) {
+        if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
+        #if CYTHON_COMPILING_IN_CPYTHON
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 550, __pyx_L1_error)
+        #else
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 550, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        #endif
+      } else {
+        if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
+        #if CYTHON_COMPILING_IN_CPYTHON
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 550, __pyx_L1_error)
+        #else
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 550, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        #endif
+      }
+    } else {
+      __pyx_t_4 = __pyx_t_3(__pyx_t_1);
+      if (unlikely(!__pyx_t_4)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 550, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_4);
+    }
+    __Pyx_XDECREF_SET(__pyx_v_key, __pyx_t_4);
+    __pyx_t_4 = 0;
+
+    /* "swacmod/model.pyx":551
+ *     """Aggregate reporting."""
+ *     for key in output:
+ *         reporting[key] += output[key]             # <<<<<<<<<<<<<<
+ *     return reporting
+ */
+    __Pyx_INCREF(__pyx_v_key);
+    __pyx_t_4 = __pyx_v_key;
+    __pyx_t_5 = PyObject_GetItem(__pyx_v_reporting, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 551, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_6 = PyObject_GetItem(__pyx_v_output, __pyx_v_key); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 551, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_t_7 = PyNumber_InPlaceAdd(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 551, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    if (unlikely(PyObject_SetItem(__pyx_v_reporting, __pyx_t_4, __pyx_t_7) < 0)) __PYX_ERR(0, 551, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+    /* "swacmod/model.pyx":550
+ * def aggregate(reporting, output):
+ *     """Aggregate reporting."""
+ *     for key in output:             # <<<<<<<<<<<<<<
+ *         reporting[key] += output[key]
+ *     return reporting
+ */
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "swacmod/model.pyx":552
+ *     for key in output:
+ *         reporting[key] += output[key]
+ *     return reporting             # <<<<<<<<<<<<<<
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_reporting);
+  __pyx_r = __pyx_v_reporting;
+  goto __pyx_L0;
+
+  /* "swacmod/model.pyx":548
+ * 
+ * ###############################################################################
+ * def aggregate(reporting, output):             # <<<<<<<<<<<<<<
+ *     """Aggregate reporting."""
+ *     for key in output:
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_AddTraceback("swacmod.model.aggregate", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_key);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -26279,6 +26483,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s__27, __pyx_k__27, sizeof(__pyx_k__27), 0, 0, 1, 1},
   {&__pyx_n_s_ae, __pyx_k_ae, sizeof(__pyx_k_ae), 0, 0, 1, 1},
+  {&__pyx_n_s_aggregate, __pyx_k_aggregate, sizeof(__pyx_k_aggregate), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_array, __pyx_k_array, sizeof(__pyx_k_array), 0, 0, 1, 1},
   {&__pyx_n_s_average_in, __pyx_k_average_in, sizeof(__pyx_k_average_in), 0, 0, 1, 1},
@@ -26385,6 +26590,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_itemsize_0_for_cython_array, __pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 0, 1, 0},
   {&__pyx_n_s_k_slope, __pyx_k_k_slope, sizeof(__pyx_k_k_slope), 0, 0, 1, 1},
   {&__pyx_n_s_kc_list, __pyx_k_kc_list, sizeof(__pyx_k_kc_list), 0, 0, 1, 1},
+  {&__pyx_n_s_key, __pyx_k_key, sizeof(__pyx_k_key), 0, 0, 1, 1},
   {&__pyx_n_s_last_ri, __pyx_k_last_ri, sizeof(__pyx_k_last_ri), 0, 0, 1, 1},
   {&__pyx_n_s_last_smd, __pyx_k_last_smd, sizeof(__pyx_k_last_smd), 0, 0, 1, 1},
   {&__pyx_n_s_leakage_process, __pyx_k_leakage_process, sizeof(__pyx_k_leakage_process), 0, 0, 1, 1},
@@ -26445,6 +26651,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_recharge_attenuation_process, __pyx_k_recharge_attenuation_process, sizeof(__pyx_k_recharge_attenuation_process), 0, 0, 1, 1},
   {&__pyx_n_s_recharge_store, __pyx_k_recharge_store, sizeof(__pyx_k_recharge_store), 0, 0, 1, 1},
   {&__pyx_n_s_recharge_store_input, __pyx_k_recharge_store_input, sizeof(__pyx_k_recharge_store_input), 0, 0, 1, 1},
+  {&__pyx_n_s_reporting, __pyx_k_reporting, sizeof(__pyx_k_reporting), 0, 0, 1, 1},
   {&__pyx_n_s_rivers, __pyx_k_rivers, sizeof(__pyx_k_rivers), 0, 0, 1, 1},
   {&__pyx_n_s_rll, __pyx_k_rll, sizeof(__pyx_k_rll), 0, 0, 1, 1},
   {&__pyx_n_s_rlp, __pyx_k_rlp, sizeof(__pyx_k_rlp), 0, 0, 1, 1},
@@ -27138,6 +27345,18 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__76);
   __pyx_codeobj__77 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__76, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_marco_Code_upwork_water_m, __pyx_n_s_get_balance, 541, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__77)) __PYX_ERR(0, 541, __pyx_L1_error)
 
+  /* "swacmod/model.pyx":548
+ * 
+ * ###############################################################################
+ * def aggregate(reporting, output):             # <<<<<<<<<<<<<<
+ *     """Aggregate reporting."""
+ *     for key in output:
+ */
+  __pyx_tuple__78 = PyTuple_Pack(3, __pyx_n_s_reporting, __pyx_n_s_output, __pyx_n_s_key); if (unlikely(!__pyx_tuple__78)) __PYX_ERR(0, 548, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__78);
+  __Pyx_GIVEREF(__pyx_tuple__78);
+  __pyx_codeobj__79 = (PyObject*)__Pyx_PyCode_New(2, 0, 3, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__78, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_marco_Code_upwork_water_m, __pyx_n_s_aggregate, 548, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__79)) __PYX_ERR(0, 548, __pyx_L1_error)
+
   /* "View.MemoryView":282
  *         return self.name
  * 
@@ -27145,9 +27364,9 @@ static int __Pyx_InitCachedConstants(void) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_tuple__78 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__78)) __PYX_ERR(2, 282, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__78);
-  __Pyx_GIVEREF(__pyx_tuple__78);
+  __pyx_tuple__80 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__80)) __PYX_ERR(2, 282, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__80);
+  __Pyx_GIVEREF(__pyx_tuple__80);
 
   /* "View.MemoryView":283
  * 
@@ -27156,9 +27375,9 @@ static int __Pyx_InitCachedConstants(void) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_tuple__79 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__79)) __PYX_ERR(2, 283, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__79);
-  __Pyx_GIVEREF(__pyx_tuple__79);
+  __pyx_tuple__81 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__81)) __PYX_ERR(2, 283, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__81);
+  __Pyx_GIVEREF(__pyx_tuple__81);
 
   /* "View.MemoryView":284
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -27167,9 +27386,9 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__80 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__80)) __PYX_ERR(2, 284, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__80);
-  __Pyx_GIVEREF(__pyx_tuple__80);
+  __pyx_tuple__82 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__82)) __PYX_ERR(2, 284, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__82);
+  __Pyx_GIVEREF(__pyx_tuple__82);
 
   /* "View.MemoryView":287
  * 
@@ -27178,9 +27397,9 @@ static int __Pyx_InitCachedConstants(void) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_tuple__81 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__81)) __PYX_ERR(2, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__81);
-  __Pyx_GIVEREF(__pyx_tuple__81);
+  __pyx_tuple__83 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__83)) __PYX_ERR(2, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__83);
+  __Pyx_GIVEREF(__pyx_tuple__83);
 
   /* "View.MemoryView":288
  * 
@@ -27189,9 +27408,9 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__82 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__82)) __PYX_ERR(2, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__82);
-  __Pyx_GIVEREF(__pyx_tuple__82);
+  __pyx_tuple__84 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__84)) __PYX_ERR(2, 288, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__84);
+  __Pyx_GIVEREF(__pyx_tuple__84);
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -27685,6 +27904,18 @@ PyMODINIT_FUNC PyInit_model(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_balance, __pyx_t_2) < 0) __PYX_ERR(0, 541, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
+  /* "swacmod/model.pyx":548
+ * 
+ * ###############################################################################
+ * def aggregate(reporting, output):             # <<<<<<<<<<<<<<
+ *     """Aggregate reporting."""
+ *     for key in output:
+ */
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7swacmod_5model_51aggregate, NULL, __pyx_n_s_swacmod_model); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 548, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_aggregate, __pyx_t_2) < 0) __PYX_ERR(0, 548, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
   /* "swacmod/model.pyx":1
  * # -*- coding: utf-8 -*-             # <<<<<<<<<<<<<<
  * """SWAcMod model functions in Cython."""
@@ -27715,7 +27946,7 @@ PyMODINIT_FUNC PyInit_model(void)
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__78, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 282, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__80, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 282, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(generic);
   __Pyx_DECREF_SET(generic, __pyx_t_2);
@@ -27729,7 +27960,7 @@ PyMODINIT_FUNC PyInit_model(void)
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__79, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 283, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__81, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 283, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(strided);
   __Pyx_DECREF_SET(strided, __pyx_t_2);
@@ -27743,7 +27974,7 @@ PyMODINIT_FUNC PyInit_model(void)
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__80, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 284, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__82, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 284, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(indirect);
   __Pyx_DECREF_SET(indirect, __pyx_t_2);
@@ -27757,7 +27988,7 @@ PyMODINIT_FUNC PyInit_model(void)
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__81, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 287, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__83, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 287, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(contiguous);
   __Pyx_DECREF_SET(contiguous, __pyx_t_2);
@@ -27771,7 +28002,7 @@ PyMODINIT_FUNC PyInit_model(void)
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__82, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 288, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__84, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 288, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(indirect_contiguous);
   __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_2);
