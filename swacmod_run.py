@@ -86,7 +86,9 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level):
             if rep_zone not in reporting:
                 reporting[rep_zone] = output.copy()
             else:
-                reporting[rep_zone] = m.aggregate(reporting[rep_zone], output)
+                area = data['params']['node_areas'][node]
+                reporting[rep_zone] = m.aggregate(reporting[rep_zone], output,
+                                                  area)
             recharge[node] = output['combined_recharge'].copy()
     logging.info('Process %d ended', num)
 

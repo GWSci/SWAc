@@ -545,8 +545,8 @@ def get_balance(data, output, node):
 
 
 ###############################################################################
-def aggregate(reporting, output):
+def aggregate(reporting, output, area):
     """Aggregate reporting."""
     for key in output:
-        reporting[key] += output[key]
+        reporting[key] += output[key] * area
     return reporting

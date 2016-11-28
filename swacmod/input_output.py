@@ -138,7 +138,10 @@ def dump_water_balance(data, output, node=None, zone=None):
             row.insert(2, area)
             for num2, element in enumerate(row):
                 if u.CONSTANTS['BALANCE_CONVERSIONS'][num2][1]:
-                    row[num2] = element / 1000.0 * area
+                    if node:
+                        row[num2] = element / 1000.0 * area
+                    elif zone:
+                        row[num2] = element / 1000.0
             writer.writerow(row)
 
 
