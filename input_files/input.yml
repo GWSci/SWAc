@@ -32,6 +32,10 @@
 # path is invalid, e.g. one of the directories does not exist, the program will
 # not try to create it.
 #
+# If you get a yaml.parser.ParserError, please see guidelines for the YAML
+# syntax here:
+# http://docs.ansible.com/ansible/YAMLSyntax.html
+#
 ###############################################################################
 
 

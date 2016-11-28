@@ -94,6 +94,8 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level):
 ###############################################################################
 def run(test=False, debug=False):
     """Run model for all nodes."""
+    print '\nInput: %s' % u.CONSTANTS['INPUT_DIR']
+    print 'Output: %s\n' % u.CONSTANTS['OUTPUT_DIR']
     level = (logging.DEBUG if debug else logging.INFO)
     log_path = io.start_logging(level=level)
     logging.info('Start SWAcMod run')
