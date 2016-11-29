@@ -239,7 +239,7 @@ def fin_rapid_runoff_zone_mapping(data, name):
     """
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
-        data['params'][name] = dict((k, 0) for k in range(1, nodes + 1))
+        data['params'][name] = dict((k, 1) for k in range(1, nodes + 1))
 
 
 ###############################################################################
@@ -262,7 +262,7 @@ def fin_rorecharge_zone_mapping(data, name):
     """
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
-        data['params'][name] = dict((k, 0) for k in range(1, nodes + 1))
+        data['params'][name] = dict((k, 1) for k in range(1, nodes + 1))
 
 
 ###############################################################################
@@ -397,7 +397,8 @@ def fin_rorecharge_limit(data, name):
     params = data['params']
     zones = data['params']['rorecharge_zone_names']
     if params[name] is None:
-        params[name] = dict((k, [99999 for _ in zones]) for k in range(1, 13))
+        params[name] = dict((k, [99999.9 for _ in zones]) for k in
+                            range(1, 13))
         logging.info('\t\tDefaulted "%s" to [99999]', name)
 
     params['ror_limit'] = sorted(params[name].items(), key=lambda x: x[0])
