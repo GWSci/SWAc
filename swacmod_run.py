@@ -70,7 +70,8 @@ def get_output(data, node):
 
 
 ###############################################################################
-def run_process(num, ids, data, test, reporting, recharge, log_path, level):
+def run_process(num, ids, data, test, reporting, recharge, log_path, level,
+                file_format):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
@@ -82,7 +83,7 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level):
         logging.debug('RAM usage is %.2fMb', u.get_ram_usage_for_process())
         if not test:
             if node in data['params']['output_individual']:
-                io.dump_water_balance(data, output, node=node)
+                io.dump_water_balance(data, output, file_format, node=node)
             if rep_zone not in reporting:
                 reporting[rep_zone] = output.copy()
             else:
@@ -94,10 +95,11 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level):
 
 
 ###############################################################################
-def run(test=False, debug=False):
+def run(test=False, debug=False, file_format=None):
     """Run model for all nodes."""
     print '\nInput: %s' % u.CONSTANTS['INPUT_DIR']
     print 'Output: %s\n' % u.CONSTANTS['OUTPUT_DIR']
+
     level = (logging.DEBUG if debug else logging.INFO)
     log_path = io.start_logging(level=level)
     logging.info('Start SWAcMod run')
@@ -125,7 +127,7 @@ def run(test=False, debug=False):
             continue
         procs[num] = Process(target=run_process,
                              args=(num, chunk, data, test, reporting,
-                                   recharge, log_path, level))
+                                   recharge, log_path, level, file_format))
         procs[num].start()
 
     for num in procs:
@@ -133,7 +135,7 @@ def run(test=False, debug=False):
 
     if not test:
         for key in reporting.keys():
-            io.dump_water_balance(data, reporting[key], zone=key)
+            io.dump_water_balance(data, reporting[key], file_format, zone=key)
         if data['params']['output_recharge']:
             io.dump_recharge_file(data, recharge)
 
@@ -164,6 +166,11 @@ if __name__ == "__main__":
     PARSER.add_argument('-o',
                         '--output_dir',
                         help='path to output directory')
+    PARSER.add_argument('-f',
+                        '--format',
+                        help='output file format',
+                        choices=['hdf5', 'csv'],
+                        default='csv')
 
     ARGS = PARSER.parse_args()
     if ARGS.input_dir:
@@ -172,5 +179,5 @@ if __name__ == "__main__":
     if ARGS.output_dir:
         u.CONSTANTS['OUTPUT_DIR'] = ARGS.output_dir
 
-    run(test=ARGS.test, debug=ARGS.debug)
+    run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format)
 

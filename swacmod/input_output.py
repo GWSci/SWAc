@@ -12,6 +12,7 @@ import datetime
 
 # Third Party Libraries
 import yaml
+import pandas as pd
 from dateutil import parser
 
 # Internal modules
@@ -111,16 +112,16 @@ def dump_recharge_file(data, recharge):
 
 
 ###############################################################################
-def dump_water_balance(data, output, node=None, zone=None):
+def dump_water_balance(data, output, file_format, node=None, zone=None):
     """Write output to file."""
     areas = data['params']['node_areas']
     periods = data['params']['time_periods']
 
     if node:
-        fileout = 'output_node_%d.csv' % node
+        fileout = 'output_node_%d.%s' % (node, file_format)
         area = areas[node]
     elif zone:
-        fileout = 'output_zone_%d.csv' % zone
+        fileout = 'output_zone_%d.%s' % (zone, file_format)
         items = data['params']['reporting_zone_mapping'].items()
         area = sum([areas[i[0]] for i in items if i[1] == zone])
 
@@ -128,9 +129,14 @@ def dump_water_balance(data, output, node=None, zone=None):
     logging.debug('\tDumping output to "%s"', path)
     aggregated = u.aggregate_output(data, output, method='sum')
 
-    with open(path, 'wb') as csvfile:
-        writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow([i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS']])
+    with open(path, 'wb') as outfile:
+        header = [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS']]
+        if file_format == 'csv':
+            writer = csv.writer(outfile, delimiter=',',
+                                quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(header)
+        elif file_format == 'hdf5':
+            writer = pd.HDFStore(path)
         for num, period in enumerate(periods):
             row = [aggregated[key][num] for key in u.CONSTANTS['COL_ORDER'] if
                    key not in ['unutilised_pe', 'k_slope', 'rapid_runoff_c']]
@@ -142,7 +148,14 @@ def dump_water_balance(data, output, node=None, zone=None):
                         row[num2] = element / 1000.0 * area
                     elif zone:
                         row[num2] = element / 1000.0
-            writer.writerow(row)
+            if file_format == 'csv':
+                writer.writerow(row)
+            elif file_format == 'hdf5':
+                data_frame = pd.DataFrame([row], columns=header)
+                writer.append('data', data_frame)
+
+    if file_format == 'hdf5':
+        writer.close()
 
 
 ###############################################################################
