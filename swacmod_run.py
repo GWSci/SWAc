@@ -72,7 +72,7 @@ def get_output(data, node):
 
 ###############################################################################
 def run_process(num, ids, data, test, reporting, recharge, log_path, level,
-                file_format):
+                file_format, reduced):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
@@ -84,7 +84,8 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
         logging.debug('RAM usage is %.2fMb', u.get_ram_usage_for_process())
         if not test:
             if node in data['params']['output_individual']:
-                io.dump_water_balance(data, output, file_format, node=node)
+                io.dump_water_balance(data, output, file_format, node=node,
+                                      reduced=reduced)
             if rep_zone not in reporting:
                 reporting[rep_zone] = output.copy()
             else:
@@ -96,7 +97,7 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
 
 
 ###############################################################################
-def run(test=False, debug=False, file_format=None):
+def run(test=False, debug=False, file_format=None, reduced=False):
     """Run model for all nodes."""
     print '\nInput: %s' % u.CONSTANTS['INPUT_DIR']
     print 'Output: %s\n' % u.CONSTANTS['OUTPUT_DIR']
@@ -128,7 +129,8 @@ def run(test=False, debug=False, file_format=None):
             continue
         procs[num] = Process(target=run_process,
                              args=(num, chunk, data, test, reporting,
-                                   recharge, log_path, level, file_format))
+                                   recharge, log_path, level, file_format,
+                                   reduced))
         procs[num].start()
 
     for num in procs:
@@ -136,7 +138,8 @@ def run(test=False, debug=False, file_format=None):
 
     if not test:
         for key in reporting.keys():
-            io.dump_water_balance(data, reporting[key], file_format, zone=key)
+            io.dump_water_balance(data, reporting[key], file_format, zone=key,
+                                  reduced=reduced)
         if data['params']['output_recharge']:
             io.dump_recharge_file(data, recharge)
 
@@ -161,6 +164,10 @@ if __name__ == "__main__":
                         '--debug',
                         help='verbose log',
                         action='store_true')
+    PARSER.add_argument('-r',
+                        '--reduced',
+                        help='reduced output',
+                        action='store_true')
     PARSER.add_argument('-i',
                         '--input_dir',
                         help='path to input directory')
@@ -180,5 +187,6 @@ if __name__ == "__main__":
     if ARGS.output_dir:
         u.CONSTANTS['OUTPUT_DIR'] = ARGS.output_dir
 
-    run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format)
+    run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format,
+        reduced=ARGS.reduced)
 

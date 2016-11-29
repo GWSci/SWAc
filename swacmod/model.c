@@ -12340,7 +12340,7 @@ static PyObject *__pyx_pf_7swacmod_5model_48get_change(CYTHON_UNUSED PyObject *_
  *                           output['snowpack'][num] - \
  *                           output['snowpack'][num - 1]             # <<<<<<<<<<<<<<
  * 
- *     return {'total_storage_change': col_change}
+ *     return {'total_storage_change': col_change.base}
  */
     __pyx_t_1 = PyObject_GetItem(__pyx_v_output, __pyx_n_s_snowpack); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 564, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -12398,7 +12398,7 @@ static PyObject *__pyx_pf_7swacmod_5model_48get_change(CYTHON_UNUSED PyObject *_
   /* "swacmod/model.pyx":566
  *                           output['snowpack'][num - 1]
  * 
- *     return {'total_storage_change': col_change}             # <<<<<<<<<<<<<<
+ *     return {'total_storage_change': col_change.base}             # <<<<<<<<<<<<<<
  * 
  * 
  */
@@ -12407,8 +12407,11 @@ static PyObject *__pyx_pf_7swacmod_5model_48get_change(CYTHON_UNUSED PyObject *_
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_col_change, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 566, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_total_storage_change, __pyx_t_3) < 0) __PYX_ERR(0, 566, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_base); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 566, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_total_storage_change, __pyx_t_5) < 0) __PYX_ERR(0, 566, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_r = __pyx_t_4;
   __pyx_t_4 = 0;
   goto __pyx_L0;

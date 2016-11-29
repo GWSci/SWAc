@@ -563,7 +563,7 @@ def get_change(data, output, node):
                           output['snowpack'][num] - \
                           output['snowpack'][num - 1]
 
-    return {'total_storage_change': col_change}
+    return {'total_storage_change': col_change.base}
 
 
 ###############################################################################

@@ -112,7 +112,8 @@ def dump_recharge_file(data, recharge):
 
 
 ###############################################################################
-def dump_water_balance(data, output, file_format, node=None, zone=None):
+def dump_water_balance(data, output, file_format, node=None, zone=None,
+                       reduced=False):
     """Write output to file."""
     areas = data['params']['node_areas']
     periods = data['params']['time_periods']
@@ -130,7 +131,10 @@ def dump_water_balance(data, output, file_format, node=None, zone=None):
     aggregated = u.aggregate_output(data, output, method='sum')
 
     with open(path, 'wb') as outfile:
-        header = [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS']]
+        if reduced:
+            header = [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS'] if i[2]]
+        else:
+            header = [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS']]
         if file_format == 'csv':
             writer = csv.writer(outfile, delimiter=',',
                                 quoting=csv.QUOTE_MINIMAL)
@@ -138,8 +142,13 @@ def dump_water_balance(data, output, file_format, node=None, zone=None):
         elif file_format == 'hdf5':
             writer = pd.HDFStore(path)
         for num, period in enumerate(periods):
-            row = [aggregated[key][num] for key in u.CONSTANTS['COL_ORDER'] if
-                   key not in ['unutilised_pe', 'k_slope', 'rapid_runoff_c']]
+            if reduced:
+                row = [aggregated[key][num] for key in ['date',
+                       'combined_recharge', 'combined_str', 'combined_ae']]
+            else:
+                row = [aggregated[key][num] for key in u.CONSTANTS['COL_ORDER']
+                       if key not in ['unutilised_pe', 'k_slope',
+                                      'rapid_runoff_c']]
             row.insert(1, period[1] - period[0])
             row.insert(2, area)
             for num2, element in enumerate(row):

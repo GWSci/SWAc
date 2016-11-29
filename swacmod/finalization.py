@@ -379,8 +379,9 @@ def fin_rorecharge_proportion(data, name):
     1) if not provided, set it to 0.
     """
     params = data['params']
+    zones = data['params']['rorecharge_zone_names']
     if params[name] is None:
-        params[name] = dict((k, [0.0]) for k in range(1, 13))
+        params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [0.0]', name)
 
     params['ror_prop'] = sorted(params[name].items(), key=lambda x: x[0])
@@ -394,8 +395,9 @@ def fin_rorecharge_limit(data, name):
     1) if not provided, set it to 99999.
     """
     params = data['params']
+    zones = data['params']['rorecharge_zone_names']
     if params[name] is None:
-        params[name] = dict((k, [99999]) for k in range(1, 13))
+        params[name] = dict((k, [99999 for _ in zones]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [99999]', name)
 
     params['ror_limit'] = sorted(params[name].items(), key=lambda x: x[0])
@@ -409,8 +411,9 @@ def fin_rorecharge_activation(data, name):
     1) if not provided, set it to 0.0.
     """
     params = data['params']
+    zones = data['params']['rorecharge_zone_names']
     if params[name] is None:
-        params[name] = dict((k, [0.0]) for k in range(1, 13))
+        params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [0.0]', name)
 
     params['ror_act'] = sorted(params[name].items(), key=lambda x: x[0])
@@ -424,8 +427,9 @@ def fin_macropore_proportion(data, name):
     1) if not provided, set it to 0.
     """
     params = data['params']
+    zones = data['params']['macropore_zone_names']
     if params[name] is None:
-        params[name] = dict((k, [0.0]) for k in range(1, 13))
+        params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [0.0]', name)
 
     params['macro_prop'] = sorted(params[name].items(), key=lambda x: x[0])
@@ -439,8 +443,10 @@ def fin_macropore_limit(data, name):
     1) if not provided, set it to 99999.
     """
     params = data['params']
+    zones = data['params']['macropore_zone_names']
     if params[name] is None:
-        params[name] = dict((k, [99999.9]) for k in range(1, 13))
+        params[name] = dict((k, [99999.9 for _ in zones]) for k in
+                            range(1, 13))
         logging.info('\t\tDefaulted "%s" to [99999.9]', name)
 
     params['macro_limit'] = sorted(params[name].items(), key=lambda x: x[0])
@@ -454,8 +460,9 @@ def fin_macropore_activation(data, name):
     1) if not provided, set it to 0.0.
     """
     params = data['params']
+    zones = data['params']['macropore_zone_names']
     if params[name] is None:
-        params[name] = dict((k, [0.0]) for k in range(1, 13))
+        params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [0.0]', name)
 
     params['macro_act'] = sorted(params[name].items(), key=lambda x: x[0])
