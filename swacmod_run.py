@@ -58,6 +58,7 @@ def get_output(data, node):
                      m.get_evt,
                      m.get_average_in,
                      m.get_average_out,
+                     m.get_change,
                      m.get_balance]:
 
         columns = function(data, output, node)

@@ -383,8 +383,7 @@ def fin_rorecharge_proportion(data, name):
         params[name] = dict((k, [0.0]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [0.0]', name)
 
-    params['ror_prop'] = sorted(params['rorecharge_proportion'].items(),
-                                key=lambda x: x[0])
+    params['ror_prop'] = sorted(params[name].items(), key=lambda x: x[0])
     params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
 
 
@@ -399,9 +398,23 @@ def fin_rorecharge_limit(data, name):
         params[name] = dict((k, [99999]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [99999]', name)
 
-    params['ror_limit'] = sorted(params['rorecharge_limit'].items(),
-                                 key=lambda x: x[0])
+    params['ror_limit'] = sorted(params[name].items(), key=lambda x: x[0])
     params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
+
+
+###############################################################################
+def fin_rorecharge_activation(data, name):
+    """Finalize the "rorecharge_activation" parameter.
+
+    1) if not provided, set it to 0.0.
+    """
+    params = data['params']
+    if params[name] is None:
+        params[name] = dict((k, [0.0]) for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [0.0]', name)
+
+    params['ror_act'] = sorted(params[name].items(), key=lambda x: x[0])
+    params['ror_act'] = np.array([i[1] for i in params['ror_act']])
 
 
 ###############################################################################
@@ -415,8 +428,7 @@ def fin_macropore_proportion(data, name):
         params[name] = dict((k, [0.0]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [0.0]', name)
 
-    params['macro_prop'] = sorted(params['macropore_proportion'].items(),
-                                  key=lambda x: x[0])
+    params['macro_prop'] = sorted(params[name].items(), key=lambda x: x[0])
     params['macro_prop'] = np.array([i[1] for i in params['macro_prop']])
 
 
@@ -431,9 +443,23 @@ def fin_macropore_limit(data, name):
         params[name] = dict((k, [99999.9]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [99999.9]', name)
 
-    params['macro_limit'] = sorted(params['macropore_limit'].items(),
-                                   key=lambda x: x[0])
+    params['macro_limit'] = sorted(params[name].items(), key=lambda x: x[0])
     params['macro_limit'] = np.array([i[1] for i in params['macro_limit']])
+
+
+###############################################################################
+def fin_macropore_activation(data, name):
+    """Finalize the "macropore_activation" parameter.
+
+    1) if not provided, set it to 0.0.
+    """
+    params = data['params']
+    if params[name] is None:
+        params[name] = dict((k, [0.0]) for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [0.0]', name)
+
+    params['macro_act'] = sorted(params[name].items(), key=lambda x: x[0])
+    params['macro_act'] = np.array([i[1] for i in params['macro_act']])
 
 
 ###############################################################################
@@ -668,8 +694,10 @@ FUNC_PARAMS = [fin_start_date,
                fin_rapid_runoff_params,
                fin_rorecharge_proportion,
                fin_rorecharge_limit,
+               fin_rorecharge_activation,
                fin_macropore_proportion,
                fin_macropore_limit,
+               fin_macropore_activation,
                fin_soil_static_params,
                fin_soil_spatial,
                fin_lu_spatial,

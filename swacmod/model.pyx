@@ -215,8 +215,10 @@ def get_ae(data, output, node):
                                           dtype=np.int64)
         double [:, :] ror_prop = params['ror_prop']
         double [:, :] ror_limit = params['ror_limit']
+        double [:, :] ror_act = params['ror_act']
         double [:, :] macro_prop = params['macro_prop']
         double [:, :] macro_limit = params['macro_limit']
+        double [:, :] macro_act = params['macro_act']
         double [:, :] values = np.array(rrp[zone_rro]['values'])
         size_t len_class_smd = len(class_smd)
         size_t len_class_ri = len(class_ri)
@@ -260,15 +262,22 @@ def get_ae(data, output, node):
         var6 = months[num]
 
         if params['rorecharge_process'] == 'enabled':
-            var7 = ror_prop[var6][zone_ror] * rapid_runoff
-            var8 = ror_limit[var6][zone_ror]
-            col_runoff_recharge[num] = (var8 if var7 > var8 else var7)
+            var6a = rapid_runoff - ror_act[var6][zone_ror]
+            if var6a > 0:
+                var7 = ror_prop[var6][zone_ror] * var6a
+                var8 = ror_limit[var6][zone_ror]
+                col_runoff_recharge[num] = (var8 if var7 > var8 else var7)
+            else:
+                col_runoff_recharge[num] = 0.0
 
         if params['macropore_process'] == 'enabled':
-            var8a = var2 - rapid_runoff
-            var9 = macro_prop[var6][zone_mac] * var8a
-            var10 = macro_limit[var6][zone_mac]
-            macropore = (var10 if var9 > var10 else var9)
+            var8a = var2 - rapid_runoff - macro_act[var6][zone_ror]
+            if var8a > 0:
+                var9 = macro_prop[var6][zone_mac] * var8a
+                var10 = macro_limit[var6][zone_mac]
+                macropore = (var10 if var9 > var10 else var9)
+            else:
+                macropore = 0.0
             col_macropore[num] = macropore
 
         percol_in_root = (var2 - rapid_runoff - macropore)
@@ -412,21 +421,19 @@ def get_interflow(data, output, node):
 
     if params['interflow_process'] == 'enabled':
         col_interflow_volume[0] = volume
+        col_infiltration_recharge[0] = recharge
+        col_interflow_to_rivers[0] = rivers
 
-    col_infiltration_recharge[0] = recharge
-    col_interflow_to_rivers[0] = rivers
-
-    for num in range(1, length):
-        if params['interflow_process'] == 'enabled':
+        for num in range(1, length):
             var1 = volume - (var5 if var5 < volume else volume)
             volume = interflow_store_input[num-1] + var1 * (1 - var8)
             col_interflow_volume[num] = volume
-        if volume >= var5:
-            col_infiltration_recharge[num] = var5
-        else:
-            col_infiltration_recharge[num] = volume
-        col_interflow_to_rivers[num] = (col_interflow_volume[num] -
-                                        col_infiltration_recharge[num]) * var8
+            if volume >= var5:
+                col_infiltration_recharge[num] = var5
+            else:
+                col_infiltration_recharge[num] = volume
+            var6 = (col_interflow_volume[num] - col_infiltration_recharge[num])
+            col_interflow_to_rivers[num] = var6 * var8
 
     col = {}
     col['interflow_volume'] = col_interflow_volume.base
@@ -538,9 +545,34 @@ def get_average_out(data, output, node):
 
 
 ###############################################################################
+def get_change(data, output, node):
+    """AO) TOTAL STORAGE CHANGE [mm]."""
+    series = data['series']
+
+    cdef:
+        size_t length = len(series['date'])
+        double [:] col_change = np.zeros(length)
+
+    for num in range(1, length):
+        col_change[num] = output['recharge_store'][num] - \
+                          output['recharge_store'][num - 1] + \
+                          output['interflow_volume'][num] - \
+                          output['interflow_volume'][num - 1] + \
+                          output['smd'][num] - \
+                          output['smd'][num - 1] + \
+                          output['snowpack'][num] - \
+                          output['snowpack'][num - 1]
+
+    return {'total_storage_change': col_change}
+
+
+###############################################################################
 def get_balance(data, output, node):
-    """AO) BALANCE [mm]."""
-    balance = output['average_in'] - output['average_out']
+    """AP) BALANCE [mm]."""
+    balance = (output['average_in'] -
+               output['average_out'] -
+               output['total_storage_change'])
+
     return {'balance': balance}
 
 

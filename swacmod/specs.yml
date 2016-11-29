@@ -297,6 +297,14 @@ rorecharge_limit:
         - !!python/name:list
         - !!python/name:float
 
+rorecharge_activation:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
 
 ######################
 # Process: Macropore #
@@ -317,6 +325,14 @@ macropore_proportion:
         - !!python/name:float
 
 macropore_limit:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+macropore_activation:
     required: false
     alt_format: [yml, csv]
     type:

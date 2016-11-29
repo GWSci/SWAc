@@ -249,6 +249,11 @@ rorecharge_proportion: rorecharge_proportion.yml
 # This parameter can accept a path to YAML or CSV
 rorecharge_limit: rorecharge_limit.yml
 
+# Runoff Recharge Activation [mm]
+# This parameter is optional. If not specified, it will be set to 0.0.
+# This parameter can accept a path to YAML or CSV
+rorecharge_activation: rorecharge_activation.yml
+
 
 ######################
 # Process: Macropore #
@@ -268,6 +273,11 @@ macropore_proportion: macropore_proportion.yml
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 macropore_limit: macropore_limit.yml
+
+# MacroPore Bypass Activation [mm]
+# This parameter is optional. If not specified, it will be set to 0.0.
+# This parameter can accept a path to YAML or CSV
+macropore_activation: macropore_activation.yml
 
 
 ###################################

@@ -202,7 +202,7 @@ def val_temperature_ts(data, name):
     2) list length has to be equal to the number of days x number of zones
     """
     tts = data['series'][name]
-    tzn = data['params']['temperature_zone_names']
+    tzn = set(data['params']['temperature_zone_mapping'].values())
 
     c.check_type(param=tts,
                  name=name,
@@ -771,6 +771,24 @@ def val_rorecharge_limit(data, name):
 
 
 ###############################################################################
+def val_rorecharge_activation(data, name):
+    """Validate rorecharge_activation.
+
+    1) type has to be a list of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires lenght equal to the number of zones
+    """
+    rra = data['params'][name]
+    rzn = data['params']['rorecharge_zone_names']
+
+    c.check_type(param=rra,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(rzn)],
+                 keys=range(1, 13))
+
+
+###############################################################################
 def val_macropore_process(data, name):
     """Validate macropore_process.
 
@@ -822,6 +840,24 @@ def val_macropore_limit(data, name):
     mzn = data['params']['macropore_zone_names']
 
     c.check_type(param=mpl,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(mzn)],
+                 keys=range(1, 13))
+
+
+###############################################################################
+def val_macropore_activation(data, name):
+    """Validate macropore_activation.
+
+    1) type has to be a list of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires lenght equal to the number of zones
+    """
+    mpa = data['params'][name]
+    mzn = data['params']['macropore_zone_names']
+
+    c.check_type(param=mpa,
                  name=name,
                  t_types=data['specs'][name]['type'],
                  len_list=[len(mzn)],
@@ -1197,9 +1233,11 @@ FUNC_PARAMS = [val_run_name,
                val_rorecharge_process,
                val_rorecharge_proportion,
                val_rorecharge_limit,
+               val_rorecharge_activation,
                val_macropore_process,
                val_macropore_proportion,
                val_macropore_limit,
+               val_macropore_activation,
                val_fao_process,
                val_fao_input,
                val_soil_static_params,

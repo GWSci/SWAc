@@ -40,7 +40,7 @@ CONSTANTS['COL_ORDER'] = [
     'interflow_store_input', 'interflow_volume', 'infiltration_recharge',
     'interflow_to_rivers', 'recharge_store_input', 'recharge_store',
     'combined_recharge', 'combined_str', 'combined_ae', 'evt', 'average_in',
-    'average_out', 'balance'
+    'average_out', 'total_storage_change', 'balance'
 ]
 
 # Header, Column needs conversion
@@ -83,6 +83,7 @@ CONSTANTS['BALANCE_CONVERSIONS'] = [
     ('UnitilisedPE', True),
     ('AVERAGE_IN', True),
     ('AVERAGE_OUT', True),
+    ('TOTAL_STORAGE_CHANGE', True),
     ('BALANCE', True)
 ]
 

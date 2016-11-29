@@ -193,7 +193,7 @@ landuse_zone_names: landuse_zone_names.yml
 
 # Canopy process: can be either "enabled" or "disabled"
 # This parameter is required
-canopy_process: enabled
+canopy_process: disabled
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
@@ -210,7 +210,7 @@ max_canopy_storage: max_canopy_storage.yml
 
 # Snow process: can be either "enabled" or "disabled"
 # This parameter is required
-snow_process: enabled
+snow_process: disabled
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
@@ -249,6 +249,11 @@ rorecharge_proportion: rorecharge_proportion.yml
 # This parameter can accept a path to YAML or CSV
 rorecharge_limit: rorecharge_limit.yml
 
+# Runoff Recharge Activation [mm]
+# This parameter is optional. If not specified, it will be set to 0.0.
+# This parameter can accept a path to YAML or CSV
+rorecharge_activation: rorecharge_activation.yml
+
 
 ######################
 # Process: Macropore #
@@ -268,6 +273,11 @@ macropore_proportion: macropore_proportion.yml
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 macropore_limit: macropore_limit.yml
+
+# MacroPore Bypass Activation [mm]
+# This parameter is optional. If not specified, it will be set to 0.0.
+# This parameter can accept a path to YAML or CSV
+macropore_activation: macropore_activation.yml
 
 
 ###################################
@@ -355,7 +365,7 @@ subsoilzone_leakage_fraction: subsoilzone_leakage_fraction.yml
 
 # Interflow process: can be either "enabled" or "disabled"
 # This parameter is required
-interflow_process: enabled
+interflow_process: disabled
 
 # Interflow parameters (Initial interflow store, Store bypass, Infiltration,
 #                       Interflow to rivers )
