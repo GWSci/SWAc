@@ -12,6 +12,10 @@ import datetime
 
 # Third Party Libraries
 import yaml
+try:
+    from yaml import CLoader as Loader
+except ImportError:
+    from yaml import Loader
 import pandas as pd
 from dateutil import parser
 
@@ -50,7 +54,7 @@ def load_yaml(filein):
     """Load a YAML file, lowercase its keys."""
     logging.debug('\t\tLoading %s', filein)
 
-    yml = yaml.load(open(filein, 'r'), Loader=yaml.CLoader)
+    yml = yaml.load(open(filein, 'r'), Loader=Loader)
     try:
         keys = yml.keys()
     except AttributeError:
@@ -143,6 +147,7 @@ def dump_water_balance(data, output, file_format, node=None, zone=None,
     aggregated = u.aggregate_output(data, output, method='sum')
 
     with open(path, 'wb') as outfile:
+
         if reduced:
             header = [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS'] if i[2]]
         else:
@@ -178,9 +183,7 @@ def dump_water_balance(data, output, file_format, node=None, zone=None,
         if file_format == 'hdf5':
             data_frame = pd.DataFrame(final, columns=header)
             writer.append('data', data_frame, index=False)
-
-    if file_format == 'hdf5':
-        writer.close()
+            writer.close()
 
 
 ###############################################################################
