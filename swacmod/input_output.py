@@ -153,6 +153,7 @@ def dump_water_balance(data, output, file_format, node=None, zone=None,
             writer.writerow(header)
         elif file_format == 'hdf5':
             writer = pd.HDFStore(path)
+        final = []
         for num, period in enumerate(periods):
             if reduced:
                 row = [aggregated[key][num] for key in ['date',
@@ -172,8 +173,11 @@ def dump_water_balance(data, output, file_format, node=None, zone=None,
             if file_format == 'csv':
                 writer.writerow(row)
             elif file_format == 'hdf5':
-                data_frame = pd.DataFrame([row], columns=header)
-                writer.append('data', data_frame)
+                final.append(row)
+
+        if file_format == 'hdf5':
+            data_frame = pd.DataFrame(final, columns=header)
+            writer.append('data', data_frame, index=False)
 
     if file_format == 'hdf5':
         writer.close()
