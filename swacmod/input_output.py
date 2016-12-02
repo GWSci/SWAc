@@ -115,16 +115,22 @@ def dump_recharge_file(data, recharge):
 def dump_water_balance(data, output, file_format, node=None, zone=None,
                        reduced=False):
     """Write output to file."""
+    run = data['params']['run_name']
     areas = data['params']['node_areas']
     periods = data['params']['time_periods']
 
     if node:
+        _ = len(str(data['params']['num_nodes']))
+        counter = eval("'%%0%dd' % _") % node
         string = 'for node %d' % node
-        fileout = 'output_node_%d.%s' % (node, file_format)
+        fileout = '%s_n_%s.%s' % (run, counter, file_format)
         area = areas[node]
     elif zone:
+        zones = data['params']['reporting_zone_mapping'].values()
+        _ = len(str(len(set(zones))))
+        counter = eval("'%%0%dd' % _") % zone
         string = 'for zone %d' % zone
-        fileout = 'output_zone_%d.%s' % (zone, file_format)
+        fileout = '%s_z_%s.%s' % (run, counter, file_format)
         items = data['params']['reporting_zone_mapping'].items()
         area = sum([areas[i[0]] for i in items if i[1] == zone])
 
