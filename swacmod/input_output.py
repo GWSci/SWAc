@@ -23,8 +23,11 @@ from . import finalization as f
 
 
 ###############################################################################
-def start_logging(level=logging.INFO, path=None):
-    """Start logging output."""
+def start_logging(level=logging.INFO, path=None, run_name=None):
+    """Start logging output.
+
+    If path is None, run_name has to be provided.
+    """
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
 
@@ -32,7 +35,8 @@ def start_logging(level=logging.INFO, path=None):
 
     if path is None:
         now = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
-        path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], '%s.log' % now)
+        name = '%s_%s.log' % (run_name, now)
+        path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], name)
 
     logging.basicConfig(filename=path,
                         format=log_format,

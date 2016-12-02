@@ -114,10 +114,6 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
 ###############################################################################
 def run(test=False, debug=False, file_format=None, reduced=False):
     """Run model for all nodes."""
-    level = (logging.DEBUG if debug else logging.INFO)
-    log_path = io.start_logging(level=level)
-    logging.info('Start SWAcMod run')
-
     manager = Manager()
     reporting = manager.dict()
     recharge = manager.dict()
@@ -129,6 +125,11 @@ def run(test=False, debug=False, file_format=None, reduced=False):
     else:
         input_file = u.CONSTANTS['INPUT_FILE']
         input_dir = u.CONSTANTS['INPUT_DIR']
+
+    level = (logging.DEBUG if debug else logging.INFO)
+    params = io.load_yaml(input_file)
+    log_path = io.start_logging(level=level, run_name=params['run_name'])
+    logging.info('Start SWAcMod run')
 
     data = io.load_and_validate(specs_file, input_file, input_dir)
 
