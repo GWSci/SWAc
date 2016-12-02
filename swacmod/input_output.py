@@ -85,7 +85,7 @@ def dump_recharge_file(data, recharge):
 
     fileout = '%s_recharge.rch' % data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
-    logging.debug('\tDumping recharge to "%s"', path)
+    logging.info('\tDumping recharge file')
 
     with open(path, 'w') as rech_file:
         rech_file.write('# MODFLOW-USGs Recharge Package\n')
@@ -119,15 +119,17 @@ def dump_water_balance(data, output, file_format, node=None, zone=None,
     periods = data['params']['time_periods']
 
     if node:
+        string = 'for node %d' % node
         fileout = 'output_node_%d.%s' % (node, file_format)
         area = areas[node]
     elif zone:
+        string = 'for zone %d' % zone
         fileout = 'output_zone_%d.%s' % (zone, file_format)
         items = data['params']['reporting_zone_mapping'].items()
         area = sum([areas[i[0]] for i in items if i[1] == zone])
 
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
-    logging.debug('\tDumping output to "%s"', path)
+    logging.info('\tDumping water balance %s', string)
     aggregated = u.aggregate_output(data, output, method='sum')
 
     with open(path, 'wb') as outfile:

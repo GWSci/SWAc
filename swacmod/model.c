@@ -1208,6 +1208,27 @@ static CYTHON_INLINE int __pyx_sub_acquisition_count_locked(
 static CYTHON_INLINE void __Pyx_INC_MEMVIEW(__Pyx_memviewslice *, int, int);
 static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *, int, int);
 
+/* DictGetItem.proto */
+#if PY_MAJOR_VERSION >= 3 && !CYTHON_COMPILING_IN_PYPY
+static PyObject *__Pyx_PyDict_GetItem(PyObject *d, PyObject* key) {
+    PyObject *value;
+    value = PyDict_GetItemWithError(d, key);
+    if (unlikely(!value)) {
+        if (!PyErr_Occurred()) {
+            PyObject* args = PyTuple_Pack(1, key);
+            if (likely(args))
+                PyErr_SetObject(PyExc_KeyError, args);
+            Py_XDECREF(args);
+        }
+        return NULL;
+    }
+    Py_INCREF(value);
+    return value;
+}
+#else
+    #define __Pyx_PyDict_GetItem(d, key) PyObject_GetItem(d, key)
+#endif
+
 /* PyThreadStateGet.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
 #define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
@@ -1234,27 +1255,6 @@ static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject 
 
 /* RaiseException.proto */
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
-
-/* DictGetItem.proto */
-#if PY_MAJOR_VERSION >= 3 && !CYTHON_COMPILING_IN_PYPY
-static PyObject *__Pyx_PyDict_GetItem(PyObject *d, PyObject* key) {
-    PyObject *value;
-    value = PyDict_GetItemWithError(d, key);
-    if (unlikely(!value)) {
-        if (!PyErr_Occurred()) {
-            PyObject* args = PyTuple_Pack(1, key);
-            if (likely(args))
-                PyErr_SetObject(PyExc_KeyError, args);
-            Py_XDECREF(args);
-        }
-        return NULL;
-    }
-    Py_INCREF(value);
-    return value;
-}
-#else
-    #define __Pyx_PyDict_GetItem(d, key) PyObject_GetItem(d, key)
-#endif
 
 /* RaiseTooManyValuesToUnpack.proto */
 static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected);
@@ -1865,6 +1865,7 @@ static const char __pyx_k_k_slope[] = "k_slope";
 static const char __pyx_k_kc_list[] = "kc_list";
 static const char __pyx_k_last_ri[] = "last_ri";
 static const char __pyx_k_memview[] = "memview";
+static const char __pyx_k_new_rep[] = "new_rep";
 static const char __pyx_k_ror_act[] = "ror_act";
 static const char __pyx_k_zone_lu[] = "zone_lu";
 static const char __pyx_k_zone_pe[] = "zone_pe";
@@ -2198,6 +2199,7 @@ static PyObject *__pyx_n_s_ndim;
 static PyObject *__pyx_n_s_net_pefac;
 static PyObject *__pyx_n_s_net_pefac_a;
 static PyObject *__pyx_n_s_net_rainfall;
+static PyObject *__pyx_n_s_new_rep;
 static PyObject *__pyx_n_s_node;
 static PyObject *__pyx_n_s_np;
 static PyObject *__pyx_n_s_num;
@@ -2345,7 +2347,7 @@ static PyObject *__pyx_pf_7swacmod_5model_44get_average_in(CYTHON_UNUSED PyObjec
 static PyObject *__pyx_pf_7swacmod_5model_46get_average_out(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_data, PyObject *__pyx_v_output, CYTHON_UNUSED PyObject *__pyx_v_node); /* proto */
 static PyObject *__pyx_pf_7swacmod_5model_48get_change(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_data, PyObject *__pyx_v_output, CYTHON_UNUSED PyObject *__pyx_v_node); /* proto */
 static PyObject *__pyx_pf_7swacmod_5model_50get_balance(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_data, PyObject *__pyx_v_output, CYTHON_UNUSED PyObject *__pyx_v_node); /* proto */
-static PyObject *__pyx_pf_7swacmod_5model_52aggregate(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_reporting, PyObject *__pyx_v_output, PyObject *__pyx_v_area); /* proto */
+static PyObject *__pyx_pf_7swacmod_5model_52aggregate(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_output, PyObject *__pyx_v_area, PyObject *__pyx_v_reporting); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
@@ -12625,9 +12627,9 @@ static PyObject *__pyx_pf_7swacmod_5model_50get_balance(CYTHON_UNUSED PyObject *
 /* "swacmod/model.pyx":580
  * 
  * ###############################################################################
- * def aggregate(reporting, output, area):             # <<<<<<<<<<<<<<
+ * def aggregate(output, area, reporting=None):             # <<<<<<<<<<<<<<
  *     """Aggregate reporting."""
- *     for key in output:
+ *     new_rep = {}
  */
 
 /* Python wrapper */
@@ -12635,15 +12637,16 @@ static PyObject *__pyx_pw_7swacmod_5model_53aggregate(PyObject *__pyx_self, PyOb
 static char __pyx_doc_7swacmod_5model_52aggregate[] = "Aggregate reporting.";
 static PyMethodDef __pyx_mdef_7swacmod_5model_53aggregate = {"aggregate", (PyCFunction)__pyx_pw_7swacmod_5model_53aggregate, METH_VARARGS|METH_KEYWORDS, __pyx_doc_7swacmod_5model_52aggregate};
 static PyObject *__pyx_pw_7swacmod_5model_53aggregate(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_reporting = 0;
   PyObject *__pyx_v_output = 0;
   PyObject *__pyx_v_area = 0;
+  PyObject *__pyx_v_reporting = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("aggregate (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_reporting,&__pyx_n_s_output,&__pyx_n_s_area,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_output,&__pyx_n_s_area,&__pyx_n_s_reporting,0};
     PyObject* values[3] = {0,0,0};
+    values[2] = ((PyObject *)Py_None);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
@@ -12657,49 +12660,52 @@ static PyObject *__pyx_pw_7swacmod_5model_53aggregate(PyObject *__pyx_self, PyOb
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_reporting)) != 0)) kw_args--;
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_output)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         case  1:
-        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_output)) != 0)) kw_args--;
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_area)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("aggregate", 1, 3, 3, 1); __PYX_ERR(0, 580, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("aggregate", 0, 2, 3, 1); __PYX_ERR(0, 580, __pyx_L3_error)
         }
         case  2:
-        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_area)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("aggregate", 1, 3, 3, 2); __PYX_ERR(0, 580, __pyx_L3_error)
+        if (kw_args > 0) {
+          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_reporting);
+          if (value) { values[2] = value; kw_args--; }
         }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "aggregate") < 0)) __PYX_ERR(0, 580, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
-      goto __pyx_L5_argtuple_error;
     } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
     }
-    __pyx_v_reporting = values[0];
-    __pyx_v_output = values[1];
-    __pyx_v_area = values[2];
+    __pyx_v_output = values[0];
+    __pyx_v_area = values[1];
+    __pyx_v_reporting = values[2];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("aggregate", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 580, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("aggregate", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 580, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("swacmod.model.aggregate", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7swacmod_5model_52aggregate(__pyx_self, __pyx_v_reporting, __pyx_v_output, __pyx_v_area);
+  __pyx_r = __pyx_pf_7swacmod_5model_52aggregate(__pyx_self, __pyx_v_output, __pyx_v_area, __pyx_v_reporting);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7swacmod_5model_52aggregate(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_reporting, PyObject *__pyx_v_output, PyObject *__pyx_v_area) {
+static PyObject *__pyx_pf_7swacmod_5model_52aggregate(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_output, PyObject *__pyx_v_area, PyObject *__pyx_v_reporting) {
+  PyObject *__pyx_v_new_rep = NULL;
   PyObject *__pyx_v_key = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -12708,41 +12714,54 @@ static PyObject *__pyx_pf_7swacmod_5model_52aggregate(CYTHON_UNUSED PyObject *__
   PyObject *(*__pyx_t_3)(PyObject *);
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
+  int __pyx_t_6;
   PyObject *__pyx_t_7 = NULL;
+  PyObject *__pyx_t_8 = NULL;
   __Pyx_RefNannySetupContext("aggregate", 0);
 
   /* "swacmod/model.pyx":582
- * def aggregate(reporting, output, area):
+ * def aggregate(output, area, reporting=None):
  *     """Aggregate reporting."""
+ *     new_rep = {}             # <<<<<<<<<<<<<<
+ *     for key in output:
+ *         new_rep[key] = output[key] * area
+ */
+  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 582, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_new_rep = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "swacmod/model.pyx":583
+ *     """Aggregate reporting."""
+ *     new_rep = {}
  *     for key in output:             # <<<<<<<<<<<<<<
- *         reporting[key] += output[key] * area
- *     return reporting
+ *         new_rep[key] = output[key] * area
+ *         if reporting:
  */
   if (likely(PyList_CheckExact(__pyx_v_output)) || PyTuple_CheckExact(__pyx_v_output)) {
     __pyx_t_1 = __pyx_v_output; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
     __pyx_t_3 = NULL;
   } else {
-    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_output); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 582, __pyx_L1_error)
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_output); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 583, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 582, __pyx_L1_error)
+    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 583, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_3)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 582, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 583, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 582, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 583, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 582, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 583, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 582, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 583, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -12752,7 +12771,7 @@ static PyObject *__pyx_pf_7swacmod_5model_52aggregate(CYTHON_UNUSED PyObject *__
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 582, __pyx_L1_error)
+          else __PYX_ERR(0, 583, __pyx_L1_error)
         }
         break;
       }
@@ -12761,55 +12780,86 @@ static PyObject *__pyx_pf_7swacmod_5model_52aggregate(CYTHON_UNUSED PyObject *__
     __Pyx_XDECREF_SET(__pyx_v_key, __pyx_t_4);
     __pyx_t_4 = 0;
 
+    /* "swacmod/model.pyx":584
+ *     new_rep = {}
+ *     for key in output:
+ *         new_rep[key] = output[key] * area             # <<<<<<<<<<<<<<
+ *         if reporting:
+ *             new_rep[key] += reporting[key]
+ */
+    __pyx_t_4 = PyObject_GetItem(__pyx_v_output, __pyx_v_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 584, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = PyNumber_Multiply(__pyx_t_4, __pyx_v_area); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 584, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(PyDict_SetItem(__pyx_v_new_rep, __pyx_v_key, __pyx_t_5) < 0)) __PYX_ERR(0, 584, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+    /* "swacmod/model.pyx":585
+ *     for key in output:
+ *         new_rep[key] = output[key] * area
+ *         if reporting:             # <<<<<<<<<<<<<<
+ *             new_rep[key] += reporting[key]
+ *     return new_rep
+ */
+    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_reporting); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 585, __pyx_L1_error)
+    if (__pyx_t_6) {
+
+      /* "swacmod/model.pyx":586
+ *         new_rep[key] = output[key] * area
+ *         if reporting:
+ *             new_rep[key] += reporting[key]             # <<<<<<<<<<<<<<
+ *     return new_rep
+ */
+      __Pyx_INCREF(__pyx_v_key);
+      __pyx_t_5 = __pyx_v_key;
+      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_new_rep, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 586, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_7 = PyObject_GetItem(__pyx_v_reporting, __pyx_v_key); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 586, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_8 = PyNumber_InPlaceAdd(__pyx_t_4, __pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 586, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      if (unlikely(PyDict_SetItem(__pyx_v_new_rep, __pyx_t_5, __pyx_t_8) < 0)) __PYX_ERR(0, 586, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+      /* "swacmod/model.pyx":585
+ *     for key in output:
+ *         new_rep[key] = output[key] * area
+ *         if reporting:             # <<<<<<<<<<<<<<
+ *             new_rep[key] += reporting[key]
+ *     return new_rep
+ */
+    }
+
     /* "swacmod/model.pyx":583
  *     """Aggregate reporting."""
- *     for key in output:
- *         reporting[key] += output[key] * area             # <<<<<<<<<<<<<<
- *     return reporting
- */
-    __Pyx_INCREF(__pyx_v_key);
-    __pyx_t_4 = __pyx_v_key;
-    __pyx_t_5 = PyObject_GetItem(__pyx_v_reporting, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 583, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = PyObject_GetItem(__pyx_v_output, __pyx_v_key); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 583, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = PyNumber_Multiply(__pyx_t_6, __pyx_v_area); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 583, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = PyNumber_InPlaceAdd(__pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 583, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(PyObject_SetItem(__pyx_v_reporting, __pyx_t_4, __pyx_t_6) < 0)) __PYX_ERR(0, 583, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-    /* "swacmod/model.pyx":582
- * def aggregate(reporting, output, area):
- *     """Aggregate reporting."""
+ *     new_rep = {}
  *     for key in output:             # <<<<<<<<<<<<<<
- *         reporting[key] += output[key] * area
- *     return reporting
+ *         new_rep[key] = output[key] * area
+ *         if reporting:
  */
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "swacmod/model.pyx":584
- *     for key in output:
- *         reporting[key] += output[key] * area
- *     return reporting             # <<<<<<<<<<<<<<
+  /* "swacmod/model.pyx":587
+ *         if reporting:
+ *             new_rep[key] += reporting[key]
+ *     return new_rep             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_INCREF(__pyx_v_reporting);
-  __pyx_r = __pyx_v_reporting;
+  __Pyx_INCREF(__pyx_v_new_rep);
+  __pyx_r = __pyx_v_new_rep;
   goto __pyx_L0;
 
   /* "swacmod/model.pyx":580
  * 
  * ###############################################################################
- * def aggregate(reporting, output, area):             # <<<<<<<<<<<<<<
+ * def aggregate(output, area, reporting=None):             # <<<<<<<<<<<<<<
  *     """Aggregate reporting."""
- *     for key in output:
+ *     new_rep = {}
  */
 
   /* function exit code */
@@ -12817,11 +12867,12 @@ static PyObject *__pyx_pf_7swacmod_5model_52aggregate(CYTHON_UNUSED PyObject *__
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_8);
   __Pyx_AddTraceback("swacmod.model.aggregate", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_new_rep);
   __Pyx_XDECREF(__pyx_v_key);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
@@ -27373,6 +27424,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_net_pefac, __pyx_k_net_pefac, sizeof(__pyx_k_net_pefac), 0, 0, 1, 1},
   {&__pyx_n_s_net_pefac_a, __pyx_k_net_pefac_a, sizeof(__pyx_k_net_pefac_a), 0, 0, 1, 1},
   {&__pyx_n_s_net_rainfall, __pyx_k_net_rainfall, sizeof(__pyx_k_net_rainfall), 0, 0, 1, 1},
+  {&__pyx_n_s_new_rep, __pyx_k_new_rep, sizeof(__pyx_k_new_rep), 0, 0, 1, 1},
   {&__pyx_n_s_node, __pyx_k_node, sizeof(__pyx_k_node), 0, 0, 1, 1},
   {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
   {&__pyx_n_s_num, __pyx_k_num, sizeof(__pyx_k_num), 0, 0, 1, 1},
@@ -28119,14 +28171,14 @@ static int __Pyx_InitCachedConstants(void) {
   /* "swacmod/model.pyx":580
  * 
  * ###############################################################################
- * def aggregate(reporting, output, area):             # <<<<<<<<<<<<<<
+ * def aggregate(output, area, reporting=None):             # <<<<<<<<<<<<<<
  *     """Aggregate reporting."""
- *     for key in output:
+ *     new_rep = {}
  */
-  __pyx_tuple__80 = PyTuple_Pack(4, __pyx_n_s_reporting, __pyx_n_s_output, __pyx_n_s_area, __pyx_n_s_key); if (unlikely(!__pyx_tuple__80)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_tuple__80 = PyTuple_Pack(5, __pyx_n_s_output, __pyx_n_s_area, __pyx_n_s_reporting, __pyx_n_s_new_rep, __pyx_n_s_key); if (unlikely(!__pyx_tuple__80)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__80);
   __Pyx_GIVEREF(__pyx_tuple__80);
-  __pyx_codeobj__81 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__80, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_marco_Code_upwork_water_m, __pyx_n_s_aggregate, 580, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__81)) __PYX_ERR(0, 580, __pyx_L1_error)
+  __pyx_codeobj__81 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__80, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_marco_Code_upwork_water_m, __pyx_n_s_aggregate, 580, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__81)) __PYX_ERR(0, 580, __pyx_L1_error)
 
   /* "View.MemoryView":282
  *         return self.name
@@ -28690,9 +28742,9 @@ PyMODINIT_FUNC PyInit_model(void)
   /* "swacmod/model.pyx":580
  * 
  * ###############################################################################
- * def aggregate(reporting, output, area):             # <<<<<<<<<<<<<<
+ * def aggregate(output, area, reporting=None):             # <<<<<<<<<<<<<<
  *     """Aggregate reporting."""
- *     for key in output:
+ *     new_rep = {}
  */
   __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7swacmod_5model_53aggregate, NULL, __pyx_n_s_swacmod_model); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 580, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);

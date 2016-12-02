@@ -23,6 +23,20 @@ from swacmod import model as m
 
 
 ###############################################################################
+def aggregate_reporting(reporting):
+    """Aggregate zones across processes."""
+    logging.info('\tAggregating reporting across processes')
+    new_rep = {}
+    for key in reporting.keys():
+        if key[1] not in new_rep:
+            new_rep[key[1]] = reporting[key].copy()
+        else:
+            for key2 in reporting[key]:
+                new_rep[key[1]][key2] += reporting[key][key2]
+    return new_rep
+
+
+###############################################################################
 def get_output(data, node):
     """Run the model."""
     logging.debug('\tRunning model for node %d', node)
@@ -86,12 +100,13 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
             if node in data['params']['output_individual']:
                 io.dump_water_balance(data, output, file_format, node=node,
                                       reduced=reduced)
-            if rep_zone not in reporting:
-                reporting[rep_zone] = output.copy()
+            key = (num, rep_zone)
+            area = data['params']['node_areas'][node]
+            if key not in reporting:
+                reporting[key] = m.aggregate(output, area)
             else:
-                area = data['params']['node_areas'][node]
-                reporting[rep_zone] = m.aggregate(reporting[rep_zone], output,
-                                                  area)
+                reporting[key] = m.aggregate(output, area,
+                                             reporting=reporting[key])
             recharge[node] = output['combined_recharge'].copy()
     logging.info('Process %d ended', num)
 
@@ -99,9 +114,6 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
 ###############################################################################
 def run(test=False, debug=False, file_format=None, reduced=False):
     """Run model for all nodes."""
-    print '\nInput: %s' % u.CONSTANTS['INPUT_DIR']
-    print 'Output: %s\n' % u.CONSTANTS['OUTPUT_DIR']
-
     level = (logging.DEBUG if debug else logging.INFO)
     log_path = io.start_logging(level=level)
     logging.info('Start SWAcMod run')
@@ -137,6 +149,7 @@ def run(test=False, debug=False, file_format=None, reduced=False):
         procs[num].join()
 
     if not test:
+        reporting = aggregate_reporting(reporting)
         for key in reporting.keys():
             io.dump_water_balance(data, reporting[key], file_format, zone=key,
                                   reduced=reduced)
