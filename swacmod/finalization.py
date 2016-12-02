@@ -60,10 +60,13 @@ def fin_num_cores(data, name):
 
     1) if not provided, use the number of cores of the machine.
     """
+    count = multiprocessing.cpu_count()
     if data['params'][name] is None:
-        count = multiprocessing.cpu_count()
         data['params'][name] = count
-        logging.info('\t\tDefaulted "%s" to %s', name, count)
+        logging.info('\t\tDefaulted "%s" to %s', name, data['params'][name])
+    elif data['params'][name] < 0:
+        data['params'][name] = max(count - abs(data['params'][name]), 1)
+        logging.info('\t\tSet "%s" to %s', name, data['params'][name])
 
 
 ###############################################################################
