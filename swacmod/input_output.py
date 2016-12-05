@@ -85,7 +85,7 @@ def print_progress(nodes, total):
     spaces = int(perc_big / 2)
     progress = '=' * (spaces - 1) + '>' + ' ' * (50 - spaces)
 
-    sys.stdout.write('Run SWAcMod: [%s] %d%% (%d nodes done)\r' % \
+    sys.stdout.write('Run SWAcMod: [%s] %d%% (%d nodes done)\r' %
                      (progress, perc_big, nodes))
     sys.stdout.flush()
 
@@ -248,9 +248,9 @@ def dump_water_balance(data, output, file_format, node=None, zone=None,
         final = []
         for num, period in enumerate(periods):
             if reduced:
-                row = [aggregated[key][num] for key in ['date',
-                       'unutilised_pe', 'combined_recharge', 'combined_str',
-                       'combined_ae']]
+                row = [aggregated[key][num] for key in
+                       ['date', 'unutilised_pe', 'combined_recharge',
+                        'combined_str', 'combined_ae']]
             else:
                 row = [aggregated[key][num] for key in u.CONSTANTS['COL_ORDER']
                        if key not in ['unutilised_pe', 'k_slope',
