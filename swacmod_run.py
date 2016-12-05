@@ -107,13 +107,21 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
             else:
                 reporting[key] = m.aggregate(output, area,
                                              reporting=reporting[key])
-            recharge[node] = output['combined_recharge'].copy()
+            if data['params']['output_recharge']:
+                recharge[node] = output['combined_recharge'].copy()
+            else:
+                recharge[node] = {}
+            io.print_progress(len(recharge), data['params']['num_nodes'])
     logging.info('Process %d ended', num)
 
 
 ###############################################################################
 def run(test=False, debug=False, file_format=None, reduced=False):
     """Run model for all nodes."""
+    print '\nLoading parameters'
+
+    times = {'start_of_run': time.time()}
+
     manager = Manager()
     reporting = manager.dict()
     recharge = manager.dict()
@@ -136,6 +144,8 @@ def run(test=False, debug=False, file_format=None, reduced=False):
     ids = range(1, data['params']['num_nodes'] + 1)
     chunks = np.array_split(ids, data['params']['num_cores'])
 
+    times['end_of_input'] = time.time()
+
     procs = {}
     for num, chunk in enumerate(chunks):
         if chunk.size == 0:
@@ -149,13 +159,32 @@ def run(test=False, debug=False, file_format=None, reduced=False):
     for num in procs:
         procs[num].join()
 
+    times['end_of_model'] = time.time()
+
     if not test:
+        print 'Writing output files'
         reporting = aggregate_reporting(reporting)
         for key in reporting.keys():
             io.dump_water_balance(data, reporting[key], file_format, zone=key,
                                   reduced=reduced)
         if data['params']['output_recharge']:
             io.dump_recharge_file(data, recharge)
+
+    times['end_of_run'] = time.time()
+
+    diff = times['end_of_run'] - times['start_of_run']
+    total = io.format_time(diff)
+    per_node = io.format_time(diff/data['params']['num_nodes'])
+
+    print '\nPerformance'
+    print 'Input time:  %s' % io.format_time(times['end_of_input'] -
+                                             times['start_of_run'])
+    print 'Run time:    %s' % io.format_time(times['end_of_model'] -
+                                             times['end_of_input'])
+    print 'Output time: %s' % io.format_time(times['end_of_run'] -
+                                             times['end_of_model'])
+    print 'Total time:  %s (%s/node)' % (total, per_node)
+    print
 
     logging.info('End SWAcMod run')
 

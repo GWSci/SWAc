@@ -37,16 +37,71 @@ def start_logging(level=logging.INFO, path=None, run_name=None):
 
     log_format = ('%(asctime)s --- (%(process)d) %(levelname)s - %(message)s')
 
+    disc = '''
+    Although this program has been subjected to rigorous review, Groundwater
+    Science Ltd. reserves the right to update the software as needed pursuant
+    to further analysis and review. No warranty, expressed or implied, is made
+    by Groundwater Science Ltd. as to the functionality of the software nor
+    shall the fact of release constitute any such warranty. Furthermore, the
+    tool is released on condition that Groundwater Science Ltd. shall not be
+    held liable for any damages resulting from its authorised or unauthorised
+    use.
+    '''
+
     if path is None:
         now = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
         name = '%s_%s.log' % (run_name, now)
         path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], name)
+        logging.basicConfig(filename=path,
+                            format='%(message)s',
+                            level=level)
+        logging.info(disc)
+
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
 
     logging.basicConfig(filename=path,
                         format=log_format,
                         level=level)
 
     return path
+
+
+###############################################################################
+def format_time(diff):
+    """Format a time difference for output."""
+    if diff >= 84600:
+        final = '%.1f days' % (diff/86400)
+    elif diff >= 3600:
+        final = '%.1f hrs' % (diff/3600)
+    elif diff >= 60:
+        final = '%.1f min' % (diff/60)
+    elif diff >= 1:
+        final = '%.1f sec' % diff
+    else:
+        final = '%d msec' % (diff * 1000)
+
+    return final
+
+
+###############################################################################
+def print_progress(nodes, total):
+    """Start logging output.
+
+    If path is None, run_name has to be provided.
+    """
+    perc = nodes * 1.0 / total
+    perc_big = perc * 100
+    spaces = int(perc_big / 2)
+    progress = '=' * (spaces - 1) + '>' + ' ' * (50 - spaces)
+
+    sys.stdout.write('\b' * 100)
+    sys.stdout.write('Run SWAcMod: [%s] %d%% (%d nodes done)' % \
+                     (progress, perc_big, nodes))
+    sys.stdout.flush()
+
+    if nodes == total:
+        print
 
 
 ###############################################################################

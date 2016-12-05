@@ -82,7 +82,7 @@ CONSTANTS['BALANCE_CONVERSIONS'] = [
     ('CombinedRecharge', True, True),
     ('CombinedSW', True, True),
     ('CombinedAE', True, True),
-    ('UnitilisedPE', True, False),
+    ('UnitilisedPE', True, True),
     ('AVERAGE_IN', True, False),
     ('AVERAGE_OUT', True, False),
     ('TOTAL_STORAGE_CHANGE', True, False),
