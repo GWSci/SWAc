@@ -70,18 +70,8 @@ def start_logging(level=logging.INFO, path=None, run_name=None):
 ###############################################################################
 def format_time(diff):
     """Format a time difference for output."""
-    if diff >= 84600:
-        final = '%.1f days' % (diff/86400)
-    elif diff >= 3600:
-        final = '%.1f hrs' % (diff/3600)
-    elif diff >= 60:
-        final = '%.1f min' % (diff/60)
-    elif diff >= 1:
-        final = '%.1f sec' % diff
-    else:
-        final = '%d msec' % (diff * 1000)
-
-    return final
+    secs = int(round(diff))
+    return str(datetime.timedelta(0, secs))
 
 
 ###############################################################################
@@ -95,8 +85,7 @@ def print_progress(nodes, total):
     spaces = int(perc_big / 2)
     progress = '=' * (spaces - 1) + '>' + ' ' * (50 - spaces)
 
-    sys.stdout.write('\b' * 100)
-    sys.stdout.write('Run SWAcMod: [%s] %d%% (%d nodes done)' % \
+    sys.stdout.write('Run SWAcMod: [%s] %d%% (%d nodes done)\r' % \
                      (progress, perc_big, nodes))
     sys.stdout.flush()
 
@@ -142,6 +131,57 @@ def format_recharge_row(row):
 
 
 ###############################################################################
+def get_recharge_path(data):
+    """Return the path of the recharge file."""
+    fileout = '%s_recharge.rch' % data['params']['run_name']
+    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    return path
+
+
+###############################################################################
+def get_output_path(data, file_format, node=None, zone=None):
+    """Return the path of the recharge file."""
+    run = data['params']['run_name']
+
+    if node:
+        _ = len(str(data['params']['num_nodes']))
+        counter = eval("'%%0%dd' % _") % node
+        fileout = '%s_n_%s.%s' % (run, counter, file_format)
+    elif zone:
+        zones = data['params']['reporting_zone_mapping'].values()
+        _ = len(str(len(set(zones))))
+        counter = eval("'%%0%dd' % _") % zone
+        fileout = '%s_z_%s.%s' % (run, counter, file_format)
+
+    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    return path
+
+
+###############################################################################
+def check_open_files(data, file_format):
+    """Check if any of the scheduled output files can't be open."""
+    paths = []
+    if data['params']['output_recharge']:
+        paths.append(get_recharge_path(data))
+
+    for node in data['params']['output_individual']:
+        paths.append(get_output_path(data, file_format, node=node))
+
+    zones = set(data['params']['reporting_zone_mapping'].values())
+    for zone in zones:
+        paths.append(get_output_path(data, file_format, zone=zone))
+
+    for path in paths:
+        try:
+            fileobj = open(path, 'w')
+            fileobj.close()
+        except IOError:
+            print ('\nCannot write to "%s", make sure the file is not '
+                   'in use\n' % path)
+            sys.exit()
+
+
+###############################################################################
 def dump_recharge_file(data, recharge):
     """Write recharge to file."""
     nrchop, inrech = 3, 1
@@ -178,26 +218,18 @@ def dump_recharge_file(data, recharge):
 def dump_water_balance(data, output, file_format, node=None, zone=None,
                        reduced=False):
     """Write output to file."""
-    run = data['params']['run_name']
     areas = data['params']['node_areas']
     periods = data['params']['time_periods']
 
     if node:
-        _ = len(str(data['params']['num_nodes']))
-        counter = eval("'%%0%dd' % _") % node
         string = 'for node %d' % node
-        fileout = '%s_n_%s.%s' % (run, counter, file_format)
         area = areas[node]
     elif zone:
-        zones = data['params']['reporting_zone_mapping'].values()
-        _ = len(str(len(set(zones))))
-        counter = eval("'%%0%dd' % _") % zone
         string = 'for zone %d' % zone
-        fileout = '%s_z_%s.%s' % (run, counter, file_format)
         items = data['params']['reporting_zone_mapping'].items()
         area = sum([areas[i[0]] for i in items if i[1] == zone])
 
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    path = get_output_path(data, file_format, node=node, zone=zone)
     logging.info('\tDumping water balance %s', string)
     aggregated = u.aggregate_output(data, output, method='sum')
 
@@ -217,7 +249,8 @@ def dump_water_balance(data, output, file_format, node=None, zone=None,
         for num, period in enumerate(periods):
             if reduced:
                 row = [aggregated[key][num] for key in ['date',
-                       'combined_recharge', 'combined_str', 'combined_ae']]
+                       'unutilised_pe', 'combined_recharge', 'combined_str',
+                       'combined_ae']]
             else:
                 row = [aggregated[key][num] for key in u.CONSTANTS['COL_ORDER']
                        if key not in ['unutilised_pe', 'k_slope',

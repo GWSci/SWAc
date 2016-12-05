@@ -140,6 +140,7 @@ def run(test=False, debug=False, file_format=None, reduced=False):
     logging.info('Start SWAcMod run')
 
     data = io.load_and_validate(specs_file, input_file, input_dir)
+    io.check_open_files(data, file_format)
 
     ids = range(1, data['params']['num_nodes'] + 1)
     chunks = np.array_split(ids, data['params']['num_cores'])
@@ -174,16 +175,19 @@ def run(test=False, debug=False, file_format=None, reduced=False):
 
     diff = times['end_of_run'] - times['start_of_run']
     total = io.format_time(diff)
-    per_node = io.format_time(diff/data['params']['num_nodes'])
+    per_node = int(round(diff * 1000/data['params']['num_nodes']))
 
-    print '\nPerformance'
+    cores = ('%d cores' % data['params']['num_cores'] if
+             data['params']['num_cores'] != 1 else '1 core')
+
+    print '\nPerformance (%s)' % cores
     print 'Input time:  %s' % io.format_time(times['end_of_input'] -
                                              times['start_of_run'])
     print 'Run time:    %s' % io.format_time(times['end_of_model'] -
                                              times['end_of_input'])
     print 'Output time: %s' % io.format_time(times['end_of_run'] -
                                              times['end_of_model'])
-    print 'Total time:  %s (%s/node)' % (total, per_node)
+    print 'Total time:  %s (%d msec/node)' % (total, per_node)
     print
 
     logging.info('End SWAcMod run')
@@ -213,7 +217,7 @@ if __name__ == "__main__":
                         action='store_true')
     PARSER.add_argument('-i',
                         '--input_dir',
-                        help='path to input directory')
+                        help='path to input yaml file and directory')
     PARSER.add_argument('-o',
                         '--output_dir',
                         help='path to output directory')
@@ -225,10 +229,12 @@ if __name__ == "__main__":
 
     ARGS = PARSER.parse_args()
     if ARGS.input_dir:
-        u.CONSTANTS['INPUT_DIR'] = ARGS.input_dir
-        u.CONSTANTS['INPUT_FILE'] = os.path.join(ARGS.input_dir, 'input.yml')
+        u.CONSTANTS['INPUT_FILE'] = ARGS.input_dir
+        u.CONSTANTS['INPUT_DIR'] = os.path.dirname(ARGS.input_dir)
     if ARGS.output_dir:
         u.CONSTANTS['OUTPUT_DIR'] = ARGS.output_dir
+        if not os.path.exists(ARGS.output_dir):
+            os.makedirs(ARGS.output_dir)
 
     run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format,
         reduced=ARGS.reduced)
