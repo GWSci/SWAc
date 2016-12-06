@@ -173,7 +173,7 @@ def check_open_files(data, file_format, output_dir):
     for path in paths:
         while True:
             try:
-                fileobj = open(path, 'w')
+                fileobj = open(path, 'a')
                 fileobj.close()
                 break
             except IOError:
