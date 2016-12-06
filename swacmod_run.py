@@ -116,7 +116,7 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
 
 
 ###############################################################################
-def run(test=False, debug=False, file_format=None, reduced=False):
+def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     """Run model for all nodes."""
     print '\nLoading parameters'
 
@@ -140,7 +140,8 @@ def run(test=False, debug=False, file_format=None, reduced=False):
     logging.info('Start SWAcMod run')
 
     data = io.load_and_validate(specs_file, input_file, input_dir)
-    io.check_open_files(data, file_format)
+    if not skip:
+        io.check_open_files(data, file_format)
 
     ids = range(1, data['params']['num_nodes'] + 1)
     chunks = np.array_split(ids, data['params']['num_cores'])
@@ -164,6 +165,8 @@ def run(test=False, debug=False, file_format=None, reduced=False):
 
     if not test:
         print 'Writing output files'
+        if not skip:
+            io.check_open_files(data, file_format)
         reporting = aggregate_reporting(reporting)
         for key in reporting.keys():
             io.dump_water_balance(data, reporting[key], file_format, zone=key,
@@ -227,6 +230,10 @@ if __name__ == "__main__":
                         help='output file format',
                         choices=['hdf5', 'csv'],
                         default='csv')
+    PARSER.add_argument('-s',
+                        '--skip_prompt',
+                        help='skip user prompts and warnings',
+                        action='store_true')
 
     ARGS = PARSER.parse_args()
     if ARGS.input_dir:
@@ -238,5 +245,5 @@ if __name__ == "__main__":
             os.makedirs(ARGS.output_dir)
 
     run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format,
-        reduced=ARGS.reduced)
+        reduced=ARGS.reduced, skip=ARGS.skip_prompt)
 
