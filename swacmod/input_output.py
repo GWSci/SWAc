@@ -138,7 +138,7 @@ def get_recharge_path(data):
 
 
 ###############################################################################
-def get_output_path(data, file_format, node=None, zone=None):
+def get_output_path(data, file_format, output_dir, node=None, zone=None):
     """Return the path of the recharge file."""
     run = data['params']['run_name']
 
@@ -152,23 +152,23 @@ def get_output_path(data, file_format, node=None, zone=None):
         counter = eval("'%%0%dd' % _") % zone
         fileout = '%s_z_%s.%s' % (run, counter, file_format)
 
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    path = os.path.join(output_dir, fileout)
     return path
 
 
 ###############################################################################
-def check_open_files(data, file_format):
+def check_open_files(data, file_format, output_dir):
     """Check if any of the scheduled output files can't be open."""
     paths = []
     if data['params']['output_recharge']:
         paths.append(get_recharge_path(data))
 
     for node in data['params']['output_individual']:
-        paths.append(get_output_path(data, file_format, node=node))
+        paths.append(get_output_path(data, file_format, output_dir, node=node))
 
     zones = set(data['params']['reporting_zone_mapping'].values())
     for zone in zones:
-        paths.append(get_output_path(data, file_format, zone=zone))
+        paths.append(get_output_path(data, file_format, output_dir, zone=zone))
 
     for path in paths:
         while True:
@@ -215,8 +215,8 @@ def dump_recharge_file(data, recharge):
 
 
 ###############################################################################
-def dump_water_balance(data, output, file_format, node=None, zone=None,
-                       reduced=False):
+def dump_water_balance(data, output, file_format, output_dir, node=None,
+                       zone=None, reduced=False):
     """Write output to file."""
     areas = data['params']['node_areas']
     periods = data['params']['time_periods']
@@ -229,7 +229,7 @@ def dump_water_balance(data, output, file_format, node=None, zone=None,
         items = data['params']['reporting_zone_mapping'].items()
         area = sum([areas[i[0]] for i in items if i[1] == zone])
 
-    path = get_output_path(data, file_format, node=node, zone=zone)
+    path = get_output_path(data, file_format, output_dir, node=node, zone=zone)
     logging.info('\tDumping water balance %s', string)
     aggregated = u.aggregate_output(data, output, method='sum')
 

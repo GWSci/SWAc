@@ -86,7 +86,7 @@ def get_output(data, node):
 
 ###############################################################################
 def run_process(num, ids, data, test, reporting, recharge, log_path, level,
-                file_format, reduced):
+                file_format, reduced, output_dir):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
@@ -141,7 +141,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     data = io.load_and_validate(specs_file, input_file, input_dir)
     if not skip:
-        io.check_open_files(data, file_format)
+        io.check_open_files(data, file_format, u.CONSTANTS['OUTPUT_DIR'])
 
     ids = range(1, data['params']['num_nodes'] + 1)
     chunks = np.array_split(ids, data['params']['num_cores'])
@@ -155,7 +155,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
         procs[num] = Process(target=run_process,
                              args=(num, chunk, data, test, reporting,
                                    recharge, log_path, level, file_format,
-                                   reduced))
+                                   reduced, u.CONSTANTS['OUTPUT_DIR']))
         procs[num].start()
 
     for num in procs:
@@ -166,10 +166,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     if not test:
         print 'Writing output files'
         if not skip:
-            io.check_open_files(data, file_format)
+            io.check_open_files(data, file_format, u.CONSTANTS['OUTPUT_DIR'])
         reporting = aggregate_reporting(reporting)
         for key in reporting.keys():
-            io.dump_water_balance(data, reporting[key], file_format, zone=key,
+            io.dump_water_balance(data, reporting[key], file_format,
+                                  u.CONSTANTS['OUTPUT_DIR'], zone=key,
                                   reduced=reduced)
         if data['params']['output_recharge']:
             io.dump_recharge_file(data, recharge)
