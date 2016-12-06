@@ -393,28 +393,15 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
 ###############################################################################
 def load_and_validate(specs_file, input_file, input_dir):
     """Load, finalize and validate model parameters and time series."""
-    try:
-        data = load_params_from_yaml(specs_file=specs_file,
-                                     input_file=input_file,
-                                     input_dir=input_dir)
-    except u.InputOutputError as err:
-        print '---> InputOutput failed: %s' % err
-        sys.exit()
+    data = load_params_from_yaml(specs_file=specs_file,
+                                 input_file=input_file,
+                                 input_dir=input_dir)
 
-    try:
-        f.finalize_params(data)
-        f.finalize_series(data)
-    except u.FinalizationError as err:
-        print '---> Finalization failed: %s' % err
-        sys.exit()
-
-    try:
-        c.check_required(data)
-        v.validate_params(data)
-        v.validate_series(data)
-    except u.ValidationError as err:
-        print '---> Validation failed: %s' % err
-        sys.exit()
+    f.finalize_params(data)
+    f.finalize_series(data)
+    c.check_required(data)
+    v.validate_params(data)
+    v.validate_series(data)
 
     return data
 

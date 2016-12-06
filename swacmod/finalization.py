@@ -737,7 +737,7 @@ def finalize_params(data):
             function(data, param)
         except Exception as err:
             raise u.FinalizationError('Could not finalize "%s": %s' %
-                                      (param, err))
+                                      (param, err.__repr__()))
         logging.debug('\t\t"%s" finalized', param)
 
     logging.info('\tDone.')
@@ -754,7 +754,7 @@ def finalize_series(data):
             function(data, series)
         except Exception as err:
             raise u.FinalizationError('Could not finalize "%s": %s' %
-                                      (series, err))
+                                      (series, err.__repr__()))
         logging.debug('\t\t"%s" finalized', series)
 
     logging.info('\tDone.')

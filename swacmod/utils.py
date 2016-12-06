@@ -94,21 +94,30 @@ CONSTANTS['BALANCE_CONVERSIONS'] = [
 class ValidationError(Exception):
     """General exception for validation errors."""
 
-    pass
+    def __init__(self, msg):
+        """Initialization."""
+        new_msg = '---> Validation failed: %s' % msg
+        Exception.__init__(self, new_msg)
 
 
 ###############################################################################
 class FinalizationError(Exception):
     """General exception for validation errors."""
 
-    pass
+    def __init__(self, msg):
+        """Initialization."""
+        new_msg = '---> Finalization failed: %s' % msg
+        Exception.__init__(self, new_msg)
 
 
 ###############################################################################
 class InputOutputError(Exception):
     """General exception for validation errors."""
 
-    pass
+    def __init__(self, msg):
+        """Initialization."""
+        new_msg = '---> InputOutput failed: %s' % msg
+        Exception.__init__(self, new_msg)
 
 
 ###############################################################################
