@@ -45,7 +45,7 @@
 
 # Pattern for output file names.
 # This parameter is required.
-run_name: mypattern
+run_name: my_run
 
 # Number of nodes in the 2D water accounting model
 # This parameter is required.
@@ -83,14 +83,19 @@ output_recharge: true
 output_individual: "1"
 
 # IRCHCB.
-# Has to be an integer.
+# This parameter is an integer.
 # This parameter is optional. If not specified, it will be set to 50.
 irchcb: 50
 
 # Number of nodes per line of recharge file.
-# It has to be a positive integer.
+# This parameter is a positive integer.
 # This parameter is optional. If not specified, it will be set to 10.
 nodes_per_line: 5
+
+# Output unit conversion factor
+# This parameter is a positive float.
+# This parameter is optional. If not specified, it will be set to 1.0
+output_fac: 1.0
 
 
 ##############################################

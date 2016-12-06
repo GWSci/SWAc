@@ -163,6 +163,23 @@ def val_nodes_per_line(data, name):
 
 
 ###############################################################################
+def val_output_fac(data, name):
+    """Validate output_fac.
+
+    1) type has to be a positive float
+    """
+    fac = data['params'][name]
+
+    c.check_type(param=fac,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[fac],
+                          name=name,
+                          low_l=0.0)
+
+
+###############################################################################
 def val_rainfall_ts(data, name):
     """Validate rainfall_ts.
 
@@ -1205,6 +1222,7 @@ FUNC_PARAMS = [val_run_name,
                val_output_individual,
                val_irchcb,
                val_nodes_per_line,
+               val_output_fac,
                val_reporting_zone_names,
                val_reporting_zone_mapping,
                val_rainfall_zone_names,

@@ -73,6 +73,11 @@ nodes_per_line:
     type:
         - !!python/name:int
 
+output_fac:
+    required: false
+    type:
+        - !!python/name:float
+
 
 ##############################################
 # Model parameters: Zones names and mappings #

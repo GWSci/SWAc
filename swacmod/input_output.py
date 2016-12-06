@@ -16,7 +16,8 @@ try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-import pandas as pd
+import h5py
+import numpy
 from dateutil import parser
 
 # Internal modules
@@ -215,6 +216,22 @@ def dump_recharge_file(data, recharge):
 
 
 ###############################################################################
+def get_row(aggregated, num, reduced, file_format, mult):
+    """Get a row of data for output."""
+    if reduced or file_format in ['h5', 'hdf5']:
+        keys = ['unutilised_pe', 'combined_recharge',
+                'combined_str', 'combined_ae']
+        row = [aggregated[key][num] for key in keys]
+    else:
+        row = [aggregated[key][num] for key in
+               u.CONSTANTS['COL_ORDER'] if key not in
+               ['date', 'unutilised_pe', 'k_slope', 'rapid_runoff_c']]
+
+    row = numpy.array(row) * mult
+    return row
+
+
+###############################################################################
 def dump_water_balance(data, output, file_format, output_dir, node=None,
                        zone=None, reduced=False):
     """Write output to file."""
@@ -232,46 +249,40 @@ def dump_water_balance(data, output, file_format, output_dir, node=None,
     path = get_output_path(data, file_format, output_dir, node=node, zone=zone)
     logging.info('\tDumping water balance %s', string)
     aggregated = u.aggregate_output(data, output, method='sum')
+    fac = data['params']['output_fac']
+    mult = (area * fac / 1000 if node else fac / 1000)
 
-    with open(path, 'wb') as outfile:
-
-        if reduced:
-            header = [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS'] if i[2]]
-        else:
-            header = [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS']]
-        if file_format == 'csv':
+    if file_format == 'csv':
+        with open(path, 'wb') as outfile:
+            if reduced:
+                header = [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS'] if
+                          i[2]]
+            else:
+                header = [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS']]
             writer = csv.writer(outfile, delimiter=',',
                                 quoting=csv.QUOTE_MINIMAL)
             writer.writerow(header)
-        elif file_format == 'hdf5':
-            writer = pd.HDFStore(path)
+            for num, period in enumerate(periods):
+                row = get_row(aggregated, num, reduced, file_format, mult)
+                row = row.tolist()
+                row.insert(0, aggregated['date'][num])
+                row.insert(1, period[1] - period[0])
+                row.insert(2, area)
+                writer.writerow(row)
+
+    elif file_format in ['hdf5', 'h5']:
         final = []
         for num, period in enumerate(periods):
-            if reduced:
-                row = [aggregated[key][num] for key in
-                       ['date', 'unutilised_pe', 'combined_recharge',
-                        'combined_str', 'combined_ae']]
-            else:
-                row = [aggregated[key][num] for key in u.CONSTANTS['COL_ORDER']
-                       if key not in ['unutilised_pe', 'k_slope',
-                                      'rapid_runoff_c']]
-            row.insert(1, period[1] - period[0])
-            row.insert(2, area)
-            for num2, element in enumerate(row):
-                if u.CONSTANTS['BALANCE_CONVERSIONS'][num2][1]:
-                    if node:
-                        row[num2] = element / 1000.0 * area
-                    elif zone:
-                        row[num2] = element / 1000.0
-            if file_format == 'csv':
-                writer.writerow(row)
-            elif file_format == 'hdf5':
-                final.append(row)
-
-        if file_format == 'hdf5':
-            data_frame = pd.DataFrame(final, columns=header)
-            writer.append('data', data_frame, index=False)
-            writer.close()
+            row = get_row(aggregated, num, reduced, file_format, mult)
+            final.append(row)
+        final = numpy.array(final)
+        try:
+            os.remove(path)
+        except OSError:
+            pass
+        with h5py.File(path) as outfile:
+            root = 'swacmod_output'
+            outfile.create_dataset(root, data=final, compression='gzip')
 
 
 ###############################################################################

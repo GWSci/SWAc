@@ -139,6 +139,16 @@ def fin_nodes_per_line(data, name):
 
 
 ###############################################################################
+def fin_output_fac(data, name):
+    """Finalize the "output_fac" parameter.
+
+    1) if not provided, set it to 1.0.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = 1.0
+
+
+###############################################################################
 def fin_reporting_zone_mapping(data, name):
     """Finalize the "reporting_zone_mapping" parameter.
 
@@ -684,6 +694,7 @@ FUNC_PARAMS = [fin_start_date,
                fin_output_individual,
                fin_irchcb,
                fin_nodes_per_line,
+               fin_output_fac,
                fin_reporting_zone_mapping,
                fin_reporting_zone_names,
                fin_rainfall_zone_names,

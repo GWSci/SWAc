@@ -118,8 +118,6 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
 ###############################################################################
 def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     """Run model for all nodes."""
-    print '\nLoading parameters'
-
     times = {'start_of_run': time.time()}
 
     manager = Manager()
@@ -137,7 +135,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     level = (logging.DEBUG if debug else logging.INFO)
     params = io.load_yaml(input_file)
     log_path = io.start_logging(level=level, run_name=params['run_name'])
+
+    print '\nStart "%s"' % params['run_name']
     logging.info('Start SWAcMod run')
+    print 'Loading parameters'
 
     data = io.load_and_validate(specs_file, input_file, input_dir)
     if not skip:
@@ -229,7 +230,7 @@ if __name__ == "__main__":
     PARSER.add_argument('-f',
                         '--format',
                         help='output file format',
-                        choices=['hdf5', 'csv'],
+                        choices=['hdf5', 'h5', 'csv'],
                         default='csv')
     PARSER.add_argument('-s',
                         '--skip_prompt',
