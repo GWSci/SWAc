@@ -98,8 +98,8 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
         logging.debug('RAM usage is %.2fMb', u.get_ram_usage_for_process())
         if not test:
             if node in data['params']['output_individual']:
-                io.dump_water_balance(data, output, file_format, node=node,
-                                      reduced=reduced)
+                io.dump_water_balance(data, output, file_format, output_dir,
+                                      node=node, reduced=reduced)
             key = (num, rep_zone)
             area = data['params']['node_areas'][node]
             if key not in reporting:
