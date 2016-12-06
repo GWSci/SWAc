@@ -171,13 +171,14 @@ def check_open_files(data, file_format):
         paths.append(get_output_path(data, file_format, zone=zone))
 
     for path in paths:
-        try:
-            fileobj = open(path, 'w')
-            fileobj.close()
-        except IOError:
-            print ('\nCannot write to "%s", make sure the file is not '
-                   'in use\n' % path)
-            sys.exit()
+        while True:
+            try:
+                fileobj = open(path, 'w')
+                fileobj.close()
+                break
+            except IOError:
+                _ = raw_input('\nCannot write to "%s", make sure the file is '
+                              'not in use then press Enter.' % path)
 
 
 ###############################################################################
