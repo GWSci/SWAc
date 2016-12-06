@@ -195,6 +195,7 @@ def run(test=False, debug=False, file_format=None, reduced=False):
 
 ###############################################################################
 if __name__ == "__main__":
+    freeze_support()
 
     # Parser for command line arguments
     DESCRIPTION = """
@@ -235,9 +236,6 @@ if __name__ == "__main__":
         u.CONSTANTS['OUTPUT_DIR'] = ARGS.output_dir
         if not os.path.exists(ARGS.output_dir):
             os.makedirs(ARGS.output_dir)
-
-    if os.name == 'nt':
-        freeze_support()
 
     run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format,
         reduced=ARGS.reduced)

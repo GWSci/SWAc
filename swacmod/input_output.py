@@ -83,10 +83,9 @@ def print_progress(nodes, total):
     perc = nodes * 1.0 / total
     perc_big = perc * 100
     spaces = int(perc_big / 2)
-    progress = '=' * (spaces - 1) + '>' + ' ' * (50 - spaces)
+    progress = '=' * spaces + '>' + ' ' * (50 - spaces)
 
-    sys.stdout.write('Run SWAcMod: [%s] %d%% (%d nodes done)\r' %
-                     (progress, perc_big, nodes))
+    sys.stdout.write('Run SWAcMod: [%s] %d%%\r' % (progress, perc_big))
     sys.stdout.flush()
 
     if nodes == total:
