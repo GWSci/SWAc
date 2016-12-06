@@ -218,7 +218,7 @@ def dump_recharge_file(data, recharge):
 ###############################################################################
 def get_row(aggregated, num, reduced, file_format, mult):
     """Get a row of data for output."""
-    if reduced or file_format in ['h5', 'hdf5']:
+    if reduced:
         keys = ['unutilised_pe', 'combined_recharge',
                 'combined_str', 'combined_ae']
         row = [aggregated[key][num] for key in keys]
@@ -271,11 +271,16 @@ def dump_water_balance(data, output, file_format, output_dir, node=None,
                 writer.writerow(row)
 
     elif file_format in ['hdf5', 'h5']:
-        final = []
+        final = None
         for num, period in enumerate(periods):
             row = get_row(aggregated, num, reduced, file_format, mult)
-            final.append(row)
-        final = numpy.array(final)
+            if not reduced:
+                row = numpy.insert(row, 0, period[1] - period[0])
+                row = numpy.insert(row, 1, area)
+            if final is None:
+                final = row
+            else:
+                final = numpy.vstack((final, row))
         try:
             os.remove(path)
         except OSError:
