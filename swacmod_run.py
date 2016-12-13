@@ -222,8 +222,8 @@ if __name__ == "__main__":
                         help='reduced output',
                         action='store_true')
     PARSER.add_argument('-i',
-                        '--input_dir',
-                        help='path to input yaml file and directory')
+                        '--input_yml',
+                        help='path to input yaml file inside input directory')
     PARSER.add_argument('-o',
                         '--output_dir',
                         help='path to output directory')
@@ -238,9 +238,13 @@ if __name__ == "__main__":
                         action='store_true')
 
     ARGS = PARSER.parse_args()
-    if ARGS.input_dir:
-        u.CONSTANTS['INPUT_FILE'] = ARGS.input_dir
-        u.CONSTANTS['INPUT_DIR'] = os.path.dirname(ARGS.input_dir)
+    if ARGS.input_yml:
+        if not ARGS.input_yml.endswith('.yml'):
+            print ('\nError: use "-i" or "--input_yml" to specify the path '
+                   'to "input.yml"\n')
+            sys.exit()
+        u.CONSTANTS['INPUT_FILE'] = ARGS.input_yml
+        u.CONSTANTS['INPUT_DIR'] = os.path.dirname(ARGS.input_yml)
     if ARGS.output_dir:
         u.CONSTANTS['OUTPUT_DIR'] = ARGS.output_dir
         if not os.path.exists(ARGS.output_dir):

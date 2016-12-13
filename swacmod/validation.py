@@ -293,7 +293,7 @@ def val_reporting_zone_mapping(data, name):
                  keys=range(1, tot + 1))
 
     c.check_values_limits(values=rzm.values(),
-                          name=name,
+                          name='zone in %s' % name,
                           low_l=0,
                           include_low=True,
                           high_l=len(rzn),
@@ -328,7 +328,7 @@ def val_rainfall_zone_mapping(data, name):
                  keys=range(1, tot + 1))
 
     c.check_values_limits(values=[i[0] for i in rzm.values()],
-                          name=name,
+                          name='zone in %s' % name,
                           low_l=1,
                           include_low=True,
                           high_l=len(rzn),
@@ -363,7 +363,7 @@ def val_pe_zone_mapping(data, name):
                  keys=range(1, tot + 1))
 
     c.check_values_limits(values=[i[0] for i in pzm.values()],
-                          name=name,
+                          name='zone in %s' % name,
                           low_l=0,
                           include_low=True,
                           high_l=len(pzn),
@@ -433,7 +433,7 @@ def val_subroot_zone_mapping(data, name):
                  keys=range(1, tot + 1))
 
     c.check_values_limits(values=[i[0] for i in szm.values()],
-                          name=name,
+                          name='zone in %s' % name,
                           low_l=0,
                           include_low=True,
                           high_l=len(szn),
@@ -589,7 +589,7 @@ def val_free_throughfall(data, name):
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
-    3) values have to be >= 0
+    3) values have to be 0 <= x <= 1
     """
     fth = data['params'][name]
     tot = data['params']['num_nodes']
@@ -602,7 +602,9 @@ def val_free_throughfall(data, name):
     c.check_values_limits(values=fth.values(),
                           name=name,
                           low_l=0,
-                          include_low=True)
+                          high_l=1.0,
+                          include_low=True,
+                          include_high=True)
 
 
 ###############################################################################
@@ -667,7 +669,7 @@ def val_snow_params(data, name):
                  keys=range(1, tot + 1))
 
     c.check_values_limits(values=[i[0] for i in snp.values()],
-                          name='starting_snow_pack',
+                          name='starting_snow_pack in %s' % name,
                           low_l=0,
                           include_low=True)
 
@@ -755,9 +757,10 @@ def val_rorecharge_process(data, name):
 def val_rorecharge_proportion(data, name):
     """Validate rorecharge_proportion.
 
-    1) type has to be a list of lists
+    1) type has to be a dict of lists
     2) the top list requires length 12 (months)
     3) the bottom list requires lenght equal to the number of zones
+    4) all elements of each list have to be 0 <= x <= 1
     """
     rrp = data['params'][name]
     rzn = data['params']['rorecharge_zone_names']
@@ -768,12 +771,19 @@ def val_rorecharge_proportion(data, name):
                  len_list=[len(rzn)],
                  keys=range(1, 13))
 
+    c.check_values_limits(values=[j for i in rrp.values() for j in i],
+                          name=name,
+                          low_l=0,
+                          high_l=1.0,
+                          include_low=True,
+                          include_high=True)
+
 
 ###############################################################################
 def val_rorecharge_limit(data, name):
     """Validate rorecharge_limit.
 
-    1) type has to be a list of lists
+    1) type has to be a dict of lists
     2) the top list requires length 12 (months)
     3) the bottom list requires lenght equal to the number of zones
     """
@@ -791,7 +801,7 @@ def val_rorecharge_limit(data, name):
 def val_rorecharge_activation(data, name):
     """Validate rorecharge_activation.
 
-    1) type has to be a list of lists
+    1) type has to be a dict of lists
     2) the top list requires length 12 (months)
     3) the bottom list requires lenght equal to the number of zones
     """
@@ -831,9 +841,10 @@ def val_macropore_process(data, name):
 def val_macropore_proportion(data, name):
     """Validate macropore_proportion.
 
-    1) type has to be a list of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
+    1) type has to be a dict of lists
+    2) the dict requires length 12 (months)
+    3) the lists require lenght equal to the number of zones
+    4) all elements of each list have to be 0 <= x <= 1
     """
     mpp = data['params'][name]
     mzn = data['params']['macropore_zone_names']
@@ -843,6 +854,13 @@ def val_macropore_proportion(data, name):
                  t_types=data['specs'][name]['type'],
                  len_list=[len(mzn)],
                  keys=range(1, 13))
+
+    c.check_values_limits(values=[j for i in mpp.values() for j in i],
+                          name=name,
+                          low_l=0,
+                          high_l=1.0,
+                          include_low=True,
+                          include_high=True)
 
 
 ###############################################################################
@@ -1160,6 +1178,7 @@ def val_interflow_params(data, name):
     2) all node ids have to be present
     3) values have to be lists with 4 elements
     4) floats need to be >= 0
+    5) the first and third elements of each list has to be <= 1
     """
     ifp = data['params'][name]
     tot = data['params']['num_nodes']
@@ -1174,6 +1193,13 @@ def val_interflow_params(data, name):
                           name=name,
                           low_l=0,
                           include_low=True)
+
+    c.check_values_limits(values=[j for i in ifp.values() for j in
+                                  [i[1], i[3]]],
+                          name=('store_bypass and interflow_to_rivers in %s'
+                                % name),
+                          high_l=1.0,
+                          include_high=True)
 
 
 ###############################################################################
@@ -1201,6 +1227,7 @@ def val_recharge_attenuation_params(data, name):
     1) type has to be a dictionary of lists of floats
     2) all node ids have to be present
     3) values have to be lists with length 3
+    4) the first element of each list has to be 0 <= x <= 1
     """
     rpn = data['params'][name]
     tot = data['params']['num_nodes']
@@ -1210,6 +1237,13 @@ def val_recharge_attenuation_params(data, name):
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1),
                  len_list=[3])
+
+    c.check_values_limits(values=[i[1] for i in rpn.values()],
+                          name='release_proportion in %s' % name,
+                          low_l=0.0,
+                          include_low=True,
+                          high_l=1.0,
+                          include_high=True)
 
 
 ###############################################################################
@@ -1237,6 +1271,7 @@ def val_sw_params(data, name):
     1) type has to be a dictionary of lists of floats
     2) all node ids have to be present
     3) values have to be lists with length 2
+    4) the first element of each list has to be 0 <= x <= 1
     """
     rpn = data['params'][name]
     tot = data['params']['num_nodes']
@@ -1246,6 +1281,13 @@ def val_sw_params(data, name):
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1),
                  len_list=[2])
+
+    c.check_values_limits(values=[i[1] for i in rpn.values()],
+                          name='release_proportion in %s' % name,
+                          low_l=0.0,
+                          include_low=True,
+                          high_l=1.0,
+                          include_high=True)
 
 
 FUNC_PARAMS = [val_run_name,
