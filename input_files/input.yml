@@ -394,6 +394,20 @@ recharge_attenuation_process: enabled
 recharge_attenuation_params: recharge_attenuation_params.yml
 
 
+#######################
+# Process: SW Release #
+#######################
+
+# SW release process: can be either "enabled" or "disabled"
+# This parameter is required
+sw_process: enabled
+
+# SW Parameters
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+sw_params: sw_params.yml
+
+
 ###############
 # Time series #
 ###############

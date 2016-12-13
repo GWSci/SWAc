@@ -39,8 +39,8 @@ CONSTANTS['COL_ORDER'] = [
     'perc_through_root', 'subroot_leak', 'interflow_bypass',
     'interflow_store_input', 'interflow_volume', 'infiltration_recharge',
     'interflow_to_rivers', 'recharge_store_input', 'recharge_store',
-    'combined_recharge', 'combined_str', 'combined_ae', 'evt', 'average_in',
-    'average_out', 'total_storage_change', 'balance'
+    'combined_recharge', 'sw_attenuation', 'combined_str', 'combined_ae',
+    'evt', 'average_in', 'average_out', 'total_storage_change', 'balance'
 ]
 
 # Header
@@ -80,6 +80,7 @@ CONSTANTS['BALANCE_CONVERSIONS'] = [
     ('InputRechargeStore', True, False),
     ('RechargeStoreVol', True, False),
     ('CombinedRecharge', True, True),
+    ('SWAttenuation', True, True),
     ('CombinedSW', True, True),
     ('CombinedAE', True, True),
     ('UnitilisedPE', True, True),

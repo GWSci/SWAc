@@ -216,7 +216,7 @@ def dump_recharge_file(data, recharge):
 
 
 ###############################################################################
-def get_row(aggregated, num, reduced, file_format, mult):
+def get_row(aggregated, num, reduced, mult):
     """Get a row of data for output."""
     if reduced:
         keys = ['unutilised_pe', 'combined_recharge',
@@ -263,7 +263,7 @@ def dump_water_balance(data, output, file_format, output_dir, node=None,
                                 quoting=csv.QUOTE_MINIMAL)
             writer.writerow(header)
             for num, period in enumerate(periods):
-                row = get_row(aggregated, num, reduced, file_format, mult)
+                row = get_row(aggregated, num, reduced, mult)
                 row = row.tolist()
                 row.insert(0, aggregated['date'][num])
                 row.insert(1, period[1] - period[0])
@@ -273,7 +273,7 @@ def dump_water_balance(data, output, file_format, output_dir, node=None,
     elif file_format in ['hdf5', 'h5']:
         final = None
         for num, period in enumerate(periods):
-            row = get_row(aggregated, num, reduced, file_format, mult)
+            row = get_row(aggregated, num, reduced, mult)
             if not reduced:
                 row = numpy.insert(row, 0, period[1] - period[0])
                 row = numpy.insert(row, 1, area)

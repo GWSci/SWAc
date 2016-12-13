@@ -1178,7 +1178,7 @@ def val_interflow_params(data, name):
 
 ###############################################################################
 def val_recharge_attenuation_process(data, name):
-    """Validate interflow_process.
+    """Validate recharge_attenuation_process.
 
     1) type has to be a string
     2) value has to be one in ['enabled', 'disabled']
@@ -1210,6 +1210,42 @@ def val_recharge_attenuation_params(data, name):
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1),
                  len_list=[3])
+
+
+###############################################################################
+def val_sw_process(data, name):
+    """Validate sw_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    rap = data['params'][name]
+
+    c.check_type(param=rap,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[rap],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
+def val_sw_params(data, name):
+    """Validate sw_params.
+
+    1) type has to be a dictionary of lists of floats
+    2) all node ids have to be present
+    3) values have to be lists with length 2
+    """
+    rpn = data['params'][name]
+    tot = data['params']['num_nodes']
+
+    c.check_type(param=rpn,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 keys=range(1, tot + 1),
+                 len_list=[2])
 
 
 FUNC_PARAMS = [val_run_name,
@@ -1271,7 +1307,9 @@ FUNC_PARAMS = [val_run_name,
                val_interflow_process,
                val_interflow_params,
                val_recharge_attenuation_process,
-               val_recharge_attenuation_params]
+               val_recharge_attenuation_params,
+               val_sw_process,
+               val_sw_params]
 
 FUNC_SERIES = [val_rainfall_ts,
                val_pe_ts,

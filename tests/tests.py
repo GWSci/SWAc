@@ -53,7 +53,7 @@ def generate_test_files(num_nodes=10):
                  'macropore_zone_mapping', 'free_throughfall',
                  'max_canopy_storage', 'snow_params', 'interflow_params',
                  'subsoilzone_leakage_fraction', 'soil_spatial', 'lu_spatial',
-                 'recharge_attenuation_params']:
+                 'recharge_attenuation_params', 'sw_params']:
         generate_test_file(name, num_nodes)
 
     filein = open(u.CONSTANTS['TEST_INPUT_FILE'], 'r').readlines()

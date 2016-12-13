@@ -621,6 +621,19 @@ def fin_recharge_attenuation_params(data, name):
 
 
 ###############################################################################
+def fin_sw_params(data, name):
+    """Finalize the "sw_params" parameter.
+
+    1) if not provided, set it to all [0.0, 1.0].
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, [0.0, 1.0]) for k in
+                                    range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to %s', name, [0.0, 1.0])
+
+
+###############################################################################
 def fin_date(data, name):
     """Finalize the "date" series."""
     series, params = data['series'], data['params']
@@ -728,7 +741,8 @@ FUNC_PARAMS = [fin_start_date,
                fin_kc,
                fin_subsoilzone_leakage_fraction,
                fin_interflow_params,
-               fin_recharge_attenuation_params]
+               fin_recharge_attenuation_params,
+               fin_sw_params]
 
 FUNC_SERIES = [fin_date,
                fin_rainfall_ts,

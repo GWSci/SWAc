@@ -499,30 +499,62 @@ def get_recharge(data, output, node):
 
 ###############################################################################
 def get_combined_str(data, output, node):
-    """AJ) STR: Combined Surface Flow To Surface Water Courses [mm/d]."""
-    combined_str = (output['interflow_to_rivers'] +
-                    output['rapid_runoff'] -
-                    output['runoff_recharge'])
+    """Multicolumn function.
 
-    return {'combined_str': combined_str}
+    AJ) SW Attenuation Store [mm].
+    AK) STR: Combined Surface Flow To Surface Water Courses [mm/d].
+    """
+    series, params = data['series'], data['params']
+
+    cdef:
+        size_t length = len(series['date'])
+        double [:] col_attenuation = np.zeros(length)
+        double [:] col_combined_str = np.zeros(length)
+        double rlp = params['sw_params'][node][1]
+        double base = (params['sw_params'][node][0] +
+                       output['interflow_to_rivers'][0] +
+                       output['rapid_runoff'][0] -
+                       output['runoff_recharge'][0])
+        size_t num
+
+    if params['sw_process'] == 'enabled':
+        col_combined_str[0] = rlp * base
+        col_attenuation[0] = base - col_combined_str[0]
+        for num in range(1, length):
+            base = (col_attenuation[num-1] +
+                    output['interflow_to_rivers'][num] +
+                    output['rapid_runoff'][num] -
+                    output['runoff_recharge'][num])
+            col_combined_str[num] = rlp * base
+            col_attenuation[num] = base - col_combined_str[num]
+    else:
+        col_combined_str = (output['interflow_to_rivers'] +
+                            output['rapid_runoff'] -
+                            output['runoff_recharge'])
+
+    col = {}
+    col['sw_attenuation'] = col_attenuation.base
+    col['combined_str'] = col_combined_str.base
+
+    return col
 
 
 ###############################################################################
 def get_combined_ae(data, output, node):
-    """AK) AE: Combined AE [mm/d]."""
+    """AL) AE: Combined AE [mm/d]."""
     combined_ae = output['canopy_storage'] + output['ae']
     return {'combined_ae': combined_ae}
 
 
 ###############################################################################
 def get_evt(data, output, node):
-    """AL) EVT: Unitilised PE [mm/d]."""
+    """AM) EVT: Unitilised PE [mm/d]."""
     return {'evt': output['unutilised_pe']}
 
 
 ###############################################################################
 def get_average_in(data, output, node):
-    """AM) AVERAGE IN [mm]."""
+    """AN) AVERAGE IN [mm]."""
     series, params = data['series'], data['params']
     zone_rf = params['rainfall_zone_mapping'][node][0] - 1
     coef_rf = params['rainfall_zone_mapping'][node][1]
@@ -535,7 +567,7 @@ def get_average_in(data, output, node):
 
 ###############################################################################
 def get_average_out(data, output, node):
-    """AN) AVERAGE OUT [mm]."""
+    """AO) AVERAGE OUT [mm]."""
     average_out = (output['combined_str'] +
                    output['combined_recharge'] +
                    output['ae'] +
@@ -546,7 +578,7 @@ def get_average_out(data, output, node):
 
 ###############################################################################
 def get_change(data, output, node):
-    """AO) TOTAL STORAGE CHANGE [mm]."""
+    """AP) TOTAL STORAGE CHANGE [mm]."""
     series = data['series']
 
     cdef:
@@ -568,7 +600,7 @@ def get_change(data, output, node):
 
 ###############################################################################
 def get_balance(data, output, node):
-    """AP) BALANCE [mm]."""
+    """AQ) BALANCE [mm]."""
     balance = (output['average_in'] -
                output['average_out'] -
                output['total_storage_change'])

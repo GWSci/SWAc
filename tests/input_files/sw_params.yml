@@ -1,0 +1,5 @@
+# Columns are
+# 1) initial_sw_store
+# 2) release_proportion
+sw_params:
+    1: [1.0, 0.7]
