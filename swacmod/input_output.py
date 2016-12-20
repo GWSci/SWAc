@@ -219,8 +219,8 @@ def dump_recharge_file(data, recharge):
 def get_row(aggregated, num, reduced, mult):
     """Get a row of data for output."""
     if reduced:
-        keys = ['unutilised_pe', 'combined_recharge',
-                'combined_str', 'combined_ae']
+        keys = ['combined_recharge', 'combined_str', 'combined_ae',
+                'unutilised_pe']
         row = [aggregated[key][num] for key in keys]
     else:
         row = [aggregated[key][num] for key in

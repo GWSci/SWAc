@@ -80,7 +80,7 @@ CONSTANTS['BALANCE_CONVERSIONS'] = [
     ('InputRechargeStore', True, False),
     ('RechargeStoreVol', True, False),
     ('CombinedRecharge', True, True),
-    ('SWAttenuation', True, True),
+    ('SWAttenuation', True, False),
     ('CombinedSW', True, True),
     ('CombinedAE', True, True),
     ('UnitilisedPE', True, True),
