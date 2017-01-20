@@ -181,7 +181,8 @@ def get_modified_time(path):
         mod = datetime.datetime(mod.year, mod.month, mod.day, mod.hour,
                                 mod.minute, mod.second)
     except OSError:
-        logging.error('Could not find %s, set modified time to 1/1/1901', path)
+        logging.warning('Could not find %s, set modified time to 1/1/1901',
+                        path)
         mod = datetime.datetime(1901, 1, 1, 0, 0, 0)
     return mod
 
