@@ -247,8 +247,8 @@ if __name__ == "__main__":
         u.CONSTANTS['INPUT_DIR'] = os.path.dirname(ARGS.input_yml)
     if ARGS.output_dir:
         u.CONSTANTS['OUTPUT_DIR'] = ARGS.output_dir
-        if not os.path.exists(ARGS.output_dir):
-            os.makedirs(ARGS.output_dir)
+    if not os.path.exists(u.CONSTANTS['OUTPUT_DIR']):
+        os.makedirs(u.CONSTANTS['OUTPUT_DIR'])
 
     try:
         run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format,
