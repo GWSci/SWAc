@@ -426,6 +426,14 @@ raw:
         - !!python/name:list
         - !!python/name:float
 
+percolation_rejection:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
 
 ############################################
 # Process: Percentage of leakage to Permit #

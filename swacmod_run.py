@@ -60,6 +60,7 @@ def get_output(data, node):
                      m.get_tawrew,
                      m.get_ae,
                      m.get_unutilised_pe,
+                     m.get_rejected_recharge,
                      m.get_perc_through_root,
                      m.get_subroot_leak,
                      m.get_interflow_bypass,

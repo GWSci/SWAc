@@ -1082,7 +1082,7 @@ def val_taw(data, name):
 
     1) type has to be a dict of lists of floats
     2) dictionary needs to have integer keys, from 1 to 12
-    3) lists need to have length equal to the number of zones
+    3) lists need to have length equal to the number of months
     """
     if data['params']['fao_process'] == 'disabled':
         return
@@ -1116,6 +1116,33 @@ def val_raw(data, name):
                  t_types=data['specs'][name]['type'],
                  len_list=[12],
                  keys=range(1, tot + 1))
+
+
+###############################################################################
+def val_percolation_rejection(data, name):
+    """Validate percolation_rejection.
+
+    1) type has to be a dictionary of lists of floats
+    2) values have to be lists with length equal to the number of zones
+    3) dictionary needs 1 key: percolation_rejection
+    4) value should be >= 0.0
+    """
+    if data['params']['fao_process'] == 'disabled':
+        return
+
+    per = data['params'][name]
+    lzn = data['params']['landuse_zone_names']
+
+    c.check_type(param=per,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(lzn)],
+                 keys=['percolation_rejection'])
+
+    c.check_values_limits(values=[per],
+                          name=name,
+                          low_l=0.0,
+                          include_low=True)
 
 
 ###############################################################################
@@ -1344,6 +1371,7 @@ FUNC_PARAMS = [val_run_name,
                val_kc,
                val_taw,
                val_raw,
+               val_percolation_rejection,
                val_leakage_process,
                val_subsoilzone_leakage_fraction,
                val_interflow_process,

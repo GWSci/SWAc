@@ -582,6 +582,19 @@ def fin_taw_and_raw(data, name):
 
 
 ###############################################################################
+def fin_percolation_rejection(data, name):
+    """Finalize the "percolation_rejection" parameter.
+
+    1) if not provided, set it to a large number.
+    """
+    if data['params'][name] is None:
+        default = 99999.0
+        zones = len(data['params']['landuse_zone_names'])
+        data['params'][name] = [default for _ in range(zones)]
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
 def fin_subsoilzone_leakage_fraction(data, name):
     """Finalize the "subsoilzone_leakage_fraction" parameter.
 
@@ -739,6 +752,7 @@ FUNC_PARAMS = [fin_start_date,
                fin_taw_and_raw,
                fin_zr,
                fin_kc,
+               fin_percolation_rejection,
                fin_subsoilzone_leakage_fraction,
                fin_interflow_params,
                fin_recharge_attenuation_params,

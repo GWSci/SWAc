@@ -350,6 +350,11 @@ taw: taw.yml
 # This parameter can accept a path to YAML or CSV
 raw: raw.yml
 
+# Percolation Limit (Rejected Recharge initiation)
+# This parameter is optional.
+# This parameter can accept a path to YAML or CSV
+percolation_rejection: percolation_rejection.yml
+
 
 ############################################
 # Process: Percentage of leakage to Permit #

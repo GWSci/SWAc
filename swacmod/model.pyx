@@ -340,23 +340,41 @@ def get_unutilised_pe(data, output, node):
 
 
 ###############################################################################
+def get_rejected_recharge(data, output, node):
+    """Z) Rejected Recharge."""
+    series, params = data['series'], data['params']
+    rej = params['percolation_rejection']
+
+    rejected_recharge = np.zeros(len(series['date']))
+    if params['fao_process'] == 'enabled':
+        zone = params['lu_spatial'][node]
+        rej = (np.array(rej['percolation_rejection']) * zone).sum(axis=0)
+        perc = np.copy(output['p_smd'])
+        perc[perc > 0] = 0
+        perc = - perc
+        rejected_recharge[perc > rej] = perc[perc > rej] - rej
+
+    return {'rejected_recharge': rejected_recharge}
+
+
+###############################################################################
 def get_perc_through_root(data, output, node):
-    """Z) Percolation Through the Root Zone [mm/d]."""
+    """AA) Percolation Through the Root Zone [mm/d]."""
     params = data['params']
 
     if params['fao_process'] == 'enabled':
-        perc_through_root = np.copy(output['p_smd'])
-        perc_through_root[perc_through_root > 0] = 0
-        perc_through_root = - perc_through_root
+        perc = np.copy(output['p_smd'])
+        perc[perc > 0] = 0
+        perc = - perc
     else:
-        perc_through_root = np.copy(output['percol_in_root'])
+        perc = np.copy(output['percol_in_root'])
 
-    return {'perc_through_root': perc_through_root}
+    return {'perc_through_root': perc - output['rejected_recharge']}
 
 
 ###############################################################################
 def get_subroot_leak(data, output, node):
-    """AA) Sub Root Zone Leakege / Inputs [mm/d]."""
+    """AB) Sub Root Zone Leakege / Inputs [mm/d]."""
     series, params = data['series'], data['params']
 
     if params['leakage_process'] == 'enabled':
@@ -372,7 +390,7 @@ def get_subroot_leak(data, output, node):
 
 ###############################################################################
 def get_interflow_bypass(data, output, node):
-    """AB) Bypassing the Interflow Store [mm/d]."""
+    """AC) Bypassing the Interflow Store [mm/d]."""
     params = data['params']
     if params['interflow_process'] == 'enabled':
         coef = params['interflow_params'][node][1]
@@ -387,7 +405,7 @@ def get_interflow_bypass(data, output, node):
 
 ###############################################################################
 def get_interflow_store_input(data, output, node):
-    """AC) Input to Interflow Store [mm/d]."""
+    """AD) Input to Interflow Store [mm/d]."""
     interflow_store_input = (output['perc_through_root'] +
                              output['subroot_leak'] -
                              output['interflow_bypass'])
@@ -399,9 +417,9 @@ def get_interflow_store_input(data, output, node):
 def get_interflow(data, output, node):
     """Multicolumn function.
 
-    AD) Interflow Store Volume [mm]
-    AE) Infiltration Recharge [mm/d]
-    AF) Interflow to Surface Water Courses [mm/d]
+    AE) Interflow Store Volume [mm]
+    AF) Infiltration Recharge [mm/d]
+    AG) Interflow to Surface Water Courses [mm/d]
     """
     series, params = data['series'], data['params']
 
@@ -445,7 +463,7 @@ def get_interflow(data, output, node):
 
 ###############################################################################
 def get_recharge_store_input(data, output, node):
-    """AG) Input to Recharge Store [mm/d]."""
+    """AH) Input to Recharge Store [mm/d]."""
     recharge_store_input = (output['infiltration_recharge'] +
                             output['interflow_bypass'] +
                             output['macropore'] +
@@ -458,8 +476,8 @@ def get_recharge_store_input(data, output, node):
 def get_recharge(data, output, node):
     """Multicolumn function.
 
-    AH) Recharge Store Volume [mm]
-    AI) RCH: Combined Recharge [mm/d]
+    AI) Recharge Store Volume [mm]
+    AJ) RCH: Combined Recharge [mm/d]
     """
     series, params = data['series'], data['params']
 
@@ -501,8 +519,8 @@ def get_recharge(data, output, node):
 def get_combined_str(data, output, node):
     """Multicolumn function.
 
-    AJ) SW Attenuation Store [mm].
-    AK) STR: Combined Surface Flow To Surface Water Courses [mm/d].
+    AK) SW Attenuation Store [mm].
+    AL) STR: Combined Surface Flow To Surface Water Courses [mm/d].
     """
     series, params = data['series'], data['params']
 
@@ -524,7 +542,8 @@ def get_combined_str(data, output, node):
             base = (col_attenuation[num-1] +
                     output['interflow_to_rivers'][num] +
                     output['rapid_runoff'][num] -
-                    output['runoff_recharge'][num])
+                    output['runoff_recharge'][num] +
+                    output['rejected_recharge'][num])
             col_combined_str[num] = rlp * base
             col_attenuation[num] = base - col_combined_str[num]
     else:
@@ -541,20 +560,20 @@ def get_combined_str(data, output, node):
 
 ###############################################################################
 def get_combined_ae(data, output, node):
-    """AL) AE: Combined AE [mm/d]."""
+    """AM) AE: Combined AE [mm/d]."""
     combined_ae = output['canopy_storage'] + output['ae']
     return {'combined_ae': combined_ae}
 
 
 ###############################################################################
 def get_evt(data, output, node):
-    """AM) EVT: Unitilised PE [mm/d]."""
+    """AN) EVT: Unitilised PE [mm/d]."""
     return {'evt': output['unutilised_pe']}
 
 
 ###############################################################################
 def get_average_in(data, output, node):
-    """AN) AVERAGE IN [mm]."""
+    """AO) AVERAGE IN [mm]."""
     series, params = data['series'], data['params']
     zone_rf = params['rainfall_zone_mapping'][node][0] - 1
     coef_rf = params['rainfall_zone_mapping'][node][1]
@@ -567,7 +586,7 @@ def get_average_in(data, output, node):
 
 ###############################################################################
 def get_average_out(data, output, node):
-    """AO) AVERAGE OUT [mm]."""
+    """AP) AVERAGE OUT [mm]."""
     average_out = (output['combined_str'] +
                    output['combined_recharge'] +
                    output['ae'] +
@@ -578,7 +597,7 @@ def get_average_out(data, output, node):
 
 ###############################################################################
 def get_change(data, output, node):
-    """AP) TOTAL STORAGE CHANGE [mm]."""
+    """AQ) TOTAL STORAGE CHANGE [mm]."""
     series = data['series']
 
     cdef:
@@ -600,7 +619,7 @@ def get_change(data, output, node):
 
 ###############################################################################
 def get_balance(data, output, node):
-    """AQ) BALANCE [mm]."""
+    """AR) BALANCE [mm]."""
     balance = (output['average_in'] -
                output['average_out'] -
                output['total_storage_change'])

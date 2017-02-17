@@ -36,11 +36,12 @@ CONSTANTS['COL_ORDER'] = [
     'snowmelt', 'net_rainfall', 'rapid_runoff_c', 'rapid_runoff',
     'runoff_recharge', 'macropore', 'percol_in_root', 'rawrew',
     'tawrew', 'p_smd', 'smd', 'k_slope', 'ae', 'unutilised_pe',
-    'perc_through_root', 'subroot_leak', 'interflow_bypass',
-    'interflow_store_input', 'interflow_volume', 'infiltration_recharge',
-    'interflow_to_rivers', 'recharge_store_input', 'recharge_store',
-    'combined_recharge', 'sw_attenuation', 'combined_str', 'combined_ae',
-    'evt', 'average_in', 'average_out', 'total_storage_change', 'balance'
+    'rejected_recharge', 'perc_through_root', 'subroot_leak',
+    'interflow_bypass', 'interflow_store_input', 'interflow_volume',
+    'infiltration_recharge', 'interflow_to_rivers', 'recharge_store_input',
+    'recharge_store', 'combined_recharge', 'sw_attenuation', 'combined_str',
+    'combined_ae', 'evt', 'average_in', 'average_out', 'total_storage_change',
+    'balance'
 ]
 
 # Header
@@ -70,6 +71,7 @@ CONSTANTS['BALANCE_CONVERSIONS'] = [
     ('pSMD', True, False),
     ('SMD', True, False),
     ('AE', True, False),
+    ('RejectedRecharge', True, False),
     ('PercolationThroughRootZone', True, False),
     ('SubRootZoneLeakege', True, False),
     ('BypassingInterflow', True, False),
