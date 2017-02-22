@@ -251,10 +251,14 @@ if __name__ == "__main__":
     if not os.path.exists(u.CONSTANTS['OUTPUT_DIR']):
         os.makedirs(u.CONSTANTS['OUTPUT_DIR'])
 
-    try:
+    if ARGS.debug:
         run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format,
             reduced=ARGS.reduced, skip=ARGS.skip_prompt)
-    except Exception as err:
-        logging.error(err.__repr__())
-        print err
-        print
+    else:
+        try:
+            run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format,
+                reduced=ARGS.reduced, skip=ARGS.skip_prompt)
+        except Exception as err:
+            logging.error(err.__repr__())
+            print err
+            print

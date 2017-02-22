@@ -143,11 +143,11 @@ def get_output_path(data, file_format, output_dir, node=None, zone=None):
     """Return the path of the recharge file."""
     run = data['params']['run_name']
 
-    if node:
+    if node is not None:
         _ = len(str(data['params']['num_nodes']))
         counter = eval("'%%0%dd' % _") % node
         fileout = '%s_n_%s.%s' % (run, counter, file_format)
-    elif zone:
+    elif zone is not None:
         zones = data['params']['reporting_zone_mapping'].values()
         _ = len(str(len(set(zones))))
         counter = eval("'%%0%dd' % _") % zone
