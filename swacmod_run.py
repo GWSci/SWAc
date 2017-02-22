@@ -92,6 +92,8 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
     for node in ids:
+        recharge[node] = {}
+        io.print_progress(len(recharge), data['params']['num_nodes'])
         rep_zone = data['params']['reporting_zone_mapping'][node]
         if rep_zone == 0:
             continue
@@ -110,9 +112,7 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
                                              reporting=reporting[key])
             if data['params']['output_recharge']:
                 recharge[node] = output['combined_recharge'].copy()
-            else:
-                recharge[node] = {}
-            io.print_progress(len(recharge), data['params']['num_nodes'])
+
     logging.info('Process %d ended', num)
 
 
@@ -166,7 +166,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     times['end_of_model'] = time.time()
 
     if not test:
-        print 'Writing output files'
+        print '\nWriting output files'
         if not skip:
             io.check_open_files(data, file_format, u.CONSTANTS['OUTPUT_DIR'])
         reporting = aggregate_reporting(reporting)
