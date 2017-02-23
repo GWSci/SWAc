@@ -249,7 +249,7 @@ def dump_spatial_output(data, spatial, output_dir, reduced=False):
         for node in ids:
             if node in spatial:
                 area = areas[node]
-                mult = area * fac / 1000
+                mult = fac / 1000
                 row = get_row_spatial(spatial[node], reduced, mult)
                 row.insert(0, node)
                 row.insert(1, area)
