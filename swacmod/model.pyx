@@ -10,8 +10,18 @@ from . import utils as u
 
 
 ###############################################################################
-def get_pefac(data, output, node):
-    """E) Vegitation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
+def get_precipitation(data, output, node):
+    """C) Precipitation [mm/d]."""
+    series, params = data['series'], data['params']
+    zone_rf = params['rainfall_zone_mapping'][node][0] - 1
+    coef_rf = params['rainfall_zone_mapping'][node][1]
+    rainfall_ts = series['rainfall_ts'][:, zone_rf] * coef_rf
+    return {'rainfall_ts': rainfall_ts}
+
+
+###############################################################################
+def get_pe(data, output, node):
+    """D) Potential Evapotranspiration (PE) [mm/d]."""
     series, params = data['series'], data['params']
 
     fao = params['fao_process']
@@ -20,9 +30,25 @@ def get_pefac(data, output, node):
     if fao == 'enabled' or canopy == 'enabled':
         zone_pe = params['pe_zone_mapping'][node][0] - 1
         coef_pe = params['pe_zone_mapping'][node][1]
+        pe_ts = series['pe_ts'][:, zone_pe] * coef_pe
+    else:
+        pe_ts = np.zeros(len(series['date']))
+
+    return {'pe_ts': pe_ts}
+
+
+###############################################################################
+def get_pefac(data, output, node):
+    """E) Vegitation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
+    series, params = data['series'], data['params']
+
+    fao = params['fao_process']
+    canopy = params['canopy_process']
+
+    if fao == 'enabled' or canopy == 'enabled':
         zone_lu = params['lu_spatial'][node]
         var1 = (params['kc_list'][series['months']] * zone_lu).sum(axis=1)
-        pefac = series['pe_ts'][:, zone_pe] * coef_pe * var1
+        pefac = output['pe_ts'] * var1
     else:
         pefac = np.zeros(len(series['date']))
 
@@ -35,11 +61,9 @@ def get_canopy_storage(data, output, node):
     series, params = data['series'], data['params']
 
     if params['canopy_process'] == 'enabled':
-        zone_rf = params['rainfall_zone_mapping'][node][0] - 1
-        coef = params['rainfall_zone_mapping'][node][1]
         ftf = params['free_throughfall'][node]
         mcs = params['max_canopy_storage'][node]
-        canopy_storage = series['rainfall_ts'][:, zone_rf] * coef * (1 - ftf)
+        canopy_storage = output['rainfall_ts'] * (1 - ftf)
         canopy_storage[canopy_storage > mcs] = mcs
         indexes = np.where(canopy_storage > output['pefac'])
         canopy_storage[indexes] = output['pefac']
@@ -60,12 +84,7 @@ def get_net_pefac(data, output, node):
 def get_precip_to_ground(data, output, node):
     """H) Precipitation at Groundlevel [mm/d]."""
     series, params = data['series'], data['params']
-    zone_rf = params['rainfall_zone_mapping'][node][0] - 1
-    coef_rf = params['rainfall_zone_mapping'][node][1]
-
-    precip_to_ground = (series['rainfall_ts'][:, zone_rf] * coef_rf -
-                        output['canopy_storage'])
-
+    precip_to_ground = output['rainfall_ts'] - output['canopy_storage']
     return {'precip_to_ground': precip_to_ground}
 
 
@@ -575,12 +594,7 @@ def get_evt(data, output, node):
 def get_average_in(data, output, node):
     """AO) AVERAGE IN [mm]."""
     series, params = data['series'], data['params']
-    zone_rf = params['rainfall_zone_mapping'][node][0] - 1
-    coef_rf = params['rainfall_zone_mapping'][node][1]
-
-    average_in = (series['rainfall_ts'][:, zone_rf] * coef_rf +
-                  output['subroot_leak'])
-
+    average_in = output['rainfall_ts'] + output['subroot_leak']
     return {'average_in': average_in}
 
 

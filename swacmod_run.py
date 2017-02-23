@@ -44,12 +44,10 @@ def get_output(data, node):
 
     start = time.time()
 
-    zone_r = data['params']['rainfall_zone_mapping'][node][0] - 1
-    zone_p = data['params']['pe_zone_mapping'][node][0] - 1
-    output = {'rainfall_ts': data['series']['rainfall_ts'][:, zone_r],
-              'pe_ts': data['series']['pe_ts'][:, zone_p]}
-
-    for function in [m.get_pefac,
+    output = {}
+    for function in [m.get_precipitation,
+                     m.get_pe,
+                     m.get_pefac,
                      m.get_canopy_storage,
                      m.get_net_pefac,
                      m.get_precip_to_ground,

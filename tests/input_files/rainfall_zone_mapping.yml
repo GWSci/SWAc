@@ -2,4 +2,4 @@
 # 1) zone
 # 2) proportion
 rainfall_zone_mapping:
-    1: [1, 1.0]
+    1: [1, 0.76]

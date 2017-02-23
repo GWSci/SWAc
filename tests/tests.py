@@ -138,7 +138,8 @@ class EndToEndTests(unittest.TestCase):
                                 key in output)
                 self.assertEqual(len(results) - 1,
                                  len(output))
-                if key in self.data['series']:
+                if key in self.data['series'] and key not in \
+                        ['rainfall_ts', 'pe_ts']:
                     types = (list, np.ndarray)
                     if isinstance(self.data['series'][key][0], types):
                         new_list = [i[0] for i in self.data['series'][key]]
