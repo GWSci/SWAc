@@ -180,6 +180,22 @@ def val_output_fac(data, name):
 
 
 ###############################################################################
+def val_spatial_output_date(data, name):
+    """Validate spatial_output_date.
+
+    NOTE: 1/12/70 is ambiguous
+          if Excel conversion I need the datemode of the file
+
+    1) type has to be datetime object (string is parsed in io module) or None
+    """
+    dat = data['params'][name]
+    if dat is None:
+        return
+
+    c.check_type(param=dat, name=name, t_types=data['specs'][name]['type'])
+
+
+###############################################################################
 def val_rainfall_ts(data, name):
     """Validate rainfall_ts.
 
@@ -1328,6 +1344,7 @@ FUNC_PARAMS = [val_run_name,
                val_irchcb,
                val_nodes_per_line,
                val_output_fac,
+               val_spatial_output_date,
                val_reporting_zone_names,
                val_reporting_zone_mapping,
                val_rainfall_zone_names,

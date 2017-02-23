@@ -6,6 +6,7 @@
 import os
 import sys
 import time
+import random
 import logging
 import argparse
 from multiprocessing import Process, Manager, freeze_support
@@ -87,13 +88,14 @@ def get_output(data, node):
 
 ###############################################################################
 def run_process(num, ids, data, test, reporting, recharge, log_path, level,
-                file_format, reduced, output_dir):
+                file_format, reduced, output_dir, spatial, spatial_index):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
     for node in ids:
         recharge[node] = {}
-        io.print_progress(len(recharge), data['params']['num_nodes'])
+        io.print_progress(len(recharge), data['params']['num_nodes'],
+                          'Run SWAcMod')
         rep_zone = data['params']['reporting_zone_mapping'][node]
         if rep_zone == 0:
             continue
@@ -112,6 +114,8 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
                                              reporting=reporting[key])
             if data['params']['output_recharge']:
                 recharge[node] = output['combined_recharge'].copy()
+            if data['params']['spatial_output_date']:
+                spatial[node] = m.aggregate(output, area, index=spatial_index)
 
     logging.info('Process %d ended', num)
 
@@ -124,6 +128,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     manager = Manager()
     reporting = manager.dict()
     recharge = manager.dict()
+    spatial = manager.dict()
 
     specs_file = u.CONSTANTS['SPECS_FILE']
     if test:
@@ -139,16 +144,22 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     print '\nStart "%s"' % params['run_name']
     logging.info('Start SWAcMod run')
-    print 'Loading parameters'
 
     data = io.load_and_validate(specs_file, input_file, input_dir)
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS['OUTPUT_DIR'])
 
     ids = range(1, data['params']['num_nodes'] + 1)
+    random.shuffle(ids)
     chunks = np.array_split(ids, data['params']['num_cores'])
 
     times['end_of_input'] = time.time()
+
+    if data['params']['spatial_output_date'] is not None:
+        spatial_index = (data['params']['spatial_output_date'] -
+                         data['params']['start_date']).days
+    else:
+        spatial_index = None
 
     procs = {}
     for num, chunk in enumerate(chunks):
@@ -157,7 +168,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
         procs[num] = Process(target=run_process,
                              args=(num, chunk, data, test, reporting,
                                    recharge, log_path, level, file_format,
-                                   reduced, u.CONSTANTS['OUTPUT_DIR']))
+                                   reduced, u.CONSTANTS['OUTPUT_DIR'],
+                                   spatial, spatial_index))
         procs[num].start()
 
     for num in procs:
@@ -176,6 +188,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                                   reduced=reduced)
         if data['params']['output_recharge']:
             io.dump_recharge_file(data, recharge)
+        if data['params']['spatial_output_date']:
+            io.dump_spatial_output(data, spatial, u.CONSTANTS['OUTPUT_DIR'],
+                                   reduced=reduced)
 
     times['end_of_run'] = time.time()
 
@@ -260,5 +275,5 @@ if __name__ == "__main__":
                 reduced=ARGS.reduced, skip=ARGS.skip_prompt)
         except Exception as err:
             logging.error(err.__repr__())
-            print err
+            print 'ERROR: %s' % err
             print

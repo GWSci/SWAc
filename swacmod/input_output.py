@@ -76,21 +76,18 @@ def format_time(diff):
 
 
 ###############################################################################
-def print_progress(nodes, total):
-    """Start logging output.
-
-    If path is None, run_name has to be provided.
-    """
-    perc = nodes * 1.0 / total
+def print_progress(progress, total, prefix):
+    """Print progress bar."""
+    perc = progress * 1.0 / total
     perc_big = perc * 100
     spaces = int(perc_big / 2)
-    progress = '=' * spaces + '>' + ' ' * (50 - spaces)
+    progress_bar = '=' * spaces + '>' + ' ' * (50 - spaces)
 
     sys.stdout.write('\b' * 100 +
-                     'Run SWAcMod: [%s] %d%%\r' % (progress, perc_big))
+                     '%s: [%s] %d%%\r' % (prefix, progress_bar, perc_big))
     sys.stdout.flush()
 
-    if nodes == total:
+    if progress == total:
         print
 
 
@@ -165,11 +162,16 @@ def check_open_files(data, file_format, output_dir):
     if data['params']['output_recharge']:
         paths.append(get_recharge_path(data))
 
+    if data['params']['spatial_output_date']:
+        paths.append(get_spatial_path(data, output_dir))
+
     for node in data['params']['output_individual']:
         paths.append(get_output_path(data, file_format, output_dir, node=node))
 
     zones = set(data['params']['reporting_zone_mapping'].values())
     for zone in zones:
+        if zone == 0:
+            continue
         paths.append(get_output_path(data, file_format, output_dir, zone=zone))
 
     for path in paths:
@@ -217,19 +219,41 @@ def dump_recharge_file(data, recharge):
 
 
 ###############################################################################
-def get_row(aggregated, num, reduced, mult):
-    """Get a row of data for output."""
-    if reduced:
-        keys = ['combined_recharge', 'combined_str', 'combined_ae',
-                'unutilised_pe']
-        row = [aggregated[key][num] for key in keys]
-    else:
-        row = [aggregated[key][num] for key in
-               u.CONSTANTS['COL_ORDER'] if key not in
-               ['date', 'unutilised_pe', 'k_slope', 'rapid_runoff_c']]
+def get_spatial_path(data, output_dir):
+    """Get the path of the spatial data output CSV file."""
+    string = str(data['params']['spatial_output_date'].date())
+    run = data['params']['run_name']
+    path = os.path.join(output_dir, '%sSpatial%s.csv' % (run, string))
+    return path
 
-    row = numpy.array(row) * mult
-    return row
+
+###############################################################################
+def dump_spatial_output(data, spatial, output_dir, reduced=False):
+    """Write recharge to file."""
+    string = str(data['params']['spatial_output_date'].date())
+    logging.info('\tDumping spatial output for %s', string)
+    areas = data['params']['node_areas']
+    path = get_spatial_path(data, output_dir)
+    fac = data['params']['output_fac']
+    ids = range(1, data['params']['num_nodes'] + 1)
+    with open(path, 'wb') as outfile:
+        header = ['Node']
+        header += [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS'] if i[0] not
+                   in ['DATE', 'nDays']]
+        if reduced:
+            header += [i for i in header if
+                       u.CONSTANTS['BALANCE_CONVERSIONS'][i][2]]
+        writer = csv.writer(outfile, delimiter=',',
+                            quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(header)
+        for node in ids:
+            if node in spatial:
+                area = areas[node]
+                mult = area * fac / 1000
+                row = get_row_spatial(spatial[node], reduced, mult)
+                row.insert(0, node)
+                row.insert(1, area)
+                writer.writerow(row)
 
 
 ###############################################################################
@@ -264,7 +288,7 @@ def dump_water_balance(data, output, file_format, output_dir, node=None,
                                 quoting=csv.QUOTE_MINIMAL)
             writer.writerow(header)
             for num, period in enumerate(periods):
-                row = get_row(aggregated, num, reduced, mult)
+                row = get_row_balance(aggregated, num, reduced, mult)
                 row = row.tolist()
                 row.insert(0, aggregated['date'][num])
                 row.insert(1, period[1] - period[0])
@@ -274,7 +298,7 @@ def dump_water_balance(data, output, file_format, output_dir, node=None,
     elif file_format in ['hdf5', 'h5']:
         final = None
         for num, period in enumerate(periods):
-            row = get_row(aggregated, num, reduced, mult)
+            row = get_row_balance(aggregated, num, reduced, mult)
             if not reduced:
                 row = numpy.insert(row, 0, period[1] - period[0])
                 row = numpy.insert(row, 1, area)
@@ -289,6 +313,37 @@ def dump_water_balance(data, output, file_format, output_dir, node=None,
         with h5py.File(path) as outfile:
             root = 'swacmod_output'
             outfile.create_dataset(root, data=final, compression='gzip')
+
+
+###############################################################################
+def get_row_spatial(vector, reduced, mult):
+    """Get a row of data for output."""
+    if reduced:
+        keys = ['combined_recharge', 'combined_str', 'combined_ae',
+                'unutilised_pe']
+        row = [vector[key] for key in keys]
+    else:
+        row = [vector[key] for key in u.CONSTANTS['COL_ORDER'] if key not in
+               ['date', 'unutilised_pe', 'k_slope', 'rapid_runoff_c']]
+
+    row = numpy.array(row) * mult
+    return row.tolist()
+
+
+###############################################################################
+def get_row_balance(aggregated, num, reduced, mult):
+    """Get a row of data for output."""
+    if reduced:
+        keys = ['combined_recharge', 'combined_str', 'combined_ae',
+                'unutilised_pe']
+        row = [aggregated[key][num] for key in keys]
+    else:
+        row = [aggregated[key][num] for key in
+               u.CONSTANTS['COL_ORDER'] if key not in
+               ['date', 'unutilised_pe', 'k_slope', 'rapid_runoff_c']]
+
+    row = numpy.array(row) * mult
+    return row
 
 
 ###############################################################################
@@ -357,7 +412,8 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                ['rainfall_zone_mapping', 'pe_zone_mapping',
                 'subroot_zone_mapping']]
 
-    for param in params:
+    for num, param in enumerate(params):
+        print_progress(num + 1, len(params), 'Load params')
         if isinstance(params[param], str) and 'alt_format' in specs[param]:
             absolute = os.path.join(input_dir, params[param])
             ext = params[param].split('.')[-1]

@@ -29,9 +29,9 @@ def fin_start_date(data, name):
         msg = ('start_date has to be in the format YYYY-MM-DD '
                '(e.g. 1980-01-13)')
         raise u.ValidationError(msg)
-    params['start_date'] = datetime.datetime(int(fields[0][0]),
-                                             int(fields[0][1]),
-                                             int(fields[0][2]))
+    params[name] = datetime.datetime(int(fields[0][0]),
+                                     int(fields[0][1]),
+                                     int(fields[0][2]))
 
 
 ###############################################################################
@@ -146,6 +146,30 @@ def fin_output_fac(data, name):
     """
     if data['params'][name] is None:
         data['params'][name] = 1.0
+
+
+###############################################################################
+def fin_spatial_output_date(data, name):
+    """Finalize the "spatial_output_date" parameter.
+
+    1) if in the right format, convert it to datetime object.
+    """
+    params = data['params']
+    if params[name] is None:
+        return
+    if params[name] == 'none':
+        params[name] = None
+        return
+
+    new_date = str(params['spatial_output_date'])
+    fields = re.findall(r'^(\d{4})-(\d{2})-(\d{2})$', new_date)
+    if not fields:
+        msg = ('spatial_output_date has to be in the format YYYY-MM-DD '
+               '(e.g. 1980-01-13)')
+        raise u.ValidationError(msg)
+    params[name] = datetime.datetime(int(fields[0][0]),
+                                     int(fields[0][1]),
+                                     int(fields[0][2]))
 
 
 ###############################################################################
@@ -721,6 +745,7 @@ FUNC_PARAMS = [fin_start_date,
                fin_irchcb,
                fin_nodes_per_line,
                fin_output_fac,
+               fin_spatial_output_date,
                fin_reporting_zone_mapping,
                fin_reporting_zone_names,
                fin_rainfall_zone_names,

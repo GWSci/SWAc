@@ -97,6 +97,10 @@ nodes_per_line: 5
 # This parameter is optional. If not specified, it will be set to 1.0
 output_fac: 1.0
 
+# Output data for all nodes on a single day. Has to be in format "YYYY-MM-DD".
+# Also accepts "none".
+# This parameter is optional. If not specified, it will be set to "none".
+spatial_output_date:
 
 ##############################################
 # Model parameters: Zones names and mappings #

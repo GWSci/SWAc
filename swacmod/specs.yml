@@ -78,6 +78,10 @@ output_fac:
     type:
         - !!python/name:float
 
+spatial_output_date:
+    required: false
+    type:
+        - !!python/name:datetime.datetime
 
 ##############################################
 # Model parameters: Zones names and mappings #
