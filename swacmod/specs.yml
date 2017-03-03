@@ -349,6 +349,14 @@ macropore_activation:
         - !!python/name:list
         - !!python/name:float
 
+macropore_recharge:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
 
 ###################################
 # Process: FAO: SMD-AE Accounting #

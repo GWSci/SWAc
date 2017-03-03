@@ -73,17 +73,22 @@ To **run a test version of the model without output files** (but with a log file
 
     $ python swacmod_run.py --test
 
-Finally, to simply **run the model**: navigate to ``ROOT``, then run
+Finally, to simply **run the model**: navigate to ``ROOT``, then run the main script ``swacmod_run.py``. This accepts several flags as parameters:
 
 .. code-block:: bash
 
-    $ python swacmod_run.py
+    $ python swacmod_run.py -h
 
-This will read the input files from ``input_files/`` and write the output files in ``output_files/``. In order to specify different paths for these two folders,
+    usage: swacmod_run.py [-h] [-t] [-d] [-r] [-i INPUT_YML] [-o OUTPUT_DIR]
+                      [-f {hdf5,h5,csv}] [-s]
 
-.. code-block:: bash
-
-    $ python swacmod_run.py --input_dir [PATH_TO_INPUT_DIR] --output_dir [PATH_TO_OUTPUT_DIR]
-
-
+    optional arguments:
+      -h, --help            show this help message and exit
+      -t, --test            run the whole model, but do not output any file
+      -d, --debug           verbose logging
+      -r, --reduced         output reduced format files
+      -i, --input_yml       path to input yaml file inside input directory
+      -o, --output_dir      path to output directory
+      -f, --format          output file format, choose between ``hdf5`` (or ``h5``) and ``csv``
+      -s, --skip_prompt     skip user prompts and warnings
 

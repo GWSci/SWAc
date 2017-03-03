@@ -290,6 +290,11 @@ macropore_limit: macropore_limit.yml
 # This parameter can accept a path to YAML or CSV
 macropore_activation: macropore_activation.yml
 
+# MacroPore Proportion Direct Recharge
+# This parameter is optional. If not specified, it will be set to 0.0.
+# This parameter can accept a path to YAML or CSV
+macropore_recharge: macropore_recharge.yml
+
 
 ###################################
 # Process: FAO: SMD-AE Accounting #

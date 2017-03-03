@@ -508,6 +508,22 @@ def fin_macropore_activation(data, name):
 
 
 ###############################################################################
+def fin_macropore_recharge(data, name):
+    """Finalize the "macropore_recharge" parameter.
+
+    1) if not provided, set it to 0.0.
+    """
+    params = data['params']
+    zones = data['params']['macropore_zone_names']
+    if params[name] is None:
+        params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [0.0]', name)
+
+    params['macro_rec'] = sorted(params[name].items(), key=lambda x: x[0])
+    params['macro_rec'] = np.array([i[1] for i in params['macro_rec']])
+
+
+###############################################################################
 def fin_soil_static_params(data, name):
     """Finalize the "soil_static_params" parameter.
 
@@ -771,6 +787,7 @@ FUNC_PARAMS = [fin_start_date,
                fin_macropore_proportion,
                fin_macropore_limit,
                fin_macropore_activation,
+               fin_macropore_recharge,
                fin_soil_static_params,
                fin_soil_spatial,
                fin_lu_spatial,

@@ -916,6 +916,32 @@ def val_macropore_activation(data, name):
 
 
 ###############################################################################
+def val_macropore_recharge(data, name):
+    """Validate macropore_recharge.
+
+    1) type has to be a list of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires lenght equal to the number of zones
+    4) all elements of each list have to be 0 <= x <= 1
+    """
+    mpr = data['params'][name]
+    mzn = data['params']['macropore_zone_names']
+
+    c.check_type(param=mpr,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(mzn)],
+                 keys=range(1, 13))
+
+    c.check_values_limits(values=[j for i in mpr.values() for j in i],
+                          name=name,
+                          low_l=0,
+                          high_l=1.0,
+                          include_low=True,
+                          include_high=True)
+
+
+###############################################################################
 def val_fao_process(data, name):
     """Validate fao_process.
 
@@ -1378,6 +1404,7 @@ FUNC_PARAMS = [val_run_name,
                val_macropore_proportion,
                val_macropore_limit,
                val_macropore_activation,
+               val_macropore_recharge,
                val_fao_process,
                val_fao_input,
                val_soil_static_params,
