@@ -92,3 +92,16 @@ Finally, to simply **run the model**: navigate to ``ROOT``, then run the main sc
       -f, --format          output file format, choose between ``hdf5`` (or ``h5``) and ``csv``
       -s, --skip_prompt     skip user prompts and warnings
 
+For example,
+
+.. code-block:: bash
+
+    $ python swacmod_run.py -d -r -i path_to_input/input001.yml -o path_to_output/ -f csv -s
+
+Flags can also be combined, the above is equivalent to
+
+.. code-block:: bash
+
+    $ python swacmod_run.py -drs -i path_to_input/input001.yml -o path_to_output/ -f csv
+
+
