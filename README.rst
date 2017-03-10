@@ -13,7 +13,7 @@ Installation on win32 systems (tested on Windows 7):
 
     source location: https://github.com/AlastairBlack/SWAcMod
 
-    target: C:/Users/Marco/Desktop/SWAcMod
+    target: C:/somewhere/SWAcMod
 
 - launch ``Start`` > ``All Programs`` > ``Anaconda2`` > ``Anaconda Prompt`` and install ``SWAcMod`` with
 
