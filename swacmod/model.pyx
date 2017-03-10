@@ -516,21 +516,19 @@ def get_recharge(data, output, node):
         double irs = params['recharge_attenuation_params'][node][0]
         double rlp = params['recharge_attenuation_params'][node][1]
         double rll = params['recharge_attenuation_params'][node][2]
-        double recharge = irs
-        double combined = recharge * rlp
+        double recharge
         double [:] recharge_store_input = output['recharge_store_input']
         size_t num
         double var1, var2
 
-    if params['recharge_attenuation_process'] == 'enabled':
-        col_recharge_store[0] = recharge
-        col_combined_recharge[0] = combined
-
-    for num in range(1, length):
+    for num in range(length):
         if params['recharge_attenuation_process'] == 'enabled':
-            recharge = (recharge_store_input[num - 1] +
-                        col_recharge_store[num - 1] -
-                        col_combined_recharge[num - 1])
+            if num == 0:
+                recharge = irs
+            else:
+                recharge = (recharge_store_input[num - 1] +
+                            col_recharge_store[num - 1] -
+                            col_combined_recharge[num - 1])
             col_recharge_store[num] = recharge
             var1 = recharge * rlp
             col_combined_recharge[num] = (rll if var1 > rll else var1)
