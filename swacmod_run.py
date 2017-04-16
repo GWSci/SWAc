@@ -116,6 +116,7 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
                 spatial[node] = m.aggregate(output, area, index=spatial_index)
 
     logging.info('Process %d ended', num)
+    return reporting, recharge, spatial
 
 
 ###############################################################################
@@ -165,9 +166,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             continue
         if data['params']['num_cores'] == 1:
             logging.info('Bypassing multiprocessing.')
-            run_process(num, chunk, data, test, {}, {}, log_path,
-                        level, file_format, reduced, u.CONSTANTS['OUTPUT_DIR'],
-                        {}, spatial_index)
+            reporting, recharge, spatial = run_process(num, chunk, data, test,
+                                           {}, {}, log_path, level,
+                                           file_format, reduced,
+                                           u.CONSTANTS['OUTPUT_DIR'], {},
+                                           spatial_index)
         else:
             procs[num] = Process(target=run_process,
                                  args=(num, chunk, data, test, reporting,
