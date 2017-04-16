@@ -165,9 +165,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             continue
         if data['params']['num_cores'] == 1:
             logging.info('Bypassing multiprocessing.')
-            run_process(num, chunk, data, test, reporting, recharge, log_path,
+            run_process(num, chunk, data, test, {}, {}, log_path,
                         level, file_format, reduced, u.CONSTANTS['OUTPUT_DIR'],
-                        spatial, spatial_index)
+                        {}, spatial_index)
         else:
             procs[num] = Process(target=run_process,
                                  args=(num, chunk, data, test, reporting,
