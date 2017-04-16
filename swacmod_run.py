@@ -177,7 +177,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                                        recharge, log_path, level, file_format,
                                        reduced, u.CONSTANTS['OUTPUT_DIR'],
                                        spatial, spatial_index))
-        procs[num].start()
+            procs[num].start()
 
     if data['params']['num_cores'] != 1:
         for num in procs:
