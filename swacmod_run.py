@@ -163,15 +163,22 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     for num, chunk in enumerate(chunks):
         if chunk.size == 0:
             continue
-        procs[num] = Process(target=run_process,
-                             args=(num, chunk, data, test, reporting,
-                                   recharge, log_path, level, file_format,
-                                   reduced, u.CONSTANTS['OUTPUT_DIR'],
-                                   spatial, spatial_index))
+        if data['params']['num_cores'] == 1:
+            logging.info('Bypassing multiprocessing.')
+            run_process(num, chunk, data, test, reporting, recharge, log_path,
+                        level, file_format, reduced, u.CONSTANTS['OUTPUT_DIR'],
+                        spatial, spatial_index)
+        else:
+            procs[num] = Process(target=run_process,
+                                 args=(num, chunk, data, test, reporting,
+                                       recharge, log_path, level, file_format,
+                                       reduced, u.CONSTANTS['OUTPUT_DIR'],
+                                       spatial, spatial_index))
         procs[num].start()
 
-    for num in procs:
-        procs[num].join()
+    if data['params']['num_cores'] != 1:
+        for num in procs:
+            procs[num].join()
 
     times['end_of_model'] = time.time()
 
