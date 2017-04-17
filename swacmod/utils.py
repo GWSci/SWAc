@@ -5,6 +5,7 @@
 # Standard Library
 import os
 import sys
+import struct
 import logging
 import datetime
 import subprocess as sp
@@ -234,7 +235,8 @@ def compile_model():
     mod_c = get_modified_time('swacmod/model.c')
     mod_pyx = get_modified_time('swacmod/model.pyx')
     if mod_pyx >= mod_c:
-        print 'model.pyx modified, recompiling'
+        arch = struct.calcsize('P') * 8
+        print 'model.pyx modified, recompiling for %d-bit' % arch
         proc = sp.Popen(['python', 'setup.py', 'build_ext', '--inplace'],
                         cwd=CONSTANTS['CODE_DIR'],
                         stdout=sp.PIPE,
