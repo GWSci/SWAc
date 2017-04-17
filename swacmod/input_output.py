@@ -222,7 +222,7 @@ def get_spatial_path(data, output_dir):
 
 ###############################################################################
 def dump_spatial_output(data, spatial, output_dir, reduced=False):
-    """Write recharge to file."""
+    """Write spatial output to file."""
     string = str(data['params']['spatial_output_date'].date())
     logging.info('\tDumping spatial output for %s', string)
     areas = data['params']['node_areas']
@@ -252,7 +252,7 @@ def dump_spatial_output(data, spatial, output_dir, reduced=False):
 ###############################################################################
 def dump_water_balance(data, output, file_format, output_dir, node=None,
                        zone=None, reduced=False):
-    """Write output to file."""
+    """Write report to file."""
     areas = data['params']['node_areas']
     periods = data['params']['time_periods']
 

@@ -188,17 +188,21 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     times['end_of_model'] = time.time()
 
     if not test:
-        print '\nWriting output files'
+        print '\nWriting output files:'
         if not skip:
             io.check_open_files(data, file_format, u.CONSTANTS['OUTPUT_DIR'])
         reporting = aggregate_reporting(reporting)
-        for key in reporting.keys():
+        for num, key in enumerate(reporting.keys()):
+            print '\t- Report file (%d of %d)' % (num + 1,
+                                                  len(reporting.keys()))
             io.dump_water_balance(data, reporting[key], file_format,
                                   u.CONSTANTS['OUTPUT_DIR'], zone=key,
                                   reduced=reduced)
         if data['params']['output_recharge']:
+            print '\t- Recharge file'
             io.dump_recharge_file(data, recharge)
         if data['params']['spatial_output_date']:
+            print '\t- Spatial file'
             io.dump_spatial_output(data, spatial, u.CONSTANTS['OUTPUT_DIR'],
                                    reduced=reduced)
 

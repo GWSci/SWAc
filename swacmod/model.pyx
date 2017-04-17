@@ -539,7 +539,6 @@ def get_recharge(data, output, node):
     col = {}
     col['recharge_store'] = col_recharge_store.base
     col['combined_recharge'] = col_combined_recharge.base
-
     return col
 
 
