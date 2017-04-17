@@ -198,17 +198,12 @@ def dump_recharge_file(data, recharge):
         rech_file.write('# MODFLOW-USGs Recharge Package\n')
         rech_file.write(' %d %d\n' % (nrchop, data['params']['irchcb']))
 
-        final = {}
-        for node in recharge.keys():
-            final[node] = u.aggregate_output_col(data,
-                                                 {'recharge': recharge[node]},
-                                                 'recharge', method='average')
         for num in range(len(data['params']['time_periods'])):
             rech_file.write(' %d\n' % inrech)
             rech_file.write('INTERNAL  1.000000e+000  (FREE)  -1  RECHARGE\n')
             row = []
             for node in sorted(recharge.keys()):
-                row.append(final[node][num])
+                row.append(recharge[node][num])
                 if len(row) == data['params']['nodes_per_line']:
                     rech_file.write(format_recharge_row(row))
                     row = []

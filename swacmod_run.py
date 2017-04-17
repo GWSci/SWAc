@@ -111,7 +111,9 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
                 reporting[key] = m.aggregate(output, area,
                                              reporting=reporting[key])
             if data['params']['output_recharge']:
-                recharge[node] = output['combined_recharge'].copy()
+                rech = {'recharge': output['combined_recharge'].copy()}
+                recharge[node] = u.aggregate_output_col(data, rech, 'recharge',
+                                                        method='average')
             if data['params']['spatial_output_date']:
                 spatial[node] = m.aggregate(output, area, index=spatial_index)
 
