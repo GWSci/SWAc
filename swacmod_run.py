@@ -56,7 +56,7 @@ def get_output(data, node):
                      m.get_snow,
                      m.get_net_rainfall,
                      m.get_rawrew,
-                     m.get_tawrew,
+                     m.get_tawtew,
                      m.get_ae,
                      m.get_unutilised_pe,
                      m.get_rejected_recharge,

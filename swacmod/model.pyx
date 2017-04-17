@@ -39,7 +39,7 @@ def get_pe(data, output, node):
 
 ###############################################################################
 def get_pefac(data, output, node):
-    """E) Vegitation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
+    """E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
     series, params = data['series'], data['params']
 
     fao = params['fao_process']
@@ -75,7 +75,7 @@ def get_canopy_storage(data, output, node):
 
 ###############################################################################
 def get_net_pefac(data, output, node):
-    """G) Vegitation-factored PE less Canopy Evaporation [mm/d]."""
+    """G) Vegetation-factored PE less Canopy Evaporation [mm/d]."""
     net_pefac = output['pefac'] - output['canopy_storage']
     return {'net_pefac': net_pefac}
 
@@ -182,16 +182,16 @@ def get_rawrew(data, output, node):
 
 
 ###############################################################################
-def get_tawrew(data, output, node):
-    """T) TAWREW (Total Available Water, Readily Evaporable Water)."""
+def get_tawtew(data, output, node):
+    """T) TAWTEW (Total Available Water, Readily Evaporable Water)."""
     series, params = data['series'], data['params']
 
     if params['fao_process'] == 'enabled':
-        tawrew = params['taw'][node][series['months']]
+        tawtew = params['taw'][node][series['months']]
     else:
-        tawrew = np.zeros(len(series['date']))
+        tawtew = np.zeros(len(series['date']))
 
-    return {'tawrew': tawrew}
+    return {'tawtew': tawtew}
 
 
 ###############################################################################
@@ -253,12 +253,12 @@ def get_ae(data, output, node):
         double smd = ssmd
         double var2, var5, var7, var8, var8a, var9, var10, var11, var12, var13
         double rapid_runoff_c, rapid_runoff, macropore, percol_in_root
-        double net_pefac, tawrew, rawrew
+        double net_pefac, tawtew, rawrew
         size_t num, i, var3, var4, var6
         size_t length = len(series['date'])
         double [:] net_rainfall = output['net_rainfall']
         double [:] net_pefac_a = output['net_pefac']
-        double [:] tawrew_a = output['tawrew']
+        double [:] tawtew_a = output['tawtew']
         double [:] rawrew_a = output['rawrew']
         long long [:] months = np.array(series['months'], dtype=np.int64)
 
@@ -315,13 +315,13 @@ def get_ae(data, output, node):
             smd = (p_smd if p_smd > 0 else 0.0)
             col_smd[num] = smd
             net_pefac = net_pefac_a[num]
-            tawrew = tawrew_a[num]
+            tawtew = tawtew_a[num]
             rawrew = rawrew_a[num]
 
             if percol_in_root > net_pefac:
                 var11 = -1
             else:
-                var12 = (tawrew - smd) / (tawrew - rawrew)
+                var12 = (tawtew - smd) / (tawtew - rawrew)
                 if var12 >= 1:
                     var11 = 1
                 else:
@@ -331,7 +331,7 @@ def get_ae(data, output, node):
             var13 = percol_in_root
             if smd < rawrew or percol_in_root > net_pefac:
                 var13 = net_pefac
-            elif smd >= rawrew and smd <= tawrew:
+            elif smd >= rawrew and smd <= tawtew:
                 var13 = var11 * (net_pefac - percol_in_root) + percol_in_root
             col_ae[num] = var13
 
