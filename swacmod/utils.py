@@ -237,7 +237,7 @@ def compile_model():
     if mod_pyx >= mod_c:
         arch = struct.calcsize('P') * 8
         print 'model.pyx modified, recompiling for %d-bit' % arch
-        proc = sp.Popen(['python', 'setup.py', 'build_ext', '--inplace'],
+        proc = sp.Popen([sys.executable, 'setup.py', 'build_ext', '--inplace'],
                         cwd=CONSTANTS['CODE_DIR'],
                         stdout=sp.PIPE,
                         stderr=sp.PIPE)
