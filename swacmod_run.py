@@ -19,10 +19,10 @@ import numpy as np
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
-from swacmod import model as m
 
 # Compile and import model
 u.compile_model()
+from swacmod import model as m
 
 
 class Worker():
