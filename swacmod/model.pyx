@@ -65,8 +65,10 @@ def get_canopy_storage(data, output, node):
         mcs = params['max_canopy_storage'][node]
         canopy_storage = output['rainfall_ts'] * (1 - ftf)
         canopy_storage[canopy_storage > mcs] = mcs
-        indexes = np.where(canopy_storage > output['pefac'])
-        canopy_storage[indexes] = output['pefac']
+        #indexes = np.where(canopy_storage > output['pefac'])
+        #canopy_storage[indexes] = output['pefac']
+        canopy_storage = np.where(canopy_storage > output['pefac'],
+                                  output['pefac'], canopy_storage)
     else:
         canopy_storage = np.zeros(len(series['date']))
 
@@ -153,7 +155,7 @@ def get_snow(data, output, node):
 
     col_snowmelt[0] = start_snow_pack * var6
     col_snowpack[0] = snowpack
-    for num in range(1, length):
+    for num in xrange(1, length):
         if var5[num] < 0:
             var5[num] = 0
         col_snowmelt[num] = snowpack * var5[num]
@@ -262,7 +264,7 @@ def get_ae(data, output, node):
         double [:] rawrew_a = output['rawrew']
         long long [:] months = np.array(series['months'], dtype=np.int64)
 
-    for num in range(length):
+    for num in xrange(length):
         var2 = net_rainfall[num]
 
         if params['rapid_runoff_process'] == 'enabled':
@@ -270,11 +272,11 @@ def get_ae(data, output, node):
                 rapid_runoff_c = value
             else:
                 var3 = 0
-                for i in range(len_class_ri):
+                for i in xrange(len_class_ri):
                     if class_ri[i] < var2:
                         var3 += 1
                 var4 = 0
-                for i in range(len_class_smd):
+                for i in xrange(len_class_smd):
                     if class_smd[i] < smd:
                         var4 += 1
                 rapid_runoff_c = values[var3][var4]
@@ -351,6 +353,7 @@ def get_ae(data, output, node):
     col['ae'] = col_ae.base
 
     return col
+
 
 
 ###############################################################################
@@ -464,13 +467,14 @@ def get_interflow(data, output, node):
         double recharge = (var5 if volume >= var5 else volume)
         double rivers = (volume - recharge) * var8
         size_t num
+        
 
     if params['interflow_process'] == 'enabled':
         col_interflow_volume[0] = volume
         col_infiltration_recharge[0] = recharge
         col_interflow_to_rivers[0] = rivers
 
-        for num in range(1, length):
+        for num in xrange(1, length):
             var1 = volume - (var5 if var5 < volume else volume)
             volume = interflow_store_input[num-1] + var1 * (1 - var8)
             col_interflow_volume[num] = volume
@@ -518,10 +522,11 @@ def get_recharge(data, output, node):
         double rll = params['recharge_attenuation_params'][node][2]
         double recharge
         double [:] recharge_store_input = output['recharge_store_input']
+        rep_zone = data['params']['reporting_zone_mapping'][node]
         size_t num
         double var1, var2
 
-    for num in range(length):
+    for num in xrange(length):
         if params['recharge_attenuation_process'] == 'enabled':
             if num == 0:
                 recharge = irs
@@ -565,7 +570,7 @@ def get_combined_str(data, output, node):
     if params['sw_process'] == 'enabled':
         col_combined_str[0] = rlp * base
         col_attenuation[0] = base - col_combined_str[0]
-        for num in range(1, length):
+        for num in xrange(1, length):
             base = (col_attenuation[num-1] +
                     output['interflow_to_rivers'][num] +
                     output['rapid_runoff'][num] -
@@ -625,8 +630,8 @@ def get_change(data, output, node):
     cdef:
         size_t length = len(series['date'])
         double [:] col_change = np.zeros(length)
-
-    for num in range(1, length):
+        size_t num
+    for num in xrange(1, length):
         col_change[num] = output['recharge_store'][num] - \
                           output['recharge_store'][num - 1] + \
                           output['interflow_volume'][num] - \

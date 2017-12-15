@@ -97,7 +97,7 @@ def fin_output_individual(data, name):
     final = []
     for section in sections:
         if section == 'all':
-            final = range(1, params['num_nodes'] + 1)
+            final = xrange(1, params['num_nodes'] + 1)
             break
         elif section == 'none':
             final = []

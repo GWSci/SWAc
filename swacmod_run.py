@@ -9,7 +9,9 @@ import time
 import random
 import logging
 import argparse
-from multiprocessing import Process, Manager, freeze_support
+from multiprocessing import (Process, Manager,
+                             freeze_support, Array, Queue,
+                             Value)
 
 # Third Party Libraries
 import numpy as np
@@ -17,10 +19,44 @@ import numpy as np
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
+from swacmod import model as m
 
 # Compile and import model
 u.compile_model()
-from swacmod import model as m
+
+
+class Worker():
+
+    def __init__(self, name, result_queue, process, verbose=True):
+        self.name = name
+        self.result_queue = result_queue
+        self.process = process
+        self.verbose = verbose
+
+    def start(self):
+        if self.verbose:
+            print 'starting ', self.name
+        self.process.start()
+
+    def join(self):
+        if self.verbose:
+            print 'join ', self.name
+        self.process.join()
+
+
+class Counter():
+
+    def __init__(self, initval=0):
+        self.val = Value('i', initval)
+        self.lock = self.val.get_lock()
+
+    def increment(self):
+        with self.lock:
+            self.val.value += 1
+
+    def value(self):
+        with self.lock:
+            return self.val.value
 
 
 ###############################################################################
@@ -80,43 +116,52 @@ def get_output(data, node):
         logging.debug('\t\t"%s()" done', function.__name__)
 
     end = time.time()
+
     logging.debug('\tNode %d done (%dms).', node, (end - start) * 1000)
     return output
 
 
 ###############################################################################
 def run_process(num, ids, data, test, reporting, recharge, log_path, level,
-                file_format, reduced, output_dir, spatial, spatial_index):
+                file_format, reduced, output_dir, spatial, spatial_index,
+                counter):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
-    for node in ids:
-        recharge[node] = {}
-        io.print_progress(len(recharge), data['params']['num_nodes'],
-                          'Run SWAcMod')
-        rep_zone = data['params']['reporting_zone_mapping'][node]
-        if rep_zone == 0:
-            continue
-        output = get_output(data, node)
-        logging.debug('RAM usage is %.2fMb', u.get_ram_usage_for_process())
-        if not test:
-            if node in data['params']['output_individual']:
-                io.dump_water_balance(data, output, file_format, output_dir,
-                                      node=node, reduced=reduced)
-            key = (num, rep_zone)
-            area = data['params']['node_areas'][node]
-            if key not in reporting:
-                reporting[key] = m.aggregate(output, area)
-            else:
-                reporting[key] = m.aggregate(output, area,
-                                             reporting=reporting[key])
-            if data['params']['output_recharge']:
-                rech = {'recharge': output['combined_recharge'].copy()}
-                recharge[node] = u.aggregate_output_col(data, rech, 'recharge',
-                                                        method='average')
-            if data['params']['spatial_output_date']:
-                spatial[node] = m.aggregate(output, area, index=spatial_index)
+    nnodes = data['params']['num_nodes']
 
+    for node in ids:
+        counter.increment()
+        rep_zone = data['params']['reporting_zone_mapping'][node]
+        if rep_zone != 0:
+            output = get_output(data, node)
+            logging.debug('RAM usage is %.2fMb', u.get_ram_usage_for_process())
+            if not test:
+                if node in data['params']['output_individual']:
+                    io.dump_water_balance(data, output, file_format,
+                                          output_dir, node=node,
+                                          reduced=reduced)
+                key = (num, rep_zone)
+                area = data['params']['node_areas'][node]
+                if key not in reporting:
+                    reporting[key] = m.aggregate(output, area)
+                else:
+                    reporting[key] = m.aggregate(output, area,
+                                                 reporting=reporting[key])
+                if data['params']['output_recharge']:
+                    rech = {'recharge': output['combined_recharge'].copy()}
+                    for i, p in enumerate(u.aggregate_output_col(data,
+                                                                 rech,
+                                                                 'recharge',
+                                                                 method='average')):
+                        recharge[(nnodes * i) + int(node)] = p
+                    rech = None
+                if data['params']['spatial_output_date']:
+                    spatial[node] = m.aggregate(output,
+                                                area,
+                                                index=spatial_index)
+
+        io.print_progress(counter.value(), nnodes, 'Run SWAcMod')
     logging.info('Process %d ended', num)
     return reporting, recharge, spatial
 
@@ -128,8 +173,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     manager = Manager()
     reporting = manager.dict()
-    recharge = manager.dict()
     spatial = manager.dict()
+    counter = Counter()
 
     specs_file = u.CONSTANTS['SPECS_FILE']
     if test:
@@ -150,7 +195,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS['OUTPUT_DIR'])
 
-    ids = range(1, data['params']['num_nodes'] + 1)
+    per = len(data['params']['time_periods'])
+    nnodes = data['params']['num_nodes']
+    len_rch = (nnodes * per) + 1
+    recharge = Array('f', len_rch)
+
+    ids = range(1, nnodes + 1)
     random.shuffle(ids)
     chunks = np.array_split(ids, data['params']['num_cores'])
 
@@ -162,28 +212,29 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     else:
         spatial_index = None
 
-    procs = {}
-    for num, chunk in enumerate(chunks):
+    workers = []
+
+    for process, chunk in enumerate(chunks):
+
         if chunk.size == 0:
             continue
-        if data['params']['num_cores'] == 1:
-            logging.info('Bypassing multiprocessing.')
-            reporting, recharge, spatial = run_process(num, chunk, data, test,
-                                           {}, {}, log_path, level,
-                                           file_format, reduced,
-                                           u.CONSTANTS['OUTPUT_DIR'], {},
-                                           spatial_index)
-        else:
-            procs[num] = Process(target=run_process,
-                                 args=(num, chunk, data, test, reporting,
-                                       recharge, log_path, level, file_format,
-                                       reduced, u.CONSTANTS['OUTPUT_DIR'],
-                                       spatial, spatial_index))
-            procs[num].start()
 
-    if data['params']['num_cores'] != 1:
-        for num in procs:
-            procs[num].join()
+        proc = Process(target=run_process,
+                       args=(process, chunk, data, test, reporting,
+                             recharge, log_path, level, file_format,
+                             reduced, u.CONSTANTS['OUTPUT_DIR'],
+                             spatial, spatial_index, counter))
+
+        workers.append(Worker("worker%d" % process,
+                              Queue(),
+                              proc,
+                              verbose=False))
+
+    for p in workers:
+        p.start()
+
+    for p in workers:
+        p.join()
 
     times['end_of_model'] = time.time()
 
@@ -210,7 +261,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     diff = times['end_of_run'] - times['start_of_run']
     total = io.format_time(diff)
-    per_node = int(round(diff * 1000/data['params']['num_nodes']))
+    per_node = int(round(diff * 1000 / data['params']['num_nodes']))
 
     cores = ('%d cores' % data['params']['num_cores'] if
              data['params']['num_cores'] != 1 else '1 core')

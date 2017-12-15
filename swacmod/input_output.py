@@ -103,10 +103,11 @@ def load_yaml(filein):
         return yml
 
     for key in keys:
-        if not key.islower():
-            new_key = key.lower()
-            value = yml.pop(key)
-            yml[new_key] = value
+        if isinstance(key, basestring):
+            if not key.islower():
+                new_key = key.lower()
+                value = yml.pop(key)
+                yml[new_key] = value
 
     return yml
 
@@ -193,17 +194,19 @@ def dump_recharge_file(data, recharge):
     fileout = '%s_recharge.rch' % data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
     logging.info('\tDumping recharge file')
+    nnodes = data['params']['num_nodes']
 
     with open(path, 'w') as rech_file:
         rech_file.write('# MODFLOW-USGs Recharge Package\n')
         rech_file.write(' %d %d\n' % (nrchop, data['params']['irchcb']))
-
-        for num in range(len(data['params']['time_periods'])):
+        for per in xrange(len(data['params']['time_periods'])):
             rech_file.write(' %d\n' % inrech)
             rech_file.write('INTERNAL  1.000000e+000  (FREE)  -1  RECHARGE\n')
             row = []
-            for node in sorted(recharge.keys()):
-                row.append(recharge[node][num])
+            for node in xrange(data['params']['num_nodes']):
+                rch = recharge[(nnodes * per) + node + 1]
+                row.append(rch)
+
                 if len(row) == data['params']['nodes_per_line']:
                     rech_file.write(format_recharge_row(row))
                     row = []
@@ -211,8 +214,8 @@ def dump_recharge_file(data, recharge):
                 rech_file.write(format_recharge_row(row))
 
 
-###############################################################################
 def get_spatial_path(data, output_dir):
+###############################################################################
     """Get the path of the spatial data output CSV file."""
     string = str(data['params']['spatial_output_date'].date())
     run = data['params']['run_name']

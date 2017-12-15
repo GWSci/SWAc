@@ -196,7 +196,7 @@ def build_taw_raw(params):
     """Build the TAW and RAW matrices."""
     taw, raw = {}, {}
 
-    for node in range(1, params['num_nodes'] + 1):
+    for node in xrange(1, params['num_nodes'] + 1):
         taw[node], raw[node] = [], []
         fcp = params['soil_static_params']['FC']
         wpp = params['soil_static_params']['WP']
@@ -219,7 +219,7 @@ def invert_taw_raw(param, params):
     """Invert the TAW and RAW matrices, from month by zone to node by month."""
     new_param = {}
 
-    for node in range(1, params['num_nodes'] + 1):
+    for node in xrange(1, params['num_nodes'] + 1):
         new_param[node] = []
         lus = params['lu_spatial'][node]
         for num in range(1, 13):
