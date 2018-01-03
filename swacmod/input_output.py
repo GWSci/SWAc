@@ -103,10 +103,11 @@ def load_yaml(filein):
         return yml
 
     for key in keys:
-        if not key.islower():
-            new_key = key.lower()
-            value = yml.pop(key)
-            yml[new_key] = value
+        if isinstance(key, basestring):
+            if not key.islower():
+                new_key = key.lower()
+                value = yml.pop(key)
+                yml[new_key] = values
 
     return yml
 
