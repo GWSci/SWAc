@@ -107,7 +107,11 @@ def load_yaml(filein):
             if not key.islower():
                 new_key = key.lower()
                 value = yml.pop(key)
+<<<<<<< HEAD
                 yml[new_key] = value
+=======
+                yml[new_key] = value
+>>>>>>> master
 
     return yml
 
