@@ -232,8 +232,9 @@ def invert_taw_raw(param, params):
 ###############################################################################
 def compile_model():
     """Compile Cython model."""
-    mod_c = get_modified_time('swacmod/model.c')
-    mod_pyx = get_modified_time('swacmod/model.pyx')
+    mod_c = get_modified_time(os.path.join(CONSTANTS['CODE_DIR'], 'model.c'))
+    mod_pyx = get_modified_time(os.path.join(CONSTANTS['CODE_DIR'],
+                                             'model.pyx'))
     if mod_pyx >= mod_c:
         arch = struct.calcsize('P') * 8
         print 'model.pyx modified, recompiling for %d-bit' % arch
