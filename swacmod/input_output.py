@@ -188,18 +188,36 @@ def check_open_files(data, file_format, output_dir):
 ###############################################################################
 def dump_recharge_file(data, recharge):
     """Write recharge to file."""
-    nrchop, inrech = 3, 1
+
+    nnodes = data['params']['num_nodes']
+    
+    if data['params']['recharge_node_mapping'] is None:
+        nrchop, inrech, inirch = 3, 1, 0
+    else:
+        nrchop, inrech, inirch = 2, 1, nnodes
 
     fileout = '%s_recharge.rch' % data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
     logging.info('\tDumping recharge file')
-    nnodes = data['params']['num_nodes']
 
     with open(path, 'w') as rech_file:
         rech_file.write('# MODFLOW-USGs Recharge Package\n')
         rech_file.write(' %d %d\n' % (nrchop, data['params']['irchcb']))
         for per in xrange(len(data['params']['time_periods'])):
-            rech_file.write(' %d\n' % inrech)
+            rech_file.write('%d %d\n' % (inrech, inirch))
+            inirch = -1  # no longer needed
+            if per == 0 and nrchop == 2:
+                # write irch for destination node (only for first period)
+                rech_file.write('INTERNAL  1              (FREE)  -1  IRCH\n')
+                row = []
+                for node in xrange(nnodes):
+                    row.append(data['params']['recharge_node_mapping'][node + 1])
+                    if len(row) == data['params']['nodes_per_line']:
+                        rech_file.write(' '.join(str(i[0]) for i in row) + '\n')
+                        row = []
+                if row:
+                    rech_file.write(' '.join(str(i[0]) for i in row) + '\n')
+                    
             rech_file.write('INTERNAL  1.000000e+000  (FREE)  -1  RECHARGE\n')
             row = []
             for node in xrange(data['params']['num_nodes']):

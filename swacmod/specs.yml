@@ -502,6 +502,13 @@ recharge_attenuation_params:
         - !!python/name:list
         - !!python/name:float
 
+recharge_node_mapping:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
 
 #######################
 # Process: SW Release #
