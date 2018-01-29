@@ -208,18 +208,7 @@ def dump_recharge_file(data, recharge):
         for per in xrange(len(data['params']['time_periods'])):
             rech_file.write('%d %d\n' % (inrech, inirch))
             inirch = -1  # no longer needed
-            if per == 0 and nrchop == 2:
-                # write irch for destination node (only for first period)
-                rech_file.write('INTERNAL  1              (FREE)  -1  IRCH\n')
-                row = []
-                for node in xrange(nnodes):
-                    row.append(data['params']['recharge_node_mapping'][node + 1])
-                    if len(row) == data['params']['nodes_per_line']:
-                        rech_file.write(' '.join(str(i[0]) for i in row) + '\n')
-                        row = []
-                if row:
-                    rech_file.write(' '.join(str(i[0]) for i in row) + '\n')
-                    
+
             rech_file.write('INTERNAL  1.000000e+000  (FREE)  -1  RECHARGE\n')
             row = []
             for node in xrange(data['params']['num_nodes']):
@@ -231,7 +220,18 @@ def dump_recharge_file(data, recharge):
                     row = []
             if row:
                 rech_file.write(format_recharge_row(row))
-
+            
+            if per == 0 and nrchop == 2:
+                # write irch for destination node (only for first period)
+                rech_file.write('INTERNAL  1              (FREE)  -1  IRCH\n')
+                row = []
+                for node in xrange(nnodes):
+                    row.append(data['params']['recharge_node_mapping'][node + 1])
+                    if len(row) == data['params']['nodes_per_line']:
+                        rech_file.write(' '.join(str(i[0]) for i in row) + '\n')
+                        row = []
+                if row:
+                    rech_file.write(' '.join(str(i[0]) for i in row) + '\n')
 
 def get_spatial_path(data, output_dir):
 ###############################################################################
