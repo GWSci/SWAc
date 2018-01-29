@@ -97,6 +97,11 @@ nodes_per_line: 5
 # This parameter is optional. If not specified, it will be set to 1.0
 output_fac: 1.0
 
+# Recharge layer mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+recharge_node_mapping: recharge_node_mapping.csv
+
 # Output data for all nodes on a single day. Has to be in format "YYYY-MM-DD".
 # Also accepts "none".
 # This parameter is optional. If not specified, it will be set to "none".
