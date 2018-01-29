@@ -203,6 +203,8 @@ def dump_recharge_file(data, recharge):
     with open(path, 'w') as rech_file:
         rech_file.write('# MODFLOW-USGs Recharge Package\n')
         rech_file.write(' %d %d\n' % (nrchop, data['params']['irchcb']))
+        if nrchop == 2:
+            rech_file.write('%d\n' % (nnodes))
         for per in xrange(len(data['params']['time_periods'])):
             rech_file.write('%d %d\n' % (inrech, inirch))
             inirch = -1  # no longer needed
