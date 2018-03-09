@@ -311,7 +311,7 @@ def get_ae(data, output, node):
 
         percol_in_root = (var2 - rapid_runoff - col_macropore_att[num])
         col_percol_in_root[num] = percol_in_root
-
+        
         if params['fao_process'] == 'enabled':
 
             smd = (p_smd if p_smd > 0 else 0.0)
@@ -334,9 +334,10 @@ def get_ae(data, output, node):
             if smd < rawrew or percol_in_root > net_pefac:
                 var13 = net_pefac
             elif smd >= rawrew and smd <= tawtew:
-                var13 = var11 * (net_pefac - percol_in_root) + percol_in_root
+                var13 = var11 * (net_pefac - percol_in_root)
+            else:
+                var13 = 0.0
             col_ae[num] = var13
-
             p_smd = smd + var13 - percol_in_root
             col_p_smd[num] = p_smd
 
