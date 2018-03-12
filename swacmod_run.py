@@ -5,6 +5,9 @@
 # Standard Library
 import os
 import sys
+
+sys.maxint = 2**63 - 1
+
 import time
 import random
 import logging
