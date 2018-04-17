@@ -226,7 +226,8 @@ def dump_recharge_file(data, recharge):
                 rech_file.write('INTERNAL  1              (FREE)  -1  IRCH\n')
                 row = []
                 for node in xrange(nnodes):
-                    row.append(data['params']['recharge_node_mapping'][node + 1])
+                    if data['params']['recharge_node_mapping'][node + 1] != 0:
+                        row.append(data['params']['recharge_node_mapping'][node + 1])
                     if len(row) == data['params']['nodes_per_line']:
                         rech_file.write(' '.join(str(i[0]) for i in row) + '\n')
                         row = []
