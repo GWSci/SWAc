@@ -196,7 +196,7 @@ def dump_recharge_file(data, recharge):
     else:
         inirch = sum(1 for x in
                          data['params']['recharge_node_mapping'].values()
-                         if x !=0)
+                         if x[0] !=0)
         nrchop, inrech = 2, 1
 
     fileout = '%s_recharge.rch' % data['params']['run_name']
@@ -209,8 +209,9 @@ def dump_recharge_file(data, recharge):
         if nrchop == 2:
             inrech = sum(1 for x in
                          data['params']['recharge_node_mapping'].values()
-                         if x !=0)
+                         if x[0] !=0)
             rech_file.write('%d\n' % (inrech))
+            
         for per in xrange(len(data['params']['time_periods'])):
             rech_file.write('%d %d\n' % (inrech, inirch))
             inirch = -1  # no longer needed
@@ -219,7 +220,7 @@ def dump_recharge_file(data, recharge):
             row = []
             for node in xrange(data['params']['num_nodes']):
                 if nrchop == 2:
-                    if data['params']['recharge_node_mapping'][node + 1] != 0:
+                    if data['params']['recharge_node_mapping'][node + 1] != [0]:
                         row.append(recharge[(nnodes * per) + node + 1])
                 else:
                     row.append(recharge[(nnodes * per) + node + 1])
@@ -235,7 +236,7 @@ def dump_recharge_file(data, recharge):
                 rech_file.write('INTERNAL  1              (FREE)  -1  IRCH\n')
                 row = []
                 for node in xrange(nnodes):
-                    if data['params']['recharge_node_mapping'][node + 1] != 0:
+                    if data['params']['recharge_node_mapping'][node + 1] != [0]:
                         row.append(data['params']['recharge_node_mapping'][node + 1])
                     if len(row) == data['params']['nodes_per_line']:
                         rech_file.write(' '.join(str(i[0]) for i in row) + '\n')
