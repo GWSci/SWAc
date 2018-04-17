@@ -194,7 +194,10 @@ def dump_recharge_file(data, recharge):
     if data['params']['recharge_node_mapping'] is None:
         nrchop, inrech, inirch = 3, 1, 0
     else:
-        nrchop, inrech, inirch = 2, 1, nnodes
+        inirch = sum(1 for x in
+                         data['params']['recharge_node_mapping'].values()
+                         if x !=0)
+        nrchop, inrech = 2, 1
 
     fileout = '%s_recharge.rch' % data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
@@ -204,10 +207,10 @@ def dump_recharge_file(data, recharge):
         rech_file.write('# MODFLOW-USGs Recharge Package\n')
         rech_file.write(' %d %d\n' % (nrchop, data['params']['irchcb']))
         if nrchop == 2:
-            INRECH = sum(1 for x in
+            inrech = sum(1 for x in
                          data['params']['recharge_node_mapping'].values()
                          if x !=0)
-            rech_file.write('%d\n' % (INRECH))
+            rech_file.write('%d\n' % (inrech))
         for per in xrange(len(data['params']['time_periods'])):
             rech_file.write('%d %d\n' % (inrech, inirch))
             inirch = -1  # no longer needed
