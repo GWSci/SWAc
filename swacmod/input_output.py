@@ -206,7 +206,7 @@ def dump_recharge_file(data, recharge):
         if nrchop == 2:
             INRECH = sum(1 for x in
                          data['params']['recharge_node_mapping'].values()
-                         if x ==0)
+                         if x !=0)
             rech_file.write('%d\n' % (INRECH))
         for per in xrange(len(data['params']['time_periods'])):
             rech_file.write('%d %d\n' % (inrech, inirch))
