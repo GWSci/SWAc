@@ -247,7 +247,10 @@ def dump_recharge_file(data, recharge):
 def get_spatial_path(data, output_dir):
 ###############################################################################
     """Get the path of the spatial data output CSV file."""
-    string = str(data['params']['spatial_output_date'].date())
+    if data['params']['spatial_output_date'] == 'mean':
+        string = 'mean'
+    else:
+        string = str(data['params']['spatial_output_date'].date())
     run = data['params']['run_name']
     path = os.path.join(output_dir, '%sSpatial%s.csv' % (run, string))
     return path
@@ -256,7 +259,10 @@ def get_spatial_path(data, output_dir):
 ###############################################################################
 def dump_spatial_output(data, spatial, output_dir, reduced=False):
     """Write spatial output to file."""
-    string = str(data['params']['spatial_output_date'].date())
+    if data['params']['spatial_output_date'] == 'mean':
+        string = 'mean'
+    else:
+        string = str(data['params']['spatial_output_date'].date())
     logging.info('\tDumping spatial output for %s', string)
     areas = data['params']['node_areas']
     path = get_spatial_path(data, output_dir)
@@ -281,6 +287,16 @@ def dump_spatial_output(data, spatial, output_dir, reduced=False):
                 row.insert(1, area)
                 writer.writerow(row)
 
+
+###############################################################################
+def dump_sfr_output(data, runoff):
+    """Write sfr output to file."""
+    import flopy
+    import csv
+    import numpy as np
+    import copy
+
+    return
 
 ###############################################################################
 def dump_water_balance(data, output, file_format, output_dir, node=None,
@@ -452,8 +468,14 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                     msg = 'Could not import %s: %s' % (param, err)
                     raise u.InputOutputError(msg)
                 try:
+                    # print 'ww', absolute
                     rows = [[ast.literal_eval(j) for j in row]
-                            for row in reader]
+                           for row in reader]
+                    # rows = []
+                    # for row in reader:
+                    #     print row
+                    #     rows.append([ast.literal_eval(j) for j in row])
+
                     if param.endswith('_ts') or param == 'time_periods':
                         params[param] = rows
                     else:

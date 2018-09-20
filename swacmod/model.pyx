@@ -323,7 +323,12 @@ def get_ae(data, output, node):
             if percol_in_root > net_pefac:
                 var11 = -1
             else:
-                var12 = (tawtew - smd) / (tawtew - rawrew)
+                # tmp div zero
+                if (tawtew - rawrew) == 0.0:
+                    var12 = 1.0
+                else:
+                    var12 = (tawtew - smd) / (tawtew - rawrew)
+                    
                 if var12 >= 1:
                     var11 = 1
                 else:
@@ -659,8 +664,11 @@ def get_balance(data, output, node):
 def aggregate(output, area, reporting=None, index=None):
     """Aggregate reporting."""
     new_rep = {}
+    
     for key in output:
-        if index is not None:
+        if isinstance(index, list):
+            new_rep[key] = output[key][index].mean(dtype=np.float64) * area
+        elif index is not None:
             new_rep[key] = output[key][index] * area
         else:
             new_rep[key] = output[key] * area

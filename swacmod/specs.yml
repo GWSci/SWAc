@@ -57,6 +57,11 @@ output_recharge:
     type:
         - !!python/name:bool
 
+output_sfr:
+    required: false
+    type:
+        - !!python/name:bool
+        
 output_individual:
     required: false
     type:
@@ -81,8 +86,9 @@ output_fac:
 spatial_output_date:
     required: false
     type:
-        - !!python/name:datetime.datetime
-
+        # - !!python/name:datetime.datetime
+        - !!python/name:basestring
+        
 ##############################################
 # Model parameters: Zones names and mappings #
 ##############################################
@@ -528,7 +534,26 @@ sw_params:
         - !!python/name:list
         - !!python/name:float
 
+######
+###################################
+# Model parameters: Routed Runoff #
+###################################
 
+routing_process:
+    required: false
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+routing_toplogy:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+        
 ###############
 # Time series #
 ###############

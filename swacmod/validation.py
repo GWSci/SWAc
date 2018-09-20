@@ -189,7 +189,7 @@ def val_spatial_output_date(data, name):
     1) type has to be datetime object (string is parsed in io module) or None
     """
     dat = data['params'][name]
-    if dat is None:
+    if dat is None or dat != 'mean':
         return
 
     c.check_type(param=dat, name=name, t_types=data['specs'][name]['type'])

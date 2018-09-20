@@ -125,7 +125,7 @@ def get_output(data, node):
 
 
 ###############################################################################
-def run_process(num, ids, data, test, reporting, recharge, log_path, level,
+def run_process(num, ids, data, test, reporting, recharge, runoff, log_path, level,
                 file_format, reduced, output_dir, spatial, spatial_index,
                 counter):
     """Run model for a chunk of nodes."""
@@ -159,6 +159,16 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
                                                                  method='average')):
                         recharge[(nnodes * i) + int(node)] = p
                     rech = None
+
+                if data['params']['output_sfr']:
+                    ro = {'runoff': output['combined_str'].copy()}
+                    for i, p in enumerate(u.aggregate_output_col(data,
+                                                                 ro,
+                                                                 'runoff',
+                                                                 method='average')):
+                        runoff[(nnodes * i) + int(node)] = p
+                    ro = None
+
                 if data['params']['spatial_output_date']:
                     spatial[node] = m.aggregate(output,
                                                 area,
@@ -166,7 +176,7 @@ def run_process(num, ids, data, test, reporting, recharge, log_path, level,
 
         io.print_progress(counter.value(), nnodes, 'Run SWAcMod')
     logging.info('Process %d ended', num)
-    return reporting, recharge, spatial
+    return reporting, recharge, spatial, runoff
 
 
 ###############################################################################
@@ -202,6 +212,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     nnodes = data['params']['num_nodes']
     len_rch = (nnodes * per) + 1
     recharge = Array('f', len_rch)
+    runoff = Array('f', len_rch)
 
     ids = range(1, nnodes + 1)
     random.shuffle(ids)
@@ -209,7 +220,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     times['end_of_input'] = time.time()
 
-    if data['params']['spatial_output_date'] is not None:
+    if data['params']['spatial_output_date'] == 'mean':
+        spatial_index = range(per)
+    
+    elif data['params']['spatial_output_date'] is not None:
         spatial_index = (data['params']['spatial_output_date'] -
                          data['params']['start_date']).days
     else:
@@ -224,7 +238,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
         proc = Process(target=run_process,
                        args=(process, chunk, data, test, reporting,
-                             recharge, log_path, level, file_format,
+                             recharge, runoff, log_path, level, file_format,
                              reduced, u.CONSTANTS['OUTPUT_DIR'],
                              spatial, spatial_index, counter))
 
@@ -259,7 +273,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             print '\t- Spatial file'
             io.dump_spatial_output(data, spatial, u.CONSTANTS['OUTPUT_DIR'],
                                    reduced=reduced)
-
+        if data['params']['output_sfr']:
+            print '\t- SFR file'
+            io.dump_sfr_output(data, runoff) # rech = {'recharge': output['combined_recharge'].copy()}
+            
     times['end_of_run'] = time.time()
 
     diff = times['end_of_run'] - times['start_of_run']

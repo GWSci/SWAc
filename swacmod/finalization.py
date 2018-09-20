@@ -162,14 +162,15 @@ def fin_spatial_output_date(data, name):
         return
 
     new_date = str(params['spatial_output_date'])
-    fields = re.findall(r'^(\d{4})-(\d{2})-(\d{2})$', new_date)
-    if not fields:
-        msg = ('spatial_output_date has to be in the format YYYY-MM-DD '
-               '(e.g. 1980-01-13)')
-        raise u.ValidationError(msg)
-    params[name] = datetime.datetime(int(fields[0][0]),
-                                     int(fields[0][1]),
-                                     int(fields[0][2]))
+    if new_date != 'mean':
+        fields = re.findall(r'^(\d{4})-(\d{2})-(\d{2})$', new_date)
+        if not fields:
+            msg = ('spatial_output_date has to be in the format YYYY-MM-DD '
+                   '(e.g. 1980-01-13)')
+            raise u.ValidationError(msg)
+        params[name] = datetime.datetime(int(fields[0][0]),
+                                         int(fields[0][1]),
+                                         int(fields[0][2]))
 
 
 ###############################################################################
@@ -598,6 +599,7 @@ def fin_kc(data, name):
 ###############################################################################
 def fin_taw_and_raw(data, name):
     """Finalize the "taw" and "raw" parameters."""
+
     params = data['params']
     if params['taw'] is None and params['fao_input'] == 'l':
         params['fao_input'] = 'ls'
@@ -614,7 +616,6 @@ def fin_taw_and_raw(data, name):
     elif params['fao_input'] == 'l':
         params['taw'] = u.invert_taw_raw(params['taw'], params)
         params['raw'] = u.invert_taw_raw(params['raw'], params)
-
     if params['taw'] is not None and params['raw'] is not None:
         for node in range(1, params['num_nodes'] + 1):
             params['taw'][node] = np.array(params['taw'][node]).astype(float)
@@ -814,6 +815,7 @@ def finalize_params(data):
 
     for function in FUNC_PARAMS:
         param = function.__name__.replace('fin_', '')
+        logging.debug('\t\t"%s" ww final', param)
         try:
             function(data, param)
         except Exception as err:
