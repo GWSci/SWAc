@@ -61,6 +61,16 @@ output_sfr:
     required: false
     type:
         - !!python/name:bool
+
+istcb1:
+    required: false
+    type:
+        - !!python/name:int
+
+istcb2:
+    required: false
+    type:
+        - !!python/name:int        
         
 output_individual:
     required: false

@@ -174,7 +174,8 @@ def run_process(num, ids, data, test, reporting, recharge, runoff, log_path, lev
                                                 area,
                                                 index=spatial_index)
 
-        io.print_progress(counter.value(), nnodes, 'Run SWAcMod')
+        io.print_progress(counter.value(), nnodes, 'SWAcMod Parallel   ')
+
     logging.info('Process %d ended', num)
     return reporting, recharge, spatial, runoff
 
@@ -253,6 +254,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     for p in workers:
         p.join()
 
+    sfr = m.get_sfr_file(data, runoff)
+        
     times['end_of_model'] = time.time()
 
     if not test:
@@ -275,8 +278,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                                    reduced=reduced)
         if data['params']['output_sfr']:
             print '\t- SFR file'
-            io.dump_sfr_output(data, runoff) # rech = {'recharge': output['combined_recharge'].copy()}
-            
+            io.dump_sfr_output(sfr)
+
     times['end_of_run'] = time.time()
 
     diff = times['end_of_run'] - times['start_of_run']

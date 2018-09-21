@@ -1455,3 +1455,28 @@ def validate_series(data):
         logging.debug('\t\t"%s" validated', series)
 
     logging.info('\tDone.')
+
+###############################################################################
+def val_istcb1(data, name):
+    """Validate istcb1.
+
+    1) type has to be an integer
+    """
+    x = data['params'][name]
+
+    c.check_type(param=x,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    
+###############################################################################
+def val_istcb2(data, name):
+    """Validate istcb2.
+
+    1) type has to be an integer
+    """
+    x = data['params'][name]
+
+    c.check_type(param=x,
+                 name=name,
+                 t_types=data['specs'][name]['type'])

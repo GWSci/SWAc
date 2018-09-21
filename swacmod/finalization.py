@@ -688,6 +688,86 @@ def fin_sw_params(data, name):
 
 
 ###############################################################################
+def fin_output_sfr(data, name):
+    """Finalize the "output_sfr" parameter.
+
+    1) if not provided, set "output_sfr" to "false".
+    """
+    params = data['params']
+    if params[name] is None:
+        params['output_sfr'] = 'false'
+        logging.info('\t\tSwitched "output_sfr" to "false"')
+
+
+###############################################################################
+def fin_istcb1(data, name):
+    """Finalize the "istcb1" parameter.
+
+    1) if not provided, set it to 50.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = 50
+
+
+###############################################################################
+def fin_istcb2(data, name):
+    """Finalize the "istcb2" parameter.
+
+    1) if not provided, set it to 55.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = 55
+
+
+###############################################################################
+def fin_routing_process(data, name):
+    """Finalize the "routing_process" parameter.
+
+    1) if not provided, set to "disabled".
+    """
+    params = data['params']
+    if params[name] is None:
+        params['routing_process'] = 'disabled'
+        logging.info('\t\tSwitched "routing_process" to "disabled"')
+        params['output_sfr'] = 'false'
+        logging.info('\t\tSwitched "output_sfr" to "false", missing %s',
+                     name)
+
+###############################################################################
+def fin_routing_toplogy(data, name):
+    """Finalize the "routing_toplogy" parameter.
+
+    1) if not provided, set it to all zero.
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        zeros = [0] * 3 + [0.0] * 8
+        data['params'][name] = dict((k, zeros) for k in
+                                    range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to %s', name, zeros)
+        params['output_sfr'] = 'false'
+        logging.info('\t\tSwitched "output_sfr" to "false", missing %s',
+                     name)
+        params['routing_process'] = 'disabled'
+        logging.info('\t\tSwitched "routing_process" to "disabled", missing %s',
+                     name)        
+
+
+###############################################################################
+def fin_soil_static_params(data, name):
+    """Finalize the "soil_static_params" parameter.
+
+    1) if not provided, set "fao_process" to "disabled".
+    """
+    params = data['params']
+    if params[name] is None and params['fao_process'] == 'enabled' and \
+            params['fao_input'] == 'ls':
+        params['fao_process'] = 'disabled'
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
+
+        
+###############################################################################
 def fin_date(data, name):
     """Finalize the "date" series."""
     series, params = data['series'], data['params']
@@ -799,7 +879,13 @@ FUNC_PARAMS = [fin_start_date,
                fin_subsoilzone_leakage_fraction,
                fin_interflow_params,
                fin_recharge_attenuation_params,
-               fin_sw_params]
+               fin_sw_params,
+               fin_output_sfr,
+               fin_istcb1,
+               fin_istcb2,
+               fin_routing_process,
+               fin_routing_toplogy]
+
 
 FUNC_SERIES = [fin_date,
                fin_rainfall_ts,
