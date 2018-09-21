@@ -790,8 +790,6 @@ def get_sfr_file(data, runoff):
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, hcond1,
          depth, width) = line
         
-        str_k = hcond1 = 0.0
-        
         if str_flag > 0 and node_mf > 0:
             swac_seg_dic[node_swac] = str_count + 1
             seg_swac_dic[str_count + 1] = node_swac
