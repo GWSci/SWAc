@@ -27,7 +27,7 @@ setup(
     test_suite='tests.tests.EndToEndTests',
     keywords=['water management', 'water accounting'],
     install_requires=['Cython', 'numpy', 'psutil', 'python-dateutil', 'pytz',
-                      'PyYAML', 'setuptools', 'pandas'],
+                      'PyYAML', 'setuptools', 'pandas', 'flopy'],
     classifiers=['Intended Audience :: Developers',
                  'Intended Audience :: Science/Research',
                  'Operating System :: MacOS :: MacOS X',
