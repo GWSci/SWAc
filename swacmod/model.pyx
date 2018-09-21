@@ -783,7 +783,7 @@ def get_sfr_file(data, runoff):
     swac_seg_dic = {}
     seg_swac_dic = {}
     done = np.zeros((nodes), dtype=int)
-
+    
     # initialise reach & segment data
     str_count = 0
     for node_swac, line in sorted_by_ca.items():

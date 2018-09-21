@@ -739,6 +739,7 @@ def fin_routing_toplogy(data, name):
 
     1) if not provided, set it to all zero.
     """
+    params = data['params']
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
         zeros = [0] * 3 + [0.0] * 8
