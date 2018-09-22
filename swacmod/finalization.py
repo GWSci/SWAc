@@ -696,8 +696,10 @@ def fin_output_sfr(data, name):
     params = data['params']
     if params[name] is None:
         params['output_sfr'] = 'false'
+        params['output_sfr'] = False
         logging.info('\t\tSwitched "output_sfr" to "false"')
-
+    else:
+        params['output_sfr'] = True
 
 ###############################################################################
 def fin_istcb1(data, name):
@@ -729,7 +731,7 @@ def fin_routing_process(data, name):
     if params[name] is None:
         params['routing_process'] = 'disabled'
         logging.info('\t\tSwitched "routing_process" to "disabled"')
-        params['output_sfr'] = 'false'
+        params['output_sfr'] = False
         logging.info('\t\tSwitched "output_sfr" to "false", missing %s',
                      name)
 
@@ -746,7 +748,8 @@ def fin_routing_toplogy(data, name):
         data['params'][name] = dict((k, zeros) for k in
                                     range(1, nodes + 1))
         logging.info('\t\tDefaulted "%s" to %s', name, zeros)
-        params['output_sfr'] = 'false'
+        # params['output_sfr'] = 'false'
+        params['output_sfr'] = False
         logging.info('\t\tSwitched "output_sfr" to "false", missing %s',
                      name)
         params['routing_process'] = 'disabled'
