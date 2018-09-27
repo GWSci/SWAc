@@ -695,11 +695,8 @@ def fin_output_sfr(data, name):
     """
     params = data['params']
     if params[name] is None:
-        params['output_sfr'] = 'false'
         params['output_sfr'] = False
         logging.info('\t\tSwitched "output_sfr" to "false"')
-    else:
-        params['output_sfr'] = True
 
 ###############################################################################
 def fin_istcb1(data, name):
@@ -770,7 +767,44 @@ def fin_soil_static_params(data, name):
         logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
                      name)
 
-        
+###############################################################################
+def fin_swdis_locs(data, name):
+    """Finalize the "swdis_locs" parameter.
+
+    1) if not provided, set it to all zeros.
+    """
+    params = data['params']
+    if params[name] is None:
+        data['params'][name] = {0: 0}
+
+###############################################################################
+def fin_swabs_locs(data, name):
+    """Finalize the "swabs_locs" parameter.
+
+    1) if not provided, set it to all zeros.
+    """
+    params = data['params']
+    if params[name] is None:
+        data['params'][name] = {0: 0}
+
+###############################################################################
+def fin_swdis_f(data, name):
+    """Finalize the "swdis_f" parameter.
+
+    1) if not provided, set it to 0
+    """
+    if data['params'][name] is None:
+        data['params'][name] = 0
+
+###############################################################################
+def fin_swabs_f(data, name):
+    """Finalize the "swabs_f" parameter.
+
+    1) if not provided, set it to 0
+    """
+    if data['params'][name] is None:
+        data['params'][name] = 0
+
 ###############################################################################
 def fin_date(data, name):
     """Finalize the "date" series."""
@@ -789,6 +823,19 @@ def fin_rainfall_ts(data, name):
     series = data['series']
     series[name] = np.array(series[name])
 
+###############################################################################
+def fin_swdis_ts(data, name):
+    """Finalize the "swdis_ts" series."""
+
+    series = data['series']
+    series[name] = np.array(series[name])
+
+###############################################################################
+def fin_swabs_ts(data, name):
+    """Finalize the "swabs_ts" series."""
+    
+    series = data['series']
+    series[name] = np.array(series[name])
 
 ###############################################################################
 def fin_pe_ts(data, name):
@@ -888,15 +935,20 @@ FUNC_PARAMS = [fin_start_date,
                fin_istcb1,
                fin_istcb2,
                fin_routing_process,
-               fin_routing_toplogy]
+               fin_routing_toplogy,
+               fin_swdis_locs,
+               fin_swabs_locs,
+               fin_swdis_f,
+               fin_swabs_f]
 
 
 FUNC_SERIES = [fin_date,
                fin_rainfall_ts,
                fin_pe_ts,
                fin_temperature_ts,
-               fin_subroot_leakage_ts]
-
+               fin_subroot_leakage_ts,
+               fin_swabs_ts,
+               fin_swdis_ts]
 
 ###############################################################################
 def finalize_params(data):

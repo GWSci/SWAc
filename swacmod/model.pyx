@@ -569,16 +569,23 @@ def get_combined_str(data, output, node):
         double rlp = params['sw_params'][node][1]
         double base = (params['sw_params'][node][0] +
                        output['interflow_to_rivers'][0] +
+                       output['swabs_ts'][0] +
+                       output['swdis_ts'][0] +
                        output['rapid_runoff'][0] -
                        output['runoff_recharge'][0])
         size_t num
 
     if params['sw_process'] == 'enabled':
+        # don't attenuate negative flows
+        if base < 0.0:
+            rlp = 1.0
         col_combined_str[0] = rlp * base
         col_attenuation[0] = base - col_combined_str[0]
         for num in xrange(1, length):
             base = (col_attenuation[num-1] +
                     output['interflow_to_rivers'][num] +
+                    output['swabs_ts'][num] +
+                    output['swdis_ts'][num] +
                     output['rapid_runoff'][num] -
                     output['runoff_recharge'][num] +
                     output['rejected_recharge'][num])
@@ -586,6 +593,8 @@ def get_combined_str(data, output, node):
             col_attenuation[num] = base - col_combined_str[num]
     else:
         col_combined_str = (output['interflow_to_rivers'] +
+                            output['swabs_ts'] +
+                            output['swdis_ts'] +
                             output['rapid_runoff'] -
                             output['runoff_recharge'])
 
@@ -683,6 +692,9 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro, flow
     
     ro[:] = 0.0
     flow[:] = 0.0
+
+    # units oddness - lots of hardcoded 1000s in input_output.py
+    fac = 0.001
     
     for node_swac, line in sorted_by_ca.items():
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, hcond1,
@@ -700,7 +712,7 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro, flow
             if str_flag < 1 or node_mf < 1:
                 # not not done
                 if done[node_swac] < 1:
-                    acc += (runoff[(nodes * per) + node_swac] * areas[node_swac])
+                    acc += (runoff[(nodes * per) + node_swac] * areas[node_swac]) * fac
                     done[node_swac] += 1
             else:
                 # stream cell
@@ -708,7 +720,7 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro, flow
 
                 # not done
                 if done[node_swac] < 1:
-                    ro[iseg - 1] += runoff[(nodes * per) + node_swac] * areas[node_swac]
+                    ro[iseg - 1] += (runoff[(nodes * per) + node_swac] * areas[node_swac]) * fac
                     flow[iseg - 1] += acc
                     done[node_swac] += 1
                     acc = 0.0
@@ -846,9 +858,6 @@ def get_sfr_file(data, runoff):
         # add segment data for this period
         seg_data[per] = copy.deepcopy(sd)
         done[:] = 0
-        # for iseg in xrange(nss):
-        #     sd[iseg]['runoff'] = 0.0
-        #     sd[iseg]['flow'] = 0.0
             
     isfropt = 1
     sfr = flopy.modflow.mfsfr2.ModflowSfr2(m, nstrm=nstrm, nss=nss, nsfrpar=0,
@@ -868,3 +877,77 @@ def get_sfr_file(data, runoff):
 
     return sfr
 
+
+###############################################################################
+
+def get_swdis(data, output, node):
+    """Surface water discharges"""
+
+    from swacmod.utils import monthdelta, weekdelta
+    
+    series, params = data['series'], data['params']
+    areas = data['params']['node_areas']
+    fac = 1000.0
+    freq_flag = data['params']['swdis_f']
+    dates = series['date']
+
+    swdis_ts = np.zeros(len(series['date']))
+    start_date = dates[0]
+    
+    if node in params['swdis_locs']:
+        area = areas[node]
+        zone_swdis = params['swdis_locs'][node] - 1
+
+        if freq_flag == 0:
+            # daily input just populate
+            swdis_ts = series['swdis_ts'][:, zone_swdis] / area * fac
+        elif freq_flag == 1:
+            # if weeks convert to days
+            for iday, day in enumerate(dates):
+                week = weekdelta(start_date, day)
+                swdis_ts[iday] = series['swdis_ts'][week, zone_swdis] / area * fac
+        elif freq_flag == 2:
+            # if months convert to days
+            for iday, day in enumerate(dates):    
+                month = monthdelta(start_date, day)
+                swdis_ts[iday] = series['swdis_ts'][month, zone_swdis] / area * fac
+
+    return {'swdis_ts': swdis_ts}
+
+###############################################################################
+
+def get_swabs(data, output, node):
+    """Surface water abtractions"""
+
+    from swacmod.utils import monthdelta, weekdelta
+    
+    series, params = data['series'], data['params']
+    areas = data['params']['node_areas']
+    fac = 1000.0
+    freq_flag = data['params']['swabs_f']
+    dates = series['date']
+
+    swabs_ts = np.zeros(len(series['date']))
+    start_date = dates[0]
+    
+    if node in params['swabs_locs']:
+        area = areas[node]
+        zone_swabs = params['swabs_locs'][node] - 1
+
+        if freq_flag == 0:
+            # daily input just populate
+            swabs_ts = series['swabs_ts'][:, zone_swabs] / area * fac
+            
+        elif freq_flag == 1:
+            # if weeks convert to days
+            for iday, day in enumerate(dates):
+                week = weekdelta(start_date, day)
+                swabs_ts[iday] = series['swabs_ts'][week, zone_swabs] / area * fac
+
+        elif freq_flag == 2:
+            # if months convert to days
+            for iday, day in enumerate(dates):
+                month = monthdelta(start_date, day)
+                swabs_ts[iday] = series['swabs_ts'][month, zone_swabs] / area * fac
+
+    return {'swabs_ts': swabs_ts}

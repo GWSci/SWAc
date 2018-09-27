@@ -260,6 +260,108 @@ def val_subroot_leakage_ts(data, name):
 
 
 ###############################################################################
+def val_swdis_ts(data, name):
+    """Validate swdis_ts.
+
+    1) type has to be a dictionary of lists of floats
+    2) list length has to be equal to the number of days/weeks/months
+    x number of zones
+    """
+
+    from swacmod.utils import monthdelta, weekdelta
+
+    swdists = data['series'][name]
+    swdisn = data['params']['swdis_locs']
+    dates = data['series']['date']
+
+    freq_flag = data['params']['swdis_f']
+    ndays = len(dates)
+    nweeks = weekdelta(dates[0], dates[-1]) + 1
+    nmonths = monthdelta(dates[0], dates[-1]) + 1
+
+    length = [ndays, nweeks, nmonths]
+
+    c.check_type(param=swdists,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[length[freq_flag], len(swdisn)])
+
+###############################################################################
+
+def val_swabs_ts(data, name):
+    """Validate swabs_ts.
+
+    1) type has to be a dictionary of lists of floats
+    2) list length has to be equal to the number of days/weeks/months
+    x number of zones
+    """
+
+    from swacmod.utils import monthdelta, weekdelta
+
+    swabsts = data['series'][name]
+    swabsn = data['params']['swabs_locs']
+    dates = data['series']['date']
+
+    freq_flag = data['params']['swabs_f']
+    ndays = len(dates)
+    nweeks = weekdelta(dates[0], dates[-1]) + 1
+    nmonths = monthdelta(dates[0], dates[-1]) + 1
+
+    length = [ndays, nweeks, nmonths]
+
+    c.check_type(param=swabsts,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[length[freq_flag], len(swabsn)])
+
+###############################################################################
+def val_swdis_locs(data, name):
+    """Validate swdis_locs.
+
+    1) type has to be a dictionary of integers
+    2) all swabs ids have to be present
+    3) values (i.e. swabs ids) have to be > 1 and <= number of swabs
+    """
+    swdisl = data['params'][name]
+    tot = len(data['params']['swdis_locs']) + 1
+
+    c.check_type(param=swdisl,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 keys=range(1, tot))
+
+    c.check_values_limits(values=swdisl.values(),
+                          name='zone in %s' % name,
+                          low_l=1,
+                          include_low=True,
+                          high_l=tot,
+                          include_high=True)
+
+###############################################################################
+def val_swabs_locs(data, name):
+    """Validate swabs_locs.
+
+    1) type has to be a dictionary of integers
+    2) all swabs ids have to be present
+    3) values (i.e. swabs ids) have to be > 1 and <= number of swabs
+    """
+    swabsl = data['params'][name]
+    tot = len(data['params']['swabs_locs']) + 1
+
+    c.check_type(param=swabsl,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 keys=range(1, tot))
+
+    c.check_values_limits(values=swabsl.values(),
+                          name='zone in %s' % name,
+                          low_l=1,
+                          include_low=True,
+                          high_l=tot,
+                          include_high=True)
+
+
+###############################################################################
 def val_node_areas(data, name):
     """Validate node_areas.
 
@@ -1358,7 +1460,81 @@ def val_sw_params(data, name):
                           high_l=1.0,
                           include_high=True)
 
+###############################################################################
+def val_routing_toplogy(data, name):
+    """Validate routing .
 
+    1) type has to be a dictionary of lists of floats
+    2) all node ids have to be present
+    3) values have to be lists with length 11
+    """
+    rpn = data['params'][name]
+    tot = data['params']['num_nodes']
+
+    c.check_type(param=rpn,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 keys=range(1, tot + 1),
+                 len_list=[11])
+
+###############################################################################
+def val_istcb1(data, name):
+    """Validate istcb1.
+
+    1) type has to be an integer
+    """
+    x = data['params'][name]
+
+    c.check_type(param=x,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    
+###############################################################################
+def val_istcb2(data, name):
+    """Validate istcb2.
+
+    1) type has to be an integer
+    """
+    x = data['params'][name]
+
+    c.check_type(param=x,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+###############################################################################
+def val_swdis_f(data, name):
+    """Validate swdis_f.
+
+    1) type has to be an integer
+    """
+    x = data['params'][name]
+
+    c.check_type(param=x,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[x],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+###############################################################################
+def val_swabs_f(data, name):
+    """Validate swabs_f.
+
+    1) type has to be an integer
+    """
+    x = data['params'][name]
+
+    c.check_type(param=x,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[x],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+    
 FUNC_PARAMS = [val_run_name,
                val_num_cores,
                val_num_nodes,
@@ -1423,12 +1599,22 @@ FUNC_PARAMS = [val_run_name,
                val_recharge_attenuation_process,
                val_recharge_attenuation_params,
                val_sw_process,
-               val_sw_params]
+               val_sw_params,
+               val_swdis_locs,
+               val_swabs_locs,
+               val_istcb1,
+               val_istcb2,
+               val_routing_toplogy,
+               val_swdis_f,
+               val_swabs_f]
+
 
 FUNC_SERIES = [val_rainfall_ts,
                val_pe_ts,
                val_temperature_ts,
-               val_subroot_leakage_ts]
+               val_subroot_leakage_ts,
+               val_swdis_ts,
+               val_swabs_ts]
 
 
 ###############################################################################
@@ -1456,27 +1642,3 @@ def validate_series(data):
 
     logging.info('\tDone.')
 
-###############################################################################
-def val_istcb1(data, name):
-    """Validate istcb1.
-
-    1) type has to be an integer
-    """
-    x = data['params'][name]
-
-    c.check_type(param=x,
-                 name=name,
-                 t_types=data['specs'][name]['type'])
-
-    
-###############################################################################
-def val_istcb2(data, name):
-    """Validate istcb2.
-
-    1) type has to be an integer
-    """
-    x = data['params'][name]
-
-    c.check_type(param=x,
-                 name=name,
-                 t_types=data['specs'][name]['type'])

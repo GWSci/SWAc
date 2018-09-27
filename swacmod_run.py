@@ -106,6 +106,8 @@ def get_output(data, node):
                      m.get_interflow,
                      m.get_recharge_store_input,
                      m.get_recharge,
+                     m.get_swabs,
+                     m.get_swdis,
                      m.get_combined_str,
                      m.get_combined_ae,
                      m.get_evt,
@@ -254,7 +256,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     for p in workers:
         p.join()
 
-    sfr = m.get_sfr_file(data, runoff)
+    if data['params']['output_sfr']:
+        sfr = m.get_sfr_file(data, runoff)
         
     times['end_of_model'] = time.time()
 

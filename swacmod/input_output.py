@@ -445,10 +445,11 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
     no_list = ['node_areas', 'free_throughfall', 'max_canopy_storage',
                'subsoilzone_leakage_fraction'] + \
               [i for i in params if 'zone_names' in i] + \
-              [i for i in params if 'zone_mapping' in i and i not in
+              [i for i in params if ('zone_mapping' in i
+               or '_locs' in i) and i not in
                ['rainfall_zone_mapping', 'pe_zone_mapping',
                 'subroot_zone_mapping']]
-
+    
     for num, param in enumerate(params):
         print_progress(num + 1, len(params), 'SWAcMod load params')
         if isinstance(params[param], str) and 'alt_format' in specs[param]:
@@ -463,13 +464,8 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                     msg = 'Could not import %s: %s' % (param, err)
                     raise u.InputOutputError(msg)
                 try:
-                    # print 'ww', absolute
                     rows = [[ast.literal_eval(j) for j in row]
                            for row in reader]
-                    # rows = []
-                    # for row in reader:
-                    #     print row
-                    #     rows.append([ast.literal_eval(j) for j in row])
 
                     if param.endswith('_ts') or param == 'time_periods':
                         params[param] = rows

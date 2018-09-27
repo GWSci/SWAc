@@ -599,3 +599,54 @@ subroot_leakage_ts:
         - !!python/name:list
         - !!python/name:list
         - !!python/name:float
+
+swdis_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:float
+
+swdis_locs:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
+swabs_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:float
+
+swabs_test_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:float
+
+        
+swabs_locs:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
+swdis_f:
+    required: false
+    constraints: [0, 1, 2]
+    type:
+        - !!python/name:int
+
+swabs_f:
+    required: false
+    constraints: [0, 1, 2]
+    type:
+        - !!python/name:int

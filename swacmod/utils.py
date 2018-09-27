@@ -40,9 +40,9 @@ CONSTANTS['COL_ORDER'] = [
     'rejected_recharge', 'perc_through_root', 'subroot_leak',
     'interflow_bypass', 'interflow_store_input', 'interflow_volume',
     'infiltration_recharge', 'interflow_to_rivers', 'recharge_store_input',
-    'recharge_store', 'combined_recharge', 'sw_attenuation', 'combined_str',
-    'combined_ae', 'evt', 'average_in', 'average_out', 'total_storage_change',
-    'balance'
+    'recharge_store', 'combined_recharge', 'sw_attenuation', 'swabs_ts',
+    'swdis_ts', 'combined_str', 'combined_ae', 'evt', 'average_in',
+    'average_out', 'total_storage_change', 'balance'
 ]
 
 # Header
@@ -85,6 +85,8 @@ CONSTANTS['BALANCE_CONVERSIONS'] = [
     ('RechargeStoreVol', True, False),
     ('CombinedRecharge', True, True),
     ('SWAttenuation', True, False),
+    ('SWAbstractions', False, False),
+    ('SWDischarges', False, False),
     ('CombinedSW', True, True),
     ('CombinedAE', True, True),
     ('UnitilisedPE', True, True),
@@ -248,3 +250,29 @@ def compile_model():
             print '%s' % proc.stdout.read()
             print '%s' % proc.stderr.read()
             sys.exit(proc.returncode)
+
+###############################################################################
+
+
+def monthdelta(d1, d2):
+    " difference in months between two dates"
+    
+    from calendar import monthrange
+    
+    delta = 0
+    while True:
+        mdays = monthrange(d1.year, d1.month)[1]
+        d1 += datetime.timedelta(days=mdays)
+        if d1 <= d2:
+            delta += 1
+        else:
+            break
+    return delta
+
+def weekdelta(d1, d2):
+    " difference in weeks between two dates"
+    
+    monday1 = (d1 - datetime.timedelta(days=d1.weekday()))
+    monday2 = (d2 - datetime.timedelta(days=d2.weekday()))
+
+    return (monday2 - monday1).days / 7
