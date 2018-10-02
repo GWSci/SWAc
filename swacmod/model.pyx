@@ -997,9 +997,9 @@ def get_evt_file(data, evtrate):
     evt_dic = {}
     for per in xrange(nper):
         print_progress(per + 1, nper, 'SWAcMod Serial     ')
-        for inode in ievt[:, 0]:
+        for inode in xrange(1, nodes + 1):
             evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
-        evt_dic[per] = evtr
+        evt_dic[per] = evtr.copy()
     
     evt_out = flopy.modflow.ModflowEvt(m, nevtop=nevtopt,
                                        ipakcb=ievtcb,
