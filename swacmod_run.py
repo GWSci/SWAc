@@ -127,9 +127,9 @@ def get_output(data, node):
 
 
 ###############################################################################
-def run_process(num, ids, data, test, reporting, recharge, runoff, log_path, level,
-                file_format, reduced, output_dir, spatial, spatial_index,
-                counter):
+def run_process(num, ids, data, test, reporting, recharge, runoff, evtr,
+                log_path, level, file_format, reduced, output_dir, spatial,
+                spatial_index, counter):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
@@ -171,6 +171,16 @@ def run_process(num, ids, data, test, reporting, recharge, runoff, log_path, lev
                         runoff[(nnodes * i) + int(node)] = p
                     ro = None
 
+                if data['params']['output_evt']:
+                    evt = {'evtr': output['unutilised_pe'].copy()}
+                    for i, p in enumerate(u.aggregate_output_col(data,
+                                                                 evt,
+                                                                 'evtr',
+                                                                 method='average')):
+                        evtr[(nnodes * i) + int(node)] = p
+                    evt = None
+
+                    
                 if data['params']['spatial_output_date']:
                     spatial[node] = m.aggregate(output,
                                                 area,
@@ -179,7 +189,7 @@ def run_process(num, ids, data, test, reporting, recharge, runoff, log_path, lev
         io.print_progress(counter.value(), nnodes, 'SWAcMod Parallel   ')
 
     logging.info('Process %d ended', num)
-    return reporting, recharge, spatial, runoff
+    return reporting, recharge, spatial, runoff, evtr
 
 
 ###############################################################################
@@ -216,7 +226,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     len_rch = (nnodes * per) + 1
     recharge = Array('f', len_rch)
     runoff = Array('f', len_rch)
-
+    evtr = Array('f', len_rch)
+    
     ids = range(1, nnodes + 1)
     random.shuffle(ids)
     chunks = np.array_split(ids, data['params']['num_cores'])
@@ -241,8 +252,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
         proc = Process(target=run_process,
                        args=(process, chunk, data, test, reporting,
-                             recharge, runoff, log_path, level, file_format,
-                             reduced, u.CONSTANTS['OUTPUT_DIR'],
+                             recharge, runoff, evtr, log_path, level,
+                             file_format, reduced, u.CONSTANTS['OUTPUT_DIR'],
                              spatial, spatial_index, counter))
 
         workers.append(Worker("worker%d" % process,
@@ -258,6 +269,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     if data['params']['output_sfr']:
         sfr = m.get_sfr_file(data, runoff)
+
+    if data['params']['output_evt']:
+        evt = m.get_evt_file(data, evtr)
         
     times['end_of_model'] = time.time()
 
@@ -282,6 +296,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
         if data['params']['output_sfr']:
             print '\t- SFR file'
             io.dump_sfr_output(sfr)
+        if data['params']['output_evt']:
+            print '\t- EVT file'
+            io.dump_evt_output(evt)
 
     times['end_of_run'] = time.time()
 

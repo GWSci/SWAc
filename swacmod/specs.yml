@@ -57,6 +57,29 @@ output_recharge:
     type:
         - !!python/name:bool
 
+output_evt:
+    required: false
+    type:
+        - !!python/name:bool
+
+ievtcb:
+    required: false
+    type:
+        - !!python/name:int
+
+nevtopt:
+    required: false
+    constraints: [1, 2, 3]
+    type:
+        - !!python/name:int
+
+evt_parameters:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        
 output_sfr:
     required: false
     type:

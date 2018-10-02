@@ -693,8 +693,9 @@ def fin_output_sfr(data, name):
 
     1) if not provided, set "output_sfr" to "false".
     """
+
     params = data['params']
-    if params[name] is None:
+    if params[name] is None or params[name] == None:
         params['output_sfr'] = False
         logging.info('\t\tSwitched "output_sfr" to "false"')
 
@@ -884,6 +885,51 @@ def fin_subroot_leakage_ts(data, name):
         series[name] = np.zeros([len(series['date']), zones])
         logging.info('\t\tDefaulted "%s" to 0.0', name)
 
+        
+###############################################################################
+def fin_output_evt(data, name):
+    """Finalize the "output_evt" parameter.
+
+    1) if not provided, set it to False.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = False
+
+###############################################################################
+def fin_evt_parameters(data, name):
+    """Finalize the "evt_parameters" parameter.
+
+    1) if not provided, set it to all zero.
+    """
+    params = data['params']
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        zeros = [0] + [0.0] * 2
+        data['params'][name] = dict((k, zeros) for k in
+                                    range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to %s', name, zeros)
+        params['output_evt'] = False
+        logging.info('\t\tSwitched "output_evt" to "false", missing %s',
+                     name)
+
+###############################################################################
+def fin_ievtcb(data, name):
+    """Finalize the "ievtcb" parameter.
+
+    1) if not provided, set it to 50.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = 50
+
+###############################################################################
+def fin_nevtopt(data, name):
+    """Finalize the "nevtopt" parameter.
+
+    1) if not provided, set it to 2.
+    """
+    if data['params'][name] is None:
+        data['params'][name] = 2
+
 
 FUNC_PARAMS = [fin_start_date,
                fin_run_name,
@@ -939,7 +985,11 @@ FUNC_PARAMS = [fin_start_date,
                fin_swdis_locs,
                fin_swabs_locs,
                fin_swdis_f,
-               fin_swabs_f]
+               fin_swabs_f,
+               fin_output_evt,
+               fin_evt_parameters,
+               fin_ievtcb,
+               fin_nevtopt]
 
 
 FUNC_SERIES = [fin_date,

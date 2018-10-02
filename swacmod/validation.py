@@ -271,6 +271,7 @@ def val_swdis_ts(data, name):
     from swacmod.utils import monthdelta, weekdelta
 
     swdists = data['series'][name]
+
     swdisn = data['params']['swdis_locs']
     dates = data['series']['date']
 
@@ -281,10 +282,11 @@ def val_swdis_ts(data, name):
 
     length = [ndays, nweeks, nmonths]
 
-    c.check_type(param=swdists,
-                 name=name,
-                 t_types=data['specs'][name]['type'],
-                 len_list=[length[freq_flag], len(swdisn)])
+    if swdisn != {0: 0}:
+        c.check_type(param=swdists,
+                     name=name,
+                     t_types=data['specs'][name]['type'],
+                     len_list=[length[freq_flag], len(swdisn)])
 
 ###############################################################################
 
@@ -309,10 +311,11 @@ def val_swabs_ts(data, name):
 
     length = [ndays, nweeks, nmonths]
 
-    c.check_type(param=swabsts,
-                 name=name,
-                 t_types=data['specs'][name]['type'],
-                 len_list=[length[freq_flag], len(swabsn)])
+    if swabsn != {0: 0}:
+        c.check_type(param=swabsts,
+                     name=name,
+                     t_types=data['specs'][name]['type'],
+                     len_list=[length[freq_flag], len(swabsn)])
 
 ###############################################################################
 def val_swdis_locs(data, name):
@@ -323,6 +326,7 @@ def val_swdis_locs(data, name):
     3) values (i.e. swabs ids) have to be > 1 and <= number of swabs
     """
     swdisl = data['params'][name]
+
     tot = len(data['params']['swdis_locs']) + 1
 
     c.check_type(param=swdisl,
@@ -332,7 +336,7 @@ def val_swdis_locs(data, name):
 
     c.check_values_limits(values=swdisl.values(),
                           name='zone in %s' % name,
-                          low_l=1,
+                          low_l=0,
                           include_low=True,
                           high_l=tot,
                           include_high=True)
@@ -346,6 +350,7 @@ def val_swabs_locs(data, name):
     3) values (i.e. swabs ids) have to be > 1 and <= number of swabs
     """
     swabsl = data['params'][name]
+
     tot = len(data['params']['swabs_locs']) + 1
 
     c.check_type(param=swabsl,
@@ -355,7 +360,7 @@ def val_swabs_locs(data, name):
 
     c.check_values_limits(values=swabsl.values(),
                           name='zone in %s' % name,
-                          low_l=1,
+                          low_l=0,
                           include_low=True,
                           high_l=tot,
                           include_high=True)
@@ -1534,6 +1539,64 @@ def val_swabs_f(data, name):
                           name=name,
                           constraints=data['specs'][name]['constraints'])
 
+###############################################################################
+def val_output_evt(data, name):
+    """Validate output_evt.
+
+    1) type has to be a boolean
+    """
+    opr = data['params'][name]
+
+    c.check_type(param=opr,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+###############################################################################
+def val_evt_parameters(data, name):
+    """Validate evt parameters .
+
+    1) type has to be a dictionary of lists of floats
+    2) all node ids have to be present
+    3) values have to be lists with length 3
+    """
+    rpn = data['params'][name]
+    tot = data['params']['num_nodes']
+
+    c.check_type(param=rpn,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 keys=range(1, tot + 1),
+                 len_list=[3])
+
+###############################################################################
+def val_ievtcb(data, name):
+    """Validate ievtcb.
+
+    1) type has to be an integer
+    """
+    x = data['params'][name]
+
+    c.check_type(param=x,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+###############################################################################
+def val_nevtopt(data, name):
+    """Validate nevtopt.
+
+    1) type has to be an integer 1, 2 or 3
+    """
+    x = data['params'][name]
+
+    c.check_type(param=x,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[x],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
     
 FUNC_PARAMS = [val_run_name,
                val_num_cores,
@@ -1606,7 +1669,11 @@ FUNC_PARAMS = [val_run_name,
                val_istcb2,
                val_routing_toplogy,
                val_swdis_f,
-               val_swabs_f]
+               val_swabs_f,
+               val_output_evt,
+               val_evt_parameters,
+               val_ievtcb,
+               val_nevtopt]
 
 
 FUNC_SERIES = [val_rainfall_ts,
