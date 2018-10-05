@@ -290,8 +290,10 @@ def dump_spatial_output(data, spatial, output_dir, reduced=False):
 ###############################################################################
                 
 def dump_sfr_output(sfr):
+    from swacmod.model import write_sfr
     logging.info('\tDumping SFR file')
-    sfr.write_file()
+    write_sfr(sfr)
+    # sfr.write_file()
 
 ###############################################################################
                     
