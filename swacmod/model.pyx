@@ -952,15 +952,12 @@ def write_sfr(sfr, filename=None):
             'runoff', 'etsw', 'pptsw', 'width1', 'depth1']
     
     for i in xrange(0, sfr.nper):
-        start = time.clock()
         # item 5
-        
         f_sfr.write(' '.join(map(str, sfr.dataset_5[i])) + '\n')
         # Item 6
         for j in itmpr:
             # write datasets 6a, 6b and 6c
             _write_segment_data(sfr, i, j, f_sfr, fmt1, fmt2, cols)
-        print 'done write', i, time.clock() - start
     f_sfr.close()
 
 ###############################################################################
