@@ -1480,7 +1480,7 @@ def val_routing_toplogy(data, name):
                  name=name,
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1),
-                 len_list=[11])
+                 len_list=[10])
 
 ###############################################################################
 def val_istcb1(data, name):

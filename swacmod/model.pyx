@@ -777,7 +777,8 @@ def get_sfr_file(data, runoff):
                                       key=lambda x: x[1][4]))
 
     names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
-             'bed_thk', 'str_k', 'hcond1', 'depth', 'width']
+             'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
+
 
     idx = dict((y, x) for (x, y) in enumerate(names))
     
@@ -797,7 +798,7 @@ def get_sfr_file(data, runoff):
     # initialise reach & segment data
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
-        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, hcond1,
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, # hcond1,
          depth, width) = line
         
         if str_flag > 0 and node_mf > 0:
@@ -820,7 +821,7 @@ def get_sfr_file(data, runoff):
             sd[str_count]['runoff'] = 0.0  # constant (for now - swac)
             sd[str_count]['etsw'] = 0.0 # # cotnstant (0)
             sd[str_count]['pptsw'] = 0.0 # constant (0)
-            sd[str_count]['hcond1'] = hcond1 # get from lpf
+            # sd[str_count]['hcond1'] = hcond1 # get from lpf
             sd[str_count]['thickm1'] = bed_thk # constant
             sd[str_count]['elevup'] = z # get from mf
             sd[str_count]['width1'] = width # constant
