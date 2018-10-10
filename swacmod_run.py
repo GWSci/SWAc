@@ -137,6 +137,7 @@ def run_process(num, ids, data, test, reporting, recharge, runoff, evtr,
 
     for node in ids:
         counter.increment()
+        io.print_progress(counter.value(), nnodes, 'SWAcMod Parallel   ')
         rep_zone = data['params']['reporting_zone_mapping'][node]
         if rep_zone != 0:
             output = get_output(data, node)
@@ -186,7 +187,7 @@ def run_process(num, ids, data, test, reporting, recharge, runoff, evtr,
                                                 area,
                                                 index=spatial_index)
 
-        io.print_progress(counter.value(), nnodes, 'SWAcMod Parallel   ')
+        #io.print_progress(counter.value(), nnodes, 'SWAcMod Parallel   ')
 
     logging.info('Process %d ended', num)
     return reporting, recharge, spatial, runoff, evtr

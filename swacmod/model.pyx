@@ -589,6 +589,11 @@ def get_combined_str(data, output, node):
                     output['rapid_runoff'][num] -
                     output['runoff_recharge'][num] +
                     output['rejected_recharge'][num])
+            # don't attenuate negative flows
+            if base < 0.0:
+                rlp = 1.0
+            else:
+                rlp = params['sw_params'][node][1]
             col_combined_str[num] = rlp * base
             col_attenuation[num] = base - col_combined_str[num]
     else:
