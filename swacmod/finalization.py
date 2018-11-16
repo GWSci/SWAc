@@ -742,7 +742,7 @@ def fin_routing_toplogy(data, name):
     params = data['params']
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
-        zeros = [0] * 3 + [0.0] * 8
+        zeros = [0] * 3 + [0.0] * 7
         data['params'][name] = dict((k, zeros) for k in
                                     range(1, nodes + 1))
         logging.info('\t\tDefaulted "%s" to %s', name, zeros)
