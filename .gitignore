@@ -10,3 +10,6 @@ swacmod/deploy.py
 pylint.conf
 swacmod.egg-info/
 swacmod/build/
+*.xlsb
+*.ods
+*.xlsx

@@ -175,7 +175,21 @@ def aggregate_output_col(data, output, column, method='sum'):
             final[num] = np.sum(output[column][time[0]-1:time[1]-1])
         if method == 'average':
             final[num] /= (time[1] - time[0])
+            # if column == 'recharge':
+            #     print final[num]
+    return final
 
+
+###############################################################################
+def aggregate_array(data, array, method='average'):
+    """Aggregate 1d array according to user-defined time periods."""
+    times = data['params']['time_periods']
+    final = np.zeros((len(times)), dtype=np.float64)
+
+    for num, time in enumerate(times):
+        final[num] = np.sum(array[time[0]-1:time[1]-1])
+        if method == 'average':
+            final[num] /= (time[1] - time[0])
     return final
 
 

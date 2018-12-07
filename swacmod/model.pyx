@@ -4,6 +4,7 @@
 # Third Party Libraries
 import numpy as np
 cimport numpy as np
+from collections import OrderedDict
 
 # Internal modules
 from . import utils as u
@@ -288,13 +289,7 @@ def get_ae(data, output, node):
         var6 = months[num]
 
         if params['rorecharge_process'] == 'enabled':
-            var6a = rapid_runoff - ror_act[var6][zone_ror]
-            if var6a > 0:
-                var7 = ror_prop[var6][zone_ror] * var6a
-                var8 = ror_limit[var6][zone_ror]
-                col_runoff_recharge[num] = (var8 if var7 > var8 else var7)
-            else:
-                col_runoff_recharge[num] = 0.0
+            col_runoff_recharge[num] = 0.0
 
         if params['macropore_process'] == 'enabled':
             var8a = var2 - rapid_runoff - macro_act[var6][zone_mac]
@@ -359,7 +354,6 @@ def get_ae(data, output, node):
     col['ae'] = col_ae.base
 
     return col
-
 
 
 ###############################################################################
@@ -746,7 +740,6 @@ def get_sfr_file(data, runoff):
     import csv
     import numpy as np
     import copy
-    from collections import OrderedDict
     import os.path
     from swacmod.input_output import print_progress
     
@@ -778,9 +771,9 @@ def get_sfr_file(data, runoff):
 
     m.dis = m.disu
 
-    sorted_by_ca = OrderedDict(sorted(data['params']['routing_toplogy'].items(),
+    sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
                                       key=lambda x: x[1][4]))
-
+    
     names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
              'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
 
@@ -1132,3 +1125,69 @@ def get_evt_file(data, evtrate):
                                        ievt={0: ievt})
 
     return evt_out
+
+###############################################################################
+
+def do_rorecharge(data, runoff, recharge):
+    """get EVT object."""
+    series, params = data['series'], data['params']
+    nnodes = data['params']['num_nodes']
+    cdef:
+        double [:] col_runoff_recharge = np.zeros(len(series['date']))
+        size_t length = len(series['date'])
+        double [:, :] ror_prop = params['ror_prop']
+        double [:, :] ror_limit = params['ror_limit']
+        double [:, :] ror_act = params['ror_act']
+        long long [:] months = np.array(series['months'], dtype=np.int64)
+        size_t zone_ror = params['rorecharge_zone_mapping'][1] - 1
+
+    sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
+                                      key=lambda x: x[1][4]))
+    
+    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
+             'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
+     
+    for day in xrange(length):
+        month = months[day]
+        acc_flow = get_ror_flows(sorted_by_ca, runoff, nnodes, day)
+
+        for node in xrange(1, nnodes + 1):
+            
+            ro = acc_flow[node -1]
+            if ro > 0.0:
+                zone_ror = params['rorecharge_zone_mapping'][node] - 1
+                fac_ro = ror_prop[month][zone_ror] * ro
+                lim = ror_limit[month][zone_ror]
+                if fac_ro > lim:
+                    col_runoff_recharge[day] = lim
+                    recharge[(nnodes * day) + node] += lim
+                    runoff[(nnodes * day) + node] -= lim
+                else:
+                    col_runoff_recharge[day] = fac_ro
+                    recharge[(nnodes * day) + node] += fac_ro
+                    runoff[(nnodes * day) + node] -= fac_ro
+            else:
+                col_runoff_recharge[day] = 0.0
+    return runoff, recharge
+
+###############################################################################
+def get_ror_flows(sorted_by_ca, runoff, nodes, day):
+    
+    """get total flows for RoR one day"""
+    
+    flow = np.zeros((nodes))
+    
+    for node_swac, line in sorted_by_ca.items():
+        downstr = line[0]
+
+        # accumulate  flows into network
+        while downstr > 1:
+
+            flow[node_swac - 1] += runoff[nodes * day + node_swac]
+
+            # new node
+            node_swac = downstr
+            # get new downstr node
+            downstr = sorted_by_ca[node_swac][0] #[idx['downstr']]
+
+    return flow

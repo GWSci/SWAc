@@ -734,17 +734,17 @@ def fin_routing_process(data, name):
                      name)
 
 ###############################################################################
-def fin_routing_toplogy(data, name):
-    """Finalize the "routing_toplogy" parameter.
+def fin_routing_topology(data, name):
+    """Finalize the "routing_topology" parameter.
 
     1) if not provided, set it to all zero.
     """
     params = data['params']
     if data['params'][name] is None:
         nodes = data['params']['num_nodes']
-        zeros = [0] * 3 + [0.0] * 8
+        zeros = [0] * 3 + [0.0] * 7
         data['params'][name] = dict((k, zeros) for k in
-                                    range(1, nodes + 1))
+                                    xrange(1, nodes + 1))
         logging.info('\t\tDefaulted "%s" to %s', name, zeros)
         # params['output_sfr'] = 'false'
         params['output_sfr'] = False
@@ -981,7 +981,7 @@ FUNC_PARAMS = [fin_start_date,
                fin_istcb1,
                fin_istcb2,
                fin_routing_process,
-               fin_routing_toplogy,
+               fin_routing_topology,
                fin_swdis_locs,
                fin_swabs_locs,
                fin_swdis_f,

@@ -1466,7 +1466,7 @@ def val_sw_params(data, name):
                           include_high=True)
 
 ###############################################################################
-def val_routing_toplogy(data, name):
+def val_routing_topology(data, name):
     """Validate routing .
 
     1) type has to be a dictionary of lists of floats
@@ -1667,7 +1667,7 @@ FUNC_PARAMS = [val_run_name,
                val_swabs_locs,
                val_istcb1,
                val_istcb2,
-               val_routing_toplogy,
+               val_routing_topology,
                val_swdis_f,
                val_swabs_f,
                val_output_evt,

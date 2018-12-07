@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """SWAcMod main."""
 
@@ -12,8 +12,7 @@ import time
 import random
 import logging
 import argparse
-from multiprocessing import (Process, Manager,
-                             freeze_support, Array, Queue,
+from multiprocessing import (Process, Manager, freeze_support, Array, Queue,
                              Value)
 
 # Third Party Libraries
@@ -29,7 +28,6 @@ from swacmod import model as m
 
 
 class Worker():
-
     def __init__(self, name, result_queue, process, verbose=True):
         self.name = name
         self.result_queue = result_queue
@@ -48,7 +46,6 @@ class Worker():
 
 
 class Counter():
-
     def __init__(self, initval=0):
         self.val = Value('i', initval)
         self.lock = self.val.get_lock()
@@ -84,37 +81,18 @@ def get_output(data, node):
     start = time.time()
 
     output = {}
-    for function in [m.get_precipitation,
-                     m.get_pe,
-                     m.get_pefac,
-                     m.get_canopy_storage,
-                     m.get_net_pefac,
-                     m.get_precip_to_ground,
-                     m.get_snowfall_o,
-                     m.get_rainfall_o,
-                     m.get_snow,
-                     m.get_net_rainfall,
-                     m.get_rawrew,
-                     m.get_tawtew,
-                     m.get_ae,
-                     m.get_unutilised_pe,
-                     m.get_rejected_recharge,
-                     m.get_perc_through_root,
-                     m.get_subroot_leak,
-                     m.get_interflow_bypass,
-                     m.get_interflow_store_input,
-                     m.get_interflow,
-                     m.get_recharge_store_input,
-                     m.get_recharge,
-                     m.get_swabs,
-                     m.get_swdis,
-                     m.get_combined_str,
-                     m.get_combined_ae,
-                     m.get_evt,
-                     m.get_average_in,
-                     m.get_average_out,
-                     m.get_change,
-                     m.get_balance]:
+    for function in [
+            m.get_precipitation, m.get_pe, m.get_pefac, m.get_canopy_storage,
+            m.get_net_pefac, m.get_precip_to_ground, m.get_snowfall_o,
+            m.get_rainfall_o, m.get_snow, m.get_net_rainfall, m.get_rawrew,
+            m.get_tawtew, m.get_ae, m.get_unutilised_pe,
+            m.get_rejected_recharge, m.get_perc_through_root,
+            m.get_subroot_leak, m.get_interflow_bypass,
+            m.get_interflow_store_input, m.get_interflow,
+            m.get_recharge_store_input, m.get_recharge, m.get_swabs,
+            m.get_swdis, m.get_combined_str, m.get_combined_ae, m.get_evt,
+            m.get_average_in, m.get_average_out, m.get_change, m.get_balance
+    ]:
 
         columns = function(data, output, node)
         output.update(columns)
@@ -127,9 +105,10 @@ def get_output(data, node):
 
 
 ###############################################################################
-def run_process(num, ids, data, test, reporting, recharge, runoff, evtr,
-                log_path, level, file_format, reduced, output_dir, spatial,
-                spatial_index, counter):
+def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
+                evtr_agg, recharge, runoff, log_path, level, file_format,
+                reduced, output_dir, spatial, spatial_index, counter,
+                reporting):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
@@ -144,53 +123,63 @@ def run_process(num, ids, data, test, reporting, recharge, runoff, evtr,
             logging.debug('RAM usage is %.2fMb', u.get_ram_usage_for_process())
             if not test:
                 if node in data['params']['output_individual']:
-                    io.dump_water_balance(data, output, file_format,
-                                          output_dir, node=node,
-                                          reduced=reduced)
+                    io.dump_water_balance(
+                        data,
+                        output,
+                        file_format,
+                        output_dir,
+                        node=node,
+                        reduced=reduced)
                 key = (num, rep_zone)
                 area = data['params']['node_areas'][node]
-                if key not in reporting:
-                    reporting[key] = m.aggregate(output, area)
+                if key not in reporting_agg:
+                    reporting_agg[key] = m.aggregate(output, area)
                 else:
-                    reporting[key] = m.aggregate(output, area,
-                                                 reporting=reporting[key])
+                    reporting_agg[key] = m.aggregate(
+                        output, area, reporting=reporting_agg[key])
+
                 if data['params']['output_recharge']:
                     rech = {'recharge': output['combined_recharge'].copy()}
-                    for i, p in enumerate(u.aggregate_output_col(data,
-                                                                 rech,
-                                                                 'recharge',
-                                                                 method='average')):
+                    for i, p in enumerate(
+                            u.aggregate_output_col(
+                                data, rech, 'recharge', method='average')):
+                        recharge_agg[(nnodes * i) + int(node)] = p
+                    rech = None
+
+                if data['params']['rorecharge_process'] == 'enabled':
+
+                    rech = output['combined_recharge'].copy()
+                    for i, p in enumerate(rech):
                         recharge[(nnodes * i) + int(node)] = p
                     rech = None
 
+                    ro = output['combined_str'].copy()
+                    for i, p in enumerate(ro):
+                        runoff[(nnodes * i) + int(node)] = p
+                    ro = None
+
                 if data['params']['output_sfr']:
                     ro = {'runoff': output['combined_str'].copy()}
-                    for i, p in enumerate(u.aggregate_output_col(data,
-                                                                 ro,
-                                                                 'runoff',
-                                                                 method='average')):
-                        runoff[(nnodes * i) + int(node)] = p
+                    for i, p in enumerate(
+                            u.aggregate_output_col(
+                                data, ro, 'runoff', method='average')):
+                        runoff_agg[(nnodes * i) + int(node)] = p
                     ro = None
 
                 if data['params']['output_evt']:
                     evt = {'evtr': output['unutilised_pe'].copy()}
-                    for i, p in enumerate(u.aggregate_output_col(data,
-                                                                 evt,
-                                                                 'evtr',
-                                                                 method='average')):
-                        evtr[(nnodes * i) + int(node)] = p
+                    for i, p in enumerate(
+                            u.aggregate_output_col(
+                                data, evt, 'evtr', method='average')):
+                        evtr_agg[(nnodes * i) + int(node)] = p
                     evt = None
 
-                    
                 if data['params']['spatial_output_date']:
-                    spatial[node] = m.aggregate(output,
-                                                area,
-                                                index=spatial_index)
-
-        #io.print_progress(counter.value(), nnodes, 'SWAcMod Parallel   ')
+                    spatial[node] = m.aggregate(
+                        output, area, index=spatial_index)
 
     logging.info('Process %d ended', num)
-    return reporting, recharge, spatial, runoff, evtr
+    return reporting_agg, recharge_agg, spatial, runoff_agg, evtr_agg, recharge, runoff, reporting
 
 
 ###############################################################################
@@ -199,6 +188,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     times = {'start_of_run': time.time()}
 
     manager = Manager()
+    reporting_agg = manager.dict()
+    reporting_agg2 = {}
     reporting = manager.dict()
     spatial = manager.dict()
     counter = Counter()
@@ -224,11 +215,17 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     per = len(data['params']['time_periods'])
     nnodes = data['params']['num_nodes']
-    len_rch = (nnodes * per) + 1
+    len_rch_agg = (nnodes * per) + 1
+    recharge_agg = Array('f', len_rch_agg) # recharge by output period (agg)
+    # recharge_agg = np.zeros((len_rch_agg))
+    runoff_agg = Array('f', len_rch_agg)
+    # runoff_agg = np.zeros((len_rch_agg))
+    runoff_recharge_agg = np.zeros((len_rch_agg))
+    evtr_agg = Array('f', len_rch_agg)
+    days = len(data['series']['date'])
+    len_rch = (nnodes * days) + 1
     recharge = Array('f', len_rch)
     runoff = Array('f', len_rch)
-    evtr = Array('f', len_rch)
-    
     ids = range(1, nnodes + 1)
     random.shuffle(ids)
     chunks = np.array_split(ids, data['params']['num_cores'])
@@ -237,7 +234,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     if data['params']['spatial_output_date'] == 'mean':
         spatial_index = range(per)
-    
+
     elif data['params']['spatial_output_date'] is not None:
         spatial_index = (data['params']['spatial_output_date'] -
                          data['params']['start_date']).days
@@ -251,16 +248,15 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
         if chunk.size == 0:
             continue
 
-        proc = Process(target=run_process,
-                       args=(process, chunk, data, test, reporting,
-                             recharge, runoff, evtr, log_path, level,
-                             file_format, reduced, u.CONSTANTS['OUTPUT_DIR'],
-                             spatial, spatial_index, counter))
+        proc = Process(
+            target=run_process,
+            args=(process, chunk, data, test, reporting_agg, recharge_agg,
+                  runoff_agg, evtr_agg, recharge, runoff, log_path, level,
+                  file_format, reduced, u.CONSTANTS['OUTPUT_DIR'], spatial,
+                  spatial_index, counter, reporting))
 
-        workers.append(Worker("worker%d" % process,
-                              Queue(),
-                              proc,
-                              verbose=False))
+        workers.append(
+            Worker("worker%d" % process, Queue(), proc, verbose=False))
 
     for p in workers:
         p.start()
@@ -268,32 +264,117 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     for p in workers:
         p.join()
 
-    if data['params']['output_sfr']:
-        sfr = m.get_sfr_file(data, runoff)
-
-    if data['params']['output_evt']:
-        evt = m.get_evt_file(data, evtr)
-        
     times['end_of_model'] = time.time()
 
     if not test:
+
+        # aggregate over processes
+        reporting_agg = aggregate_reporting(reporting_agg)
+
+        if params['rorecharge_process'] == 'enabled':
+
+            for cat in data['params']['reporting_zone_mapping'].values():
+                reporting_agg2[cat] = {}
+
+            # ended up needing this for catchment output - bit silly
+            runoff_recharge = np.copy(np.array(runoff))
+            # do RoR
+            runoff, recharge = m.do_rorecharge(data, runoff, recharge)
+            # get RoR for cat output purposes
+            runoff_recharge -= np.array(runoff)
+
+            # aggregate amended recharge & runoff arrays by output periods
+            for node in xrange(1, nnodes + 1):
+                # get indices of single node output
+                idx = range(node, (nnodes * days) + 1, nnodes)
+                rch_array = np.array(recharge, dtype=np.float64)[idx]
+                ro_array = np.array(runoff, dtype=np.float64)[idx]
+                ror_array = np.array(runoff_recharge, dtype=np.float64)[idx]
+
+                # aggregate single node of recharge array
+                rch_agg = u.aggregate_array(data, rch_array)
+                # aggregate single node of runoff array
+                ro_agg = u.aggregate_array(data, ro_array)
+                # aggregate single node of runoff rech array
+                ror_agg = u.aggregate_array(data, ror_array)
+
+                for period, val in enumerate(rch_agg):
+                    recharge_agg[(nnodes * period) + int(node)] = val
+                for period, val in enumerate(ro_agg):
+                    runoff_agg[(nnodes * period) + int(node)] = val
+                for period, val in enumerate(ror_agg):
+                    runoff_recharge_agg[(nnodes * period) + int(node)] = val
+
+                # amend catchment output values
+                rep_zone = data['params']['reporting_zone_mapping'][node]
+                area = data['params']['node_areas'][node]
+                rech = {'combined_recharge': rch_array}
+                sw = {'combined_str': ro_array}
+                ror = {'runoff_recharge': ror_array}
+
+                if 'combined_recharge' not in reporting_agg2[rep_zone]:
+                    reporting_agg2[rep_zone][
+                        'combined_recharge'] = m.aggregate(rech, area)
+                else:
+                    reporting_agg2[rep_zone][
+                        'combined_recharge'] = m.aggregate(
+                            rech,
+                            area,
+                            reporting=reporting_agg2[rep_zone]
+                            ['combined_recharge'])
+
+                if 'combined_str' not in reporting_agg2[rep_zone]:
+                    reporting_agg2[rep_zone]['combined_str'] = m.aggregate(
+                        sw, area)
+                else:
+                    reporting_agg2[rep_zone]['combined_str'] = m.aggregate(
+                        sw,
+                        area,
+                        reporting=reporting_agg2[rep_zone]['combined_str'])
+
+                if 'runoff_recharge' not in reporting_agg2[rep_zone]:
+                    reporting_agg2[rep_zone]['runoff_recharge'] = m.aggregate(
+                        ror, area)
+                else:
+                    reporting_agg2[rep_zone]['runoff_recharge'] = m.aggregate(
+                        ror,
+                        area,
+                        reporting=reporting_agg2[rep_zone]['runoff_recharge'])
+
+            # copy new bits into cat output
+            for cat in reporting_agg2:
+                for term in reporting_agg2[cat]:
+                    reporting_agg[cat][term] = reporting_agg2[cat][term][term]
+
+        if data['params']['output_sfr']:
+            # copy array into this fn to avoid unit conversion
+            sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
+
+        if data['params']['output_evt']:
+            evt = m.get_evt_file(data, evtr_agg)
+
         print '\nWriting output files:'
         if not skip:
             io.check_open_files(data, file_format, u.CONSTANTS['OUTPUT_DIR'])
-        reporting = aggregate_reporting(reporting)
-        for num, key in enumerate(reporting.keys()):
+
+        for num, key in enumerate(reporting_agg.keys()):
             print '\t- Report file (%d of %d)' % (num + 1,
-                                                  len(reporting.keys()))
-            io.dump_water_balance(data, reporting[key], file_format,
-                                  u.CONSTANTS['OUTPUT_DIR'], zone=key,
-                                  reduced=reduced)
+                                                  len(reporting_agg.keys()))
+            io.dump_water_balance(
+                data,
+                reporting_agg[key],
+                file_format,
+                u.CONSTANTS['OUTPUT_DIR'],
+                zone=key,
+                reduced=reduced)
+
         if data['params']['output_recharge']:
             print '\t- Recharge file'
-            io.dump_recharge_file(data, recharge)
+            io.dump_recharge_file(data, recharge_agg)
         if data['params']['spatial_output_date']:
             print '\t- Spatial file'
-            io.dump_spatial_output(data, spatial, u.CONSTANTS['OUTPUT_DIR'],
-                                   reduced=reduced)
+            io.dump_spatial_output(
+                data, spatial, u.CONSTANTS['OUTPUT_DIR'], reduced=reduced)
         if data['params']['output_sfr']:
             print '\t- SFR file'
             io.dump_sfr_output(sfr)
@@ -307,8 +388,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     total = io.format_time(diff)
     per_node = int(round(diff * 1000 / data['params']['num_nodes']))
 
-    cores = ('%d cores' % data['params']['num_cores'] if
-             data['params']['num_cores'] != 1 else '1 core')
+    cores = ('%d cores' % data['params']['num_cores']
+             if data['params']['num_cores'] != 1 else '1 core')
 
     print '\nPerformance (%s)' % cores
     print 'Input time:  %s' % io.format_time(times['end_of_input'] -
@@ -334,39 +415,34 @@ if __name__ == "__main__":
     FORM = argparse.RawTextHelpFormatter
 
     PARSER = argparse.ArgumentParser(description=DESCRIPTION)
-    PARSER.add_argument('-t',
-                        '--test',
-                        help='run with no output',
-                        action='store_true')
-    PARSER.add_argument('-d',
-                        '--debug',
-                        help='verbose log',
-                        action='store_true')
-    PARSER.add_argument('-r',
-                        '--reduced',
-                        help='reduced output',
-                        action='store_true')
-    PARSER.add_argument('-i',
-                        '--input_yml',
-                        help='path to input yaml file inside input directory')
-    PARSER.add_argument('-o',
-                        '--output_dir',
-                        help='path to output directory')
-    PARSER.add_argument('-f',
-                        '--format',
-                        help='output file format',
-                        choices=['hdf5', 'h5', 'csv'],
-                        default='csv')
-    PARSER.add_argument('-s',
-                        '--skip_prompt',
-                        help='skip user prompts and warnings',
-                        action='store_true')
+    PARSER.add_argument(
+        '-t', '--test', help='run with no output', action='store_true')
+    PARSER.add_argument(
+        '-d', '--debug', help='verbose log', action='store_true')
+    PARSER.add_argument(
+        '-r', '--reduced', help='reduced output', action='store_true')
+    PARSER.add_argument(
+        '-i',
+        '--input_yml',
+        help='path to input yaml file inside input directory')
+    PARSER.add_argument('-o', '--output_dir', help='path to output directory')
+    PARSER.add_argument(
+        '-f',
+        '--format',
+        help='output file format',
+        choices=['hdf5', 'h5', 'csv'],
+        default='csv')
+    PARSER.add_argument(
+        '-s',
+        '--skip_prompt',
+        help='skip user prompts and warnings',
+        action='store_true')
 
     ARGS = PARSER.parse_args()
     if ARGS.input_yml:
         if not ARGS.input_yml.endswith('.yml'):
-            print ('\nError: use "-i" or "--input_yml" to specify the path '
-                   'to "input.yml"\n')
+            print('\nError: use "-i" or "--input_yml" to specify the path '
+                  'to "input.yml"\n')
             sys.exit()
         u.CONSTANTS['INPUT_FILE'] = ARGS.input_yml
         u.CONSTANTS['INPUT_DIR'] = os.path.dirname(ARGS.input_yml)
@@ -376,12 +452,18 @@ if __name__ == "__main__":
         os.makedirs(u.CONSTANTS['OUTPUT_DIR'])
 
     if ARGS.debug:
-        run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format,
-            reduced=ARGS.reduced, skip=ARGS.skip_prompt)
+        run(test=ARGS.test,
+            debug=ARGS.debug,
+            file_format=ARGS.format,
+            reduced=ARGS.reduced,
+            skip=ARGS.skip_prompt)
     else:
         try:
-            run(test=ARGS.test, debug=ARGS.debug, file_format=ARGS.format,
-                reduced=ARGS.reduced, skip=ARGS.skip_prompt)
+            run(test=ARGS.test,
+                debug=ARGS.debug,
+                file_format=ARGS.format,
+                reduced=ARGS.reduced,
+                skip=ARGS.skip_prompt)
         except Exception as err:
             logging.error(err.__repr__())
             print 'ERROR: %s' % err

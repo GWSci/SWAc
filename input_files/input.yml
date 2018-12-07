@@ -69,7 +69,7 @@ time_periods: time_periods.yml
 # This parameter is optional.
 # If not specified, all cores will be used
 # If negative, all cores - abs(num_cores) will be used
-num_cores: 2
+num_cores: 3
 
 # Output recharge file switch
 # Can be either true or false
@@ -248,7 +248,7 @@ rapid_runoff_params: rapid_runoff_params.yml
 
 # Runoff Recharge process: can be either "enabled" or "disabled"
 # This parameter is required
-rorecharge_process: enabled
+rorecharge_process: disabled
 
 # Runoff Recharge Proportion of RO
 # This parameter is optional
@@ -445,7 +445,7 @@ routing_process: enabled
 #  8 STRHC1 - the modflow SFR variable STRHC1
 #  9 DEPTH2 - the modflow SFR variable DEPTH2
 #  10 WIDTH2 - the modflow SFR variable WIDTH2
-routing_toplogy: routing_parameters.csv
+routing_topology: routing_parameters.csv
 
 # Output modflow sfr2 file switch
 # Can be either true or false

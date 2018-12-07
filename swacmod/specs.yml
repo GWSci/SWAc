@@ -578,7 +578,7 @@ routing_process:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
-routing_toplogy:
+routing_topology:
     required: false
     alt_format: [yml, csv]
     type:
