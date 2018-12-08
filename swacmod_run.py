@@ -108,12 +108,12 @@ def get_output(data, node):
 def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
                 evtr_agg, recharge, runoff, log_path, level, file_format,
                 reduced, output_dir, spatial, spatial_index, counter,
-                reporting):
+                reporting, single_node_output, node):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
     nnodes = data['params']['num_nodes']
-
+    
     for node in ids:
         counter.increment()
         io.print_progress(counter.value(), nnodes, 'SWAcMod Parallel   ')
@@ -122,14 +122,15 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
             output = get_output(data, node)
             logging.debug('RAM usage is %.2fMb', u.get_ram_usage_for_process())
             if not test:
-                if node in data['params']['output_individual']:
-                    io.dump_water_balance(
-                        data,
-                        output,
-                        file_format,
-                        output_dir,
-                        node=node,
-                        reduced=reduced)
+                # if node in data['params']['output_individual']:
+                #     single_node_output = output.copy()
+                #     io.dump_water_balance(
+                #         data,
+                #         output,
+                #         file_format,
+                #         output_dir,
+                #         node=node,
+                #         reduced=reduced)
                 key = (num, rep_zone)
                 area = data['params']['node_areas'][node]
                 if key not in reporting_agg:
@@ -179,7 +180,7 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
                         output, area, index=spatial_index)
 
     logging.info('Process %d ended', num)
-    return reporting_agg, recharge_agg, spatial, runoff_agg, evtr_agg, recharge, runoff, reporting
+    return reporting_agg, recharge_agg, spatial, runoff_agg, evtr_agg, recharge, runoff, reporting, single_node_output
 
 
 ###############################################################################
@@ -253,7 +254,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             args=(process, chunk, data, test, reporting_agg, recharge_agg,
                   runoff_agg, evtr_agg, recharge, runoff, log_path, level,
                   file_format, reduced, u.CONSTANTS['OUTPUT_DIR'], spatial,
-                  spatial_index, counter, reporting))
+                  spatial_index, counter, reporting, single_node_output, node))
 
         workers.append(
             Worker("worker%d" % process, Queue(), proc, verbose=False))
@@ -368,6 +369,16 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 zone=key,
                 reduced=reduced)
 
+            if single_node_output is not None:
+                io.dump_water_balance(
+                    data,
+                    single_node_output,
+                    file_format,
+                    output_dir,
+                    node=node,
+                    reduced=reduced)
+
+            
         if data['params']['output_recharge']:
             print '\t- Recharge file'
             io.dump_recharge_file(data, recharge_agg)
