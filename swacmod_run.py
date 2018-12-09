@@ -108,7 +108,7 @@ def get_output(data, node):
 def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
                 evtr_agg, recharge, runoff, log_path, level, file_format,
                 reduced, output_dir, spatial, spatial_index, counter,
-                reporting, single_node_output, node):
+                reporting, single_node_output):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
@@ -122,15 +122,9 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
             output = get_output(data, node)
             logging.debug('RAM usage is %.2fMb', u.get_ram_usage_for_process())
             if not test:
-                # if node in data['params']['output_individual']:
-                #     single_node_output = output.copy()
-                #     io.dump_water_balance(
-                #         data,
-                #         output,
-                #         file_format,
-                #         output_dir,
-                #         node=node,
-                #         reduced=reduced)
+                if node in data['params']['output_individual']:
+                    # if this node for individual output then preserve
+                    single_node_output[node] = output.copy()
                 key = (num, rep_zone)
                 area = data['params']['node_areas'][node]
                 if key not in reporting_agg:
@@ -194,7 +188,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     reporting = manager.dict()
     spatial = manager.dict()
     counter = Counter()
-
+    single_node_output = manager.dict()
     specs_file = u.CONSTANTS['SPECS_FILE']
     if test:
         input_file = u.CONSTANTS['TEST_INPUT_FILE']
@@ -254,7 +248,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             args=(process, chunk, data, test, reporting_agg, recharge_agg,
                   runoff_agg, evtr_agg, recharge, runoff, log_path, level,
                   file_format, reduced, u.CONSTANTS['OUTPUT_DIR'], spatial,
-                  spatial_index, counter, reporting, single_node_output, node))
+                  spatial_index, counter, reporting, single_node_output))
 
         workers.append(
             Worker("worker%d" % process, Queue(), proc, verbose=False))
@@ -286,12 +280,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
             # aggregate amended recharge & runoff arrays by output periods
             for node in xrange(1, nnodes + 1):
-                # get indices of single node output
+                # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
                 rch_array = np.array(recharge, dtype=np.float64)[idx]
                 ro_array = np.array(runoff, dtype=np.float64)[idx]
-                ror_array = np.array(runoff_recharge, dtype=np.float64)[idx]
-
+                ror_array = np.array(runoff_recharge, dtype=np.float64)[idx]    
                 # aggregate single node of recharge array
                 rch_agg = u.aggregate_array(data, rch_array)
                 # aggregate single node of runoff array
@@ -342,6 +335,13 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                         area,
                         reporting=reporting_agg2[rep_zone]['runoff_recharge'])
 
+                # check for single node
+                if node in data['params']['output_individual']:
+                    # amend single_node_output with ror values
+                    single_node_output[node]['runoff_recharge'] = ror_array
+                    single_node_output[node]['combined_recharge'] = rch_array
+                    single_node_output[node]['combined_str'] = ro_array
+                    
             # copy new bits into cat output
             for cat in reporting_agg2:
                 for term in reporting_agg2[cat]:
@@ -369,16 +369,15 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 zone=key,
                 reduced=reduced)
 
-            if single_node_output is not None:
-                io.dump_water_balance(
-                    data,
-                    single_node_output,
-                    file_format,
-                    output_dir,
-                    node=node,
-                    reduced=reduced)
+        for node in list(data['params']['output_individual']):
+            io.dump_water_balance(
+                data,
+                single_node_output[node],
+                file_format,
+                u.CONSTANTS['OUTPUT_DIR'],
+                node=node,
+                reduced=reduced)
 
-            
         if data['params']['output_recharge']:
             print '\t- Recharge file'
             io.dump_recharge_file(data, recharge_agg)

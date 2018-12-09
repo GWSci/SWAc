@@ -248,7 +248,7 @@ rapid_runoff_params: rapid_runoff_params.yml
 
 # Runoff Recharge process: can be either "enabled" or "disabled"
 # This parameter is required
-rorecharge_process: disabled
+rorecharge_process: enabled
 
 # Runoff Recharge Proportion of RO
 # This parameter is optional
