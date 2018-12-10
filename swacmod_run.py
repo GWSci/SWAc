@@ -113,7 +113,7 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
     io.start_logging(path=log_path, level=level)
     logging.info('Process %d started (%d nodes)', num, len(ids))
     nnodes = data['params']['num_nodes']
-    
+
     for node in ids:
         counter.increment()
         io.print_progress(counter.value(), nnodes, 'SWAcMod Parallel   ')
@@ -174,7 +174,8 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
                         output, area, index=spatial_index)
 
     logging.info('Process %d ended', num)
-    return reporting_agg, recharge_agg, spatial, runoff_agg, evtr_agg, recharge, runoff, reporting, single_node_output
+    return (reporting_agg, recharge_agg, spatial, runoff_agg, evtr_agg,
+            recharge, runoff, reporting, single_node_output)
 
 
 ###############################################################################
@@ -211,10 +212,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     per = len(data['params']['time_periods'])
     nnodes = data['params']['num_nodes']
     len_rch_agg = (nnodes * per) + 1
-    recharge_agg = Array('f', len_rch_agg) # recharge by output period (agg)
-    # recharge_agg = np.zeros((len_rch_agg))
+    recharge_agg = Array('f', len_rch_agg)  # recharge by output period (agg)
     runoff_agg = Array('f', len_rch_agg)
-    # runoff_agg = np.zeros((len_rch_agg))
     runoff_recharge_agg = np.zeros((len_rch_agg))
     evtr_agg = Array('f', len_rch_agg)
     days = len(data['series']['date'])
@@ -284,7 +283,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 idx = range(node, (nnodes * days) + 1, nnodes)
                 rch_array = np.array(recharge, dtype=np.float64)[idx]
                 ro_array = np.array(runoff, dtype=np.float64)[idx]
-                ror_array = np.array(runoff_recharge, dtype=np.float64)[idx]    
+                ror_array = np.array(runoff_recharge, dtype=np.float64)[idx]
                 # aggregate single node of recharge array
                 rch_agg = u.aggregate_array(data, rch_array)
                 # aggregate single node of runoff array
@@ -341,7 +340,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                     single_node_output[node]['runoff_recharge'] = ror_array
                     single_node_output[node]['combined_recharge'] = rch_array
                     single_node_output[node]['combined_str'] = ro_array
-                    
+
             # copy new bits into cat output
             for cat in reporting_agg2:
                 for term in reporting_agg2[cat]:
@@ -370,6 +369,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 reduced=reduced)
 
         for node in list(data['params']['output_individual']):
+            print '\t- Node output file'
             io.dump_water_balance(
                 data,
                 single_node_output[node],
