@@ -12,9 +12,15 @@ import numpy as np
 # Internal modules
 from . import utils as u
 
+
+try:
+  basestring
+except NameError:
+  basestring = str
+
 MAPPING = {
-    (int, long): ["an integer", "integers"],
-    (float, int, long): ["a number", "numbers"],
+    (int, int): ["an integer", "integers"],
+    (float, int, int): ["a number", "numbers"],
     str: ["a string", "strings"],
     basestring: ["a string", "strings"],
     dict: ["a dictionary", "dictionaries"],
@@ -30,9 +36,9 @@ MAPPING = {
 def expand_t_type(t_type):
     """Expand t_type to all allowed types."""
     if t_type == float:
-        t_type = (float, int, long)
+        t_type = (float, int, int)
     elif t_type == int:
-        t_type = (int, long)
+        t_type = (int, int)
     elif t_type == list:
         t_type = (list, np.ndarray)
 
@@ -101,7 +107,7 @@ def check_values_limits(
     high_l=None,
     include_low=False,
     include_high=False,
-    constraints=None,
+    constraints=None
 ):
     """Check the values are all within two limits."""
     if low_l is not None:

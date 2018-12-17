@@ -14,7 +14,7 @@ except ImportError:
 import numpy
 from Cython.Build import cythonize
 
-EXTENSIONS = [Extension("model", ["model.pyx"], extra_compile_args=["-w"])]
+EXTENSIONS = [Extension("model", ["cymodel.pyx"], extra_compile_args=["-w"])]
 
 setup(
     include_dirs=[numpy.get_include()],

@@ -27,6 +27,12 @@ from . import validation as v
 from . import finalization as f
 
 
+try:
+  basestring
+except NameError:
+  basestring = str
+
+
 ###############################################################################
 def start_logging(level=logging.INFO, path=None, run_name=None):
     """Start logging output.
@@ -88,7 +94,7 @@ def print_progress(progress, total, prefix):
     sys.stdout.flush()
 
     if progress == total:
-        print
+        print()
 
 
 ###############################################################################
@@ -212,13 +218,13 @@ def dump_recharge_file(data, recharge):
                          if x[0] !=0)
             rech_file.write('%d\n' % (inrech))
             
-        for per in xrange(len(data['params']['time_periods'])):
+        for per in range(len(data['params']['time_periods'])):
             rech_file.write('%d %d\n' % (inrech, inirch))
             inirch = -1  # no longer needed
 
             rech_file.write('INTERNAL  1.000000e+000  (FREE)  -1  RECHARGE\n')
             row = []
-            for node in xrange(data['params']['num_nodes']):
+            for node in range(data['params']['num_nodes']):
                 if nrchop == 2:
                     if data['params']['recharge_node_mapping'][node + 1] != [0]:
                         row.append(recharge[(nnodes * per) + node + 1])
@@ -235,7 +241,7 @@ def dump_recharge_file(data, recharge):
                 # write irch for destination node (only for first period)
                 rech_file.write('INTERNAL  1              (FREE)  -1  IRCH\n')
                 row = []
-                for node in xrange(nnodes):
+                for node in range(nnodes):
                     if data['params']['recharge_node_mapping'][node + 1] != [0]:
                         row.append(data['params']['recharge_node_mapping'][node + 1])
                     if len(row) == data['params']['nodes_per_line']:
@@ -364,7 +370,7 @@ def dump_water_balance(data, output, file_format, output_dir, node=None,
     mult = (area * fac / 1000 if node else fac / 1000)
 
     if file_format == 'csv':
-        with open(path, 'wb') as outfile:
+        with open(path, 'w') as outfile:
             if reduced:
                 header = [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS'] if
                           i[2]]
@@ -444,7 +450,7 @@ def convert_all_yaml_to_csv(specs_file, input_dir):
             loaded = load_yaml(path)
             param = loaded.items()[0][0]
             if len(loaded.items()) == 1 and param in to_csv:
-                print path
+                print(path)
                 convert_one_yaml_to_csv(path)
 
 
@@ -467,7 +473,7 @@ def convert_one_yaml_to_csv(filein):
                 elif isinstance(item[1], (float, int, long, str)):
                     row += [item[1]]
                 else:
-                    print 'Could not recognize object: %s' % type(item[1])
+                    print('Could not recognize object: %s' % type(item[1]))
                 writer.writerow(row)
         elif isinstance(readin, list):
             for item in readin:
@@ -477,7 +483,7 @@ def convert_one_yaml_to_csv(filein):
                 elif isinstance(item, (float, int, long, str)):
                     row += [item]
                 else:
-                    print 'Could not recognize object: %s' % type(item)
+                    print('Could not recognize object: %s' % type(item))
                 writer.writerow(row)
 
 

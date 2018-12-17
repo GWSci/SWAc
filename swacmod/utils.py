@@ -212,7 +212,7 @@ def build_taw_raw(params):
     """Build the TAW and RAW matrices."""
     taw, raw = {}, {}
 
-    for node in xrange(1, params['num_nodes'] + 1):
+    for node in range(1, params['num_nodes'] + 1):
         taw[node], raw[node] = [], []
         fcp = params['soil_static_params']['FC']
         wpp = params['soil_static_params']['WP']
@@ -235,7 +235,7 @@ def invert_taw_raw(param, params):
     """Invert the TAW and RAW matrices, from month by zone to node by month."""
     new_param = {}
 
-    for node in xrange(1, params['num_nodes'] + 1):
+    for node in range(1, params['num_nodes'] + 1):
         new_param[node] = []
         lus = params['lu_spatial'][node]
         for num in range(1, 13):
@@ -248,23 +248,23 @@ def invert_taw_raw(param, params):
 ###############################################################################
 def compile_model():
     """Compile Cython model."""
-    mod_c = get_modified_time(os.path.join(CONSTANTS['CODE_DIR'], 'model.c'))
+    mod_c = get_modified_time(os.path.join(CONSTANTS['CODE_DIR'], 'cymodel.c'))
     mod_pyx = get_modified_time(os.path.join(CONSTANTS['CODE_DIR'],
-                                             'model.pyx'))
+                                             'cymodel.pyx'))
     if mod_pyx >= mod_c:
         arch = struct.calcsize('P') * 8
-        print 'model.pyx modified, recompiling for %d-bit' % arch
+        print ('cymodel.pyx modified, recompiling for %d-bit' % arch)
         proc = sp.Popen([sys.executable, 'setup.py', 'build_ext', '--inplace'],
                         cwd=CONSTANTS['CODE_DIR'],
                         stdout=sp.PIPE,
                         stderr=sp.PIPE)
         proc.wait()
         if proc.returncode != 0:
-            print 'Could not compile C extensions:'
-            print '%s' % proc.stdout.read()
-            print '%s' % proc.stderr.read()
+            print ('Could not compile C extensions:')
+            print ('%s' % proc.stdout.read())
+            print ('%s' % proc.stderr.read())
             sys.exit(proc.returncode)
-
+            
 ###############################################################################
 
 

@@ -1364,8 +1364,7 @@ def val_percolation_rejection(data, name):
         len_list=[len(lzn)],
         keys=["percolation_rejection"],
     )
-
-    c.check_values_limits(values=[per], name=name, low_l=0.0, include_low=True)
+    c.check_values_limits(values=list(per.values())[0], name=name, low_l=0.0, include_low=True)
 
 
 ###############################################################################

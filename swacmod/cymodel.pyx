@@ -1,3 +1,4 @@
+# cython: language_level=3
 # -*- coding: utf-8 -*-
 """SWAcMod model functions in Cython."""
 
@@ -8,7 +9,8 @@ from collections import OrderedDict
 
 # Internal modules
 from . import utils as u
-
+from tqdm import tqdm
+import networkx as nx
 
 ###############################################################################
 def get_precipitation(data, output, node):
@@ -156,7 +158,7 @@ def get_snow(data, output, node):
 
     col_snowmelt[0] = start_snow_pack * var6
     col_snowpack[0] = snowpack
-    for num in xrange(1, length):
+    for num in range(1, length):
         if var5[num] < 0:
             var5[num] = 0
         col_snowmelt[num] = snowpack * var5[num]
@@ -265,7 +267,7 @@ def get_ae(data, output, node):
         double [:] rawrew_a = output['rawrew']
         long long [:] months = np.array(series['months'], dtype=np.int64)
 
-    for num in xrange(length):
+    for num in range(length):
         var2 = net_rainfall[num]
 
         if params['rapid_runoff_process'] == 'enabled':
@@ -273,11 +275,11 @@ def get_ae(data, output, node):
                 rapid_runoff_c = value
             else:
                 var3 = 0
-                for i in xrange(len_class_ri):
+                for i in range(len_class_ri):
                     if class_ri[i] < var2:
                         var3 += 1
                 var4 = 0
-                for i in xrange(len_class_smd):
+                for i in range(len_class_smd):
                     if class_smd[i] < smd:
                         var4 += 1
                 rapid_runoff_c = values[var3][var4]
@@ -474,7 +476,7 @@ def get_interflow(data, output, node):
         col_infiltration_recharge[0] = recharge
         col_interflow_to_rivers[0] = rivers
 
-        for num in xrange(1, length):
+        for num in range(1, length):
             var1 = volume - (var5 if var5 < volume else volume)
             volume = interflow_store_input[num-1] + var1 * (1 - var8)
             col_interflow_volume[num] = volume
@@ -526,7 +528,7 @@ def get_recharge(data, output, node):
         size_t num
         double var1, var2
 
-    for num in xrange(length):
+    for num in range(length):
         if params['recharge_attenuation_process'] == 'enabled':
             if num == 0:
                 recharge = irs
@@ -575,7 +577,7 @@ def get_combined_str(data, output, node):
             rlp = 1.0
         col_combined_str[0] = rlp * base
         col_attenuation[0] = base - col_combined_str[0]
-        for num in xrange(1, length):
+        for num in range(1, length):
             base = (col_attenuation[num-1] +
                     output['interflow_to_rivers'][num] +
                     output['swabs_ts'][num] +
@@ -645,7 +647,7 @@ def get_change(data, output, node):
         size_t length = len(series['date'])
         double [:] col_change = np.zeros(length)
         size_t num
-    for num in xrange(1, length):
+    for num in range(1, length):
         col_change[num] = output['recharge_store'][num] - \
                           output['recharge_store'][num - 1] + \
                           output['interflow_volume'][num] - \
@@ -756,7 +758,7 @@ def get_sfr_file(data, runoff):
     nodes = data['params']['num_nodes']
 
     njag = nodes + 2
-    lenx = (njag/2) - (nodes/2)
+    lenx = int((njag/2) - (nodes/2))
 
     dis = flopy.modflow.ModflowDisU(
         m,
@@ -830,7 +832,7 @@ def get_sfr_file(data, runoff):
             # inc stream counter
             str_count += 1
 
-    for iseg in xrange(nss):
+    for iseg in range(nss):
         node_swac = seg_swac_dic[iseg + 1]
         downstr = sorted_by_ca[node_swac][idx['downstr']]
         if downstr in swac_seg_dic:
@@ -838,21 +840,21 @@ def get_sfr_file(data, runoff):
         else:
             sd[iseg ]['outseg'] = 0
 
-    for per in xrange(nper):
-        for node in xrange(1, nodes + 1):
+    for per in range(nper):
+        for node in range(1, nodes + 1):
             i = (nodes * per) + node
             runoff[i] = runoff[i] * areas[node] * fac
             
     ro, flow = np.zeros((nss)), np.zeros((nss))
     # import time
     # populate runoff and flow
-    for per in xrange(nper):
+    for per in range(nper):
         print_progress(per + 1, nper, 'SWAcMod Serial     ')
         # start = time.clock()
         ro, flow = get_sfr_flows(sorted_by_ca, idx, runoff, done, areas,
                                  swac_seg_dic, ro, flow, nodes * per)
         # print 'done get flows', per, time.clock() - start
-        for iseg in xrange(nss):
+        for iseg in range(nss):
             sd[iseg]['runoff'] = ro[iseg]
             sd[iseg]['flow'] = flow[iseg]
 
@@ -950,7 +952,7 @@ def write_sfr(sfr, filename=None):
     cols = ['nseg', 'icalc', 'outseg', 'iupseg', 'flow',
             'runoff', 'etsw', 'pptsw', 'width1', 'depth1']
     
-    for i in xrange(0, sfr.nper):
+    for i in range(0, sfr.nper):
         # item 5
         f_sfr.write(' '.join(map(str, sfr.dataset_5[i])) + '\n')
         # Item 6
@@ -1111,9 +1113,9 @@ def get_evt_file(data, evtrate):
         exdp[inode - 1, 0] = vals[2]
 
     evt_dic = {}
-    for per in xrange(nper):
+    for per in range(nper):
         print_progress(per + 1, nper, 'SWAcMod Serial     ')
-        for inode in xrange(1, nodes + 1):
+        for inode in range(1, nodes + 1):
             evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
         evt_dic[per] = evtr.copy()
     
@@ -1147,13 +1149,20 @@ def do_rorecharge(data, runoff, recharge):
     names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
              'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
      
-    for day in xrange(length):
+    for day in tqdm(range(length)):
+        # print "day", day
         month = months[day]
         acc_flow = get_ror_flows(sorted_by_ca, runoff, nnodes, day)
 
-        for node in xrange(1, nnodes + 1):
+        for node in range(1, nnodes + 1):
             
             ro = acc_flow[node -1]
+
+            if day == 0:
+                zone_ror = params['rorecharge_zone_mapping'][node] - 1
+                print(node, ro, ror_limit[month][zone_ror])
+
+            
             if ro > 0.0:
                 zone_ror = params['rorecharge_zone_mapping'][node] - 1
                 fac_ro = ror_prop[month][zone_ror] * ro
@@ -1171,6 +1180,71 @@ def do_rorecharge(data, runoff, recharge):
     return runoff, recharge
 
 ###############################################################################
+
+def do_rorecharge_mask(data, runoff, recharge):
+    """do ror with daily mask"""
+    series, params = data['series'], data['params']
+    nnodes = data['params']['num_nodes']
+    cdef:
+        double [:] col_runoff_recharge = np.zeros(len(series['date']))
+        size_t length = len(series['date'])
+        double [:, :] ror_prop = params['ror_prop']
+        double [:, :] ror_limit = params['ror_limit']
+        double [:, :] ror_act = params['ror_act']
+        long long [:] months = np.array(series['months'], dtype=np.int64)
+        size_t zone_ror = params['rorecharge_zone_mapping'][1] - 1
+
+    sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
+                                      key=lambda x: x[1][4]))
+    
+    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
+             'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
+
+    # complete graph
+    Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
+    
+    for day in tqdm(range(length)):
+        month = months[day]
+
+        mask = np.full((nnodes), 0, dtype='int')
+        for node in range(1, nnodes + 1):
+            zone_ror = params['rorecharge_zone_mapping'][node] - 1
+            fac = ror_prop[month][zone_ror]
+            lim = ror_limit[month][zone_ror]
+            if fac != 0.0 or lim != 0.0:
+                mask[node-1] = 1
+                for n in nx.ancestors(Gc, node):
+                    mask[n-1] = 1
+
+        acc_flow = get_ror_flows_tree(build_graph(nnodes, sorted_by_ca, mask),
+                                      runoff, nnodes, day)
+
+        for node in range(1, nnodes + 1):
+            
+            ro = acc_flow[node -1]
+            
+            if day == 0:
+                zone_ror = params['rorecharge_zone_mapping'][node] - 1
+                print(node, ro, ror_limit[month][zone_ror], mask)
+                
+            if ro > 0.0:
+                zone_ror = params['rorecharge_zone_mapping'][node] - 1
+                fac_ro = ror_prop[month][zone_ror] * ro
+                lim = ror_limit[month][zone_ror]
+                if fac_ro > lim:
+                    col_runoff_recharge[day] = lim
+                    recharge[(nnodes * day) + node] += lim
+                    runoff[(nnodes * day) + node] -= lim
+                else:
+                    col_runoff_recharge[day] = fac_ro
+                    recharge[(nnodes * day) + node] += fac_ro
+                    runoff[(nnodes * day) + node] -= fac_ro
+            else:
+                col_runoff_recharge[day] = 0.0
+    return runoff, recharge
+
+
+###############################################################################
 def get_ror_flows(sorted_by_ca, runoff, nodes, day):
     
     """get total flows for RoR one day"""
@@ -1179,10 +1253,9 @@ def get_ror_flows(sorted_by_ca, runoff, nodes, day):
     
     for node_swac, line in sorted_by_ca.items():
         downstr = line[0]
-
         # accumulate  flows into network
         while downstr > 1:
-
+            #print(node_swac, downstr)
             flow[node_swac - 1] += runoff[nodes * day + node_swac]
 
             # new node
@@ -1191,3 +1264,54 @@ def get_ror_flows(sorted_by_ca, runoff, nodes, day):
             downstr = sorted_by_ca[node_swac][0] #[idx['downstr']]
 
     return flow
+
+###############################################################################
+def get_ror_flows_mask(sorted_by_ca, runoff, nodes, day, mask):
+    
+    """get total flows for RoR one day with mask"""
+    
+    flow = np.zeros((nodes))
+    
+    for node_swac, line in sorted_by_ca.items():
+        downstr = line[0]
+        # accumulate  flows into network
+        while downstr > 1:
+            if mask[node_swac - 1] == 1:
+                flow[node_swac - 1] += runoff[nodes * day + node_swac]
+
+            # new node
+            node_swac = downstr
+            # get new downstr node
+            downstr = sorted_by_ca[node_swac][0] #[idx['downstr']]
+
+    return flow
+
+###############################################################################
+def get_ror_flows_tree(G, runoff, nodes, day):
+    
+    """get total flows for RoR one day with mask"""
+    
+    flow = np.zeros((nodes))
+    done = np.zeros((nodes), dtype='int')
+    c = nodes * day
+    leaf_nodes = [x for x in G.nodes() if G.out_degree(x)==1 and G.in_degree(x)==0]
+    for node_swac in leaf_nodes:
+        node = node_swac
+        flow[node - 1] = runoff[c + node]
+        lst = nx.descendants(G, node_swac)
+        for d in lst:
+            if done[d-1] == 1: break
+            flow[d - 1] += (flow[node -1] + runoff[c + d])
+            node = d
+            done[d-1] = 1
+
+    return flow
+
+
+def build_graph(nnodes, sorted_by_ca, mask):
+    G = nx.DiGraph()
+    G.add_nodes_from(range(1, nnodes + 1))
+    for node_swac, line in sorted_by_ca.items():
+        if mask[node_swac-1] == 1 and line[0] > 0:
+            G.add_edge(node_swac, line[0])
+    return G

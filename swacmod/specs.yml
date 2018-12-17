@@ -120,7 +120,8 @@ spatial_output_date:
     required: false
     type:
         # - !!python/name:datetime.datetime
-        - !!python/name:basestring
+        # - !!python/name:basestring
+        - !!python/name:str
         
 ##############################################
 # Model parameters: Zones names and mappings #
@@ -131,7 +132,8 @@ reporting_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
+        # - !!python/name:basestring
 
 reporting_zone_mapping:
     required: false
@@ -145,7 +147,7 @@ rainfall_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 rainfall_zone_mapping:
     required: true
@@ -160,7 +162,7 @@ pe_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 pe_zone_mapping:
     required: true
@@ -175,7 +177,7 @@ temperature_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 temperature_zone_mapping:
     required: false
@@ -189,7 +191,7 @@ subroot_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 subroot_zone_mapping:
     required: false
@@ -204,7 +206,7 @@ rapid_runoff_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 rapid_runoff_zone_mapping:
     required: false
@@ -218,7 +220,7 @@ rorecharge_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 rorecharge_zone_mapping:
     required: false
@@ -232,7 +234,7 @@ macropore_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 macropore_zone_mapping:
     required: false
@@ -246,14 +248,14 @@ soil_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 landuse_zone_names:
     required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 
 ############################################

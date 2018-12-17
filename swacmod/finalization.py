@@ -15,6 +15,12 @@ import numpy as np
 from . import utils as u
 
 
+try:
+  basestring
+except NameError:
+  basestring = str
+
+
 ###############################################################################
 def fin_start_date(data, name):
     """Finalize the "start_date" parameter.
@@ -96,7 +102,7 @@ def fin_output_individual(data, name):
     final = []
     for section in sections:
         if section == "all":
-            final = xrange(1, params["num_nodes"] + 1)
+            final = range(1, params["num_nodes"] + 1)
             break
         elif section == "none":
             final = []
@@ -746,7 +752,7 @@ def fin_routing_topology(data, name):
     if data["params"][name] is None:
         nodes = data["params"]["num_nodes"]
         zeros = [0] * 3 + [0.0] * 7
-        data["params"][name] = dict((k, zeros) for k in xrange(1, nodes + 1))
+        data["params"][name] = dict((k, zeros) for k in range(1, nodes + 1))
         logging.info('\t\tDefaulted "%s" to %s', name, zeros)
         # params['output_sfr'] = 'false'
         params["output_sfr"] = False

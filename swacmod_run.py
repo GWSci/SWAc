@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 """SWAcMod main."""
@@ -12,6 +12,10 @@ import logging
 import argparse
 from multiprocessing import (Process, Manager, freeze_support, Array,
                              Queue, Value)
+
+# import tempfile as TF
+
+# TF.tempdir = "."
 
 # Third Party Libraries
 import numpy as np
@@ -146,8 +150,8 @@ def run_process(
         spatial_index,
         counter,
         reporting,
-        single_node_output,
-):
+        single_node_output):
+
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info("Process %d started (%d nodes)", num, len(ids))
@@ -222,7 +226,7 @@ def run_process(
         recharge,
         runoff,
         reporting,
-        single_node_output,
+        single_node_output
     )
 
 
@@ -269,7 +273,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     recharge = Array("f", len_rch)
     runoff = Array("f", len_rch)
     ids = range(1, nnodes + 1)
-    random.shuffle(ids)
+    random.shuffle(list(ids))
     chunks = np.array_split(ids, data["params"]["num_cores"])
 
     times["end_of_input"] = time.time()
@@ -312,8 +316,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 spatial_index,
                 counter,
                 reporting,
-                single_node_output,
-            ),
+                single_node_output
+            )
         )
 
         workers.append(
@@ -338,19 +342,29 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 reporting_agg2[cat] = {}
 
             # ended up needing this for catchment output - bit silly
-            runoff_recharge = np.copy(np.array(runoff))
+            runoff_recharge = np.array(runoff).copy()
+            # print (type(runoff), type(runoff[0]))
+            runoff_recharge = np.frombuffer(runoff.get_obj(), dtype=np.float32).copy()
+
             # do RoR
-            runoff, recharge = m.do_rorecharge(data, runoff, recharge)
+            runoff, recharge = m.do_rorecharge_mask(data, runoff, recharge)
+            #runoff, recharge = m.do_rorecharge(data, runoff, recharge)
             # get RoR for cat output purposes
-            runoff_recharge -= np.array(runoff)
+            runoff_recharge -= np.frombuffer(runoff.get_obj(), dtype=np.float32).copy()
 
             # aggregate amended recharge & runoff arrays by output periods
-            for node in xrange(1, nnodes + 1):
+            for node in range(1, nnodes + 1):
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
-                rch_array = np.array(recharge, dtype=np.float64)[idx]
-                ro_array = np.array(runoff, dtype=np.float64)[idx]
-                ror_array = np.array(runoff_recharge, dtype=np.float64)[idx]
+
+                tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32).copy()
+                rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
+
+                tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32).copy()
+                ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
+                
+                ror_array = np.array(runoff_recharge[idx], dtype=np.float64, copy=True)
+                
                 # aggregate single node of recharge array
                 rch_agg = u.aggregate_array(data, rch_array)
                 # aggregate single node of runoff array
@@ -405,9 +419,13 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 # check for single node
                 if node in data["params"]["output_individual"]:
                     # amend single_node_output with ror values
-                    single_node_output[node]["runoff_recharge"] = ror_array
-                    single_node_output[node]["combined_recharge"] = rch_array
-                    single_node_output[node]["combined_str"] = ro_array
+                    # this method required due to upstream bug
+                    tmp_node = single_node_output[node]
+                    tmp_node["runoff_recharge"] = ror_array.copy()
+                    tmp_node["combined_recharge"] = np.copy(rch_array)
+                    tmp_node["combined_str"] = np.copy(ro_array)
+                    single_node_output[node] = tmp_node
+                    print('ROR' + str(node), ror_array)
 
             # copy new bits into cat output
             for cat in reporting_agg2:
@@ -438,6 +456,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             )
 
         for node in list(data["params"]["output_individual"]):
+            #print (' NODE ', node, len(single_node_output[node]["runoff_recharge"]), single_node_output[node]["runoff_recharge"])
             print("\t- Node output file")
             io.dump_water_balance(
                 data,
@@ -447,7 +466,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 node=node,
                 reduced=reduced,
             )
-
+            
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
             io.dump_recharge_file(data, recharge_agg)
