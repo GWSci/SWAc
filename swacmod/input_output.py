@@ -274,7 +274,7 @@ def dump_spatial_output(data, spatial, output_dir, reduced=False):
     path = get_spatial_path(data, output_dir)
     fac = data['params']['output_fac']
     ids = range(1, data['params']['num_nodes'] + 1)
-    with open(path, 'wb') as outfile:
+    with open(path, 'w') as outfile:
         header = ['Node']
         header += [i[0] for i in u.CONSTANTS['BALANCE_CONVERSIONS'] if i[0] not
                    in ['DATE', 'nDays']]

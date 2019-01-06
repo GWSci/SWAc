@@ -1186,7 +1186,7 @@ def do_rorecharge_mask(data, runoff, recharge):
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
     cdef:
-        double [:] col_runoff_recharge = np.zeros(len(series['date']))
+        #double [:] col_runoff_recharge = np.zeros(len(series['date']))
         size_t length = len(series['date'])
         double [:, :] ror_prop = params['ror_prop']
         double [:, :] ror_limit = params['ror_limit']
@@ -1203,9 +1203,10 @@ def do_rorecharge_mask(data, runoff, recharge):
     # complete graph
     Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
     
-    for day in tqdm(range(length)):
+    # for day in tqdm(range(length)):
+    for day in range(length):
+        print('day', day)
         month = months[day]
-
         mask = np.full((nnodes), 0, dtype='int')
         for node in range(1, nnodes + 1):
             zone_ror = params['rorecharge_zone_mapping'][node] - 1
@@ -1213,34 +1214,37 @@ def do_rorecharge_mask(data, runoff, recharge):
             lim = ror_limit[month][zone_ror]
             if fac != 0.0 or lim != 0.0:
                 mask[node-1] = 1
+                # add upstream bits
                 for n in nx.ancestors(Gc, node):
                     mask[n-1] = 1
-
-        acc_flow = get_ror_flows_tree(build_graph(nnodes, sorted_by_ca, mask),
+        print('mask size', mask.sum())
+        Gp = build_graph(nnodes, sorted_by_ca, mask)
+        acc_flow = get_ror_flows_tree(Gp,
                                       runoff, nnodes, day)
 
-        for node in range(1, nnodes + 1):
+        # for node in range(1, nnodes + 1):
+        for node in list(Gp.nodes):
             
             ro = acc_flow[node -1]
             
             if day == 0:
                 zone_ror = params['rorecharge_zone_mapping'][node] - 1
-                print(node, ro, ror_limit[month][zone_ror], mask)
-                
+                # print(node, ro, ror_limit[month][zone_ror], mask)
+                # print(Gc.size(), Gp.size())
             if ro > 0.0:
                 zone_ror = params['rorecharge_zone_mapping'][node] - 1
                 fac_ro = ror_prop[month][zone_ror] * ro
                 lim = ror_limit[month][zone_ror]
                 if fac_ro > lim:
-                    col_runoff_recharge[day] = lim
+                    #col_runoff_recharge[day] = lim
                     recharge[(nnodes * day) + node] += lim
                     runoff[(nnodes * day) + node] -= lim
                 else:
-                    col_runoff_recharge[day] = fac_ro
+                    #col_runoff_recharge[day] = fac_ro
                     recharge[(nnodes * day) + node] += fac_ro
                     runoff[(nnodes * day) + node] -= fac_ro
-            else:
-                col_runoff_recharge[day] = 0.0
+            # else:
+            #     col_runoff_recharge[day] = 0.0
     return runoff, recharge
 
 
@@ -1276,7 +1280,7 @@ def get_ror_flows_mask(sorted_by_ca, runoff, nodes, day, mask):
         downstr = line[0]
         # accumulate  flows into network
         while downstr > 1:
-            if mask[node_swac - 1] == 1:
+            if mask[node_swac - 1] != 1:
                 flow[node_swac - 1] += runoff[nodes * day + node_swac]
 
             # new node
@@ -1310,8 +1314,50 @@ def get_ror_flows_tree(G, runoff, nodes, day):
 
 def build_graph(nnodes, sorted_by_ca, mask):
     G = nx.DiGraph()
-    G.add_nodes_from(range(1, nnodes + 1))
+    for node in range(1, nnodes + 1):
+        if mask[node-1] == 1:
+            G.add_node(node)
     for node_swac, line in sorted_by_ca.items():
         if mask[node_swac-1] == 1 and line[0] > 0:
             G.add_edge(node_swac, line[0])
     return G
+
+def all_days_mask(data):
+    """get overall RoR mask for run"""
+    series, params = data['series'], data['params']
+    nnodes = data['params']['num_nodes']
+    cdef:
+        size_t length = len(series['date'])
+        double [:, :] ror_prop = params['ror_prop']
+        double [:, :] ror_limit = params['ror_limit']
+        double [:, :] ror_act = params['ror_act']
+        long long [:] months = np.array(series['months'], dtype=np.int64)
+        size_t zone_ror = params['rorecharge_zone_mapping'][1] - 1
+
+    sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
+                                      key=lambda x: x[1][4]))
+
+    mask = np.full((nnodes), 0, dtype='int')
+
+    # complete graph
+    Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
+    print('MASL0', mask.sum())
+    for day in range(length):
+        #print('day', day)
+        month = months[day]
+
+        for node in range(1, nnodes + 1):
+            zone_ror = params['rorecharge_zone_mapping'][node] - 1
+            fac = ror_prop[month][zone_ror]
+            lim = ror_limit[month][zone_ror]
+            if fac != 0.0 or lim != 0.0:
+                mask[node-1] = 1
+    # do downstream from RoR areas as flows will be different
+    for node in range(1, nnodes + 1):
+        if mask[node-1] == 1:
+            for n in nx.descendants(Gc, node):
+                mask[n-1] = 1
+    print('MASL', mask.sum())
+    Gp = build_graph(nnodes, sorted_by_ca, mask)
+    print(len(list(Gp.nodes)))
+    return Gp

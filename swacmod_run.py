@@ -10,15 +10,12 @@ import time
 import random
 import logging
 import argparse
-from multiprocessing import (Process, Manager, freeze_support, Array,
-                             Queue, Value)
-
-# import tempfile as TF
-
-# TF.tempdir = "."
+from multiprocessing import (Process, Manager, freeze_support, Array, Queue,
+                             Value)
 
 # Third Party Libraries
 import numpy as np
+from tqdm import tqdm
 
 # Internal modules
 from swacmod import utils as u
@@ -130,28 +127,10 @@ def get_output(data, node):
 
 
 ###############################################################################
-def run_process(
-        num,
-        ids,
-        data,
-        test,
-        reporting_agg,
-        recharge_agg,
-        runoff_agg,
-        evtr_agg,
-        recharge,
-        runoff,
-        log_path,
-        level,
-        file_format,
-        reduced,
-        output_dir,
-        spatial,
-        spatial_index,
-        counter,
-        reporting,
-        single_node_output):
-
+def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
+                evtr_agg, recharge, runoff, log_path, level, file_format,
+                reduced, output_dir, spatial, spatial_index, counter,
+                reporting, single_node_output):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info("Process %d started (%d nodes)", num, len(ids))
@@ -217,17 +196,8 @@ def run_process(
                         output, area, index=spatial_index)
 
     logging.info("Process %d ended", num)
-    return (
-        reporting_agg,
-        recharge_agg,
-        spatial,
-        runoff_agg,
-        evtr_agg,
-        recharge,
-        runoff,
-        reporting,
-        single_node_output
-    )
+    return (reporting_agg, recharge_agg, spatial, runoff_agg, evtr_agg,
+            recharge, runoff, reporting, single_node_output)
 
 
 ###############################################################################
@@ -296,29 +266,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
         proc = Process(
             target=run_process,
-            args=(
-                process,
-                chunk,
-                data,
-                test,
-                reporting_agg,
-                recharge_agg,
-                runoff_agg,
-                evtr_agg,
-                recharge,
-                runoff,
-                log_path,
-                level,
-                file_format,
-                reduced,
-                u.CONSTANTS["OUTPUT_DIR"],
-                spatial,
-                spatial_index,
-                counter,
-                reporting,
-                single_node_output
-            )
-        )
+            args=(process, chunk, data, test, reporting_agg, recharge_agg,
+                  runoff_agg, evtr_agg, recharge, runoff, log_path, level,
+                  file_format, reduced, u.CONSTANTS["OUTPUT_DIR"], spatial,
+                  spatial_index, counter, reporting, single_node_output))
 
         workers.append(
             Worker("worker%d" % process, Queue(), proc, verbose=False))
@@ -344,27 +295,44 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             # ended up needing this for catchment output - bit silly
             runoff_recharge = np.array(runoff).copy()
             # print (type(runoff), type(runoff[0]))
-            runoff_recharge = np.frombuffer(runoff.get_obj(), dtype=np.float32).copy()
-
+            t0 = time.time()
+            runoff_recharge = np.frombuffer(
+                runoff.get_obj(), dtype=np.float32).copy()
+            print('runoff_recharge 0', time.time() - t0)
+            
             # do RoR
             runoff, recharge = m.do_rorecharge_mask(data, runoff, recharge)
             #runoff, recharge = m.do_rorecharge(data, runoff, recharge)
             # get RoR for cat output purposes
-            runoff_recharge -= np.frombuffer(runoff.get_obj(), dtype=np.float32).copy()
-
+            t0 = time.time()
+            runoff_recharge -= np.frombuffer(
+                runoff.get_obj(), dtype=np.float32).copy()
+            print('runoff_recharge 1', time.time() - t0)
+            
             # aggregate amended recharge & runoff arrays by output periods
-            for node in range(1, nnodes + 1):
+            print('agg')
+            #m.all_days_mask(data)
+            #for node in tqdm(range(1, nnodes + 1)):
+            #for node in range(1, nnodes + 1):
+            t0 = time.time()
+            lst = list(m.all_days_mask(data).nodes)
+            print('all days mask', (time.time() - t0)/60)
+            for node in tqdm(lst):
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
-
-                tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32).copy()
+                t0 = time.time()
+                tmp = np.frombuffer(
+                    recharge.get_obj(), dtype=np.float32).copy()
+                # print('tmp 0', time.time() - t0)
                 rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-
+                t0 = time.time()
                 tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32).copy()
+                # print('tmp 1', time.time() - t0)
                 ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-                
-                ror_array = np.array(runoff_recharge[idx], dtype=np.float64, copy=True)
-                
+
+                ror_array = np.array(
+                    runoff_recharge[idx], dtype=np.float64, copy=True)
+
                 # aggregate single node of recharge array
                 rch_agg = u.aggregate_array(data, rch_array)
                 # aggregate single node of runoff array
@@ -466,7 +434,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 node=node,
                 reduced=reduced,
             )
-            
+
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
             io.dump_recharge_file(data, recharge_agg)
@@ -485,6 +453,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     diff = times["end_of_run"] - times["start_of_run"]
     total = io.format_time(diff)
+
     per_node = int(round(diff * 1000 / data["params"]["num_nodes"]))
 
     cores = ("%d cores" % data["params"]["num_cores"]
