@@ -1202,47 +1202,70 @@ def do_rorecharge_mask(data, runoff, recharge):
 
     # complete graph
     Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
-    
-    # for day in tqdm(range(length)):
-    for day in range(length):
-        print('day', day)
-        month = months[day]
+
+    def compute_upstream_month_mask(month_num):
         mask = np.full((nnodes), 0, dtype='int')
         for node in range(1, nnodes + 1):
             zone_ror = params['rorecharge_zone_mapping'][node] - 1
-            fac = ror_prop[month][zone_ror]
-            lim = ror_limit[month][zone_ror]
-            if fac != 0.0 or lim != 0.0:
+            fac = ror_prop[month_num][zone_ror]
+            lim = ror_limit[month_num][zone_ror]
+            if min(fac, lim) > 0.0:
                 mask[node-1] = 1
                 # add upstream bits
-                for n in nx.ancestors(Gc, node):
+                lst = [n for n, d in nx.shortest_path_length(Gc, target=node).items()]
+                for n in lst:
+                # for n in nx.ancestors(Gc, node):
                     mask[n-1] = 1
-        print('mask size', mask.sum())
-        Gp = build_graph(nnodes, sorted_by_ca, mask)
-        acc_flow = get_ror_flows_tree(Gp,
+        print("month", month_num, 'UPSTREAM mask size', mask.sum())
+        return build_graph(nnodes, sorted_by_ca, mask)
+
+    # compute monthly mask dictionary
+    Gp = {}
+    for month in range(12):
+        Gp[month] = compute_upstream_month_mask(month)
+
+    # import pickle
+
+    # f1 = open("/home/william/data/Dropbox/GWSci_Sync/#gs116_VerGade/GIS/dump/Gc.dump", 'wb')
+    # f2 = open("/home/william/data/Dropbox/GWSci_Sync/#gs116_VerGade/GIS/dump/Gp.dump", 'wb')
+    # pickle.dump(Gc, f1 , -1)
+    # pickle.dump(Gp[0], f2, -1)
+
+    # f1.close()
+    # f2.close()
+
+    # for day in tqdm(range(length)):
+    print('RoR over days...')
+    for day in tqdm(range(length)):
+        month = months[day]
+
+        acc_flow = get_ror_flows_tree(Gp[month],
                                       runoff, nnodes, day)
+        # acc_flow = get_ror_flows(sorted_by_ca, runoff, nnodes, day)
+
+        # print("------------------------------")
+        # print(80532, 'COMP', acc_flow[80532 -1], acc_flow0[80532 -1], acc_flow[80532 -1] - acc_flow0[80532 -1])
+        # print(acc_flow0[81101 -1], acc_flow[81101 -1])
+        # print(acc_flow0[80533 -1], acc_flow[80533 -1])
+        # print("------------------------------")
 
         # for node in range(1, nnodes + 1):
-        for node in list(Gp.nodes):
+        for node in list(Gp[month].nodes):
             
             ro = acc_flow[node -1]
-            
-            if day == 0:
-                zone_ror = params['rorecharge_zone_mapping'][node] - 1
-                # print(node, ro, ror_limit[month][zone_ror], mask)
-                # print(Gc.size(), Gp.size())
+            # if node == 80532:
+            #     print(node, 'COMP', ro, acc_flow0[node -1], ro - acc_flow0[node -1])
+            #     print(acc_flow0[node -1], ro - acc_flow0[node -1])
             if ro > 0.0:
                 zone_ror = params['rorecharge_zone_mapping'][node] - 1
                 fac_ro = ror_prop[month][zone_ror] * ro
                 lim = ror_limit[month][zone_ror]
-                if fac_ro > lim:
-                    #col_runoff_recharge[day] = lim
-                    recharge[(nnodes * day) + node] += lim
-                    runoff[(nnodes * day) + node] -= lim
-                else:
-                    #col_runoff_recharge[day] = fac_ro
-                    recharge[(nnodes * day) + node] += fac_ro
-                    runoff[(nnodes * day) + node] -= fac_ro
+                qty = min(fac_ro, lim)
+
+                #col_runoff_recharge[day] = qty
+                recharge[(nnodes * day) + node] += qty
+                runoff[(nnodes * day) + node] -= qty
+
             # else:
             #     col_runoff_recharge[day] = 0.0
     return runoff, recharge
@@ -1270,27 +1293,6 @@ def get_ror_flows(sorted_by_ca, runoff, nodes, day):
     return flow
 
 ###############################################################################
-def get_ror_flows_mask(sorted_by_ca, runoff, nodes, day, mask):
-    
-    """get total flows for RoR one day with mask"""
-    
-    flow = np.zeros((nodes))
-    
-    for node_swac, line in sorted_by_ca.items():
-        downstr = line[0]
-        # accumulate  flows into network
-        while downstr > 1:
-            if mask[node_swac - 1] != 1:
-                flow[node_swac - 1] += runoff[nodes * day + node_swac]
-
-            # new node
-            node_swac = downstr
-            # get new downstr node
-            downstr = sorted_by_ca[node_swac][0] #[idx['downstr']]
-
-    return flow
-
-###############################################################################
 def get_ror_flows_tree(G, runoff, nodes, day):
     
     """get total flows for RoR one day with mask"""
@@ -1298,14 +1300,24 @@ def get_ror_flows_tree(G, runoff, nodes, day):
     flow = np.zeros((nodes))
     done = np.zeros((nodes), dtype='int')
     c = nodes * day
-    leaf_nodes = [x for x in G.nodes() if G.out_degree(x)==1 and G.in_degree(x)==0]
+    leaf_nodes = [x for x in G.nodes()
+                  if G.out_degree(x) == 1 and G.in_degree(x) == 0]
     for node_swac in leaf_nodes:
         node = node_swac
-        flow[node - 1] = runoff[c + node]
-        lst = nx.descendants(G, node_swac)
-        for d in lst:
-            if done[d-1] == 1: break
-            flow[d - 1] += (flow[node -1] + runoff[c + d])
+        # flow[node - 1] = runoff[c + node]
+        # if node_swac == 70514:
+        #     print('RoR flows tree', flow[node_swac - 1], runoff[c + node])
+        acc = runoff[c + node]
+        #done[node-1] = 1
+        lst = [n for n, d in nx.shortest_path_length(G,
+                                                     source=node_swac).items()]
+        #lst = nx.descendants(G, node_swac)
+        for i, d in enumerate(lst):
+            if done[d-1] != 1:
+                acc = (flow[node -1] + runoff[c + d])
+            flow[d - 1] += acc
+            # if d == 37027:
+            #      print('RoR flows tree', i, d, flow[d - 1], acc)
             node = d
             done[d-1] = 1
 
@@ -1341,7 +1353,7 @@ def all_days_mask(data):
 
     # complete graph
     Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
-    print('MASL0', mask.sum())
+    print('MASK0', mask.sum())
     for day in range(length):
         #print('day', day)
         month = months[day]
@@ -1355,9 +1367,12 @@ def all_days_mask(data):
     # do downstream from RoR areas as flows will be different
     for node in range(1, nnodes + 1):
         if mask[node-1] == 1:
-            for n in nx.descendants(Gc, node):
+            lst = [n for n, d in nx.shortest_path_length(Gc,
+                                                         source=node).items()]
+            #for n in nx.descendants(Gc, node):
+            for n in lst:
                 mask[n-1] = 1
-    print('MASL', mask.sum())
+    print('MASK downstr', mask.sum())
     Gp = build_graph(nnodes, sorted_by_ca, mask)
     print(len(list(Gp.nodes)))
     return Gp
