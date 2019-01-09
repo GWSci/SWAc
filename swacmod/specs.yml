@@ -215,14 +215,14 @@ rapid_runoff_zone_mapping:
         - !!python/name:dict
         - !!python/name:int
 
-rorecharge_zone_names:
+swrecharge_zone_names:
     required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
         - !!python/name:str
 
-rorecharge_zone_mapping:
+swrecharge_zone_mapping:
     required: false
     alt_format: [yml, csv]
     type:
@@ -325,13 +325,13 @@ rapid_runoff_params:
 # Process: Runoff Recharge #
 ############################
 
-rorecharge_process:
+swrecharge_process:
     required: true
     type:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
-rorecharge_proportion:
+swrecharge_proportion:
     required: false
     alt_format: [yml, csv]
     type:
@@ -339,15 +339,7 @@ rorecharge_proportion:
         - !!python/name:list
         - !!python/name:float
 
-rorecharge_limit:
-    required: false
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:dict
-        - !!python/name:list
-        - !!python/name:float
-
-rorecharge_activation:
+swrecharge_limit:
     required: false
     alt_format: [yml, csv]
     type:

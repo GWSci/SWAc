@@ -163,7 +163,7 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
                         recharge_agg[(nnodes * i) + int(node)] = p
                     rech = None
 
-                if data["params"]["rorecharge_process"] == "enabled":
+                if data["params"]["swrecharge_process"] == "enabled":
 
                     rech = output["combined_recharge"].copy()
                     for i, p in enumerate(rech):
@@ -287,7 +287,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
         # aggregate over processes
         reporting_agg = aggregate_reporting(reporting_agg)
 
-        if params["rorecharge_process"] == "enabled":
+        if params["swrecharge_process"] == "enabled":
 
             for cat in data["params"]["reporting_zone_mapping"].values():
                 reporting_agg2[cat] = {}
@@ -298,11 +298,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 runoff.get_obj(), dtype=np.float32).copy()
             
             # do RoR
-            runoff, recharge = m.do_rorecharge_mask(data, runoff, recharge)
+            runoff, recharge = m.do_swrecharge_mask(data, runoff, recharge)
             # get RoR for cat output purposes
             runoff_recharge -= np.frombuffer(
                 runoff.get_obj(), dtype=np.float32).copy()
-            print('runoff_recharge 1', time.time() - t0)
             
             # aggregate amended recharge & runoff arrays by output periods
             for node in tqdm(list(m.all_days_mask(data).nodes)):

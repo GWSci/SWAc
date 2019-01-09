@@ -233,7 +233,7 @@ def get_ae(data, output, node):
         double [:] col_k_slope = np.zeros(len(series['date']))
         double [:] col_ae = np.zeros(len(series['date']))
         size_t zone_mac = params['macropore_zone_mapping'][node] - 1
-        size_t zone_ror = params['rorecharge_zone_mapping'][node] - 1
+        size_t zone_ror = params['swrecharge_zone_mapping'][node] - 1
         size_t zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
         double ssmd = u.weighted_sum(params['soil_spatial'][node],
                                      s_smd['starting_SMD'])
@@ -290,7 +290,7 @@ def get_ae(data, output, node):
 
         var6 = months[num]
 
-        if params['rorecharge_process'] == 'enabled':
+        if params['swrecharge_process'] == 'enabled':
             col_runoff_recharge[num] = 0.0
 
         if params['macropore_process'] == 'enabled':
@@ -1130,7 +1130,7 @@ def get_evt_file(data, evtrate):
 
 ###############################################################################
 
-def do_rorecharge_mask(data, runoff, recharge):
+def do_swrecharge_mask(data, runoff, recharge):
     """do ror with monthly mask"""
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
@@ -1140,7 +1140,7 @@ def do_rorecharge_mask(data, runoff, recharge):
         double [:, :] ror_limit = params['ror_limit']
         double [:, :] ror_act = params['ror_act']
         long long [:] months = np.array(series['months'], dtype=np.int64)
-        size_t zone_ror = params['rorecharge_zone_mapping'][1] - 1
+        size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
 
     sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
                                       key=lambda x: x[1][4]))
@@ -1154,7 +1154,7 @@ def do_rorecharge_mask(data, runoff, recharge):
     def compute_upstream_month_mask(month_num):
         mask = np.full((nnodes), 0, dtype='int')
         for node in range(1, nnodes + 1):
-            zone_ror = params['rorecharge_zone_mapping'][node] - 1
+            zone_ror = params['swrecharge_zone_mapping'][node] - 1
             fac = ror_prop[month_num][zone_ror]
             lim = ror_limit[month_num][zone_ror]
             if min(fac, lim) > 0.0:
@@ -1184,7 +1184,7 @@ def do_rorecharge_mask(data, runoff, recharge):
             ro = acc_flow[node -1]
 
             if ro > 0.0:
-                zone_ror = params['rorecharge_zone_mapping'][node] - 1
+                zone_ror = params['swrecharge_zone_mapping'][node] - 1
                 fac_ro = ror_prop[month][zone_ror] * ro
                 lim = ror_limit[month][zone_ror]
                 qty = min(fac_ro, lim)
@@ -1246,7 +1246,7 @@ def all_days_mask(data):
         double [:, :] ror_limit = params['ror_limit']
         double [:, :] ror_act = params['ror_act']
         long long [:] months = np.array(series['months'], dtype=np.int64)
-        size_t zone_ror = params['rorecharge_zone_mapping'][1] - 1
+        size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
 
     sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
                                       key=lambda x: x[1][4]))
@@ -1261,7 +1261,7 @@ def all_days_mask(data):
         month = months[day]
 
         for node in range(1, nnodes + 1):
-            zone_ror = params['rorecharge_zone_mapping'][node] - 1
+            zone_ror = params['swrecharge_zone_mapping'][node] - 1
             fac = ror_prop[month][zone_ror]
             lim = ror_limit[month][zone_ror]
             if fac != 0.0 or lim != 0.0:

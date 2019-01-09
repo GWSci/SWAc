@@ -1,5 +1,5 @@
 # Columns are macropore zones
-rorecharge_activation:
+swrecharge_activation:
      1: [0.1, 0.1]   # January
      2: [0.1, 0.1]   # February
      3: [0.1, 0.1]   # March

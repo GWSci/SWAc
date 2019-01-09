@@ -1,5 +1,5 @@
 # Columns are recharge zones
-rorecharge_limit:
+swrecharge_limit:
      1: [0.0, 2.0]   # January
      2: [0.0, 2.0]   # February
      3: [0.0, 2.0]   # March

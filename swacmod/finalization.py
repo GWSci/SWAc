@@ -300,8 +300,8 @@ def fin_rapid_runoff_zone_names(data, name):
 
 
 ###############################################################################
-def fin_rorecharge_zone_mapping(data, name):
-    """Finalize the "rorecharge_zone_mapping" parameter.
+def fin_swrecharge_zone_mapping(data, name):
+    """Finalize the "swrecharge_zone_mapping" parameter.
 
     1) if not provided, set it to all 0s.
     """
@@ -311,14 +311,14 @@ def fin_rorecharge_zone_mapping(data, name):
 
 
 ###############################################################################
-def fin_rorecharge_zone_names(data, name):
-    """Finalize the "rorecharge_zone_names" parameter.
+def fin_swrecharge_zone_names(data, name):
+    """Finalize the "swrecharge_zone_names" parameter.
 
     1) if not provided, set it to "Zone1", "Zone2" etc.
     """
     params = data["params"]
     if params[name] is None:
-        zones = len(set(params["rorecharge_zone_mapping"].values()))
+        zones = len(set(params["swrecharge_zone_mapping"].values()))
         params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
 
 
@@ -417,13 +417,13 @@ def fin_rapid_runoff_params(data, name):
 
 
 ###############################################################################
-def fin_rorecharge_proportion(data, name):
-    """Finalize the "rorecharge_proportion" parameter.
+def fin_swrecharge_proportion(data, name):
+    """Finalize the "swrecharge_proportion" parameter.
 
     1) if not provided, set it to 0.
     """
     params = data["params"]
-    zones = data["params"]["rorecharge_zone_names"]
+    zones = data["params"]["swrecharge_zone_names"]
     if params[name] is None:
         params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [0.0]', name)
@@ -433,13 +433,13 @@ def fin_rorecharge_proportion(data, name):
 
 
 ###############################################################################
-def fin_rorecharge_limit(data, name):
-    """Finalize the "rorecharge_limit" parameter.
+def fin_swrecharge_limit(data, name):
+    """Finalize the "swrecharge_limit" parameter.
 
     1) if not provided, set it to 99999.
     """
     params = data["params"]
-    zones = data["params"]["rorecharge_zone_names"]
+    zones = data["params"]["swrecharge_zone_names"]
     if params[name] is None:
         params[name] = dict((k, [99999.9 for _ in zones]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [99999]', name)
@@ -449,13 +449,13 @@ def fin_rorecharge_limit(data, name):
 
 
 ###############################################################################
-def fin_rorecharge_activation(data, name):
-    """Finalize the "rorecharge_activation" parameter.
+def fin_swrecharge_activation(data, name):
+    """Finalize the "swrecharge_activation" parameter.
 
     1) if not provided, set it to 0.0.
     """
     params = data["params"]
-    zones = data["params"]["rorecharge_zone_names"]
+    zones = data["params"]["swrecharge_zone_names"]
     if params[name] is None:
         params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [0.0]', name)
@@ -967,8 +967,8 @@ FUNC_PARAMS = [
     fin_subroot_zone_names,
     fin_rapid_runoff_zone_mapping,
     fin_rapid_runoff_zone_names,
-    fin_rorecharge_zone_mapping,
-    fin_rorecharge_zone_names,
+    fin_swrecharge_zone_mapping,
+    fin_swrecharge_zone_names,
     fin_macropore_zone_mapping,
     fin_macropore_zone_names,
     fin_soil_zone_names,
@@ -976,9 +976,9 @@ FUNC_PARAMS = [
     fin_free_throughfall,
     fin_max_canopy_storage,
     fin_rapid_runoff_params,
-    fin_rorecharge_proportion,
-    fin_rorecharge_limit,
-    fin_rorecharge_activation,
+    fin_swrecharge_proportion,
+    fin_swrecharge_limit,
+    fin_swrecharge_activation,
     fin_macropore_proportion,
     fin_macropore_limit,
     fin_macropore_activation,

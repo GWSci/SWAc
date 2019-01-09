@@ -174,12 +174,12 @@ rapid_runoff_zone_names: rapid_runoff_zone_names.yml
 # Runoff Recharge Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-rorecharge_zone_mapping: rorecharge_zone_mapping.yml
+swrecharge_zone_mapping: swrecharge_zone_mapping.yml
 
 # Runoff recharge zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-rorecharge_zone_names: rorecharge_zone_names.yml
+swrecharge_zone_names: swrecharge_zone_names.yml
 
 # Macropore Zone Mapping
 # This parameter is optional
@@ -252,22 +252,22 @@ rapid_runoff_params: rapid_runoff_params.yml
 
 # Runoff Recharge process: can be either "enabled" or "disabled"
 # This parameter is required
-rorecharge_process: enabled
+swrecharge_process: enabled
 
 # Runoff Recharge Proportion of RO
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-rorecharge_proportion: rorecharge_proportion.yml
+swrecharge_proportion: swrecharge_proportion.yml
 
 # Runoff Recharge Limit [mm]
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-rorecharge_limit: rorecharge_limit.yml
+swrecharge_limit: swrecharge_limit.yml
 
 # Runoff Recharge Activation [mm]
 # This parameter is optional. If not specified, it will be set to 0.0.
 # This parameter can accept a path to YAML or CSV
-rorecharge_activation: rorecharge_activation.yml
+swrecharge_activation: swrecharge_activation.yml
 
 
 ######################

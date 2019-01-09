@@ -631,8 +631,8 @@ def val_rapid_runoff_zone_mapping(data, name):
 
 
 ###############################################################################
-def val_rorecharge_zone_names(data, name):
-    """Validate rorecharge_zone_names.
+def val_swrecharge_zone_names(data, name):
+    """Validate swrecharge_zone_names.
 
     1) type has to be a dictionary of strings
     """
@@ -641,8 +641,8 @@ def val_rorecharge_zone_names(data, name):
 
 
 ###############################################################################
-def val_rorecharge_zone_mapping(data, name):
-    """Validate rorecharge_zone_mapping.
+def val_swrecharge_zone_mapping(data, name):
+    """Validate swrecharge_zone_mapping.
 
     1) type has to be a dictionary of integers
     2) all node ids have to be present
@@ -650,7 +650,7 @@ def val_rorecharge_zone_mapping(data, name):
     """
     rorzm = data["params"][name]
     tot = data["params"]["num_nodes"]
-    rzn = data["params"]["rorecharge_zone_names"]
+    rzn = data["params"]["swrecharge_zone_names"]
 
     c.check_type(
         param=rorzm,
@@ -896,8 +896,8 @@ def val_rapid_runoff_params(data, name):
 
 
 ###############################################################################
-def val_rorecharge_process(data, name):
-    """Validate rorecharge_process.
+def val_swrecharge_process(data, name):
+    """Validate swrecharge_process.
 
     1) type has to be a string
     2) value has to be one in ['enabled', 'disabled']
@@ -916,8 +916,8 @@ def val_rorecharge_process(data, name):
 
 
 ###############################################################################
-def val_rorecharge_proportion(data, name):
-    """Validate rorecharge_proportion.
+def val_swrecharge_proportion(data, name):
+    """Validate swrecharge_proportion.
 
     1) type has to be a dict of lists
     2) the top list requires length 12 (months)
@@ -925,7 +925,7 @@ def val_rorecharge_proportion(data, name):
     4) all elements of each list have to be 0 <= x <= 1
     """
     rrp = data["params"][name]
-    rzn = data["params"]["rorecharge_zone_names"]
+    rzn = data["params"]["swrecharge_zone_names"]
 
     c.check_type(
         param=rrp,
@@ -946,15 +946,15 @@ def val_rorecharge_proportion(data, name):
 
 
 ###############################################################################
-def val_rorecharge_limit(data, name):
-    """Validate rorecharge_limit.
+def val_swrecharge_limit(data, name):
+    """Validate swrecharge_limit.
 
     1) type has to be a dict of lists
     2) the top list requires length 12 (months)
     3) the bottom list requires lenght equal to the number of zones
     """
     rrl = data["params"][name]
-    rzn = data["params"]["rorecharge_zone_names"]
+    rzn = data["params"]["swrecharge_zone_names"]
 
     c.check_type(
         param=rrl,
@@ -966,15 +966,15 @@ def val_rorecharge_limit(data, name):
 
 
 ###############################################################################
-def val_rorecharge_activation(data, name):
-    """Validate rorecharge_activation.
+def val_swrecharge_activation(data, name):
+    """Validate swrecharge_activation.
 
     1) type has to be a dict of lists
     2) the top list requires length 12 (months)
     3) the bottom list requires lenght equal to the number of zones
     """
     rra = data["params"][name]
-    rzn = data["params"]["rorecharge_zone_names"]
+    rzn = data["params"]["swrecharge_zone_names"]
 
     c.check_type(
         param=rra,
@@ -1699,8 +1699,8 @@ FUNC_PARAMS = [
     val_temperature_zone_mapping,
     val_subroot_zone_names,
     val_subroot_zone_mapping,
-    val_rorecharge_zone_names,
-    val_rorecharge_zone_mapping,
+    val_swrecharge_zone_names,
+    val_swrecharge_zone_mapping,
     val_macropore_zone_names,
     val_macropore_zone_mapping,
     val_soil_zone_names,
@@ -1712,10 +1712,10 @@ FUNC_PARAMS = [
     val_snow_params,
     val_rapid_runoff_process,
     val_rapid_runoff_params,
-    val_rorecharge_process,
-    val_rorecharge_proportion,
-    val_rorecharge_limit,
-    val_rorecharge_activation,
+    val_swrecharge_process,
+    val_swrecharge_proportion,
+    val_swrecharge_limit,
+    val_swrecharge_activation,
     val_macropore_process,
     val_macropore_proportion,
     val_macropore_limit,
