@@ -449,22 +449,6 @@ def fin_swrecharge_limit(data, name):
 
 
 ###############################################################################
-def fin_swrecharge_activation(data, name):
-    """Finalize the "swrecharge_activation" parameter.
-
-    1) if not provided, set it to 0.0.
-    """
-    params = data["params"]
-    zones = data["params"]["swrecharge_zone_names"]
-    if params[name] is None:
-        params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
-        logging.info('\t\tDefaulted "%s" to [0.0]', name)
-
-    params["ror_act"] = sorted(params[name].items(), key=lambda x: x[0])
-    params["ror_act"] = np.array([i[1] for i in params["ror_act"]])
-
-
-###############################################################################
 def fin_macropore_proportion(data, name):
     """Finalize the "macropore_proportion" parameter.
 
@@ -978,7 +962,6 @@ FUNC_PARAMS = [
     fin_rapid_runoff_params,
     fin_swrecharge_proportion,
     fin_swrecharge_limit,
-    fin_swrecharge_activation,
     fin_macropore_proportion,
     fin_macropore_limit,
     fin_macropore_activation,

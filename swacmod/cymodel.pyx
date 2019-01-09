@@ -12,6 +12,7 @@ from . import utils as u
 from tqdm import tqdm
 import networkx as nx
 
+
 ###############################################################################
 def get_precipitation(data, output, node):
     """C) Precipitation [mm/d]."""
@@ -243,7 +244,6 @@ def get_ae(data, output, node):
                                           dtype=np.int64)
         double [:, :] ror_prop = params['ror_prop']
         double [:, :] ror_limit = params['ror_limit']
-        double [:, :] ror_act = params['ror_act']
         double [:, :] macro_prop = params['macro_prop']
         double [:, :] macro_limit = params['macro_limit']
         double [:, :] macro_act = params['macro_act']
@@ -1138,7 +1138,6 @@ def do_swrecharge_mask(data, runoff, recharge):
         size_t length = len(series['date'])
         double [:, :] ror_prop = params['ror_prop']
         double [:, :] ror_limit = params['ror_limit']
-        double [:, :] ror_act = params['ror_act']
         long long [:] months = np.array(series['months'], dtype=np.int64)
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
 
@@ -1244,7 +1243,6 @@ def all_days_mask(data):
         size_t length = len(series['date'])
         double [:, :] ror_prop = params['ror_prop']
         double [:, :] ror_limit = params['ror_limit']
-        double [:, :] ror_act = params['ror_act']
         long long [:] months = np.array(series['months'], dtype=np.int64)
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
 

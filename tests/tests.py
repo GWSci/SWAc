@@ -97,8 +97,7 @@ class EndToEndTests(unittest.TestCase):
         all_keys = self.data['series'].keys() + self.data['params'].keys()
         for key in all_keys:
             if key in ['date', 'months', 'kc_list', 'ror_prop', 'ror_limit',
-                       'macro_prop', 'macro_limit', 'macro_act', 'macro_rec',
-                       'ror_act']:
+                       'macro_prop', 'macro_limit', 'macro_act', 'macro_rec']:
                 continue
             self.assertTrue(key in self.data['specs'])
 
