@@ -294,42 +294,26 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
             # ended up needing this for catchment output - bit silly
             runoff_recharge = np.array(runoff).copy()
-            # print (type(runoff), type(runoff[0]))
-            t0 = time.time()
             runoff_recharge = np.frombuffer(
                 runoff.get_obj(), dtype=np.float32).copy()
-            print('runoff_recharge 0', time.time() - t0)
             
             # do RoR
             runoff, recharge = m.do_rorecharge_mask(data, runoff, recharge)
-            #runoff, recharge = m.do_rorecharge(data, runoff, recharge)
             # get RoR for cat output purposes
-            t0 = time.time()
             runoff_recharge -= np.frombuffer(
                 runoff.get_obj(), dtype=np.float32).copy()
             print('runoff_recharge 1', time.time() - t0)
             
             # aggregate amended recharge & runoff arrays by output periods
-            print('agg')
-            #m.all_days_mask(data)
-            #for node in tqdm(range(1, nnodes + 1)):
-            #for node in range(1, nnodes + 1):
-            t0 = time.time()
-            lst = list(m.all_days_mask(data).nodes)
-            print('all days mask', (time.time() - t0)/60)
-            for node in tqdm(lst):
+            for node in tqdm(list(m.all_days_mask(data).nodes)):
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
-                t0 = time.time()
+
                 tmp = np.frombuffer(
                     recharge.get_obj(), dtype=np.float32).copy()
-                # print('tmp 0', time.time() - t0)
                 rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-                t0 = time.time()
                 tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32).copy()
-                # print('tmp 1', time.time() - t0)
                 ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-
                 ror_array = np.array(
                     runoff_recharge[idx], dtype=np.float64, copy=True)
 
@@ -354,27 +338,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 sw = {"combined_str": ro_array}
                 ror = {"runoff_recharge": ror_array}
 
-                if "combined_recharge" not in reporting_agg2[rep_zone]:
-                    reporting_agg2[rep_zone][
-                        "combined_recharge"] = m.aggregate(rech, area)
-                else:
-                    reporting_agg2[rep_zone][
-                        "combined_recharge"] = m.aggregate(
-                            rech,
-                            area,
-                            reporting=reporting_agg2[rep_zone]
-                            ["combined_recharge"],
-                        )
-
-                if "combined_str" not in reporting_agg2[rep_zone]:
-                    reporting_agg2[rep_zone]["combined_str"] = m.aggregate(
-                        sw, area)
-                else:
-                    reporting_agg2[rep_zone]["combined_str"] = m.aggregate(
-                        sw,
-                        area,
-                        reporting=reporting_agg2[rep_zone]["combined_str"])
-
                 if "runoff_recharge" not in reporting_agg2[rep_zone]:
                     reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
                         ror, area)
@@ -396,9 +359,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                     print('ROR' + str(node), ror_array)
 
             # copy new bits into cat output
+            term = "runoff_recharge"
             for cat in reporting_agg2:
-                for term in reporting_agg2[cat]:
-                    reporting_agg[cat][term] = reporting_agg2[cat][term][term]
+                reporting_agg[cat]["combined_recharge"] += reporting_agg2[cat][term][term]
+                reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][term][term]
+                reporting_agg[cat]["runoff_recharge"] = reporting_agg2[cat][term][term]
 
         if data["params"]["output_sfr"]:
             # copy array into this fn to avoid unit conversion
@@ -424,7 +389,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             )
 
         for node in list(data["params"]["output_individual"]):
-            #print (' NODE ', node, len(single_node_output[node]["runoff_recharge"]), single_node_output[node]["runoff_recharge"])
             print("\t- Node output file")
             io.dump_water_balance(
                 data,
