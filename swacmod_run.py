@@ -21,7 +21,11 @@ from tqdm import tqdm
 from swacmod import utils as u
 from swacmod import input_output as io
 
+# win fix
 sys.maxint = 2**63 - 1
+
+# sentinel for iteration count
+SENTINEL = 1
 
 # Compile and import model
 u.compile_model()
@@ -124,7 +128,7 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
 
     for node in ids:
 
-        q.put(1)
+        q.put(SENTINEL)
 
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
@@ -247,20 +251,20 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     workers = []
     q = Queue()
+    pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
 
-    def listener(q):
-        pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
+    def listener(q, pbar):
         for item in iter(q.get, None):
             pbar.update()
 
-    lproc = Process(target=listener, args=(q,))
+    lproc = Process(target=listener, args=(q, pbar))
     lproc.start()
 
     for process, chunk in enumerate(chunks):
 
         if chunk.size == 0:
             continue
-        # pbar.update(counter.value())
+
         proc = Process(
             target=run_process,
             args=(process, chunk, data, test, reporting_agg, recharge_agg,
@@ -279,7 +283,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     q.put(None)
     lproc.join()
-
+    pbar.close()
     times["end_of_model"] = time.time()
 
     if not test:
