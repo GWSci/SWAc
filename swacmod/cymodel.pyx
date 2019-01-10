@@ -846,19 +846,16 @@ def get_sfr_file(data, runoff):
             runoff[i] = runoff[i] * areas[node] * fac
             
     ro, flow = np.zeros((nss)), np.zeros((nss))
-    # import time
+
     # populate runoff and flow
-    for per in range(nper):
-        print_progress(per + 1, nper, 'SWAcMod Serial     ')
-        # start = time.clock()
+    for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
+
         ro, flow = get_sfr_flows(sorted_by_ca, idx, runoff, done, areas,
                                  swac_seg_dic, ro, flow, nodes * per)
-        # print 'done get flows', per, time.clock() - start
         for iseg in range(nss):
             sd[iseg]['runoff'] = ro[iseg]
             sd[iseg]['flow'] = flow[iseg]
 
-            
         # add segment data for this period
         seg_data[per] = copy.deepcopy(sd)
         done[:] = 0
@@ -1113,8 +1110,8 @@ def get_evt_file(data, evtrate):
         exdp[inode - 1, 0] = vals[2]
 
     evt_dic = {}
-    for per in range(nper):
-        print_progress(per + 1, nper, 'SWAcMod Serial     ')
+    for per in tqdm(range(nper), desc="Generating EVT flux     "):
+        # print_progress(per + 1, nper, 'SWAcMod Serial     ')
         for inode in range(1, nodes + 1):
             evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
         evt_dic[per] = evtr.copy()
@@ -1163,7 +1160,7 @@ def do_swrecharge_mask(data, runoff, recharge):
                 for n in lst:
                 # for n in nx.ancestors(Gc, node):
                     mask[n-1] = 1
-        print("month", month_num, 'UPSTREAM mask size', mask.sum())
+        # print("month", month_num, 'UPSTREAM mask size', mask.sum())
         return build_graph(nnodes, sorted_by_ca, mask)
 
     # compute monthly mask dictionary
@@ -1171,7 +1168,8 @@ def do_swrecharge_mask(data, runoff, recharge):
     for month in range(12):
         Gp[month] = compute_upstream_month_mask(month)
 
-    for day in tqdm(range(length)):
+    # pbar = tqdm(total=range(length))
+    for day in tqdm(range(length), desc="Accumulating SW recharge"):
         month = months[day]
 
         # accumulate flows for today
@@ -1191,7 +1189,7 @@ def do_swrecharge_mask(data, runoff, recharge):
                 # col_runoff_recharge[day] = qty
                 recharge[(nnodes * day) + node] += qty
                 runoff[(nnodes * day) + node] -= qty
-
+        # pbar.update(day)
     return runoff, recharge
 
 

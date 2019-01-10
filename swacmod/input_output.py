@@ -19,6 +19,7 @@ except ImportError:
 import h5py
 import numpy
 from dateutil import parser
+from tqdm import tqdm
 
 # Internal modules
 from . import utils as u
@@ -504,9 +505,9 @@ def load_params_from_yaml(specs_file=u.CONSTANTS['SPECS_FILE'],
                or '_locs' in i) and i not in
                ['rainfall_zone_mapping', 'pe_zone_mapping',
                 'subroot_zone_mapping']]
-    
-    for num, param in enumerate(params):
-        print_progress(num + 1, len(params), 'SWAcMod load params')
+
+    for param in tqdm(params, desc='SWAcMod load params     '):
+        # print_progress(num + 1, len(params), 'SWAcMod load params')
         if isinstance(params[param], str) and 'alt_format' in specs[param]:
             absolute = os.path.join(input_dir, params[param])
             ext = params[param].split('.')[-1]

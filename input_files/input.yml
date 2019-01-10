@@ -260,12 +260,6 @@ swrecharge_proportion: swrecharge_proportion.yml
 # This parameter can accept a path to YAML or CSV
 swrecharge_limit: swrecharge_limit.yml
 
-# Runoff Recharge Activation [mm]
-# This parameter is optional. If not specified, it will be set to 0.0.
-# This parameter can accept a path to YAML or CSV
-swrecharge_activation: swrecharge_activation.yml
-
-
 ######################
 # Process: Macropore #
 ######################

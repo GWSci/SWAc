@@ -11,7 +11,7 @@ import random
 import logging
 import argparse
 from multiprocessing import (Process, Manager, freeze_support, Array, Queue,
-                             Value)
+                             Value, Pool)
 
 # Third Party Libraries
 import numpy as np
@@ -44,20 +44,6 @@ class Worker:
         if self.verbose:
             print("join ", self.name)
         self.process.join()
-
-
-class Counter:
-    def __init__(self, initval=0):
-        self.val = Value("i", initval)
-        self.lock = self.val.get_lock()
-
-    def increment(self):
-        with self.lock:
-            self.val.value += 1
-
-    def value(self):
-        with self.lock:
-            return self.val.value
 
 
 ###############################################################################
@@ -129,16 +115,17 @@ def get_output(data, node):
 ###############################################################################
 def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
                 evtr_agg, recharge, runoff, log_path, level, file_format,
-                reduced, output_dir, spatial, spatial_index, counter,
-                reporting, single_node_output):
+                reduced, output_dir, spatial, spatial_index,
+                reporting, single_node_output, q):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info("Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
 
     for node in ids:
-        counter.increment()
-        io.print_progress(counter.value(), nnodes, "SWAcMod Parallel   ")
+
+        q.put(1)
+
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
             output = get_output(data, node)
@@ -196,6 +183,7 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
                         output, area, index=spatial_index)
 
     logging.info("Process %d ended", num)
+
     return (reporting_agg, recharge_agg, spatial, runoff_agg, evtr_agg,
             recharge, runoff, reporting, single_node_output)
 
@@ -210,7 +198,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     reporting_agg2 = {}
     reporting = manager.dict()
     spatial = manager.dict()
-    counter = Counter()
+
     single_node_output = manager.dict()
     specs_file = u.CONSTANTS["SPECS_FILE"]
     if test:
@@ -258,27 +246,39 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
         spatial_index = None
 
     workers = []
+    q = Queue()
+
+    def listener(q):
+        pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
+        for item in iter(q.get, None):
+            pbar.update()
+
+    lproc = Process(target=listener, args=(q,))
+    lproc.start()
 
     for process, chunk in enumerate(chunks):
 
         if chunk.size == 0:
             continue
-
+        # pbar.update(counter.value())
         proc = Process(
             target=run_process,
             args=(process, chunk, data, test, reporting_agg, recharge_agg,
                   runoff_agg, evtr_agg, recharge, runoff, log_path, level,
                   file_format, reduced, u.CONSTANTS["OUTPUT_DIR"], spatial,
-                  spatial_index, counter, reporting, single_node_output))
+                  spatial_index, reporting, single_node_output, q))
 
         workers.append(
-            Worker("worker%d" % process, Queue(), proc, verbose=False))
+            Worker("worker%d" % process, q, proc, verbose=False))
 
     for p in workers:
         p.start()
 
     for p in workers:
         p.join()
+
+    q.put(None)
+    lproc.join()
 
     times["end_of_model"] = time.time()
 
@@ -304,7 +304,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 runoff.get_obj(), dtype=np.float32).copy()
             
             # aggregate amended recharge & runoff arrays by output periods
-            for node in tqdm(list(m.all_days_mask(data).nodes)):
+            for node in tqdm(list(m.all_days_mask(data).nodes),
+                             desc="Aggregating Fluxes      "):
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
 
@@ -355,7 +356,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                     tmp_node["combined_recharge"] = np.copy(rch_array)
                     tmp_node["combined_str"] = np.copy(ro_array)
                     single_node_output[node] = tmp_node
-                    print('ROR' + str(node), ror_array)
 
             # copy new bits into cat output
             term = "runoff_recharge"
