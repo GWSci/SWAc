@@ -253,11 +253,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     q = Queue()
     pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
 
-    def listener(q, pbar):
+    def listener(q,):
         for item in iter(q.get, None):
             pbar.update()
 
-    lproc = Process(target=listener, args=(q, pbar))
+    lproc = Process(target=listener, args=(q,))
     lproc.start()
 
     for process, chunk in enumerate(chunks):
