@@ -283,6 +283,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     q.put(None)
     lproc.join()
+    pbar.update(nnodes - pbar.last_print_n)
     pbar.close()
     times["end_of_model"] = time.time()
 
