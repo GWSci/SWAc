@@ -193,6 +193,15 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
 
 
 ###############################################################################
+
+# this stuff stranded here for windows
+
+def listener(q, pbar):
+    for item in iter(q.get, None):
+        pbar.update()
+
+
+###############################################################################
 def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     """Run model for all nodes."""
     times = {"start_of_run": time.time()}
@@ -252,12 +261,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     workers = []
     q = Queue()
     pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
-
-    def listener(q,):
-        for item in iter(q.get, None):
-            pbar.update()
-
-    lproc = Process(target=listener, args=(q,))
+    lproc = Process(target=listener, args=(q, pbar))
     lproc.start()
 
     for process, chunk in enumerate(chunks):
