@@ -194,14 +194,21 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
 
 ###############################################################################
 
-# this stuff stranded here for windows
+# this stuff stranded here for windows - multiprocessing cannot handle
+#  - functions not in the top level
+#  - not pickleable objects as argumnets to that function :(
 
-def listener(q, pbar):
+
+def listener(q, total):
+    pbar = tqdm(total=total, desc="SWAcMod Parallel        ")
     for item in iter(q.get, None):
         pbar.update()
+    pbar.close()
 
 
 ###############################################################################
+
+
 def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     """Run model for all nodes."""
     times = {"start_of_run": time.time()}
@@ -260,8 +267,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     workers = []
     q = Queue()
-    pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
-    lproc = Process(target=listener, args=(q, pbar))
+    lproc = Process(target=listener, args=(q, nnodes))
     lproc.start()
 
     for process, chunk in enumerate(chunks):
@@ -287,8 +293,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     q.put(None)
     lproc.join()
-    pbar.update(nnodes - pbar.last_print_n)
-    pbar.close()
+
     times["end_of_model"] = time.time()
 
     if not test:
