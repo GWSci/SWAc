@@ -11,7 +11,7 @@ import random
 import logging
 import argparse
 from multiprocessing import (Process, Manager, freeze_support, Array, Queue,
-                             Value, Pool)
+                             Value, Pool, set_start_method)
 
 # Third Party Libraries
 import numpy as np
@@ -248,17 +248,21 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     evtr_agg = Array("f", len_rch_agg)
     days = len(data["series"]["date"])
     len_rch = (nnodes * days) + 1
-    recharge = Array("f", len_rch)
-    runoff = Array("f", len_rch)
+
+    if params["swrecharge_process"] == "enabled":
+        recharge = Array("f", len_rch)
+        runoff = Array("f", len_rch)
+    else:
+        recharge = Array("f", 1)
+        runoff = Array("f", 1)
+
     ids = range(1, nnodes + 1)
     random.shuffle(list(ids))
     chunks = np.array_split(ids, data["params"]["num_cores"])
-
     times["end_of_input"] = time.time()
 
     if data["params"]["spatial_output_date"] == "mean":
         spatial_index = range(per)
-
     elif data["params"]["spatial_output_date"] is not None:
         spatial_index = (data["params"]["spatial_output_date"] -
                          data["params"]["start_date"]).days
