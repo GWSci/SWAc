@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
@@ -168,8 +168,8 @@ def run_process(
                 if data["params"]["output_recharge"]:
                     rech = {"recharge": output["combined_recharge"].copy()}
                     for i, p in enumerate(
-                        u.aggregate_output_col(data, rech, "recharge", method="average")
-                    ):
+                        u.aggregate_output_col(data, rech, "recharge",
+                                               method="average")):
                         recharge_agg[(nnodes * i) + int(node)] = p
                     rech = None
 
@@ -188,21 +188,22 @@ def run_process(
                 if data["params"]["output_sfr"]:
                     ro = {"runoff": output["combined_str"].copy()}
                     for i, p in enumerate(
-                        u.aggregate_output_col(data, ro, "runoff", method="average")
-                    ):
+                        u.aggregate_output_col(data, ro, "runoff",
+                                               method="average")):
                         runoff_agg[(nnodes * i) + int(node)] = p
                     ro = None
 
                 if data["params"]["output_evt"]:
                     evt = {"evtr": output["unutilised_pe"].copy()}
                     for i, p in enumerate(
-                        u.aggregate_output_col(data, evt, "evtr", method="average")
-                    ):
+                        u.aggregate_output_col(data, evt, "evtr",
+                                               method="average")):
                         evtr_agg[(nnodes * i) + int(node)] = p
                     evt = None
 
                 if data["params"]["spatial_output_date"]:
-                    spatial[node] = m.aggregate(output, area, index=spatial_index)
+                    spatial[node] = m.aggregate(output, area,
+                                                index=spatial_index)
 
     logging.info("Process %d ended", num)
 
