@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 from __future__ import print_function
+
 """SWAcMod main."""
 
 # Standard Library
@@ -10,8 +11,7 @@ import time
 import random
 import logging
 import argparse
-from multiprocessing import (Process, Manager, freeze_support, Array, Queue,
-                             Value, Pool)
+from multiprocessing import Process, Manager, freeze_support, Array, Queue
 
 # Third Party Libraries
 import numpy as np
@@ -22,7 +22,7 @@ from swacmod import utils as u
 from swacmod import input_output as io
 
 # win fix
-sys.maxint = 2**63 - 1
+sys.maxint = 2 ** 63 - 1
 
 # sentinel for iteration count
 SENTINEL = 1
@@ -73,37 +73,37 @@ def get_output(data, node):
 
     output = {}
     for function in [
-            m.get_precipitation,
-            m.get_pe,
-            m.get_pefac,
-            m.get_canopy_storage,
-            m.get_net_pefac,
-            m.get_precip_to_ground,
-            m.get_snowfall_o,
-            m.get_rainfall_o,
-            m.get_snow,
-            m.get_net_rainfall,
-            m.get_rawrew,
-            m.get_tawtew,
-            m.get_ae,
-            m.get_unutilised_pe,
-            m.get_rejected_recharge,
-            m.get_perc_through_root,
-            m.get_subroot_leak,
-            m.get_interflow_bypass,
-            m.get_interflow_store_input,
-            m.get_interflow,
-            m.get_recharge_store_input,
-            m.get_recharge,
-            m.get_swabs,
-            m.get_swdis,
-            m.get_combined_str,
-            m.get_combined_ae,
-            m.get_evt,
-            m.get_average_in,
-            m.get_average_out,
-            m.get_change,
-            m.get_balance,
+        m.get_precipitation,
+        m.get_pe,
+        m.get_pefac,
+        m.get_canopy_storage,
+        m.get_net_pefac,
+        m.get_precip_to_ground,
+        m.get_snowfall_o,
+        m.get_rainfall_o,
+        m.get_snow,
+        m.get_net_rainfall,
+        m.get_rawrew,
+        m.get_tawtew,
+        m.get_ae,
+        m.get_unutilised_pe,
+        m.get_rejected_recharge,
+        m.get_perc_through_root,
+        m.get_subroot_leak,
+        m.get_interflow_bypass,
+        m.get_interflow_store_input,
+        m.get_interflow,
+        m.get_recharge_store_input,
+        m.get_recharge,
+        m.get_swabs,
+        m.get_swdis,
+        m.get_combined_str,
+        m.get_combined_ae,
+        m.get_evt,
+        m.get_average_in,
+        m.get_average_out,
+        m.get_change,
+        m.get_balance,
     ]:
 
         columns = function(data, output, node)
@@ -117,10 +117,28 @@ def get_output(data, node):
 
 
 ###############################################################################
-def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
-                evtr_agg, recharge, runoff, log_path, level, file_format,
-                reduced, output_dir, spatial, spatial_index,
-                reporting, single_node_output, q):
+def run_process(
+    num,
+    ids,
+    data,
+    test,
+    reporting_agg,
+    recharge_agg,
+    runoff_agg,
+    evtr_agg,
+    recharge,
+    runoff,
+    log_path,
+    level,
+    file_format,
+    reduced,
+    output_dir,
+    spatial,
+    spatial_index,
+    reporting,
+    single_node_output,
+    q,
+):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
     logging.info("Process %d started (%d nodes)", num, len(ids))
@@ -144,13 +162,14 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
                     reporting_agg[key] = m.aggregate(output, area)
                 else:
                     reporting_agg[key] = m.aggregate(
-                        output, area, reporting=reporting_agg[key])
+                        output, area, reporting=reporting_agg[key]
+                    )
 
                 if data["params"]["output_recharge"]:
                     rech = {"recharge": output["combined_recharge"].copy()}
                     for i, p in enumerate(
-                            u.aggregate_output_col(
-                                data, rech, "recharge", method="average")):
+                        u.aggregate_output_col(data, rech, "recharge", method="average")
+                    ):
                         recharge_agg[(nnodes * i) + int(node)] = p
                     rech = None
 
@@ -169,27 +188,35 @@ def run_process(num, ids, data, test, reporting_agg, recharge_agg, runoff_agg,
                 if data["params"]["output_sfr"]:
                     ro = {"runoff": output["combined_str"].copy()}
                     for i, p in enumerate(
-                            u.aggregate_output_col(
-                                data, ro, "runoff", method="average")):
+                        u.aggregate_output_col(data, ro, "runoff", method="average")
+                    ):
                         runoff_agg[(nnodes * i) + int(node)] = p
                     ro = None
 
                 if data["params"]["output_evt"]:
                     evt = {"evtr": output["unutilised_pe"].copy()}
                     for i, p in enumerate(
-                            u.aggregate_output_col(
-                                data, evt, "evtr", method="average")):
+                        u.aggregate_output_col(data, evt, "evtr", method="average")
+                    ):
                         evtr_agg[(nnodes * i) + int(node)] = p
                     evt = None
 
                 if data["params"]["spatial_output_date"]:
-                    spatial[node] = m.aggregate(
-                        output, area, index=spatial_index)
+                    spatial[node] = m.aggregate(output, area, index=spatial_index)
 
     logging.info("Process %d ended", num)
 
-    return (reporting_agg, recharge_agg, spatial, runoff_agg, evtr_agg,
-            recharge, runoff, reporting, single_node_output)
+    return (
+        reporting_agg,
+        recharge_agg,
+        spatial,
+        runoff_agg,
+        evtr_agg,
+        recharge,
+        runoff,
+        reporting,
+        single_node_output,
+    )
 
 
 ###############################################################################
@@ -264,8 +291,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     if data["params"]["spatial_output_date"] == "mean":
         spatial_index = range(per)
     elif data["params"]["spatial_output_date"] is not None:
-        spatial_index = (data["params"]["spatial_output_date"] -
-                         data["params"]["start_date"]).days
+        spatial_index = (
+            data["params"]["spatial_output_date"] - data["params"]["start_date"]
+        ).days
     else:
         spatial_index = None
 
@@ -281,13 +309,31 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
         proc = Process(
             target=run_process,
-            args=(process, chunk, data, test, reporting_agg, recharge_agg,
-                  runoff_agg, evtr_agg, recharge, runoff, log_path, level,
-                  file_format, reduced, u.CONSTANTS["OUTPUT_DIR"], spatial,
-                  spatial_index, reporting, single_node_output, q))
+            args=(
+                process,
+                chunk,
+                data,
+                test,
+                reporting_agg,
+                recharge_agg,
+                runoff_agg,
+                evtr_agg,
+                recharge,
+                runoff,
+                log_path,
+                level,
+                file_format,
+                reduced,
+                u.CONSTANTS["OUTPUT_DIR"],
+                spatial,
+                spatial_index,
+                reporting,
+                single_node_output,
+                q,
+            ),
+        )
 
-        workers.append(
-            Worker("worker%d" % process, q, proc, verbose=False))
+        workers.append(Worker("worker%d" % process, q, proc, verbose=False))
 
     for p in workers:
         p.start()
@@ -312,28 +358,25 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
             # ended up needing this for catchment output - bit silly
             runoff_recharge = np.array(runoff).copy()
-            runoff_recharge = np.frombuffer(
-                runoff.get_obj(), dtype=np.float32).copy()
-            
+            runoff_recharge = np.frombuffer(runoff.get_obj(), dtype=np.float32).copy()
+
             # do RoR
             runoff, recharge = m.do_swrecharge_mask(data, runoff, recharge)
             # get RoR for cat output purposes
-            runoff_recharge -= np.frombuffer(
-                runoff.get_obj(), dtype=np.float32).copy()
-            
+            runoff_recharge -= np.frombuffer(runoff.get_obj(), dtype=np.float32).copy()
+
             # aggregate amended recharge & runoff arrays by output periods
-            for node in tqdm(list(m.all_days_mask(data).nodes),
-                             desc="Aggregating Fluxes      "):
+            for node in tqdm(
+                list(m.all_days_mask(data).nodes), desc="Aggregating Fluxes      "
+            ):
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
 
-                tmp = np.frombuffer(
-                    recharge.get_obj(), dtype=np.float32).copy()
+                tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32).copy()
                 rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
                 tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32).copy()
                 ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-                ror_array = np.array(
-                    runoff_recharge[idx], dtype=np.float64, copy=True)
+                ror_array = np.array(runoff_recharge[idx], dtype=np.float64, copy=True)
 
                 # aggregate single node of recharge array
                 rch_agg = u.aggregate_array(data, rch_array)
@@ -357,13 +400,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 ror = {"runoff_recharge": ror_array}
 
                 if "runoff_recharge" not in reporting_agg2[rep_zone]:
-                    reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                        ror, area)
+                    reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(ror, area)
                 else:
                     reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                        ror,
-                        area,
-                        reporting=reporting_agg2[rep_zone]["runoff_recharge"])
+                        ror, area, reporting=reporting_agg2[rep_zone]["runoff_recharge"]
+                    )
 
                 # check for single node
                 if node in data["params"]["output_individual"]:
@@ -378,7 +419,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             # copy new bits into cat output
             term = "runoff_recharge"
             for cat in reporting_agg2:
-                reporting_agg[cat]["combined_recharge"] += reporting_agg2[cat][term][term]
+                reporting_agg[cat]["combined_recharge"] += reporting_agg2[cat][term][
+                    term
+                ]
                 reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][term][term]
                 reporting_agg[cat]["runoff_recharge"] = reporting_agg2[cat][term][term]
 
@@ -394,8 +437,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
         for num, key in enumerate(reporting_agg.keys()):
-            print("\t- Report file (%d of %d)" % (num + 1,
-                                                  len(reporting_agg.keys())))
+            print("\t- Report file (%d of %d)" % (num + 1, len(reporting_agg.keys())))
             io.dump_water_balance(
                 data,
                 reporting_agg[key],
@@ -422,7 +464,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
         if data["params"]["spatial_output_date"]:
             print("\t- Spatial file")
             io.dump_spatial_output(
-                data, spatial, u.CONSTANTS["OUTPUT_DIR"], reduced=reduced)
+                data, spatial, u.CONSTANTS["OUTPUT_DIR"], reduced=reduced
+            )
         if data["params"]["output_sfr"]:
             print("\t- SFR file")
             io.dump_sfr_output(sfr)
@@ -437,16 +480,24 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     per_node = int(round(diff * 1000 / data["params"]["num_nodes"]))
 
-    cores = ("%d cores" % data["params"]["num_cores"]
-             if data["params"]["num_cores"] != 1 else "1 core")
+    cores = (
+        "%d cores" % data["params"]["num_cores"]
+        if data["params"]["num_cores"] != 1
+        else "1 core"
+    )
 
     print("\nPerformance (%s)" % cores)
-    print("Input time:  %s" %
-          io.format_time(times["end_of_input"] - times["start_of_run"]))
-    print("Run time:    %s" %
-          io.format_time(times["end_of_model"] - times["end_of_input"]))
-    print("Output time: %s" %
-          io.format_time(times["end_of_run"] - times["end_of_model"]))
+    print(
+        "Input time:  %s"
+        % io.format_time(times["end_of_input"] - times["start_of_run"])
+    )
+    print(
+        "Run time:    %s"
+        % io.format_time(times["end_of_model"] - times["end_of_input"])
+    )
+    print(
+        "Output time: %s" % io.format_time(times["end_of_run"] - times["end_of_model"])
+    )
     print("Total time:  %s (%d msec/node)" % (total, per_node))
     print("")
 
@@ -464,16 +515,12 @@ if __name__ == "__main__":
     FORM = argparse.RawTextHelpFormatter
 
     PARSER = argparse.ArgumentParser(description=DESCRIPTION)
+    PARSER.add_argument("-t", "--test", help="run with no output", action="store_true")
+    PARSER.add_argument("-d", "--debug", help="verbose log", action="store_true")
+    PARSER.add_argument("-r", "--reduced", help="reduced output", action="store_true")
     PARSER.add_argument(
-        "-t", "--test", help="run with no output", action="store_true")
-    PARSER.add_argument(
-        "-d", "--debug", help="verbose log", action="store_true")
-    PARSER.add_argument(
-        "-r", "--reduced", help="reduced output", action="store_true")
-    PARSER.add_argument(
-        "-i",
-        "--input_yml",
-        help="path to input yaml file inside input directory")
+        "-i", "--input_yml", help="path to input yaml file inside input directory"
+    )
     PARSER.add_argument("-o", "--output_dir", help="path to output directory")
     PARSER.add_argument(
         "-f",
@@ -492,8 +539,10 @@ if __name__ == "__main__":
     ARGS = PARSER.parse_args()
     if ARGS.input_yml:
         if not ARGS.input_yml.endswith(".yml"):
-            print('\nError: use "-i" or "--input_yml" to specify the path '
-                  'to "input.yml"\n')
+            print(
+                '\nError: use "-i" or "--input_yml" to specify the path '
+                'to "input.yml"\n'
+            )
             sys.exit()
         u.CONSTANTS["INPUT_FILE"] = ARGS.input_yml
         u.CONSTANTS["INPUT_DIR"] = os.path.dirname(ARGS.input_yml)
