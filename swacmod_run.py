@@ -3,7 +3,6 @@
 from __future__ import print_function
 """SWAcMod main."""
 
-
 # Standard Library
 import os
 import sys
