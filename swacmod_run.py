@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 """SWAcMod main."""
@@ -11,7 +11,7 @@ import random
 import logging
 import argparse
 from multiprocessing import (Process, Manager, freeze_support, Array, Queue,
-                             Value, Pool, set_start_method)
+                             Value, Pool)
 
 # Third Party Libraries
 import numpy as np

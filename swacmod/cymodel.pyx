@@ -1,4 +1,3 @@
-# cython: language_level=3
 # -*- coding: utf-8 -*-
 """SWAcMod model functions in Cython."""
 
@@ -674,9 +673,11 @@ def get_balance(data, output, node):
 def aggregate(output, area, reporting=None, index=None):
     """Aggregate reporting."""
     new_rep = {}
-    
+
+    not_scalar = (type(index) is range or type(index) is list)
+
     for key in output:
-        if isinstance(index, list):
+        if not_scalar:
             new_rep[key] = output[key][index].mean(dtype=np.float64) * area
         elif index is not None:
             new_rep[key] = output[key][index] * area
