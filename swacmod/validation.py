@@ -1674,6 +1674,23 @@ def val_nevtopt(data, name):
     )
 
 
+###############################################################################
+def val_gwmodel_type(data, name):
+    """Validate gwmodel_type.
+
+    1) type has to be a string
+    2) value has to be one in ['mf6', 'mfusg']
+    """
+    rap = data["params"][name]
+
+    c.check_type(param=rap, name=name, t_types=data["specs"][name]["type"])
+
+    c.check_values_limits(
+        values=[rap], name=name, constraints=data["specs"][name]["constraints"]
+    )
+
+
+
 FUNC_PARAMS = [
     val_run_name,
     val_num_cores,
@@ -1750,6 +1767,7 @@ FUNC_PARAMS = [
     val_evt_parameters,
     val_ievtcb,
     val_nevtopt,
+    val_gwmodel_type
 ]
 
 

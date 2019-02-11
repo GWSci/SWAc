@@ -667,3 +667,9 @@ swabs_f:
     constraints: [0, 1, 2]
     type:
         - !!python/name:int
+
+gwmodel_type:
+    required: false
+    type:
+        - !!python/name:str
+    constraints: ["mf6", "mfusg"]

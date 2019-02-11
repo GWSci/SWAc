@@ -510,3 +510,29 @@ temperature_ts: temperature_ts.yml
 # This parameter is required only if the Leakage process is enabled.
 # This parameter can accept a path to YAML or CSV
 subroot_leakage_ts: subroot_leakage_ts.yml
+
+gwmodel_type: mf6
+
+##############
+#EVT         #
+##############
+
+# Output evt file switch
+# Can be either true or false
+# This parameter is optional. If not specified, it will be set to "false".
+output_evt: true
+
+# evt parameters (ievt, surf, exdp)
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+evt_parameters: evt_params.csv
+
+# ievtcb
+# This parameter is an integer.
+# This parameter is optional. If not specified, it will be set to 50.
+#ievtcb: 50
+
+# nevtopt
+# This parameter is an integer.
+# This parameter is optional. If not specified, it will be set to 2.
+#nevtopt: 2

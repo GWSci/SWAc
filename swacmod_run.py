@@ -431,7 +431,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
 
         if data["params"]["output_evt"]:
-            evt = m.get_evt_file(data, evtr_agg)
+                evt = m.get_evt_file(data, evtr_agg)
 
         print("\nWriting output files:")
         if not skip:
@@ -461,18 +461,30 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
-            io.dump_recharge_file(data, recharge_agg)
+            if data['params']['gwmodel_type'] == 'mfusg':
+                io.dump_recharge_file(data, recharge_agg)
+            elif data['params']['gwmodel_type'] == 'mf6':
+                m.get_rch_file(data, recharge_agg).write()
+
         if data["params"]["spatial_output_date"]:
             print("\t- Spatial file")
             io.dump_spatial_output(
                 data, spatial, u.CONSTANTS["OUTPUT_DIR"], reduced=reduced
             )
+
         if data["params"]["output_sfr"]:
             print("\t- SFR file")
-            io.dump_sfr_output(sfr)
+            if data['params']['gwmodel_type'] == 'mfusg':
+                io.dump_sfr_output(sfr)
+            elif data['params']['gwmodel_type'] == 'mf6':
+                sfr.write()
+
         if data["params"]["output_evt"]:
             print("\t- EVT file")
-            io.dump_evt_output(evt)
+            if data['params']['gwmodel_type'] == 'mfusg':
+                io.dump_evt_output(evt)
+            elif data['params']['gwmodel_type'] == 'mf6':
+                evt.write()
 
     times["end_of_run"] = time.time()
 

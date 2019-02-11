@@ -804,6 +804,18 @@ def fin_swabs_f(data, name):
 
 
 ###############################################################################
+def fin_gwmodel_type(data, name):
+    """Finalize the "gwmodel_type" parameter.
+
+    1) if not provided, set to "mfusg".
+    """
+    params = data["params"]
+    if params[name] is None:
+        params["gwmodel_type"] = "mfusg"
+        logging.info('\t\tSwitched "gwmodel_type" to "mfusg"')
+
+
+###############################################################################
 def fin_date(data, name):
     """Finalize the "date" series."""
     series, params = data["series"], data["params"]
