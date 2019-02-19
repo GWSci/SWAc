@@ -1627,6 +1627,21 @@ def val_output_evt(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
+###############################################################################
+def val_excess_sw_process(data, name):
+    """Validate excess_sw_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    cpr = data["params"][name]
+
+    c.check_type(param=cpr, name=name, t_types=data["specs"][name]["type"])
+
+    c.check_values_limits(
+        values=[cpr], name=name, constraints=data["specs"][name]["constraints"]
+    )
+
 
 ###############################################################################
 def val_evt_parameters(data, name):
@@ -1767,7 +1782,8 @@ FUNC_PARAMS = [
     val_evt_parameters,
     val_ievtcb,
     val_nevtopt,
-    val_gwmodel_type
+    val_gwmodel_type,
+    val_excess_sw_process
 ]
 
 

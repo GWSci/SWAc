@@ -522,6 +522,9 @@ gwmodel_type: mf6
 # This parameter is optional. If not specified, it will be set to "false".
 output_evt: true
 
+# allow excess sw to modflow evt process
+excess_sw_process: enabled
+
 # evt parameters (ievt, surf, exdp)
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV

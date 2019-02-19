@@ -62,6 +62,12 @@ output_evt:
     type:
         - !!python/name:bool
 
+excess_sw_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
 ievtcb:
     required: false
     type:

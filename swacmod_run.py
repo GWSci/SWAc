@@ -431,6 +431,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
 
         if data["params"]["output_evt"]:
+            if data["params"]["excess_sw_process"] == "enabled":
+                evt = m.get_evt_file(data, evtr_agg - np.copy(np.array(runoff_agg)))
+            else:
                 evt = m.get_evt_file(data, evtr_agg)
 
         print("\nWriting output files:")
