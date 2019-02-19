@@ -523,7 +523,7 @@ gwmodel_type: mf6
 output_evt: true
 
 # allow excess sw to modflow evt process
-excess_sw_process: enabled
+excess_sw_process: disabled
 
 # evt parameters (ievt, surf, exdp)
 # This parameter is optional

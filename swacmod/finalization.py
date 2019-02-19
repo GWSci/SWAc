@@ -931,11 +931,15 @@ def fin_gwmodel_type(data, name):
 
 
 ###############################################################################
-def fin_evt_parameters(data, name):
-    """Finalize the "evt_parameters" parameter.
 
+
+def fin_evt_parameters(data, name):
+
+
+    """Finalize the "evt_parameters" parameter.
     1) if not provided, set it to all zero.
     """
+
     params = data["params"]
     if data["params"][name] is None:
         nodes = data["params"]["num_nodes"]
@@ -944,6 +948,13 @@ def fin_evt_parameters(data, name):
         logging.info('\t\tDefaulted "%s" to %s', name, zeros)
         params["output_evt"] = False
         logging.info('\t\tSwitched "output_evt" to "false", missing %s', name)
+
+    if (data["params"]["output_sfr"] and
+        data["params"]["excess_sw_process"] == "enabled"):
+        mgs = ("Modflow SFR output and excess_sw_process enabled"
+               " - you may not want to do this")
+        logging.info('\t\t' + msg)
+        print("Warning: " + msg)
 
 
 ###############################################################################
