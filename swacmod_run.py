@@ -185,7 +185,8 @@ def run_process(
                         runoff[(nnodes * i) + int(node)] = p
                     ro = None
 
-                if data["params"]["output_sfr"]:
+                if (data["params"]["output_sfr"] or
+                    data["params"]["excess_sw_process"] == "enabled"):
                     ro = {"runoff": output["combined_str"].copy()}
                     for i, p in enumerate(
                         u.aggregate_output_col(data, ro, "runoff",
@@ -432,7 +433,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
         if data["params"]["output_evt"]:
             if data["params"]["excess_sw_process"] == "enabled":
-                evt = m.get_evt_file(data, evtr_agg - np.copy(np.array(runoff_agg)))
+                evt = m.get_evt_file(data, evtr_agg -
+                                     np.copy(np.array(runoff_agg)))
             else:
                 evt = m.get_evt_file(data, evtr_agg)
 
