@@ -917,6 +917,18 @@ def fin_excess_sw_process(data, name):
         params["excess_sw_process"] = "disabled"
         logging.info('\t\tSwitched "excess_sw_process" to "disabled", missing %s', name)
 
+###############################################################################
+def fin_gwmodel_type(data, name):
+    """Finalize the "gwmodel_type" parameter.
+
+    1) if not provided, set "gwmodel_type" to "mfusg".
+    """
+    params = data["params"]
+    if params[name] is None:
+        params["gwmodel_type"] = "mfusg"
+        logging.info('\t\tSwitched "gwmodel_type" to "mfusg", missing %s', name)
+
+
 
 ###############################################################################
 def fin_evt_parameters(data, name):
@@ -1014,6 +1026,7 @@ FUNC_PARAMS = [
   fin_ievtcb,
   fin_nevtopt,
   fin_excess_sw_process,
+  fin_gwmodel_type
 ]
 
 
