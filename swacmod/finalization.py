@@ -951,7 +951,7 @@ def fin_evt_parameters(data, name):
 
     if (data["params"]["output_sfr"] and
         data["params"]["excess_sw_process"] != "disabled"):
-        mgs = ("Modflow SFR output and excess_sw_process enabled"
+        msg = ("Modflow SFR output and excess_sw_process enabled"
                " - you may not want to do this")
         logging.info('\t\t' + msg)
         print("Warning: " + msg)

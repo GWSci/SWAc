@@ -617,7 +617,7 @@ def get_rch_file(data, rchrate):
                 spd[per][i] = ((i,), rchrate[(nodes * per) + i + 1] * fac)
 
         rch_out = flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(m,
-                                                           fixed_cell=True,
+                                                           fixed_cell=False,
                                                            print_input=None,
                                                            print_flows=None,
                                                            save_flows=None,
@@ -1330,7 +1330,7 @@ def get_evt_file(data, evtrate):
                                             exdp[i, 0], 0.0)
 
         evt_out = flopy.mf6.modflow.mfgwfevt.ModflowGwfevt(m,
-                                                           fixed_cell=True,
+                                                           fixed_cell=False,
                                                            print_input=None,
                                                            print_flows=None,
                                                            save_flows=None,

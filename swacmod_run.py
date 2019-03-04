@@ -186,7 +186,7 @@ def run_process(
                     ro = None
 
                 if (data["params"]["output_sfr"] or
-                    data["params"]["excess_sw_process"] == "enabled"):
+                    data["params"]["excess_sw_process"] != "disabled"):
                     ro = {"runoff": output["combined_str"].copy()}
                     for i, p in enumerate(
                         u.aggregate_output_col(data, ro, "runoff",
