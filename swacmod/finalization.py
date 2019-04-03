@@ -1033,10 +1033,10 @@ FUNC_PARAMS = [
   fin_swdis_f,
   fin_swabs_f,
   fin_output_evt,
+  fin_excess_sw_process,
   fin_evt_parameters,
   fin_ievtcb,
   fin_nevtopt,
-  fin_excess_sw_process,
   fin_gwmodel_type
 ]
 
