@@ -92,6 +92,13 @@ irchcb: 50
 # This parameter is optional. If not specified, it will be set to 10.
 nodes_per_line: 5
 
+# Map recharge to specific nodes.
+# This parameter can accept a path to YAML or CSV
+# Optional, if omitted assumes recharge goes to upper most active layer
+# file is in the format SWAcNode,MFNode
+# recharge_node_mapping:
+
+
 # Output unit conversion factor
 # This parameter is a positive float.
 # This parameter is optional. If not specified, it will be set to 1.0
