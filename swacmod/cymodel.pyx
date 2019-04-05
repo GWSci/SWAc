@@ -968,9 +968,9 @@ def get_sfr_file(data, runoff):
             for n in Gs.neighbors(node_swac):
                 if n in swac_seg_dic:
                     if n == downstr:
-                        conn.append(float(swac_seg_dic[n] - 1))
+                        conn.append(-float(swac_seg_dic[n] - 1))
                     else:
-                        conn.append(-float((swac_seg_dic[n] - 1)))
+                        conn.append(float((swac_seg_dic[n] - 1)))
 
             # update num connections
             cd.append(conn)
