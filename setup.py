@@ -7,7 +7,7 @@ import sys
 try:
     from setuptools import setup
 except ImportError:
-    print 'Please install or upgrade setuptools or pip to continue'
+    print('Please install or upgrade setuptools or pip to continue')
     sys.exit(1)
 
 import swacmod

@@ -1233,13 +1233,12 @@ def val_lu_spatial(data, name):
     lus = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
     tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=lus,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
-        len_list=[len(lzn)],
+        len_list=[len(lzn.values())],
     )
 
     if not all(sum(i) == 1.0 for i in lus.values()):

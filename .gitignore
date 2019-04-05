@@ -1,6 +1,6 @@
 *.py[cod]
 *.so
-*c
+*.c
 dist/
 *.coverage*
 deploy

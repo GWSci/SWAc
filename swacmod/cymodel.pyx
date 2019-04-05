@@ -1326,9 +1326,8 @@ def get_evt_file(data, evtrate):
                                                                stress_periods=range(nper))
         for per in range(nper):
             for i in range(nodes):
-                spd[per][ievt[i, 0] - 1] = ((ievt[i, 0] -1,), surf[i, 0], evt_dic[per][i, 0],
+                spd[per][i] = ((ievt[i, 0] -1,), surf[i, 0], evt_dic[per][i, 0],
                                             exdp[i, 0], 0.0)
-
         evt_out = flopy.mf6.modflow.mfgwfevt.ModflowGwfevt(m,
                                                            fixed_cell=False,
                                                            print_input=None,
