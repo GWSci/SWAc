@@ -534,9 +534,10 @@ def get_recharge(data, output, node):
             if num == 0:
                 recharge = irs
             else:
-                recharge = (recharge_store_input[num - 1] +
-                            col_recharge_store[num - 1] -
-                            col_combined_recharge[num - 1])
+                # wittw try
+                recharge = (col_recharge_store[num - 1] +
+                            max(recharge_store_input[num - 1] -
+                                col_combined_recharge[num - 1], 0.0))
             col_recharge_store[num] = recharge
             var1 = recharge * rlp
             col_combined_recharge[num] = (rll if var1 > rll else var1)
@@ -564,7 +565,7 @@ def get_rch_file(data, rchrate):
 
     # this is equivalent of strange hardcoded 1000 in format_recharge_row
     #  which is called in the mf6 output function
-    fac = 0.01
+    fac = 0.001
     areas = data['params']['node_areas']
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
