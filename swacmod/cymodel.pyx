@@ -535,10 +535,11 @@ def get_recharge(data, output, node):
                 recharge = irs
             else:
                 # wittw try
-                recharge = (col_recharge_store[num - 1] +
-                            max(recharge_store_input[num - 1] -
-                                col_combined_recharge[num - 1], 0.0))
-            col_recharge_store[num] = recharge
+                recharge = (recharge_store_input[num - 1] +
+                            col_recharge_store[num - 1] -
+                            col_combined_recharge[num - 1])
+
+            col_recharge_store[num] = max(0.0, recharge)
             var1 = recharge * rlp
             col_combined_recharge[num] = (rll if var1 > rll else var1)
         else:
@@ -1328,7 +1329,7 @@ def get_evt_file(data, evtrate):
         for per in range(nper):
             for i in range(nodes):
                 spd[per][i] = ((ievt[i, 0] -1,), surf[i, 0], evt_dic[per][i, 0],
-                                            exdp[i, 0], 1.0)
+                                            exdp[i, 0], -999.9)
         evt_out = flopy.mf6.modflow.mfgwfevt.ModflowGwfevt(m,
                                                            fixed_cell=False,
                                                            print_input=None,
@@ -1336,7 +1337,7 @@ def get_evt_file(data, evtrate):
                                                            save_flows=None,
                                                            ts_filerecord=None,
                                                            obs_filerecord=None,
-                                                           surf_rate_specified=True,
+                                                           surf_rate_specified=False,
                                                            maxbound=nodes, nseg=1,
                                                            stress_period_data=spd,
                                                            fname=None,
