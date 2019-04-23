@@ -295,7 +295,7 @@ def get_ae(data, output, node):
             col_runoff_recharge[num] = 0.0
 
         if params['macropore_process'] == 'enabled':
-            var8a = var2 - rapid_runoff - macro_act[var6][zone_mac]
+            var8a = var2 - col_rapid_runoff[num] - macro_act[var6][zone_mac]
             if var8a > 0:
                 var9 = macro_prop[var6][zone_mac] * var8a
                 var10 = macro_limit[var6][zone_mac]
@@ -307,7 +307,7 @@ def get_ae(data, output, node):
             col_macropore_att[num] = macropore * (1 - var10a)
             col_macropore_dir[num] = macropore * var10a
 
-        percol_in_root = (var2 - rapid_runoff - col_macropore_att[num])
+        percol_in_root = (var2 - col_rapid_runoff[num] - col_macropore_att[num])
         col_percol_in_root[num] = percol_in_root
         
         if params['fao_process'] == 'enabled':
