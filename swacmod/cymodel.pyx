@@ -525,6 +525,7 @@ def get_recharge(data, output, node):
         double rll = params['recharge_attenuation_params'][node][2]
         double recharge
         double [:] recharge_store_input = output['recharge_store_input']
+        double [:] macropore_dir = output['macropore_dir']
         rep_zone = data['params']['reporting_zone_mapping'][node]
         size_t num
         double var1, var2
@@ -537,9 +538,10 @@ def get_recharge(data, output, node):
                 # wittw try
                 recharge = (recharge_store_input[num - 1] +
                             col_recharge_store[num - 1] -
-                            col_combined_recharge[num - 1])
+                            col_combined_recharge[num - 1] +
+                            macropore_dir[num -1])
 
-            col_recharge_store[num] = max(0.0, recharge)
+            col_recharge_store[num] = recharge
             var1 = recharge * rlp
             col_combined_recharge[num] = (rll if var1 > rll else var1)
         else:
