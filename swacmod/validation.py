@@ -1241,8 +1241,9 @@ def val_lu_spatial(data, name):
         len_list=[len(lzn.values())],
     )
 
-    if not all(sum(i) == 1.0 for i in lus.values()):
-        msg = 'Parameter "%s" requires the sum of its values to be 1.0'
+    if not all(abs(1 - sum(i)) < 1e-5 for i in lus.values()):
+        msg = ('Parameter "%s" requires the sum of its values '
+               'to be 1.0 within a tolerance of 1e-5')
         raise u.ValidationError(msg % name)
 
 
