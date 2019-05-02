@@ -27,7 +27,6 @@ from . import checks as c
 from . import validation as v
 from . import finalization as f
 
-
 try:
     basestring
 except NameError:
@@ -86,7 +85,8 @@ def print_progress(progress, total, prefix):
     spaces = int(perc_big / 2)
     progress_bar = "=" * spaces + ">" + " " * (50 - spaces)
 
-    sys.stdout.write("\b" * 100 + "%s: [%s] %d%%\r" % (prefix, progress_bar, perc_big))
+    sys.stdout.write("\b" * 100 + "%s: [%s] %d%%\r" %
+                     (prefix, progress_bar, perc_big))
     sys.stdout.flush()
 
     if progress == total:
@@ -161,7 +161,8 @@ def get_output_path(data, file_format, output_dir, node=None, zone=None):
 def check_open_files(data, file_format, output_dir):
     """Check if any of the scheduled output files can't be open."""
     paths = []
-    if data["params"]["output_recharge"]:
+    if (data["params"]["output_recharge"]
+            and data["params"]["gwmodel_type"] == "mfusg"):
         paths.append(get_recharge_path(data))
 
     if data["params"]["spatial_output_date"]:
@@ -183,10 +184,8 @@ def check_open_files(data, file_format, output_dir):
                 fileobj.close()
                 break
             except IOError:
-                _ = raw_input(
-                    '\nCannot write to "%s", make sure the file is '
-                    "not in use then press Enter." % path
-                )
+                _ = raw_input('\nCannot write to "%s", make sure the file is '
+                              "not in use then press Enter." % path)
 
 
 ###############################################################################
@@ -198,9 +197,9 @@ def dump_recharge_file(data, recharge):
     if data["params"]["recharge_node_mapping"] is None:
         nrchop, inrech, inirch = 3, 1, 0
     else:
-        inirch = sum(
-            1 for x in data["params"]["recharge_node_mapping"].values() if x[0] != 0
-        )
+        inirch = sum(1
+                     for x in data["params"]["recharge_node_mapping"].values()
+                     if x[0] != 0)
         nrchop, inrech = 2, 1
 
     fileout = "%s_recharge.rch" % data["params"]["run_name"]
@@ -212,8 +211,8 @@ def dump_recharge_file(data, recharge):
         rech_file.write(" %d %d\n" % (nrchop, data["params"]["irchcb"]))
         if nrchop == 2:
             inrech = sum(
-                1 for x in data["params"]["recharge_node_mapping"].values() if x[0] != 0
-            )
+                1 for x in data["params"]["recharge_node_mapping"].values()
+                if x[0] != 0)
             rech_file.write("%d\n" % (inrech))
 
         for per in range(len(data["params"]["time_periods"])):
@@ -224,7 +223,8 @@ def dump_recharge_file(data, recharge):
             row = []
             for node in range(data["params"]["num_nodes"]):
                 if nrchop == 2:
-                    if data["params"]["recharge_node_mapping"][node + 1] != [0]:
+                    if data["params"]["recharge_node_mapping"][node +
+                                                               1] != [0]:
                         row.append(recharge[(nnodes * per) + node + 1])
                 else:
                     row.append(recharge[(nnodes * per) + node + 1])
@@ -240,10 +240,13 @@ def dump_recharge_file(data, recharge):
                 rech_file.write("INTERNAL  1              (FREE)  -1  IRCH\n")
                 row = []
                 for node in range(nnodes):
-                    if data["params"]["recharge_node_mapping"][node + 1] != [0]:
-                        row.append(data["params"]["recharge_node_mapping"][node + 1])
+                    if data["params"]["recharge_node_mapping"][node +
+                                                               1] != [0]:
+                        row.append(
+                            data["params"]["recharge_node_mapping"][node + 1])
                     if len(row) == data["params"]["nodes_per_line"]:
-                        rech_file.write(" ".join(str(i[0]) for i in row) + "\n")
+                        rech_file.write(" ".join(str(i[0])
+                                                 for i in row) + "\n")
                         row = []
                 if row:
                     rech_file.write(" ".join(str(i[0]) for i in row) + "\n")
@@ -276,12 +279,13 @@ def dump_spatial_output(data, spatial, output_dir, reduced=False):
     with open(path, "w") as outfile:
         header = ["Node"]
         header += [
-            i[0]
-            for i in u.CONSTANTS["BALANCE_CONVERSIONS"]
+            i[0] for i in u.CONSTANTS["BALANCE_CONVERSIONS"]
             if i[0] not in ["DATE", "nDays"]
         ]
         if reduced:
-            header += [i for i in header if u.CONSTANTS["BALANCE_CONVERSIONS"][i][2]]
+            header += [
+                i for i in header if u.CONSTANTS["BALANCE_CONVERSIONS"][i][2]
+            ]
         writer = csv.writer(outfile, delimiter=",", quoting=csv.QUOTE_MINIMAL)
         writer.writerow(header)
         for node in ids:
@@ -338,12 +342,10 @@ def dump_evt_output(evt, f=None):
         inievt, ievt = evt.ievt.get_kper_entry(n)
         if inievt > 0:
             inievt = mxndevt
-        comment = "Evapotranspiration  dataset 5 for stress period " + str(n + 1)
-        f_evt.write(
-            "{0:10d}{1:10d}{2:10d}{3:10d} # {4:s}\n".format(
-                insurf, inevtr, inexdp, inievt, comment
-            )
-        )
+        comment = "Evapotranspiration  dataset 5 for stress period " + str(n +
+                                                                           1)
+        f_evt.write("{0:10d}{1:10d}{2:10d}{3:10d} # {4:s}\n".format(
+            insurf, inevtr, inexdp, inievt, comment))
         if insurf >= 0:
             f_evt.write(surf)
         if inevtr >= 0:
@@ -356,9 +358,13 @@ def dump_evt_output(evt, f=None):
 
 
 ###############################################################################
-def dump_water_balance(
-    data, output, file_format, output_dir, node=None, zone=None, reduced=False
-):
+def dump_water_balance(data,
+                       output,
+                       file_format,
+                       output_dir,
+                       node=None,
+                       zone=None,
+                       reduced=False):
     """Write report to file."""
     areas = data["params"]["node_areas"]
     periods = data["params"]["time_periods"]
@@ -380,10 +386,14 @@ def dump_water_balance(
     if file_format == "csv":
         with open(path, "w") as outfile:
             if reduced:
-                header = [i[0] for i in u.CONSTANTS["BALANCE_CONVERSIONS"] if i[2]]
+                header = [
+                    i[0] for i in u.CONSTANTS["BALANCE_CONVERSIONS"] if i[2]
+                ]
             else:
                 header = [i[0] for i in u.CONSTANTS["BALANCE_CONVERSIONS"]]
-            writer = csv.writer(outfile, delimiter=",", quoting=csv.QUOTE_MINIMAL)
+            writer = csv.writer(outfile,
+                                delimiter=",",
+                                quoting=csv.QUOTE_MINIMAL)
             writer.writerow(header)
             for num, period in enumerate(periods):
                 row = get_row_balance(aggregated, num, reduced, mult)
@@ -417,13 +427,14 @@ def dump_water_balance(
 def get_row_spatial(vector, reduced, mult):
     """Get a row of data for output."""
     if reduced:
-        keys = ["combined_recharge", "combined_str", "combined_ae", "unutilised_pe"]
+        keys = [
+            "combined_recharge", "combined_str", "combined_ae", "unutilised_pe"
+        ]
         row = [vector[key] for key in keys]
     else:
         row = [
-            vector[key]
-            for key in u.CONSTANTS["COL_ORDER"]
-            if key not in ["date", "unutilised_pe", "k_slope", "rapid_runoff_c"]
+            vector[key] for key in u.CONSTANTS["COL_ORDER"] if key not in
+            ["date", "unutilised_pe", "k_slope", "rapid_runoff_c"]
         ]
 
     row = numpy.array(row) * mult
@@ -434,13 +445,14 @@ def get_row_spatial(vector, reduced, mult):
 def get_row_balance(aggregated, num, reduced, mult):
     """Get a row of data for output."""
     if reduced:
-        keys = ["combined_recharge", "combined_str", "combined_ae", "unutilised_pe"]
+        keys = [
+            "combined_recharge", "combined_str", "combined_ae", "unutilised_pe"
+        ]
         row = [aggregated[key][num] for key in keys]
     else:
         row = [
-            aggregated[key][num]
-            for key in u.CONSTANTS["COL_ORDER"]
-            if key not in ["date", "unutilised_pe", "k_slope", "rapid_runoff_c"]
+            aggregated[key][num] for key in u.CONSTANTS["COL_ORDER"] if key
+            not in ["date", "unutilised_pe", "k_slope", "rapid_runoff_c"]
         ]
 
     row = numpy.array(row) * mult
@@ -452,7 +464,8 @@ def convert_all_yaml_to_csv(specs_file, input_dir):
     """Convert all YAML files to CSV for parameters that accept this option."""
     specs = load_yaml(specs_file)
     to_csv = [
-        i for i in specs if "alt_format" in specs[i] and "csv" in specs[i]["alt_format"]
+        i for i in specs
+        if "alt_format" in specs[i] and "csv" in specs[i]["alt_format"]
     ]
     for filein in os.listdir(input_dir):
         if filein.endswith(".yml"):
@@ -499,9 +512,9 @@ def convert_one_yaml_to_csv(filein):
 
 ###############################################################################
 def load_params_from_yaml(
-    specs_file=u.CONSTANTS["SPECS_FILE"],
-    input_file=u.CONSTANTS["INPUT_FILE"],
-    input_dir=u.CONSTANTS["INPUT_DIR"],
+        specs_file=u.CONSTANTS["SPECS_FILE"],
+        input_file=u.CONSTANTS["INPUT_FILE"],
+        input_dir=u.CONSTANTS["INPUT_DIR"],
 ):
     """Load model specifications, parameters and time series."""
     logging.info("\tLoading parameters and time series")
@@ -509,22 +522,15 @@ def load_params_from_yaml(
     specs = load_yaml(specs_file)
     params = load_yaml(input_file)
 
-    no_list = (
-        [
-            "node_areas",
-            "free_throughfall",
-            "max_canopy_storage",
-            "subsoilzone_leakage_fraction",
-        ]
-        + [i for i in params if "zone_names" in i]
-        + [
-            i
-            for i in params
-            if ("zone_mapping" in i or "_locs" in i)
-            and i
-            not in ["rainfall_zone_mapping", "pe_zone_mapping", "subroot_zone_mapping"]
-        ]
-    )
+    no_list = ([
+        "node_areas",
+        "free_throughfall",
+        "max_canopy_storage",
+        "subsoilzone_leakage_fraction",
+    ] + [i for i in params if "zone_names" in i] + [
+        i for i in params if ("zone_mapping" in i or "_locs" in i) and i not in
+        ["rainfall_zone_mapping", "pe_zone_mapping", "subroot_zone_mapping"]
+    ])
 
     for param in tqdm(params, desc="SWAcMod load params     "):
         # print_progress(num + 1, len(params), 'SWAcMod load params')
@@ -540,15 +546,18 @@ def load_params_from_yaml(
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
                 try:
-                    rows = [[ast.literal_eval(j) for j in row] for row in reader]
+                    rows = [[ast.literal_eval(j) for j in row]
+                            for row in reader]
 
                     if param.endswith("_ts") or param == "time_periods":
                         params[param] = rows
                     else:
                         if param not in no_list:
-                            params[param] = dict((row[0], row[1:]) for row in rows)
+                            params[param] = dict(
+                                (row[0], row[1:]) for row in rows)
                         else:
-                            params[param] = dict((row[0], row[1]) for row in rows)
+                            params[param] = dict(
+                                (row[0], row[1]) for row in rows)
                 except IndexError as err:
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
@@ -576,9 +585,9 @@ def load_params_from_yaml(
 ###############################################################################
 def load_and_validate(specs_file, input_file, input_dir):
     """Load, finalize and validate model parameters and time series."""
-    data = load_params_from_yaml(
-        specs_file=specs_file, input_file=input_file, input_dir=input_dir
-    )
+    data = load_params_from_yaml(specs_file=specs_file,
+                                 input_file=input_file,
+                                 input_dir=input_dir)
 
     f.finalize_params(data)
     f.finalize_series(data)
