@@ -572,7 +572,7 @@ def get_rch_file(data, rchrate):
     areas = data['params']['node_areas']
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
-
+    rch_params = data['params']['recharge_node_mapping']
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
 
@@ -600,6 +600,13 @@ def get_rch_file(data, rchrate):
                                              fname=None,
                                              pname=None,
                                              parent_file=None)
+        irch = np.zeros((nodes, 1), dtype=int)
+        if rch_params is not None:
+            for inode, vals in rch_params.iteritems():
+                irch[inode - 1, 0] = vals[0]
+        else:
+            for i in range(nodes):
+                irch[i - 1, 0] = i
 
     if data['params']['gwmodel_type'] == 'mfusg':
         # not used
@@ -618,7 +625,8 @@ def get_rch_file(data, rchrate):
         #for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
         for per in range(nper):
             for i in range(nodes):
-                spd[per][i] = ((i,), rchrate[(nodes * per) + i + 1] * fac)
+                if irch[i, 0] > 0:
+                    spd[per][i] = ((irch[i, 0] -1,), rchrate[(nodes * per) + i + 1] * fac)
 
         rch_out = flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(m,
                                                            fixed_cell=False,

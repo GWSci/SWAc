@@ -96,7 +96,7 @@ nodes_per_line: 5
 # This parameter can accept a path to YAML or CSV
 # Optional, if omitted assumes recharge goes to upper most active layer
 # file is in the format SWAcNode,MFNode
-# recharge_node_mapping:
+recharge_node_mapping: rch_nodes.csv
 
 
 # Output unit conversion factor
