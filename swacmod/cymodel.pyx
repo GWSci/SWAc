@@ -915,7 +915,7 @@ def get_sfr_file(data, runoff):
          depth, width) = line
         # for mf6 only
         str_flg[node_swac-1] = str_flag
-        if str_flag > 0 and node_mf > 0:
+        if str_flag > 0: # and node_mf > 0:
             swac_seg_dic[node_swac] = str_count + 1
             seg_swac_dic[str_count + 1] = node_swac
 
@@ -946,7 +946,12 @@ def get_sfr_file(data, runoff):
                 sd[str_count]['depth2'] = depth # constant
 
             elif data['params']['gwmodel_type'] == 'mf6':
-                rd.append([str_count, (node_mf - 1,), length, width,
+                if node_mf > 0:
+                    n = (node_mf - 1,)
+                else:
+                    n = (-100000000, )
+
+                rd.append([str_count, n, length, width,
                            0.0001, z, bed_thk, str_k, 0.0001, 1, 1.0, 0])
                 sd[0].append((str_count, 'STAGE', z + depth))
                 sd[0].append((str_count, 'STATUS', "SIMPLE"))
