@@ -597,7 +597,7 @@ def get_rch_file(data, rchrate):
                                              time_units=None,
                                              start_date_time=None,
                                              nper=nper,
-                                             fname=None,
+                                             filename=None,
                                              pname=None,
                                              parent_file=None)
         irch = np.zeros((nodes, 1), dtype=int)
@@ -637,7 +637,7 @@ def get_rch_file(data, rchrate):
                                                            obs_filerecord=None,
                                                            maxbound=nodes,
                                                            stress_period_data=spd,
-                                                           fname=None,
+                                                           filename=None,
                                                            pname=None,
                                                            parent_file=None)
 
@@ -902,7 +902,7 @@ def get_sfr_file(data, runoff):
                                              time_units=None,
                                              start_date_time=None,
                                              nper=nper,
-                                             fname=None,
+                                             filename=None,
                                              pname=None,
                                              parent_file=None)
         cd = []
@@ -1060,7 +1060,7 @@ def get_sfr_file(data, runoff):
                                                        connectiondata=cd,
                                                        diversions=None,
                                                        perioddata=sd,
-                                                       fname=None,
+                                                       filename=None,
                                                        pname=None,
                                                        parent_file=None)
 
@@ -1305,7 +1305,7 @@ def get_evt_file(data, evtrate):
                                              time_units=None,
                                              start_date_time=None,
                                              nper=nper,
-                                             fname=None,
+                                             filename=None,
                                              pname=None,
                                              parent_file=None)
 
@@ -1360,7 +1360,7 @@ def get_evt_file(data, evtrate):
                                                            surf_rate_specified=False,
                                                            maxbound=nodes, nseg=1,
                                                            stress_period_data=spd,
-                                                           fname=None,
+                                                           filename=None,
                                                            pname=None,
                                                            parent_file=None)
 
