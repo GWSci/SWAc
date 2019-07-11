@@ -295,14 +295,17 @@ def get_ae(data, output, node):
             col_runoff_recharge[num] = 0.0
 
         if params['macropore_process'] == 'enabled':
-            var8a = var2 - col_rapid_runoff[num] - macro_act[var6][zone_mac]
+            var8a = var2 - col_rapid_runoff[num]
             if var8a > 0:
-                var9 = macro_prop[var6][zone_mac] * var8a
-                var10 = macro_limit[var6][zone_mac]
-                macropore = (var10 if var9 > var10 else var9)
+                if last_smd < macro_act[var6][zone_mac]:
+                    var9 = macro_prop[var6][zone_mac] * var8a
+                    var10 = macro_limit[var6][zone_mac]
+                    macropore = (var10 if var9 > var10 else var9)
+                else:
+                    macropore = 0.0
             else:
                 macropore = 0.0
-
+                
             var10a = macro_rec[var6][zone_mac]
             col_macropore_att[num] = macropore * (1 - var10a)
             col_macropore_dir[num] = macropore * var10a
