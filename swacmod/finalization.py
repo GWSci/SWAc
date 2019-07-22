@@ -354,7 +354,7 @@ def fin_soil_zone_names(data, name):
     params = data["params"]
     if params[name] is None:
         try:
-            zones = len(params["soil_spatial"].items()[0][1])
+            zones = len(list(params["soil_spatial"].items())[0][1])
         except (TypeError, KeyError, IndexError):
             zones = 1
         params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
@@ -368,11 +368,11 @@ def fin_landuse_zone_names(data, name):
     """
     params = data["params"]
     if params[name] is None:
-        try:
-            zones = len(params["lu_spatial"].items()[0][1])
-        except (TypeError, KeyError, IndexError):
-            zones = 1
-        params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
+      try:
+        zones = len(list(params["lu_spatial"].items())[0][1])
+      except (TypeError, KeyError, IndexError):
+        zones = 1
+      params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
 
 
 ###############################################################################

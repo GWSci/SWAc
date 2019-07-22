@@ -1233,6 +1233,7 @@ def val_lu_spatial(data, name):
     lus = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
     tot = data["params"]["num_nodes"]
+
     c.check_type(
         param=lus,
         name=name,

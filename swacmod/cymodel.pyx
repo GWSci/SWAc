@@ -270,7 +270,8 @@ def get_ae(data, output, node):
 
     for num in range(length):
         var2 = net_rainfall[num]
-
+        if num > 0:
+            last_smd = col_smd[num-1]
         if params['rapid_runoff_process'] == 'enabled':
             if smd > last_smd or var2 > last_ri:
                 rapid_runoff_c = value
