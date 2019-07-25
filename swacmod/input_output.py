@@ -286,7 +286,9 @@ def dump_spatial_output(data, spatial, output_dir, reduced=False):
             header += [
                 i for i in header if u.CONSTANTS["BALANCE_CONVERSIONS"][i][2]
             ]
-        writer = csv.writer(outfile, delimiter=",", quoting=csv.QUOTE_MINIMAL)
+        writer = csv.writer(outfile, delimiter=",",
+                            quoting=csv.QUOTE_MINIMAL,
+                            lineterminator='\n')
         writer.writerow(header)
         for node in ids:
             if node in spatial:
@@ -393,7 +395,8 @@ def dump_water_balance(data,
                 header = [i[0] for i in u.CONSTANTS["BALANCE_CONVERSIONS"]]
             writer = csv.writer(outfile,
                                 delimiter=",",
-                                quoting=csv.QUOTE_MINIMAL)
+                                quoting=csv.QUOTE_MINIMAL,
+                                lineterminator='\n')
             writer.writerow(header)
             for num, period in enumerate(periods):
                 row = get_row_balance(aggregated, num, reduced, mult)
@@ -487,7 +490,9 @@ def convert_one_yaml_to_csv(filein):
     readin = load_yaml(filein).items()[0][1]
 
     with open(fileout, "wb") as csvfile:
-        writer = csv.writer(csvfile, delimiter=",", quoting=csv.QUOTE_MINIMAL)
+        writer = csv.writer(csvfile, delimiter=",",
+                            quoting=csv.QUOTE_MINIMAL,
+                            lineterminator='\n')
         if isinstance(readin, dict):
             for item in readin.items():
                 row = [item[0]]
@@ -604,7 +609,8 @@ def load_results():
     check = dict((k, []) for k in u.CONSTANTS["COL_ORDER"])
 
     with open(u.CONSTANTS["TEST_RESULTS_FILE"], "rU") as csvfile:
-        reader = csv.reader(csvfile, delimiter=",", quoting=csv.QUOTE_MINIMAL)
+        reader = csv.reader(csvfile, delimiter=",",
+                            quoting=csv.QUOTE_MINIMAL)
         for row in reader:
             values = []
             for num, cell in enumerate(row):
