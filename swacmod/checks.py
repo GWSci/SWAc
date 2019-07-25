@@ -12,25 +12,33 @@ import numpy as np
 # Internal modules
 from . import utils as u
 
-MAPPING = {(int, long): ['an integer', 'integers'],
-           (float, int, long): ['a number', 'numbers'],
-           str: ['a string', 'strings'],
-           basestring: ['a string', 'strings'],
-           dict: ['a dictionary', 'dictionaries'],
-           (list, np.ndarray): ['a list', 'lists'],
-           set: ['a set', 'sets'],
-           basestring: ['a string', 'strings'],
-           datetime.datetime: ['a datetime', 'datetimes'],
-           np.ndarray: ['a numpy array', 'numpy arrays']}
+
+try:
+  basestring
+except NameError:
+  basestring = str
+
+MAPPING = {
+    (int, int): ["an integer", "integers"],
+    (float, int, int): ["a number", "numbers"],
+    str: ["a string", "strings"],
+    basestring: ["a string", "strings"],
+    dict: ["a dictionary", "dictionaries"],
+    (list, np.ndarray): ["a list", "lists"],
+    set: ["a set", "sets"],
+    basestring: ["a string", "strings"],
+    datetime.datetime: ["a datetime", "datetimes"],
+    np.ndarray: ["a numpy array", "numpy arrays"],
+}
 
 
 ###############################################################################
 def expand_t_type(t_type):
     """Expand t_type to all allowed types."""
     if t_type == float:
-        t_type = (float, int, long)
+        t_type = (float, int, int)
     elif t_type == int:
-        t_type = (int, long)
+        t_type = (int, int)
     elif t_type == list:
         t_type = (list, np.ndarray)
 
@@ -52,8 +60,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
 
         if not isinstance(param, t_type):
             msg = 'Parameter "%s" has to be %s, found a %s instead'
-            raise u.ValidationError(msg % (name, MAPPING[t_type][0],
-                                           type(param)))
+            raise u.ValidationError(msg % (name, MAPPING[t_type][0], type(param)))
 
         if t_type == (list, np.ndarray) and new_len and len(param) != new_len:
             msg = 'Parameter "%s" has to be a list of length %d, found %d'
@@ -73,8 +80,9 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
                 copy_l = []
                 if len_list:
                     copy_l = [i for i in len_list]
-                check_type(param=value, name=name, t_types=copy_t,
-                           len_list=copy_l, keys=keys)
+                check_type(
+                    param=value, name=name, t_types=copy_t, len_list=copy_l, keys=keys
+                )
             types = []
             len_list = []
 
@@ -84,16 +92,23 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
                 copy_l = []
                 if len_list:
                     copy_l = [i for i in len_list]
-                check_type(param=value, name=name, t_types=copy_t,
-                           len_list=copy_l, keys=keys)
+                check_type(
+                    param=value, name=name, t_types=copy_t, len_list=copy_l, keys=keys
+                )
             types = []
             len_list = []
 
 
 ###############################################################################
-def check_values_limits(values=None, name=None, low_l=None, high_l=None,
-                        include_low=False, include_high=False,
-                        constraints=None):
+def check_values_limits(
+    values=None,
+    name=None,
+    low_l=None,
+    high_l=None,
+    include_low=False,
+    include_high=False,
+    constraints=None
+):
     """Check the values are all within two limits."""
     if low_l is not None:
         if not include_low and not all(i > low_l for i in values):
@@ -122,16 +137,16 @@ def check_path(path):
     """Convert path to absolute if it isn't."""
     new_path = path
     if not os.path.isabs(path):
-        new_path = os.path.join(u.CONSTANTS['INPUT_DIR'], path)
+        new_path = os.path.join(u.CONSTANTS["INPUT_DIR"], path)
     return new_path
 
 
 ###############################################################################
 def check_required(data):
     """Check that all required parameters have been provided."""
-    for param in data['specs']:
-        if not data['specs'][param]['required']:
+    for param in data["specs"]:
+        if not data["specs"][param]["required"]:
             continue
-        key = ('series' if param.endswith('ts') else 'params')
+        key = "series" if param.endswith("ts") else "params"
         if data[key][param] is None:
             raise u.ValidationError('Parameter "%s" is required' % param)

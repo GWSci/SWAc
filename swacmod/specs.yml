@@ -62,6 +62,12 @@ output_evt:
     type:
         - !!python/name:bool
 
+excess_sw_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["sw_rip", "sw_ow_evap", "sw_only", "disabled"]
+
 ievtcb:
     required: false
     type:
@@ -120,7 +126,8 @@ spatial_output_date:
     required: false
     type:
         # - !!python/name:datetime.datetime
-        - !!python/name:basestring
+        # - !!python/name:basestring
+        - !!python/name:str
         
 ##############################################
 # Model parameters: Zones names and mappings #
@@ -131,7 +138,8 @@ reporting_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
+        # - !!python/name:basestring
 
 reporting_zone_mapping:
     required: false
@@ -145,7 +153,7 @@ rainfall_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 rainfall_zone_mapping:
     required: true
@@ -160,7 +168,7 @@ pe_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 pe_zone_mapping:
     required: true
@@ -175,7 +183,7 @@ temperature_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 temperature_zone_mapping:
     required: false
@@ -189,7 +197,7 @@ subroot_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 subroot_zone_mapping:
     required: false
@@ -204,7 +212,7 @@ rapid_runoff_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 rapid_runoff_zone_mapping:
     required: false
@@ -213,14 +221,14 @@ rapid_runoff_zone_mapping:
         - !!python/name:dict
         - !!python/name:int
 
-rorecharge_zone_names:
+swrecharge_zone_names:
     required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
-rorecharge_zone_mapping:
+swrecharge_zone_mapping:
     required: false
     alt_format: [yml, csv]
     type:
@@ -232,7 +240,7 @@ macropore_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 macropore_zone_mapping:
     required: false
@@ -246,14 +254,14 @@ soil_zone_names:
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 landuse_zone_names:
     required: false
     alt_format: [yml]
     type:
         - !!python/name:dict
-        - !!python/name:basestring
+        - !!python/name:str
 
 
 ############################################
@@ -323,13 +331,13 @@ rapid_runoff_params:
 # Process: Runoff Recharge #
 ############################
 
-rorecharge_process:
+swrecharge_process:
     required: true
     type:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
-rorecharge_proportion:
+swrecharge_proportion:
     required: false
     alt_format: [yml, csv]
     type:
@@ -337,15 +345,7 @@ rorecharge_proportion:
         - !!python/name:list
         - !!python/name:float
 
-rorecharge_limit:
-    required: false
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:dict
-        - !!python/name:list
-        - !!python/name:float
-
-rorecharge_activation:
+swrecharge_limit:
     required: false
     alt_format: [yml, csv]
     type:
@@ -578,7 +578,7 @@ routing_process:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
-routing_toplogy:
+routing_topology:
     required: false
     alt_format: [yml, csv]
     type:
@@ -673,3 +673,9 @@ swabs_f:
     constraints: [0, 1, 2]
     type:
         - !!python/name:int
+
+gwmodel_type:
+    required: false
+    type:
+        - !!python/name:str
+    constraints: ["mf6", "mfusg"]

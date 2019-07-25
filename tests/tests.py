@@ -49,7 +49,7 @@ def generate_test_files(num_nodes=10):
     for name in ['node_areas', 'reporting_zone_mapping',
                  'rainfall_zone_mapping', 'pe_zone_mapping',
                  'temperature_zone_mapping', 'subroot_zone_mapping',
-                 'rapid_runoff_zone_mapping', 'rorecharge_zone_mapping',
+                 'rapid_runoff_zone_mapping', 'swrecharge_zone_mapping',
                  'macropore_zone_mapping', 'free_throughfall',
                  'max_canopy_storage', 'snow_params', 'interflow_params',
                  'subsoilzone_leakage_fraction', 'soil_spatial', 'lu_spatial',
@@ -97,8 +97,7 @@ class EndToEndTests(unittest.TestCase):
         all_keys = self.data['series'].keys() + self.data['params'].keys()
         for key in all_keys:
             if key in ['date', 'months', 'kc_list', 'ror_prop', 'ror_limit',
-                       'macro_prop', 'macro_limit', 'macro_act', 'macro_rec',
-                       'ror_act']:
+                       'macro_prop', 'macro_limit', 'macro_act', 'macro_rec']:
                 continue
             self.assertTrue(key in self.data['specs'])
 

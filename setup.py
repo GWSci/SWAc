@@ -7,7 +7,7 @@ import sys
 try:
     from setuptools import setup
 except ImportError:
-    print 'Please install or upgrade setuptools or pip to continue'
+    print('Please install or upgrade setuptools or pip to continue')
     sys.exit(1)
 
 import swacmod
@@ -27,7 +27,8 @@ setup(
     test_suite='tests.tests.EndToEndTests',
     keywords=['water management', 'water accounting'],
     install_requires=['Cython', 'numpy', 'psutil', 'python-dateutil', 'pytz',
-                      'PyYAML', 'setuptools', 'pandas', 'flopy'],
+                      'PyYAML', 'setuptools', 'pandas', 'flopy', 'networkx',
+                      'tqdm'],
     classifiers=['Intended Audience :: Developers',
                  'Intended Audience :: Science/Research',
                  'Operating System :: MacOS :: MacOS X',

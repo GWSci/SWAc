@@ -1,6 +1,6 @@
 *.py[cod]
 *.so
-*c
+*.c
 dist/
 *.coverage*
 deploy
@@ -13,3 +13,5 @@ swacmod/build/
 *.xlsb
 *.ods
 *.xlsx
+.gitattributes
+.gitconfig
