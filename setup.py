@@ -24,7 +24,7 @@ setup(
     author=swacmod.__authors__,
     author_email=swacmod.__author_email__,
     license=swacmod.__license__,
-    test_suite='tests.tests.EndToEndTests',
+    test_suite="tests",
     keywords=['water management', 'water accounting'],
     install_requires=['Cython', 'numpy', 'psutil', 'python-dateutil', 'pytz',
                       'PyYAML', 'setuptools', 'pandas', 'flopy', 'networkx',
