@@ -646,15 +646,6 @@ swabs_ts:
         - !!python/name:list
         - !!python/name:float
 
-swabs_test_ts:
-    required: false
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:list
-        - !!python/name:list
-        - !!python/name:float
-
-        
 swabs_locs:
     required: false
     alt_format: [yml, csv]
