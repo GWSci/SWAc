@@ -98,7 +98,8 @@ def load_yaml(filein):
     """Load a YAML file, lowercase its keys."""
     logging.debug("\t\tLoading %s", filein)
 
-    yml = yaml.load(open(filein, "r"), Loader=Loader)
+    with open(filein, "r") as fp:
+        yml = yaml.load(fp, Loader=Loader)
     try:
         keys = yml.keys()
     except AttributeError:
@@ -608,7 +609,7 @@ def load_results():
     """Load 'Calculations' sheet."""
     check = dict((k, []) for k in u.CONSTANTS["COL_ORDER"])
 
-    with open(u.CONSTANTS["TEST_RESULTS_FILE"], "rU") as csvfile:
+    with open(u.CONSTANTS["TEST_RESULTS_FILE"], "r") as csvfile:
         reader = csv.reader(csvfile, delimiter=",",
                             quoting=csv.QUOTE_MINIMAL)
         for row in reader:

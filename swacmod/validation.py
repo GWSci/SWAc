@@ -116,6 +116,26 @@ def val_output_recharge(data, name):
 
 
 ###############################################################################
+def val_routing_process(data, name):
+    """Validate routing_process.
+
+    """
+    opr = data["params"][name]
+
+    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+
+###############################################################################
+def val_output_sfr(data, name):
+    """Validate output_sfr.
+
+    1) type has to be a boolean
+    """
+    opr = data["params"][name]
+
+    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+
+
+###############################################################################
 def val_output_individual(data, name):
     """Validate output_individual.
 
@@ -964,27 +984,6 @@ def val_swrecharge_limit(data, name):
         keys=range(1, 13),
     )
 
-
-###############################################################################
-def val_swrecharge_activation(data, name):
-    """Validate swrecharge_activation.
-
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    """
-    rra = data["params"][name]
-    rzn = data["params"]["swrecharge_zone_names"]
-
-    c.check_type(
-        param=rra,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(rzn)],
-        keys=range(1, 13),
-    )
-
-
 ###############################################################################
 def val_macropore_process(data, name):
     """Validate macropore_process.
@@ -1563,6 +1562,22 @@ def val_routing_topology(data, name):
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
         len_list=[10],
+    )
+
+###############################################################################
+def val_recharge_node_mapping(data, name):
+    """Validate recharge node .
+
+    """
+    rpn = data["params"][name]
+    tot = data["params"]["num_nodes"]
+
+    c.check_type(
+        param=rpn,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+        len_list=[1],
     )
 
 

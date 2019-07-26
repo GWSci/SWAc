@@ -63,7 +63,7 @@ start_date: 1980-01-01
 # Output data will be aggregated according to these time windows.
 # This parameter is required.
 # This parameter can accept a path to YAML or CSV
-time_periods: time_periods.yml
+time_periods: time_periods.csv
 
 # Number of cores to be used
 # This parameter is optional.
@@ -263,11 +263,6 @@ swrecharge_proportion: swrecharge_proportion.yml
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 swrecharge_limit: swrecharge_limit.yml
-
-# Runoff Recharge Activation [mm]
-# This parameter is optional. If not specified, it will be set to 0.0.
-# This parameter can accept a path to YAML or CSV
-swrecharge_activation: swrecharge_activation.yml
 
 
 ######################
