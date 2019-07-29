@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
@@ -427,28 +427,13 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][term][term]
                 reporting_agg[cat]["runoff_recharge"] = reporting_agg2[cat][term][term]
 
-        if data["params"]["output_sfr"]:
-            # copy array into this fn to avoid unit conversion
-            sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
-
-        if data["params"]["output_evt"]:
-            if data["params"]["excess_sw_process"] != "disabled":
-                tmp = np.copy(np.array(evtr_agg)) - np.copy(np.array(runoff_agg))
-                if data["params"]["excess_sw_process"] == "sw_rip":
-                    evt = m.get_evt_file(data, tmp)
-                elif data["params"]["excess_sw_process"] == "sw_ow_evap":
-                    evt = m.get_evt_file(data, np.where(tmp > 0.0, 0.0, tmp))
-                elif data["params"]["excess_sw_process"] == "sw_only":
-                    evt = m.get_evt_file(data, - np.copy(np.array(runoff_agg)))
-            else:
-                evt = m.get_evt_file(data, evtr_agg)
-
         print("\nWriting output files:")
         if not skip:
             io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
         for num, key in enumerate(reporting_agg.keys()):
-            print("\t- Report file (%d of %d)" % (num + 1, len(reporting_agg.keys())))
+            print("\t- Report file (%d of %d)" % (num + 1,
+                                                  len(reporting_agg.keys())))
             io.dump_water_balance(
                 data,
                 reporting_agg[key],
@@ -484,17 +469,34 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
         if data["params"]["output_sfr"]:
             print("\t- SFR file")
+            sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
             if data['params']['gwmodel_type'] == 'mfusg':
                 io.dump_sfr_output(sfr)
             elif data['params']['gwmodel_type'] == 'mf6':
                 sfr.write()
+            del sfr
 
         if data["params"]["output_evt"]:
             print("\t- EVT file")
+
+            if data["params"]["excess_sw_process"] != "disabled":
+                tmp = (np.copy(np.array(evtr_agg))
+                       - np.copy(np.array(runoff_agg)))
+                if data["params"]["excess_sw_process"] == "sw_rip":
+                    evt = m.get_evt_file(data, tmp)
+                elif data["params"]["excess_sw_process"] == "sw_ow_evap":
+                    evt = m.get_evt_file(data, np.where(tmp > 0.0, 0.0, tmp))
+                elif data["params"]["excess_sw_process"] == "sw_only":
+                    evt = m.get_evt_file(data, - np.copy(np.array(runoff_agg)))
+            else:
+                evt = m.get_evt_file(data, evtr_agg)
+
             if data['params']['gwmodel_type'] == 'mfusg':
                 io.dump_evt_output(evt)
             elif data['params']['gwmodel_type'] == 'mf6':
                 evt.write()
+            evt, tmp = None, None
+            del evt
 
     times["end_of_run"] = time.time()
 
