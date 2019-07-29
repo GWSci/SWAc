@@ -253,7 +253,6 @@ def get_ae(data, output, node):
         size_t len_class_smd = len(class_smd)
         size_t len_class_ri = len(class_ri)
         double last_smd = class_smd[-1] - 1
-        double yest_smd = 0.0
         double last_ri = class_ri[-1] - 1
         double value = values[-1][0]
         double p_smd = ssmd
@@ -271,8 +270,7 @@ def get_ae(data, output, node):
 
     for num in range(length):
         var2 = net_rainfall[num]
-        if num > 0:
-            yest_smd = col_smd[num-1]
+
         if params['rapid_runoff_process'] == 'enabled':
             if smd > last_smd or var2 > last_ri:
                 rapid_runoff_c = value
@@ -299,7 +297,7 @@ def get_ae(data, output, node):
         if params['macropore_process'] == 'enabled':
             var8a = var2 - col_rapid_runoff[num]
             if var8a > 0:
-                if yest_smd < macro_act[var6][zone_mac]:
+                if p_smd < macro_act[var6][zone_mac]:
                     var9 = macro_prop[var6][zone_mac] * var8a
                     var10 = macro_limit[var6][zone_mac]
                     macropore = (var10 if var9 > var10 else var9)
