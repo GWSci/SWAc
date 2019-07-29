@@ -253,6 +253,7 @@ def get_ae(data, output, node):
         size_t len_class_smd = len(class_smd)
         size_t len_class_ri = len(class_ri)
         double last_smd = class_smd[-1] - 1
+        double yest_smd = 0.0
         double last_ri = class_ri[-1] - 1
         double value = values[-1][0]
         double p_smd = ssmd
@@ -271,7 +272,7 @@ def get_ae(data, output, node):
     for num in range(length):
         var2 = net_rainfall[num]
         if num > 0:
-            last_smd = col_smd[num-1]
+            yest_smd = col_smd[num-1]
         if params['rapid_runoff_process'] == 'enabled':
             if smd > last_smd or var2 > last_ri:
                 rapid_runoff_c = value
@@ -298,7 +299,7 @@ def get_ae(data, output, node):
         if params['macropore_process'] == 'enabled':
             var8a = var2 - col_rapid_runoff[num]
             if var8a > 0:
-                if last_smd < macro_act[var6][zone_mac]:
+                if yest_smd < macro_act[var6][zone_mac]:
                     var9 = macro_prop[var6][zone_mac] * var8a
                     var10 = macro_limit[var6][zone_mac]
                     macropore = (var10 if var9 > var10 else var9)
@@ -570,6 +571,8 @@ def get_rch_file(data, rchrate):
     import os.path
     from swacmod.input_output import print_progress
 
+    cdef int i, per
+
     # this is equivalent of strange hardcoded 1000 in format_recharge_row
     #  which is called in the mf6 output function
     fac = 0.001
@@ -626,8 +629,8 @@ def get_rch_file(data, rchrate):
                                                                maxbound=nodes,
                                                                nseg=1,
                                                                stress_periods=range(nper))
-        #for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
-        for per in range(nper):
+
+        for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
             for i in range(nodes):
                 if irch[i, 0] > 0:
                     spd[per][i] = ((irch[i, 0] -1,), rchrate[(nodes * per) + i + 1] * fac)
@@ -644,6 +647,7 @@ def get_rch_file(data, rchrate):
                                                            filename=None,
                                                            pname=None,
                                                            parent_file=None)
+        spd = None
 
     return rch_out
 
@@ -788,11 +792,13 @@ def aggregate(output, area, reporting=None, index=None):
             new_rep[key] += reporting[key]
     return new_rep
 
+
 ###############################################################################
-def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro, flow, nodes_per):
+def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
+                  flow, nodes_per):
     
     """get flows for one period"""
-    
+
     ro[:] = 0.0
     flow[:] = 0.0
     
@@ -1231,6 +1237,7 @@ def get_swdis(data, output, node):
 
 ###############################################################################
 
+
 def get_swabs(data, output, node):
     """Surface water abtractions"""
 
@@ -1268,12 +1275,12 @@ def get_swabs(data, output, node):
     return {'swabs_ts': swabs_ts}
 
 
-
 ###############################################################################
+
 
 def get_evt_file(data, evtrate):
     """get EVT object."""
-    
+
     import flopy
     import csv
     import numpy as np
@@ -1281,8 +1288,10 @@ def get_evt_file(data, evtrate):
     import os.path
     from swacmod.input_output import print_progress
 
+    cdef int i, per, nper, nodes
+
     # units oddness - lots of hardcoded 1000s in input_output.py
-    fac = 0.001
+    cdef float fac = 0.001
     areas = data['params']['node_areas']
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
@@ -1346,7 +1355,8 @@ def get_evt_file(data, evtrate):
                                                                maxbound=nodes,
                                                                nseg=1,
                                                                stress_periods=range(nper))
-        for per in range(nper):
+
+        for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
             for i in range(nodes):
                 if ievt[i, 0] > 0:
                     spd[per][i] = ((ievt[i, 0] -1,),
@@ -1363,7 +1373,8 @@ def get_evt_file(data, evtrate):
                                                            timeseries=None,
                                                            observations=None,
                                                            surf_rate_specified=False,
-                                                           maxbound=nodes, nseg=1,
+                                                           maxbound=nodes,
+                                                           nseg=1,
                                                            stress_period_data=spd,
                                                            filename=None,
                                                            pname=None,
@@ -1372,6 +1383,7 @@ def get_evt_file(data, evtrate):
     return evt_out
 
 ###############################################################################
+
 
 def do_swrecharge_mask(data, runoff, recharge):
     """do ror with monthly mask"""
