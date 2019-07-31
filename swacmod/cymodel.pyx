@@ -699,7 +699,7 @@ def get_combined_str(data, output, node):
                             output['swdis_ts'] +
                             output['rapid_runoff'] -
                             output['runoff_recharge'] +
-                            output['rejected_recharge'][num])
+                            output['rejected_recharge'])
 
     col = {}
     col['sw_attenuation'] = col_attenuation.base
