@@ -452,10 +452,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 reduced=reduced,
             )
 
-        del runoff_recharge
-        del tmp
-        del runoff
-        del recharge
+        if params["swrecharge_process"] == "enabled":
+            del runoff_recharge
+            del tmp
+            del runoff
+            del recharge
 
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
