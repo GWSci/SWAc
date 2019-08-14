@@ -419,11 +419,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             # copy new bits into cat output
             term = "runoff_recharge"
             for cat in reporting_agg2:
-                reporting_agg[cat]["combined_recharge"] += reporting_agg2[cat][term][
-                    term
-                ]
-                reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][term][term]
-                reporting_agg[cat]["runoff_recharge"] = reporting_agg2[cat][term][term]
+                if "runoff_recharge" in reporting_agg2[cat]:
+                    reporting_agg[cat]["combined_recharge"] += reporting_agg2[cat][term][
+                        term
+                    ]
+                    reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][term][term]
+                    reporting_agg[cat]["runoff_recharge"] = reporting_agg2[cat][term][term]
 
         print("\nWriting output files:")
         if not skip:
