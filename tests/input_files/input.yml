@@ -294,6 +294,10 @@ macropore_activation: macropore_activation.yml
 # This parameter can accept a path to YAML or CSV
 macropore_recharge: macropore_recharge.yml
 
+# MacroPore Activation Option
+# This parameter is optional. If not specified, it will be set to SMD.
+# RI = rianfall intensity, SMD = previous day's SMD
+macropore_activation_option: "SMD"
 
 ###################################
 # Process: FAO: SMD-AE Accounting #

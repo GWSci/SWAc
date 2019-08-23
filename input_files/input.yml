@@ -80,7 +80,7 @@ output_recharge: true
 # ranges and overlapping values, e.g. "1, 3, 68-83, 5-7, 6".
 # It also accepts "all" and "none" values.
 # This parameter is optional. If not specified, it will be set to "none".
-output_individual: "1-10"
+#output_individual: "1-10"
 
 # IRCHCB.
 # This parameter is an integer.
@@ -296,6 +296,10 @@ macropore_activation: macropore_activation.yml
 # This parameter can accept a path to YAML or CSV
 macropore_recharge: macropore_recharge.yml
 
+# MacroPore Activation Option
+# This parameter is optional. If not specified, it will be set to SMD.
+# RI = rainfall intensity, SMD = previous day's SMD
+#macropore_activation_option: "RI"
 
 ###################################
 # Process: FAO: SMD-AE Accounting #
