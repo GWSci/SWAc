@@ -334,6 +334,16 @@ def fin_macropore_zone_mapping(data, name):
 
 
 ###############################################################################
+def fin_macropore_activation_option(data, name):
+    """Finalize the "macropore_activation_option" parameter.
+
+    1) if not provided, set it to SMD.
+    """
+    if data["params"][name] is None:
+        data["params"][name] = 'SMD'
+
+
+###############################################################################
 def fin_macropore_zone_names(data, name):
     """Finalize the "macropore_zone_names" parameter.
 
@@ -1012,6 +1022,7 @@ FUNC_PARAMS = [
   fin_macropore_limit,
   fin_macropore_activation,
   fin_macropore_recharge,
+  fin_macropore_activation_option,
   fin_soil_static_params,
   fin_soil_spatial,
   fin_lu_spatial,

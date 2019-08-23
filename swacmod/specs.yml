@@ -364,6 +364,12 @@ macropore_process:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
+macropore_activation_option:
+    required: false
+    type:
+        - !!python/name:str
+    constraints: ["SMD", "RI"]
+
 macropore_proportion:
     required: false
     alt_format: [yml, csv]

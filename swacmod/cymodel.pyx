@@ -12,6 +12,7 @@ from collections import OrderedDict
 from . import utils as u
 from tqdm import tqdm
 import networkx as nx
+import sys
 
 
 ###############################################################################
@@ -222,6 +223,7 @@ def get_ae(data, output, node):
     ssp = params['soil_static_params']
     rrp = params['rapid_runoff_params']
     s_smd = params['smd']
+    mac_opt = params['macropore_activation_option']
 
     cdef:
         double [:] col_rapid_runoff_c = np.zeros(len(series['date']))
@@ -267,6 +269,7 @@ def get_ae(data, output, node):
         double [:] tawtew_a = output['tawtew']
         double [:] rawrew_a = output['rawrew']
         long long [:] months = np.array(series['months'], dtype=np.int64)
+        double ma = 0.0
 
     for num in range(length):
         var2 = net_rainfall[num]
@@ -295,9 +298,14 @@ def get_ae(data, output, node):
             col_runoff_recharge[num] = 0.0
 
         if params['macropore_process'] == 'enabled':
-            var8a = var2 - col_rapid_runoff[num]
+            if mac_opt == 'SMD':
+                var8a = var2 - col_rapid_runoff[num]
+                ma = macro_act[var6][zone_mac]
+            else:
+                var8a = var2 - col_rapid_runoff[num] - macro_act[var6][zone_mac]
+                ma = sys.float_info.max
             if var8a > 0:
-                if p_smd < macro_act[var6][zone_mac]:
+                if p_smd < ma:
                     var9 = macro_prop[var6][zone_mac] * var8a
                     var10 = macro_limit[var6][zone_mac]
                     macropore = (var10 if var9 > var10 else var9)

@@ -729,6 +729,20 @@ def val_macropore_zone_mapping(data, name):
 
 
 ###############################################################################
+def val_macropore_activation_option(data, name):
+    """macropore_activation_option.
+
+    1) type has to be an string SMD or RI
+    """
+    x = data["params"][name]
+
+    c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
+
+    c.check_values_limits(
+        values=[x], name=name, constraints=data["specs"][name]["constraints"]
+    )
+
+###############################################################################
 def val_soil_zone_names(data, name):
     """Validate soil_zone_names.
 
@@ -1751,6 +1765,7 @@ FUNC_PARAMS = [
     val_swrecharge_zone_mapping,
     val_macropore_zone_names,
     val_macropore_zone_mapping,
+    val_macropore_activation_option,
     val_soil_zone_names,
     val_landuse_zone_names,
     val_canopy_process,
