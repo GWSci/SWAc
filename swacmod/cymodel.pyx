@@ -758,16 +758,16 @@ def get_change(data, output, node):
     cdef:
         size_t length = len(series['date'])
         double [:] col_change = np.zeros(length)
+        double [:] tmp0 = np.zeros(length)
         size_t num
+
+    tmp0 = (output['recharge_store'] +
+            output['interflow_volume'] +
+            output['smd'] +
+            output['snowpack'])
+
     for num in xrange(1, length):
-        col_change[num] = output['recharge_store'][num] - \
-                          output['recharge_store'][num - 1] + \
-                          output['interflow_volume'][num] - \
-                          output['interflow_volume'][num - 1] + \
-                          output['smd'][num] - \
-                          output['smd'][num - 1] + \
-                          output['snowpack'][num] - \
-                          output['snowpack'][num - 1]
+        col_change[num] = tmp0[num] - tmp0[num-1]
 
     return {'total_storage_change': col_change.base}
 
