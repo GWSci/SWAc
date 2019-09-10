@@ -91,7 +91,7 @@ def get_net_pefac(data, output, node):
 ###############################################################################
 def get_precip_to_ground(data, output, node):
     """H) Precipitation at Groundlevel [mm/d]."""
-    series, params = data['series'], data['params']
+
     precip_to_ground = output['rainfall_ts'] - output['canopy_storage']
     return {'precip_to_ground': precip_to_ground}
 
