@@ -489,13 +489,10 @@ def get_interflow(data, output, node):
         col_interflow_to_rivers[0] = rivers
 
         for num in xrange(1, length):
-            var1 = volume - (var5 if var5 < volume else volume)
+            var1 = volume - min(var5, volume)
             volume = interflow_store_input[num-1] + var1 * (1 - var8)
             col_interflow_volume[num] = volume
-            if volume >= var5:
-                col_infiltration_recharge[num] = var5
-            else:
-                col_infiltration_recharge[num] = volume
+            col_infiltration_recharge[num] = min(var5, volume)
             var6 = (col_interflow_volume[num] - col_infiltration_recharge[num])
             col_interflow_to_rivers[num] = var6 * var8
 
