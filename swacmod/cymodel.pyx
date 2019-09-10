@@ -338,7 +338,7 @@ def get_ae(data, output, node):
                 else:
                     var12 = (tawtew - smd) / (tawtew - rawrew)
                     
-                if var12 >= 1,0:
+                if var12 >= 1.0:
                     var11 = 1.0
                 else:
                     var11 = max(var12, 0.0)
