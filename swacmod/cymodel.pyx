@@ -1403,6 +1403,7 @@ def do_swrecharge_mask(data, runoff, recharge):
         double [:, :] ror_limit = params['ror_limit']
         long long [:] months = np.array(series['months'], dtype=np.int64)
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
+        int day, month, month_num
 
     sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
                                       key=lambda x: x[1][4]))
@@ -1413,12 +1414,12 @@ def do_swrecharge_mask(data, runoff, recharge):
     # complete graph
     Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
 
-    def compute_upstream_month_mask(month_num):
+    def compute_upstream_month_mask(month_number):
         mask = np.full((nnodes), 0, dtype='int')
         for node in xrange(1, nnodes + 1):
             zone_ror = params['swrecharge_zone_mapping'][node] - 1
-            fac = ror_prop[month_num][zone_ror]
-            lim = ror_limit[month_num][zone_ror]
+            fac = ror_prop[month_number][zone_ror]
+            lim = ror_limit[month_number][zone_ror]
             if min(fac, lim) > 0.0:
                 mask[node-1] = 1
                 # add upstream bits
