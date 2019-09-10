@@ -294,12 +294,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     random.shuffle(list(ids))
     chunks = np.array_split(ids, data["params"]["num_cores"])
     times["end_of_input"] = time.time()
-
     if data["params"]["spatial_output_date"] == "mean":
-        spatial_index = range(per)
+        spatial_index = [range(days)] + [u.month_indices(i+1, data)
+                                         for i in range(12)]
     elif data["params"]["spatial_output_date"] is not None:
-        spatial_index = (data["params"]["spatial_output_date"] -
-                         data["params"]["start_date"]).days
+        spatial_index = [(data["params"]["spatial_output_date"] -
+                         data["params"]["start_date"]).days]
     else:
         spatial_index = None
 
@@ -609,3 +609,4 @@ if __name__ == "__main__":
             logging.error(err.__repr__())
             print("ERROR: %s" % err)
             print("")
+
