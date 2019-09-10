@@ -272,6 +272,9 @@ def get_ae(data, output, node):
         long long [:] months = np.array(series['months'], dtype=np.int64)
         double ma = 0.0
 
+    if params['swrecharge_process'] == 'enabled':
+        col_runoff_recharge[:] = 0.0
+
     for num in xrange(length):
         var2 = net_rainfall[num]
 
@@ -290,13 +293,10 @@ def get_ae(data, output, node):
                 rapid_runoff_c = values[var3][var4]
             col_rapid_runoff_c[num] = rapid_runoff_c
             var5 = var2 * rapid_runoff_c
-            rapid_runoff = (0 if var2 < 0 else var5)
+            rapid_runoff = (0.0 if var2 < 0.0 else var5)
             col_rapid_runoff[num] = rapid_runoff
 
         var6 = months[num]
-
-        if params['swrecharge_process'] == 'enabled':
-            col_runoff_recharge[num] = 0.0
 
         if params['macropore_process'] == 'enabled':
             if mac_opt == 'SMD':
@@ -305,11 +305,11 @@ def get_ae(data, output, node):
             else:
                 var8a = var2 - col_rapid_runoff[num] - macro_act[var6][zone_mac]
                 ma = sys.float_info.max
-            if var8a > 0:
+            if var8a > 0.0:
                 if p_smd < ma:
                     var9 = macro_prop[var6][zone_mac] * var8a
                     var10 = macro_limit[var6][zone_mac]
-                    macropore = (var10 if var9 > var10 else var9)
+                    macropore = min(var10, var9)
                 else:
                     macropore = 0.0
             else:
@@ -323,15 +323,14 @@ def get_ae(data, output, node):
         col_percol_in_root[num] = percol_in_root
         
         if params['fao_process'] == 'enabled':
-
-            smd = (p_smd if p_smd > 0 else 0.0)
+            smd = max(p_smd, 0.0)
             col_smd[num] = smd
             net_pefac = net_pefac_a[num]
             tawtew = tawtew_a[num]
             rawrew = rawrew_a[num]
 
             if percol_in_root > net_pefac:
-                var11 = -1
+                var11 = -1.0
             else:
                 # tmp div zero
                 if (tawtew - rawrew) == 0.0:
@@ -339,10 +338,10 @@ def get_ae(data, output, node):
                 else:
                     var12 = (tawtew - smd) / (tawtew - rawrew)
                     
-                if var12 >= 1:
-                    var11 = 1
+                if var12 >= 1,0:
+                    var11 = 1.0
                 else:
-                    var11 = (var12 if var12 >= 0 else 0.0)
+                    var11 = max(var12, 0.0)
             col_k_slope[num] = var11
 
             var13 = percol_in_root
