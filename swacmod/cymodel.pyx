@@ -673,6 +673,7 @@ def get_combined_str(data, output, node):
         size_t length = len(series['date'])
         double [:] col_attenuation = np.zeros(length)
         double [:] col_combined_str = np.zeros(length)
+        double [:] combined_str = np.zeros(length)
         double rlp = params['sw_params'][node][1]
         double base = (params['sw_params'][node][0] +
                        output['interflow_to_rivers'][0] +
@@ -682,20 +683,24 @@ def get_combined_str(data, output, node):
                        output['runoff_recharge'][0])
         size_t num
 
+    combined_str = (output['interflow_to_rivers'] +
+                    output['swabs_ts'] +
+                    output['swdis_ts'] +
+                    output['rapid_runoff'] -
+                    output['runoff_recharge'] +
+                    output['rejected_recharge'])
+
+
     if params['sw_process'] == 'enabled':
         # don't attenuate negative flows
         if base < 0.0:
             rlp = 1.0
         col_combined_str[0] = rlp * base
         col_attenuation[0] = base - col_combined_str[0]
+
         for num in xrange(1, length):
             base = (col_attenuation[num-1] +
-                    output['interflow_to_rivers'][num] +
-                    output['swabs_ts'][num] +
-                    output['swdis_ts'][num] +
-                    output['rapid_runoff'][num] -
-                    output['runoff_recharge'][num] +
-                    output['rejected_recharge'][num])
+                    combined_str[num])
             # don't attenuate negative flows
             if base < 0.0:
                 rlp = 1.0
@@ -704,12 +709,7 @@ def get_combined_str(data, output, node):
             col_combined_str[num] = rlp * base
             col_attenuation[num] = base - col_combined_str[num]
     else:
-        col_combined_str = (output['interflow_to_rivers'] +
-                            output['swabs_ts'] +
-                            output['swdis_ts'] +
-                            output['rapid_runoff'] -
-                            output['runoff_recharge'] +
-                            output['rejected_recharge'])
+        col_combined_str = combined_str
 
     col = {}
     col['sw_attenuation'] = col_attenuation.base
