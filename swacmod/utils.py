@@ -276,9 +276,9 @@ def daterange(start_date, end_date):
 
 def month_indices(month, data):
     "get day numbers of a month"
-    last = datetime.timedelta(data['params']['time_periods'][-1][1])
+    last = datetime.timedelta(data['params']['time_periods'][-1][1]-1)
     first = data["params"]["start_date"]
-    print(last, first)
+
     return [
         i for i, day_date in enumerate(daterange(first, first+last))
         if day_date.month == month
