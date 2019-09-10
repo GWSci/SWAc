@@ -32,12 +32,11 @@ CONSTANTS['TEST_RESULTS_FILE'] = os.path.join(CONSTANTS['TEST_DIR'],
                                               'results.csv')
 
 CONSTANTS['COL_ORDER'] = [
-    'date', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage',
-    'net_pefac', 'precip_to_ground', 'snowfall_o', 'rainfall_o', 'snowpack',
-    'snowmelt', 'net_rainfall', 'rapid_runoff',
-    'runoff_recharge', 'macropore_att', 'macropore_dir', 'percol_in_root',
-    'rawrew', 'tawtew', 'p_smd', 'smd', 'ae',
-    'rejected_recharge', 'perc_through_root', 'subroot_leak',
+    'date', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage', 'net_pefac',
+    'precip_to_ground', 'snowfall_o', 'rainfall_o', 'snowpack', 'snowmelt',
+    'net_rainfall', 'rapid_runoff', 'runoff_recharge', 'macropore_att',
+    'macropore_dir', 'percol_in_root', 'rawrew', 'tawtew', 'p_smd', 'smd',
+    'ae', 'rejected_recharge', 'perc_through_root', 'subroot_leak',
     'interflow_bypass', 'interflow_store_input', 'interflow_volume',
     'infiltration_recharge', 'interflow_to_rivers', 'recharge_store_input',
     'recharge_store', 'combined_recharge', 'sw_attenuation', 'swabs_ts',
@@ -49,50 +48,28 @@ CONSTANTS['COL_ORDER'] = [
 # Column needs conversion
 # Column included in reduced output
 CONSTANTS['BALANCE_CONVERSIONS'] = [
-    ('DATE', False, True),
-    ('nDays', False, True),
-    ('Area', False, True),
-    ('Precipitation', True, False),
-    ('PEt', True, False),
-    ('VegetationPE_PEfac', True, False),
-    ('CanopyStorage', True, False),
+    ('DATE', False, True), ('nDays', False, True), ('Area', False, True),
+    ('Precipitation', True, False), ('PEt', True, False),
+    ('VegetationPE_PEfac', True, False), ('CanopyStorage', True, False),
     ('PEfacLessCanopy_AE', True, False),
-    ('Precipitation_Groundlevel', True, False),
-    ('Snowfall', True, False),
-    ('Precipitation_Rainfall', True, False),
-    ('SnowPack', True, False),
-    ('SnowMelt', True, False),
-    ('Rainfall_SnowMelt', True, False),
-    ('RapidRunoff', True, False),
-    ('RunoffRecharge', True, False),
-    ('MacroPoreAttenuated', True, False),
-    ('MacroPoreDirect', True, False),
-    ('Percolation_RootZone', True, False),
-    ('RAWREW', True, False),
-    ('TAWTEW', True, False),
-    ('pSMD', True, False),
-    ('SMD', True, False),
-    ('AE', True, False),
-    ('RejectedRecharge', True, False),
+    ('Precipitation_Groundlevel', True, False), ('Snowfall', True, False),
+    ('Precipitation_Rainfall', True, False), ('SnowPack', True, False),
+    ('SnowMelt', True, False), ('Rainfall_SnowMelt', True, False),
+    ('RapidRunoff', True, False), ('RunoffRecharge', True, False),
+    ('MacroPoreAttenuated', True, False), ('MacroPoreDirect', True, False),
+    ('Percolation_RootZone', True, False), ('RAWREW', True, False),
+    ('TAWTEW', True, False), ('pSMD', True, False), ('SMD', True, False),
+    ('AE', True, False), ('RejectedRecharge', True, False),
     ('PercolationThroughRootZone', True, False),
-    ('SubRootZoneLeakege', True, False),
-    ('BypassingInterflow', True, False),
-    ('InputInterflowStore', True, False),
-    ('InterflowStoreVol', True, False),
-    ('InfiltrationRecharge', True, False),
-    ('InterflowtoSW', True, False),
-    ('InputRechargeStore', True, False),
-    ('RechargeStoreVol', True, False),
-    ('CombinedRecharge', True, True),
-    ('SWAttenuation', True, False),
-    ('SWAbstractions', False, False),
-    ('SWDischarges', False, False),
-    ('CombinedSW', True, True),
-    ('CombinedAE', True, True),
-    ('UnitilisedPE', True, True),
-    ('AVERAGE_IN', True, False),
-    ('AVERAGE_OUT', True, False),
-    ('TOTAL_STORAGE_CHANGE', True, False),
+    ('SubRootZoneLeakege', True, False), ('BypassingInterflow', True, False),
+    ('InputInterflowStore', True, False), ('InterflowStoreVol', True, False),
+    ('InfiltrationRecharge', True, False), ('InterflowtoSW', True, False),
+    ('InputRechargeStore', True, False), ('RechargeStoreVol', True, False),
+    ('CombinedRecharge', True, True), ('SWAttenuation', True, False),
+    ('SWAbstractions', False, False), ('SWDischarges', False, False),
+    ('CombinedSW', True, True), ('CombinedAE', True, True),
+    ('UnitilisedPE', True, True), ('AVERAGE_IN', True, False),
+    ('AVERAGE_OUT', True, False), ('TOTAL_STORAGE_CHANGE', True, False),
     ('BALANCE', True, False)
 ]
 
@@ -100,7 +77,6 @@ CONSTANTS['BALANCE_CONVERSIONS'] = [
 ###############################################################################
 class ValidationError(Exception):
     """General exception for validation errors."""
-
     def __init__(self, msg):
         """Initialization."""
         new_msg = '---> Validation failed: %s' % msg
@@ -110,7 +86,6 @@ class ValidationError(Exception):
 ###############################################################################
 class FinalizationError(Exception):
     """General exception for validation errors."""
-
     def __init__(self, msg):
         """Initialization."""
         new_msg = '---> Finalization failed: %s' % msg
@@ -120,7 +95,6 @@ class FinalizationError(Exception):
 ###############################################################################
 class InputOutputError(Exception):
     """General exception for validation errors."""
-
     def __init__(self, msg):
         """Initialization."""
         new_msg = '---> InputOutput failed: %s' % msg
@@ -137,7 +111,7 @@ def get_ram_usage_for_process(pid=None):
     if not pid:
         pid = os.getpid()
     process = psutil.Process(pid)
-    mem = process.memory_info()[0] / float(2 ** 20)
+    mem = process.memory_info()[0] / float(2**20)
     return mem
 
 
@@ -169,10 +143,10 @@ def aggregate_output_col(data, output, column, method='sum'):
 
     for num, time in enumerate(times):
         if column == 'date':
-            date = data['series']['date'][time[1]-2]
+            date = data['series']['date'][time[1] - 2]
             final[num] = date.strftime('%d/%m/%Y')
         else:
-            final[num] = np.sum(output[column][time[0]-1:time[1]-1])
+            final[num] = np.sum(output[column][time[0] - 1:time[1] - 1])
         if method == 'average':
             final[num] /= (time[1] - time[0])
             # if column == 'recharge':
@@ -187,7 +161,7 @@ def aggregate_array(data, array, method='average'):
     final = np.zeros((len(times)), dtype=np.float64)
 
     for num, time in enumerate(times):
-        final[num] = np.sum(array[time[0]-1:time[1]-1])
+        final[num] = np.sum(array[time[0] - 1:time[1] - 1])
         if method == 'average':
             final[num] /= (time[1] - time[0])
     return final
@@ -222,7 +196,7 @@ def build_taw_raw(params):
         var1 = [(fcp[i] - wpp[i]) * pss[i] * 1000 for i in range(len(pss))]
         var2 = [ppp[i] * pss[i] for i in range(len(pss))]
         for num in range(12):
-            var3 = [params['zr'][num+1][i] * lus[i] for i in range(len(lus))]
+            var3 = [params['zr'][num + 1][i] * lus[i] for i in range(len(lus))]
             taw[node].append(sum(var1) * sum(var3))
             raw = taw[node][num] * sum(var2)
             raw[node].append(raw)
@@ -249,30 +223,31 @@ def invert_taw_raw(param, params):
 def compile_model():
     """Compile Cython model."""
     mod_c = get_modified_time(os.path.join(CONSTANTS['CODE_DIR'], 'cymodel.c'))
-    mod_pyx = get_modified_time(os.path.join(CONSTANTS['CODE_DIR'],
-                                             'cymodel.pyx'))
+    mod_pyx = get_modified_time(
+        os.path.join(CONSTANTS['CODE_DIR'], 'cymodel.pyx'))
     if mod_pyx >= mod_c:
         arch = struct.calcsize('P') * 8
-        print ('cymodel.pyx modified, recompiling for %d-bit' % arch)
+        print('cymodel.pyx modified, recompiling for %d-bit' % arch)
         proc = sp.Popen([sys.executable, 'setup.py', 'build_ext', '--inplace'],
                         cwd=CONSTANTS['CODE_DIR'],
                         stdout=sp.PIPE,
                         stderr=sp.PIPE)
         proc.wait()
         if proc.returncode != 0:
-            print ('Could not compile C extensions:')
-            print ('%s' % proc.stdout.read())
-            print ('%s' % proc.stderr.read())
+            print('Could not compile C extensions:')
+            print('%s' % proc.stdout.read())
+            print('%s' % proc.stderr.read())
             sys.exit(proc.returncode)
-            
+
+
 ###############################################################################
 
 
 def monthdelta(d1, d2):
     " difference in months between two dates"
-    
+
     from calendar import monthrange
-    
+
     delta = 0
     while True:
         mdays = monthrange(d1.year, d1.month)[1]
@@ -283,9 +258,10 @@ def monthdelta(d1, d2):
             break
     return delta
 
+
 def weekdelta(d1, d2):
     " difference in weeks between two dates"
-    
+
     monday1 = (d1 - datetime.timedelta(days=d1.weekday()))
     monday2 = (d2 - datetime.timedelta(days=d2.weekday()))
 
