@@ -531,30 +531,35 @@ def get_recharge(data, output, node):
         double irs = params['recharge_attenuation_params'][node][0]
         double rlp = params['recharge_attenuation_params'][node][1]
         double rll = params['recharge_attenuation_params'][node][2]
-        double recharge
+        double [:] recharge = np.zeros(length)
+        double [:] tmp = np.zeros(length)
         double [:] recharge_store_input = output['recharge_store_input']
         double [:] macropore_dir = output['macropore_dir']
         rep_zone = data['params']['reporting_zone_mapping'][node]
         size_t num
-        double var1, var2
+        double var2
 
-    for num in xrange(length):
-        if params['recharge_attenuation_process'] == 'enabled':
-            if num == 0:
-                recharge = irs
-            else:
-                # wittw try
-                recharge = (recharge_store_input[num - 1] +
-                            col_recharge_store[num - 1] -
-                            col_combined_recharge[num - 1] +
-                            macropore_dir[num -1])
 
-            col_recharge_store[num] = recharge
-            var1 = recharge * rlp
-            col_combined_recharge[num] = (rll if var1 > rll else var1)
-        else:
-            col_combined_recharge[num] = recharge_store_input[num]
-        col_combined_recharge[num] += output['macropore_dir'][num]
+    if params['recharge_attenuation_process'] == 'enabled':
+        recharge[0] = irs
+        col_recharge_store[0] = irs
+        col_combined_recharge[0] = (min((irs * rlp), rll) +
+                                          output['macropore_dir'][0])
+        for num in xrange(1, length):
+            recharge[num] = (recharge_store_input[num-1] +
+                             col_recharge_store[num-1] -
+                             col_combined_recharge[num-1] +
+                             macropore_dir[num-1])
+
+            col_recharge_store[num] = recharge[num]
+            col_combined_recharge[num] = (min((recharge[num] * rlp), rll) +
+                                          output['macropore_dir'][num])
+    else:
+        col_recharge_store[0] = irs
+        for num in xrange(1, length):
+            col_combined_recharge[num] = (recharge_store_input[num] +
+                                          output['macropore_dir'][num])
+
 
     col = {}
     col['recharge_store'] = col_recharge_store.base
