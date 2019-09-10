@@ -518,7 +518,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     total = io.format_time(diff)
 
     per_node = int(round(diff * 1000 / data["params"]["num_nodes"]))
-
     cores = ("%d cores" % data["params"]["num_cores"]
              if data["params"]["num_cores"] != 1 else "1 core")
 
