@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 """SWAcMod input/output functions."""
 
 # Standard Library
@@ -167,7 +168,8 @@ def check_open_files(data, file_format, output_dir):
         paths.append(get_recharge_path(data))
 
     if data["params"]["spatial_output_date"]:
-        paths.append(get_spatial_path(data, output_dir))
+        for p in get_spatial_path(data, output_dir):
+            paths.append(p)
 
     for node in data["params"]["output_individual"]:
         paths.append(get_output_path(data, file_format, output_dir, node=node))
@@ -257,48 +259,60 @@ def get_spatial_path(data, output_dir):
     ###############################################################################
     """Get the path of the spatial data output CSV file."""
     if data["params"]["spatial_output_date"] == "mean":
-        string = "mean"
+        nam_list = ["mean"] + ['month' + str(i + 1) for i in range(12)]
     else:
-        string = str(data["params"]["spatial_output_date"].date())
+        nam_list = [str(data["params"]["spatial_output_date"].date())]
     run = data["params"]["run_name"]
-    path = os.path.join(output_dir, "%sSpatial%s.csv" % (run, string))
+    path = [
+        os.path.join(output_dir, "%sSpatial%s.csv" % (run, string))
+        for string in nam_list
+    ]
     return path
 
 
 ###############################################################################
-def dump_spatial_output(data, spatial, output_dir, reduced=False):
+def dump_spatial_output(data, spatials, output_dir, reduced=False):
     """Write spatial output to file."""
-    if data["params"]["spatial_output_date"] == "mean":
-        string = "mean"
-    else:
-        string = str(data["params"]["spatial_output_date"].date())
-    logging.info("\tDumping spatial output for %s", string)
+
     areas = data["params"]["node_areas"]
-    path = get_spatial_path(data, output_dir)
+    paths = get_spatial_path(data, output_dir)
     fac = data["params"]["output_fac"]
     ids = range(1, data["params"]["num_nodes"] + 1)
-    with open(path, "w") as outfile:
-        header = ["Node"]
-        header += [
-            i[0] for i in u.CONSTANTS["BALANCE_CONVERSIONS"]
-            if i[0] not in ["DATE", "nDays"]
-        ]
-        if reduced:
+
+    for isp, path in enumerate(paths):
+        path = paths[isp]
+        spatial = {
+            key0: {key1: val1[isp]
+                   for key1, val1 in val0.items()}
+            for key0, val0 in spatials.items()
+        }
+        string = os.path.split(path)[1]
+        logging.info("\tDumping spatial output for %s", string)
+        print("\t-" + str(1 + isp) + ' of ' + str(len(paths)))
+        with open(path, "w") as outfile:
+            header = ["Node"]
             header += [
-                i for i in header if u.CONSTANTS["BALANCE_CONVERSIONS"][i][2]
+                i[0] for i in u.CONSTANTS["BALANCE_CONVERSIONS"]
+                if i[0] not in ["DATE", "nDays"]
             ]
-        writer = csv.writer(outfile, delimiter=",",
-                            quoting=csv.QUOTE_MINIMAL,
-                            lineterminator='\n')
-        writer.writerow(header)
-        for node in ids:
-            if node in spatial:
-                area = areas[node]
-                mult = fac / 1000
-                row = get_row_spatial(spatial[node], reduced, mult)
-                row.insert(0, node)
-                row.insert(1, area)
-                writer.writerow(row)
+            if reduced:
+                header += [
+                    i for i in header
+                    if u.CONSTANTS["BALANCE_CONVERSIONS"][i][2]
+                ]
+            writer = csv.writer(outfile,
+                                delimiter=",",
+                                quoting=csv.QUOTE_MINIMAL,
+                                lineterminator='\n')
+            writer.writerow(header)
+            for node in ids:
+                if node in spatial:
+                    area = areas[node]
+                    mult = fac / 1000
+                    row = get_row_spatial(spatial[node], reduced, mult)
+                    row.insert(0, node)
+                    row.insert(1, area)
+                    writer.writerow(row)
 
 
 ###############################################################################
@@ -491,7 +505,8 @@ def convert_one_yaml_to_csv(filein):
     readin = load_yaml(filein).items()[0][1]
 
     with open(fileout, "wb") as csvfile:
-        writer = csv.writer(csvfile, delimiter=",",
+        writer = csv.writer(csvfile,
+                            delimiter=",",
                             quoting=csv.QUOTE_MINIMAL,
                             lineterminator='\n')
         if isinstance(readin, dict):
@@ -610,8 +625,7 @@ def load_results():
     check = dict((k, []) for k in u.CONSTANTS["COL_ORDER"])
 
     with open(u.CONSTANTS["TEST_RESULTS_FILE"], "r") as csvfile:
-        reader = csv.reader(csvfile, delimiter=",",
-                            quoting=csv.QUOTE_MINIMAL)
+        reader = csv.reader(csvfile, delimiter=",", quoting=csv.QUOTE_MINIMAL)
         for row in reader:
             values = []
             for num, cell in enumerate(row):
