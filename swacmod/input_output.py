@@ -449,15 +449,15 @@ def get_row_spatial(vector, reduced, mult):
         keys = [
             "combined_recharge", "combined_str", "combined_ae", "unutilised_pe"
         ]
-        row = [vector[key] for key in keys]
+        row = [vector[key] * mult for key in keys]
     else:
         row = [
-            vector[key] for key in u.CONSTANTS["COL_ORDER"] if key not in
+            vector[key] * mult for key in u.CONSTANTS["COL_ORDER"]
+            if key not in
             ["date", "unutilised_pe", "k_slope", "rapid_runoff_c"]
         ]
 
-    row = numpy.array(row) * mult
-    return row.tolist()
+    return row
 
 
 ###############################################################################
