@@ -277,7 +277,6 @@ def dump_spatial_output(data, spatials, output_dir, reduced=False):
     areas = data["params"]["node_areas"]
     paths = get_spatial_path(data, output_dir)
     fac = data["params"]["output_fac"]
-    ids = range(1, data["params"]["num_nodes"] + 1)
 
     for isp, path in enumerate(paths):
         path = paths[isp]
@@ -305,14 +304,12 @@ def dump_spatial_output(data, spatials, output_dir, reduced=False):
                                 quoting=csv.QUOTE_MINIMAL,
                                 lineterminator='\n')
             writer.writerow(header)
-            for node in ids:
-                if node in spatial:
-                    area = areas[node]
-                    mult = fac / 1000
-                    row = get_row_spatial(spatial[node], reduced, mult)
-                    row.insert(0, node)
-                    row.insert(1, area)
-                    writer.writerow(row)
+            mult = fac / 1000.0
+            for node in spatial.keys():
+                writer.writerow([node, areas[node]] +
+                                get_row_spatial(spatial[node],
+                                                reduced,
+                                                mult))
         spatial.clear()
         writer = None
 
