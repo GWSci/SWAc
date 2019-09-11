@@ -313,7 +313,8 @@ def dump_spatial_output(data, spatials, output_dir, reduced=False):
                     row.insert(0, node)
                     row.insert(1, area)
                     writer.writerow(row)
-
+        spatial.clear()
+        writer = None
 
 ###############################################################################
 
