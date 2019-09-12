@@ -1371,9 +1371,9 @@ def do_swrecharge_mask(data, runoff, recharge):
     nnodes = data['params']['num_nodes']
     cdef:
         size_t length = len(series['date'])
-        double [:, :] ror_prop = params['ror_prop']
-        double [:, :] ror_limit = params['ror_limit']
-        long long [:] months = np.array(series['months'], dtype=np.int64)
+        double[:, :] ror_prop = params['ror_prop']
+        double[:, :] ror_limit = params['ror_limit']
+        long long[:] months = np.array(series['months'], dtype=np.int64)
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
         int day, month
 
@@ -1406,7 +1406,7 @@ def do_swrecharge_mask(data, runoff, recharge):
     # compute monthly mask dictionary
     Gp = {}
     for month in xrange(12):
-        Gp[month] = compute_upstream_month_mask(month, Gc)
+        Gp[month] = compute_upstream_month_mask(month)
 
     # pbar = tqdm(total=range(length))
     for day in tqdm(xrange(length), desc="Accumulating SW recharge"):
