@@ -276,15 +276,11 @@ def dump_spatial_output(data, spatials, output_dir, reduced=False):
 
     areas = data["params"]["node_areas"]
     paths = get_spatial_path(data, output_dir)
-    fac = data["params"]["output_fac"]
+    mult = data["params"]["output_fac"] * 0.001
+    fn = get_row_spatial_reduced if reduced else get_row_spatial
 
     for isp, path in enumerate(paths):
-        path = paths[isp]
-        spatial = {
-            key0: {key1: val1[isp]
-                   for key1, val1 in val0.items()}
-            for key0, val0 in spatials.items()
-        }
+
         string = os.path.split(path)[1]
         logging.info("\tDumping spatial output for %s", string)
         print("\t-" + str(1 + isp) + ' of ' + str(len(paths)))
@@ -304,14 +300,12 @@ def dump_spatial_output(data, spatials, output_dir, reduced=False):
                                 quoting=csv.QUOTE_MINIMAL,
                                 lineterminator='\n')
             writer.writerow(header)
-            mult = fac / 1000.0
-            for node in spatial.keys():
-                writer.writerow([node, areas[node]] +
-                                get_row_spatial(spatial[node],
-                                                reduced,
-                                                mult))
-        spatial.clear()
-        writer = None
+
+            writer.writerows([[node, areas[node]] +
+                              fn({key1: val1[isp]
+                                  for key1, val1 in spatials[node].items()},
+                                 mult) for node in spatials.keys()])
+            writer = None
 
 ###############################################################################
 
@@ -440,19 +434,26 @@ def dump_water_balance(data,
 
 
 ###############################################################################
-def get_row_spatial(vector, reduced, mult):
+def get_row_spatial(vector, mult):
     """Get a row of data for output."""
-    if reduced:
-        keys = [
-            "combined_recharge", "combined_str", "combined_ae", "unutilised_pe"
-        ]
-        row = [vector[key] * mult for key in keys]
-    else:
-        row = [
-            vector[key] * mult for key in u.CONSTANTS["COL_ORDER"]
-            if key not in
-            ["date", "unutilised_pe", "k_slope", "rapid_runoff_c"]
-        ]
+
+    row = [
+        vector[key] * mult for key in u.CONSTANTS["COL_ORDER"]
+        if key not in
+        ["date", "unutilised_pe", "k_slope", "rapid_runoff_c"]
+    ]
+
+    return row
+
+
+###############################################################################
+def get_row_spatial_reduced(vector, mult):
+    """Get a reduced row of data for output."""
+
+    keys = [
+        "combined_recharge", "combined_str", "combined_ae", "unutilised_pe"
+    ]
+    row = [vector[key] * mult for key in keys]
 
     return row
 
