@@ -585,7 +585,6 @@ def get_mf6rch_file(data, rchrate):
     import flopy
     import numpy as np
     import os.path
-    from flopy.mf6.ModflowGwfrch import stress_period_data
 
     cdef int i, per
 
@@ -623,10 +622,8 @@ def get_mf6rch_file(data, rchrate):
         for i in xrange(nodes):
             irch[i - 1, 0] = i
 
-    spd = stress_period_data.empty(m,
-                                   maxbound=nodes,
-                                   nseg=1,
-                                   stress_periods=range(nper))
+    mt = flopy.mf6.ModflowGwfrch.stress_period_data.empty
+    spd = mt(m, maxbound=nodes, nseg=1, stress_periods=range(nper))
 
     for per in tqdm(xrange(nper), desc="Generating MF6 RCH  "):
         for i in xrange(nodes):
@@ -1299,7 +1296,6 @@ def get_evt_file(data, evtrate):
     import flopy
     import numpy as np
     import os.path
-    from flopy.mf6.ModflowGwfevt import stress_period_data
 
     cdef int i, per, nper, nodes
 
@@ -1345,6 +1341,7 @@ def get_evt_file(data, evtrate):
     surf = np.zeros((nodes, 1))
     exdp = np.zeros((nodes, 1))
     evtr = np.zeros((nodes, 1))
+    mt = flopy.mf6.ModflowGwfevt.stress_period_data.empty
 
     for inode, vals in evt_params.iteritems():
         ievt[inode - 1, 0] = vals[0]
@@ -1364,11 +1361,9 @@ def get_evt_file(data, evtrate):
                                            surf={0: surf},
                                            exdp={0: exdp},
                                            ievt={0: ievt})
+
     elif data['params']['gwmodel_type'] == 'mf6':
-        spd = stress_period_data.empty(m,
-                                       maxbound=nodes,
-                                       nseg=1,
-                                       stress_periods=range(nper))
+        spd = mt(m, maxbound=nodes, nseg=1, stress_periods=range(nper))
 
         for per in tqdm(xrange(nper), desc="Generating MF6 EVT  "):
             for i in xrange(nodes):
