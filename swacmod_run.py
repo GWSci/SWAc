@@ -281,10 +281,13 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     runoff_recharge_agg = np.zeros((1))
     evtr_agg = Array("f", 1)
 
-    if params["swrecharge_process"] == "enabled" or data["params"]["output_recharge"]:
-        recharge_agg = Array("f", len_rch_agg)  # recharge by output period (agg)
+    if params["swrecharge_process"] == "enabled" or data["params"][
+            "output_recharge"]:
+        recharge_agg = Array("f",
+                             len_rch_agg)  # recharge by output period (agg)
 
-    if params["swrecharge_process"] == "enabled" or data["params"]["output_sfr"]:
+    if params["swrecharge_process"] == "enabled" or data["params"][
+            "output_sfr"]:
         runoff_agg = Array("f", len_rch_agg)
 
     if params["swrecharge_process"] == "enabled":
@@ -485,7 +488,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             if data['params']['gwmodel_type'] == 'mfusg':
                 io.dump_recharge_file(data, recharge_agg)
             elif data['params']['gwmodel_type'] == 'mf6':
-                m.get_rch_file(data, recharge_agg).write()
+                m.get_mf6rch_file(data, recharge_agg).write()
 
         if data["params"]["spatial_output_date"]:
             print("\t- Spatial file")

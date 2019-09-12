@@ -92,7 +92,6 @@ def get_net_pefac(data, output, node):
 ###############################################################################
 def get_precip_to_ground(data, output, node):
     """H) Precipitation at Groundlevel [mm/d]."""
-    series, params = data['series'], data['params']
     precip_to_ground = output['rainfall_ts'] - output['canopy_storage']
     return {'precip_to_ground': precip_to_ground}
 
@@ -221,7 +220,6 @@ def get_ae(data, output, node):
     Y) AE (actual evapotranspiration) [mm/d]
     """
     series, params = data['series'], data['params']
-    ssp = params['soil_static_params']
     rrp = params['rapid_runoff_params']
     s_smd = params['smd']
     mac_opt = params['macropore_activation_option']
@@ -238,7 +236,6 @@ def get_ae(data, output, node):
         double [:] col_k_slope = np.zeros(len(series['date']))
         double [:] col_ae = np.zeros(len(series['date']))
         size_t zone_mac = params['macropore_zone_mapping'][node] - 1
-        size_t zone_ror = params['swrecharge_zone_mapping'][node] - 1
         size_t zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
         double ssmd = u.weighted_sum(params['soil_spatial'][node],
                                      s_smd['starting_SMD'])
@@ -246,8 +243,6 @@ def get_ae(data, output, node):
                                            dtype=np.int64)
         long long [:] class_ri = np.array(rrp[zone_rro]['class_ri'],
                                           dtype=np.int64)
-        double [:, :] ror_prop = params['ror_prop']
-        double [:, :] ror_limit = params['ror_limit']
         double [:, :] macro_prop = params['macro_prop']
         double [:, :] macro_limit = params['macro_limit']
         double [:, :] macro_act = params['macro_act']
@@ -260,7 +255,7 @@ def get_ae(data, output, node):
         double value = values[-1][0]
         double p_smd = ssmd
         double smd = ssmd
-        double var2, var5, var7, var8, var8a, var9, var10, var11, var12, var13
+        double var2, var5, var8a, var9, var10, var11, var12, var13
         double rapid_runoff_c, rapid_runoff, macropore, percol_in_root
         double net_pefac, tawtew, rawrew
         size_t num, i, var3, var4, var6
@@ -532,12 +527,9 @@ def get_recharge(data, output, node):
         double rlp = params['recharge_attenuation_params'][node][1]
         double rll = params['recharge_attenuation_params'][node][2]
         double [:] recharge = np.zeros(length)
-        double [:] tmp = np.zeros(length)
         double [:] recharge_store_input = output['recharge_store_input']
         double [:] macropore_dir = output['macropore_dir']
-        rep_zone = data['params']['reporting_zone_mapping'][node]
         size_t num
-        double var2
 
 
     if params['recharge_attenuation_process'] == 'enabled':
@@ -569,93 +561,73 @@ def get_recharge(data, output, node):
 
 ###############################################################################
 
-def get_rch_file(data, rchrate):
+def get_mf6rch_file(data, rchrate):
     """get mf6 RCH object."""
 
     import flopy
-    import csv
     import numpy as np
-    import copy
     import os.path
-    from swacmod.input_output import print_progress
 
     cdef int i, per
 
     # this is equivalent of strange hardcoded 1000 in format_recharge_row
     #  which is called in the mf6 output function
     fac = 0.001
-    areas = data['params']['node_areas']
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
     rch_params = data['params']['recharge_node_mapping']
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
 
-    if data['params']['gwmodel_type'] == 'mfusg':
-        # not used
-        m = flopy.modflow.Modflow(modelname=path,
-                                  version='mfusg',
-                                  structured=True)
-        dis = flopy.modflow.ModflowDis(m, nrow=nodes, ncol=1, nper=nper)
-    elif data['params']['gwmodel_type'] == 'mf6':
-        sim = flopy.mf6.MFSimulation()
-        m = flopy.mf6.mfmodel.MFModel(sim,
+
+    sim = flopy.mf6.MFSimulation()
+    m = flopy.mf6.mfmodel.MFModel(sim,
                                        modelname=path)
-        njag = nodes + 2
-        lenx = int((njag/2) - (nodes/2))
-        dis = flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
-                                                         nodes=nodes,
-                                                         ja=np.zeros((njag), dtype=int),
-                                                         nja=njag, area=1.0)
-        flopy.mf6.modflow.mftdis.ModflowTdis(sim,
-                                             loading_package=False,
-                                             time_units=None,
-                                             start_date_time=None,
-                                             nper=nper,
-                                             filename=None,
-                                             pname=None,
-                                             parent_file=None)
-        irch = np.zeros((nodes, 1), dtype=int)
-        if rch_params is not None:
-            for inode, vals in rch_params.iteritems():
-                irch[inode - 1, 0] = vals[0]
-        else:
-            for i in xrange(nodes):
-                irch[i - 1, 0] = i
+    njag = nodes + 2
+    flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
+                                               nodes=nodes,
+                                               ja=np.zeros((njag),
+                                                           dtype=int),
+                                               nja=njag, area=1.0)
+    flopy.mf6.modflow.mftdis.ModflowTdis(sim,
+                                         loading_package=False,
+                                         time_units=None,
+                                         start_date_time=None,
+                                         nper=nper,
+                                         filename=None,
+                                         pname=None,
+                                         parent_file=None)
+    irch = np.zeros((nodes, 1), dtype=int)
+    if rch_params is not None:
+        for inode, vals in rch_params.iteritems():
+            irch[inode - 1, 0] = vals[0]
+    else:
+        for i in xrange(nodes):
+            irch[i - 1, 0] = i
 
-    if data['params']['gwmodel_type'] == 'mfusg':
-        # not used
-        # evt_out = flopy.modflow.ModflowEvt(m, nevtop=nevtopt,
-        #                                    ipakcb=ievtcb,
-        #                                    evtr=evt_dic,
-        #                                    surf={0: surf},
-        #                                    exdp={0: exdp},
-        #                                    ievt={0: ievt})
-        pass
-    elif data['params']['gwmodel_type'] == 'mf6':
-        spd = flopy.mf6.ModflowGwfrch.stress_period_data.empty(m,
-                                                               maxbound=nodes,
-                                                               nseg=1,
-                                                               stress_periods=range(nper))
-
-        for per in tqdm(xrange(nper), desc="Generating MF6 RCH  "):
-            for i in xrange(nodes):
-                if irch[i, 0] > 0:
-                    spd[per][i] = ((irch[i, 0] -1,), rchrate[(nodes * per) + i + 1] * fac)
-
-        rch_out = flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(m,
-                                                           fixed_cell=False,
-                                                           print_input=None,
-                                                           print_flows=None,
-                                                           save_flows=None,
-                                                           timeseries=None,
-                                                           observations=None,
+    spd = flopy.mf6.ModflowGwfrch.stress_period_data.empty(m,
                                                            maxbound=nodes,
-                                                           stress_period_data=spd,
-                                                           filename=None,
-                                                           pname=None,
-                                                           parent_file=None)
-        spd = None
+                                                           nseg=1,
+                                                           stress_periods=range(nper))
+
+    for per in tqdm(xrange(nper), desc="Generating MF6 RCH  "):
+        for i in xrange(nodes):
+            if irch[i, 0] > 0:
+                spd[per][i] = ((irch[i, 0] -1,), rchrate[(nodes * per) + i + 1] * fac)
+
+    rch_out = flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(m,
+                                                       fixed_cell=False,
+                                                       print_input=None,
+                                                       print_flows=None,
+                                                       save_flows=None,
+                                                       timeseries=None,
+                                                       observations=None,
+                                                       maxbound=nodes,
+                                                       stress_period_data=spd,
+                                                       filename=None,
+                                                       pname=None,
+                                                       parent_file=None)
+    spd = None
 
     return rch_out
 
@@ -734,7 +706,6 @@ def get_evt(data, output, node):
 ###############################################################################
 def get_average_in(data, output, node):
     """AP) AVERAGE IN [mm]."""
-    series, params = data['series'], data['params']
     average_in = output['rainfall_ts'] + output['subroot_leak']
     return {'average_in': average_in}
 
@@ -855,11 +826,9 @@ def get_sfr_file(data, runoff):
     """get SFR object."""
     
     import flopy
-    import csv
     import numpy as np
     import copy
     import os.path
-    from swacmod.input_output import print_progress
     
     # units oddness - lots of hardcoded 1000s in input_output.py
     fac = 0.001
@@ -873,6 +842,7 @@ def get_sfr_file(data, runoff):
 
     njag = nodes + 2
     lenx = int((njag/2) - (nodes/2))
+    m = None
 
     sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
                                       key=lambda x: x[1][4]))
@@ -885,12 +855,17 @@ def get_sfr_file(data, runoff):
     nstrm = nss = sum(value[idx['str_flag']] > 0 for value in sorted_by_ca.values())
 
     istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
-    
+
+    cd = []
+    rd = []
+    sd = {}
+    sfr = None
+
     if data['params']['gwmodel_type'] == 'mfusg':
         m = flopy.modflow.Modflow(modelname=path,
                                   version='mfusg', structured=False)
 
-        dis = flopy.modflow.ModflowDisU(
+        flopy.modflow.ModflowDisU(
             m,
             nodes=nodes,
             nper=nper, iac=[njag] + (nodes - 1) * [0],
@@ -909,13 +884,14 @@ def get_sfr_file(data, runoff):
     elif data['params']['gwmodel_type'] == 'mf6':
         sim = flopy.mf6.MFSimulation()
         m = flopy.mf6.mfmodel.MFModel(sim,
-                                       modelname=path)
+                                      modelname=path)
         njag = nodes + 2
         lenx = int((njag/2) - (nodes/2))
-        dis = flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
-                                                         nodes=nodes,
-                                                         ja=np.zeros((njag), dtype=int),
-                                                         nja=njag)
+        flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
+                                                   nodes=nodes,
+                                                   ja=np.zeros((njag),
+                                                               dtype=int),
+                                                   nja=njag)
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
                                              time_units=None,
@@ -924,9 +900,7 @@ def get_sfr_file(data, runoff):
                                              filename=None,
                                              pname=None,
                                              parent_file=None)
-        cd = []
-        rd = []
-        sd = {}
+
         sd[0] = []
     seg_data = {}
     swac_seg_dic = {}
@@ -942,6 +916,7 @@ def get_sfr_file(data, runoff):
          depth, width) = line
         # for mf6 only
         str_flg[node_swac-1] = str_flag
+        ca = ca
         if str_flag > 0: # and node_mf > 0:
             swac_seg_dic[node_swac] = str_count + 1
             seg_swac_dic[str_count + 1] = node_swac
@@ -1157,7 +1132,6 @@ def write_sfr(sfr, filename=None):
     fmt2 = ['{!s}'] * 4
     
     # items 3 and 4 are skipped (parameters not supported)
-    import time
     itmpr = range(sfr.dataset_5[0][0])
     cols = ['nseg', 'icalc', 'outseg', 'iupseg', 'flow',
             'runoff', 'etsw', 'pptsw', 'width1', 'depth1']
@@ -1290,38 +1264,35 @@ def get_evt_file(data, evtrate):
     """get EVT object."""
 
     import flopy
-    import csv
     import numpy as np
-    import copy
     import os.path
-    from swacmod.input_output import print_progress
 
     cdef int i, per, nper, nodes
 
     # units oddness - lots of hardcoded 1000s in input_output.py
     cdef float fac = 0.001
-    areas = data['params']['node_areas']
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
 
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
+    m = None
 
     if data['params']['gwmodel_type'] == 'mfusg':
         m = flopy.modflow.Modflow(modelname=path,
                                   version='mfusg',
                                   structured=True)
-        dis = flopy.modflow.ModflowDis(m, nrow=nodes, ncol=1, nper=nper)
+        flopy.modflow.ModflowDis(m, nrow=nodes, ncol=1, nper=nper)
     elif data['params']['gwmodel_type'] == 'mf6':
         sim = flopy.mf6.MFSimulation()
         m = flopy.mf6.mfmodel.MFModel(sim,
                                        modelname=path)
         njag = nodes + 2
-        lenx = int((njag/2) - (nodes/2))
-        dis = flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
-                                                         nodes=nodes,
-                                                         ja=np.zeros((njag), dtype=int),
-                                                         nja=njag)
+        flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
+                                                   nodes=nodes,
+                                                   ja=np.zeros((njag),
+                                                               dtype=int),
+                                                   nja=njag)
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
                                              time_units=None,
@@ -1334,6 +1305,7 @@ def get_evt_file(data, evtrate):
     ievtcb = data['params']['ievtcb']
     nevtopt = data['params']['nevtopt']
     evt_params = data['params']['evt_parameters']
+    evt_out = None
 
     ievt = np.zeros((nodes, 1), dtype=int)
     surf = np.zeros((nodes, 1))
@@ -1403,18 +1375,19 @@ def do_swrecharge_mask(data, runoff, recharge):
         double [:, :] ror_limit = params['ror_limit']
         long long [:] months = np.array(series['months'], dtype=np.int64)
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
-        int day, month, month_num
+        int day, month
 
     sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
                                       key=lambda x: x[1][4]))
     
-    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
-             'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
+    #'downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
+    #         'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
 
     # complete graph
     Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
 
     def compute_upstream_month_mask(month_number):
+
         mask = np.full((nnodes), 0, dtype='int')
         for node in xrange(1, nnodes + 1):
             zone_ror = params['swrecharge_zone_mapping'][node] - 1
@@ -1423,7 +1396,8 @@ def do_swrecharge_mask(data, runoff, recharge):
             if min(fac, lim) > 0.0:
                 mask[node-1] = 1
                 # add upstream bits
-                lst = [n for n, d in nx.shortest_path_length(Gc, target=node).items()]
+                lst = [n[0] for n in
+                       nx.shortest_path_length(Gc, target=node).items()]
                 for n in lst:
                 # for n in nx.ancestors(Gc, node):
                     mask[n-1] = 1
@@ -1432,7 +1406,7 @@ def do_swrecharge_mask(data, runoff, recharge):
     # compute monthly mask dictionary
     Gp = {}
     for month in xrange(12):
-        Gp[month] = compute_upstream_month_mask(month)
+        Gp[month] = compute_upstream_month_mask(month, Gc)
 
     # pbar = tqdm(total=range(length))
     for day in tqdm(xrange(length), desc="Accumulating SW recharge"):
@@ -1478,7 +1452,7 @@ def get_ror_flows_tree(G, runoff, nodes, day):
         lst = [n for n, d in nx.shortest_path_length(G,
                                                      source=node_swac).items()]
         #lst = nx.descendants(G, node_swac)
-        for i, d in enumerate(lst):
+        for d in lst:
             if done[d-1] != 1:
                 acc = (flow[node -1] + runoff[c + d])
             flow[d - 1] += acc
@@ -1535,7 +1509,7 @@ def all_days_mask(data):
     # do downstream from RoR areas as flows will be different
     for node in xrange(1, nnodes + 1):
         if mask[node-1] == 1:
-            lst = [n for n, d in nx.shortest_path_length(Gc,
+            lst = [n[0] for n in nx.shortest_path_length(Gc,
                                                          source=node).items()]
             #for n in nx.descendants(Gc, node):
             for n in lst:
