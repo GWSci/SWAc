@@ -167,7 +167,7 @@ def get_snow(data, output, node):
 
     col_snowmelt[0] = start_snow_pack * var6
     col_snowpack[0] = snowpack
-    for num in xrange(1, length):
+    for num in range(1, length):
         if var5[num] < 0:
             var5[num] = 0
         col_snowmelt[num] = snowpack * var5[num]
@@ -280,7 +280,7 @@ def get_ae(data, output, node):
     if params['swrecharge_process'] == 'enabled':
         col_runoff_recharge[:] = 0.0
 
-    for num in xrange(length):
+    for num in range(length):
         var2 = net_rainfall[num]
 
         if params['rapid_runoff_process'] == 'enabled':
@@ -288,11 +288,11 @@ def get_ae(data, output, node):
                 rapid_runoff_c = value
             else:
                 var3 = 0
-                for i in xrange(len_class_ri):
+                for i in range(len_class_ri):
                     if class_ri[i] < var2:
                         var3 += 1
                 var4 = 0
-                for i in xrange(len_class_smd):
+                for i in range(len_class_smd):
                     if class_smd[i] < smd:
                         var4 += 1
                 rapid_runoff_c = values[var3][var4]
@@ -501,7 +501,7 @@ def get_interflow(data, output, node):
         col_infiltration_recharge[0] = recharge
         col_interflow_to_rivers[0] = rivers
 
-        for num in xrange(1, length):
+        for num in range(1, length):
             var1 = volume - min(var5, volume)
             volume = interflow_store_input[num-1] + var1 * (1 - var8)
             col_interflow_volume[num] = volume
@@ -556,7 +556,7 @@ def get_recharge(data, output, node):
         col_recharge_store[0] = irs
         col_combined_recharge[0] = (min((irs * rlp), rll) +
                                     output['macropore_dir'][0])
-        for num in xrange(1, length):
+        for num in range(1, length):
             recharge[num] = (recharge_store_input[num-1] +
                              col_recharge_store[num-1] -
                              col_combined_recharge[num-1] +
@@ -567,7 +567,7 @@ def get_recharge(data, output, node):
                                           output['macropore_dir'][num])
     else:
         col_recharge_store[0] = irs
-        for num in xrange(1, length):
+        for num in range(1, length):
             col_combined_recharge[num] = (recharge_store_input[num] +
                                           output['macropore_dir'][num])
 
@@ -619,14 +619,14 @@ def get_mf6rch_file(data, rchrate):
         for inode, vals in rch_params.iteritems():
             irch[inode - 1, 0] = vals[0]
     else:
-        for i in xrange(nodes):
+        for i in range(nodes):
             irch[i - 1, 0] = i
 
     mt = flopy.mf6.ModflowGwfrch.stress_period_data.empty
     spd = mt(m, maxbound=nodes, nseg=1, stress_periods=range(nper))
 
-    for per in tqdm(xrange(nper), desc="Generating MF6 RCH  "):
-        for i in xrange(nodes):
+    for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
+        for i in range(nodes):
             if irch[i, 0] > 0:
                 spd[per][i] = ((irch[i, 0] - 1,),
                                rchrate[(nodes * per) + i + 1] * fac)
@@ -686,7 +686,7 @@ def get_combined_str(data, output, node):
         col_combined_str[0] = rlp * base
         col_attenuation[0] = base - col_combined_str[0]
 
-        for num in xrange(1, length):
+        for num in range(1, length):
             base = (col_attenuation[num-1] +
                     combined_str[num])
             # don't attenuate negative flows
@@ -758,7 +758,7 @@ def get_change(data, output, node):
             output['smd'] +
             output['snowpack'])
 
-    for num in xrange(1, length):
+    for num in range(1, length):
         col_change[num] = tmp0[num] - tmp0[num-1]
 
     return {'total_storage_change': col_change.base}
@@ -985,7 +985,7 @@ def get_sfr_file(data, runoff):
             str_count += 1
 
     if data['params']['gwmodel_type'] == 'mfusg':
-        for iseg in xrange(nss):
+        for iseg in range(nss):
             node_swac = seg_swac_dic[iseg + 1]
             downstr = sorted_by_ca[node_swac][idx['downstr']]
             if downstr in swac_seg_dic:
@@ -995,7 +995,7 @@ def get_sfr_file(data, runoff):
 
     elif data['params']['gwmodel_type'] == 'mf6':
         Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
-        for iseg in xrange(nss):
+        for iseg in range(nss):
             conn = [iseg]
             node_swac = seg_swac_dic[iseg + 1]
             downstr = sorted_by_ca[node_swac][idx['downstr']]
@@ -1010,26 +1010,26 @@ def get_sfr_file(data, runoff):
             cd.append(conn)
             rd[iseg][9] = len(cd[iseg]) - 1
 
-    for per in xrange(nper):
-        for node in xrange(1, nodes + 1):
+    for per in range(nper):
+        for node in range(1, nodes + 1):
             i = (nodes * per) + node
             runoff[i] = runoff[i] * areas[node] * fac
 
     ro, flow = np.zeros((nss)), np.zeros((nss))
 
     # populate runoff and flow
-    for per in tqdm(xrange(nper), desc="Accumulating SFR flows  "):
+    for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
         ro, flow = get_sfr_flows(sorted_by_ca, idx, runoff, done, areas,
                                  swac_seg_dic, ro, flow, nodes * per)
 
         if data['params']['gwmodel_type'] == 'mfusg':
-            for iseg in xrange(nss):
+            for iseg in range(nss):
                 sd[iseg]['runoff'] = ro[iseg]
                 sd[iseg]['flow'] = flow[iseg]
 
         elif data['params']['gwmodel_type'] == 'mf6':
-            for iseg in xrange(nss):
+            for iseg in range(nss):
                 if per not in sd:
                     sd[per] = []
                 sd[per].append((iseg, 'RUNOFF', ro[iseg]))
@@ -1161,7 +1161,7 @@ def write_sfr(sfr, filename=None):
     cols = ['nseg', 'icalc', 'outseg', 'iupseg', 'flow',
             'runoff', 'etsw', 'pptsw', 'width1', 'depth1']
 
-    for i in xrange(0, sfr.nper):
+    for i in range(0, sfr.nper):
         # item 5
         f_sfr.write(' '.join(map(str, sfr.dataset_5[i])) + '\n')
         # Item 6
@@ -1349,8 +1349,8 @@ def get_evt_file(data, evtrate):
         exdp[inode - 1, 0] = vals[2]
 
     evt_dic = {}
-    for per in tqdm(xrange(nper), desc="Generating EVT flux     "):
-        for inode in xrange(1, nodes + 1):
+    for per in tqdm(range(nper), desc="Generating EVT flux     "):
+        for inode in range(1, nodes + 1):
             evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
         evt_dic[per] = evtr.copy()
 
@@ -1365,8 +1365,8 @@ def get_evt_file(data, evtrate):
     elif data['params']['gwmodel_type'] == 'mf6':
         spd = mt(m, maxbound=nodes, nseg=1, stress_periods=range(nper))
 
-        for per in tqdm(xrange(nper), desc="Generating MF6 EVT  "):
-            for i in xrange(nodes):
+        for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
+            for i in range(nodes):
                 if ievt[i, 0] > 0:
                     spd[per][i] = ((ievt[i, 0] - 1,),
                                    surf[i, 0],
@@ -1419,7 +1419,7 @@ def do_swrecharge_mask(data, runoff, recharge):
     def compute_upstream_month_mask(month_number):
 
         mask = np.full((nnodes), 0, dtype='int')
-        for node in xrange(1, nnodes + 1):
+        for node in range(1, nnodes + 1):
             zone_ror = params['swrecharge_zone_mapping'][node] - 1
             fac = ror_prop[month_number][zone_ror]
             lim = ror_limit[month_number][zone_ror]
@@ -1435,11 +1435,11 @@ def do_swrecharge_mask(data, runoff, recharge):
 
     # compute monthly mask dictionary
     Gp = {}
-    for month in xrange(12):
+    for month in range(12):
         Gp[month] = compute_upstream_month_mask(month)
 
     # pbar = tqdm(total=range(length))
-    for day in tqdm(xrange(length), desc="Accumulating SW recharge"):
+    for day in tqdm(range(length), desc="Accumulating SW recharge"):
         month = months[day]
 
         # accumulate flows for today
@@ -1494,7 +1494,7 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True):
         G = nx.DiGraph()
     else:
         G = nx.Graph()
-    for node in xrange(1, nnodes + 1):
+    for node in range(1, nnodes + 1):
         if mask[node-1] == 1:
             G.add_node(node)
     for node_swac, line in sorted_by_ca.items():
@@ -1524,11 +1524,11 @@ def all_days_mask(data):
     # complete graph
     Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
 
-    for day in xrange(length):
+    for day in range(length):
 
         month = months[day]
 
-        for node in xrange(1, nnodes + 1):
+        for node in range(1, nnodes + 1):
             zone_ror = params['swrecharge_zone_mapping'][node] - 1
             fac = ror_prop[month][zone_ror]
             lim = ror_limit[month][zone_ror]
@@ -1536,7 +1536,7 @@ def all_days_mask(data):
                 mask[node-1] = 1
 
     # do downstream from RoR areas as flows will be different
-    for node in xrange(1, nnodes + 1):
+    for node in range(1, nnodes + 1):
         if mask[node-1] == 1:
             lst = [n[0] for n in nx.shortest_path_length(Gc,
                                                          source=node).items()]
