@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # cython: language_level=2
 
-"""SWAcMod model functions in Cython."""
 
 # Third Party Libraries
 import numpy as np
-cimport numpy as np
 from collections import OrderedDict
 
 # Internal modules
@@ -14,9 +12,11 @@ from tqdm import tqdm
 import networkx as nx
 import sys
 from past.builtins import xrange
+cimport numpy as np
 
 
 ###############################################################################
+
 def get_precipitation(data, output, node):
     """C) Precipitation [mm/d]."""
     series, params = data['series'], data['params']
@@ -25,8 +25,9 @@ def get_precipitation(data, output, node):
     rainfall_ts = series['rainfall_ts'][:, zone_rf] * coef_rf
     return {'rainfall_ts': rainfall_ts}
 
-
 ###############################################################################
+
+
 def get_pe(data, output, node):
     """D) Potential Evapotranspiration (PE) [mm/d]."""
     series, params = data['series'], data['params']
@@ -43,8 +44,9 @@ def get_pe(data, output, node):
 
     return {'pe_ts': pe_ts}
 
-
 ###############################################################################
+
+
 def get_pefac(data, output, node):
     """E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
     series, params = data['series'], data['params']
@@ -61,8 +63,9 @@ def get_pefac(data, output, node):
 
     return {'pefac': pefac}
 
-
 ###############################################################################
+
+
 def get_canopy_storage(data, output, node):
     """F) Canopy Storage and PEfac Limited Interception [mm/d]."""
     series, params = data['series'], data['params']
@@ -72,8 +75,6 @@ def get_canopy_storage(data, output, node):
         mcs = params['max_canopy_storage'][node]
         canopy_storage = output['rainfall_ts'] * (1 - ftf)
         canopy_storage[canopy_storage > mcs] = mcs
-        #indexes = np.where(canopy_storage > output['pefac'])
-        #canopy_storage[indexes] = output['pefac']
         canopy_storage = np.where(canopy_storage > output['pefac'],
                                   output['pefac'], canopy_storage)
     else:
@@ -81,22 +82,25 @@ def get_canopy_storage(data, output, node):
 
     return {'canopy_storage': canopy_storage}
 
-
 ###############################################################################
+
+
 def get_net_pefac(data, output, node):
     """G) Vegetation-factored PE less Canopy Evaporation [mm/d]."""
     net_pefac = output['pefac'] - output['canopy_storage']
     return {'net_pefac': net_pefac}
 
-
 ###############################################################################
+
+
 def get_precip_to_ground(data, output, node):
     """H) Precipitation at Groundlevel [mm/d]."""
     precip_to_ground = output['rainfall_ts'] - output['canopy_storage']
     return {'precip_to_ground': precip_to_ground}
 
-
 ###############################################################################
+
+
 def get_snowfall_o(data, output, node):
     """I) Snowfall [mm/d]."""
     series, params = data['series'], data['params']
@@ -117,15 +121,17 @@ def get_snowfall_o(data, output, node):
 
     return {'snowfall_o': snowfall_o}
 
-
 ###############################################################################
+
+
 def get_rainfall_o(data, output, node):
     """J) Precipitation as Rainfall [mm/d]."""
     rainfall_o = output['precip_to_ground'] - output['snowfall_o']
     return {'rainfall_o': rainfall_o}
 
-
 ###############################################################################
+
+
 def get_snow(data, output, node):
     """"Multicolumn function.
 
@@ -137,8 +143,8 @@ def get_snow(data, output, node):
     cdef:
         size_t num
         size_t length = len(series['date'])
-        double [:] col_snowpack = np.zeros(length)
-        double [:] col_snowmelt = np.zeros(len(series['date']))
+        double[:] col_snowpack = np.zeros(length)
+        double[:] col_snowmelt = np.zeros(len(series['date']))
 
     if params['snow_process'] == 'disabled':
         col = {}
@@ -152,10 +158,10 @@ def get_snow(data, output, node):
         double snow_melt_temp = params['snow_params'][node][2]
         double diff = snow_fall_temp - snow_melt_temp
         size_t zone_tm = params['temperature_zone_mapping'][node] - 1
-        double [:] var3 = (snow_melt_temp -
-                           series['temperature_ts'][:, zone_tm])/diff
-        double [:] var5 = 1 - (np.exp(var3))**2
-        double [:] snowfall_o = output['snowfall_o']
+        double[:] var3 = (snow_melt_temp -
+                          series['temperature_ts'][:, zone_tm])/diff
+        double[:] var5 = 1 - (np.exp(var3))**2
+        double[:] snowfall_o = output['snowfall_o']
         double var6 = (var5[0] if var5[0] > 0 else 0)
         double snowpack = (1 - var6) * start_snow_pack + snowfall_o[0]
 
@@ -170,15 +176,17 @@ def get_snow(data, output, node):
 
     return {'snowpack': col_snowpack.base, 'snowmelt': col_snowmelt.base}
 
-
 ###############################################################################
+
+
 def get_net_rainfall(data, output, node):
     """M) Net Rainfall and Snow Melt [mm/d]."""
     net_rainfall = output['snowmelt'] + output['rainfall_o']
     return {'net_rainfall': net_rainfall}
 
-
 ###############################################################################
+
+
 def get_rawrew(data, output, node):
     """S) RAWREW (Readily Available Water, Readily Evaporable Water)."""
     series, params = data['series'], data['params']
@@ -188,8 +196,9 @@ def get_rawrew(data, output, node):
         rawrew = np.zeros(len(series['date']))
     return {'rawrew': rawrew}
 
-
 ###############################################################################
+
+
 def get_tawtew(data, output, node):
     """T) TAWTEW (Total Available Water, Readily Evaporable Water)."""
     series, params = data['series'], data['params']
@@ -201,8 +210,9 @@ def get_tawtew(data, output, node):
 
     return {'tawtew': tawtew}
 
-
 ###############################################################################
+
+
 def get_ae(data, output, node):
     """Multicolumn function.
 
@@ -225,29 +235,29 @@ def get_ae(data, output, node):
     mac_opt = params['macropore_activation_option']
 
     cdef:
-        double [:] col_rapid_runoff_c = np.zeros(len(series['date']))
-        double [:] col_rapid_runoff = np.zeros(len(series['date']))
-        double [:] col_runoff_recharge = np.zeros(len(series['date']))
-        double [:] col_macropore_att = np.zeros(len(series['date']))
-        double [:] col_macropore_dir = np.zeros(len(series['date']))
-        double [:] col_percol_in_root = np.zeros(len(series['date']))
-        double [:] col_p_smd = np.zeros(len(series['date']))
-        double [:] col_smd = np.zeros(len(series['date']))
-        double [:] col_k_slope = np.zeros(len(series['date']))
-        double [:] col_ae = np.zeros(len(series['date']))
+        double[:] col_rapid_runoff_c = np.zeros(len(series['date']))
+        double[:] col_rapid_runoff = np.zeros(len(series['date']))
+        double[:] col_runoff_recharge = np.zeros(len(series['date']))
+        double[:] col_macropore_att = np.zeros(len(series['date']))
+        double[:] col_macropore_dir = np.zeros(len(series['date']))
+        double[:] col_percol_in_root = np.zeros(len(series['date']))
+        double[:] col_p_smd = np.zeros(len(series['date']))
+        double[:] col_smd = np.zeros(len(series['date']))
+        double[:] col_k_slope = np.zeros(len(series['date']))
+        double[:] col_ae = np.zeros(len(series['date']))
         size_t zone_mac = params['macropore_zone_mapping'][node] - 1
         size_t zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
         double ssmd = u.weighted_sum(params['soil_spatial'][node],
                                      s_smd['starting_SMD'])
-        long long [:] class_smd = np.array(rrp[zone_rro]['class_smd'],
-                                           dtype=np.int64)
-        long long [:] class_ri = np.array(rrp[zone_rro]['class_ri'],
+        long long[:] class_smd = np.array(rrp[zone_rro]['class_smd'],
                                           dtype=np.int64)
-        double [:, :] macro_prop = params['macro_prop']
-        double [:, :] macro_limit = params['macro_limit']
-        double [:, :] macro_act = params['macro_act']
-        double [:, :] macro_rec = params['macro_rec']
-        double [:, :] values = np.array(rrp[zone_rro]['values'])
+        long long[:] class_ri = np.array(rrp[zone_rro]['class_ri'],
+                                         dtype=np.int64)
+        double[:, :] macro_prop = params['macro_prop']
+        double[:, :] macro_limit = params['macro_limit']
+        double[:, :] macro_act = params['macro_act']
+        double[:, :] macro_rec = params['macro_rec']
+        double[:, :] values = np.array(rrp[zone_rro]['values'])
         size_t len_class_smd = len(class_smd)
         size_t len_class_ri = len(class_ri)
         double last_smd = class_smd[-1] - 1
@@ -260,11 +270,11 @@ def get_ae(data, output, node):
         double net_pefac, tawtew, rawrew
         size_t num, i, var3, var4, var6
         size_t length = len(series['date'])
-        double [:] net_rainfall = output['net_rainfall']
-        double [:] net_pefac_a = output['net_pefac']
-        double [:] tawtew_a = output['tawtew']
-        double [:] rawrew_a = output['rawrew']
-        long long [:] months = np.array(series['months'], dtype=np.int64)
+        double[:] net_rainfall = output['net_rainfall']
+        double[:] net_pefac_a = output['net_pefac']
+        double[:] tawtew_a = output['tawtew']
+        double[:] rawrew_a = output['rawrew']
+        long long[:] months = np.array(series['months'], dtype=np.int64)
         double ma = 0.0
 
     if params['swrecharge_process'] == 'enabled':
@@ -298,7 +308,8 @@ def get_ae(data, output, node):
                 var8a = var2 - col_rapid_runoff[num]
                 ma = macro_act[var6][zone_mac]
             else:
-                var8a = var2 - col_rapid_runoff[num] - macro_act[var6][zone_mac]
+                var8a = (var2 - col_rapid_runoff[num]
+                         - macro_act[var6][zone_mac])
                 ma = sys.float_info.max
             if var8a > 0.0:
                 if p_smd < ma:
@@ -309,14 +320,15 @@ def get_ae(data, output, node):
                     macropore = 0.0
             else:
                 macropore = 0.0
-                
+
             var10a = macro_rec[var6][zone_mac]
             col_macropore_att[num] = macropore * (1 - var10a)
             col_macropore_dir[num] = macropore * var10a
 
-        percol_in_root = (var2 - col_rapid_runoff[num] - col_macropore_att[num])
+        percol_in_root = (var2 - col_rapid_runoff[num]
+                          - col_macropore_att[num])
         col_percol_in_root[num] = percol_in_root
-        
+
         if params['fao_process'] == 'enabled':
             smd = max(p_smd, 0.0)
             col_smd[num] = smd
@@ -332,7 +344,7 @@ def get_ae(data, output, node):
                     var12 = 1.0
                 else:
                     var12 = (tawtew - smd) / (tawtew - rawrew)
-                    
+
                 if var12 >= 1.0:
                     var11 = 1.0
                 else:
@@ -364,8 +376,9 @@ def get_ae(data, output, node):
 
     return col
 
-
 ###############################################################################
+
+
 def get_unutilised_pe(data, output, node):
     """Z) Unutilised PE [mm/d]."""
     series, params = data['series'], data['params']
@@ -378,8 +391,9 @@ def get_unutilised_pe(data, output, node):
 
     return {'unutilised_pe': unutilised_pe}
 
-
 ###############################################################################
+
+
 def get_rejected_recharge(data, output, node):
     """AA) Rejected Recharge."""
     series, params = data['series'], data['params']
@@ -396,8 +410,9 @@ def get_rejected_recharge(data, output, node):
 
     return {'rejected_recharge': rejected_recharge}
 
-
 ###############################################################################
+
+
 def get_perc_through_root(data, output, node):
     """AB) Percolation Through the Root Zone [mm/d]."""
     params = data['params']
@@ -411,8 +426,9 @@ def get_perc_through_root(data, output, node):
 
     return {'perc_through_root': perc - output['rejected_recharge']}
 
-
 ###############################################################################
+
+
 def get_subroot_leak(data, output, node):
     """AC) Sub Root Zone Leakege / Inputs [mm/d]."""
     series, params = data['series'], data['params']
@@ -427,8 +443,9 @@ def get_subroot_leak(data, output, node):
 
     return {'subroot_leak': subroot_leak}
 
-
 ###############################################################################
+
+
 def get_interflow_bypass(data, output, node):
     """AD) Bypassing the Interflow Store [mm/d]."""
     params = data['params']
@@ -442,8 +459,9 @@ def get_interflow_bypass(data, output, node):
 
     return {'interflow_bypass': interflow_bypass}
 
-
 ###############################################################################
+
+
 def get_interflow_store_input(data, output, node):
     """AE) Input to Interflow Store [mm/d]."""
     interflow_store_input = (output['perc_through_root'] +
@@ -452,8 +470,9 @@ def get_interflow_store_input(data, output, node):
 
     return {'interflow_store_input': interflow_store_input}
 
-
 ###############################################################################
+
+
 def get_interflow(data, output, node):
     """Multicolumn function.
 
@@ -465,10 +484,10 @@ def get_interflow(data, output, node):
 
     cdef:
         size_t length = len(series['date'])
-        double [:] col_interflow_volume = np.zeros(length)
-        double [:] col_infiltration_recharge = np.zeros(length)
-        double [:] col_interflow_to_rivers = np.zeros(length)
-        double [:] interflow_store_input = output['interflow_store_input']
+        double[:] col_interflow_volume = np.zeros(length)
+        double[:] col_infiltration_recharge = np.zeros(length)
+        double[:] col_interflow_to_rivers = np.zeros(length)
+        double[:] interflow_store_input = output['interflow_store_input']
         double var0 = params['interflow_params'][node][0]
         double var5 = params['interflow_params'][node][2]
         double var8 = params['interflow_params'][node][3]
@@ -476,7 +495,6 @@ def get_interflow(data, output, node):
         double recharge = (var5 if volume >= var5 else volume)
         double rivers = (volume - recharge) * var8
         size_t num
-        
 
     if params['interflow_process'] == 'enabled':
         col_interflow_volume[0] = volume
@@ -498,8 +516,9 @@ def get_interflow(data, output, node):
 
     return col
 
-
 ###############################################################################
+
+
 def get_recharge_store_input(data, output, node):
     """AI) Input to Recharge Store [mm/d]."""
     recharge_store_input = (output['infiltration_recharge'] +
@@ -509,8 +528,9 @@ def get_recharge_store_input(data, output, node):
 
     return {'recharge_store_input': recharge_store_input}
 
-
 ###############################################################################
+
+
 def get_recharge(data, output, node):
     """Multicolumn function.
 
@@ -521,22 +541,21 @@ def get_recharge(data, output, node):
 
     cdef:
         size_t length = len(series['date'])
-        double [:] col_recharge_store = np.zeros(length)
-        double [:] col_combined_recharge = np.zeros(length)
+        double[:] col_recharge_store = np.zeros(length)
+        double[:] col_combined_recharge = np.zeros(length)
         double irs = params['recharge_attenuation_params'][node][0]
         double rlp = params['recharge_attenuation_params'][node][1]
         double rll = params['recharge_attenuation_params'][node][2]
-        double [:] recharge = np.zeros(length)
-        double [:] recharge_store_input = output['recharge_store_input']
-        double [:] macropore_dir = output['macropore_dir']
+        double[:] recharge = np.zeros(length)
+        double[:] recharge_store_input = output['recharge_store_input']
+        double[:] macropore_dir = output['macropore_dir']
         size_t num
-
 
     if params['recharge_attenuation_process'] == 'enabled':
         recharge[0] = irs
         col_recharge_store[0] = irs
         col_combined_recharge[0] = (min((irs * rlp), rll) +
-                                          output['macropore_dir'][0])
+                                    output['macropore_dir'][0])
         for num in xrange(1, length):
             recharge[num] = (recharge_store_input[num-1] +
                              col_recharge_store[num-1] -
@@ -552,14 +571,13 @@ def get_recharge(data, output, node):
             col_combined_recharge[num] = (recharge_store_input[num] +
                                           output['macropore_dir'][num])
 
-
     col = {}
     col['recharge_store'] = col_recharge_store.base
     col['combined_recharge'] = col_combined_recharge.base
     return col
 
-
 ###############################################################################
+
 
 def get_mf6rch_file(data, rchrate):
     """get mf6 RCH object."""
@@ -567,6 +585,7 @@ def get_mf6rch_file(data, rchrate):
     import flopy
     import numpy as np
     import os.path
+    from flopy.mf6.ModflowGwfrch import stress_period_data
 
     cdef int i, per
 
@@ -579,10 +598,9 @@ def get_mf6rch_file(data, rchrate):
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
 
-
     sim = flopy.mf6.MFSimulation()
     m = flopy.mf6.mfmodel.MFModel(sim,
-                                       modelname=path)
+                                  modelname=path)
     njag = nodes + 2
     flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
                                                nodes=nodes,
@@ -605,15 +623,16 @@ def get_mf6rch_file(data, rchrate):
         for i in xrange(nodes):
             irch[i - 1, 0] = i
 
-    spd = flopy.mf6.ModflowGwfrch.stress_period_data.empty(m,
-                                                           maxbound=nodes,
-                                                           nseg=1,
-                                                           stress_periods=range(nper))
+    spd = stress_period_data.empty(m,
+                                   maxbound=nodes,
+                                   nseg=1,
+                                   stress_periods=range(nper))
 
     for per in tqdm(xrange(nper), desc="Generating MF6 RCH  "):
         for i in xrange(nodes):
             if irch[i, 0] > 0:
-                spd[per][i] = ((irch[i, 0] -1,), rchrate[(nodes * per) + i + 1] * fac)
+                spd[per][i] = ((irch[i, 0] - 1,),
+                               rchrate[(nodes * per) + i + 1] * fac)
 
     rch_out = flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(m,
                                                        fixed_cell=False,
@@ -631,8 +650,9 @@ def get_mf6rch_file(data, rchrate):
 
     return rch_out
 
-
 ###############################################################################
+
+
 def get_combined_str(data, output, node):
     """Multicolumn function.
 
@@ -643,9 +663,9 @@ def get_combined_str(data, output, node):
 
     cdef:
         size_t length = len(series['date'])
-        double [:] col_attenuation = np.zeros(length)
-        double [:] col_combined_str = np.zeros(length)
-        double [:] combined_str = np.zeros(length)
+        double[:] col_attenuation = np.zeros(length)
+        double[:] col_combined_str = np.zeros(length)
+        double[:] combined_str = np.zeros(length)
         double rlp = params['sw_params'][node][1]
         double base = (params['sw_params'][node][0] +
                        output['interflow_to_rivers'][0] +
@@ -661,7 +681,6 @@ def get_combined_str(data, output, node):
                     output['rapid_runoff'] -
                     output['runoff_recharge'] +
                     output['rejected_recharge'])
-
 
     if params['sw_process'] == 'enabled':
         # don't attenuate negative flows
@@ -689,28 +708,32 @@ def get_combined_str(data, output, node):
 
     return col
 
-
 ###############################################################################
+
+
 def get_combined_ae(data, output, node):
     """AN) AE: Combined AE [mm/d]."""
     combined_ae = output['canopy_storage'] + output['ae']
     return {'combined_ae': combined_ae}
 
-
 ###############################################################################
+
+
 def get_evt(data, output, node):
     """AO) EVT: Unitilised PE [mm/d]."""
     return {'evt': output['unutilised_pe']}
 
-
 ###############################################################################
+
+
 def get_average_in(data, output, node):
     """AP) AVERAGE IN [mm]."""
     average_in = output['rainfall_ts'] + output['subroot_leak']
     return {'average_in': average_in}
 
-
 ###############################################################################
+
+
 def get_average_out(data, output, node):
     """AQ) AVERAGE OUT [mm]."""
     average_out = (output['combined_str'] +
@@ -720,16 +743,17 @@ def get_average_out(data, output, node):
 
     return {'average_out': average_out}
 
-
 ###############################################################################
+
+
 def get_change(data, output, node):
     """AR) TOTAL STORAGE CHANGE [mm]."""
     series = data['series']
 
     cdef:
         size_t length = len(series['date'])
-        double [:] col_change = np.zeros(length)
-        double [:] tmp0 = np.zeros(length)
+        double[:] col_change = np.zeros(length)
+        double[:] tmp0 = np.zeros(length)
         size_t num
 
     tmp0 = (output['recharge_store'] +
@@ -742,8 +766,9 @@ def get_change(data, output, node):
 
     return {'total_storage_change': col_change.base}
 
-
 ###############################################################################
+
+
 def get_balance(data, output, node):
     """AS) BALANCE [mm]."""
     balance = (output['average_in'] -
@@ -752,8 +777,9 @@ def get_balance(data, output, node):
 
     return {'balance': balance}
 
-
 ###############################################################################
+
+
 def aggregate(output, area, reporting=None, index=None):
     """Aggregate reporting."""
     new_rep = {}
@@ -771,16 +797,16 @@ def aggregate(output, area, reporting=None, index=None):
             new_rep[key] += reporting[key]
     return new_rep
 
-
 ###############################################################################
+
+
 def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
                   flow, nodes_per):
-    
     """get flows for one period"""
 
     ro[:] = 0.0
     flow[:] = 0.0
-    
+
     for node_swac, line in sorted_by_ca.items():
         downstr, str_flag = line[:2]
         acc = 0.0
@@ -816,43 +842,43 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
             # new node
             node_swac = downstr
             # get new downstr node
-            downstr = sorted_by_ca[node_swac][0] #[idx['downstr']]
+            downstr = sorted_by_ca[node_swac][0]
 
     return ro, flow
 
 ###############################################################################
 
+
 def get_sfr_file(data, runoff):
     """get SFR object."""
-    
+
     import flopy
     import numpy as np
     import copy
     import os.path
-    
+
     # units oddness - lots of hardcoded 1000s in input_output.py
     fac = 0.001
-    
     areas = data['params']['node_areas']
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
-
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
-
+    rte_topo = data['params']['routing_topology']
     njag = nodes + 2
     lenx = int((njag/2) - (nodes/2))
     m = None
 
-    sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
+    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
                                       key=lambda x: x[1][4]))
 
     names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
-             'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
+             'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
 
     idx = dict((y, x) for (x, y) in enumerate(names))
 
-    nstrm = nss = sum(value[idx['str_flag']] > 0 for value in sorted_by_ca.values())
+    nstrm = nss = sum(value[idx['str_flag']] > 0
+                      for value in sorted_by_ca.values())
 
     istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
 
@@ -908,44 +934,44 @@ def get_sfr_file(data, runoff):
     done = np.zeros((nodes), dtype=int)
     # for mf6 only
     str_flg = np.zeros((nodes), dtype=int)
-    
+
     # initialise reach & segment data
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
-        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, # hcond1,
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
          depth, width) = line
         # for mf6 only
         str_flg[node_swac-1] = str_flag
         ca = ca
-        if str_flag > 0: # and node_mf > 0:
+        if str_flag > 0:
             swac_seg_dic[node_swac] = str_count + 1
             seg_swac_dic[str_count + 1] = node_swac
 
             if data['params']['gwmodel_type'] == 'mfusg':
-                rd[str_count]['node'] = node_mf - 1 # external
-                rd[str_count]['iseg'] = str_count + 1 # serial
-                rd[str_count]['ireach'] = 1 # str_count + 1 # serial
-                rd[str_count]['rchlen'] = length # external
-                rd[str_count]['strtop'] = z # external
-                rd[str_count]['strthick'] = bed_thk # constant (for now)
-                rd[str_count]['strhc1'] = str_k # constant (for now)
+                rd[str_count]['node'] = node_mf - 1  # external
+                rd[str_count]['iseg'] = str_count + 1  # serial
+                rd[str_count]['ireach'] = 1  # str_count + 1 # serial
+                rd[str_count]['rchlen'] = length  # external
+                rd[str_count]['strtop'] = z  # external
+                rd[str_count]['strthick'] = bed_thk  # constant (for now)
+                rd[str_count]['strhc1'] = str_k  # constant (for now)
 
                 # segment data
-                sd[str_count]['nseg'] = str_count + 1 # serial
-                sd[str_count]['icalc'] = 0 # constant
+                sd[str_count]['nseg'] = str_count + 1  # serial
+                sd[str_count]['icalc'] = 0  # constant
                 sd[str_count]['outseg'] = 0
-                sd[str_count]['iupseg'] = 0 # constant (0)
+                sd[str_count]['iupseg'] = 0  # constant (0)
                 sd[str_count]['flow'] = 0.0  # constant (for now - swac)
                 sd[str_count]['runoff'] = 0.0  # constant (for now - swac)
-                sd[str_count]['etsw'] = 0.0 # # cotnstant (0)
-                sd[str_count]['pptsw'] = 0.0 # constant (0)
+                sd[str_count]['etsw'] = 0.0  # # cotnstant (0)
+                sd[str_count]['pptsw'] = 0.0  # constant (0)
                 # sd[str_count]['hcond1'] = hcond1 # get from lpf
-                sd[str_count]['thickm1'] = bed_thk # constant
-                sd[str_count]['elevup'] = z # get from mf
-                sd[str_count]['width1'] = width # constant
-                sd[str_count]['depth1'] = depth # constant
-                sd[str_count]['width2'] = width # constant
-                sd[str_count]['depth2'] = depth # constant
+                sd[str_count]['thickm1'] = bed_thk  # constant
+                sd[str_count]['elevup'] = z  # get from mf
+                sd[str_count]['width1'] = width  # constant
+                sd[str_count]['depth1'] = depth  # constant
+                sd[str_count]['width2'] = width  # constant
+                sd[str_count]['depth2'] = depth  # constant
 
             elif data['params']['gwmodel_type'] == 'mf6':
                 if node_mf > 0:
@@ -991,7 +1017,7 @@ def get_sfr_file(data, runoff):
         for node in xrange(1, nodes + 1):
             i = (nodes * per) + node
             runoff[i] = runoff[i] * areas[node] * fac
-            
+
     ro, flow = np.zeros((nss)), np.zeros((nss))
 
     # populate runoff and flow
@@ -1016,21 +1042,32 @@ def get_sfr_file(data, runoff):
         if data['params']['gwmodel_type'] == 'mfusg':
             seg_data[per] = copy.deepcopy(sd)
         done[:] = 0
-            
+
     isfropt = 1
     if data['params']['gwmodel_type'] == 'mfusg':
-        sfr = flopy.modflow.mfsfr2.ModflowSfr2(m, nstrm=nstrm, nss=nss, nsfrpar=0,
-                                               nparseg=0, const=None, dleak=0.0001,
-                                               ipakcb=istcb1, istcb2=istcb2, isfropt=isfropt,
-                                               nstrail=10, isuzn=1, nsfrsets=30, irtflg=0,
-                                               numtim=2, weight=0.75, flwtol=0.0001,
-                                               reach_data=rd, segment_data=seg_data,
+        sfr = flopy.modflow.mfsfr2.ModflowSfr2(m, nstrm=nstrm, nss=nss,
+                                               nsfrpar=0, nparseg=0,
+                                               const=None,
+                                               dleak=0.0001, ipakcb=istcb1,
+                                               istcb2=istcb2, isfropt=isfropt,
+                                               nstrail=10, isuzn=1,
+                                               nsfrsets=30,
+                                               irtflg=0,
+                                               numtim=2, weight=0.75,
+                                               flwtol=0.0001,
+                                               reach_data=rd,
+                                               segment_data=seg_data,
                                                channel_geometry_data=None,
-                                               channel_flow_data=None, dataset_5=None,
-                                               irdflag=0, iptflag=0, reachinput=True,
-                                               transroute=False, tabfiles=False,
-                                               tabfiles_dict=None, extension='sfr',
-                                               unit_number=None, filenames=None)
+                                               channel_flow_data=None,
+                                               dataset_5=None,
+                                               irdflag=0, iptflag=0,
+                                               reachinput=True,
+                                               transroute=False,
+                                               tabfiles=False,
+                                               tabfiles_dict=None,
+                                               extension='sfr',
+                                               unit_number=None,
+                                               filenames=None)
 
     elif data['params']['gwmodel_type'] == 'mf6':
         sfr = flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr(m,
@@ -1047,7 +1084,6 @@ def get_sfr_file(data, runoff):
                                                        observations=None,
                                                        mover=None,
                                                        maximum_iterations=None,
-                                                       maximum_depth_change=None,
                                                        unit_conversion=86400.0,
                                                        nreaches=nss,
                                                        packagedata=rd,
@@ -1058,7 +1094,6 @@ def get_sfr_file(data, runoff):
                                                        pname=None,
                                                        parent_file=None)
 
-
     sfr.heading = "# SFR package for  MODFLOW-USG, generated by SWAcMod."
 
     # compute the slopes
@@ -1068,6 +1103,7 @@ def get_sfr_file(data, runoff):
     return sfr
 
 ##############################################################################
+
 
 def write_sfr(sfr, filename=None):
     """
@@ -1095,12 +1131,14 @@ def write_sfr(sfr, filename=None):
     if sfr.reachinput:
         """
         When REACHINPUT is specified, variable ISFROPT is read in data set 1c.
-        ISFROPT can be used to change the default format for entering reach and segment data
+        ISFROPT can be used to change the default format for entering reach
+        and segment data
         or to specify that unsaturated flow beneath streams will be simulated.
         """
         f_sfr.write('reachinput ')
     if sfr.transroute:
-        """When TRANSROUTE is specified, optional variables IRTFLG, NUMTIM, WEIGHT, and FLWTOL
+        """When TRANSROUTE is specified, optional variables IRTFLG, NUMTIM,
+        WEIGHT, and FLWTOL
         also must be specified in Item 1c.
         """
         f_sfr.write('transroute')
@@ -1109,16 +1147,6 @@ def write_sfr(sfr, filename=None):
     if sfr.tabfiles:
         """
         tabfiles
-        An optional character variable that is a flag to indicate that inflows to one or more stream
-        segments will be specified with tabular inflow files.
-        numtab
-        An integer value equal to the number of tabular inflow files that will be read if TABFILES
-        is specified. A separate input file is required for each segment that receives specified inflow.
-        Thus, the maximum value of NUMTAB that can be specified is equal to the total number of
-        segments specified in Item 1c with variables NSS. The name (Fname) and unit number (Nunit)
-        of each tabular file must be specified in the MODFLOW-2005 Name File using tile type (Ftype) DATA.
-        maxval
-
         """
         f_sfr.write(
             '{} {} {}\n'.format(sfr.tabfiles, sfr.numtab, sfr.maxval))
@@ -1130,12 +1158,12 @@ def write_sfr(sfr, filename=None):
 
     fmt1 = ['{:.0f}'] * 4
     fmt2 = ['{!s}'] * 4
-    
+
     # items 3 and 4 are skipped (parameters not supported)
     itmpr = range(sfr.dataset_5[0][0])
     cols = ['nseg', 'icalc', 'outseg', 'iupseg', 'flow',
             'runoff', 'etsw', 'pptsw', 'width1', 'depth1']
-    
+
     for i in xrange(0, sfr.nper):
         # item 5
         f_sfr.write(' '.join(map(str, sfr.dataset_5[i])) + '\n')
@@ -1146,6 +1174,7 @@ def write_sfr(sfr, filename=None):
     f_sfr.close()
 
 ###############################################################################
+
 
 def _write_segment_data(sfr, i, j, f_sfr, fmt1, fmt2, cols):
 
@@ -1187,7 +1216,7 @@ def get_swdis(data, output, node):
     """Surface water discharges"""
 
     from swacmod.utils import monthdelta, weekdelta
-    
+
     series, params = data['series'], data['params']
     areas = data['params']['node_areas']
     fac = 1000.0
@@ -1196,7 +1225,7 @@ def get_swdis(data, output, node):
 
     swdis_ts = np.zeros(len(series['date']))
     start_date = dates[0]
-    
+
     if node in params['swdis_locs']:
         area = areas[node]
         zone_swdis = params['swdis_locs'][node] - 1
@@ -1208,12 +1237,14 @@ def get_swdis(data, output, node):
             # if weeks convert to days
             for iday, day in enumerate(dates):
                 week = weekdelta(start_date, day)
-                swdis_ts[iday] = series['swdis_ts'][week, zone_swdis] / area * fac
+                swdis_ts[iday] = (series['swdis_ts'][week, zone_swdis] / area
+                                  * fac)
         elif freq_flag == 2:
             # if months convert to days
-            for iday, day in enumerate(dates):    
+            for iday, day in enumerate(dates):
                 month = monthdelta(start_date, day)
-                swdis_ts[iday] = series['swdis_ts'][month, zone_swdis] / area * fac
+                swdis_ts[iday] = (series['swdis_ts'][month, zone_swdis] / area
+                                  * fac)
 
     return {'swdis_ts': swdis_ts}
 
@@ -1224,7 +1255,7 @@ def get_swabs(data, output, node):
     """Surface water abtractions"""
 
     from swacmod.utils import monthdelta, weekdelta
-    
+
     series, params = data['series'], data['params']
     areas = data['params']['node_areas']
     fac = 1000.0
@@ -1241,18 +1272,20 @@ def get_swabs(data, output, node):
         if freq_flag == 0:
             # daily input just populate
             swabs_ts = series['swabs_ts'][:, zone_swabs] / area * fac
-            
+
         elif freq_flag == 1:
             # if weeks convert to days
             for iday, day in enumerate(dates):
                 week = weekdelta(start_date, day)
-                swabs_ts[iday] = series['swabs_ts'][week, zone_swabs] / area * fac
+                swabs_ts[iday] = (series['swabs_ts'][week, zone_swabs] / area
+                                  * fac)
 
         elif freq_flag == 2:
             # if months convert to days
             for iday, day in enumerate(dates):
                 month = monthdelta(start_date, day)
-                swabs_ts[iday] = series['swabs_ts'][month, zone_swabs] / area * fac
+                swabs_ts[iday] = (series['swabs_ts'][month, zone_swabs] / area
+                                  * fac)
 
     return {'swabs_ts': swabs_ts}
 
@@ -1266,6 +1299,7 @@ def get_evt_file(data, evtrate):
     import flopy
     import numpy as np
     import os.path
+    from flopy.mf6.ModflowGwfevt import stress_period_data
 
     cdef int i, per, nper, nodes
 
@@ -1286,7 +1320,7 @@ def get_evt_file(data, evtrate):
     elif data['params']['gwmodel_type'] == 'mf6':
         sim = flopy.mf6.MFSimulation()
         m = flopy.mf6.mfmodel.MFModel(sim,
-                                       modelname=path)
+                                      modelname=path)
         njag = nodes + 2
         flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
                                                    nodes=nodes,
@@ -1331,34 +1365,33 @@ def get_evt_file(data, evtrate):
                                            exdp={0: exdp},
                                            ievt={0: ievt})
     elif data['params']['gwmodel_type'] == 'mf6':
-        spd = flopy.mf6.ModflowGwfevt.stress_period_data.empty(m,
-                                                               maxbound=nodes,
-                                                               nseg=1,
-                                                               stress_periods=range(nper))
+        spd = stress_period_data.empty(m,
+                                       maxbound=nodes,
+                                       nseg=1,
+                                       stress_periods=range(nper))
 
         for per in tqdm(xrange(nper), desc="Generating MF6 EVT  "):
             for i in xrange(nodes):
                 if ievt[i, 0] > 0:
-                    spd[per][i] = ((ievt[i, 0] -1,),
+                    spd[per][i] = ((ievt[i, 0] - 1,),
                                    surf[i, 0],
                                    evt_dic[per][i, 0],
                                    exdp[i, 0],
                                    -999.9)
 
-        evt_out = flopy.mf6.modflow.mfgwfevt.ModflowGwfevt(m,
-                                                           fixed_cell=False,
-                                                           print_input=None,
-                                                           print_flows=None,
-                                                           save_flows=None,
-                                                           timeseries=None,
-                                                           observations=None,
-                                                           surf_rate_specified=False,
-                                                           maxbound=nodes,
-                                                           nseg=1,
-                                                           stress_period_data=spd,
-                                                           filename=None,
-                                                           pname=None,
-                                                           parent_file=None)
+        evt_out = flopy.mf6.ModflowGwfevt(m,
+                                          fixed_cell=False,
+                                          print_input=None,
+                                          print_flows=None,
+                                          save_flows=None,
+                                          timeseries=None,
+                                          observations=None,
+                                          maxbound=nodes,
+                                          nseg=1,
+                                          stress_period_data=spd,
+                                          filename=None,
+                                          pname=None,
+                                          parent_file=None)
 
     return evt_out
 
@@ -1369,6 +1402,8 @@ def do_swrecharge_mask(data, runoff, recharge):
     """do ror with monthly mask"""
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
+    rte_topo = data['params']['routing_topology']
+
     cdef:
         size_t length = len(series['date'])
         double[:, :] ror_prop = params['ror_prop']
@@ -1377,10 +1412,10 @@ def do_swrecharge_mask(data, runoff, recharge):
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
         int day, month
 
-    sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
+    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
                                       key=lambda x: x[1][4]))
-    
-    #'downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
+
+    # 'downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
     #         'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
 
     # complete graph
@@ -1399,7 +1434,7 @@ def do_swrecharge_mask(data, runoff, recharge):
                 lst = [n[0] for n in
                        nx.shortest_path_length(Gc, target=node).items()]
                 for n in lst:
-                # for n in nx.ancestors(Gc, node):
+                    #  for n in nx.ancestors(Gc, node):
                     mask[n-1] = 1
         return build_graph(nnodes, sorted_by_ca, mask)
 
@@ -1417,15 +1452,12 @@ def do_swrecharge_mask(data, runoff, recharge):
                                       runoff, nnodes, day)
         # iterate over nodes relevent to this month's RoR parameters
         for node in list(Gp[month].nodes):
-            
-            ro = acc_flow[node -1]
-
+            ro = acc_flow[node - 1]
             if ro > 0.0:
                 zone_ror = params['swrecharge_zone_mapping'][node] - 1
                 fac_ro = ror_prop[month][zone_ror] * ro
                 lim = ror_limit[month][zone_ror]
                 qty = min(fac_ro, lim)
-
                 # col_runoff_recharge[day] = qty
                 recharge[(nnodes * day) + node] += qty
                 runoff[(nnodes * day) + node] -= qty
@@ -1437,9 +1469,9 @@ def do_swrecharge_mask(data, runoff, recharge):
 
 
 def get_ror_flows_tree(G, runoff, nodes, day):
-    
+
     """get total flows for RoR one day with mask"""
-    
+
     flow = np.zeros((nodes))
     done = np.zeros((nodes), dtype='int')
     c = nodes * day
@@ -1451,10 +1483,10 @@ def get_ror_flows_tree(G, runoff, nodes, day):
 
         lst = [n for n, d in nx.shortest_path_length(G,
                                                      source=node_swac).items()]
-        #lst = nx.descendants(G, node_swac)
+        #  lst = nx.descendants(G, node_swac)
         for d in lst:
             if done[d-1] != 1:
-                acc = (flow[node -1] + runoff[c + d])
+                acc = (flow[node - 1] + runoff[c + d])
             flow[d - 1] += acc
             node = d
             done[d-1] = 1
@@ -1480,14 +1512,16 @@ def all_days_mask(data):
     """get overall RoR mask for run"""
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
+    rte_topo = data['params']['routing_topology']
+
     cdef:
         size_t length = len(series['date'])
-        double [:, :] ror_prop = params['ror_prop']
-        double [:, :] ror_limit = params['ror_limit']
-        long long [:] months = np.array(series['months'], dtype=np.int64)
+        double[:, :] ror_prop = params['ror_prop']
+        double[:, :] ror_limit = params['ror_limit']
+        long long[:] months = np.array(series['months'], dtype=np.int64)
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
 
-    sorted_by_ca = OrderedDict(sorted(data['params']['routing_topology'].items(),
+    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
                                       key=lambda x: x[1][4]))
 
     mask = np.full((nnodes), 0, dtype='int')
@@ -1511,7 +1545,7 @@ def all_days_mask(data):
         if mask[node-1] == 1:
             lst = [n[0] for n in nx.shortest_path_length(Gc,
                                                          source=node).items()]
-            #for n in nx.descendants(Gc, node):
+            #  for n in nx.descendants(Gc, node):
             for n in lst:
                 mask[n-1] = 1
 
