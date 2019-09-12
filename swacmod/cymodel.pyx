@@ -781,13 +781,18 @@ def aggregate(output, area, reporting=None, index=None):
     """Aggregate reporting."""
     new_rep = {}
 
-    not_scalar = (type(index) is range or type(index) is list)
+    if index is not None:
+        not_scalar = (type(index[0]) is range or type(index[0]) is list)
+    else:
+        not_scalar = False
 
-    for key in output:
+    for ik, key in enumerate(output):
+        new_rep[key] = []
         if not_scalar:
-            new_rep[key] = output[key][index].mean(dtype=np.float64) * area
+            new_rep[key] = [output[key][i].mean(dtype=np.float64)
+                            * area for i in index]
         elif index is not None:
-            new_rep[key] = output[key][index] * area
+            new_rep[key] = [output[key][index[0]] * area]
         else:
             new_rep[key] = output[key] * area
         if reporting:

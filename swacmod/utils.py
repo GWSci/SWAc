@@ -266,3 +266,20 @@ def weekdelta(d1, d2):
     monday2 = (d2 - datetime.timedelta(days=d2.weekday()))
 
     return (monday2 - monday1).days / 7
+
+
+def daterange(start_date, end_date):
+    "iterate over dates"
+    for n in range(int((end_date - start_date).days)):
+        yield start_date + datetime.timedelta(n)
+
+
+def month_indices(month, data):
+    "get day numbers of a month"
+    last = datetime.timedelta(data['params']['time_periods'][-1][1]-1)
+    first = data["params"]["start_date"]
+
+    return [
+        i for i, day_date in enumerate(daterange(first, first+last))
+        if day_date.month == month
+    ]
