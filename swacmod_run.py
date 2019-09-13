@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 """SWAcMod main."""
@@ -10,7 +10,7 @@ import time
 import random
 import logging
 import argparse
-from multiprocessing import Process, Manager, freeze_support, Array, Queue
+import multiprocessing as mp
 
 # Third Party Libraries
 import numpy as np
@@ -19,16 +19,15 @@ from tqdm import tqdm
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
+# Compile and import model
+from swacmod import compile_model
+from swacmod import model as m
 
 # win fix
 sys.maxint = 2**63 - 1
 
 # sentinel for iteration count
 SENTINEL = 1
-
-# Compile and import model
-u.compile_model()
-from swacmod import model as m
 
 
 class Worker:
@@ -140,7 +139,7 @@ def run_process(
 ):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
-    logging.info("Process %d started (%d nodes)", num, len(ids))
+    logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
 
     for node in ids:
@@ -211,7 +210,7 @@ def run_process(
                                                 area,
                                                 index=spatial_index)
 
-    logging.info("Process %d ended", num)
+    logging.info("mp.Process %d ended", num)
 
     return (
         reporting_agg,
@@ -247,7 +246,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     """Run model for all nodes."""
     times = {"start_of_run": time.time()}
 
-    manager = Manager()
+    manager = mp.Manager()
     reporting_agg = manager.dict()
     reporting_agg2 = {}
     reporting = manager.dict()
@@ -268,6 +267,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     print('\nStart "%s"' % params["run_name"])
     logging.info("Start SWAcMod run")
+    logging.info(compile_model.get_status())
 
     data = io.load_and_validate(specs_file, input_file, input_dir)
     if not skip:
@@ -276,35 +276,35 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     per = len(data["params"]["time_periods"])
     nnodes = data["params"]["num_nodes"]
     len_rch_agg = (nnodes * per) + 1
-    recharge_agg = Array("f", 1)
-    runoff_agg = Array("f", 1)
+    recharge_agg = mp.Array("f", 1)
+    runoff_agg = mp.Array("f", 1)
     runoff_recharge_agg = np.zeros((1))
-    evtr_agg = Array("f", 1)
+    evtr_agg = mp.Array("f", 1)
 
     if params["swrecharge_process"] == "enabled" or data["params"][
             "output_recharge"]:
-        recharge_agg = Array("f",
-                             len_rch_agg)  # recharge by output period (agg)
+        recharge_agg = mp.Array("f",
+                                len_rch_agg)  # recharge by output period (agg)
 
     if params["swrecharge_process"] == "enabled" or data["params"][
             "output_sfr"]:
-        runoff_agg = Array("f", len_rch_agg)
+        runoff_agg = mp.Array("f", len_rch_agg)
 
     if params["swrecharge_process"] == "enabled":
         runoff_recharge_agg = np.zeros((len_rch_agg))
 
     if data["params"]["output_evt"]:
-        evtr_agg = Array("f", len_rch_agg)
+        evtr_agg = mp.Array("f", len_rch_agg)
 
     days = len(data["series"]["date"])
     len_rch = (nnodes * days) + 1
 
     if params["swrecharge_process"] == "enabled":
-        recharge = Array("f", len_rch)
-        runoff = Array("f", len_rch)
+        recharge = mp.Array("f", len_rch)
+        runoff = mp.Array("f", len_rch)
     else:
-        recharge = Array("f", 1)
-        runoff = Array("f", 1)
+        recharge = mp.Array("f", 1)
+        runoff = mp.Array("f", 1)
 
     ids = range(1, nnodes + 1)
     random.shuffle(list(ids))
@@ -320,8 +320,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
         spatial_index = None
 
     workers = []
-    q = Queue()
-    lproc = Process(target=listener, args=(q, nnodes))
+    q = mp.Queue()
+    lproc = mp.Process(target=listener, args=(q, nnodes))
     lproc.start()
 
     for process, chunk in enumerate(chunks):
@@ -329,7 +329,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
         if chunk.size == 0:
             continue
 
-        proc = Process(
+        proc = mp.Process(
             target=run_process,
             args=(
                 process,
@@ -552,7 +552,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
 ###############################################################################
 if __name__ == "__main__":
-    freeze_support()
+    mp.freeze_support()
 
     # Parser for command line arguments
     DESCRIPTION = """
@@ -625,4 +625,3 @@ if __name__ == "__main__":
             logging.error(err.__repr__())
             print("ERROR: %s" % err)
             print("")
-
