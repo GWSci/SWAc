@@ -786,7 +786,7 @@ def aggregate(output, area, reporting=None, index=None):
     else:
         not_scalar = False
 
-    for ik, key in enumerate(output):
+    for key in output:
         new_rep[key] = []
         if not_scalar:
             new_rep[key] = [output[key][i].mean(dtype=np.float64)
@@ -816,10 +816,10 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
         # accumulate pre-stream flows into network
         while downstr > 1:
 
-            str_flag = sorted_by_ca[node_swac][1] #[idx['str_flag']]
+            str_flag = sorted_by_ca[node_swac][1]  # [idx['str_flag']]
 
             # not str
-            if str_flag < 1: # or node_mf < 1:
+            if str_flag < 1:  # or node_mf < 1:
                 # not not done
                 if done[node_swac - 1] < 1:
                     acc += runoff[nodes_per + node_swac]
@@ -877,10 +877,10 @@ def get_sfr_file(data, runoff):
     names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
              'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
 
-    idx = dict((y, x) for (x, y) in enumerate(names))
+    idx = {y: x for (x, y) in enumerate(names)}
 
-    nstrm = nss = sum(value[idx['str_flag']] > 0
-                      for value in sorted_by_ca.values())
+    nstrm = nss = sum([value[idx['str_flag']] > 0
+                       for value in sorted_by_ca.values()])
 
     istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
 
@@ -1422,12 +1422,13 @@ def do_swrecharge_mask(data, runoff, recharge):
     Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
 
     def compute_upstream_month_mask(month_number):
-
+        cdef int i = month_number
+        cdef int z
         mask = np.full((nnodes), 0, dtype='int')
         for node in range(1, nnodes + 1):
-            zone_ror = params['swrecharge_zone_mapping'][node] - 1
-            fac = ror_prop[month_number][zone_ror]
-            lim = ror_limit[month_number][zone_ror]
+            z = params['swrecharge_zone_mapping'][node] - 1
+            fac = ror_prop[i][z]
+            lim = ror_limit[i][z]
             if min(fac, lim) > 0.0:
                 mask[node-1] = 1
                 # add upstream bits
@@ -1520,6 +1521,7 @@ def all_days_mask(data):
         double[:, :] ror_limit = params['ror_limit']
         long long[:] months = np.array(series['months'], dtype=np.int64)
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
+        int month
 
     sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
                                       key=lambda x: x[1][4]))
