@@ -11,6 +11,9 @@ import random
 import logging
 import argparse
 import multiprocessing as mp
+from multiprocessing.heap import Arena
+import mmap
+import gc
 
 # Third Party Libraries
 import numpy as np
@@ -28,6 +31,17 @@ sys.maxint = 2**63 - 1
 
 # sentinel for iteration count
 SENTINEL = 1
+
+
+def anonymous_arena_init(self, size, fd=-1):
+    "Create Arena using an anonymous memory mapping."
+    self.size = size
+    self.fd = fd  # still kept but is not used !
+    self.buffer = mmap.mmap(-1, self.size)
+
+# monkey patch for anonymous memory mapping python 3
+if mp.get_start_method() == 'fork':
+    Arena.__init__ = anonymous_arena_init
 
 
 class Worker:
@@ -280,7 +294,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     runoff_agg = mp.Array("f", 1)
     runoff_recharge_agg = np.zeros((1))
     evtr_agg = mp.Array("f", 1)
-
+    recharge = mp.Array("f", 1)
+    runoff = mp.Array("f", 1)
     if params["swrecharge_process"] == "enabled" or data["params"][
             "output_recharge"]:
         recharge_agg = mp.Array("f",
@@ -300,11 +315,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     len_rch = (nnodes * days) + 1
 
     if params["swrecharge_process"] == "enabled":
-        recharge = mp.Array("f", len_rch)
-        runoff = mp.Array("f", len_rch)
-    else:
-        recharge = mp.Array("f", 1)
-        runoff = mp.Array("f", 1)
+        recharge = mp.sharedctypes.Array("f", len_rch, lock=True)
+        runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
 
     ids = range(1, nnodes + 1)
     random.shuffle(list(ids))
@@ -478,10 +490,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             )
 
         if params["swrecharge_process"] == "enabled":
-            del runoff_recharge
-            del tmp
-            del runoff
-            del recharge
+            del runoff_recharge, tmp, runoff, recharge
 
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
@@ -526,7 +535,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             elif data['params']['gwmodel_type'] == 'mf6':
                 evt.write()
             evt, tmp = None, None
-            del evt
+            del evt, tmp
 
     times["end_of_run"] = time.time()
 
@@ -548,6 +557,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
     print("")
 
     logging.info("End SWAcMod run")
+
+    del reporting, spatial, reporting_agg, reporting_agg2
+
+    gc.collect()
+
+    return
 
 
 ###############################################################################

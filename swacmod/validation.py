@@ -300,7 +300,6 @@ def val_swdis_ts(data, name):
     nmonths = monthdelta(dates[0], dates[-1]) + 1
 
     length = [ndays, nweeks, nmonths]
-
     if swdisn != {0: 0}:
         c.check_type(
             param=swdists,
