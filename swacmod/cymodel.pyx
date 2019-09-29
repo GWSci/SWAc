@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# cython: language_level=2
+# cython: language_level=3, boundscheck=False
 
 
 # Third Party Libraries
@@ -11,7 +11,6 @@ from . import utils as u
 from tqdm import tqdm
 import networkx as nx
 import sys
-from past.builtins import xrange
 cimport numpy as np
 
 
