@@ -124,6 +124,7 @@ def val_routing_process(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
+
 ###############################################################################
 def val_output_sfr(data, name):
     """Validate output_sfr.
@@ -149,7 +150,8 @@ def val_output_individual(data, name):
     ids = set(range(1, data["params"]["num_nodes"] + 1))
 
     if not all(i in ids for i in oin):
-        msg = 'Parameter "%s" requires all node ids to be 1 <= x <= ' "num_nodes"
+        msg = ('Parameter "%s" requires all node ids to be'
+               + '1 <= x <= ' "num_nodes")
         raise u.ValidationError(msg % name)
 
 
@@ -355,7 +357,8 @@ def val_swdis_locs(data, name):
     tot = len(data["params"]["swdis_locs"]) + 1
 
     c.check_type(
-        param=swdisl, name=name, t_types=data["specs"][name]["type"], keys=range(1, tot)
+        param=swdisl, name=name, t_types=data["specs"][name]["type"],
+        keys=range(1, tot)
     )
 
     c.check_values_limits(
@@ -381,7 +384,8 @@ def val_swabs_locs(data, name):
     tot = len(data["params"]["swabs_locs"]) + 1
 
     c.check_type(
-        param=swabsl, name=name, t_types=data["specs"][name]["type"], keys=range(1, tot)
+        param=swabsl, name=name, t_types=data["specs"][name]["type"],
+        keys=range(1, tot)
     )
 
     c.check_values_limits(
@@ -412,7 +416,8 @@ def val_node_areas(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(values=nda.values(), name=name, low_l=0, include_low=True)
+    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+                          include_low=True)
 
 
 ###############################################################################
@@ -741,6 +746,7 @@ def val_macropore_activation_option(data, name):
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
+
 ###############################################################################
 def val_soil_zone_names(data, name):
     """Validate soil_zone_names.
@@ -823,7 +829,8 @@ def val_max_canopy_storage(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(values=mcs.values(), name=name, low_l=0, include_low=True)
+    c.check_values_limits(values=mcs.values(), name=name, low_l=0,
+                          include_low=True)
 
 
 ###############################################################################
@@ -903,7 +910,8 @@ def val_rapid_runoff_params(data, name):
     rzn = data["params"]["rapid_runoff_zone_names"]
 
     c.check_type(
-        param=rrp, name=name, t_types=data["specs"][name]["type"], len_list=[len(rzn)]
+        param=rrp, name=name, t_types=data["specs"][name]["type"],
+        len_list=[len(rzn)]
     )
 
     keys = ["class_smd", "class_ri", "values"]
@@ -996,6 +1004,7 @@ def val_swrecharge_limit(data, name):
         len_list=[len(rzn)],
         keys=range(1, 13),
     )
+
 
 ###############################################################################
 def val_macropore_process(data, name):
@@ -1377,7 +1386,8 @@ def val_percolation_rejection(data, name):
         len_list=[len(lzn)],
         keys=["percolation_rejection"],
     )
-    c.check_values_limits(values=list(per.values())[0], name=name, low_l=0.0, include_low=True)
+    c.check_values_limits(values=list(per.values())[0], name=name, low_l=0.0,
+                          include_low=True)
 
 
 ###############################################################################
@@ -1577,6 +1587,7 @@ def val_routing_topology(data, name):
         len_list=[10],
     )
 
+
 ###############################################################################
 def val_recharge_node_mapping(data, name):
     """Validate recharge node .
@@ -1656,6 +1667,7 @@ def val_output_evt(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
+
 ###############################################################################
 def val_excess_sw_process(data, name):
     """Validate excess_sw_process.
@@ -1732,7 +1744,6 @@ def val_gwmodel_type(data, name):
     c.check_values_limits(
         values=[rap], name=name, constraints=data["specs"][name]["constraints"]
     )
-
 
 
 FUNC_PARAMS = [
