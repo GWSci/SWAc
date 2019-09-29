@@ -14,15 +14,14 @@ from . import utils as u
 
 
 try:
-  basestring
+    basestring
 except NameError:
-  basestring = str
+    basestring = str
 
 MAPPING = {
     (int, int): ["an integer", "integers"],
     (float, int, int): ["a number", "numbers"],
     str: ["a string", "strings"],
-    basestring: ["a string", "strings"],
     dict: ["a dictionary", "dictionaries"],
     (list, np.ndarray): ["a list", "lists"],
     set: ["a set", "sets"],
@@ -60,7 +59,8 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
 
         if not isinstance(param, t_type):
             msg = 'Parameter "%s" has to be %s, found a %s instead'
-            raise u.ValidationError(msg % (name, MAPPING[t_type][0], type(param)))
+            raise u.ValidationError(msg % (name, MAPPING[t_type][0],
+                                           type(param)))
 
         if t_type == (list, np.ndarray) and new_len and len(param) != new_len:
             msg = 'Parameter "%s" has to be a list of length %d, found %d'
@@ -81,7 +81,8 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
                 if len_list:
                     copy_l = [i for i in len_list]
                 check_type(
-                    param=value, name=name, t_types=copy_t, len_list=copy_l, keys=keys
+                  param=value, name=name, t_types=copy_t, len_list=copy_l,
+                  keys=keys
                 )
             types = []
             len_list = []
@@ -93,7 +94,8 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
                 if len_list:
                     copy_l = [i for i in len_list]
                 check_type(
-                    param=value, name=name, t_types=copy_t, len_list=copy_l, keys=keys
+                  param=value, name=name, t_types=copy_t, len_list=copy_l,
+                  keys=keys
                 )
             types = []
             len_list = []
