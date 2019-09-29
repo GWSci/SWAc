@@ -379,11 +379,11 @@ def fin_landuse_zone_names(data, name):
     """
     params = data["params"]
     if params[name] is None:
-      try:
-        zones = len(list(params["lu_spatial"].items())[0][1])
-      except (TypeError, KeyError, IndexError):
-        zones = 1
-      params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
+        try:
+            zones = len(list(params["lu_spatial"].items())[0][1])
+        except(TypeError, KeyError, IndexError):
+            zones = 1
+            params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
 
 
 ###############################################################################
@@ -424,7 +424,8 @@ def fin_rapid_runoff_params(data, name):
         ]
     else:
         for dataset in data["params"][name]:
-            dataset["values"] = [[float(i) for i in row] for row in dataset["values"]]
+            dataset["values"] = [[float(i) for i in row]
+                                 for row in dataset["values"]]
 
 
 ###############################################################################
@@ -452,7 +453,8 @@ def fin_swrecharge_limit(data, name):
     params = data["params"]
     zones = data["params"]["swrecharge_zone_names"]
     if params[name] is None:
-        params[name] = dict((k, [99999.9 for _ in zones]) for k in range(1, 13))
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [99999]', name)
 
     params["ror_limit"] = sorted(params[name].items(), key=lambda x: x[0])
@@ -484,7 +486,8 @@ def fin_macropore_limit(data, name):
     params = data["params"]
     zones = data["params"]["macropore_zone_names"]
     if params[name] is None:
-        params[name] = dict((k, [99999.9 for _ in zones]) for k in range(1, 13))
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
         logging.info('\t\tDefaulted "%s" to [99999.9]', name)
 
     params["macro_limit"] = sorted(params[name].items(), key=lambda x: x[0])
@@ -536,7 +539,8 @@ def fin_soil_static_params(data, name):
         and params["fao_input"] == "ls"
     ):
         params["fao_process"] = "disabled"
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s', name)
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
 
 
 ###############################################################################
@@ -552,7 +556,8 @@ def fin_soil_spatial(data, name):
         and params["fao_input"] == "ls"
     ):
         params["fao_process"] = "disabled"
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s', name)
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
 
 
 ###############################################################################
@@ -564,7 +569,8 @@ def fin_lu_spatial(data, name):
     params = data["params"]
     if params[name] is None and params["fao_process"] == "enabled":
         params["fao_process"] = "disabled"
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s', name)
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
 
 
 ###############################################################################
@@ -580,7 +586,8 @@ def fin_zr(data, name):
         and params["fao_input"] == "ls"
     ):
         params["fao_process"] = "disabled"
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s', name)
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
 
 
 ###############################################################################
@@ -596,7 +603,8 @@ def fin_kc(data, name):
         and params["fao_input"] == "ls"
     ):
         params["fao_process"] = "disabled"
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s', name)
+        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
+                     name)
     elif params[name]:
         params["kc_list"] = sorted(params[name].items(), key=lambda x: x[0])
         params["kc_list"] = np.array([i[1] for i in params["kc_list"]])
@@ -662,7 +670,8 @@ def fin_interflow_params(data, name):
     """
     if data["params"][name] is None:
         nodes = data["params"]["num_nodes"]
-        data["params"][name] = dict((k, [0, 1, 999999, 0]) for k in range(1, nodes + 1))
+        data["params"][name] = dict((k, [0, 1, 999999, 0])
+                                    for k in range(1, nodes + 1))
         logging.info('\t\tDefaulted "%s" to %s', name, [0, 1, 999999, 0])
 
 
@@ -674,7 +683,8 @@ def fin_recharge_attenuation_params(data, name):
     """
     if data["params"][name] is None:
         nodes = data["params"]["num_nodes"]
-        data["params"][name] = dict((k, [0, 1, 999999]) for k in range(1, nodes + 1))
+        data["params"][name] = dict((k, [0, 1, 999999])
+                                    for k in range(1, nodes + 1))
         logging.info('\t\tDefaulted "%s" to %s', name, [0, 1, 999999])
 
 
@@ -686,7 +696,8 @@ def fin_sw_params(data, name):
     """
     if data["params"][name] is None:
         nodes = data["params"]["num_nodes"]
-        data["params"][name] = dict((k, [0.0, 1.0]) for k in range(1, nodes + 1))
+        data["params"][name] = dict((k, [0.0, 1.0])
+                                    for k in range(1, nodes + 1))
         logging.info('\t\tDefaulted "%s" to %s', name, [0.0, 1.0])
 
 
@@ -698,7 +709,7 @@ def fin_output_sfr(data, name):
     """
 
     params = data["params"]
-    if params[name] is None or params[name] == None:
+    if params[name] is None or params[name] is None:
         params["output_sfr"] = False
         logging.info('\t\tSwitched "output_sfr" to "false"')
 
@@ -753,23 +764,8 @@ def fin_routing_topology(data, name):
         params["output_sfr"] = False
         logging.info('\t\tSwitched "output_sfr" to "false", missing %s', name)
         params["routing_process"] = "disabled"
-        logging.info('\t\tSwitched "routing_process" to "disabled", missing %s', name)
-
-
-###############################################################################
-def fin_soil_static_params(data, name):
-    """Finalize the "soil_static_params" parameter.
-
-    1) if not provided, set "fao_process" to "disabled".
-    """
-    params = data["params"]
-    if (
-        params[name] is None
-        and params["fao_process"] == "enabled"
-        and params["fao_input"] == "ls"
-    ):
-        params["fao_process"] = "disabled"
-        logging.info('\t\tSwitched "fao_process" to "disabled", missing %s', name)
+        logging.info('\t\tSwitch "routing_process" to "disabled", missing %s',
+                     name)
 
 
 ###############################################################################
@@ -815,24 +811,13 @@ def fin_swabs_f(data, name):
 
 
 ###############################################################################
-def fin_gwmodel_type(data, name):
-    """Finalize the "gwmodel_type" parameter.
-
-    1) if not provided, set to "mfusg".
-    """
-    params = data["params"]
-    if params[name] is None:
-        params["gwmodel_type"] = "mfusg"
-        logging.info('\t\tSwitched "gwmodel_type" to "mfusg"')
-
-
-###############################################################################
 def fin_date(data, name):
     """Finalize the "date" series."""
     series, params = data["series"], data["params"]
     max_time = max([i for j in params["time_periods"] for i in j]) - 1
     day = datetime.timedelta(1)
-    series["date"] = [params["start_date"] + day * num for num in range(max_time)]
+    series["date"] = [params["start_date"] + day * num
+                      for num in range(max_time)]
     dates = np.array([np.datetime64(str(i.date())) for i in series["date"]])
     series["months"] = dates.astype("datetime64[M]").astype(int) % 12
 
@@ -917,6 +902,7 @@ def fin_output_evt(data, name):
     if data["params"][name] is None:
         data["params"][name] = False
 
+
 ###############################################################################
 def fin_excess_sw_process(data, name):
     """Finalize the "excess_sw_process" parameter.
@@ -926,7 +912,9 @@ def fin_excess_sw_process(data, name):
     params = data["params"]
     if params[name] is None:
         params["excess_sw_process"] = "disabled"
-        logging.info('\t\tSwitched "excess_sw_process" to "disabled", missing %s', name)
+        logging.info('\t\tSwitch "excess_sw_proc" to "disabled", missing %s',
+                     name)
+
 
 ###############################################################################
 def fin_gwmodel_type(data, name):
@@ -937,15 +925,12 @@ def fin_gwmodel_type(data, name):
     params = data["params"]
     if params[name] is None:
         params["gwmodel_type"] = "mfusg"
-        logging.info('\t\tSwitched "gwmodel_type" to "mfusg", missing %s', name)
-
+        logging.info('\t\tSwitched "gwmodel_type" to "mfusg", missing %s',
+                     name)
 
 
 ###############################################################################
-
-
 def fin_evt_parameters(data, name):
-
 
     """Finalize the "evt_parameters" parameter.
     1) if not provided, set it to all zero.
@@ -960,8 +945,7 @@ def fin_evt_parameters(data, name):
         params["output_evt"] = False
         logging.info('\t\tSwitched "output_evt" to "false", missing %s', name)
 
-    if (data["params"]["output_sfr"] and
-        data["params"]["excess_sw_process"] != "disabled"):
+    if (params["output_sfr"] and params["excess_sw_process"] != "disabled"):
         msg = ("Modflow SFR output and excess_sw_process enabled"
                " - you may not want to do this")
         logging.info('\t\t' + msg)
@@ -1062,6 +1046,7 @@ FUNC_SERIES = [
     fin_swabs_ts,
     fin_swdis_ts,
 ]
+
 
 ###############################################################################
 def finalize_params(data):
