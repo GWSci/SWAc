@@ -39,6 +39,7 @@ def anonymous_arena_init(self, size, fd=-1):
     self.fd = fd  # still kept but is not used !
     self.buffer = mmap.mmap(-1, self.size)
 
+
 # monkey patch for anonymous memory mapping python 3
 if mp.get_start_method() == 'fork':
     Arena.__init__ = anonymous_arena_init
