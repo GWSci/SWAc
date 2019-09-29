@@ -13,7 +13,17 @@ except ImportError:
 import numpy
 from Cython.Build import cythonize
 
-EXTENSIONS = [Extension("model", ["cymodel.pyx"], extra_compile_args=["-w"])]
+EXTENSIONS = [Extension("model",
+                        ["cymodel.pyx"],
+                        extra_compile_args=["-w",
+                                            "-mtune=native",
+                                            "-flto",
+                                            "-march=native",
+                                            "-O2",
+                                            "-funroll-loops",
+                                            "-floop-nest-optimize"],
+                        extra_link_args=["-flto",
+                                         "-O2"])]
 
 setup(
     include_dirs=[numpy.get_include()],
