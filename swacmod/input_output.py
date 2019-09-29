@@ -33,6 +33,10 @@ try:
 except NameError:
     basestring = str
 
+if sys.version_info > (3,):
+    long = int
+    raw_input = input
+
 
 ###############################################################################
 def start_logging(level=logging.INFO, path=None, run_name=None):
@@ -256,7 +260,7 @@ def dump_recharge_file(data, recharge):
 
 
 def get_spatial_path(data, output_dir):
-    ###############################################################################
+    ###########################################################################
     """Get the path of the spatial data output CSV file."""
     if data["params"]["spatial_output_date"] == "mean":
         nam_list = ["mean"] + ['month' + str(i + 1) for i in range(12)]
