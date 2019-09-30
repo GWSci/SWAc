@@ -1699,7 +1699,7 @@ def val_evt_parameters(data, name):
         param=rpn,
         name=name,
         t_types=data["specs"][name]["type"],
-        keys=range(1, tot + 1),
+        # keys=range(1, tot + 1),
         len_list=[3],
     )
 
