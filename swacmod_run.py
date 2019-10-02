@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
+
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 """SWAcMod main."""
@@ -41,8 +42,9 @@ def anonymous_arena_init(self, size, fd=-1):
 
 
 # monkey patch for anonymous memory mapping python 3
-if mp.get_start_method() == 'fork':
-    Arena.__init__ = anonymous_arena_init
+if sys.version_info > (3,):
+    if mp.get_start_method() == 'fork':
+        Arena.__init__ = anonymous_arena_init
 
 
 class Worker:
@@ -492,7 +494,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
         if params["swrecharge_process"] == "enabled":
             del runoff_recharge, tmp, runoff, recharge
-
+            gc.collect()
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
             if data['params']['gwmodel_type'] == 'mfusg':
@@ -515,6 +517,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             elif data['params']['gwmodel_type'] == 'mf6':
                 sfr.write()
             del sfr
+            gc.collect()
 
         if data["params"]["output_evt"]:
             print("\t- EVT file")
@@ -537,6 +540,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 evt.write()
             evt, tmp = None, None
             del evt, tmp
+            gc.collect()
 
     times["end_of_run"] = time.time()
 
