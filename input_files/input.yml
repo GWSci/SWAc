@@ -459,7 +459,7 @@ output_sfr: true
 
 # Modflow 6 sfr obs input file
 # This parameter is optional.
-sfr_obs: some_sfr.obs
+sfr_obs: gauges_sfr.obs
 
 # istcb1.
 # Has to be an integer.

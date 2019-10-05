@@ -96,6 +96,7 @@ sfr_obs:
     type:
         - !!python/name:str
 
+
 istcb1:
     required: false
     type:
