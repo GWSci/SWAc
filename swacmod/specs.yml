@@ -91,6 +91,11 @@ output_sfr:
     type:
         - !!python/name:bool
 
+sfr_obs:
+    required: false
+    type:
+        - !!python/name:str
+
 istcb1:
     required: false
     type:

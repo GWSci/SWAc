@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 # -*- coding: utf-8 -*-
 from __future__ import print_function
@@ -246,7 +246,7 @@ def run_process(
 
 # this stuff stranded here for windows - multiprocessing cannot handle
 #  - functions not in the top level
-#  - not pickleable objects as argumnets to that function :(
+#  - not pickleable objects as arguments to that function :(
 
 
 def listener(q, total):

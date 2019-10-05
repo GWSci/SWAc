@@ -457,6 +457,10 @@ routing_topology: routing_parameters.csv
 # This parameter is optional. If not specified, it will be set to "false".
 output_sfr: true
 
+# Modflow 6 sfr obs input file
+# This parameter is optional.
+sfr_obs: some_sfr.obs
+
 # istcb1.
 # Has to be an integer.
 # This parameter is optional. If not specified, it will be set to 50.

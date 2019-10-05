@@ -137,6 +137,16 @@ def val_output_sfr(data, name):
 
 
 ###############################################################################
+def val_sfr_obs(data, name):
+    """Validate sfr_obs.
+
+    1) type has to be string
+    """
+    obs = data["params"][name]
+    c.check_type(param=obs, name=name, t_types=data["specs"][name]["type"])
+
+
+###############################################################################
 def val_output_individual(data, name):
     """Validate output_individual.
 
@@ -1814,6 +1824,8 @@ FUNC_PARAMS = [
     val_sw_params,
     val_swdis_locs,
     val_swabs_locs,
+    val_output_sfr,
+    val_sfr_obs,
     val_istcb1,
     val_istcb2,
     val_routing_topology,
