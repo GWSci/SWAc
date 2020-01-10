@@ -675,13 +675,14 @@ def get_combined_str(data, output, node):
         double[:] col_attenuation = np.zeros(length)
         double[:] col_combined_str = np.zeros(length)
         double[:] combined_str = np.zeros(length)
+        double[:] some_zeros = np.zeros(length)
         double rlp = params['sw_params'][node][1]
-        double base = (params['sw_params'][node][0] +
-                       output['interflow_to_rivers'][0] +
-                       output['swabs_ts'][0] +
-                       output['swdis_ts'][0] +
-                       output['rapid_runoff'][0] -
-                       output['runoff_recharge'][0])
+        double base = max((params['sw_params'][node][0] +
+                           output['interflow_to_rivers'][0] +
+                           output['swabs_ts'][0] +
+                           output['swdis_ts'][0] +
+                           output['rapid_runoff'][0] -
+                           output['runoff_recharge'][0]), 0.0)
         size_t num
 
     combined_str = (output['interflow_to_rivers'] +
@@ -690,6 +691,12 @@ def get_combined_str(data, output, node):
                     output['rapid_runoff'] -
                     output['runoff_recharge'] +
                     output['rejected_recharge'])
+
+    for num in range(1, length):
+        if combined_str[num] < 0.0:
+            combined_str[num] = 0.0
+        else:
+            combined_str[num] = combined_str[num]
 
     if params['sw_process'] == 'enabled':
         # don't attenuate negative flows
