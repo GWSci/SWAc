@@ -693,9 +693,14 @@ def get_combined_str(data, output, node):
                     output['runoff_recharge'] +
                     output['rejected_recharge'])
 
-    for num in range(1, length):
+    for num in range(length):
         if combined_str[num] < 0.0:
             combined_str[num] = 0.0
+            output['swabs_ts'][num] = (output['interflow_to_rivers'][num] +
+                                       output['swdis_ts'][num] +
+                                       output['rapid_runoff'][num] -
+                                       output['runoff_recharge'][num] +
+                                       output['rejected_recharge'][num])
         else:
             combined_str[num] = combined_str[num]
 
@@ -745,7 +750,9 @@ def get_evt(data, output, node):
 
 def get_average_in(data, output, node):
     """AP) AVERAGE IN [mm]."""
-    average_in = output['rainfall_ts'] + output['subroot_leak']
+    average_in = (output['rainfall_ts'] +
+                  output['subroot_leak'] +
+                  output['swdis_ts'])
     return {'average_in': average_in}
 
 ###############################################################################
@@ -756,7 +763,8 @@ def get_average_out(data, output, node):
     average_out = (output['combined_str'] +
                    output['combined_recharge'] +
                    output['ae'] +
-                   output['canopy_storage'])
+                   output['canopy_storage'] +
+                   output['swabs_ts'])
 
     return {'average_out': average_out}
 
