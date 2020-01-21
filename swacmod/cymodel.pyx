@@ -338,7 +338,8 @@ def get_ae(data, output, node):
             col_macropore_dir[num] = macropore * var10a
 
         percol_in_root = (var2 - col_rapid_runoff[num]
-                          - col_macropore_att[num])
+                          - col_macropore_att[num]
+                          - col_macropore_dir[num])
         col_percol_in_root[num] = percol_in_root
 
         if params['fao_process'] == 'enabled':
