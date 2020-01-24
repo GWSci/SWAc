@@ -67,7 +67,7 @@ class Worker:
 
 ###############################################################################
 def aggregate_reporting(reporting):
-    """Aggregate zones across processes."""
+    """Aggregate reporting zones across processes."""
     logging.info("\tAggregating reporting across processes")
     new_rep = {}
     for key in reporting.keys():
