@@ -1514,7 +1514,7 @@ def get_ror_flows_tree(G, runoff, nodes, day):
                   if G.out_degree(x) == 1 and G.in_degree(x) == 0]
     for node_swac in leaf_nodes:
         node = node_swac
-        acc = runoff[c + node]
+        acc = max(0.0, runoff[c + node])
 
         lst = [nd[0] for nd in nx.shortest_path_length(
             G,
@@ -1522,7 +1522,7 @@ def get_ror_flows_tree(G, runoff, nodes, day):
         #  lst = nx.descendants(G, node_swac)
         for d in lst:
             if done[d-1] != 1:
-                acc = (flow[node - 1] + runoff[c + d])
+                acc = (flow[node - 1] + max(0.0, runoff[c + d]))
             flow[d - 1] += acc
             node = d
             done[d-1] = 1
