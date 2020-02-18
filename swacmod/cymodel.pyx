@@ -676,7 +676,7 @@ def get_combined_str(data, output, node):
         double[:] col_attenuation = np.zeros(length)
         double[:] col_combined_str = np.zeros(length)
         double[:] combined_str = np.zeros(length)
-        double[:] some_zeros = np.zeros(length)
+        # double[:] some_zeros = np.zeros(length)
         double rlp = params['sw_params'][node][1]
         double base = max((params['sw_params'][node][0] +
                            output['interflow_to_rivers'][0] +
@@ -695,7 +695,7 @@ def get_combined_str(data, output, node):
 
     for num in range(length):
         if combined_str[num] < 0.0:
-            combined_str[num] = 0.0
+            # combined_str[num] = 0.0
             output['swabs_ts'][num] = (output['interflow_to_rivers'][num] +
                                        output['swdis_ts'][num] +
                                        output['rapid_runoff'][num] -
