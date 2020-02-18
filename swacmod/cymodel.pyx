@@ -850,7 +850,7 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
             if str_flag < 1:  # or node_mf < 1:
                 # not not done
                 if done[node_swac - 1] < 1:
-                    acc += runoff[nodes_per + node_swac]
+                    acc += max(0.0, runoff[nodes_per + node_swac])
                     done[node_swac - 1] = 1
             else:
                 # stream cell
