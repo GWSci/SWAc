@@ -105,3 +105,5 @@ Flags can also be combined, the above is equivalent to
     $ python swacmod_run.py -drs -i path_to_input/input001.yml -o path_to_output/ -f csv
 
 
+.. note::
+   Python package maintainers may no longer support Python2, if using Python2 then restrict the python environment to the package versions listed in requirements.txt, FloPy is noted as one such package.

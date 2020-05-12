@@ -474,33 +474,33 @@ istcb2: 55
 # Surface water discharges time-series m3/day
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-# swdis_ts: swdis_ts.csv
+swdis_ts: swdis_ts.csv
 
 # # Surface water discharges points
 # # This parameter can accept a path to YAML or CSV
-# swdis_locs: swdis_locs.yml
+swdis_locs: swdis_locs.yml
 
 # swdis_f
 # Surface water discharges time-series frequency
 # Has to be an integer: 0 = daily, 1 = weekly, 2 = monthly
 # This parameter is optional. If not specified, it will be set to 0 (daily).
-swdis_f: 0
+#swdis_f: 0
 
 # Surface water abstractions time-series m3/day
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-# swabs_ts: swabs_ts.csv
+swabs_ts: swabs_ts.csv
 
 # swabs_f
 # Surface water abstractions time-series frequency
 # Has to be an integer: 0 = daily, 1 = weekly, 2 = monthly
 # This parameter is optional. If not specified, it will be set to 0 (daily).
-swabs_f: 0
+#swabs_f: 0
 
 
 # Surface water discharges points
 # This parameter can accept a path to YAML or CSV
-# swabs_locs: swabs_locs.csv
+swabs_locs: swabs_locs.csv
 
 
 ###############

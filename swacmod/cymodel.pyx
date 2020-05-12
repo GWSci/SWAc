@@ -695,14 +695,11 @@ def get_combined_str(data, output, node):
 
     for num in range(length):
         if combined_str[num] < 0.0:
-            # combined_str[num] = 0.0
             output['swabs_ts'][num] = (output['interflow_to_rivers'][num] +
                                        output['swdis_ts'][num] +
                                        output['rapid_runoff'][num] -
                                        output['runoff_recharge'][num] +
                                        output['rejected_recharge'][num])
-        else:
-            combined_str[num] = combined_str[num]
 
     if params['sw_process'] == 'enabled':
         # don't attenuate negative flows
