@@ -69,7 +69,7 @@ time_periods: time_periods.yml
 # This parameter is optional.
 # If not specified, all cores will be used
 # If negative, all cores - abs(num_cores) will be used
-num_cores: 3
+num_cores: 1
 
 # Output recharge file switch
 # Can be either true or false
