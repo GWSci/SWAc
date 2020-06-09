@@ -27,6 +27,8 @@ from . import utils as u
 from . import checks as c
 from . import validation as v
 from . import finalization as f
+from . import __version__
+
 
 try:
     basestring
@@ -65,6 +67,7 @@ def start_logging(level=logging.INFO, path=None, run_name=None):
         name = "%s_%s.log" % (run_name, now)
         path = os.path.join(u.CONSTANTS["OUTPUT_DIR"], name)
         logging.basicConfig(filename=path, format="%(message)s", level=level)
+        logging.info("Version " + __version__)
         logging.info(disc)
 
     for handler in logging.root.handlers[:]:
