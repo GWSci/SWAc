@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """SWAcMod init."""
 
-VERSION = (1, 0, 0)
+VERSION = (1, 0, 1)
 
 __version__ = ".".join([str(i) for i in VERSION])
 __authors__ = ["Alastair Black", "Marco Lagi"]
