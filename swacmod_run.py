@@ -1,8 +1,8 @@
 #!/usr/bin/env python
+"""SWAcMod main."""
 
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-"""SWAcMod main."""
 
 # Standard Library
 import os
@@ -48,6 +48,7 @@ if sys.version_info > (3,):
 
 
 class Worker:
+    "mp worker"
     def __init__(self, name, result_queue, process, verbose=True):
         self.name = name
         self.result_queue = result_queue
@@ -55,11 +56,13 @@ class Worker:
         self.verbose = verbose
 
     def start(self):
+        "start worker"
         if self.verbose:
             print("starting ", self.name)
         self.process.start()
 
     def join(self):
+        "join worker"
         if self.verbose:
             print("join ", self.name)
         self.process.join()
@@ -145,9 +148,6 @@ def run_process(
         runoff,
         log_path,
         level,
-        file_format,
-        reduced,
-        output_dir,
         spatial,
         spatial_index,
         reporting,
@@ -359,9 +359,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
                 runoff,
                 log_path,
                 level,
-                file_format,
-                reduced,
-                u.CONSTANTS["OUTPUT_DIR"],
                 spatial,
                 spatial_index,
                 reporting,
@@ -567,7 +564,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
     gc.collect()
 
-    return
+    # return
 
 
 ###############################################################################
