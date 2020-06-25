@@ -56,6 +56,11 @@ num_nodes: 10
 # This parameter can accept a path to YAML or CSV
 node_areas: node_areas.yml
 
+# X,Ya of each node.
+# This parameter is optional.
+# This parameter can accept a path to YAML or CSV
+node_xy: node_xy.csv
+
 # Start date for the time series. Has to be in format "YYYY-MM-DD".
 # This parameter is required.
 start_date: 1980-01-01
@@ -154,6 +159,37 @@ temperature_zone_mapping: temperature_zone_mapping.yml
 # This parameter can accept a path to YAML or CSV
 temperature_zone_names: temperature_zone_names.yml
 
+# Tmax_C zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+tmax_c_zone_mapping: tmax_c_zone_mapping.yml
+
+# Tmax_C zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+tmax_c_zone_names: tmax_c_zone_names.yml
+
+# Tmin_C zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+tmin_c_zone_mapping: tmin_c_zone_mapping.yml
+
+# Tmin_C zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+tmin_c_zone_names: tmin_c_zone_names.yml
+
+# windSp zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+windsp_zone_mapping: windsp_zone_mapping.yml
+
+# windSp zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+windsp_zone_names: windsp_zone_names.yml
+
+
 # Subroot zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
@@ -226,14 +262,21 @@ max_canopy_storage: max_canopy_storage.yml
 # Process: Snow #
 #################
 
-# Snow process: can be either "enabled" or "disabled"
+# Simple snow process: can be either "enabled" or "disabled"
 # This parameter is required
-snow_process: enabled
+snow_process_simple: enabled
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-snow_params: snow_params.yml
+snow_params_simple: snow_params.yml
 
+# Complex snow process: can be either "enabled" or "disabled"
+# This parameter is required
+snow_process_complex: disabled
+
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+snow_params_complex: snow_params_complex.yml
 
 #######################################################
 # Process: Proportion of rainfall converted to Runoff #
@@ -511,6 +554,10 @@ swabs_locs: swabs_locs.csv
 # This parameter can accept a path to YAML or CSV
 rainfall_ts: rainfall_ts.yml
 
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+#rainfall_rasters: rainfall_rasters.yml
+
 # This parameter is optional.
 # This parameter is required only if the FAO or the Canopy process is enabled.
 # This parameter can accept a path to YAML or CSV
@@ -520,6 +567,22 @@ pe_ts: pe_ts.yml
 # This parameter is required only if the Snow process is enabled.
 # This parameter can accept a path to YAML or CSV
 temperature_ts: temperature_ts.yml
+
+# This parameter is optional.
+# This parameter is required only if the Snow process is enabled.
+# This parameter can accept a path to YAML or CSV
+tmax_c_ts: tmax_c_ts.yml
+
+# This parameter is optional.
+# This parameter is required only if the Snow process is enabled.
+# This parameter can accept a path to YAML or CSV
+tmin_c_ts: tmin_c_ts.yml
+
+# This parameter is optional.
+# This parameter is required only if the Snow process is enabled.
+# This parameter can accept a path to YAML or CSV
+windsp_ts: windsp_ts.yml
+
 
 # This parameter is optional.
 # This parameter is required only if the Leakage process is enabled.

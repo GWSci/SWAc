@@ -2,7 +2,7 @@
 # 1) starting_snow_pack
 # 2) snowfall_degrees
 # 3) snowmelt_degrees
-snow_params:
+snow_params_simple:
     1: [100, 1, -2]
     2: [100, 1, -2]
     4: [100, 1, -2]
