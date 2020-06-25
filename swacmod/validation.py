@@ -844,7 +844,23 @@ def val_max_canopy_storage(data, name):
 
 
 ###############################################################################
-def val_snow_process(data, name):
+def val_snow_process_simple(data, name):
+    """Validate snow_process.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    spr = data["params"][name]
+
+    c.check_type(param=spr, name=name, t_types=data["specs"][name]["type"])
+
+    c.check_values_limits(
+        values=[spr], name=name, constraints=data["specs"][name]["constraints"]
+    )
+
+###############################################################################
+
+def val_snow_process_complex(data, name):
     """Validate snow_process.
 
     1) type has to be a string
@@ -860,15 +876,15 @@ def val_snow_process(data, name):
 
 
 ###############################################################################
-def val_snow_params(data, name):
-    """Validate snow_params.
+def val_snow_params_simple(data, name):
+    """Validate snow_params_simple.
 
     1) type has to be a dictionary of lists of numbers
     2) all node ids have to be present
     3) values have to lists with 3 elements
     4) the first element (starting_snow_pack) is a number >= 0
     """
-    if data["params"]["snow_process"] == "disabled":
+    if data["params"]["snow_process_simple"] == "disabled":
         return
 
     snp = data["params"][name]
@@ -889,6 +905,35 @@ def val_snow_params(data, name):
         include_low=True,
     )
 
+###############################################################################
+def val_snow_params_complex(data, name):
+    """Validate snow_params_complex.
+
+    1) type has to be a dictionary of lists of numbers
+    2) all node ids have to be present
+    3) values have to lists with 10 elements
+    4) the first element (starting_snow_pack) is a number >= 0
+    """
+    if data["params"]["snow_process_complex"] == "disabled":
+        return
+
+    snp = data["params"][name]
+    tot = data["params"]["num_nodes"]
+
+    c.check_type(
+        param=snp,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[10],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(
+        values=[i[0] for i in snp.values()],
+        name="starting_snow_pack in %s" % name,
+        low_l=0,
+        include_low=True,
+    )
 
 ###############################################################################
 def val_rapid_runoff_process(data, name):
@@ -1791,8 +1836,10 @@ FUNC_PARAMS = [
     val_canopy_process,
     val_free_throughfall,
     val_max_canopy_storage,
-    val_snow_process,
-    val_snow_params,
+    val_snow_process_simple,
+    val_snow_params_simple,
+    val_snow_process_complex,
+    val_snow_params_complex,
     val_rapid_runoff_process,
     val_rapid_runoff_params,
     val_swrecharge_process,
