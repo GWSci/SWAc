@@ -198,6 +198,48 @@ temperature_zone_mapping:
         - !!python/name:dict
         - !!python/name:float
 
+tmax_c_zone_names:
+  required: false
+  alt_format: [yml]
+  type:
+    - !!python/name:dict
+    - !!python/name:str
+
+tmax_c_zone_mapping:
+  required: false
+  alt_format: [yml, csv]
+  type:
+    - !!python/name:dict
+    - !!python/name:float
+
+tmin_c_zone_names:
+  required: false
+  alt_format: [yml]
+  type:
+    - !!python/name:dict
+    - !!python/name:str
+
+tmin_c_zone_mapping:
+  required: false
+  alt_format: [yml, csv]
+  type:
+    - !!python/name:dict
+    - !!python/name:float
+
+windsp_zone_names:
+  required: false
+  alt_format: [yml]
+  type:
+    - !!python/name:dict
+    - !!python/name:str
+
+windsp_zone_mapping:
+  required: false
+  alt_format: [yml, csv]
+  type:
+    - !!python/name:dict
+    - !!python/name:float
+
 subroot_zone_names:
     required: false
     alt_format: [yml]
@@ -299,13 +341,13 @@ max_canopy_storage:
 # Process: Snow #
 #################
 
-snow_process:
+snow_process_simple:
     required: true
     type:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
-snow_params:
+snow_params_simple:
     required: false
     alt_format: [yml, csv]
     type:
@@ -313,6 +355,19 @@ snow_params:
         - !!python/name:list
         - !!python/name:float
 
+snow_process_complex:
+  required: true
+  type:
+    - !!python/name:str
+  constraints: ["enabled", "disabled"]
+
+snow_params_complex:
+  required: false
+  alt_format: [yml, csv]
+  type:
+    - !!python/name:dict
+    - !!python/name:list
+    - !!python/name:float
 
 #######################################################
 # Process: Proportion of rainfall converted to Runoff #
@@ -627,6 +682,30 @@ temperature_ts:
         - !!python/name:list
         - !!python/name:float
 
+tmax_c_ts:
+  required: false
+  alt_format: [yml, csv]
+  type:
+    - !!python/name:list
+    - !!python/name:list
+    - !!python/name:float
+
+tmin_c_ts:
+  required: false
+  alt_format: [yml, csv]
+  type:
+    - !!python/name:list
+    - !!python/name:list
+    - !!python/name:float
+
+windsp_ts:
+  required: false
+  alt_format: [yml, csv]
+  type:
+    - !!python/name:list
+    - !!python/name:list
+    - !!python/name:float
+
 subroot_leakage_ts:
     required: false
     alt_format: [yml, csv]
@@ -682,3 +761,11 @@ gwmodel_type:
     type:
         - !!python/name:str
     constraints: ["mf6", "mfusg"]
+
+node_xy:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
