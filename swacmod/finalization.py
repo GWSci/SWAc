@@ -251,6 +251,75 @@ def fin_temperature_zone_names(data, name):
         zones = len(set(params["temperature_zone_mapping"].values()))
         params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
 
+###############################################################################
+def fin_tmin_c_zone_mapping(data, name):
+    """Finalize the "tmin_c_zone_mapping" parameter.
+
+    1) if not provided, set it to all 1s.
+    """
+    params = data["params"]
+    if params[name] is None:
+        nodes = params["num_nodes"]
+        params[name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_tmin_c_zone_names(data, name):
+    """Finalize the "tmin_c_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data["params"]
+    if params[name] is None:
+        zones = len(set(params["tmin_c_zone_mapping"].values()))
+        params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
+
+###############################################################################
+def fin_tmax_c_zone_mapping(data, name):
+    """Finalize the "tmax_c_zone_mapping" parameter.
+
+    1) if not provided, set it to all 1s.
+    """
+    params = data["params"]
+    if params[name] is None:
+        nodes = params["num_nodes"]
+        params[name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_tmax_c_zone_names(data, name):
+    """Finalize the "tmax_c_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data["params"]
+    if params[name] is None:
+        zones = len(set(params["tmax_c_zone_mapping"].values()))
+        params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
+
+###############################################################################
+def fin_windsp_zone_mapping(data, name):
+    """Finalize the "windsp_zone_mapping" parameter.
+
+    1) if not provided, set it to all 1s.
+    """
+    params = data["params"]
+    if params[name] is None:
+        nodes = params["num_nodes"]
+        params[name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_windsp_zone_names(data, name):
+    """Finalize the "windsp_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data["params"]
+    if params[name] is None:
+        zones = len(set(params["windsp_zone_mapping"].values()))
+        params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
+
 
 ###############################################################################
 def fin_subroot_zone_mapping(data, name):
@@ -877,7 +946,7 @@ def fin_temperature_ts(data, name):
     """Finalize the "temperature_ts" series."""
     series, specs, params = data["series"], data["specs"], data["params"]
 
-    if params["snow_process"] == "enabled" and not specs[name]["required"]:
+    if params["snow_process_simple"] == "enabled" and not specs[name]["required"]:
         specs[name]["required"] = True
         series[name] = np.array(series[name])
         logging.info('\t\tSwitched "%s" to "required"', name)
@@ -886,6 +955,47 @@ def fin_temperature_ts(data, name):
         series[name] = np.zeros([len(series["date"]), zones])
         logging.info('\t\tDefaulted "%s" to 0.0', name)
 
+###############################################################################
+def fin_windsp_ts(data, name):
+    """Finalize the "winsp_ts" series."""
+    series, specs, params = data["series"], data["specs"], data["params"]
+
+    if params["snow_process_complex"] == "enabled" and not specs[name]["required"]:
+        specs[name]["required"] = True
+        series[name] = np.array(series[name])
+        logging.info('\t\tSwitched "%s" to "required"', name)
+    else:
+        zones = len(set(params["windsp_zone_mapping"].values()))
+        series[name] = np.zeros([len(series["date"]), zones])
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
+
+###############################################################################
+def fin_tmax_c_ts(data, name):
+    """Finalize the "temperature_ts" series."""
+    series, specs, params = data["series"], data["specs"], data["params"]
+
+    if params["snow_process_complex"] == "enabled" and not specs[name]["required"]:
+        specs[name]["required"] = True
+        series[name] = np.array(series[name])
+        logging.info('\t\tSwitched "%s" to "required"', name)
+    else:
+        zones = len(set(params["tmax_c_zone_mapping"].values()))
+        series[name] = np.zeros([len(series["date"]), zones])
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
+
+###############################################################################
+def fin_tmin_c_ts(data, name):
+    """Finalize the "temperature_ts" series."""
+    series, specs, params = data["series"], data["specs"], data["params"]
+
+    if params["snow_process_complex"] == "enabled" and not specs[name]["required"]:
+        specs[name]["required"] = True
+        series[name] = np.array(series[name])
+        logging.info('\t\tSwitched "%s" to "required"', name)
+    else:
+        zones = len(set(params["tmin_c_zone_mapping"].values()))
+        series[name] = np.zeros([len(series["date"]), zones])
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
 
 ###############################################################################
 def fin_subroot_leakage_ts(data, name):
@@ -998,6 +1108,12 @@ FUNC_PARAMS = [
     fin_pe_zone_names,
     fin_temperature_zone_mapping,
     fin_temperature_zone_names,
+    fin_tmax_c_zone_mapping,
+    fin_tmax_c_zone_names,
+    fin_tmin_c_zone_mapping,
+    fin_tmin_c_zone_names,
+    fin_windsp_zone_mapping,
+    fin_windsp_zone_names,
     fin_subroot_zone_mapping,
     fin_subroot_zone_names,
     fin_rapid_runoff_zone_mapping,
@@ -1053,6 +1169,9 @@ FUNC_SERIES = [
     fin_rainfall_ts,
     fin_pe_ts,
     fin_temperature_ts,
+    fin_tmax_c_ts,
+    fin_tmin_c_ts,
+    fin_windsp_ts,
     fin_subroot_leakage_ts,
     fin_swabs_ts,
     fin_swdis_ts,
