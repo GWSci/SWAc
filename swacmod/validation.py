@@ -271,6 +271,41 @@ def val_temperature_ts(data, name):
         len_list=[len(data["series"]["date"]), len(tzn)],
     )
 
+###############################################################################
+def val_tmax_c_ts(data, name):
+    """Validate tmax_c_ts.
+
+    1) type has to be a dictionary of lists of floats
+    2) list length has to be equal to the number of days x number of zones
+    """
+    tts = data["series"][name]
+    tzn = set(data["params"]["tmax_c_zone_mapping"].values())
+
+    c.check_type(
+        param=tts,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(tzn)],
+    )
+
+
+###############################################################################
+def val_tmin_c_ts(data, name):
+    """Validate tmin_c_ts.
+
+    1) type has to be a dictionary of lists of floats
+    2) list length has to be equal to the number of days x number of zones
+    """
+    tts = data["series"][name]
+    tzn = set(data["params"]["tmin_c_zone_mapping"].values())
+
+    c.check_type(
+        param=tts,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(tzn)],
+    )
+
 
 ###############################################################################
 def val_subroot_leakage_ts(data, name):
@@ -545,6 +580,81 @@ def val_pe_zone_mapping(data, name):
         high_l=len(pzn),
         include_high=True,
     )
+
+###############################################################################
+def val_tmax_c_zone_mapping(data, name):
+    """Validate tmax_c_zone_mapping.
+
+    1) type has to be a dictionary of integers
+    2) all node ids have to be present
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
+    """
+    tzm = data["params"][name]
+    tot = data["params"]["num_nodes"]
+    tzn = data["params"]["tmax_c_zone_names"]
+
+    c.check_type(
+        param=tzm,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(
+        values=tzm.values(),
+        name=name,
+        low_l=0,
+        include_low=True,
+        high_l=len(tzn),
+        include_high=True,
+    )
+
+###############################################################################
+def val_tmax_c_zone_names(data, name):
+    """Validate tmax_c_zone_names.
+
+    1) type has to be a dictionary of strings
+    """
+    tzn = data["params"][name]
+    c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
+
+
+###############################################################################
+def val_tmin_c_zone_mapping(data, name):
+    """Validate tmin_c_zone_mapping.
+
+    1) type has to be a dictionary of integers
+    2) all node ids have to be present
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
+    """
+    tzm = data["params"][name]
+    tot = data["params"]["num_nodes"]
+    tzn = data["params"]["tmin_c_zone_names"]
+
+    c.check_type(
+        param=tzm,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(
+        values=tzm.values(),
+        name=name,
+        low_l=0,
+        include_low=True,
+        high_l=len(tzn),
+        include_high=True,
+    )
+
+###############################################################################
+def val_tmin_c_zone_names(data, name):
+    """Validate tmin_c_zone_names.
+
+    1) type has to be a dictionary of strings
+    """
+    tzn = data["params"][name]
+    c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
 
 
 ###############################################################################
