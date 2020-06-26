@@ -306,6 +306,23 @@ def val_tmin_c_ts(data, name):
         len_list=[len(data["series"]["date"]), len(tzn)],
     )
 
+###############################################################################
+def val_winsp_ts(data, name):
+    """Validate windsp_ts.
+
+    1) type has to be a dictionary of lists of floats
+    2) list length has to be equal to the number of days x number of zones
+    """
+    tts = data["series"][name]
+    tzn = set(data["params"]["windsp_zone_mapping"].values())
+
+    c.check_type(
+        param=tts,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(tzn)],
+    )
+
 
 ###############################################################################
 def val_subroot_leakage_ts(data, name):
@@ -2043,6 +2060,9 @@ FUNC_SERIES = [
     val_rainfall_ts,
     val_pe_ts,
     val_temperature_ts,
+    val_tmax_c_ts,
+    val_tmin_c_ts,
+    val_windsp_ts,
     val_subroot_leakage_ts,
     val_swdis_ts,
     val_swabs_ts,
