@@ -307,7 +307,7 @@ def val_tmin_c_ts(data, name):
     )
 
 ###############################################################################
-def val_winsp_ts(data, name):
+def val_windsp_ts(data, name):
     """Validate windsp_ts.
 
     1) type has to be a dictionary of lists of floats
