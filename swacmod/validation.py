@@ -656,6 +656,42 @@ def val_tmin_c_zone_names(data, name):
     tzn = data["params"][name]
     c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
 
+###############################################################################
+def val_windsp_zone_mapping(data, name):
+    """Validate windsp_zone_mapping.
+
+    1) type has to be a dictionary of integers
+    2) all node ids have to be present
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
+    """
+    tzm = data["params"][name]
+    tot = data["params"]["num_nodes"]
+    tzn = data["params"]["tmin_c_zone_names"]
+
+    c.check_type(
+        param=tzm,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(
+        values=tzm.values(),
+        name=name,
+        low_l=0,
+        include_low=True,
+        high_l=len(tzn),
+        include_high=True,
+    )
+
+###############################################################################
+def val_windsp_zone_names(data, name):
+    """Validate windsp_zone_names.
+
+    1) type has to be a dictionary of strings
+    """
+    tzn = data["params"][name]
+    c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
 
 ###############################################################################
 def val_temperature_zone_names(data, name):
