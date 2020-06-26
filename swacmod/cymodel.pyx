@@ -15,6 +15,10 @@ import cython
 cimport cython
 cimport numpy as np
 
+import sys
+sys.path.append("..")
+from SnowTest.snow_melt import SnowMelt
+
 
 ###############################################################################
 
@@ -25,6 +29,17 @@ def get_precipitation(data, output, node):
     coef_rf = params['rainfall_zone_mapping'][node][1]
     rainfall_ts = series['rainfall_ts'][:, zone_rf] * coef_rf
     return {'rainfall_ts': rainfall_ts}
+
+###############################################################################
+
+def get_precipitation_r(data, output, node):
+    """C) Precipitation [mm/d]."""
+    series, params = data['series'], data['params']
+    zone_rf = params['rainfall_zone_mapping'][node][0] - 1
+    coef_rf = params['rainfall_zone_mapping'][node][1]
+    rainfall_ts = series['rainfall_ts'][:, zone_rf] * coef_rf
+    return {'rainfall_ts': rainfall_ts}
+
 
 ###############################################################################
 
@@ -112,15 +127,14 @@ def get_precip_to_ground(data, output, node):
 
 ###############################################################################
 
-
 def get_snowfall_o(data, output, node):
     """I) Snowfall [mm/d]."""
     series, params = data['series'], data['params']
 
-    if params['snow_process'] == 'enabled':
+    if params['snow_process_simple'] == 'enabled':
         zone_tm = params['temperature_zone_mapping'][node] - 1
-        snow_fall_temp = params['snow_params'][node][1]
-        snow_melt_temp = params['snow_params'][node][2]
+        snow_fall_temp = params['snow_params_simple'][node][1]
+        snow_melt_temp = params['snow_params_simple'][node][2]
         diff = snow_fall_temp - snow_melt_temp
         var1 = series['temperature_ts'][:, zone_tm] - snow_fall_temp
         var3 = 1 - (np.exp(- var1 / diff))**2
@@ -135,7 +149,6 @@ def get_snowfall_o(data, output, node):
 
 ###############################################################################
 
-
 def get_rainfall_o(data, output, node):
     """J) Precipitation as Rainfall [mm/d]."""
     rainfall_o = output['precip_to_ground'] - output['snowfall_o']
@@ -143,8 +156,7 @@ def get_rainfall_o(data, output, node):
 
 ###############################################################################
 
-
-def get_snow(data, output, node):
+def get_snow_simple(data, output, node):
     """"Multicolumn function.
 
     K) SnowPack [mm]
@@ -158,16 +170,16 @@ def get_snow(data, output, node):
         double[:] col_snowpack = np.zeros(length)
         double[:] col_snowmelt = np.zeros(len(series['date']))
 
-    if params['snow_process'] == 'disabled':
+    if params['snow_process_simple'] == 'disabled':
         col = {}
         col['snowpack'] = col_snowpack.base
         col['snowmelt'] = col_snowmelt.base
         return col
 
     cdef:
-        double start_snow_pack = params['snow_params'][node][0]
-        double snow_fall_temp = params['snow_params'][node][1]
-        double snow_melt_temp = params['snow_params'][node][2]
+        double start_snow_pack = params['snow_params_simple'][node][0]
+        double snow_fall_temp = params['snow_params_simple'][node][1]
+        double snow_melt_temp = params['snow_params_simple'][node][2]
         double diff = snow_fall_temp - snow_melt_temp
         size_t zone_tm = params['temperature_zone_mapping'][node] - 1
         double[:] var3 = (snow_melt_temp -
@@ -188,16 +200,90 @@ def get_snow(data, output, node):
 
     return {'snowpack': col_snowpack.base, 'snowmelt': col_snowmelt.base}
 
-###############################################################################
 
+##############################################################################
+
+def get_snow_complex(data, output, node):
+    """"
+    Call snowmelt fn of snowmelt for this node
+    """
+    series, params = data['series'], data['params']
+
+    cdef:
+        size_t day
+        size_t days = len(series['date'])
+        double[:] col_snowpack = np.zeros(days)
+        double[:] col_snowmelt = np.zeros(days)
+        double[:] col_snowfall_o = np.zeros(days)
+        double[:] col_rainfall_o = np.zeros(days)
+        double[:] rainfall_ts = output['rainfall_ts']
+        size_t zone_tmax_c = params['tmax_c_zone_mapping'][node] - 1
+        size_t zone_tmin_c = params['tmin_c_zone_mapping'][node] - 1
+        size_t zone_windsp = params['windsp_zone_mapping'][node] - 1
+
+        double[:] tmax_c = series['tmax_c_ts'][:, zone_tmax_c]
+        double[:] tmin_c = series['tmin_c_ts'][:, zone_tmin_c]
+        double[:] windsp = series['windsp_ts'][:, zone_windsp]
+
+        double lat_deg = params['snow_params_complex'][node][0]
+        double slope = params['snow_params_complex'][node][1]
+        double aspect = params['snow_params_complex'][node][2]
+        double tempht = params['snow_params_complex'][node][3]
+        double windht = params['snow_params_complex'][node][4]
+        double groundalbedo = params['snow_params_complex'][node][5]
+        double surfemissiv = params['snow_params_complex'][node][6]
+        double forest = params['snow_params_complex'][node][7]
+        double startingsnowdepth_m = params['snow_params_complex'][node][8]
+        double startingsnowdensity_kg_m3 = params['snow_params_complex'][node][9]
+
+    if params['snow_process_complex'] == 'disabled':
+        col = {}
+        col['snowfall_o'] = output['snowfall_o']
+        col['rainfall_o'] = output['rainfall_o']
+
+        if params['snow_process_simple'] == 'disabled':
+            col['snowpack'] = col_snowpack.base
+            col['snowmelt'] = col_snowmelt.base
+        else:
+            col['snowpack'] = output['snowpack']
+            col['snowmelt'] = output['snowmelt']
+
+        return col
+
+    else:
+
+        sm = SnowMelt()
+
+        big_list = sm.SnowMelt(np.array([d.strftime("%Y-%m-%d") for d in series['date']]),
+                               np.asarray(rainfall_ts),
+                               np.asarray(tmax_c), np.asarray(tmin_c),
+                               lat_deg, slope,
+                               aspect, tempht, windht, groundalbedo,
+                               surfemissiv, np.asarray(windsp), forest,
+                               startingsnowdepth_m,
+                               startingsnowdensity_kg_m3)
+
+        for day in range(1, days):
+            col_snowmelt[day] = big_list[6][day]
+            col_snowpack[day] = big_list[8][day]
+            col_snowfall_o[day] = big_list[7][day]
+            col_rainfall_o[day] = big_list[3][day]
+
+        del sm
+
+        return {'snowpack': col_snowpack.base,
+                'snowmelt': col_snowmelt.base,
+                'snowfall_o': col_snowfall_o.base,
+                'rainfall_o': col_rainfall_o.base}
+
+##############################################################################
 
 def get_net_rainfall(data, output, node):
     """M) Net Rainfall and Snow Melt [mm/d]."""
     net_rainfall = output['snowmelt'] + output['rainfall_o']
     return {'net_rainfall': net_rainfall}
 
-###############################################################################
-
+##############################################################################
 
 def get_rawrew(data, output, node):
     """S) RAWREW (Readily Available Water, Readily Evaporable Water)."""
@@ -208,8 +294,7 @@ def get_rawrew(data, output, node):
         rawrew = np.zeros(len(series['date']))
     return {'rawrew': rawrew}
 
-###############################################################################
-
+##############################################################################
 
 def get_tawtew(data, output, node):
     """T) TAWTEW (Total Available Water, Readily Evaporable Water)."""
@@ -222,8 +307,7 @@ def get_tawtew(data, output, node):
 
     return {'tawtew': tawtew}
 
-###############################################################################
-
+##############################################################################
 
 def get_ae(data, output, node):
     """Multicolumn function.
