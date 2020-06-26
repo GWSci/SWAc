@@ -320,6 +320,19 @@ def fin_windsp_zone_names(data, name):
         zones = len(set(params["windsp_zone_mapping"].values()))
         params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
 
+###############################################################################
+def fin_snow_params_complex(data, name):
+    """Finalize the "interflow_params" parameter.
+
+    1) if not provided, set it to all [0, 1, 999999, 0].
+    """
+    if data["params"][name] is None:
+        default = [67.55, 0.05, 4.79, 20.0, 100.0, 0.25, 0.95, 1.0, 0.0, 450.0]
+        nodes = data["params"]["num_nodes"]
+        data["params"][name] = dict((k, default)
+                                    for k in range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to %s', name, default)
+
 
 ###############################################################################
 def fin_subroot_zone_mapping(data, name):
