@@ -322,7 +322,7 @@ def fin_windsp_zone_names(data, name):
 
 ###############################################################################
 def fin_snow_params_complex(data, name):
-    """Finalize the "interflow_params" parameter.
+    """Finalize the "snow_params_complex" parameter.
 
     1) if not provided, set it to all [0, 1, 999999, 0].
     """
@@ -1127,6 +1127,7 @@ FUNC_PARAMS = [
     fin_tmin_c_zone_names,
     fin_windsp_zone_mapping,
     fin_windsp_zone_names,
+    fin_snow_params_complex,
     fin_subroot_zone_mapping,
     fin_subroot_zone_names,
     fin_rapid_runoff_zone_mapping,
