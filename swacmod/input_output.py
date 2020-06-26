@@ -560,7 +560,6 @@ def load_params_from_yaml(
     ])
 
     for param in tqdm(params, desc="SWAcMod load params     "):
-        # print_progress(num + 1, len(params), 'SWAcMod load params')
         if isinstance(params[param], str) and "alt_format" in specs[param]:
             absolute = os.path.join(input_dir, params[param])
             ext = params[param].split(".")[-1]
@@ -594,7 +593,6 @@ def load_params_from_yaml(
                 except (IOError, KeyError) as err:
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
-
     for key in specs:
         if key not in params:
             params[key] = None
