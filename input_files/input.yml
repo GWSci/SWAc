@@ -68,7 +68,7 @@ start_date: 1980-01-01
 # Output data will be aggregated according to these time windows.
 # This parameter is required.
 # This parameter can accept a path to YAML or CSV
-time_periods: time_periods.yml
+time_periods: time_periods.csv
 
 # Number of cores to be used
 # This parameter is optional.
