@@ -589,7 +589,7 @@ windsp_ts: windsp_ts.yml
 # This parameter can accept a path to YAML or CSV
 subroot_leakage_ts: subroot_leakage_ts.yml
 
-gwmodel_type: mf6
+gwmodel_type: mfusg
 
 ##############
 #EVT         #

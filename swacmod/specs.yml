@@ -760,7 +760,7 @@ gwmodel_type:
     required: false
     type:
         - !!python/name:str
-    constraints: ["mf6", "mfusg"]
+    constraints: ["mf6", "mfusg", "mf96"]
 
 node_xy:
     required: false

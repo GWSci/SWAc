@@ -261,6 +261,39 @@ def dump_recharge_file(data, recharge):
                 if row:
                     rech_file.write(" ".join(str(i[0]) for i in row) + "\n")
 
+###############################################################################
+
+
+def dump_mf96_recharge_file(data, recharge):
+    """Write recharge to mf96 rch file."""
+
+    nnodes = data["params"]["num_nodes"]
+    nrchop, inrech, inirch = 3, 1, -1
+    fileout = "%s.rch" % data["params"]["run_name"]
+    path = os.path.join(u.CONSTANTS["OUTPUT_DIR"], fileout)
+    logging.info("\tDumping recharge file")
+    fmt_float = "{:12.4f}"
+    npl = 6
+
+    with open(path, "w") as rech_file:
+        rech_file.write("{0:10d}{1:10d}\n".format(nrchop,
+                                                  data["params"]["irchcb"]))
+        for per in range(len(data["params"]["time_periods"])):
+            rech_file.write("{0:10d}{1:10d}\n".format(inrech, inirch))
+            rech_file.write("        18    1.0000(6g12.4)" +
+                            "                    -3\n")
+            row = ""
+            i_row = 0
+            for node in range(data["params"]["num_nodes"]):
+                row += fmt_float.format(recharge[(nnodes * per) + node + 1])
+                i_row += 1
+                if i_row == npl:
+                    rech_file.write(row + "\n")
+                    row = ""
+                    i_row = 0
+            if row:
+                rech_file.write(row + "\n")
+
 
 def get_spatial_path(data, output_dir):
     ###########################################################################

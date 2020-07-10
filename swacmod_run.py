@@ -495,10 +495,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             gc.collect()
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
-            if data['params']['gwmodel_type'] == 'mfusg':
+            if data['params']['gwmodel_type'] == 'mfuessgee':
                 io.dump_recharge_file(data, recharge_agg)
             elif data['params']['gwmodel_type'] == 'mf6':
                 m.get_mf6rch_file(data, recharge_agg).write()
+            elif data['params']['gwmodel_type'] == 'mfusg':
+                io.dump_mf96_recharge_file(data, recharge_agg)
 
         if data["params"]["spatial_output_date"]:
             print("\t- Spatial file")
