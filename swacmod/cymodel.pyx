@@ -1222,6 +1222,158 @@ def get_sfr_file(data, runoff):
 ##############################################################################
 
 
+def get_str_file(data, runoff):
+    """get STR object."""
+
+    import flopy
+    import numpy as np
+    import copy
+    import os.path
+
+    # units oddness - lots of hardcoded 1000s in input_output.py
+    fac = 0.001
+    areas = data['params']['node_areas']
+    fileout = data['params']['run_name']
+    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    nper = len(data['params']['time_periods'])
+    nodes = data['params']['num_nodes']
+    nlay, nrow, ncol = data['params']['mf96_lrc']
+    rte_topo = data['params']['routing_topology']
+    m = None
+
+    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
+                                      key=lambda x: x[1][4]))
+
+    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
+             'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
+
+    idx = {y: x for (x, y) in enumerate(names)}
+
+    nstrm = nss = sum([value[idx['str_flag']] > 0
+                       for value in sorted_by_ca.values()])
+
+    istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
+
+    cd = []
+    rd = []
+
+    m = flopy.modflow.Modflow(modelname=path)
+
+    dis = flopy.modflow.ModflowDis(m,
+                                   nlay=nlay,
+                                   nrow=nrow,
+                                   ncol=ncol,
+                                   nper=nper)
+
+    flopy.modflow.ModflowBas(m, ifrefm=False)
+        # sd = flopy.modflow.ModflowSfr2.get_empty_segment_data(nss)
+        # rd = flopy.modflow.ModflowSfr2.get_empty_reach_data(nstrm,
+        #                                                     structured=False)
+    rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
+    reach_data = {}
+    swac_seg_dic = {}
+    seg_swac_dic = {}
+    done = np.zeros((nodes), dtype=int)
+    # for mf6 only
+    str_flg = np.zeros((nodes), dtype=int)
+
+    # initialise reach & segment data
+    str_count = 0
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
+         depth, width) = line
+        # for mf6 only
+        str_flg[node_swac-1] = str_flag
+        ca = ca
+        if str_flag > 0:
+            swac_seg_dic[node_swac] = str_count + 1
+            seg_swac_dic[str_count + 1] = node_swac
+            # NB docs say node number should be zero based (node_mf -1)
+            #  but doesn't seem to be
+            l, r, c = dis.get_lrc(node_mf)[0]
+            # print(str_count + 1, l, r, c)
+            rd[str_count]['k'] = l - 1
+            rd[str_count]['i'] = r - 1
+            rd[str_count]['j'] = c - 1
+            rd[str_count]['segment'] = str_count + 1
+            rd[str_count]['reach'] = 1
+            rd[str_count]['stage'] = z + depth
+            # print(length, width, str_k, bed_thk, z)
+            rd[str_count]['cond'] = (length * width * str_k) / bed_thk
+            rd[str_count]['sbot'] = z - bed_thk
+            rd[str_count]['stop'] = z
+            rd[str_count]['width'] = width
+            rd[str_count]['slope'] = 111.111
+            rd[str_count]['rough'] = 222.222
+            # inc stream counter
+            str_count += 1
+    Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
+    cd = []
+    for iseg in range(nss):
+        conn = []
+        # print("SEg_SWAC", seg_swac_dic)
+        node_swac = seg_swac_dic[iseg + 1]
+        downstr = sorted_by_ca[node_swac][idx['downstr']]
+        for n in Gs.neighbors(node_swac):
+            if n in swac_seg_dic:
+                if n == downstr:
+                    # do nothing I only want the +ve numbers here
+                    # conn.append(-float(swac_seg_dic[n] - 1))
+                    pass
+                else:
+                    conn.append((swac_seg_dic[n] - 1))
+
+        # update num connections
+        cd.append(conn + [0] * (11 - len(conn)))
+    #rd[iseg][9] = len(cd[iseg]) - 1
+
+
+    # for iseg in range(nss):
+    #     node_swac = seg_swac_dic[iseg + 1]
+    #     downstr = sorted_by_ca[node_swac][idx['downstr']]
+    #     if downstr in swac_seg_dic:
+    #         sd[iseg]['outseg'] = swac_seg_dic[downstr]
+    #     else:
+    #         sd[iseg]['outseg'] = 0
+
+    for per in range(nper):
+        for node in range(1, nodes + 1):
+            i = (nodes * per) + node
+            runoff[i] = runoff[i] * areas[node] * fac
+
+    ro, flow = np.zeros((nss)), np.zeros((nss))
+
+    # populate runoff and flow
+    for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
+
+        ro, flow = get_sfr_flows(sorted_by_ca, idx, runoff, done, areas,
+                                 swac_seg_dic, ro, flow, nodes * per)
+
+        for iseg in range(nss):
+            rd[iseg]['flow'] = flow[iseg] + ro[iseg]
+
+        # add segment data for this period
+        reach_data[per] = copy.deepcopy(rd)
+        done[:] = 0
+
+    isfropt = 1
+
+    strm = flopy.modflow.ModflowStr(m,
+                                    mxacts=nstrm,
+                                    nss=nstrm,
+                                    ntrib=8,
+                                    ipakcb=istcb1,
+                                    istcb2=istcb2,
+                                    stress_period_data=reach_data,
+                                    segment_data={iper: cd for iper in range(nper)},
+                                    irdflg={0:2, 1:2})
+
+    strm.heading = "# DELETE ME"
+
+    return strm
+
+###############################################################################
+
 def write_sfr(sfr, filename=None):
     """
     Write the package file.
