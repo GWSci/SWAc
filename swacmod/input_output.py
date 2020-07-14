@@ -274,7 +274,6 @@ def dump_mf96_recharge_file(data, recharge):
     logging.info("\tDumping recharge file")
     fmt_float = "{:12.4f}"
     npl = 6
-
     with open(path, "w") as rech_file:
         rech_file.write("{0:10d}{1:10d}\n".format(nrchop,
                                                   data["params"]["irchcb"]))
