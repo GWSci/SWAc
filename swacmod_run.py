@@ -495,11 +495,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
             gc.collect()
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
-            if data['params']['gwmodel_type'] == 'mfuessgee':
+            if data['params']['gwmodel_type'] == 'mfusg':
                 io.dump_recharge_file(data, recharge_agg)
             elif data['params']['gwmodel_type'] == 'mf6':
                 m.get_mf6rch_file(data, recharge_agg).write()
-            elif data['params']['gwmodel_type'] == 'mfusg':
+            elif data['params']['gwmodel_type'] == 'mf96':
                 io.dump_mf96_recharge_file(data, recharge_agg)
 
         if data["params"]["spatial_output_date"]:
@@ -511,13 +511,25 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
 
         if data["params"]["output_sfr"]:
             print("\t- SFR file")
-            sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
-            if data['params']['gwmodel_type'] == 'mfusg':
-                io.dump_sfr_output(sfr)
-            elif data['params']['gwmodel_type'] == 'mf6':
-                sfr.write()
-            del sfr
-            gc.collect()
+            if data['params']['gwmodel_type'] == 'mf96':
+                strm = m.get_str_file(data, np.copy(np.array(runoff_agg)))
+                strm.write_file()
+                # remove header from str file
+                with open(strm.file_name[0], 'r') as fin:
+                    #data = fin.read().splitlines(True)
+                    lst_strm = fin.readlines()
+                with open(strm.file_name[0], 'w') as fout:
+                    fout.write(lst_strm[1].rstrip() + "        -1\n")
+                    fout.writelines(lst_strm[2:])
+                del strm
+            else:
+                sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
+                if data['params']['gwmodel_type'] == 'mfusg':
+                    io.dump_sfr_output(sfr)
+                elif data['params']['gwmodel_type'] == 'mf6':
+                    sfr.write()
+                del sfr
+                gc.collect()
 
         if data["params"]["output_evt"]:
             print("\t- EVT file")
