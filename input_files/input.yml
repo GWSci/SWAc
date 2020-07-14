@@ -590,6 +590,7 @@ windsp_ts: windsp_ts.yml
 subroot_leakage_ts: subroot_leakage_ts.yml
 
 gwmodel_type: mfusg
+mf96_lrc: [2, 2, 5]
 
 ##############
 #EVT         #
