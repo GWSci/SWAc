@@ -413,6 +413,9 @@ raw: raw.yml
 # This parameter can accept a path to YAML or CSV
 percolation_rejection: percolation_rejection.yml
 
+percolation_rejection_use_timeseries: true
+
+percolation_rejection_ts: percolation_rejection_ts.yml
 
 ############################################
 # Process: Percentage of leakage to Permit #

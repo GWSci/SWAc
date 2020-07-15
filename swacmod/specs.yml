@@ -552,6 +552,19 @@ percolation_rejection:
         - !!python/name:list
         - !!python/name:float
 
+percolation_rejection_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:float
+
+percolation_rejection_use_timeseries:
+    required: false
+    type:
+        - !!python/name:bool
+
 
 ############################################
 # Process: Percentage of leakage to Permit #

@@ -721,7 +721,6 @@ def fin_taw_and_raw(data, name):
 ###############################################################################
 def fin_percolation_rejection(data, name):
     """Finalize the "percolation_rejection" parameter.
-
     1) if not provided, set it to a large number.
     """
     if data["params"][name] is None:
@@ -729,6 +728,35 @@ def fin_percolation_rejection(data, name):
         zones = len(data["params"]["landuse_zone_names"])
         data["params"][name] = [default for _ in range(zones)]
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_percolation_rejection_ts(data, name):
+    """Finalize the "percolation_rejection" parameter.
+
+    1) if not provided, set it to a large number.
+    """
+
+    series, params = data["series"], data["params"]
+
+    if series[name] is None and params['percolation_rejection_use_timeseries']:
+        default = 99999.0
+        zones = len(data["params"]["landuse_zone_names"])
+        params[name] = np.full([len(series["date"]), zones], default)
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_percolation_rejection_use_timeseries(data, name):
+    """Finalize the "percolation_rejection_use_timeseries" parameter.
+
+    1) if not provided, set "percolation_rejection_use_timeseries" to "false".
+    """
+
+    params = data["params"]
+    if params[name] is None:
+        params["percolation_rejection_use_timeseries"] = False
+        logging.info('\t\tSwitched "percolation_rejection_use_timeseries" to "false"')
 
 
 ###############################################################################
@@ -1155,6 +1183,7 @@ FUNC_PARAMS = [
     fin_zr,
     fin_kc,
     fin_percolation_rejection,
+    fin_percolation_rejection_use_timeseries,
     fin_subsoilzone_leakage_fraction,
     fin_interflow_params,
     fin_recharge_attenuation_params,
@@ -1189,6 +1218,7 @@ FUNC_SERIES = [
     fin_subroot_leakage_ts,
     fin_swabs_ts,
     fin_swdis_ts,
+    fin_percolation_rejection_ts,
 ]
 
 

@@ -1609,6 +1609,45 @@ def val_percolation_rejection(data, name):
 
 
 ###############################################################################
+def val_percolation_rejection_ts(data, name):
+    """Validate percolation_rejection_ts.
+
+    1) type has to be a dictionary of lists of floats
+    2) values have to be lists with length equal to the number of zones
+    3) dictionary needs 1 key: percolation_rejection
+    4) value should be >= 0.0
+    """
+    if data["params"]["fao_process"] == "disabled":
+        return
+
+    if not data["params"]['percolation_rejection_use_timeseries']:
+        return
+
+    per = data["series"][name]
+    lzn = data["params"]["landuse_zone_names"]
+    c.check_type(
+        param=per,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(lzn)],
+        keys=["percolation_rejection_ts"]
+    )
+    c.check_values_limits(values=per[0], name=name, low_l=0.0,
+                          include_low=True)
+
+
+###############################################################################
+def val_percolation_rejection_use_timeseries(data, name):
+    """Validate percolation_rejection_use_timeseries.
+
+    1) type has to be a boolean
+    """
+    opr = data["params"][name]
+
+    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+
+
+###############################################################################
 def val_leakage_process(data, name):
     """Validate leakage_process.
 
@@ -2052,7 +2091,8 @@ FUNC_PARAMS = [
     val_ievtcb,
     val_nevtopt,
     val_gwmodel_type,
-    val_excess_sw_process
+    val_excess_sw_process,
+    val_percolation_rejection_use_timeseries
 ]
 
 
@@ -2066,6 +2106,7 @@ FUNC_SERIES = [
     val_subroot_leakage_ts,
     val_swdis_ts,
     val_swabs_ts,
+    val_percolation_rejection_ts,
 ]
 
 

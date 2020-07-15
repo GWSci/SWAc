@@ -495,15 +495,26 @@ def get_rejected_recharge(data, output, node):
     """AA) Rejected Recharge."""
     series, params = data['series'], data['params']
     rej = params['percolation_rejection']
-
     rejected_recharge = np.zeros(len(series['date']))
+
     if params['fao_process'] == 'enabled':
         zone = params['lu_spatial'][node]
         rej = (np.array(rej['percolation_rejection']) * zone).sum(axis=0)
+
         perc = np.copy(output['p_smd'])
         perc[perc > 0] = 0
         perc = - perc
-        rejected_recharge[perc > rej] = perc[perc > rej] - rej
+
+        if params["percolation_rejection_use_timeseries"]:
+            rej_ts = series['percolation_rejection_ts']
+            rej_array = np.zeros(len(series['date']))
+            for iday, rts in enumerate(rej_ts):
+                rej_array[iday] = (np.array(rts) * zone).sum(axis=0)
+            rej = rej_array
+            # not sure if this correct
+            rejected_recharge[perc > rej] = perc[perc > rej] - rej[perc > rej]
+        else:
+            rejected_recharge[perc > rej] = perc[perc > rej] - rej
 
     return {'rejected_recharge': rejected_recharge}
 
