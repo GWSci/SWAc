@@ -560,7 +560,6 @@ def get_interflow_bypass(data, output, node):
     if params['interflow_process'] == 'enabled':
         interflow_zone = params['interflow_zone_mapping'][node]
         coef = params['interflow_store_bypass'][interflow_zone]
-        print(coef)
     else:
         coef = 1.0
 
@@ -600,25 +599,40 @@ def get_interflow(data, output, node):
         double[:] interflow_store_input = output['interflow_store_input']
         int interflow_zone = params['interflow_zone_mapping'][node]
         double var0 = params['init_interflow_store'][interflow_zone]
-        double var5 = params['infiltration_limit'][interflow_zone]
-        double var8 = params['interflow_decay'][interflow_zone]
-        double volume = var0
-        double recharge = (var5 if volume >= var5 else volume)
-        double rivers = (volume - recharge) * var8
+        double[:] var5 = np.full([length],
+                              params['infiltration_limit'][interflow_zone])
+        double[:] var8 = np.full([length],
+                                 params['interflow_decay'][interflow_zone])
+        double[:] volume = np.full([length], var0)
+        double var1, var6
         size_t num
+        double[:] recharge = np.zeros(length)
+        double[:] rivers = np.zeros(length)
 
     if params['interflow_process'] == 'enabled':
-        col_interflow_volume[0] = volume
-        col_infiltration_recharge[0] = recharge
-        col_interflow_to_rivers[0] = rivers
+        col_interflow_volume = volume
+        col_infiltration_recharge = recharge
+        col_interflow_to_rivers = rivers
+
+        if params["infiltration_limit_use_timeseries"]:
+            for day in range(1, length):
+                var5[day] = series['infiltration_limit_ts'][day][interflow_zone-1]
+
+        if params["interflow_decay_use_timeseries"]:
+            for day in range(1, length):
+                var8[day] = series['interflow_decay_ts'][day][interflow_zone-1]
+
+        recharge = np.where(np.asarray(volume) >= np.asarray(var5),
+                            np.asarray(var5), np.asarray(volume))
+        rivers = (np.asarray(volume) - np.asarray(recharge)) * var8
 
         for num in range(1, length):
-            var1 = volume - min(var5, volume)
-            volume = interflow_store_input[num-1] + var1 * (1 - var8)
-            col_interflow_volume[num] = volume
-            col_infiltration_recharge[num] = min(var5, volume)
+            var1 = volume[num] - min(var5[num], volume[num])
+            volume[num] = interflow_store_input[num-1] + var1 * (1 - var8[num])
+            col_interflow_volume[num] = volume[num]
+            col_infiltration_recharge[num] = min(var5[num], volume[num])
             var6 = (col_interflow_volume[num] - col_infiltration_recharge[num])
-            col_interflow_to_rivers[num] = var6 * var8
+            col_interflow_to_rivers[num] = var6 * var8[num]
 
     col = {}
     col['interflow_volume'] = col_interflow_volume.base

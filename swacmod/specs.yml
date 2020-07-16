@@ -608,14 +608,6 @@ interflow_process:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
-interflow_params:
-    required: false
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:dict
-        - !!python/name:list
-        - !!python/name:float
-
 init_interflow_store:
     required: false
     alt_format: [yml, csv]
@@ -642,6 +634,32 @@ interflow_decay:
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
+        - !!python/name:float
+
+infiltration_limit_use_timeseries:
+    required: false
+    type:
+        - !!python/name:bool
+
+interflow_decay_use_timeseries:
+    required: false
+    type:
+        - !!python/name:bool
+
+infiltration_limit_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:float
+
+interflow_decay_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
         - !!python/name:float
 
 ###############################################

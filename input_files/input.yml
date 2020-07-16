@@ -441,9 +441,6 @@ interflow_process: enabled
 
 # Interflow parameters (Initial interflow store, Store bypass, Infiltration,
 #                       Interflow to rivers )
-# This parameter is optional
-# This parameter can accept a path to YAML or CSV
-#interflow_params: interflow_params.yml
 
 # Interflow Zone Mapping
 # This parameter is optional
@@ -464,6 +461,13 @@ infiltration_limit: infiltration_limit.yml
 
 interflow_decay: interflow_decay.yml
 
+infiltration_limit_use_timeseries: true
+
+interflow_decay_use_timeseries: true
+
+infiltration_limit_ts: infiltration_limit_ts.yml
+
+interflow_decay_ts: interflow_decay_ts.yml
 
 ###############################################
 # Process: Recharge Release to Saturated Zone #
