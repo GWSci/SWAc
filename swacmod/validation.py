@@ -1773,6 +1773,94 @@ def val_interflow_params(data, name):
 
 
 ###############################################################################
+def val_init_interflow_store(data, name):
+    """init_interflow_store.
+
+    1) type has to be a dict of floats
+    2) all interflow zones to be present
+    3) values have to be >= 0.
+    """
+    nda = data["params"][name]
+    tot = len(data["params"]["interflow_zone_names"])
+
+    c.check_type(
+        param=nda,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+                          include_low=True)
+
+
+###############################################################################
+def val_interflow_store_bypass(data, name):
+    """interflow_store_bypass.
+
+    1) type has to be a dict of floats
+    2) all interflow zones to be present
+    3) values have to be >= 0.
+    """
+    nda = data["params"][name]
+    tot = len(data["params"]["interflow_zone_names"])
+
+    c.check_type(
+        param=nda,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+                          include_low=True)
+
+
+###############################################################################
+def val_infiltration_limit(data, name):
+    """infiltration_limit.
+
+    1) type has to be a dict of floats
+    2) all interflow zones to be present
+    3) values have to be >= 0.
+    """
+    nda = data["params"][name]
+    tot = len(data["params"]["interflow_zone_names"])
+
+    c.check_type(
+        param=nda,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+                          include_low=True)
+
+
+###############################################################################
+def val_interflow_decay(data, name):
+    """interflow_decay.
+
+    1) type has to be a dict of floats
+    2) all interflow zones to be present
+    3) values have to be >= 0.
+    """
+    nda = data["params"][name]
+    tot = len(data["params"]["interflow_zone_names"])
+
+    c.check_type(
+        param=nda,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+                          include_low=True)
+
+
+###############################################################################
 def val_recharge_attenuation_process(data, name):
     """Validate recharge_attenuation_process.
 
@@ -2114,6 +2202,10 @@ FUNC_PARAMS = [
     val_subsoilzone_leakage_fraction,
     val_interflow_process,
     val_interflow_params,
+    val_init_interflow_store,
+    val_interflow_store_bypass,
+    val_infiltration_limit,
+    val_interflow_decay,
     val_recharge_attenuation_process,
     val_recharge_attenuation_params,
     val_sw_process,

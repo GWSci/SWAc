@@ -616,6 +616,33 @@ interflow_params:
         - !!python/name:list
         - !!python/name:float
 
+init_interflow_store:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+interflow_store_bypass:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+infiltration_limit:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+interflow_decay:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
 
 ###############################################
 # Process: Recharge Release to Saturated Zone #

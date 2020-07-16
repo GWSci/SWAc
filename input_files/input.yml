@@ -443,7 +443,26 @@ interflow_process: enabled
 #                       Interflow to rivers )
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-interflow_params: interflow_params.yml
+#interflow_params: interflow_params.yml
+
+# Interflow Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+interflow_zone_mapping: interflow_zone_mapping.yml
+
+# Runoff recharge zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+interflow_zone_names: interflow_zone_names.yml
+
+
+init_interflow_store: init_interflow_store.yml
+
+interflow_store_bypass: interflow_store_bypass.yml
+
+infiltration_limit: infiltration_limit.yml
+
+interflow_decay: interflow_decay.yml
 
 
 ###############################################

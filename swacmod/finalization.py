@@ -809,6 +809,54 @@ def fin_interflow_params(data, name):
 
 
 ###############################################################################
+def fin_init_interflow_store(data, name):
+    """Finalize the "init_interflow_store" parameter.
+    1) if not provided, set it to zero.
+    """
+    if data["params"][name] is None:
+        default = 0.0
+        zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = [default for _ in range(zones)]
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_interflow_store_bypass(data, name):
+    """Finalize the "interflow_store_bypass" parameter.
+    1) if not provided, set it to 1.0.
+    """
+    if data["params"][name] is None:
+        default = 1.0
+        zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = [default for _ in range(zones)]
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_infiltration_limit(data, name):
+    """Finalize the "infiltration_limit" parameter.
+    1) if not provided, set it to 999999.9.
+    """
+    if data["params"][name] is None:
+        default = 999999.9
+        zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = [default for _ in range(zones)]
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_interflow_decay(data, name):
+    """Finalize the "interflow_decay" parameter.
+    1) if not provided, set it to 0.0.
+    """
+    if data["params"][name] is None:
+        default = 0.0
+        zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = [default for _ in range(zones)]
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
 def fin_recharge_attenuation_params(data, name):
     """Finalize the "recharge_attenuation_params" parameter.
 

@@ -558,7 +558,9 @@ def get_interflow_bypass(data, output, node):
     """AD) Bypassing the Interflow Store [mm/d]."""
     params = data['params']
     if params['interflow_process'] == 'enabled':
-        coef = params['interflow_params'][node][1]
+        interflow_zone = params['interflow_zone_mapping'][node]
+        coef = params['interflow_store_bypass'][interflow_zone]
+        print(coef)
     else:
         coef = 1.0
 
@@ -596,9 +598,10 @@ def get_interflow(data, output, node):
         double[:] col_infiltration_recharge = np.zeros(length)
         double[:] col_interflow_to_rivers = np.zeros(length)
         double[:] interflow_store_input = output['interflow_store_input']
-        double var0 = params['interflow_params'][node][0]
-        double var5 = params['interflow_params'][node][2]
-        double var8 = params['interflow_params'][node][3]
+        int interflow_zone = params['interflow_zone_mapping'][node]
+        double var0 = params['init_interflow_store'][interflow_zone]
+        double var5 = params['infiltration_limit'][interflow_zone]
+        double var8 = params['interflow_decay'][interflow_zone]
         double volume = var0
         double recharge = (var5 if volume >= var5 else volume)
         double rivers = (volume - recharge) * var8
