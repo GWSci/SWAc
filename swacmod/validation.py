@@ -1737,42 +1737,6 @@ def val_interflow_process(data, name):
 
 
 ###############################################################################
-def val_interflow_params(data, name):
-    """Validate interflow_params.
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    3) values have to be lists with 4 elements
-    4) floats need to be >= 0
-    5) the first and third elements of each list has to be <= 1
-    """
-    ifp = data["params"][name]
-    tot = data["params"]["num_nodes"]
-
-    c.check_type(
-        param=ifp,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[4],
-        keys=range(1, tot + 1),
-    )
-
-    c.check_values_limits(
-        values=[i for j in ifp.values() for i in j],
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
-
-    c.check_values_limits(
-        values=[j for i in ifp.values() for j in [i[1], i[3]]],
-        name=("store_bypass and interflow_to_rivers in %s" % name),
-        high_l=1.0,
-        include_high=True,
-    )
-
-
-###############################################################################
 def val_init_interflow_store(data, name):
     """init_interflow_store.
 
@@ -2278,7 +2242,6 @@ FUNC_PARAMS = [
     val_leakage_process,
     val_subsoilzone_leakage_fraction,
     val_interflow_process,
-    val_interflow_params,
     val_init_interflow_store,
     val_interflow_store_bypass,
     val_infiltration_limit,
