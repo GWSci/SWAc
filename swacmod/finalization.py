@@ -383,6 +383,29 @@ def fin_rapid_runoff_zone_names(data, name):
 
 
 ###############################################################################
+def fin_interflow_zone_mapping(data, name):
+    """Finalize the "interflow_zone_mapping" parameter.
+
+    1) if not provided, set it to all 0s.
+    """
+    if data["params"][name] is None:
+        nodes = data["params"]["num_nodes"]
+        data["params"][name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_interflow_zone_names(data, name):
+    """Finalize the "interflowf_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data["params"]
+    if params[name] is None:
+        zones = len(set(params["interflow_zone_mapping"].values()))
+        params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
+
+
+###############################################################################
 def fin_swrecharge_zone_mapping(data, name):
     """Finalize the "swrecharge_zone_mapping" parameter.
 
@@ -1160,6 +1183,8 @@ FUNC_PARAMS = [
     fin_subroot_zone_names,
     fin_rapid_runoff_zone_mapping,
     fin_rapid_runoff_zone_names,
+    fin_interflow_zone_mapping,
+    fin_interflow_zone_names,
     fin_swrecharge_zone_mapping,
     fin_swrecharge_zone_names,
     fin_macropore_zone_mapping,

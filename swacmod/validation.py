@@ -828,6 +828,45 @@ def val_rapid_runoff_zone_mapping(data, name):
 
 
 ###############################################################################
+def val_interflow_zone_names(data, name):
+    """Validate interflow_zone_names.
+
+    1) type has to be a dictionary of strings
+    """
+    rrn = data["params"][name]
+    c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
+
+
+###############################################################################
+def val_interflow_zone_mapping(data, name):
+    """Validate interflow_zone_mapping.
+
+    1) type has to be a dictionary of integers
+    2) all node ids have to be present
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
+    """
+    rrzm = data["params"][name]
+    tot = data["params"]["num_nodes"]
+    rzn = data["params"]["interflow_zone_names"]
+
+    c.check_type(
+        param=rrzm,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(
+        values=rrzm.values(),
+        name=name,
+        low_l=0,
+        include_low=True,
+        high_l=len(rzn),
+        include_high=True,
+    )
+
+
+###############################################################################
 def val_swrecharge_zone_names(data, name):
     """Validate swrecharge_zone_names.
 
@@ -2022,6 +2061,8 @@ FUNC_PARAMS = [
     val_rainfall_zone_mapping,
     val_rapid_runoff_zone_names,
     val_rapid_runoff_zone_mapping,
+    val_interflow_zone_names,
+    val_interflow_zone_mapping,
     val_pe_zone_names,
     val_pe_zone_mapping,
     val_temperature_zone_names,

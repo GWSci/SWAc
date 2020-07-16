@@ -269,6 +269,20 @@ rapid_runoff_zone_mapping:
         - !!python/name:dict
         - !!python/name:int
 
+interflow_zone_names:
+    required: false
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:str
+
+interflow_zone_mapping:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
 swrecharge_zone_names:
     required: false
     alt_format: [yml]
