@@ -1,0 +1,5 @@
+# integers are interflow zones
+init_interflow_store:
+  1: 10.0
+  2: 10.0
+  3: 10.0
