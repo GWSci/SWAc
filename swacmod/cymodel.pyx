@@ -615,18 +615,18 @@ def get_interflow(data, output, node):
         col_interflow_to_rivers = rivers
 
         if params["infiltration_limit_use_timeseries"]:
-            for day in range(1, length):
+            for day in range(length):
                 var5[day] = series['infiltration_limit_ts'][day][interflow_zone-1]
 
         if params["interflow_decay_use_timeseries"]:
-            for day in range(1, length):
+            for day in range(length):
                 var8[day] = series['interflow_decay_ts'][day][interflow_zone-1]
 
         recharge = np.where(np.asarray(var5) < volume,
                             volume, np.asarray(var5))
         rivers = (np.full([length], volume) - np.asarray(recharge)) * var8
 
-        for num in range(1, length):
+        for num in range(length):
             var1 = volume - min(var5[num], volume)
             volume = interflow_store_input[num-1] + var1 * (1 - var8[num])
             col_interflow_volume[num] = volume
