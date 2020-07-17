@@ -828,6 +828,45 @@ def val_rapid_runoff_zone_mapping(data, name):
 
 
 ###############################################################################
+def val_interflow_zone_names(data, name):
+    """Validate interflow_zone_names.
+
+    1) type has to be a dictionary of strings
+    """
+    rrn = data["params"][name]
+    c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
+
+
+###############################################################################
+def val_interflow_zone_mapping(data, name):
+    """Validate interflow_zone_mapping.
+
+    1) type has to be a dictionary of integers
+    2) all node ids have to be present
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
+    """
+    rrzm = data["params"][name]
+    tot = data["params"]["num_nodes"]
+    rzn = data["params"]["interflow_zone_names"]
+
+    c.check_type(
+        param=rrzm,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(
+        values=rrzm.values(),
+        name=name,
+        low_l=0,
+        include_low=True,
+        high_l=len(rzn),
+        include_high=True,
+    )
+
+
+###############################################################################
 def val_swrecharge_zone_names(data, name):
     """Validate swrecharge_zone_names.
 
@@ -1609,6 +1648,45 @@ def val_percolation_rejection(data, name):
 
 
 ###############################################################################
+def val_percolation_rejection_ts(data, name):
+    """Validate percolation_rejection_ts.
+
+    1) type has to be a dictionary of lists of floats
+    2) values have to be lists with length equal to the number of zones
+    3) dictionary needs 1 key: percolation_rejection
+    4) value should be >= 0.0
+    """
+    if data["params"]["fao_process"] == "disabled":
+        return
+
+    if not data["params"]['percolation_rejection_use_timeseries']:
+        return
+
+    per = data["series"][name]
+    lzn = data["params"]["landuse_zone_names"]
+    c.check_type(
+        param=per,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(lzn)],
+        keys=["percolation_rejection_ts"]
+    )
+    c.check_values_limits(values=per[0], name=name, low_l=0.0,
+                          include_low=True)
+
+
+###############################################################################
+def val_percolation_rejection_use_timeseries(data, name):
+    """Validate percolation_rejection_use_timeseries.
+
+    1) type has to be a boolean
+    """
+    opr = data["params"][name]
+
+    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+
+
+###############################################################################
 def val_leakage_process(data, name):
     """Validate leakage_process.
 
@@ -1659,39 +1737,168 @@ def val_interflow_process(data, name):
 
 
 ###############################################################################
-def val_interflow_params(data, name):
-    """Validate interflow_params.
+def val_init_interflow_store(data, name):
+    """init_interflow_store.
 
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    3) values have to be lists with 4 elements
-    4) floats need to be >= 0
-    5) the first and third elements of each list has to be <= 1
+    1) type has to be a dict of floats
+    2) all interflow zones to be present
+    3) values have to be >= 0.
     """
-    ifp = data["params"][name]
-    tot = data["params"]["num_nodes"]
+    nda = data["params"][name]
+    tot = len(data["params"]["interflow_zone_names"])
 
     c.check_type(
-        param=ifp,
+        param=nda,
         name=name,
         t_types=data["specs"][name]["type"],
-        len_list=[4],
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
-        values=[i for j in ifp.values() for i in j],
+    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+                          include_low=True)
+
+
+###############################################################################
+def val_interflow_store_bypass(data, name):
+    """interflow_store_bypass.
+
+    1) type has to be a dict of floats
+    2) all interflow zones to be present
+    3) values have to be >= 0.
+    """
+    nda = data["params"][name]
+    tot = len(data["params"]["interflow_zone_names"])
+
+    c.check_type(
+        param=nda,
         name=name,
-        low_l=0,
-        include_low=True,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
-        values=[j for i in ifp.values() for j in [i[1], i[3]]],
-        name=("store_bypass and interflow_to_rivers in %s" % name),
-        high_l=1.0,
-        include_high=True,
+    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+                          include_low=True)
+
+
+###############################################################################
+def val_infiltration_limit(data, name):
+    """infiltration_limit.
+
+    1) type has to be a dict of floats
+    2) all interflow zones to be present
+    3) values have to be >= 0.
+    """
+    nda = data["params"][name]
+    tot = len(data["params"]["interflow_zone_names"])
+
+    c.check_type(
+        param=nda,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
     )
+
+    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+                          include_low=True)
+
+
+###############################################################################
+def val_interflow_decay(data, name):
+    """interflow_decay.
+
+    1) type has to be a dict of floats
+    2) all interflow zones to be present
+    3) values have to be >= 0.
+    """
+    nda = data["params"][name]
+    tot = len(data["params"]["interflow_zone_names"])
+
+    c.check_type(
+        param=nda,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+
+    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+                          include_low=True)
+
+###############################################################################
+def val_infiltration_limit_ts(data, name):
+    """Validate infiltration_limit_ts.
+
+    1) type has to be a dictionary of lists of floats
+    2) values have to be lists with length equal to the number of zones
+    3) dictionary needs 1 key: infiltration_limit
+    4) value should be >= 0.0
+    """
+    if data["params"]["interflow_process"] == "disabled":
+        return
+
+    if not data["params"]['infiltration_limit_use_timeseries']:
+        return
+
+    per = data["series"][name]
+    lzn = data["params"]["interflow_zone_names"]
+    c.check_type(
+        param=per,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(lzn)],
+        keys=["infiltration_limit_ts"]
+    )
+    c.check_values_limits(values=per[0], name=name, low_l=0.0,
+                          include_low=True)
+
+
+###############################################################################
+def val_infiltration_limit_use_timeseries(data, name):
+    """Validate infiltration_limit_use_timeseries.
+
+    1) type has to be a boolean
+    """
+    opr = data["params"][name]
+
+    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+
+
+###############################################################################
+def val_interflow_decay_ts(data, name):
+    """Validate interflow_decay_ts.
+
+    1) type has to be a dictionary of lists of floats
+    2) values have to be lists with length equal to the number of zones
+    3) dictionary needs 1 key: infiltration_limit
+    4) value should be >= 0.0
+    """
+    if data["params"]["interflow_process"] == "disabled":
+        return
+
+    if not data["params"]['interflow_decay_use_timeseries']:
+        return
+
+    per = data["series"][name]
+    lzn = data["params"]["interflow_zone_names"]
+    c.check_type(
+        param=per,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(lzn)],
+        keys=["interflow_decay_ts"]
+    )
+    c.check_values_limits(values=per[0], name=name, low_l=0.0,
+                          include_low=True)
+
+
+###############################################################################
+def val_interflow_decay_use_timeseries(data, name):
+    """Validate interflow_decay_use_timeseries.
+
+    1) type has to be a boolean
+    """
+    opr = data["params"][name]
+
+    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
 
 ###############################################################################
@@ -1983,6 +2190,8 @@ FUNC_PARAMS = [
     val_rainfall_zone_mapping,
     val_rapid_runoff_zone_names,
     val_rapid_runoff_zone_mapping,
+    val_interflow_zone_names,
+    val_interflow_zone_mapping,
     val_pe_zone_names,
     val_pe_zone_mapping,
     val_temperature_zone_names,
@@ -2033,7 +2242,12 @@ FUNC_PARAMS = [
     val_leakage_process,
     val_subsoilzone_leakage_fraction,
     val_interflow_process,
-    val_interflow_params,
+    val_init_interflow_store,
+    val_interflow_store_bypass,
+    val_infiltration_limit,
+    val_interflow_decay,
+    val_infiltration_limit_use_timeseries,
+    val_interflow_decay_use_timeseries,
     val_recharge_attenuation_process,
     val_recharge_attenuation_params,
     val_sw_process,
@@ -2052,7 +2266,8 @@ FUNC_PARAMS = [
     val_ievtcb,
     val_nevtopt,
     val_gwmodel_type,
-    val_excess_sw_process
+    val_excess_sw_process,
+    val_percolation_rejection_use_timeseries
 ]
 
 
@@ -2066,6 +2281,9 @@ FUNC_SERIES = [
     val_subroot_leakage_ts,
     val_swdis_ts,
     val_swabs_ts,
+    val_percolation_rejection_ts,
+    val_infiltration_limit_ts,
+    val_interflow_decay_ts,
 ]
 
 

@@ -495,15 +495,26 @@ def get_rejected_recharge(data, output, node):
     """AA) Rejected Recharge."""
     series, params = data['series'], data['params']
     rej = params['percolation_rejection']
-
     rejected_recharge = np.zeros(len(series['date']))
+
     if params['fao_process'] == 'enabled':
         zone = params['lu_spatial'][node]
         rej = (np.array(rej['percolation_rejection']) * zone).sum(axis=0)
+
         perc = np.copy(output['p_smd'])
         perc[perc > 0] = 0
         perc = - perc
-        rejected_recharge[perc > rej] = perc[perc > rej] - rej
+
+        if params["percolation_rejection_use_timeseries"]:
+            rej_ts = series['percolation_rejection_ts']
+            rej_array = np.zeros(len(series['date']))
+            for iday, rts in enumerate(rej_ts):
+                rej_array[iday] = (np.array(rts) * zone).sum(axis=0)
+            rej = rej_array
+            # not sure if this correct
+            rejected_recharge[perc > rej] = perc[perc > rej] - rej[perc > rej]
+        else:
+            rejected_recharge[perc > rej] = perc[perc > rej] - rej
 
     return {'rejected_recharge': rejected_recharge}
 
@@ -547,7 +558,8 @@ def get_interflow_bypass(data, output, node):
     """AD) Bypassing the Interflow Store [mm/d]."""
     params = data['params']
     if params['interflow_process'] == 'enabled':
-        coef = params['interflow_params'][node][1]
+        interflow_zone = params['interflow_zone_mapping'][node]
+        coef = params['interflow_store_bypass'][interflow_zone]
     else:
         coef = 1.0
 
@@ -585,26 +597,42 @@ def get_interflow(data, output, node):
         double[:] col_infiltration_recharge = np.zeros(length)
         double[:] col_interflow_to_rivers = np.zeros(length)
         double[:] interflow_store_input = output['interflow_store_input']
-        double var0 = params['interflow_params'][node][0]
-        double var5 = params['interflow_params'][node][2]
-        double var8 = params['interflow_params'][node][3]
+        int interflow_zone = params['interflow_zone_mapping'][node]
+        double var0 = params['init_interflow_store'][interflow_zone]
+        double[:] var5 = np.full([length],
+                              params['infiltration_limit'][interflow_zone])
+        double[:] var8 = np.full([length],
+                                 params['interflow_decay'][interflow_zone])
         double volume = var0
-        double recharge = (var5 if volume >= var5 else volume)
-        double rivers = (volume - recharge) * var8
+        double var1, var6
         size_t num
+        double[:] recharge = np.zeros(length)
+        double[:] rivers = np.zeros(length)
 
     if params['interflow_process'] == 'enabled':
-        col_interflow_volume[0] = volume
-        col_infiltration_recharge[0] = recharge
-        col_interflow_to_rivers[0] = rivers
+        col_interflow_volume = np.full([length], volume)
+        col_infiltration_recharge = recharge
+        col_interflow_to_rivers = rivers
 
-        for num in range(1, length):
-            var1 = volume - min(var5, volume)
-            volume = interflow_store_input[num-1] + var1 * (1 - var8)
+        if params["infiltration_limit_use_timeseries"]:
+            for day in range(length):
+                var5[day] = series['infiltration_limit_ts'][day][interflow_zone-1]
+
+        if params["interflow_decay_use_timeseries"]:
+            for day in range(length):
+                var8[day] = series['interflow_decay_ts'][day][interflow_zone-1]
+
+        recharge = np.where(np.asarray(var5) < volume,
+                            volume, np.asarray(var5))
+        rivers = (np.full([length], volume) - np.asarray(recharge)) * var8
+
+        for num in range(length):
+            var1 = volume - min(var5[num], volume)
+            volume = interflow_store_input[num-1] + var1 * (1 - var8[num])
             col_interflow_volume[num] = volume
-            col_infiltration_recharge[num] = min(var5, volume)
+            col_infiltration_recharge[num] = min(var5[num], volume)
             var6 = (col_interflow_volume[num] - col_infiltration_recharge[num])
-            col_interflow_to_rivers[num] = var6 * var8
+            col_interflow_to_rivers[num] = var6 * var8[num]
 
     col = {}
     col['interflow_volume'] = col_interflow_volume.base

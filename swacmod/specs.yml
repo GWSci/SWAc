@@ -269,6 +269,20 @@ rapid_runoff_zone_mapping:
         - !!python/name:dict
         - !!python/name:int
 
+interflow_zone_names:
+    required: false
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:str
+
+interflow_zone_mapping:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
 swrecharge_zone_names:
     required: false
     alt_format: [yml]
@@ -552,6 +566,19 @@ percolation_rejection:
         - !!python/name:list
         - !!python/name:float
 
+percolation_rejection_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:float
+
+percolation_rejection_use_timeseries:
+    required: false
+    type:
+        - !!python/name:bool
+
 
 ############################################
 # Process: Percentage of leakage to Permit #
@@ -581,14 +608,59 @@ interflow_process:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
-interflow_params:
+init_interflow_store:
     required: false
     alt_format: [yml, csv]
     type:
         - !!python/name:dict
+        - !!python/name:float
+
+interflow_store_bypass:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+infiltration_limit:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+interflow_decay:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+infiltration_limit_use_timeseries:
+    required: false
+    type:
+        - !!python/name:bool
+
+interflow_decay_use_timeseries:
+    required: false
+    type:
+        - !!python/name:bool
+
+infiltration_limit_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
         - !!python/name:list
         - !!python/name:float
 
+interflow_decay_ts:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:float
 
 ###############################################
 # Process: Recharge Release to Saturated Zone #

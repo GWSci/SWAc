@@ -383,6 +383,29 @@ def fin_rapid_runoff_zone_names(data, name):
 
 
 ###############################################################################
+def fin_interflow_zone_mapping(data, name):
+    """Finalize the "interflow_zone_mapping" parameter.
+
+    1) if not provided, set it to all 0s.
+    """
+    if data["params"][name] is None:
+        nodes = data["params"]["num_nodes"]
+        data["params"][name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_interflow_zone_names(data, name):
+    """Finalize the "interflowf_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data["params"]
+    if params[name] is None:
+        zones = len(set(params["interflow_zone_mapping"].values()))
+        params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
+
+
+###############################################################################
 def fin_swrecharge_zone_mapping(data, name):
     """Finalize the "swrecharge_zone_mapping" parameter.
 
@@ -721,7 +744,6 @@ def fin_taw_and_raw(data, name):
 ###############################################################################
 def fin_percolation_rejection(data, name):
     """Finalize the "percolation_rejection" parameter.
-
     1) if not provided, set it to a large number.
     """
     if data["params"][name] is None:
@@ -729,6 +751,35 @@ def fin_percolation_rejection(data, name):
         zones = len(data["params"]["landuse_zone_names"])
         data["params"][name] = [default for _ in range(zones)]
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_percolation_rejection_ts(data, name):
+    """Finalize the "percolation_rejection" parameter.
+
+    1) if not provided, set it to a large number.
+    """
+
+    series, params = data["series"], data["params"]
+
+    if series[name] is None and params['percolation_rejection_use_timeseries']:
+        default = 99999.0
+        zones = len(data["params"]["landuse_zone_names"])
+        params[name] = np.full([len(series["date"]), zones], default)
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_percolation_rejection_use_timeseries(data, name):
+    """Finalize the "percolation_rejection_use_timeseries" parameter.
+
+    1) if not provided, set "percolation_rejection_use_timeseries" to "false".
+    """
+
+    params = data["params"]
+    if params[name] is None:
+        params["percolation_rejection_use_timeseries"] = False
+        logging.info('\t\tSwitched "percolation_rejection_use_timeseries" to "false"')
 
 
 ###############################################################################
@@ -745,16 +796,109 @@ def fin_subsoilzone_leakage_fraction(data, name):
 
 
 ###############################################################################
-def fin_interflow_params(data, name):
-    """Finalize the "interflow_params" parameter.
-
-    1) if not provided, set it to all [0, 1, 999999, 0].
+def fin_init_interflow_store(data, name):
+    """Finalize the "init_interflow_store" parameter.
+    1) if not provided, set it to zero.
     """
     if data["params"][name] is None:
-        nodes = data["params"]["num_nodes"]
-        data["params"][name] = dict((k, [0, 1, 999999, 0])
-                                    for k in range(1, nodes + 1))
-        logging.info('\t\tDefaulted "%s" to %s', name, [0, 1, 999999, 0])
+        default = 0.0
+        zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = [default for _ in range(zones)]
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_interflow_store_bypass(data, name):
+    """Finalize the "interflow_store_bypass" parameter.
+    1) if not provided, set it to 1.0.
+    """
+    if data["params"][name] is None:
+        default = 1.0
+        zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = [default for _ in range(zones)]
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_infiltration_limit(data, name):
+    """Finalize the "infiltration_limit" parameter.
+    1) if not provided, set it to 999999.9.
+    """
+    if data["params"][name] is None:
+        default = 999999.9
+        zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = [default for _ in range(zones)]
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_interflow_decay(data, name):
+    """Finalize the "interflow_decay" parameter.
+    1) if not provided, set it to 0.0.
+    """
+    if data["params"][name] is None:
+        default = 0.0
+        zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = [default for _ in range(zones)]
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_infiltration_limit_ts(data, name):
+    """Finalize the "infiltration_limit_ts" parameter.
+
+    1) if not provided, set it to a large number.
+    """
+
+    series, params = data["series"], data["params"]
+
+    if series[name] is None and params['infiltration_limit_use_timeseries']:
+        default = 99999.0
+        zones = len(data["params"]["interflow_zone_names"])
+        params[name] = np.full([len(series["date"]), zones], default)
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_infiltration_limit_use_timeseries(data, name):
+    """Finalize the "infiltration_limit_use_timeseries" parameter.
+
+    1) if not provided, set "infiltration_limit_use_timeseries" to "false".
+    """
+
+    params = data["params"]
+    if params[name] is None:
+        params["infiltration_limit_use_timeseries"] = False
+        logging.info('\t\tSwitched "infiltration_limit_use_timeseries" to "false"')
+
+
+###############################################################################
+def fin_interflow_decay_ts(data, name):
+    """Finalize the "interflow_decay_ts" parameter.
+
+    1) if not provided, set it to a large number.
+    """
+
+    series, params = data["series"], data["params"]
+
+    if series[name] is None and params['interflow_decay_use_timeseries']:
+        default = 99999.0
+        zones = len(data["params"]["interflow_zone_names"])
+        params[name] = np.full([len(series["date"]), zones], default)
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+
+###############################################################################
+def fin_interflow_decay_use_timeseries(data, name):
+    """Finalize the "interflow_decay_use_timeseries" parameter.
+
+    1) if not provided, set "interflow_decay_use_timeseries" to "false".
+    """
+
+    params = data["params"]
+    if params[name] is None:
+        params["interflow_decay_use_timeseries"] = False
+        logging.info('\t\tSwitched "interflow_decay_use_ts" to "false"')
 
 
 ###############################################################################
@@ -1132,6 +1276,10 @@ FUNC_PARAMS = [
     fin_subroot_zone_names,
     fin_rapid_runoff_zone_mapping,
     fin_rapid_runoff_zone_names,
+    fin_interflow_zone_mapping,
+    fin_interflow_zone_names,
+    fin_infiltration_limit_use_timeseries,
+    fin_interflow_decay_use_timeseries,
     fin_swrecharge_zone_mapping,
     fin_swrecharge_zone_names,
     fin_macropore_zone_mapping,
@@ -1155,8 +1303,8 @@ FUNC_PARAMS = [
     fin_zr,
     fin_kc,
     fin_percolation_rejection,
+    fin_percolation_rejection_use_timeseries,
     fin_subsoilzone_leakage_fraction,
-    fin_interflow_params,
     fin_recharge_attenuation_params,
     fin_sw_params,
     fin_output_sfr,
@@ -1189,6 +1337,9 @@ FUNC_SERIES = [
     fin_subroot_leakage_ts,
     fin_swabs_ts,
     fin_swdis_ts,
+    fin_percolation_rejection_ts,
+    fin_infiltration_limit_ts,
+    fin_interflow_decay_ts,
 ]
 
 
