@@ -16,7 +16,8 @@ cimport cython
 cimport numpy as np
 
 import sys
-sys.path.append("..")
+import os.path
+sys.path.append(os.path.join(os.path.dirname(u.__file__), ".."))
 from SnowTest.snow_melt import SnowMelt
 
 
