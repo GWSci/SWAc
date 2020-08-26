@@ -602,7 +602,7 @@ def get_interflow(data, output, node):
         int interflow_zone = params['interflow_zone_mapping'][node]
         double var0 = params['init_interflow_store'][interflow_zone]
         double[:] var5 = np.full([length],
-                              params['infiltration_limit'][interflow_zone])
+                                 params['infiltration_limit'][interflow_zone])
         double[:] var8 = np.full([length],
                                  params['interflow_decay'][interflow_zone])
         double volume = var0
