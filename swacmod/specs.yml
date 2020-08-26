@@ -336,6 +336,20 @@ canopy_process:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
+canopy_zone_names:
+    required: false
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:str
+
+canopy_zone_mapping:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
 free_throughfall:
     required: false
     alt_format: [yml, csv]
