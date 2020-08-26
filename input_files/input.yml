@@ -249,6 +249,17 @@ landuse_zone_names: landuse_zone_names.yml
 # This parameter is required
 canopy_process: enabled
 
+# Canopy Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+canopy_zone_mapping: canopy_zone_mapping.yml
+
+# Canopy zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+canopy_zone_names: canopy_zone_names.yml
+
+
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 free_throughfall: free_throughfall.yml
