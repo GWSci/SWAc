@@ -1043,7 +1043,7 @@ def val_free_throughfall(data, name):
     3) values have to be 0 <= x <= 1
     """
     fth = data["params"][name]
-    tot = data["params"]["num_nodes"]
+    tot = len(data["params"]["canopy_zone_names"])
 
     c.check_type(
         param=fth,
@@ -1071,7 +1071,7 @@ def val_max_canopy_storage(data, name):
     3) values have to be >= 0
     """
     mcs = data["params"][name]
-    tot = data["params"]["num_nodes"]
+    tot = len(data["params"]["canopy_zone_names"])
 
     c.check_type(
         param=mcs,
