@@ -99,8 +99,9 @@ def get_canopy_storage(data, output, node):
     series, params = data['series'], data['params']
 
     if params['canopy_process'] == 'enabled':
-        ftf = params['free_throughfall'][node]
-        mcs = params['max_canopy_storage'][node]
+        canopy_zone = params['canopy_zone_mapping'][node]
+        ftf = params['free_throughfall'][canopy_zone]
+        mcs = params['max_canopy_storage'][canopy_zone]
         canopy_storage = output['rainfall_ts'] * (1 - ftf)
         canopy_storage[canopy_storage > mcs] = mcs
         canopy_storage = np.where(canopy_storage > output['pefac'],
