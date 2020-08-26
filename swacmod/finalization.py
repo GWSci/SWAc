@@ -523,7 +523,7 @@ def fin_free_throughfall(data, name):
     if data["params"][name] is None:
         zones = len(data["params"]["canopy_zone_names"])
         default = 1.0
-        data["params"][name] = [default for _ in range(zones)]
+        data["params"][name] = {zone: default for zone in range(1, zones + 1)}
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
@@ -536,7 +536,7 @@ def fin_max_canopy_storage(data, name):
     if data["params"][name] is None:
         zones = len(data["params"]["canopy_zone_names"])
         default = 0.0
-        data["params"][name] = [default for _ in range(zones)]
+        data["params"][name] = {zone: default for zone in range(1, zones + 1)}
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
@@ -825,8 +825,12 @@ def fin_init_interflow_store(data, name):
     """
     if data["params"][name] is None:
         default = 0.0
-        zones = len(data["params"]["interflow_zone_names"])
-        data["params"][name] = [default for _ in range(zones)]
+        if data["params"]["interflow_zone_names"] is None:
+            zones = 1
+        else:
+            zones = len(data["params"]["interflow_zone_names"])
+
+        data["params"][name] = {zone: default for zone in range(1, zones + 1)}
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
@@ -837,8 +841,11 @@ def fin_interflow_store_bypass(data, name):
     """
     if data["params"][name] is None:
         default = 1.0
-        zones = len(data["params"]["interflow_zone_names"])
-        data["params"][name] = [default for _ in range(zones)]
+        if data["params"]["interflow_zone_names"] is None:
+            zones = 1
+        else:
+            zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = {zone: default for zone in range(1, zones + 1)}
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
@@ -849,8 +856,11 @@ def fin_infiltration_limit(data, name):
     """
     if data["params"][name] is None:
         default = 999999.9
-        zones = len(data["params"]["interflow_zone_names"])
-        data["params"][name] = [default for _ in range(zones)]
+        if data["params"]["interflow_zone_names"] is None:
+            zones = 1
+        else:
+            zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = {zone: default for zone in range(1, zones + 1)}
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
@@ -861,8 +871,11 @@ def fin_interflow_decay(data, name):
     """
     if data["params"][name] is None:
         default = 0.0
-        zones = len(data["params"]["interflow_zone_names"])
-        data["params"][name] = [default for _ in range(zones)]
+        if data["params"]["interflow_zone_names"] is None:
+            zones = 1
+        else:
+            zones = len(data["params"]["interflow_zone_names"])
+        data["params"][name] = {zone: default for zone in range(1, zones + 1)}
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
@@ -1301,6 +1314,10 @@ FUNC_PARAMS = [
     fin_rapid_runoff_zone_names,
     fin_interflow_zone_mapping,
     fin_interflow_zone_names,
+    fin_interflow_decay,
+    fin_interflow_store_bypass,
+    fin_infiltration_limit,
+    fin_init_interflow_store,
     fin_infiltration_limit_use_timeseries,
     fin_interflow_decay_use_timeseries,
     fin_swrecharge_zone_mapping,
