@@ -27,7 +27,7 @@ setup(
     test_suite="tests",
     keywords=['water management', 'water accounting'],
     install_requires=['Cython', 'numpy', 'psutil', 'python-dateutil', 'pytz',
-                      'PyYAML', 'setuptools', 'flopy==3.2.12', 'networkx',
+                      'PyYAML', 'setuptools', 'networkx',
                       'tqdm'],
     classifiers=['Intended Audience :: Developers',
                  'Intended Audience :: Science/Research',
