@@ -21,6 +21,7 @@ Installation on Windows systems (tested on Windows 7):
 
     > cd Desktop/SWAcMod
     > python setup.py install
+    > pip install flopy==3.2.12
 
 To **confirm that all modules are installed correctly**: navigate to ``ROOT``, launch a python shell and run
 
