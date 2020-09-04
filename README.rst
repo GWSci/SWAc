@@ -6,7 +6,7 @@ Development repo for the Surface Water Accounting Model (SWAcMod). In the follow
 Installation on Windows systems (tested on Windows 7):
 
 - install `Microsoft Visual C++ Compiler <https://www.microsoft.com/en-us/download/details.aspx?id=44266>`_ (for Python 2.7)
-- install `Anaconda <https://www.continuum.io/downloads>`_ (for Python 2.7, 64-bit)
+- install `Anaconda <https://repo.anaconda.com/archive/Anaconda2-2019.10-Windows-x86_64.exe>`_ (for Python 2.7, 64-bit)
 - install `Git <https://git-scm.com/download/win>`_
 - launch ``Start`` > ``All Programs`` > ``Git`` > ``Git GUI`` > ``Clone Existing Repository``
 - when prompted, use as parameters:
@@ -23,58 +23,19 @@ Installation on Windows systems (tested on Windows 7):
     > python setup.py install
     > pip install flopy==3.2.12
 
-To **confirm that all modules are installed correctly**: navigate to ``ROOT``, launch a python shell and run
+At this point you may experience an error.  Admin rights to download files are required to obtain FloPy.  If this command fails
+you can continue the below process however when running SWAc you will be unable to write MODFLOW output files from SWAc.
+This will be noted by a message after the SWAc run stating NO FLOPY MODULE
 
-.. code-block:: python
-
-    >>> from swacmod import input_output, utils, validation, finalization
-
-This should not produce errors.
-
-To **run the end-to-end tests**: navigate to ``ROOT``, then run
+To **run a test version of the model** (including a log file): navigate to ``ROOT``, then run
 
 .. code-block:: bash
 
-    $ python setup.py test
+    $ python swacmod_run.py -i .\input_files\input.yml -o .\output_files\
 
-The tests will not produce output files, they will only print to ``stdout``.
-If they succeed, you will see an output like the following:
+These are lower case -i and -o.  The input_files folder contains a full worked example of both csv and yml formatted input files.
 
-.. code-block:: bash
-
-    running test
-    running egg_info
-    writing requirements to swacmod.egg-info/requires.txt
-    writing swacmod.egg-info/PKG-INFO
-    writing top-level names to swacmod.egg-info/top_level.txt
-    writing dependency_links to swacmod.egg-info/dependency_links.txt
-    reading manifest file 'swacmod.egg-info/SOURCES.txt'
-    writing manifest file 'swacmod.egg-info/SOURCES.txt'
-    running build_ext
-    model.pyx modified, recompiling
-    test_get_output (tests.tests.EndToEndTests)
-    Test for get_output() function. ... ok
-    test_val_num_nodes (tests.tests.EndToEndTests)
-    Test for val_num_nodes() function. ... ok
-    test_val_start_date (tests.tests.EndToEndTests)
-    Test for val_start_date() function. ... ok
-    test_validate_all (tests.tests.EndToEndTests)
-    Test for validate_all() function. ... ok
-    test_validate_functions (tests.tests.EndToEndTests)
-    Test that all parameters and series have a validation function. ... ok
-
-    ----------------------------------------------------------------------
-    Ran 5 tests in 3.064s
-
-    OK
-
-To **run a test version of the model without output files** (but with a log file): navigate to ``ROOT``, then run
-
-.. code-block:: bash
-
-    $ python swacmod_run.py --test
-
-Finally, to simply **run the model**: navigate to ``ROOT``, then run the main script ``swacmod_run.py``. This accepts several flags as parameters:
+Finally, to see the optional arguments run the model with the -h argument
 
 .. code-block:: bash
 
@@ -108,3 +69,5 @@ Flags can also be combined, the above is equivalent to
 
 .. note::
    Python package maintainers may no longer support Python2, if using Python2 then restrict the python environment to the package versions listed in requirements.txt, FloPy is noted as one such package.
+   
+   The swac code is agnostic to Python 2 and 3 however this readme is specified for python2.  An alternative C++ redistributable may be required for Python3.x 
