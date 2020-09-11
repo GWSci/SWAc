@@ -502,7 +502,7 @@ def get_row_balance(aggregated, num, reduced, mult):
     """Get a row of data for output."""
     if reduced:
         keys = [
-            "combined_recharge", "combined_str", "combined_ae", "unutilised_pe"
+            "combined_recharge", "combined_str", "combined_ae", "evt"
         ]
         row = [aggregated[key][num] for key in keys]
     else:
