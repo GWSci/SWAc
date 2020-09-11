@@ -260,7 +260,8 @@ def listener(q, total):
 ###############################################################################
 
 
-def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
+def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
+        data=None):
     """Run model for all nodes."""
     times = {"start_of_run": time.time()}
 
@@ -280,14 +281,20 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False):
         input_dir = u.CONSTANTS["INPUT_DIR"]
 
     level = logging.DEBUG if debug else logging.INFO
-    params = io.load_yaml(input_file)
+
+    if data is None:
+        params = io.load_yaml(input_file)
+    else:
+        params = data['params']
     log_path = io.start_logging(level=level, run_name=params["run_name"])
 
     print('\nStart "%s"' % params["run_name"])
     logging.info("Start SWAcMod run")
     logging.info(compile_model.get_status())
 
-    data = io.load_and_validate(specs_file, input_file, input_dir)
+    if data is None:
+        data = io.load_and_validate(specs_file, input_file, input_dir)
+
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
