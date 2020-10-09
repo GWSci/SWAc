@@ -463,7 +463,6 @@ interflow_zone_mapping: interflow_zone_mapping.yml
 # This parameter can accept a path to YAML or CSV
 interflow_zone_names: interflow_zone_names.yml
 
-
 init_interflow_store: init_interflow_store.yml
 
 interflow_store_bypass: interflow_store_bypass.yml
@@ -626,7 +625,7 @@ windsp_ts: windsp_ts.yml
 # This parameter can accept a path to YAML or CSV
 subroot_leakage_ts: subroot_leakage_ts.yml
 
-gwmodel_type: mfusg
+gwmodel_type: mf6
 mf96_lrc: [2, 2, 5]
 
 ##############

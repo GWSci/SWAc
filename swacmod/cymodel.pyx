@@ -724,7 +724,7 @@ def get_mf6rch_file(data, rchrate):
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
 
-    sim = flopy.mf6.MFSimulation()
+    sim = flopy.mf6.MFSimulation(verbosity_level=0)
     m = flopy.mf6.mfmodel.MFModel(sim,
                                   modelname=path)
     njag = nodes + 2
@@ -1052,7 +1052,7 @@ def get_sfr_file(data, runoff):
         # fileout = data['params']['run_name']
         # path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
 
-        sim = flopy.mf6.MFSimulation()
+        sim = flopy.mf6.MFSimulation(verbosity_level=0)
         m = flopy.mf6.mfmodel.MFModel(sim,
                                       modelname=path)
         njag = nodes + 2
@@ -1616,7 +1616,7 @@ def get_evt_file(data, evtrate):
                                   structured=True)
         flopy.modflow.ModflowDis(m, nrow=nodes, ncol=1, nper=nper)
     elif data['params']['gwmodel_type'] == 'mf6':
-        sim = flopy.mf6.MFSimulation()
+        sim = flopy.mf6.MFSimulation(verbosity_level=0)
         m = flopy.mf6.mfmodel.MFModel(sim,
                                       modelname=path)
         njag = nodes + 2
@@ -1665,7 +1665,7 @@ def get_evt_file(data, evtrate):
                                            ievt={0: ievt})
 
     elif data['params']['gwmodel_type'] == 'mf6':
-        spd = mt(m, maxbound=nodes, nseg=1, stress_periods=range(nper))
+        spd = mt(m, maxbound=nodes, nseg=1, stress_periods=range(nper), aux_vars=['dummy'])
 
         for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
             for i in range(nodes):
@@ -1674,7 +1674,7 @@ def get_evt_file(data, evtrate):
                                    surf[i, 0],
                                    evt_dic[per][i, 0],
                                    exdp[i, 0],
-                                   -999.9)
+                                   -999.0, -999.0)
 
         evt_out = flopy.mf6.ModflowGwfevt(m,
                                           fixed_cell=False,
@@ -1686,6 +1686,7 @@ def get_evt_file(data, evtrate):
                                           maxbound=nodes,
                                           nseg=1,
                                           stress_period_data=spd,
+                                          surf_rate_specified=False,
                                           filename=None,
                                           pname=None,
                                           parent_file=None)
