@@ -1,0 +1,15 @@
+# SW Release Proportion Direct Recharge
+# Columns are zones
+sw_direct_recharge:
+     1: [0.0, 0.0]   # January
+     2: [0.0, 0.0]   # February
+     3: [0.0, 0.0]   # March
+     4: [0.0, 0.0]   # April
+     5: [0.0, 0.0]   # May
+     6: [0.0, 0.0]   # June
+     7: [0.0, 0.0]   # July
+     8: [0.0, 0.0]   # August
+     9: [0.0, 0.0]   # September
+     10: [0.0, 0.0]  # October
+     11: [0.0, 0.0]  # November
+     12: [0.0, 0.0]  # December

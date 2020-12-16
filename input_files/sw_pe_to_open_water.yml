@@ -1,0 +1,15 @@
+# SW Release Proportion Direct Recharge
+# Columns are zones
+sw_pe_to_open_water:
+  1: [1.43, 1.43]      # January
+  2: [1.14, 1.14]      # February
+  3: [0.92, 0.92]      # March
+  4: [0.95, 0.95]      # April
+  5: [0.91, 0.91]      # May
+  6: [1.02, 1.02]      # June
+  7: [1.24, 1.24]      # July
+  8: [1.37, 1.37]      # August
+  9: [1.47, 1.47]      # September
+  10: [1.99, 1.99]      # October
+  11: [2.29, 2.29]      # November
+  12: [1.95, 1.95]      # December
