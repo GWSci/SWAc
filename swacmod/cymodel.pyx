@@ -791,14 +791,17 @@ def get_combined_str(data, output, node):
         double[:] col_combined_str = np.zeros(length)
         double[:] combined_str = np.zeros(length)
         # double[:] some_zeros = np.zeros(length)
-        double rlp = params['sw_params'][node][1]
-        double base = max((params['sw_params'][node][0] +
+        long long[:] months = np.array(series['months'], dtype=np.int64)
+        size_t zone_sw = params['sw_zone_mapping'][1] - 1
+        double rlp # = params['sw_downstream']
+        double base = max((params['sw_init_ponding'] +
                            output['interflow_to_rivers'][0] +
                            output['swabs_ts'][0] +
                            output['swdis_ts'][0] +
                            output['rapid_runoff'][0] -
                            output['runoff_recharge'][0]), 0.0)
-        size_t num
+        size_t day
+        int month
 
     combined_str = (output['interflow_to_rivers'] +
                     output['swabs_ts'] +
@@ -807,13 +810,13 @@ def get_combined_str(data, output, node):
                     output['runoff_recharge'] +
                     output['rejected_recharge'])
 
-    for num in range(length):
-        if combined_str[num] < 0.0:
-            output['swabs_ts'][num] = (output['interflow_to_rivers'][num] +
-                                       output['swdis_ts'][num] +
-                                       output['rapid_runoff'][num] -
-                                       output['runoff_recharge'][num] +
-                                       output['rejected_recharge'][num])
+    for day in range(length):
+        if combined_str[day] < 0.0:
+            output['swabs_ts'][day] = (output['interflow_to_rivers'][day] +
+                                       output['swdis_ts'][day] +
+                                       output['rapid_runoff'][day] -
+                                       output['runoff_recharge'][day] +
+                                       output['rejected_recharge'][day])
 
     if params['sw_process'] == 'enabled':
         # don't attenuate negative flows
@@ -822,16 +825,22 @@ def get_combined_str(data, output, node):
         col_combined_str[0] = rlp * base
         col_attenuation[0] = base - col_combined_str[0]
 
-        for num in range(1, length):
-            base = (col_attenuation[num-1] +
-                    combined_str[num])
+        zone_sw = params['sw_zone_mapping'][node] - 1
+
+        for day in range(1, length):
+            base = (col_attenuation[day-1] +
+                    combined_str[day])
+            month = months[day]
             # don't attenuate negative flows
             if base < 0.0:
                 rlp = 1.0
             else:
-                rlp = params['sw_params'][node][1]
-            col_combined_str[num] = rlp * base
-            col_attenuation[num] = base - col_combined_str[num]
+                #rlp = params['sw_params'][node][1]
+                #print(params['sw_downstream'])
+                #print(month, zone_sw)
+                rlp = params['sw_downstream'][month + 1][zone_sw]
+            col_combined_str[day] = rlp * base
+            col_attenuation[day] = base - col_combined_str[day]
     else:
         col_combined_str = combined_str
 
