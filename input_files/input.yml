@@ -535,12 +535,44 @@ recharge_attenuation_params: recharge_attenuation_params.yml
 
 # SW release process: can be either "enabled" or "disabled"
 # This parameter is required
+# If enabled all FAO inputs should reflect open water
 sw_process: enabled
 
-# SW Parameters
+# SW Release Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-sw_params: sw_params.yml
+sw_zone_mapping: sw_zone_mapping.yml
+
+# SW release zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+sw_zone_names: sw_zone_names.yml
+
+# SW Release downstream proportion
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+sw_downstream: sw_downstream.yml
+
+# SW Release Activation threshold [mm]
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+sw_activation: sw_activation.yml
+
+# SW Release Proportion Bed Infiltration
+sw_bed_infiltration: sw_bed_infiltration.yml
+
+# SW Release Proportion Direct Recharge
+sw_direct_recharge: sw_direct_recharge.yml
+
+# SW Release PE to open water
+sw_pe_to_open_water: sw_pe_to_open_water.yml
+
+# # SW Release Initial ponding depth [mm]			15
+sw_init_ponding: 15.0
+# # SW Release Max ponding depth [mm]			20
+sw_max_ponding: 20.0
+# # SW Release Area subject to ponding [fraction]		0.1
+sw_ponding_area: 0.1
 
 ############################################
 # Process: Routed Runoff                   #
