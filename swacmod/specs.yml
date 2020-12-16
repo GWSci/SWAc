@@ -297,6 +297,20 @@ swrecharge_zone_mapping:
         - !!python/name:dict
         - !!python/name:int
 
+sw_zone_names:
+    required: false
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:str
+
+sw_zone_mapping:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
 macropore_zone_names:
     required: false
     alt_format: [yml]
@@ -760,7 +774,54 @@ sw_process:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
-sw_params:
+sw_init_ponding:
+    required: false
+    type:
+        - !!python/name:float
+
+sw_max_ponding:
+    required: false
+    type:
+        - !!python/name:float
+
+sw_ponding_area:
+    required: false
+    type:
+        - !!python/name:float
+
+sw_downstream:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_activation:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_bed_infiltration:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_direct_recharge:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_pe_to_open_water:
     required: false
     alt_format: [yml, csv]
     type:
