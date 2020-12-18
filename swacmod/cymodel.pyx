@@ -344,6 +344,7 @@ def get_ae(data, output, node):
         double[:] col_k_slope = np.zeros(len(series['date']))
         double[:] col_ae = np.zeros(len(series['date']))
         size_t zone_mac = params['macropore_zone_mapping'][node] - 1
+        size_t zone_ror = params['single_cell_swrecharge_zone_mapping'][node] - 1
         size_t zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
         double ssmd = u.weighted_sum(params['soil_spatial'][node],
                                      s_smd['starting_SMD'])
@@ -351,6 +352,9 @@ def get_ae(data, output, node):
                                           dtype=np.int64)
         long long[:] class_ri = np.array(rrp[zone_rro]['class_ri'],
                                          dtype=np.int64)
+        double [:, :] ror_prop = params['ror_prop']
+        double [:, :] ror_limit = params['ror_limit']
+        double [:, :] ror_act = params['ror_act']
         double[:, :] macro_prop = params['macro_prop']
         double[:, :] macro_limit = params['macro_limit']
         double[:, :] macro_act = params['macro_act']
@@ -380,7 +384,7 @@ def get_ae(data, output, node):
 
     for num in range(length):
         var2 = net_rainfall[num]
-
+        var6 = months[num]
         if params['rapid_runoff_process'] == 'enabled':
             if smd > last_smd or var2 > last_ri:
                 rapid_runoff_c = value
@@ -399,7 +403,14 @@ def get_ae(data, output, node):
             rapid_runoff = (0.0 if var2 < 0.0 else var5)
             col_rapid_runoff[num] = rapid_runoff
 
-        var6 = months[num]
+            if params['single_cell_swrecharge_process'] == 'enabled':
+                var6a = rapid_runoff - ror_act[var6][zone_ror]
+                if var6a > 0:
+                    var7 = ror_prop[var6][zone_ror] * var6a
+                    var8 = ror_limit[var6][zone_ror]
+                    col_runoff_recharge[num] = (var8 if var7 > var8 else var7)
+                else:
+                    col_runoff_recharge[num] = 0.0
 
         if params['macropore_process'] == 'enabled':
             if mac_opt == 'SMD':
