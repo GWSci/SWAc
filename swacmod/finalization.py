@@ -962,6 +962,89 @@ def fin_recharge_attenuation_params(data, name):
 #                                     for k in range(1, nodes + 1))
 #         logging.info('\t\tDefaulted "%s" to %s', name, [0.0, 1.0])
 
+###############################################################################
+def fin_sw_pe_to_open_water(data, name):
+    """Finalize the "sw_pe_to_open_water" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data["params"]
+    zones = data["params"]["sw_zone_names"]
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params["sw_pe_to_open_wat"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_pe_to_open_wat"] = np.array([i[1]
+                                            for i in params["sw_pe_to_open_wat"]])
+
+###############################################################################
+def fin_sw_direct_recharge(data, name):
+    """Finalize the "sw_direct_recharge" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data["params"]
+    zones = data["params"]["sw_zone_names"]
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params["sw_direct_rech"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_direct_rech"] = np.array([i[1] for i in params["sw_direct_rech"]])
+
+###############################################################################
+def fin_sw_activation(data, name):
+    """Finalize the "sw_activation" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data["params"]
+    zones = data["params"]["sw_zone_names"]
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params["sw_activ"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_activ"] = np.array([i[1] for i in params["sw_activ"]])
+
+
+###############################################################################
+def fin_sw_bed_infiltration(data, name):
+    """Finalize the "sw_bed_infiltration" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data["params"]
+    zones = data["params"]["sw_zone_names"]
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params["sw_bed_infiltn"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_bed_infiltn"] = np.array([i[1] for i in params["sw_bed_infiltn"]])
+
+
+###############################################################################
+def fin_sw_downstream(data, name):
+    """Finalize the "sw_downstream" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data["params"]
+    zones = data["params"]["sw_zone_names"]
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params["sw_downstr"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_downstr"] = np.array([i[1] for i in params["sw_downstr"]])
+
 
 ###############################################################################
 def fin_output_sfr(data, name):
@@ -1349,6 +1432,11 @@ FUNC_PARAMS = [
     fin_subsoilzone_leakage_fraction,
     fin_recharge_attenuation_params,
     #fin_sw_params,
+    fin_sw_pe_to_open_water,
+    fin_sw_direct_recharge,
+    fin_sw_activation,
+    fin_sw_bed_infiltration,
+    fin_sw_downstream,
     fin_output_sfr,
     fin_sfr_obs,
     fin_istcb1,
