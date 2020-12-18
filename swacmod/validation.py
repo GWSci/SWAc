@@ -2183,6 +2183,7 @@ def val_sw_downstream(data, name):
         keys=range(1, 13),
     )
 
+
     c.check_values_limits(
         values=[j for i in rrp.values() for j in i],
         name=name,
@@ -2541,6 +2542,8 @@ FUNC_PARAMS = [
     val_subroot_zone_mapping,
     val_swrecharge_zone_names,
     val_swrecharge_zone_mapping,
+    val_sw_zone_names,
+    val_sw_zone_mapping,
     val_macropore_zone_names,
     val_macropore_zone_mapping,
     val_macropore_activation_option,
