@@ -429,6 +429,73 @@ def fin_swrecharge_zone_names(data, name):
 
 
 ###############################################################################
+def fin_single_cell_swrecharge_zone_mapping(data, name):
+    """Finalize the "single_cell_swrecharge_zone_mapping" parameter.
+    1) if not provided, set it to all 0s.
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_single_cell_swrecharge_zone_names(data, name):
+    """Finalize the "single_cell_swrecharge_zone_names" parameter.
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        zones = len(set(params['single_cell_swrecharge_zone_mapping'].values()))
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_single_cell_swrecharge_proportion(data, name):
+    """Finalize the "single_cell_swrecharge_proportion" parameter.
+    1) if not provided, set it to 0.
+    """
+    params = data['params']
+    zones = data['params']['single_cell_swrecharge_zone_names']
+    if params[name] is None:
+        params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [0.0]', name)
+
+    params['ror_prop'] = sorted(params[name].items(), key=lambda x: x[0])
+    params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
+
+
+###############################################################################
+def fin_single_cell_swrecharge_limit(data, name):
+    """Finalize the "single_cell_swrecharge_limit" parameter.
+    1) if not provided, set it to 99999.
+    """
+    params = data['params']
+    zones = data['params']['single_cell_swrecharge_zone_names']
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones]) for k in
+                            range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params['ror_limit'] = sorted(params[name].items(), key=lambda x: x[0])
+    params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
+
+
+###############################################################################
+def fin_single_cell_swrecharge_activation(data, name):
+    """Finalize the "rorecharge_activation" parameter.
+    1) if not provided, set it to 0.0.
+    """
+    params = data['params']
+    zones = data['params']['single_cell_swrecharge_zone_names']
+    if params[name] is None:
+        params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [0.0]', name)
+
+    params['ror_act'] = sorted(params[name].items(), key=lambda x: x[0])
+    params['ror_act'] = np.array([i[1] for i in params['ror_act']])
+
+
+###############################################################################
 def fin_macropore_zone_mapping(data, name):
     """Finalize the "macropore_zone_mapping" parameter.
 
@@ -1322,6 +1389,8 @@ FUNC_PARAMS = [
     fin_interflow_decay_use_timeseries,
     fin_swrecharge_zone_mapping,
     fin_swrecharge_zone_names,
+    fin_single_cell_swrecharge_zone_mapping,
+    fin_single_cell_swrecharge_zone_names,
     fin_macropore_zone_mapping,
     fin_macropore_zone_names,
     fin_soil_zone_names,
@@ -1333,6 +1402,9 @@ FUNC_PARAMS = [
     fin_rapid_runoff_params,
     fin_swrecharge_proportion,
     fin_swrecharge_limit,
+    fin_single_cell_swrecharge_proportion,
+    fin_single_cell_swrecharge_limit,
+    fin_single_cell_swrecharge_activation,
     fin_macropore_proportion,
     fin_macropore_limit,
     fin_macropore_activation,
