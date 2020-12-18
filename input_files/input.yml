@@ -309,7 +309,7 @@ rapid_runoff_params: rapid_runoff_params.yml
 
 # Runoff Recharge process: can be either "enabled" or "disabled"
 # This parameter is required
-swrecharge_process: enabled
+swrecharge_process: disabled
 
 # Runoff Recharge Proportion of RO
 # This parameter is optional
@@ -320,6 +320,42 @@ swrecharge_proportion: swrecharge_proportion.yml
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 swrecharge_limit: swrecharge_limit.yml
+
+################################################
+# Process: Single Cell Runoff Recharge         #
+################################################
+
+# Runoff Recharge in single cells process:
+#  can be either "enabled" or "disabled"
+# you won't want the routed process
+# "swrecharge_process" active at the same time
+# This parameter is required
+single_cell_swrecharge_process: enabled
+
+# Runoff Recharge Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+single_cell_swrecharge_zone_mapping: single_cell_swrecharge_zone_mapping.yml
+
+# Runoff recharge zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+single_cell_swrecharge_zone_names: single_cell_swrecharge_zone_names.yml
+
+# Runoff Recharge Proportion of RO
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+single_cell_swrecharge_proportion: single_cell_swrecharge_proportion.yml
+
+# Runoff Recharge Limit [mm]
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+single_cell_swrecharge_limit: single_cell_swrecharge_limit.yml
+
+# Runoff Recharge Activation [mm]
+# This parameter is optional. If not specified, it will be set to 0.0.
+# This parameter can accept a path to YAML or CSV
+single_cell_swrecharge_activation: single_cell_swrecharge_activation.yml
 
 ######################
 # Process: Macropore #
