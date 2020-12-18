@@ -443,6 +443,54 @@ swrecharge_limit:
         - !!python/name:float
 
 
+########################################
+# Process: Single Cell Runoff Recharge #
+#######################################
+
+single_cell_swrecharge_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+single_cell_swrecharge_zone_names:
+    required: false
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:str
+
+single_cell_swrecharge_zone_mapping:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
+single_cell_swrecharge_proportion:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+single_cell_swrecharge_limit:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+single_cell_swrecharge_activation:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
 ######################
 # Process: Macropore #
 ######################
