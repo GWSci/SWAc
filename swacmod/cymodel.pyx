@@ -920,12 +920,11 @@ def get_combined_str(data, output, node):
                     if day == dday:
                         print('pond over ', pond_overspill, 'depth', pond_depth)
 
-                tmp1 = tmp0 * input_to_atten_store - pond_overspill
+                tmp1 = col_attenuation[day - 1] + tmp0 * input_to_atten_store - pond_overspill
 
                 if (col_attenuation[day - 1] + tmp1) > sw_activation[month][zone_sw]:
                     other_sw_flow = (sw_downstream[month][zone_sw] *
-                                     col_attenuation[day - 1] +
-                                     tmp1 - sw_activation[month][zone_sw])
+                                      tmp1 - sw_activation[month][zone_sw])
                     # print('other ', month, zone_sw, sw_downstream[month][zone_sw],
                     #       col_attenuation[day - 1],
                     #       tmp1,
