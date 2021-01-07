@@ -40,7 +40,7 @@ CONSTANTS['COL_ORDER'] = [
     'interflow_bypass', 'interflow_store_input', 'interflow_volume',
     'infiltration_recharge', 'interflow_to_rivers', 'recharge_store_input',
     'recharge_store', 'combined_recharge', 'sw_attenuation', 'pond_direct',
-    'pond_atten', 'pond_over', 'open_water_evap', 'swabs_ts',
+    'pond_atten', 'pond_over', 'sw_other', 'open_water_evap', 'swabs_ts',
     'swdis_ts', 'combined_str', 'combined_ae', 'evt', 'average_in',
     'average_out', 'total_storage_change', 'balance'
 ]
@@ -68,7 +68,8 @@ CONSTANTS['BALANCE_CONVERSIONS'] = [
     ('InputRechargeStore', True, False), ('RechargeStoreVol', True, False),
     ('CombinedRecharge', True, True), ('SWAttenuation', True, False),
     ('PondDirect', True, False),('PondAtten', True, False),
-    ('PonsOverspill', True, False), ('OpenWaterEvap', True, False),
+    ('PondOverspill', True, False), ('OtherSW', True, False),
+    ('OpenWaterEvap', True, False),
     ('SWAbstractions', False, False), ('SWDischarges', False, False),
     ('CombinedSW', True, True), ('CombinedAE', True, True),
     ('UnitilisedPE', True, True), ('AVERAGE_IN', True, False),
