@@ -799,6 +799,7 @@ def get_combined_str(data, output, node):
     cdef:
         size_t length = len(series['date'])
         double[:] col_attenuation = np.zeros(length)
+        double[:] col_atten_input = np.zeros(length)
         double[:] col_pond_direct = np.zeros(length)
         double[:] col_pond_atten = np.zeros(length)
         double[:] col_pond_over = np.zeros(length)
@@ -852,6 +853,7 @@ def get_combined_str(data, output, node):
             other_sw_flow = 0.0
             pond_direct = 0.0
             pond_atten = 0.0
+            input_to_atten_store = 0.0
             # don't attenuate negative flows
             if base < 0.0:
                 col_combined_str[day] = base
@@ -913,6 +915,7 @@ def get_combined_str(data, output, node):
                 col_pond_over[day] = pond_overspill
                 col_sw_other[day] = other_sw_flow
                 col_open_water_evap[day] = open_water_evap
+                col_atten_input[day] = input_to_atten_store
 
     else:
         col_combined_str = combined_str
@@ -925,6 +928,7 @@ def get_combined_str(data, output, node):
     col['sw_other'] = col_sw_other.base
     col['open_water_evap'] = col_open_water_evap.base
     col['combined_str'] = col_combined_str.base
+    col['atten_input'] = col_atten_input.base
 
     return col
 
