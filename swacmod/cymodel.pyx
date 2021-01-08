@@ -881,7 +881,7 @@ def get_combined_str(data, output, node):
 
                 if tmp1 > sw_activation[month][zone_sw]:
                     other_sw_flow = (sw_downstream[month][zone_sw] *
-                                      tmp1 - sw_activation[month][zone_sw])
+                                      (tmp1 - sw_activation[month][zone_sw]))
 
                 col_combined_str[day] = (output['swabs_ts'][day] +
                                          output['swdis_ts'][day] +
