@@ -879,7 +879,7 @@ def get_combined_str(data, output, node):
 
                 tmp1 = col_attenuation[day - 1] + tmp0 * input_to_atten_store - pond_overspill
 
-                if (col_attenuation[day - 1] + tmp1) > sw_activation[month][zone_sw]:
+                if tmp1 > sw_activation[month][zone_sw]:
                     other_sw_flow = (sw_downstream[month][zone_sw] *
                                       tmp1 - sw_activation[month][zone_sw])
 
