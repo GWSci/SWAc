@@ -531,11 +531,13 @@ sw_direct_recharge: sw_direct_recharge.yml
 # SW Release PE to open water
 sw_pe_to_open_water: sw_pe_to_open_water.yml
 
-# # SW Release Initial ponding depth [mm]			15
+# # SW Release Initial ponding depth [mm]
 sw_init_ponding: 15.0
-# # SW Release Max ponding depth [mm]			20
+
+# # SW Release Max ponding depth [mm]
 sw_max_ponding: 20.0
-# # SW Release Area subject to ponding [fraction]		0.1
+
+# # SW Release Area subject to ponding [fraction]
 sw_ponding_area: 0.1
 
 ############################################
@@ -595,7 +597,7 @@ swdis_locs: swdis_locs.yml
 # Surface water discharges time-series frequency
 # Has to be an integer: 0 = daily, 1 = weekly, 2 = monthly
 # This parameter is optional. If not specified, it will be set to 0 (daily).
-#swdis_f: 0
+swdis_f: 0
 
 # Surface water abstractions time-series m3/day
 # This parameter is optional
@@ -606,7 +608,7 @@ swabs_ts: swabs_ts.csv
 # Surface water abstractions time-series frequency
 # Has to be an integer: 0 = daily, 1 = weekly, 2 = monthly
 # This parameter is optional. If not specified, it will be set to 0 (daily).
-#swabs_f: 0
+swabs_f: 0
 
 
 # Surface water discharges points
