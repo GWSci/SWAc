@@ -2130,8 +2130,9 @@ def val_sw_zone_names(data, name):
 
     1) type has to be a dictionary of strings
     """
-    rrn = data["params"][name]
-    c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
+    if data["params"]['sw_process'] == "enabled":
+        rrn = data["params"][name]
+        c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
 
 
 ###############################################################################
@@ -2142,25 +2143,26 @@ def val_sw_zone_mapping(data, name):
     2) all node ids have to be present
     3) values (i.e. zone ids) have to be 0 <= x <= number of zones
     """
-    rorzm = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    rzn = data["params"]["sw_zone_names"]
+    if data["params"]['sw_process'] == "enabled":
+        rorzm = data["params"][name]
+        tot = data["params"]["num_nodes"]
+        rzn = data["params"]["sw_zone_names"]
 
-    c.check_type(
-        param=rorzm,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        keys=range(1, tot + 1),
-    )
+        c.check_type(
+            param=rorzm,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            keys=range(1, tot + 1),
+        )
 
-    c.check_values_limits(
-        values=rorzm.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-        high_l=len(rzn),
-        include_high=True,
-    )
+        c.check_values_limits(
+            values=rorzm.values(),
+            name=name,
+            low_l=0,
+            include_low=True,
+            high_l=len(rzn),
+            include_high=True,
+        )
 
 
 ###############################################################################
@@ -2172,26 +2174,27 @@ def val_sw_downstream(data, name):
     3) the bottom list requires lenght equal to the number of zones
     4) all elements of each list have to be 0 <= x <= 1
     """
-    rrp = data["params"][name]
-    rzn = data["params"]["sw_zone_names"]
+    if data["params"]['sw_process'] == "enabled":
+        rrp = data["params"][name]
+        rzn = data["params"]["sw_zone_names"]
 
-    c.check_type(
-        param=rrp,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(rzn)],
-        keys=range(1, 13),
-    )
+        c.check_type(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[len(rzn)],
+            keys=range(1, 13),
+        )
 
 
-    c.check_values_limits(
-        values=[j for i in rrp.values() for j in i],
-        name=name,
-        low_l=0,
-        high_l=1.0,
-        include_low=True,
-        include_high=True,
-    )
+        c.check_values_limits(
+            values=[j for i in rrp.values() for j in i],
+            name=name,
+            low_l=0,
+            high_l=1.0,
+            include_low=True,
+            include_high=True,
+        )
 
 
 ###############################################################################
@@ -2203,25 +2206,26 @@ def val_sw_bed_infiltration(data, name):
     3) the bottom list requires lenght equal to the number of zones
     4) all elements of each list have to be 0 <= x <= 1
     """
-    rrp = data["params"][name]
-    rzn = data["params"]["sw_zone_names"]
+    if data["params"]['sw_process'] == "enabled":
+        rrp = data["params"][name]
+        rzn = data["params"]["sw_zone_names"]
 
-    c.check_type(
-        param=rrp,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(rzn)],
-        keys=range(1, 13),
-    )
+        c.check_type(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[len(rzn)],
+            keys=range(1, 13),
+        )
 
-    c.check_values_limits(
-        values=[j for i in rrp.values() for j in i],
-        name=name,
-        low_l=0,
-        high_l=1.0,
-        include_low=True,
-        include_high=True,
-    )
+        c.check_values_limits(
+            values=[j for i in rrp.values() for j in i],
+            name=name,
+            low_l=0,
+            high_l=1.0,
+            include_low=True,
+            include_high=True,
+        )
 
 
 ###############################################################################
@@ -2233,25 +2237,26 @@ def val_sw_direct_recharge(data, name):
     3) the bottom list requires lenght equal to the number of zones
     4) all elements of each list have to be 0 <= x <= 1
     """
-    rrp = data["params"][name]
-    rzn = data["params"]["sw_zone_names"]
+    if data["params"]['sw_process'] == "enabled":
+        rrp = data["params"][name]
+        rzn = data["params"]["sw_zone_names"]
 
-    c.check_type(
-        param=rrp,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(rzn)],
-        keys=range(1, 13),
-    )
+        c.check_type(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[len(rzn)],
+            keys=range(1, 13),
+        )
 
-    c.check_values_limits(
-        values=[j for i in rrp.values() for j in i],
-        name=name,
-        low_l=0,
-        high_l=1.0,
-        include_low=True,
-        include_high=True,
-    )
+        c.check_values_limits(
+            values=[j for i in rrp.values() for j in i],
+            name=name,
+            low_l=0,
+            high_l=1.0,
+            include_low=True,
+            include_high=True,
+        )
 
 ###############################################################################
 def val_sw_activation(data, name):
@@ -2261,16 +2266,17 @@ def val_sw_activation(data, name):
     2) the top list requires length 12 (months)
     3) the bottom list requires length equal to the number of zones
     """
-    rrp = data["params"][name]
-    rzn = data["params"]["sw_zone_names"]
+    if data["params"]['sw_process'] == "enabled":
+        rrp = data["params"][name]
+        rzn = data["params"]["sw_zone_names"]
 
-    c.check_type(
-        param=rrp,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(rzn)],
-        keys=range(1, 13),
-    )
+        c.check_type(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[len(rzn)],
+            keys=range(1, 13),
+        )
 
 
 ###############################################################################
@@ -2281,16 +2287,17 @@ def val_sw_pe_to_open_water(data, name):
     2) the top list requires length 12 (months)
     3) the bottom list requires length equal to the number of zones
     """
-    rrp = data["params"][name]
-    rzn = data["params"]["sw_zone_names"]
+    if data["params"]['sw_process'] == "enabled":
+        rrp = data["params"][name]
+        rzn = data["params"]["sw_zone_names"]
 
-    c.check_type(
-        param=rrp,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(rzn)],
-        keys=range(1, 13),
-    )
+        c.check_type(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[len(rzn)],
+            keys=range(1, 13),
+        )
 
 
 ###############################################################################
@@ -2299,8 +2306,9 @@ def val_sw_init_ponding(data, name):
 
     1) type has to be a float
     """
-    num = data["params"][name]
-    c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
+    if data["params"]['sw_process'] == "enabled":
+        num = data["params"][name]
+        c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
 
 ###############################################################################
 def val_sw_max_ponding(data, name):
@@ -2308,8 +2316,9 @@ def val_sw_max_ponding(data, name):
 
     1) type has to be float
     """
-    num = data["params"][name]
-    c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
+    if data["params"]['sw_process'] == "enabled":
+        num = data["params"][name]
+        c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
 
 ###############################################################################
 def val_sw_ponding_area(data, name):
@@ -2318,15 +2327,16 @@ def val_sw_ponding_area(data, name):
     1) type has to be float
     2) value has to be 0.0 < x <= 1.0
     """
-    num = data["params"][name]
-    c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
-    c.check_values_limits(
-        values=[num],
-        name=name,
-        low_l=0.0,
-        high_l=1.0,
-        include_high=True,
-    )
+    if data["params"]['sw_process'] == "enabled":
+        num = data["params"][name]
+        c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
+        c.check_values_limits(
+            values=[num],
+            name=name,
+            low_l=0.0,
+            high_l=1.0,
+            include_high=True,
+        )
 
 
 ###############################################################################
