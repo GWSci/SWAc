@@ -1037,7 +1037,7 @@ def fin_sw_pe_to_open_water(data, name):
     """
     params = data["params"]
 
-    if params[name] not None:
+    if params[name] != None:
         zones = data["params"]["sw_zone_names"]
         params["sw_pe_to_open_wat"] = sorted(params[name].items(), key=lambda x: x[0])
         params["sw_pe_to_open_wat"] = np.array([i[1]
