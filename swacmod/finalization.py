@@ -1036,15 +1036,12 @@ def fin_sw_pe_to_open_water(data, name):
     1) if not provided, set it to 99999.
     """
     params = data["params"]
-    zones = data["params"]["sw_zone_names"]
-    if params[name] is None:
-        params[name] = dict((k, [99999.9 for _ in zones])
-                            for k in range(1, 13))
-        logging.info('\t\tDefaulted "%s" to [99999]', name)
 
-    params["sw_pe_to_open_wat"] = sorted(params[name].items(), key=lambda x: x[0])
-    params["sw_pe_to_open_wat"] = np.array([i[1]
-                                            for i in params["sw_pe_to_open_wat"]])
+    if params[name] not None:
+        zones = data["params"]["sw_zone_names"]
+        params["sw_pe_to_open_wat"] = sorted(params[name].items(), key=lambda x: x[0])
+        params["sw_pe_to_open_wat"] = np.array([i[1]
+                                                for i in params["sw_pe_to_open_wat"]])
 
 ###############################################################################
 def fin_sw_direct_recharge(data, name):
