@@ -1868,9 +1868,11 @@ def get_ror_flows_tree(G, runoff, nodes, day, leaf_nodes):
 
     """get total flows for RoR one day with mask"""
 
-    flow = np.zeros((nodes))
-    done = np.zeros((nodes), dtype='int')
-    c = nodes * day
+    cdef double[:] flow = np.zeros(nodes)
+    cdef int[:] done = np.zeros((nodes), dtype=np.intc)
+    cdef long long node_swac, node, d
+    cdef long long c = nodes * day
+    cdef double acc
 
     for node_swac in leaf_nodes:
         node = node_swac
