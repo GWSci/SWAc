@@ -1830,16 +1830,19 @@ def do_swrecharge_mask(data, runoff, recharge):
 
     # compute monthly mask dictionary
     Gp = {}
+    Ln = {}
     for month in range(12):
         Gp[month] = compute_upstream_month_mask(month)
+        Ln[month] = [x for x in Gp[month].nodes()
+                     if (Gp[month].out_degree(x) == 1 and
+                         Gp[month].in_degree(x) == 0)]
 
-    # pbar = tqdm(total=range(length))
     for day in tqdm(range(length), desc="Accumulating SW recharge"):
         month = months[day]
 
         # accumulate flows for today
         acc_flow = get_ror_flows_tree(Gp[month],
-                                      runoff, nnodes, day)
+                                      runoff, nnodes, day, Ln[month])
         # iterate over nodes relevent to this month's RoR parameters
         for node in list(Gp[month].nodes):
             ro = acc_flow[node - 1]
@@ -1858,15 +1861,14 @@ def do_swrecharge_mask(data, runoff, recharge):
 ###############################################################################
 
 
-def get_ror_flows_tree(G, runoff, nodes, day):
+def get_ror_flows_tree(G, runoff, nodes, day, leaf_nodes):
 
     """get total flows for RoR one day with mask"""
 
     flow = np.zeros((nodes))
     done = np.zeros((nodes), dtype='int')
     c = nodes * day
-    leaf_nodes = [x for x in G.nodes()
-                  if G.out_degree(x) == 1 and G.in_degree(x) == 0]
+
     for node_swac in leaf_nodes:
         node = node_swac
         acc = max(0.0, runoff[c + node])
