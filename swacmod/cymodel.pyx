@@ -1816,16 +1816,19 @@ def do_swrecharge_mask(data, runoff, recharge):
         mask = np.full((nnodes), 0, dtype='int')
         for node in range(1, nnodes + 1):
             z = params['swrecharge_zone_mapping'][node] - 1
+            cat = params["reporting_zone_mapping"][node]
             fac = ror_prop[i][z]
             lim = ror_limit[i][z]
-            if min(fac, lim) > 0.0:
-                mask[node-1] = 1
-                # add upstream bits
-                lst = [n[0] for n in
-                       nx.shortest_path_length(Gc, target=node).items()]
-                for n in lst:
-                    #  for n in nx.ancestors(Gc, node):
-                    mask[n-1] = 1
+            if cat > 0:
+                if min(fac, lim) > 0.0:
+                    mask[node-1] = 1
+                    # add upstream bits
+                    lst = [n[0] for n in
+                           nx.shortest_path_length(Gc, target=node).items()]
+                    for n in lst:
+                        #  for n in nx.ancestors(Gc, node):
+                        if params["reporting_zone_mapping"][n] > 0:
+                            mask[n-1] = 1
         return build_graph(nnodes, sorted_by_ca, mask)
 
     # compute monthly mask dictionary
