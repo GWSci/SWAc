@@ -432,6 +432,17 @@ def val_swdis_locs(data, name):
         include_high=True,
     )
 
+    c.check_values_limits(
+        values=swdisl.keys(),
+        name="node in %s" % name,
+        low_l=1,
+        include_low=True,
+        high_l=data["params"]["num_nodes"],
+        include_high=True,
+    )
+
+
+
 
 ###############################################################################
 def val_swabs_locs(data, name):
