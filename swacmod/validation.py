@@ -442,8 +442,6 @@ def val_swdis_locs(data, name):
     )
 
 
-
-
 ###############################################################################
 def val_swabs_locs(data, name):
     """Validate swabs_locs.
@@ -467,6 +465,15 @@ def val_swabs_locs(data, name):
         low_l=0,
         include_low=True,
         high_l=tot,
+        include_high=True,
+    )
+
+    c.check_values_limits(
+        values=swabsl.keys(),
+        name="node in %s" % name,
+        low_l=1,
+        include_low=True,
+        high_l=data["params"]["num_nodes"],
         include_high=True,
     )
 
