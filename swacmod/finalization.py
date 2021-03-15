@@ -461,8 +461,8 @@ def fin_single_cell_swrecharge_proportion(data, name):
             params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
             logging.info('\t\tDefaulted "%s" to [0.0]', name)
 
-        params['ror_prop'] = sorted(params[name].items(), key=lambda x: x[0])
-        params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
+    params['ror_prop'] = sorted(params[name].items(), key=lambda x: x[0])
+    params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
 
 
 ###############################################################################
@@ -478,8 +478,8 @@ def fin_single_cell_swrecharge_limit(data, name):
                                 range(1, 13))
             logging.info('\t\tDefaulted "%s" to [99999]', name)
 
-        params['ror_limit'] = sorted(params[name].items(), key=lambda x: x[0])
-        params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
+    params['ror_limit'] = sorted(params[name].items(), key=lambda x: x[0])
+    params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
 
 
 ###############################################################################
