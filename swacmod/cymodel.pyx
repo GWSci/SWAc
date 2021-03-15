@@ -659,11 +659,30 @@ def get_interflow(data, output, node):
 
 
 def get_recharge_store_input(data, output, node):
-    """AI) Input to Recharge Store [mm/d]."""
+    """
+    AI) Input to Recharge Store [mm/d].
+    """
+
+    params = data['params']
+
+    cdef:
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+
+    if params['sw_process'] == 'enabled':
+        zone_sw = params['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
     recharge_store_input = (output['infiltration_recharge'] +
-                            output['interflow_bypass'] +
-                            output['macropore_att'] +
-                            output['runoff_recharge'])
+                            ((1.0 - pond_area) *
+                             output['interflow_bypass'] +
+                             output['macropore_att'] +
+                             output['runoff_recharge']) +
+                            (pond_area * output['pond_atten']))
 
     return {'recharge_store_input': recharge_store_input}
 
@@ -688,6 +707,15 @@ def get_recharge(data, output, node):
         double[:] recharge_store_input = output['recharge_store_input']
         double[:] macropore_dir = output['macropore_dir']
         size_t num
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_area
+
+
+    if params['sw_process'] == 'enabled':
+        zone_sw = params['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
 
     if params['recharge_attenuation_process'] == 'enabled':
         recharge[0] = irs
@@ -697,17 +725,20 @@ def get_recharge(data, output, node):
         for num in range(1, length):
             recharge[num] = (recharge_store_input[num-1] +
                              col_recharge_store[num-1] -
-                             col_combined_recharge[num-1] +
-                             macropore_dir[num-1])
+                             (col_combined_recharge[num-1] -
+                              ((1.0 - pond_area) *
+                               macropore_dir[num-1])))
 
             col_recharge_store[num] = recharge[num]
             col_combined_recharge[num] = (min((recharge[num] * rlp), rll) +
-                                          output['macropore_dir'][num])
+                                          ((1.0 - pond_area) *
+                                          output['macropore_dir'][num]))
     else:
-        col_recharge_store[0] = irs
         for num in range(1, length):
             col_combined_recharge[num] = (recharge_store_input[num] +
-                                          output['macropore_dir'][num])
+                                          ((1.0 - pond_area) *
+                                           output['macropore_dir'][num]) +
+                                          (pond_area * output['pond_atten'][num]))
 
     col = {}
     col['recharge_store'] = col_recharge_store.base
@@ -859,6 +890,7 @@ def get_combined_str(data, output, node):
             other_sw_flow = 0.0
             pond_direct = 0.0
             pond_atten = 0.0
+            pond_depth = 0.0
             input_to_atten_store = 0.0
             input_to_atten_store_actual = 0.0
 
