@@ -786,7 +786,9 @@ sw_max_ponding:
 
 sw_ponding_area:
     required: false
+    alt_format: [yml, csv]
     type:
+        - !!python/name:dict
         - !!python/name:float
 
 sw_downstream:

@@ -1066,6 +1066,27 @@ def fin_sw_init_ponding(data, name):
 
 
 ###############################################################################
+def fin_sw_ponding_area(data, name):
+    """Finalize the "ponding_area" parameter.
+    1) if not provided, set it to 0.0.
+    """
+
+    params = data["params"]
+    if data["params"][name] is None:
+        default = 0.0
+        if data["params"]["sw_zone_names"] is None:
+            zones = 1
+        else:
+            zones = len(data["params"]["sw_zone_namess"])
+        data["params"][name] = {zone: default for zone in range(1, zones + 1)}
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+    params["sw_pond_area"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_pond_area"] = np.array([i[1]
+                                       for i in params["sw_pond_area"]])
+
+
+###############################################################################
 def fin_sw_pe_to_open_water(data, name):
     """Finalize the "sw_pe_to_open_water" parameter.
 
@@ -1547,6 +1568,7 @@ FUNC_PARAMS = [
     fin_sw_bed_infiltration,
     fin_sw_downstream,
     fin_sw_init_ponding,
+    fin_sw_ponding_area,
     fin_output_sfr,
     fin_sfr_obs,
     fin_istcb1,
