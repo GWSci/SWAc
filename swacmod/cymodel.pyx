@@ -799,12 +799,15 @@ def get_combined_str(data, output, node):
     cdef:
         size_t length = len(series['date'])
         double[:] col_attenuation = np.zeros(length)
+        double[:] old_col_attenuation = np.zeros(length)
         double[:] col_atten_input = np.zeros(length)
+        double[:] col_atten_input_actual = np.zeros(length)
         double[:] col_pond_direct = np.zeros(length)
         double[:] col_pond_atten = np.zeros(length)
         double[:] col_pond_over = np.zeros(length)
         double[:] col_sw_other = np.zeros(length)
         double[:] col_open_water_evap = np.zeros(length)
+        double[:] col_open_water_ae = np.zeros(length)
         double[:] col_combined_str = np.zeros(length)
         double[:] combined_str = np.zeros(length)
         long long[:] months = np.array(series['months'], dtype=np.int64)
@@ -814,7 +817,8 @@ def get_combined_str(data, output, node):
         double[:, :] sw_activation = params['sw_activ']
         double[:, :] sw_bed_infiltration = params['sw_bed_infiltn']
         double[:, :] sw_downstream = params['sw_downstr']
-        double pond_depth, other_sw_flow, pond_overspill, tmp0, tmp1, tmp2
+        double pond_depth, other_sw_flow, pond_overspill, tmp0, tmp1
+        double pond_depth_new, tmp0_new, input_to_atten_store_actual, tmp2
         double input_to_atten_store, pond_direct, pond_atten
         double base = max((params['sw_init_ponding'] +
                            output['interflow_to_rivers'][0] +
@@ -849,15 +853,19 @@ def get_combined_str(data, output, node):
             base = combined_str[day]
             month = months[day] #+ 1
             open_water_evap = 0.0
+            open_water_ae = 0.0
             pond_overspill = 0.0
             other_sw_flow = 0.0
             pond_direct = 0.0
             pond_atten = 0.0
             input_to_atten_store = 0.0
+            input_to_atten_store_actual = 0.0
+
             # don't attenuate negative flows
             if base < 0.0:
                 col_combined_str[day] = base
                 col_attenuation[day] = col_attenuation[day - 1]
+                old_col_attenuation[day] = old_col_attenuation[day - 1]
             else:
                 if col_attenuation[day - 1] > sw_activation[month][zone_sw]:
                     open_water_evap = (params['sw_ponding_area'] *
@@ -872,10 +880,12 @@ def get_combined_str(data, output, node):
                                          output['runoff_recharge'][day]))
 
                 tmp0 = ((1.0 - params['sw_ponding_area']) / params['sw_ponding_area'])
+                tmp0_new = (1.0 / params['sw_ponding_area'])
                 pond_depth = col_attenuation[day - 1] + tmp0 * input_to_atten_store
+                pond_depth_new = col_attenuation[day - 1] + tmp0_new * input_to_atten_store
 
-                if pond_depth > params['sw_max_ponding']:
-                    pond_overspill = pond_depth - params['sw_max_ponding']
+                if pond_depth_new > params['sw_max_ponding']:
+                    pond_overspill = pond_depth_new - params['sw_max_ponding']
 
                 tmp1 = col_attenuation[day - 1] + tmp0 * input_to_atten_store - pond_overspill
 
@@ -902,20 +912,44 @@ def get_combined_str(data, output, node):
                                   (col_attenuation[day - 1] + tmp2 -
                                    sw_activation[month][zone_sw]))
 
-                col_attenuation[day] = (col_attenuation[day - 1] +
-                                        (1.0 / params['sw_ponding_area']) *
-                                        input_to_atten_store -
-                                        pond_overspill -
-                                        other_sw_flow -
-                                        pond_direct -
-                                        pond_atten)
+                old_col_attenuation[day] = (col_attenuation[day - 1] +
+                                            (1.0 / params['sw_ponding_area']) *
+                                            input_to_atten_store -
+                                            pond_overspill -
+                                            other_sw_flow -
+                                            pond_direct -
+                                            pond_atten)
+
+                col_attenuation[day] = max(0.0, old_col_attenuation[day])
+
+                if old_col_attenuation[day] < 0.0:
+                    open_water_ae = (open_water_evap +
+                                     params['sw_ponding_area']
+                                     * old_col_attenuation[day])
+                else:
+                    open_water_ae = open_water_evap
+
+# new column AL (input_to_atten_store_actual)
+
+# $ParametersIN.D$106*(C15)-AK15+(1-$ParametersIN.D$106)*(AC15+V15+J15-K15)
+
+                input_to_atten_store_actual = (params['sw_ponding_area'] *
+                                               output['rainfall_ts'][day] -
+                                               open_water_ae +
+                                               (1.0 - params['sw_ponding_area']) *
+                                               (output['interflow_to_rivers'][day] +
+                                                output['rapid_runoff'][day] +
+                                                output['rejected_recharge'][day] -
+                                                output['runoff_recharge'][day]))
 
                 col_pond_direct[day] = pond_direct
                 col_pond_atten[day] = pond_atten
                 col_pond_over[day] = pond_overspill
                 col_sw_other[day] = other_sw_flow
                 col_open_water_evap[day] = open_water_evap
+                col_open_water_ae[day] = open_water_ae
                 col_atten_input[day] = input_to_atten_store
+                col_atten_input_actual[day] = input_to_atten_store_actual
 
     else:
         col_combined_str = combined_str
@@ -927,8 +961,10 @@ def get_combined_str(data, output, node):
     col['pond_over'] = col_pond_over.base
     col['sw_other'] = col_sw_other.base
     col['open_water_evap'] = col_open_water_evap.base
+    col['open_water_ae'] = col_open_water_ae.base
     col['combined_str'] = col_combined_str.base
     col['atten_input'] = col_atten_input.base
+    col['atten_input_actual'] = col_atten_input_actual.base
 
     return col
 
@@ -966,7 +1002,8 @@ def get_average_out(data, output, node):
                    output['combined_recharge'] +
                    output['ae'] +
                    output['canopy_storage'] +
-                   output['swabs_ts'])
+                   output['swabs_ts'] +
+                   output['open_water_ae'])
 
     return {'average_out': average_out}
 
