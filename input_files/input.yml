@@ -68,7 +68,7 @@ start_date: 1980-01-01
 # Output data will be aggregated according to these time windows.
 # This parameter is required.
 # This parameter can accept a path to YAML or CSV
-time_periods: time_periods.csv
+time_periods: time_periods.yml
 
 # Number of cores to be used
 # This parameter is optional.
@@ -574,7 +574,7 @@ sw_init_ponding: 15.0
 sw_max_ponding: 20.0
 
 # # SW Release Area subject to ponding [fraction]
-sw_ponding_area: 0.1
+sw_ponding_area: sw_ponding_area.yml
 
 ############################################
 # Process: Routed Runoff                   #
