@@ -1077,7 +1077,7 @@ def fin_sw_ponding_area(data, name):
         if data["params"]["sw_zone_names"] is None:
             zones = 1
         else:
-            zones = len(data["params"]["sw_zone_namess"])
+            zones = len(data["params"]["sw_zone_names"])
         data["params"][name] = {zone: default for zone in range(1, zones + 1)}
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
