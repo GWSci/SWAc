@@ -1075,7 +1075,7 @@ def get_balance(data, output, node):
 ###############################################################################
 
 
-def aggregate(output, area, reporting=None, index=None):
+def aggregate(output, area, ponded_frac, reporting=None, index=None):
     """Aggregate reporting over output periods."""
     new_rep = {}
 
@@ -1085,14 +1085,18 @@ def aggregate(output, area, reporting=None, index=None):
         not_scalar = False
 
     for key in output:
+
+        # lookup key in utils constants to see which area to use
+        area_fn = u.CONSTANTS['AREA_FN'][key]
         new_rep[key] = []
         if not_scalar:
             new_rep[key] = [output[key][i].mean(dtype=np.float64)
-                            * np.float64(area) for i in index]
+                            * area_fn(area, ponded_frac) for i in index]
         elif index is not None:
-            new_rep[key] = [np.float64(output[key][index[0]]) * np.float64(area)]
+            new_rep[key] = [np.float64(output[key][index[0]]) *
+                            area_fn(area, ponded_frac)]
         else:
-            new_rep[key] = np.float64(output[key]) * np.float64(area)
+            new_rep[key] = np.float64(output[key]) * area_fn(area, ponded_frac)
         if reporting:
             new_rep[key] += np.float64(reporting[key])
     return new_rep
