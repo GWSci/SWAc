@@ -456,13 +456,13 @@ def fin_single_cell_swrecharge_proportion(data, name):
     """
     params = data['params']
     zones = data['params']['single_cell_swrecharge_zone_names']
-    if params['swrecharge_proportion'] is None:
+    if params['swrecharge_process'] == 'disabled':
         if params[name] is None:
             params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
             logging.info('\t\tDefaulted "%s" to [0.0]', name)
 
-    params['ror_prop'] = sorted(params[name].items(), key=lambda x: x[0])
-    params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
+        params['ror_prop'] = sorted(params[name].items(), key=lambda x: x[0])
+        params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
 
 
 ###############################################################################
@@ -472,14 +472,15 @@ def fin_single_cell_swrecharge_limit(data, name):
     """
     params = data['params']
     zones = data['params']['single_cell_swrecharge_zone_names']
-    if params['swrecharge_limit'] is None:
+
+    if params['swrecharge_process'] == 'disabled':
         if params[name] is None:
             params[name] = dict((k, [99999.9 for _ in zones]) for k in
                                 range(1, 13))
             logging.info('\t\tDefaulted "%s" to [99999]', name)
 
-    params['ror_limit'] = sorted(params[name].items(), key=lambda x: x[0])
-    params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
+        params['ror_limit'] = sorted(params[name].items(), key=lambda x: x[0])
+        params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
 
 
 ###############################################################################

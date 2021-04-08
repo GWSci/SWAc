@@ -671,7 +671,6 @@ def get_recharge_store_input(data, output, node):
         double pond_area
         size_t zone_sw
 
-
     if params['sw_process'] == 'enabled':
         zone_sw = params['sw_zone_mapping'][node] - 1
         pond_area = sw_ponding_area[zone_sw]
@@ -1004,7 +1003,8 @@ def get_combined_str(data, output, node):
 
 def get_combined_ae(data, output, node):
     """AN) AE: Combined AE [mm/d]."""
-    combined_ae = output['canopy_storage'] + output['ae'] + col['open_water_ae']
+    combined_ae = (output['canopy_storage'] + output['ae'] +
+                   output['open_water_ae'])
     return {'combined_ae': combined_ae}
 
 ###############################################################################
@@ -1012,7 +1012,19 @@ def get_combined_ae(data, output, node):
 
 def get_evt(data, output, node):
     """AO) EVT: Unitilised PE [mm/d]."""
-    return {'evt': output['unutilised_pe']}
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+    if data['params']['sw_process'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    return {'evt': (1.0 - pond_area) * output['unutilised_pe']}
 
 ###############################################################################
 
