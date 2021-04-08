@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # cython: language_level=3, boundscheck=False
 
-
 # Third Party Libraries
 import numpy as np
 from collections import OrderedDict
@@ -897,7 +896,7 @@ def get_combined_str(data, output, node):
             input_to_atten_store_actual = 0.0
 
             # don't attenuate negative flows
-            if base < 0.0:
+            if base < 0.0 or (not sw_ponding_area[zone_sw] > 0.0):
                 col_combined_str[day] = base
                 col_attenuation[day] = col_attenuation[day - 1]
                 old_col_attenuation[day] = old_col_attenuation[day - 1]
