@@ -1004,7 +1004,7 @@ def get_combined_str(data, output, node):
 
 def get_combined_ae(data, output, node):
     """AN) AE: Combined AE [mm/d]."""
-    combined_ae = output['canopy_storage'] + output['ae']
+    combined_ae = output['canopy_storage'] + output['ae'] + col['open_water_ae']
     return {'combined_ae': combined_ae}
 
 ###############################################################################
