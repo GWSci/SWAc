@@ -706,7 +706,7 @@ def get_recharge(data, output, node):
         double[:] recharge = np.zeros(length)
         double[:] recharge_store_input = output['recharge_store_input']
         double[:] macropore_dir = output['macropore_dir']
-        size_t num
+        size_t num, zone_sw
         double[:] sw_ponding_area = params['sw_pond_area']
         double pond_area
 
@@ -1055,21 +1055,41 @@ def get_average_out(data, output, node):
 
 def get_change(data, output, node):
     """AR) TOTAL STORAGE CHANGE [mm]."""
+
     series = data['series']
+    params = data['params']
 
     cdef:
         size_t length = len(series['date'])
         double[:] col_change = np.zeros(length)
         double[:] tmp0 = np.zeros(length)
-        size_t num
+        size_t num, zone_sw
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_area, not_ponded
 
-    tmp0 = (output['recharge_store'] +
-            output['interflow_volume'] +
-            output['smd'] +
-            output['snowpack'])
+    if params['sw_process'] == 'enabled':
+        zone_sw = params['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    not_ponded = 1.0 - pond_area
+
+    tmp0 = (output['recharge_store_input'] -
+            (output['combined_recharge'] -
+             not_ponded * output['macropore_dir'] - pond_area * output['pond_direct']) +
+            not_ponded * (output['interflow_store_input'] - output['interflow_to_rivers']) -
+            output['infiltration_recharge'] +
+            not_ponded * (output['percol_in_root'] - output['ae']))
+
+    col_change = tmp0
 
     for num in range(1, length):
-        col_change[num] = tmp0[num] - tmp0[num-1]
+        if output['p_smd'][num] < 0.0:
+            col_change[num] += output['p_smd'][num]
+
+        col_change[num] += (output['sw_attenuation'][num]
+                            - output['sw_attenuation'][num-1])
 
     return {'total_storage_change': col_change.base}
 
