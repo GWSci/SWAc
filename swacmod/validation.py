@@ -364,7 +364,7 @@ def val_swdis_ts(data, name):
     nmonths = monthdelta(dates[0], dates[-1]) + 1
 
     length = [ndays, nweeks, nmonths]
-    if swdisn != {0: 0}:
+    if swdisn != {1: 0}:
         c.check_type(
             param=swdists,
             name=name,
@@ -397,7 +397,7 @@ def val_swabs_ts(data, name):
 
     length = [ndays, nweeks, nmonths]
 
-    if swabsn != {0: 0}:
+    if swabsn != {1: 0}:
         c.check_type(
             param=swabsts,
             name=name,

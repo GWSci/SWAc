@@ -892,13 +892,17 @@ def get_change(data, output, node):
         double[:] tmp0 = np.zeros(length)
         size_t num
 
-    tmp0 = (output['recharge_store'] +
-            output['interflow_volume'] +
-            output['smd'] +
-            output['snowpack'])
+    tmp0 = (output['recharge_store_input'] -
+            (output['combined_recharge'] - output['macropore_dir']) +
+            (output['interflow_store_input'] - output['interflow_to_rivers']) -
+            output['infiltration_recharge'] +
+            (output['percol_in_root'] - output['ae']))
 
     for num in range(1, length):
-        col_change[num] = tmp0[num] - tmp0[num-1]
+        if output['p_smd'][num] > 0.0:
+            col_change[num] = tmp0[num]
+        else:
+            col_change[num] = tmp0[num] + output['p_smd'][num]
 
     return {'total_storage_change': col_change.base}
 

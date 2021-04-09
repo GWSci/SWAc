@@ -1048,7 +1048,7 @@ def fin_swdis_locs(data, name):
     """
     params = data["params"]
     if params[name] is None:
-        data["params"][name] = {0: 0}
+        data["params"][name] = {1: 0}
 
 
 ###############################################################################
@@ -1059,7 +1059,7 @@ def fin_swabs_locs(data, name):
     """
     params = data["params"]
     if params[name] is None:
-        data["params"][name] = {0: 0}
+        data["params"][name] = {1: 0}
 
 
 ###############################################################################
@@ -1106,6 +1106,8 @@ def fin_swdis_ts(data, name):
     """Finalize the "swdis_ts" series."""
 
     series = data["series"]
+    if series[name] is None:
+        series[name] = [0.0]
     series[name] = np.array(series[name])
 
 
@@ -1114,6 +1116,9 @@ def fin_swabs_ts(data, name):
     """Finalize the "swabs_ts" series."""
 
     series = data["series"]
+    if series[name] is None:
+        series[name] = [0.0]
+
     series[name] = np.array(series[name])
 
 
