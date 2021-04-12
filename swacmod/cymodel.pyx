@@ -1049,10 +1049,23 @@ def get_average_in(data, output, node):
 
 def get_average_out(data, output, node):
     """AQ) AVERAGE OUT [mm]."""
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+    if data['params']['sw_process'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
     average_out = (output['combined_str'] +
                    output['combined_recharge'] +
-                   output['ae'] +
-                   output['canopy_storage'] +
+                   (1.0 - pond_area) *
+                   (output['ae'] +
+                   output['canopy_storage']) +
                    output['swabs_ts'] +
                    output['open_water_ae'])
 
