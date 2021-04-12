@@ -721,14 +721,18 @@ def get_recharge(data, output, node):
         recharge[0] = irs
         col_recharge_store[0] = irs
         col_combined_recharge[0] = (min((irs * rlp), rll) +
-                                    output['macropore_dir'][0])
+                                    ((1.0 - pond_area) *
+                                     output['macropore_dir'][0]) +
+                                    (pond_area *
+                                     output['pond_direct'][0]))
+
         for num in range(1, length):
             recharge[num] = (recharge_store_input[num-1] +
                              col_recharge_store[num-1] -
                              (col_combined_recharge[num-1] -
-                              (1.0 - pond_area) *
-                               macropore_dir[num-1]
-                               - pond_area * output['pond_direct'][num-1]))
+                              ((1.0 - pond_area) *
+                               macropore_dir[num-1])
+                               - (pond_area * output['pond_direct'][num-1])))
 
             col_recharge_store[num] = recharge[num]
             col_combined_recharge[num] = (min((recharge[num] * rlp), rll) +
@@ -1090,10 +1094,10 @@ def get_change(data, output, node):
 
     for num in range(1, length):
         if output['p_smd'][num] < 0.0:
-            col_change[num] += output['p_smd'][num]
+            col_change[num] += (not_ponded * output['p_smd'][num])
 
-        col_change[num] += (output['sw_attenuation'][num]
-                            - output['sw_attenuation'][num-1])
+        col_change[num] += (pond_area * (output['sw_attenuation'][num]
+                            - output['sw_attenuation'][num-1]))
 
     return {'total_storage_change': col_change.base}
 
