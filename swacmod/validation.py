@@ -364,7 +364,7 @@ def val_swdis_ts(data, name):
     nmonths = monthdelta(dates[0], dates[-1]) + 1
 
     length = [ndays, nweeks, nmonths]
-    if swdisn != {1: 0}:
+    if swdisn != {0: 0}:
         c.check_type(
             param=swdists,
             name=name,
@@ -397,7 +397,7 @@ def val_swabs_ts(data, name):
 
     length = [ndays, nweeks, nmonths]
 
-    if swabsn != {1: 0}:
+    if swabsn != {0: 0}:
         c.check_type(
             param=swabsts,
             name=name,
@@ -435,7 +435,7 @@ def val_swdis_locs(data, name):
     c.check_values_limits(
         values=swdisl.keys(),
         name="node in %s" % name,
-        low_l=1,
+        low_l=0,
         include_low=True,
         high_l=data["params"]["num_nodes"],
         include_high=True,
@@ -471,7 +471,7 @@ def val_swabs_locs(data, name):
     c.check_values_limits(
         values=swabsl.keys(),
         name="node in %s" % name,
-        low_l=1,
+        low_l=0,
         include_low=True,
         high_l=data["params"]["num_nodes"],
         include_high=True,
