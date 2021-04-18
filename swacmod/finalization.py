@@ -1048,7 +1048,7 @@ def fin_swdis_locs(data, name):
     """
     params = data["params"]
     if params[name] is None:
-        data["params"][name] = {1: 0}
+        data["params"][name] = {0: 0}
 
 
 ###############################################################################
@@ -1059,7 +1059,7 @@ def fin_swabs_locs(data, name):
     """
     params = data["params"]
     if params[name] is None:
-        data["params"][name] = {1: 0}
+        data["params"][name] = {0: 0}
 
 
 ###############################################################################
