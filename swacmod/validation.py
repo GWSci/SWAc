@@ -415,23 +415,17 @@ def val_swdis_locs(data, name):
     3) values (i.e. swabs ids) have to be > 1 and <= number of swabs
     """
     swdisl = data["params"][name]
-
+    swdisn = data["params"]["swdis_locs"]
     tot = len(data["params"]["swdis_locs"]) + 1
 
-    c.check_type(
-        param=swdisl, name=name, t_types=data["specs"][name]["type"],
-        keys=range(1, tot)
-    )
+    if swdisn != {0: 0}:
 
-    c.check_values_limits(
-        values=swdisl.values(),
-        name="zone in %s" % name,
-        low_l=0,
-        include_low=True,
-        high_l=tot,
-        include_high=True,
-    )
+        c.check_type(
+            param=swdisl, name=name, t_types=data["specs"][name]["type"],
+            keys=range(0, tot)
+        )
 
+<<<<<<< HEAD
     c.check_values_limits(
         values=swdisl.keys(),
         name="node in %s" % name,
@@ -440,6 +434,25 @@ def val_swdis_locs(data, name):
         high_l=data["params"]["num_nodes"],
         include_high=True,
     )
+=======
+        c.check_values_limits(
+            values=swdisl.values(),
+            name="zone in %s" % name,
+            low_l=1,
+            include_low=True,
+            high_l=tot,
+            include_high=True,
+        )
+
+        c.check_values_limits(
+            values=swdisl.keys(),
+            name="node in %s" % name,
+            low_l=0,
+            include_low=True,
+            high_l=data["params"]["num_nodes"],
+            include_high=True,
+        )
+>>>>>>> f063d7a7dd0c5fe215f13e06fde5d6c2360675b6
 
 
 ###############################################################################
@@ -451,23 +464,18 @@ def val_swabs_locs(data, name):
     3) values (i.e. swabs ids) have to be > 1 and <= number of swabs
     """
     swabsl = data["params"][name]
+    swabsn = data["params"]["swabs_locs"]
 
-    tot = len(data["params"]["swabs_locs"]) + 1
+    if swabsn != {0: 0}:
 
-    c.check_type(
-        param=swabsl, name=name, t_types=data["specs"][name]["type"],
-        keys=range(1, tot)
-    )
+        tot = len(data["params"]["swabs_locs"]) + 1
 
-    c.check_values_limits(
-        values=swabsl.values(),
-        name="zone in %s" % name,
-        low_l=0,
-        include_low=True,
-        high_l=tot,
-        include_high=True,
-    )
+        c.check_type(
+            param=swabsl, name=name, t_types=data["specs"][name]["type"],
+            keys=range(1, tot)
+        )
 
+<<<<<<< HEAD
     c.check_values_limits(
         values=swabsl.keys(),
         name="node in %s" % name,
@@ -476,6 +484,25 @@ def val_swabs_locs(data, name):
         high_l=data["params"]["num_nodes"],
         include_high=True,
     )
+=======
+        c.check_values_limits(
+            values=swabsl.values(),
+            name="zone in %s" % name,
+            low_l=0,
+            include_low=True,
+            high_l=tot,
+            include_high=True,
+        )
+
+        c.check_values_limits(
+            values=swabsl.keys(),
+            name="node in %s" % name,
+            low_l=1,
+            include_low=True,
+            high_l=data["params"]["num_nodes"],
+            include_high=True,
+        )
+>>>>>>> f063d7a7dd0c5fe215f13e06fde5d6c2360675b6
 
 
 ###############################################################################
