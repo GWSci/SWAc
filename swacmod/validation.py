@@ -422,7 +422,7 @@ def val_swdis_locs(data, name):
 
         c.check_type(
             param=swdisl, name=name, t_types=data["specs"][name]["type"],
-            keys=range(0, tot)
+            keys=range(1, tot)
         )
 
         c.check_values_limits(
@@ -437,7 +437,7 @@ def val_swdis_locs(data, name):
         c.check_values_limits(
             values=swdisl.keys(),
             name="node in %s" % name,
-            low_l=0,
+            low_l=1,
             include_low=True,
             high_l=data["params"]["num_nodes"],
             include_high=True,
@@ -467,7 +467,7 @@ def val_swabs_locs(data, name):
         c.check_values_limits(
             values=swabsl.values(),
             name="zone in %s" % name,
-            low_l=0,
+            low_l=1,
             include_low=True,
             high_l=tot,
             include_high=True,
