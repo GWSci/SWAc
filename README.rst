@@ -5,7 +5,7 @@ Development repo for the Surface Water Accounting Model (SWAcMod). In the follow
 
 Installation on Windows systems (tested on Windows 7):
 
-- install `Microsoft Visual C++ Compiler <https://www.microsoft.com/en-us/download/details.aspx?id=44266>`_ (for Python 2.7)
+- install `Microsoft Visual C++ Compiler <https://web.archive.org/web/20210106040224/https://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi>`_ (for Python 2.7)
 - install `Anaconda <https://repo.anaconda.com/archive/Anaconda2-2019.10-Windows-x86_64.exe>`_ (for Python 2.7, 64-bit)
 - install `Git <https://git-scm.com/download/win>`_
 - launch ``Start`` > ``All Programs`` > ``Git`` > ``Git GUI`` > ``Clone Existing Repository``
