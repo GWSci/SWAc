@@ -62,7 +62,10 @@ def val_start_date(data, name):
     """
     dat = data["params"][name]
     c.check_type(param=dat, name=name, t_types=data["specs"][name]["type"])
-
+    try:
+        x = dat.strftime('%d/%m/%Y')
+    except:
+        raise
 
 ###############################################################################
 def val_time_periods(data, name):
