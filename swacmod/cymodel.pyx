@@ -732,7 +732,9 @@ def get_mf6rch_file(data, rchrate):
                                                nodes=nodes,
                                                ja=np.zeros((njag),
                                                            dtype=int),
-                                               nja=njag, area=1.0)
+                                               nja=njag, area=1.0, iac=[1],
+                                               ihc=[1])
+
     flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                          loading_package=False,
                                          time_units=None,
@@ -1068,7 +1070,9 @@ def get_sfr_file(data, runoff):
                                                    nodes=nodes,
                                                    ja=np.zeros((njag),
                                                                dtype=int),
-                                                   nja=njag)
+                                                   nja=njag, ihc=[1],
+                                                   iac=[1])
+
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
                                              time_units=None,
@@ -1631,7 +1635,9 @@ def get_evt_file(data, evtrate):
                                                    nodes=nodes,
                                                    ja=np.zeros((njag),
                                                                dtype=int),
-                                                   nja=njag)
+                                                   nja=njag, iac=[1],
+                                                   ihc=[1])
+
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
                                              time_units=None,
