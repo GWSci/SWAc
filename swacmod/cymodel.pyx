@@ -720,7 +720,7 @@ def get_recharge(data, output, node):
         double[:] macropore_dir = output['macropore_dir']
         size_t num, zone_sw
         double[:] sw_ponding_area = params['sw_pond_area']
-        double pond_area
+        double pond_area, not_ponded
 
 
     if params['sw_process'] == 'enabled':
@@ -736,7 +736,9 @@ def get_recharge(data, output, node):
                                     ((1.0 - pond_area) *
                                      output['macropore_dir'][0]) +
                                     (pond_area *
-                                     output['pond_direct'][0]))
+                                     output['pond_direct'][0]) +
+                                    (pond_area *
+                                     output['pond_atten'][0]))
 
         for num in range(1, length):
             recharge[num] = (recharge_store_input[num-1] +
@@ -744,21 +746,24 @@ def get_recharge(data, output, node):
                              (col_combined_recharge[num-1] -
                               ((1.0 - pond_area) *
                                macropore_dir[num-1])
-                               - (pond_area * output['pond_direct'][num-1])))
+                               - (pond_area * (output['pond_direct'][num-1] +
+                                               output['pond_atten'][num-1])))
 
             col_recharge_store[num] = recharge[num]
             col_combined_recharge[num] = (min((recharge[num] * rlp), rll) +
                                           ((1.0 - pond_area) *
                                            output['macropore_dir'][num]) +
                                           (pond_area *
-                                           output['pond_direct'][num]))
+                                           (output['pond_direct'][num] +
+                                            output['pond_atten'][num])))
     else:
         for num in range(1, length):
             col_combined_recharge[num] = (recharge_store_input[num] +
                                           ((1.0 - pond_area) *
                                            output['macropore_dir'][num]) +
                                            (pond_area *
-                                           output['pond_direct'][num]))
+                                           (output['pond_direct'][num] +
+                                            output['pond_atten'][num])))
 
     col = {}
     col['recharge_store'] = col_recharge_store.base
