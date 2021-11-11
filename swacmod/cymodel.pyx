@@ -379,6 +379,17 @@ def get_ae(data, output, node):
         double[:] rawrew_a = output['rawrew']
         long long[:] months = np.array(series['months'], dtype=np.int64)
         double ma = 0.0
+        size_t zone_sw
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_area, not_ponded
+
+    if params['sw_process'] == 'enabled':
+        zone_sw = params['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    not_ponded = 1.0 - pond_area
 
     if (params['swrecharge_process'] == 'enabled' or
         params['single_cell_swrecharge_process'] == 'enabled'):
@@ -470,6 +481,7 @@ def get_ae(data, output, node):
                 var13 = var11 * (net_pefac - percol_in_root)
             else:
                 var13 = 0.0
+            var13 *= not_ponded
             col_ae[num] = var13
             p_smd = smd + var13 - percol_in_root
             col_p_smd[num] = p_smd
