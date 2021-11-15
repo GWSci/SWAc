@@ -747,7 +747,7 @@ def get_recharge(data, output, node):
                               ((1.0 - pond_area) *
                                macropore_dir[num-1])
                                - (pond_area * (output['pond_direct'][num-1] +
-                                               output['pond_atten'][num-1])))
+                                               output['pond_atten'][num-1]))))
 
             col_recharge_store[num] = recharge[num]
             col_combined_recharge[num] = (min((recharge[num] * rlp), rll) +
@@ -799,7 +799,10 @@ def get_mf6rch_file(data, rchrate):
                                                nodes=nodes,
                                                ja=np.zeros((njag),
                                                            dtype=int),
-                                               nja=njag, area=1.0)
+                                               nja=njag,
+                                               area=1.0,
+                                               ihc=[1],
+                                               iac=[1])
     flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                          loading_package=False,
                                          time_units=None,
@@ -1294,7 +1297,9 @@ def get_sfr_file(data, runoff):
                                                    nodes=nodes,
                                                    ja=np.zeros((njag),
                                                                dtype=int),
-                                                   nja=njag)
+                                                   nja=njag,
+                                                   ihc=[1],
+                                                   iac=[1])
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
                                              time_units=None,
@@ -1857,7 +1862,9 @@ def get_evt_file(data, evtrate):
                                                    nodes=nodes,
                                                    ja=np.zeros((njag),
                                                                dtype=int),
-                                                   nja=njag)
+                                                   nja=njag,
+                                                   ihc=[1],
+                                                   iac=[1])
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
                                              time_units=None,
