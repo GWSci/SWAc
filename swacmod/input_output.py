@@ -279,7 +279,7 @@ def dump_mf96_recharge_file(data, recharge):
                                                   data["params"]["irchcb"]))
         for per in range(len(data["params"]["time_periods"])):
             rech_file.write("{0:10d}{1:10d}\n".format(inrech, inirch))
-            rech_file.write("        18    1.0000(6g12.4)" +
+            rech_file.write("        18    0.0010(6g12.4)" +
                             "                    -3\n")
             row = ""
             i_row = 0
