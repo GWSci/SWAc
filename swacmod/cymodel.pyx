@@ -720,7 +720,7 @@ def get_recharge(data, output, node):
         double[:] macropore_dir = output['macropore_dir']
         size_t num, zone_sw
         double[:] sw_ponding_area = params['sw_pond_area']
-        double pond_area, not_ponded
+        double pond_area
 
 
     if params['sw_process'] == 'enabled':
@@ -1941,14 +1941,21 @@ def do_swrecharge_mask(data, runoff, recharge):
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
     rte_topo = data['params']['routing_topology']
+    areas = data['params']['node_areas']
+    catchment = data['params']["reporting_zone_mapping"]
+    #  try here
+    # cdef double[:] ror = np.zeros(nodes)
 
     cdef:
         size_t length = len(series['date'])
         double[:, :] ror_prop = params['ror_prop']
         double[:, :] ror_limit = params['ror_limit']
         long long[:] months = np.array(series['months'], dtype=np.int64)
+        #double[:] area_array = np.array(areas, dtype=np.float64)
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
-        int day, month
+        int day, month, node
+        double fac = 0.001
+        double qty_mmd, qty_m3d
 
     sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
                                       key=lambda x: x[1][4]))
@@ -1956,61 +1963,81 @@ def do_swrecharge_mask(data, runoff, recharge):
     # 'downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
     #         'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
 
-    # complete graph
-    Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
-
-    def compute_upstream_month_mask(month_number):
-        cdef int i = month_number
-        cdef int z
-        mask = np.full((nnodes), 0, dtype='int')
-        for node in range(1, nnodes + 1):
-            z = params['swrecharge_zone_mapping'][node] - 1
-            cat = params["reporting_zone_mapping"][node]
-            fac = ror_prop[i][z]
-            lim = ror_limit[i][z]
-            if cat > 0:
-                if min(fac, lim) > 0.0:
-                    mask[node-1] = 1
-                    # add upstream bits
-                    lst = [n[0] for n in
-                           nx.shortest_path_length(Gc, target=node).items()]
-                    for n in lst:
-                        #  for n in nx.ancestors(Gc, node):
-                        if params["reporting_zone_mapping"][n] > 0:
-                            mask[n-1] = 1
-        return build_graph(nnodes, sorted_by_ca, mask)
-
-    # compute monthly mask dictionary
-    Gp = {}
-    Ln = {}
-    for month in range(12):
-        Gp[month] = compute_upstream_month_mask(month)
-        Ln[month] = [x for x in Gp[month].nodes()
-                     if (Gp[month].out_degree(x) == 1 and
-                         Gp[month].in_degree(x) == 0)]
-
     for day in tqdm(range(length), desc="Accumulating SW recharge"):
         month = months[day]
 
         # accumulate flows for today
-        acc_flow = get_ror_flows_tree(Gp[month],
-                                      runoff, nnodes, day, Ln[month])
-        # iterate over nodes relevent to this month's RoR parameters
-        for node in list(Gp[month].nodes):
+        acc_flow = get_ror_flows_sfr(sorted_by_ca, runoff, nnodes, day, areas) #, catchment)
+
+        for node, line in sorted_by_ca.items():
             ro = acc_flow[node - 1]
-            if ro > 0.0:
-                zone_ror = params['swrecharge_zone_mapping'][node] - 1
-                fac_ro = ror_prop[month][zone_ror] * ro
-                lim = ror_limit[month][zone_ror]
-                qty = min(fac_ro, lim)
-                # col_runoff_recharge[day] = qty
-                recharge[(nnodes * day) + node] += qty
-                runoff[(nnodes * day) + node] -= qty
-        # pbar.update(day)
+            cat = params["reporting_zone_mapping"][node]
+            if ro > 0.0 and cat > 0:
+                downstr = line[0]
+                zone_ror = params['swrecharge_zone_mapping'][node]
+                fac_ro = ror_prop[month][zone_ror - 1] * ro
+                lim = ror_limit[month][zone_ror - 1]
+                qty_m3d = min(fac_ro, lim)
+
+                if qty_m3d > 0.0:
+
+                    qty_mmd = (qty_m3d / areas[node] / fac)
+                    recharge[(nnodes * day) + node] += qty_mmd
+                    acc_flow[node - 1] -= qty_m3d
+
+                    # remove qty from accumulated ro at nodes downstream
+                    while downstr > 1:
+                        acc_flow[downstr - 1] = max(0.0, acc_flow[downstr - 1] - qty_m3d)
+                        node_swac = downstr
+
+                        # get new downstr node
+                        downstr = sorted_by_ca[node_swac][0]
+                        cat = params["reporting_zone_mapping"][node_swac]
+                        if cat < 1:
+                            break
+
     return runoff, recharge
 
 
 ###############################################################################
+
+def get_ror_flows_sfr(sorted_by_ca, runoff, nodes, day, areas): #, cat):
+    """get flows for one period"""
+
+    cdef int[:] done = np.zeros((nodes), dtype=np.intc)
+    cdef double[:] flow = np.zeros(nodes)
+    cdef long long node_swac, downstr
+    cdef long long c = nodes * day
+    cdef double acc
+    cdef double fac = 0.001
+
+
+    for node_swac, line in sorted_by_ca.items():
+        # rep_zone = cat[node_swac]
+        # if rep_zone > 0:
+        downstr = line[0] #, str_flag = line[:2]
+        acc = 0.0
+
+        # accumulate pre-stream flows into network
+        while downstr > 0: # and rep_zone > 0:
+
+            # not str
+            if done[node_swac - 1] < 1:
+                acc += max(0.0, runoff[c + node_swac]) * float(areas[node_swac]) * fac
+                flow[node_swac - 1] += acc
+                done[node_swac - 1] = 1
+
+            else:
+                flow[node_swac - 1] += acc
+                # acc = 0.0
+                # break
+            # new node
+            node_swac = downstr
+            # get new downstr node
+            downstr = sorted_by_ca[node_swac][0]
+            # rep_zone = cat[node_swac]
+
+    return flow
 
 
 def get_ror_flows_tree(G, runoff, nodes, day, leaf_nodes):
@@ -2047,11 +2074,15 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True):
     else:
         G = nx.Graph()
     for node in range(1, nnodes + 1):
-        if mask[node-1] == 1:
-            G.add_node(node)
+        if mask[node-1] == 1: #  and sorted_by_ca[node][4] > 0.0:
+            G.add_node(node, ca=sorted_by_ca[node][4])
     for node_swac, line in sorted_by_ca.items():
-        if mask[node_swac-1] == 1 and line[0] > 0:
-            G.add_edge(node_swac, line[0])
+        downstr = int(line[0])
+        if downstr > 0:
+            if downstr not in G.nodes:
+                G.add_node(downstr, ca=sorted_by_ca[downstr][4])
+            if mask[node_swac-1] == 1:
+                G.add_edge(node_swac, downstr)
     return G
 
 

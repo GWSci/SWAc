@@ -411,19 +411,25 @@ def run(test=False,
                 reporting_agg2[cat] = {}
 
             # ended up needing this for catchment output - bit silly
-            runoff_recharge = np.frombuffer(runoff.get_obj(),
+            runoff_recharge = np.frombuffer(recharge.get_obj(),
                                             dtype=np.float32).copy()
 
             # do RoR
             runoff, recharge = m.do_swrecharge_mask(data, runoff, recharge)
             # get RoR for cat output purposes
-            runoff_recharge -= np.frombuffer(runoff.get_obj(),
-                                             dtype=np.float32)
+            runoff_recharge = np.frombuffer(recharge.get_obj(),
+                                            dtype=np.float32) - runoff_recharge
             # aggregate amended recharge & runoff arrays by output periods
             for node in tqdm(list(m.all_days_mask(data).nodes),
                              desc="Aggregating Fluxes      "):
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
+
+                if params['sw_process'] == 'enabled':
+                    zone_sw = data['params']['sw_zone_mapping'][node]
+                    pond_area = data['params']['sw_ponding_area'][zone_sw]
+                else:
+                    pond_area = 0.0
 
                 tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32)
                 rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
@@ -432,7 +438,6 @@ def run(test=False,
                 ror_array = np.array(runoff_recharge[idx],
                                      dtype=np.float64,
                                      copy=True)
-
                 # aggregate single node of recharge array
                 rch_agg = u.aggregate_array(data, rch_array)
                 # aggregate single node of runoff array
@@ -516,6 +521,7 @@ def run(test=False,
         if params["swrecharge_process"] == "enabled":
             del runoff_recharge, tmp, runoff, recharge
             gc.collect()
+
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
             if data['params']['gwmodel_type'] == 'mfusg':
