@@ -316,7 +316,7 @@ swrecharge_process: disabled
 # This parameter can accept a path to YAML or CSV
 swrecharge_proportion: swrecharge_proportion.yml
 
-# Runoff Recharge Limit [mm]
+# Runoff Recharge Limit [m3/day]
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 swrecharge_limit: swrecharge_limit.yml
