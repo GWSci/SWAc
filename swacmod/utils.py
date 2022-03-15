@@ -72,7 +72,7 @@ for p in ['canopy_storage', 'precip_to_ground', 'rapid_runoff', 'runoff_recharge
           'interflow_to_rivers']:
     CONSTANTS['AREA_FN'][p] = not_ponded_area
 
-for p in ['sw_attenuation', 'pond_direct', 'pond_atten', 'pond_over', 'sw_other']:
+for p in ['sw_attenuation', 'pond_direct', 'pond_atten', 'pond_over', 'sw_other', 'open_water_ae']:
     CONSTANTS['AREA_FN'][p] = ponded_area
 
 # Header
