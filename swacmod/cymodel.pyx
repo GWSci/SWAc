@@ -1613,7 +1613,7 @@ def get_str_file(data, runoff):
                     # conn.append(-float(swac_seg_dic[n] - 1))
                     pass
                 else:
-                    conn.append((swac_seg_dic[n] - 1))
+                    conn.append((swac_seg_dic[n]))
 
         # update num connections
         cd.append(conn + [0] * (11 - len(conn)))
