@@ -600,9 +600,23 @@ def get_interflow_bypass(data, output, node):
 
 def get_interflow_store_input(data, output, node):
     """AE) Input to Interflow Store [mm/d]."""
-    interflow_store_input = (output['perc_through_root'] +
-                             output['subroot_leak'] -
-                             output['interflow_bypass'])
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area, not_ponded
+        size_t zone_sw
+
+    if data['params']['sw_process'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    not_ponded = 1.0 - pond_area
+
+    interflow_store_input = ((output['perc_through_root'] +
+                             output['subroot_leak']) -
+                             (not_ponded * output['interflow_bypass']))
 
     return {'interflow_store_input': interflow_store_input}
 
@@ -691,9 +705,9 @@ def get_recharge_store_input(data, output, node):
 
     recharge_store_input = (output['infiltration_recharge'] +
                             ((1.0 - pond_area) *
-                             output['interflow_bypass'] +
+                             (output['interflow_bypass'] +
                              output['macropore_att'] +
-                             output['runoff_recharge']) +
+                             output['runoff_recharge'])) +
                             (pond_area * output['pond_atten']))
 
     return {'recharge_store_input': recharge_store_input}
@@ -934,11 +948,11 @@ def get_combined_str(data, output, node):
                                        output['pe_ts'][day])
                 input_to_atten_store = (sw_ponding_area[zone_sw] *
                                         output['rainfall_ts'][day] - open_water_evap +
-                                        (1.0 - sw_ponding_area[zone_sw]) *
+                                        ((1.0 - sw_ponding_area[zone_sw]) *
                                         (output['interflow_to_rivers'][day] +
                                          output['rapid_runoff'][day] +
                                          output['rejected_recharge'][day] -
-                                         output['runoff_recharge'][day]))
+                                         output['runoff_recharge'][day])))
 
                 tmp0 = ((1.0 - sw_ponding_area[zone_sw])
                         / sw_ponding_area[zone_sw])
@@ -994,11 +1008,11 @@ def get_combined_str(data, output, node):
                 input_to_atten_store_actual = (sw_ponding_area[zone_sw] *
                                                output['rainfall_ts'][day] -
                                                open_water_ae +
-                                               (1.0 - sw_ponding_area[zone_sw]) *
+                                               ((1.0 - sw_ponding_area[zone_sw]) *
                                                (output['interflow_to_rivers'][day] +
                                                 output['rapid_runoff'][day] +
                                                 output['rejected_recharge'][day] -
-                                                output['runoff_recharge'][day]))
+                                                output['runoff_recharge'][day])))
 
                 col_pond_direct[day] = pond_direct
                 col_pond_atten[day] = pond_atten
@@ -1031,7 +1045,20 @@ def get_combined_str(data, output, node):
 
 def get_combined_ae(data, output, node):
     """AN) AE: Combined AE [mm/d]."""
-    combined_ae = (output['canopy_storage'] + output['ae'] +
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+    if data['params']['sw_process'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    combined_ae = (((1.0 - pond_area) * output['canopy_storage']) +
+                   ((1.0 - pond_area) * output['ae']) +
                    output['open_water_ae'])
     return {'combined_ae': combined_ae}
 
@@ -1083,11 +1110,7 @@ def get_average_out(data, output, node):
 
     average_out = (output['combined_str'] +
                    output['combined_recharge'] +
-                   (1.0 - pond_area) *
-                   (output['ae'] +
-                   output['canopy_storage']) +
-                   output['swabs_ts'] +
-                   output['open_water_ae'])
+                   output['combined_ae'])
 
     return {'average_out': average_out}
 
@@ -1121,6 +1144,7 @@ def get_change(data, output, node):
              not_ponded * output['macropore_dir'] - pond_area * output['pond_direct']) +
             not_ponded * (output['interflow_store_input'] - output['interflow_to_rivers']) -
             output['infiltration_recharge'] +
+            pond_area * output['subroot_leak'] +
             not_ponded * (output['percol_in_root'] - output['ae']))
 
     col_change = tmp0
