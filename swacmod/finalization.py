@@ -839,10 +839,11 @@ def fin_percolation_rejection(data, name):
     """Finalize the "percolation_rejection" parameter.
     1) if not provided, set it to a large number.
     """
+
     if data["params"][name] is None:
         default = 99999.0
         zones = len(data["params"]["landuse_zone_names"])
-        data["params"][name] = [default for _ in range(zones)]
+        data["params"]["percolation_rejection"] = {"percolation_rejection": [default for _ in range(zones)]}
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
