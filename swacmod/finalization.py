@@ -76,6 +76,16 @@ def fin_num_cores(data, name):
 
 
 ###############################################################################
+def fin_disv(data, name):
+    """Finalize the "disv" parameter.
+
+    1) if not provided, set it to False.
+    """
+    if data["params"][name] is None:
+        data["params"][name] = False
+
+
+###############################################################################
 def fin_output_recharge(data, name):
     """Finalize the "output_recharge" parameter.
 
@@ -83,6 +93,7 @@ def fin_output_recharge(data, name):
     """
     if data["params"][name] is None:
         data["params"][name] = True
+
 
 
 ###############################################################################
@@ -1586,7 +1597,8 @@ FUNC_PARAMS = [
     fin_evt_parameters,
     fin_ievtcb,
     fin_nevtopt,
-    fin_gwmodel_type
+    fin_gwmodel_type,
+    fin_disv
 ]
 
 

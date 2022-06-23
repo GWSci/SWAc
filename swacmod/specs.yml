@@ -966,3 +966,8 @@ node_xy:
         - !!python/name:dict
         - !!python/name:list
         - !!python/name:float
+
+disv:
+    required: false
+    type:
+        - !!python/name:bool
