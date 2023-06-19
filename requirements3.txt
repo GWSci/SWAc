@@ -13,7 +13,7 @@ parso==0.7.0
 pexpect==4.8.0
 pickleshare==0.7.5
 prompt-toolkit==3.0.5
-psutil==5.6.7
+psutil==5.9.5
 ptyprocess==0.6.0
 Pygments==2.6.1
 pyshp==2.1.0
