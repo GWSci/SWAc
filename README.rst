@@ -4,6 +4,7 @@ swacmod
 Development repo for the Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing this file.
 
 Installation on Windows systems (tested on Windows 7):
+------------------------------------------------------
 
 - install `Microsoft Visual C++ Compiler <https://web.archive.org/web/20210106040224/https://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi>`_ (for Python 2.7)
 - install `Anaconda <https://repo.anaconda.com/archive/Anaconda2-2019.10-Windows-x86_64.exe>`_ (for Python 2.7, 64-bit)
@@ -71,3 +72,33 @@ Flags can also be combined, the above is equivalent to
    Python package maintainers may no longer support Python2, if using Python2 then restrict the python environment to the package versions listed in requirements.txt, FloPy is noted as one such package.
    
    The swac code is agnostic to Python 2 and 3 however this readme is specified for python2.  An alternative C++ redistributable may be required for Python3.x 
+
+Installation on Mac systems:
+----------------------------
+
+This installation assumes that git and homebrew are installed.
+
+- https://git-scm.com/
+- https://brew.sh/
+
+1. Create a folder to install swacmod and navigate into it using the terminal. For example:
+
+.. code-block:: bash
+
+    $ mkdir swac
+    $ cd swac
+
+2. Download the source code and install dependencies:
+
+.. code-block:: bash
+
+    $ git clone git@github.com:GWSci/SWAcMod.git
+    $ ./setup_mac.sh
+
+3. Run a test model
+
+.. code-block:: bash
+
+    $ ./run.sh -i ./input_files/input.yml -o ./output_files/
+
+Regarding Python environments, the intent is that users do not have to manage environments themselves. The ``setup_mac.sh`` script creates an environment using venv. The ``run.sh`` script will activate and exit the environment automatically.
