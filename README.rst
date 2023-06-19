@@ -92,8 +92,12 @@ This installation assumes that git and homebrew are installed.
 
 .. code-block:: bash
 
-    $ git clone git@github.com:GWSci/SWAcMod.git
+    $ git clone git@github.com:GWSci/SWAcMod.git .
     $ ./setup_mac.sh
+
+**Troubleshooting:** If the ``git clone`` command fails then you might need to set up a key for authentication. Check the link below for instructions:
+
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 
 3. Run a test model
 
