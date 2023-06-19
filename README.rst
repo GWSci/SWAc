@@ -73,6 +73,44 @@ Flags can also be combined, the above is equivalent to
    
    The swac code is agnostic to Python 2 and 3 however this readme is specified for python2.  An alternative C++ redistributable may be required for Python3.x 
 
+Installation on Linux systems:
+------------------------------
+
+This installation assumes that git and python are installed, and that your shell is bash.
+
+- https://git-scm.com/
+- https://www.python.org/
+
+1. Create a folder to install swacmod and navigate into it using the terminal. For example:
+
+.. code-block:: bash
+
+    $ mkdir swac
+    $ cd swac
+
+2. Download the source code and install dependencies:
+
+.. code-block:: bash
+
+    $ git clone git@github.com:GWSci/SWAcMod.git .
+    $ ./setup_linux.sh
+
+**Troubleshooting:** If the ``git clone`` command fails then you might need to set up a key for authentication. Check the link below for instructions:
+
+**Troubleshooting:** If the ``setup_linux.sh`` command fails, then you might need to install python3-venv. The error message will probably tell you how to do this, but in any case the command is: ``apt install python3.10-venv``.
+
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+3. Run a test model
+
+.. code-block:: bash
+
+    $ ./run.sh -i ./input_files/input.yml -o ./output_files/
+
+**Troubleshooting:** If there is a cython compilation error complaining that Python.h does not exist then you might need to install ``python-dev``. Run the command ``sudo apt-get install python3-dev`` to install it, and then run ``touch swacmod/cymodel.pyx`` to force a recompilation on the next run. Then try running the test model again.
+
+Regarding Python environments, the intent is that users do not have to manage environments themselves. The ``setup_linux.sh`` script creates an environment using venv. The ``run.sh`` script will activate and exit the environment automatically.
+
 Installation on Mac systems:
 ----------------------------
 
