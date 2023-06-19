@@ -97,9 +97,9 @@ This installation assumes that git and python are installed, and that your shell
 
 **Troubleshooting:** If the ``git clone`` command fails then you might need to set up a key for authentication. Check the link below for instructions:
 
-**Troubleshooting:** If the ``setup_linux.sh`` command fails, then you might need to install python3-venv. The error message will probably tell you how to do this, but in any case the command is: ``apt install python3.10-venv``.
-
 https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+**Troubleshooting:** If the ``setup_linux.sh`` command fails, then you might need to install python3-venv. The error message will probably tell you how to do this, but in any case the command is: ``apt install python3.10-venv``.
 
 3. Run a test model
 
