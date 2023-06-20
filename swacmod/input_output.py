@@ -570,6 +570,94 @@ def convert_one_yaml_to_csv(filein):
 
 
 ###############################################################################
+
+def categorise_param(param, value):
+    time_period_params = [
+        "infiltration_limit_ts",
+        "interflow_decay_ts",
+        "percolation_rejection_ts",
+        "rainfall_ts",
+        "subroot_leakage_ts",
+        "swdis_ts",
+        "swabs_ts",
+        "temperature_ts",
+        "tmax_c_ts",
+        "tmin_c_ts",
+        "pe_ts",
+        "windsp_ts",
+    ]
+    non_time_period_params = [
+        "canopy_zone_mapping",
+        "canopy_zone_names",
+        "evt_parameters",
+        "free_throughfall",
+        "infiltration_limit",
+        "init_interflow_store",
+        "interflow_decay",
+        "interflow_store_bypass",
+        "interflow_zone_mapping",
+        "interflow_zone_names",
+        "kc",
+        "landuse_zone_names",
+        "lu_spatial",
+        "macropore_activation",
+        "macropore_limit",
+        "macropore_proportion",
+        "macropore_recharge",
+        "macropore_zone_mapping",
+        "macropore_zone_names",
+        "max_canopy_storage",
+        "node_areas",
+        "node_xy",
+        "pe_zone_mapping",
+        "pe_zone_names",
+        "percolation_rejection",
+        "rainfall_zone_mapping",
+        "rainfall_zone_names",
+        "rapid_runoff_params",
+        "rapid_runoff_zone_mapping",
+        "rapid_runoff_zone_names",
+        "raw",
+        "recharge_attenuation_params",
+        "recharge_node_mapping",
+        "reporting_zone_mapping",
+        "reporting_zone_names",
+        "routing_topology",
+        "snow_params_simple",
+        "soil_static_params",
+        "soil_zone_names",
+        "subroot_zone_names",
+        "subsoilzone_leakage_fraction",
+        "snow_params_complex",
+        "soil_spatial",
+        "subroot_zone_mapping",
+        "smd",
+        "swdis_locs",
+        "sw_params",
+        "swabs_locs",
+        "swrecharge_limit",
+        "swrecharge_proportion",
+        "swrecharge_zone_mapping",
+        "swrecharge_zone_names",
+        "taw",
+        "temperature_zone_mapping",
+        "temperature_zone_names",
+        "time_periods",
+        "tmax_c_zone_mapping",
+        "tmax_c_zone_names",
+        "tmin_c_zone_mapping",
+        "tmin_c_zone_names",
+        "windsp_zone_mapping",
+        "windsp_zone_names",
+        "zr",
+    ]
+    if param in time_period_params:
+        return "time_peroiod_param"
+    if param in non_time_period_params:
+        return "non_time_peroiod_param"
+    print(f"Uncategorised param. param = {param}. value = {value}.")
+    return "uncategorised_param"
+
 def load_params_from_yaml(
         specs_file=u.CONSTANTS["SPECS_FILE"],
         input_file=u.CONSTANTS["INPUT_FILE"],
@@ -594,6 +682,7 @@ def load_params_from_yaml(
     for param in tqdm(params, desc="SWAcMod load params     "):
         if isinstance(params[param], str) and "alt_format" in specs[param]:
             absolute = os.path.join(input_dir, params[param])
+            param_category = categorise_param(param, params[param])
             ext = params[param].split(".")[-1]
             if ext not in specs[param]["alt_format"]:
                 continue
