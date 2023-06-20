@@ -298,6 +298,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
+    data["params"]["num_cores"] = 1
     per = len(data["params"]["time_periods"])
     nnodes = data["params"]["num_nodes"]
     len_rch_agg = (nnodes * per) + 1
