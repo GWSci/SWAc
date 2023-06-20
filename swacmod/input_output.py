@@ -28,6 +28,7 @@ from . import checks as c
 from . import validation as v
 from . import finalization as f
 from . import __version__
+from . import time_series_data as time_series_data
 
 
 try:
@@ -573,13 +574,9 @@ def convert_one_yaml_to_csv(filein):
 
 def categorise_param(param, value):
     time_period_params = [
-        "infiltration_limit_ts",
         "interflow_decay_ts",
         "percolation_rejection_ts",
         "rainfall_ts",
-        "subroot_leakage_ts",
-        "swdis_ts",
-        "swabs_ts",
         "temperature_ts",
         "tmax_c_ts",
         "tmin_c_ts",
@@ -587,6 +584,10 @@ def categorise_param(param, value):
         "windsp_ts",
     ]
     non_time_period_params = [
+        "infiltration_limit_ts", # Not used in the large model but there is a file that looks like it could be used for less that 1 MB.
+        "subroot_leakage_ts", # Less than 1 MB in a large real model.
+        "swabs_ts", # Less than 2 MB in a large real model.
+        "swdis_ts", # Less than 1 MB in a large real model.
         "canopy_zone_mapping",
         "canopy_zone_names",
         "evt_parameters",
@@ -686,7 +687,9 @@ def load_params_from_yaml(
             ext = params[param].split(".")[-1]
             if ext not in specs[param]["alt_format"]:
                 continue
-            if ext == "csv":
+            if param_category == "time_peroiod_param" and ext == "csv":
+                params[param] = time_series_data.CsvTimeSeriesData(absolute)
+            elif ext == "csv":
                 try:
                     reader = csv.reader(open(absolute, "r"))
                 except IOError as err:
