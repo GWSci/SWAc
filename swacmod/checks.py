@@ -11,6 +11,7 @@ import numpy as np
 
 # Internal modules
 from . import utils as u
+from . import time_series_data
 
 
 try:
@@ -39,7 +40,7 @@ def expand_t_type(t_type):
     elif t_type == int:
         t_type = (int, int)
     elif t_type == list:
-        t_type = (list, np.ndarray)
+        t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
 
     return t_type
 
@@ -53,8 +54,10 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         t_type = types.pop(0)
         t_type = expand_t_type(t_type)
 
+        expended_list = expand_t_type(list)
+
         new_len = None
-        if t_type == (list, np.ndarray) and len_list:
+        if t_type == expended_list and len_list:
             new_len = len_list.pop(0)
 
         if not isinstance(param, t_type):
@@ -62,7 +65,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             raise u.ValidationError(msg % (name, MAPPING[t_type][0],
                                            type(param)))
 
-        if t_type == (list, np.ndarray) and new_len and len(param) != new_len:
+        if t_type == expended_list and new_len and len(param) != new_len:
             msg = 'Parameter "%s" has to be a list of length %d, found %d'
             raise u.ValidationError(msg % (name, new_len, len(param)))
 
@@ -87,7 +90,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             types = []
             len_list = []
 
-        elif len(types) > 0 and t_type in [set, (list, np.ndarray)]:
+        elif len(types) > 0 and t_type in [set, expended_list]:
             for value in param:
                 copy_t = [i for i in types]
                 copy_l = []
