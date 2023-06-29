@@ -687,10 +687,8 @@ def load_params_from_yaml(
             ext = params[param].split(".")[-1]
             if ext not in specs[param]["alt_format"]:
                 continue
-            if param_category == "time_peroiod_param" and ext == "csv":
-                params[param] = time_series_data.CsvTimeSeriesData(param, absolute)
-            elif param_category == "time_peroiod_param" and ext == "yml":
-                params[param] = time_series_data.YamlTimeSeriesData(param, absolute)
+            if param_category == "time_peroiod_param":
+                params[param] = time_series_data.load_time_series_data(param, absolute, ext)
             elif ext == "csv":
                 try:
                     reader = csv.reader(open(absolute, "r"))

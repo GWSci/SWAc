@@ -85,3 +85,9 @@ def load_yaml(filein):
                 value = yml.pop(key)
                 yml[new_key] = value
     return yml
+
+def load_time_series_data(param, filename, ext):
+	if ext == "csv":
+		return CsvTimeSeriesData(param, filename)
+	elif ext == "yml":
+		return YamlTimeSeriesData(param, filename)
