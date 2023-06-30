@@ -3,6 +3,47 @@ swacmod
 
 Development repo for the Surface Water Accounting Model (SWAcMod). In the following documentation, we'll refer to the ``ROOT`` directory as the one obtained by cloning this repository, i.e. the one containing this file.
 
+Installation on Windows systems:
+-------------------------------------------------------
+
+This installation assumes that git and python are installed.
+
+- https://git-scm.com/
+- https://www.python.org/
+
+1. Install Microsoft C++ Build tools.
+
+- Download the installer from https://visualstudio.microsoft.com/visual-cpp-build-tools/
+- Choose Desktop development with C++.
+- In the right hand pane, make sure that MSVC and Windows SDK are selected.
+- Click "Install" in the bottom right hand corner.
+
+2. Create a folder to install swacmod and navigate into it. For example:
+
+.. code-block:: bash
+
+    $ mkdir swac
+    $ cd swac
+
+3. Download the source code and install dependencies:
+
+.. code-block:: bash
+
+    $ git clone git@github.com:GWSci/SWAcMod.git .
+    $ setup_windows.bat
+
+**Troubleshooting:** If the ``git clone`` command fails then you might need to set up a key for authentication. Check the link below for instructions:
+
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+4. Run a test model
+
+.. code-block:: bash
+
+    $ run.bat -i ./input_files/input.yml -o ./output_files/
+
+Regarding Python environments, the intent is that users do not have to manage environments themselves. The ``setup_windows.bat`` script creates an environment using venv. The ``run.bat`` script will activate and exit the environment automatically.
+
 Installation on Windows systems (tested on Windows 7):
 ------------------------------------------------------
 
