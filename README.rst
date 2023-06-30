@@ -40,7 +40,7 @@ https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generati
 
 .. code-block:: bash
 
-    $ run.bat -i ./input_files/input.yml -o ./output_files/
+    $ run.bat -i .\input_files\input.yml -o .\output_files\
 
 Regarding Python environments, the intent is that users do not have to manage environments themselves. The ``setup_windows.bat`` script creates an environment using venv. The ``run.bat`` script will activate and exit the environment automatically.
 
