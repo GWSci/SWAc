@@ -107,8 +107,6 @@ https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generati
 
     $ ./run.sh -i ./input_files/input.yml -o ./output_files/
 
-**Troubleshooting:** If there is a cython compilation error complaining that Python.h does not exist then you might need to install ``python-dev``. Run the command ``sudo apt-get install python3-dev`` to install it, and then run ``touch swacmod/cymodel.pyx`` to force a recompilation on the next run. Then try running the test model again.
-
 Regarding Python environments, the intent is that users do not have to manage environments themselves. The ``setup_linux.sh`` script creates an environment using venv. The ``run.sh`` script will activate and exit the environment automatically.
 
 Installation on Mac systems:

@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-# cython: language_level=3, boundscheck=False
-
 
 # Third Party Libraries
 import numpy as np
@@ -11,9 +9,7 @@ from . import utils as u
 from tqdm import tqdm
 import networkx as nx
 import sys
-import cython
-cimport cython
-cimport numpy as np
+import numpy as np
 
 import sys
 import os.path
@@ -63,21 +59,18 @@ def get_pe(data, output, node):
 
 ###############################################################################
 
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
 def get_pefac(data, output, node):
     """E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
     series, params = data['series'], data['params']
-    cdef int days = len(series['date'])
-    cdef int day, z
-    cdef double[:] pefac = np.zeros(days)
-    cdef double var1 = 0.0
-    cdef double[:] pe = output['pe_ts']
-    cdef double[:, :] kc = params['kc_list'][series['months']]
-    cdef double[:] zone_lu = np.array(params['lu_spatial'][node],
+    days = len(series['date'])
+    day, z
+    pefac = np.zeros(days)
+    var1 = 0.0
+    pe = output['pe_ts']
+    kc = params['kc_list'][series['months']]
+    zone_lu = np.array(params['lu_spatial'][node],
                                       dtype=np.float64)
-    cdef int len_lu = len(params['lu_spatial'][node])
+    len_lu = len(params['lu_spatial'][node])
 
     fao = params['fao_process']
     canopy = params['canopy_process']
@@ -166,11 +159,10 @@ def get_snow_simple(data, output, node):
     """
     series, params = data['series'], data['params']
 
-    cdef:
-        size_t num
-        size_t length = len(series['date'])
-        double[:] col_snowpack = np.zeros(length)
-        double[:] col_snowmelt = np.zeros(len(series['date']))
+    num
+    length = len(series['date'])
+    col_snowpack = np.zeros(length)
+    col_snowmelt = np.zeros(len(series['date']))
 
     if params['snow_process_simple'] == 'disabled':
         col = {}
@@ -178,18 +170,16 @@ def get_snow_simple(data, output, node):
         col['snowmelt'] = col_snowmelt.base
         return col
 
-    cdef:
-        double start_snow_pack = params['snow_params_simple'][node][0]
-        double snow_fall_temp = params['snow_params_simple'][node][1]
-        double snow_melt_temp = params['snow_params_simple'][node][2]
-        double diff = snow_fall_temp - snow_melt_temp
-        size_t zone_tm = params['temperature_zone_mapping'][node] - 1
-        double[:] var3 = (snow_melt_temp -
-                          series['temperature_ts'][:, zone_tm])/diff
-        double[:] var5 = 1 - (np.exp(var3))**2
-        double[:] snowfall_o = output['snowfall_o']
-        double var6 = (var5[0] if var5[0] > 0 else 0)
-        double snowpack = (1 - var6) * start_snow_pack + snowfall_o[0]
+    start_snow_pack = params['snow_params_simple'][node][0]
+    snow_fall_temp = params['snow_params_simple'][node][1]
+    snow_melt_temp = params['snow_params_simple'][node][2]
+    diff = snow_fall_temp - snow_melt_temp
+    zone_tm = params['temperature_zone_mapping'][node] - 1
+    var3 = (snow_melt_temp - series['temperature_ts'][:, zone_tm])/diff
+    var5 = 1 - (np.exp(var3))**2
+    snowfall_o = output['snowfall_o']
+    var6 = (var5[0] if var5[0] > 0 else 0)
+    snowpack = (1 - var6) * start_snow_pack + snowfall_o[0]
 
     col_snowmelt[0] = start_snow_pack * var6
     col_snowpack[0] = snowpack
@@ -211,32 +201,31 @@ def get_snow_complex(data, output, node):
     """
     series, params = data['series'], data['params']
 
-    cdef:
-        size_t day
-        size_t days = len(series['date'])
-        double[:] col_snowpack = np.zeros(days)
-        double[:] col_snowmelt = np.zeros(days)
-        double[:] col_snowfall_o = np.zeros(days)
-        double[:] col_rainfall_o = np.zeros(days)
-        double[:] rainfall_ts = output['rainfall_ts']
-        size_t zone_tmax_c = params['tmax_c_zone_mapping'][node] - 1
-        size_t zone_tmin_c = params['tmin_c_zone_mapping'][node] - 1
-        size_t zone_windsp = params['windsp_zone_mapping'][node] - 1
+    day
+    days = len(series['date'])
+    col_snowpack = np.zeros(days)
+    col_snowmelt = np.zeros(days)
+    col_snowfall_o = np.zeros(days)
+    col_rainfall_o = np.zeros(days)
+    rainfall_ts = output['rainfall_ts']
+    zone_tmax_c = params['tmax_c_zone_mapping'][node] - 1
+    zone_tmin_c = params['tmin_c_zone_mapping'][node] - 1
+    zone_windsp = params['windsp_zone_mapping'][node] - 1
 
-        double[:] tmax_c = series['tmax_c_ts'][:, zone_tmax_c]
-        double[:] tmin_c = series['tmin_c_ts'][:, zone_tmin_c]
-        double[:] windsp = series['windsp_ts'][:, zone_windsp]
+    tmax_c = series['tmax_c_ts'][:, zone_tmax_c]
+    tmin_c = series['tmin_c_ts'][:, zone_tmin_c]
+    windsp = series['windsp_ts'][:, zone_windsp]
 
-        double lat_deg = params['snow_params_complex'][node][0]
-        double slope = params['snow_params_complex'][node][1]
-        double aspect = params['snow_params_complex'][node][2]
-        double tempht = params['snow_params_complex'][node][3]
-        double windht = params['snow_params_complex'][node][4]
-        double groundalbedo = params['snow_params_complex'][node][5]
-        double surfemissiv = params['snow_params_complex'][node][6]
-        double forest = params['snow_params_complex'][node][7]
-        double startingsnowdepth_m = params['snow_params_complex'][node][8]
-        double startingsnowdensity_kg_m3 = params['snow_params_complex'][node][9]
+    lat_deg = params['snow_params_complex'][node][0]
+    slope = params['snow_params_complex'][node][1]
+    aspect = params['snow_params_complex'][node][2]
+    tempht = params['snow_params_complex'][node][3]
+    windht = params['snow_params_complex'][node][4]
+    groundalbedo = params['snow_params_complex'][node][5]
+    surfemissiv = params['snow_params_complex'][node][6]
+    forest = params['snow_params_complex'][node][7]
+    startingsnowdepth_m = params['snow_params_complex'][node][8]
+    startingsnowdensity_kg_m3 = params['snow_params_complex'][node][9]
 
     if params['snow_process_complex'] == 'disabled':
         col = {}
@@ -332,48 +321,47 @@ def get_ae(data, output, node):
     s_smd = params['smd']
     mac_opt = params['macropore_activation_option']
 
-    cdef:
-        double[:] col_rapid_runoff_c = np.zeros(len(series['date']))
-        double[:] col_rapid_runoff = np.zeros(len(series['date']))
-        double[:] col_runoff_recharge = np.zeros(len(series['date']))
-        double[:] col_macropore_att = np.zeros(len(series['date']))
-        double[:] col_macropore_dir = np.zeros(len(series['date']))
-        double[:] col_percol_in_root = np.zeros(len(series['date']))
-        double[:] col_p_smd = np.zeros(len(series['date']))
-        double[:] col_smd = np.zeros(len(series['date']))
-        double[:] col_k_slope = np.zeros(len(series['date']))
-        double[:] col_ae = np.zeros(len(series['date']))
-        size_t zone_mac = params['macropore_zone_mapping'][node] - 1
-        size_t zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
-        double ssmd = u.weighted_sum(params['soil_spatial'][node],
-                                     s_smd['starting_SMD'])
-        long long[:] class_smd = np.array(rrp[zone_rro]['class_smd'],
-                                          dtype=np.int64)
-        long long[:] class_ri = np.array(rrp[zone_rro]['class_ri'],
-                                         dtype=np.int64)
-        double[:, :] macro_prop = params['macro_prop']
-        double[:, :] macro_limit = params['macro_limit']
-        double[:, :] macro_act = params['macro_act']
-        double[:, :] macro_rec = params['macro_rec']
-        double[:, :] values = np.array(rrp[zone_rro]['values'])
-        size_t len_class_smd = len(class_smd)
-        size_t len_class_ri = len(class_ri)
-        double last_smd = class_smd[-1] - 1
-        double last_ri = class_ri[-1] - 1
-        double value = values[-1][0]
-        double p_smd = ssmd
-        double smd = ssmd
-        double var2, var5, var8a, var9, var10, var11, var12, var13
-        double rapid_runoff_c, rapid_runoff, macropore, percol_in_root
-        double net_pefac, tawtew, rawrew
-        size_t num, i, var3, var4, var6
-        size_t length = len(series['date'])
-        double[:] net_rainfall = output['net_rainfall']
-        double[:] net_pefac_a = output['net_pefac']
-        double[:] tawtew_a = output['tawtew']
-        double[:] rawrew_a = output['rawrew']
-        long long[:] months = np.array(series['months'], dtype=np.int64)
-        double ma = 0.0
+    col_rapid_runoff_c = np.zeros(len(series['date']))
+    col_rapid_runoff = np.zeros(len(series['date']))
+    col_runoff_recharge = np.zeros(len(series['date']))
+    col_macropore_att = np.zeros(len(series['date']))
+    col_macropore_dir = np.zeros(len(series['date']))
+    col_percol_in_root = np.zeros(len(series['date']))
+    col_p_smd = np.zeros(len(series['date']))
+    col_smd = np.zeros(len(series['date']))
+    col_k_slope = np.zeros(len(series['date']))
+    col_ae = np.zeros(len(series['date']))
+    zone_mac = params['macropore_zone_mapping'][node] - 1
+    zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
+    ssmd = u.weighted_sum(params['soil_spatial'][node],
+                                    s_smd['starting_SMD'])
+    class_smd = np.array(rrp[zone_rro]['class_smd'],
+                                        dtype=np.int64)
+    class_ri = np.array(rrp[zone_rro]['class_ri'],
+                                        dtype=np.int64)
+    macro_prop = params['macro_prop']
+    macro_limit = params['macro_limit']
+    macro_act = params['macro_act']
+    macro_rec = params['macro_rec']
+    values = np.array(rrp[zone_rro]['values'])
+    len_class_smd = len(class_smd)
+    len_class_ri = len(class_ri)
+    last_smd = class_smd[-1] - 1
+    last_ri = class_ri[-1] - 1
+    value = values[-1][0]
+    p_smd = ssmd
+    smd = ssmd
+    var2, var5, var8a, var9, var10, var11, var12, var13
+    rapid_runoff_c, rapid_runoff, macropore, percol_in_root
+    net_pefac, tawtew, rawrew
+    num, i, var3, var4, var6
+    length = len(series['date'])
+    net_rainfall = output['net_rainfall']
+    net_pefac_a = output['net_pefac']
+    tawtew_a = output['tawtew']
+    rawrew_a = output['rawrew']
+    months = np.array(series['months'], dtype=np.int64)
+    ma = 0.0
 
     if params['swrecharge_process'] == 'enabled':
         col_runoff_recharge[:] = 0.0
@@ -593,23 +581,22 @@ def get_interflow(data, output, node):
     """
     series, params = data['series'], data['params']
 
-    cdef:
-        size_t length = len(series['date'])
-        double[:] col_interflow_volume = np.zeros(length)
-        double[:] col_infiltration_recharge = np.zeros(length)
-        double[:] col_interflow_to_rivers = np.zeros(length)
-        double[:] interflow_store_input = output['interflow_store_input']
-        int interflow_zone = params['interflow_zone_mapping'][node]
-        double var0 = params['init_interflow_store'][interflow_zone]
-        double[:] var5 = np.full([length],
-                                 params['infiltration_limit'][interflow_zone])
-        double[:] var8 = np.full([length],
-                                 params['interflow_decay'][interflow_zone])
-        double volume = var0
-        double var1, var6
-        size_t num
-        double[:] recharge = np.zeros(length)
-        double[:] rivers = np.zeros(length)
+    length = len(series['date'])
+    col_interflow_volume = np.zeros(length)
+    col_infiltration_recharge = np.zeros(length)
+    col_interflow_to_rivers = np.zeros(length)
+    interflow_store_input = output['interflow_store_input']
+    interflow_zone = params['interflow_zone_mapping'][node]
+    var0 = params['init_interflow_store'][interflow_zone]
+    var5 = np.full([length],
+                                params['infiltration_limit'][interflow_zone])
+    var8 = np.full([length],
+                                params['interflow_decay'][interflow_zone])
+    volume = var0
+    var1, var6
+    num
+    recharge = np.zeros(length)
+    rivers = np.zeros(length)
 
     if params['interflow_process'] == 'enabled':
         col_interflow_volume = np.full([length], volume)
@@ -666,17 +653,16 @@ def get_recharge(data, output, node):
     """
     series, params = data['series'], data['params']
 
-    cdef:
-        size_t length = len(series['date'])
-        double[:] col_recharge_store = np.zeros(length)
-        double[:] col_combined_recharge = np.zeros(length)
-        double irs = params['recharge_attenuation_params'][node][0]
-        double rlp = params['recharge_attenuation_params'][node][1]
-        double rll = params['recharge_attenuation_params'][node][2]
-        double[:] recharge = np.zeros(length)
-        double[:] recharge_store_input = output['recharge_store_input']
-        double[:] macropore_dir = output['macropore_dir']
-        size_t num
+    length = len(series['date'])
+    col_recharge_store = np.zeros(length)
+    col_combined_recharge = np.zeros(length)
+    irs = params['recharge_attenuation_params'][node][0]
+    rlp = params['recharge_attenuation_params'][node][1]
+    rll = params['recharge_attenuation_params'][node][2]
+    recharge = np.zeros(length)
+    recharge_store_input = output['recharge_store_input']
+    macropore_dir = output['macropore_dir']
+    num
 
     if params['recharge_attenuation_process'] == 'enabled':
         recharge[0] = irs
@@ -713,8 +699,6 @@ def get_mf6rch_file(data, rchrate):
     import numpy as np
     import os.path
 
-    cdef int i, per
-
     # this is equivalent of strange hardcoded 1000 in format_recharge_row
     #  which is called in the mf6 output function
     fac = 0.001
@@ -745,7 +729,7 @@ def get_mf6rch_file(data, rchrate):
                                          parent_file=None)
     irch = np.zeros((nodes, 1), dtype=int)
     if rch_params is not None:
-        for inode, vals in rch_params.iteritems():
+        for inode, vals in rch_params.items():
             irch[inode - 1, 0] = vals[0]
     else:
         for i in range(nodes):
@@ -787,20 +771,19 @@ def get_combined_str(data, output, node):
     """
     series, params = data['series'], data['params']
 
-    cdef:
-        size_t length = len(series['date'])
-        double[:] col_attenuation = np.zeros(length)
-        double[:] col_combined_str = np.zeros(length)
-        double[:] combined_str = np.zeros(length)
-        # double[:] some_zeros = np.zeros(length)
-        double rlp = params['sw_params'][node][1]
-        double base = max((params['sw_params'][node][0] +
-                           output['interflow_to_rivers'][0] +
-                           output['swabs_ts'][0] +
-                           output['swdis_ts'][0] +
-                           output['rapid_runoff'][0] -
-                           output['runoff_recharge'][0]), 0.0)
-        size_t num
+    length = len(series['date'])
+    col_attenuation = np.zeros(length)
+    col_combined_str = np.zeros(length)
+    combined_str = np.zeros(length)
+    # some_zeros = np.zeros(length)
+    rlp = params['sw_params'][node][1]
+    base = max((params['sw_params'][node][0] +
+                        output['interflow_to_rivers'][0] +
+                        output['swabs_ts'][0] +
+                        output['swdis_ts'][0] +
+                        output['rapid_runoff'][0] -
+                        output['runoff_recharge'][0]), 0.0)
+    num
 
     combined_str = (output['interflow_to_rivers'] +
                     output['swabs_ts'] +
@@ -888,11 +871,10 @@ def get_change(data, output, node):
     """AR) TOTAL STORAGE CHANGE [mm]."""
     series = data['series']
 
-    cdef:
-        size_t length = len(series['date'])
-        double[:] col_change = np.zeros(length)
-        double[:] tmp0 = np.zeros(length)
-        size_t num
+    length = len(series['date'])
+    col_change = np.zeros(length)
+    tmp0 = np.zeros(length)
+    num
 
     tmp0 = (output['recharge_store_input'] -
             (output['combined_recharge'] - output['macropore_dir']) +
@@ -1610,10 +1592,8 @@ def get_evt_file(data, evtrate):
     import numpy as np
     import os.path
 
-    cdef int i, per, nper, nodes
-
     # units oddness - lots of hardcoded 1000s in input_output.py
-    cdef float fac = 0.001
+    fac = 0.001
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
 
@@ -1658,7 +1638,7 @@ def get_evt_file(data, evtrate):
     evtr = np.zeros((nodes, 1))
     mt = flopy.mf6.ModflowGwfevt.stress_period_data.empty
 
-    for inode, vals in evt_params.iteritems():
+    for inode, vals in evt_params.items():
         ievt[inode - 1, 0] = vals[0]
         surf[inode - 1, 0] = vals[1]
         exdp[inode - 1, 0] = vals[2]
@@ -1715,13 +1695,11 @@ def do_swrecharge_mask(data, runoff, recharge):
     nnodes = data['params']['num_nodes']
     rte_topo = data['params']['routing_topology']
 
-    cdef:
-        size_t length = len(series['date'])
-        double[:, :] ror_prop = params['ror_prop']
-        double[:, :] ror_limit = params['ror_limit']
-        long long[:] months = np.array(series['months'], dtype=np.int64)
-        size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
-        int day, month
+    length = len(series['date'])
+    ror_prop = params['ror_prop']
+    ror_limit = params['ror_limit']
+    months = np.array(series['months'], dtype=np.int64)
+    zone_ror = params['swrecharge_zone_mapping'][1] - 1
 
     sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
                                       key=lambda x: x[1][4]))
@@ -1733,8 +1711,7 @@ def do_swrecharge_mask(data, runoff, recharge):
     Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
 
     def compute_upstream_month_mask(month_number):
-        cdef int i = month_number
-        cdef int z
+        i = month_number
         mask = np.full((nnodes), 0, dtype='int')
         for node in range(1, nnodes + 1):
             z = params['swrecharge_zone_mapping'][node] - 1
@@ -1827,13 +1804,11 @@ def all_days_mask(data):
     nnodes = data['params']['num_nodes']
     rte_topo = data['params']['routing_topology']
 
-    cdef:
-        size_t length = len(series['date'])
-        double[:, :] ror_prop = params['ror_prop']
-        double[:, :] ror_limit = params['ror_limit']
-        long long[:] months = np.array(series['months'], dtype=np.int64)
-        size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
-        int month
+    length = len(series['date'])
+    ror_prop = params['ror_prop']
+    ror_limit = params['ror_limit']
+    months = np.array(series['months'], dtype=np.int64)
+    zone_ror = params['swrecharge_zone_mapping'][1] - 1
 
     sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
                                       key=lambda x: x[1][4]))
