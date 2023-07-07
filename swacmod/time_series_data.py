@@ -29,8 +29,6 @@ class CsvTimeSeriesData(TimeSeriesData):
 		except IOError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
-		log("Reading CSV END")
-		log("Converting to floats START")
 		try:
 			rows = [[float(j) for j in row]
 					for row in reader]
@@ -39,7 +37,7 @@ class CsvTimeSeriesData(TimeSeriesData):
 		except IndexError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
-		log("Converting to floats END")
+		log("Reading CSV END")
 
 	def row(self, index):
 		return self.rows[index]
@@ -58,19 +56,15 @@ class CsvTimeSeriesData_File_Backed(TimeSeriesData):
 		except IOError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
-		log("Reading CSV END")
 		try:
-			log("Converting to floats START")
 			rows = [[float(j) for j in row]
 					for row in reader]
-			log("Converting to floats END")
 			
-			log("Writing file-backed array START")
 			self.rows = convert_rows_to_file_backed_array(rows, csv_filename)
-			log("Writing file-backed array END")
 		except IndexError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
+		log("Reading CSV END")
 
 	def row(self, index):
 		return self.rows[index]
