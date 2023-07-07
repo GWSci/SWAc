@@ -15,6 +15,7 @@ import multiprocessing as mp
 from multiprocessing.heap import Arena
 import mmap
 import gc
+import traceback # *** remove import
 
 # Third Party Libraries
 import numpy as np
@@ -89,40 +90,41 @@ def get_output(data, node):
 
     start = time.time()
 
+    # *** Uncomment all these
     output = {}
     for function in [
-            m.get_precipitation,
-            m.get_pe,
-            m.get_pefac,
-            m.get_canopy_storage,
-            m.get_net_pefac,
-            m.get_precip_to_ground,
-            m.get_snowfall_o,
-            m.get_rainfall_o,
-            m.get_snow_simple,
-            m.get_snow_complex,
-            m.get_net_rainfall,
-            m.get_rawrew,
-            m.get_tawtew,
-            m.get_ae,
-            m.get_unutilised_pe,
-            m.get_rejected_recharge,
-            m.get_perc_through_root,
-            m.get_subroot_leak,
-            m.get_interflow_bypass,
-            m.get_interflow_store_input,
-            m.get_interflow,
-            m.get_recharge_store_input,
-            m.get_recharge,
-            m.get_swabs,
-            m.get_swdis,
-            m.get_combined_str,
-            m.get_combined_ae,
-            m.get_evt,
-            m.get_average_in,
-            m.get_average_out,
-            m.get_change,
-            m.get_balance,
+            # m.get_precipitation,
+            # m.get_pe,
+            # m.get_pefac,
+            # m.get_canopy_storage,
+            # m.get_net_pefac,
+            # m.get_precip_to_ground,
+            # m.get_snowfall_o,
+            # m.get_rainfall_o,
+            # m.get_snow_simple,
+            # m.get_snow_complex,
+            # m.get_net_rainfall,
+            # m.get_rawrew,
+            # m.get_tawtew,
+            # m.get_ae,
+            # m.get_unutilised_pe,
+            # m.get_rejected_recharge,
+            # m.get_perc_through_root,
+            # m.get_subroot_leak,
+            # m.get_interflow_bypass,
+            # m.get_interflow_store_input,
+            # m.get_interflow,
+            # m.get_recharge_store_input,
+            # m.get_recharge,
+            # m.get_swabs,
+            # m.get_swdis,
+            # m.get_combined_str,
+            # m.get_combined_ae,
+            # m.get_evt,
+            # m.get_average_in,
+            # m.get_average_out,
+            # m.get_change,
+            # m.get_balance,
     ]:
 
         columns = function(data, output, node)
@@ -159,6 +161,15 @@ def run_process(
     io.start_logging(path=log_path, level=level)
     logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
+
+    # *** Remove section
+    data["params"]["output_recharge"] = False # Remove. Set to disable aggregation.
+    data["params"]["swrecharge_process"] = "disabled" # Remove. Set to disable aggregation.
+    data["params"]["output_sfr"] = False
+    data["params"]["excess_sw_process"] = "disabled"
+    data["params"]["output_evt"] = False
+    data["params"]["spatial_output_date"] = False
+    # ### End of section to remove
 
     for node in ids:
 
@@ -230,16 +241,17 @@ def run_process(
 
     logging.info("mp.Process %d ended", num)
 
+    # *** Uncomment
     return (
-        reporting_agg,
-        recharge_agg,
-        spatial,
-        runoff_agg,
-        evtr_agg,
-        recharge,
-        runoff,
-        reporting,
-        single_node_output,
+        # reporting_agg,
+        # recharge_agg,
+        # spatial,
+        # runoff_agg,
+        # evtr_agg,
+        # recharge,
+        # runoff,
+        # reporting,
+        # single_node_output,
     )
 
 
@@ -463,7 +475,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             # copy new bits into cat output
             term = "runoff_recharge"
             for cat in reporting_agg2:
-                if "runoff_recharge" in reporting_agg2[cat]:
+                if "runoff_recharge" in reporting_agg2[cat] and False: # *** remove the and false.
                     reporting_agg[cat]["combined_recharge"] += reporting_agg2[
                         cat][term][term]
                     reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][
@@ -475,17 +487,18 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         if not skip:
             io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
-        for num, key in enumerate(reporting_agg.keys()):
-            print("\t- Report file (%d of %d)" %
-                  (num + 1, len(reporting_agg.keys())))
-            io.dump_water_balance(
-                data,
-                reporting_agg[key],
-                file_format,
-                u.CONSTANTS["OUTPUT_DIR"],
-                zone=key,
-                reduced=reduced,
-            )
+        # *** Uncomment
+        # for num, key in enumerate(reporting_agg.keys()):
+        #     print("\t- Report file (%d of %d)" %
+        #           (num + 1, len(reporting_agg.keys())))
+        #     io.dump_water_balance(
+        #         data,
+        #         reporting_agg[key],
+        #         file_format,
+        #         u.CONSTANTS["OUTPUT_DIR"],
+        #         zone=key,
+        #         reduced=reduced,
+        #     )
 
         for node in list(data["params"]["output_individual"]):
             print("\t- Node output file")
@@ -662,6 +675,7 @@ if __name__ == "__main__":
                 skip=ARGS.skip_prompt,
             )
         except Exception as err:
+            traceback.print_exc() # *** Remove
             logging.error(err.__repr__())
             print("ERROR: %s" % err)
             print("")
