@@ -164,15 +164,36 @@ def calculate_is_in_memory(filename):
 	memory_cutoff = 300000
 	return file_size < memory_cutoff
 
+def convert_bytes_to_human_readable_string(file_size):
+	b = file_size
+	if b < 1000:
+		return f"{b} b"
+	kb = int(b / 1024)
+	if kb < 1000:
+		return f"{kb} kb"
+	mb = int(kb / 1024)
+	if mb < 1000:
+		return f"{mb} kb"
+	gb = int(mb / 1024)
+	return f"{gb} gb"
+
+def report_using_data_file_backend(filename):
+	file_size = os.stat(filename).st_size
+	file_size_string = convert_bytes_to_human_readable_string(file_size)
+	message = f"Using data file backend. ({file_size_string}) {filename}"
+	print(message)
+
 def load_time_series_data(param, filename, ext):
 	is_in_memory = calculate_is_in_memory(filename)
 	if ext == "csv":
 		if is_in_memory:
 			return CsvTimeSeriesData(param, filename)
 		else:
+			report_using_data_file_backend(filename)
 			return CsvTimeSeriesData_File_Backed(param, filename)
 	elif ext == "yml":
 		if is_in_memory:
 			return YamlTimeSeriesData(param, filename)
 		else:
+			report_using_data_file_backend(filename)
 			return YamlTimeSeriesData_File_Backed(param, filename)
