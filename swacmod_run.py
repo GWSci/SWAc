@@ -16,6 +16,7 @@ from multiprocessing.heap import Arena
 import mmap
 import gc
 import traceback # *** remove import
+import datetime
 
 # Third Party Libraries
 import numpy as np
@@ -34,6 +35,10 @@ sys.maxint = 2**63 - 1
 # sentinel for iteration count
 SENTINEL = 1
 
+def log(message):
+	timestamp = datetime.datetime.now()
+	line = f"{timestamp} : swacmod_run.py : {message}"
+	print(line)
 
 def anonymous_arena_init(self, size, fd=-1):
     "Create Arena using an anonymous memory mapping."
@@ -304,8 +309,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     logging.info("Start SWAcMod run")
     logging.info(compile_model.get_status())
 
+    log("Loading data START")
     if data is None:
         data = io.load_and_validate(specs_file, input_file, input_dir)
+    log("Loading data END")
 
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
@@ -355,6 +362,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     else:
         spatial_index = None
 
+    log("Multiprocessing START")
     workers = []
     q = mp.Queue()
     lproc = mp.Process(target=listener, args=(q, nnodes))
@@ -391,13 +399,17 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         workers.append(Worker("worker%d" % process, q, proc, verbose=False))
 
     for p in workers:
+        log("Starting Worker")
         p.start()
 
     for p in workers:
         p.join()
+        log("Worker joined")
 
     q.put(None)
     lproc.join()
+
+    log("Multiprocessing END")
 
     times["end_of_model"] = time.time()
 
@@ -605,6 +617,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
 ###############################################################################
 if __name__ == "__main__":
+    log("Main program START")
     mp.freeze_support()
 
     # Parser for command line arguments
@@ -667,6 +680,7 @@ if __name__ == "__main__":
         )
     else:
         try:
+            log("Calling run START")
             run(
                 test=ARGS.test,
                 debug=ARGS.debug,
@@ -674,8 +688,10 @@ if __name__ == "__main__":
                 reduced=ARGS.reduced,
                 skip=ARGS.skip_prompt,
             )
+            log("Calling run END")
         except Exception as err:
             traceback.print_exc() # *** Remove
             logging.error(err.__repr__())
             print("ERROR: %s" % err)
             print("")
+    log("Main program END")
