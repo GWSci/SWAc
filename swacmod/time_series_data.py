@@ -28,7 +28,7 @@ class CsvTimeSeriesData(TimeSeriesData):
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
 		try:
-			rows = [[ast.literal_eval(j) for j in row]
+			rows = [[float(j) for j in row]
 					for row in reader]
 			
 			self.rows = rows
@@ -53,7 +53,7 @@ class CsvTimeSeriesData_File_Backed(TimeSeriesData):
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
 		try:
-			rows = [[ast.literal_eval(j) for j in row]
+			rows = [[float(j) for j in row]
 					for row in reader]
 			
 			self.rows = convert_rows_to_file_backed_array(rows, csv_filename)
