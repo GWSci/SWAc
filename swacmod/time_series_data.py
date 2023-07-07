@@ -1,5 +1,6 @@
 import ast
 import csv
+import datetime
 import logging
 import numpy
 import os
@@ -22,11 +23,14 @@ class TimeSeriesData:
 
 class CsvTimeSeriesData(TimeSeriesData):
 	def __init__(self, param_name, csv_filename):
+		log("Reading CSV START")
 		try:
 			reader = csv.reader(open(csv_filename, "r"))
 		except IOError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
+		log("Reading CSV END")
+		log("Converting to floats START")
 		try:
 			rows = [[float(j) for j in row]
 					for row in reader]
@@ -35,6 +39,7 @@ class CsvTimeSeriesData(TimeSeriesData):
 		except IndexError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
+		log("Converting to floats END")
 
 	def row(self, index):
 		return self.rows[index]
@@ -47,16 +52,22 @@ class CsvTimeSeriesData(TimeSeriesData):
 
 class CsvTimeSeriesData_File_Backed(TimeSeriesData):
 	def __init__(self, param_name, csv_filename):
+		log("Reading CSV START")
 		try:
 			reader = csv.reader(open(csv_filename, "r"))
 		except IOError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
+		log("Reading CSV END")
 		try:
+			log("Converting to floats START")
 			rows = [[float(j) for j in row]
 					for row in reader]
+			log("Converting to floats END")
 			
+			log("Writing file-backed array START")
 			self.rows = convert_rows_to_file_backed_array(rows, csv_filename)
+			log("Writing file-backed array END")
 		except IndexError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
@@ -181,7 +192,7 @@ def report_using_data_file_backend(filename):
 	file_size = os.stat(filename).st_size
 	file_size_string = convert_bytes_to_human_readable_string(file_size)
 	message = f"Using data file backend. ({file_size_string}) {filename}"
-	print(message)
+	log(message)
 
 def load_time_series_data(param, filename, ext):
 	is_in_memory = calculate_is_in_memory(filename)
@@ -197,3 +208,8 @@ def load_time_series_data(param, filename, ext):
 		else:
 			report_using_data_file_backend(filename)
 			return YamlTimeSeriesData_File_Backed(param, filename)
+
+def log(message):
+	timestamp = datetime.datetime.now()
+	line = f"{timestamp} : {message}"
+	print(line)
