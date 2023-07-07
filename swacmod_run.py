@@ -176,13 +176,22 @@ def run_process(
     data["params"]["spatial_output_date"] = False
     # ### End of section to remove
 
+    get_output_seconds = 0.0
+    other_stuff_seconds = 0.0
+
     for node in ids:
 
         q.put(SENTINEL)
 
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
+            seconds_start = time.time()
             output = get_output(data, node)
+            seconds_end = time.time()
+            seconds_elapsed = seconds_end - seconds_start
+            get_output_seconds = get_output_seconds + seconds_elapsed
+
+            seconds_start = time.time()
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
                 if node in data["params"]["output_individual"]:
@@ -243,20 +252,23 @@ def run_process(
                     spatial[node] = m.aggregate(output,
                                                 area,
                                                 index=spatial_index)
-
+            seconds_end = time.time()
+            seconds_elapsed = seconds_end - seconds_start
+            other_stuff_seconds = other_stuff_seconds + seconds_elapsed
     logging.info("mp.Process %d ended", num)
+    log(f"get_output_seconds  = {get_output_seconds}")
+    log(f"other_stuff_seconds = {other_stuff_seconds}")
 
-    # *** Uncomment
     return (
-        # reporting_agg,
-        # recharge_agg,
-        # spatial,
-        # runoff_agg,
-        # evtr_agg,
-        # recharge,
-        # runoff,
-        # reporting,
-        # single_node_output,
+        reporting_agg,
+        recharge_agg,
+        spatial,
+        runoff_agg,
+        evtr_agg,
+        recharge,
+        runoff,
+        reporting,
+        single_node_output,
     )
 
 
