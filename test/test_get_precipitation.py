@@ -31,7 +31,9 @@ class Test_Get_Precipitation(unittest.TestCase):
 			[17*4, 17*8, 17*12, 17*16, 17*20],
 		], dtype=float)
 		actual_oracle = oracle_get_precipitation(input_data, input_output)
+		actual_numpy = numpy_get_precipitation(input_data)
 		numpy.testing.assert_array_equal(expected, actual_oracle)
+		numpy.testing.assert_array_equal(expected, actual_numpy)
 
 def oracle_get_precipitation(data, output):
 	result = []
@@ -39,3 +41,11 @@ def oracle_get_precipitation(data, output):
 		precipitation = swacmod.model.get_precipitation(data, output, node)
 		result.append(precipitation["rainfall_ts"])
 	return numpy.array(result)
+
+def numpy_get_precipitation(data):
+	series, params = data['series'], data['params']
+	rainfall_zone_mapping = params['rainfall_zone_mapping']
+	zone_rf = numpy.array(list(map(lambda x: x[0] - 1, rainfall_zone_mapping)))
+	coef_rf = numpy.array(list(map(lambda x: x[1], rainfall_zone_mapping)))
+	rainfall_ts = numpy.transpose(series['rainfall_ts'][:, zone_rf]) * coef_rf[:, None]
+	return rainfall_ts
