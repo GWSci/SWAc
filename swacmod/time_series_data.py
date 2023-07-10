@@ -228,6 +228,8 @@ def load_time_series_data(param, filename, ext):
 		else:
 			report_using_data_file_backend(filename)
 			return YamlTimeSeriesData_File_Backed(param, filename)
+	else:
+		log(f"Could not load file: {filename}")
 
 def log(message):
 	timestamp = datetime.datetime.now()

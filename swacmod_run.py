@@ -97,7 +97,7 @@ def get_output(data, node):
     # *** Uncomment all these
     output = {}
     for function in [
-            # m.get_precipitation,
+            m.get_precipitation,
             # m.get_pe,
             # m.get_pefac,
             # m.get_canopy_storage,

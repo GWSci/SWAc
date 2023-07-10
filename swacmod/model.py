@@ -164,8 +164,8 @@ def get_snow_simple(data, output, node):
 
     if params['snow_process_simple'] == 'disabled':
         col = {}
-        col['snowpack'] = col_snowpack.base
-        col['snowmelt'] = col_snowmelt.base
+        col['snowpack'] = col_snowpack
+        col['snowmelt'] = col_snowmelt
         return col
 
     start_snow_pack = params['snow_params_simple'][node][0]
@@ -188,7 +188,7 @@ def get_snow_simple(data, output, node):
         snowpack = (1 - var5[num]) * snowpack + snowfall_o[num]
         col_snowpack[num] = snowpack
 
-    return {'snowpack': col_snowpack.base, 'snowmelt': col_snowmelt.base}
+    return {'snowpack': col_snowpack, 'snowmelt': col_snowmelt}
 
 
 ##############################################################################
@@ -230,8 +230,8 @@ def get_snow_complex(data, output, node):
         col['rainfall_o'] = output['rainfall_o']
 
         if params['snow_process_simple'] == 'disabled':
-            col['snowpack'] = col_snowpack.base
-            col['snowmelt'] = col_snowmelt.base
+            col['snowpack'] = col_snowpack
+            col['snowmelt'] = col_snowmelt
         else:
             col['snowpack'] = output['snowpack']
             col['snowmelt'] = output['snowmelt']
@@ -259,10 +259,10 @@ def get_snow_complex(data, output, node):
 
         del sm
 
-        return {'snowpack': col_snowpack.base,
-                'snowmelt': col_snowmelt.base,
-                'snowfall_o': col_snowfall_o.base,
-                'rainfall_o': col_rainfall_o.base}
+        return {'snowpack': col_snowpack,
+                'snowmelt': col_snowmelt,
+                'snowfall_o': col_snowfall_o,
+                'rainfall_o': col_rainfall_o}
 
 ##############################################################################
 
@@ -447,16 +447,16 @@ def get_ae(data, output, node):
             col_p_smd[num] = p_smd
 
     col = {}
-    col['rapid_runoff_c'] = col_rapid_runoff_c.base
-    col['rapid_runoff'] = col_rapid_runoff.base
-    col['runoff_recharge'] = col_runoff_recharge.base
-    col['macropore_att'] = col_macropore_att.base
-    col['macropore_dir'] = col_macropore_dir.base
-    col['percol_in_root'] = col_percol_in_root.base
-    col['p_smd'] = col_p_smd.base
-    col['smd'] = col_smd.base
-    col['k_slope'] = col_k_slope.base
-    col['ae'] = col_ae.base
+    col['rapid_runoff_c'] = col_rapid_runoff_c
+    col['rapid_runoff'] = col_rapid_runoff
+    col['runoff_recharge'] = col_runoff_recharge
+    col['macropore_att'] = col_macropore_att
+    col['macropore_dir'] = col_macropore_dir
+    col['percol_in_root'] = col_percol_in_root
+    col['p_smd'] = col_p_smd
+    col['smd'] = col_smd
+    col['k_slope'] = col_k_slope
+    col['ae'] = col_ae
 
     return col
 
@@ -621,9 +621,9 @@ def get_interflow(data, output, node):
             col_interflow_to_rivers[num] = var6 * var8[num]
 
     col = {}
-    col['interflow_volume'] = col_interflow_volume.base
-    col['infiltration_recharge'] = col_infiltration_recharge.base
-    col['interflow_to_rivers'] = col_interflow_to_rivers.base
+    col['interflow_volume'] = col_interflow_volume
+    col['infiltration_recharge'] = col_infiltration_recharge
+    col['interflow_to_rivers'] = col_interflow_to_rivers
 
     return col
 
@@ -682,8 +682,8 @@ def get_recharge(data, output, node):
                                           output['macropore_dir'][num])
 
     col = {}
-    col['recharge_store'] = col_recharge_store.base
-    col['combined_recharge'] = col_combined_recharge.base
+    col['recharge_store'] = col_recharge_store
+    col['combined_recharge'] = col_combined_recharge
     return col
 
 ###############################################################################
@@ -817,8 +817,8 @@ def get_combined_str(data, output, node):
         col_combined_str = combined_str
 
     col = {}
-    col['sw_attenuation'] = col_attenuation.base
-    col['combined_str'] = col_combined_str.base
+    col['sw_attenuation'] = col_attenuation
+    col['combined_str'] = col_combined_str
 
     return col
 
@@ -886,7 +886,7 @@ def get_change(data, output, node):
         col_change[num] += (output['sw_attenuation'][num]
                             - output['sw_attenuation'][num-1])
 
-    return {'total_storage_change': col_change.base}
+    return {'total_storage_change': col_change}
 
 ###############################################################################
 
