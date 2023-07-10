@@ -21,3 +21,4 @@ venv/
 Pip*
 env/
 temp*
+temp_scratch_files/

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-"""Setup for Cython module."""
 
 # Standard Library
 try:
@@ -11,7 +10,6 @@ except ImportError:
 
 # Third Party Libraries
 import numpy
-from Cython.Build import cythonize
 
 EXTENSIONS = [Extension("model",
                         ["cymodel.pyx"],
@@ -27,5 +25,4 @@ EXTENSIONS = [Extension("model",
 setup(
     include_dirs=[numpy.get_include()],
     package_dir={"swacmod": ""},
-    ext_modules=cythonize(EXTENSIONS),
 )
