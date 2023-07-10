@@ -25,7 +25,7 @@ expected_precipitation = numpy.array([
 ], dtype=float)
 
 class Test_Get_Precipitation(unittest.TestCase):
-	def test_get_precipitation(self):
+	def test_get_precipitation_oracle(self):
 		input_data = {
 			"series": {
 				"rainfall_ts": rainfall_ts
@@ -35,8 +35,18 @@ class Test_Get_Precipitation(unittest.TestCase):
 			},
 		}
 		actual_oracle = oracle_get_precipitation(input_data)
-		actual_numpy = numpy_get_precipitation(input_data)
 		numpy.testing.assert_array_equal(expected_precipitation, actual_oracle)
+
+	def test_get_precipitation_numpy(self):
+		input_data = {
+			"series": {
+				"rainfall_ts": rainfall_ts
+			},
+			"params": {
+				"rainfall_zone_mapping": rainfall_zone_mapping
+			},
+		}
+		actual_numpy = numpy_get_precipitation(input_data)
 		numpy.testing.assert_array_equal(expected_precipitation, actual_numpy)
 
 def oracle_get_precipitation(data):
