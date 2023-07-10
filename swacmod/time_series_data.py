@@ -21,6 +21,30 @@ from . import utils as u
 class TimeSeriesData:
 	pass
 
+class Numpy_Dumpy_Time_Series_Data(TimeSeriesData):
+	def __init__(self, filename):
+		log("Reading Numpydumpy START")
+		shape = convert_numpydumpy_filename_to_shape(filename)
+		try:
+			self.rows = numpy.memmap(
+				filename = filename, 
+				dtype = float,
+				mode = "r",
+				shape = shape)
+		except IOError as err:
+			message = f"Could not read file: {filename}"
+			raise u.InputOutputError(message)
+		log("Reading Numpydumpy END")
+
+	def row(self, index):
+		return self.rows[index]
+
+	def __len__(self):
+		return len(self.rows)
+
+	def __getitem__(self, subscript):
+		return self.rows.__getitem__(subscript)
+
 class CsvTimeSeriesData(TimeSeriesData):
 	def __init__(self, param_name, csv_filename):
 		log("Reading CSV START")
@@ -190,7 +214,9 @@ def report_using_data_file_backend(filename):
 
 def load_time_series_data(param, filename, ext):
 	is_in_memory = calculate_is_in_memory(filename)
-	if ext == "csv":
+	if ext == "numpydumpy":
+		return Numpy_Dumpy_Time_Series_Data(filename)
+	elif ext == "csv":
 		if is_in_memory:
 			return CsvTimeSeriesData(param, filename)
 		else:
