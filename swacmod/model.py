@@ -63,7 +63,6 @@ def get_pefac(data, output, node):
     """E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
     series, params = data['series'], data['params']
     days = len(series['date'])
-    day, z
     pefac = np.zeros(days)
     var1 = 0.0
     pe = output['pe_ts']
@@ -159,7 +158,6 @@ def get_snow_simple(data, output, node):
     """
     series, params = data['series'], data['params']
 
-    num
     length = len(series['date'])
     col_snowpack = np.zeros(length)
     col_snowmelt = np.zeros(len(series['date']))
@@ -201,7 +199,6 @@ def get_snow_complex(data, output, node):
     """
     series, params = data['series'], data['params']
 
-    day
     days = len(series['date'])
     col_snowpack = np.zeros(days)
     col_snowmelt = np.zeros(days)
@@ -783,7 +780,6 @@ def get_combined_str(data, output, node):
                         output['swdis_ts'][0] +
                         output['rapid_runoff'][0] -
                         output['runoff_recharge'][0]), 0.0)
-    num
 
     combined_str = (output['interflow_to_rivers'] +
                     output['swabs_ts'] +
@@ -874,7 +870,6 @@ def get_change(data, output, node):
     length = len(series['date'])
     col_change = np.zeros(length)
     tmp0 = np.zeros(length)
-    num
 
     tmp0 = (output['recharge_store_input'] -
             (output['combined_recharge'] - output['macropore_dir']) +
