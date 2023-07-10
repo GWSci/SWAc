@@ -207,3 +207,9 @@ def log(message):
 	timestamp = datetime.datetime.now()
 	line = f"{timestamp} : {message}"
 	print(line)
+
+def convert_numpydumpy_filename_to_shape(filename):
+    parts = filename.split(".")
+    shape_string = parts[-2]
+    shape_tuple = ast.literal_eval(shape_string)
+    return shape_tuple
