@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import snow_melt
+import swacmod.snow_melt as snow_melt
 
 class SnowMeltParams:
 	def __init__(self, length):

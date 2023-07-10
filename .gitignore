@@ -20,3 +20,4 @@ build/
 venv/
 Pip*
 env/
+temp*

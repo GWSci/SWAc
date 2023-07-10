@@ -223,13 +223,10 @@ max_canopy_storage: max_canopy_storage.yml
 # Process: Snow #
 #################
 
-# Snow process: can be either "enabled" or "disabled"
-# This parameter is required
-snow_process: disabled
-
-# This parameter is optional
-# This parameter can accept a path to YAML or CSV
-snow_params: snow_params.yml
+snow_process_simple: disabled
+snow_params_simple: snow_params_simple.yml
+snow_process_complex: disabled
+snow_params_complex: snow_params_complex.yml
 
 
 #######################################################
@@ -390,13 +387,6 @@ subsoilzone_leakage_fraction: subsoilzone_leakage_fraction.yml
 # Interflow process: can be either "enabled" or "disabled"
 # This parameter is required
 interflow_process: disabled
-
-# Interflow parameters (Initial interflow store, Store bypass, Infiltration,
-#                       Interflow to rivers )
-# This parameter is optional
-# This parameter can accept a path to YAML or CSV
-interflow_params: interflow_params.yml
-
 
 ###############################################
 # Process: Recharge Release to Saturated Zone #
