@@ -25,6 +25,7 @@ from tqdm import tqdm
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
+import swacmod.model_numpy
 # Compile and import model
 from swacmod import model as m
 
@@ -371,6 +372,14 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                          data["params"]["start_date"]).days]
     else:
         spatial_index = None
+
+    seconds_start = time.time()
+    log("Numpy calculations START")
+    precipitation = swacmod.model_numpy.numpy_get_precipitation(data, ids)
+    log("Numpy calculations END")
+    seconds_end = time.time()
+    seconds_elapsed = seconds_end - seconds_start
+    log(f"Numpy calculation seconds: {seconds_elapsed}")
 
     log("Multiprocessing START")
     workers = []
