@@ -375,7 +375,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     seconds_start = time.time()
     log("Numpy calculations START")
-    precipitation = swacmod.model_numpy.numpy_get_precipitation(data, ids)
+    precipitation = swacmod.model_numpy.lazy_get_precipitation(data, ids)
     log("Numpy calculations END")
     seconds_end = time.time()
     seconds_elapsed = seconds_end - seconds_start

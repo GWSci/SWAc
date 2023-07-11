@@ -1,10 +1,11 @@
 import datetime
+import numpy
 import time
 
 def report_time(message, function):
 	token = start_timing(message)
 	result = function()
-	stop_timing(message, token)
+	stop_timing(token)
 	return result
 
 def start_timing(message):
@@ -27,3 +28,17 @@ def log(message):
 	timestamp = datetime.datetime.now()
 	line = f"{timestamp} : {message}"
 	print(line)
+
+def report_array(name, arr):
+	gb = arr.nbytes / 1024 / 1024 / 1024
+	message = f"{name} {arr.dtype} {arr.shape} {gb} gb"
+	log(message)
+
+def report_frequencies(message, arr):
+	values, counts = numpy.unique(arr, return_counts=True)
+	counts = numpy.sort(counts)
+	counts = numpy.flip(counts)
+	unique_value_count = len(values)
+	array_length = len(arr)
+	log(f"Frequencies: {message} : {unique_value_count} unique values out of {array_length}.")
+	log(f"Frequencies: {message} : Counts: {counts.tolist()}")

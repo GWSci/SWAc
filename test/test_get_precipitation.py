@@ -52,9 +52,29 @@ class Test_Get_Precipitation(unittest.TestCase):
 		actual_numpy = swacmod.model_numpy.numpy_get_precipitation(input_data, nodes)
 		numpy.testing.assert_array_equal(expected_precipitation, actual_numpy)
 
+	def test_get_precipitation_lazy(self):
+		input_data = {
+			"series": {
+				"rainfall_ts": rainfall_ts
+			},
+			"params": {
+				"rainfall_zone_mapping": rainfall_zone_mapping
+			},
+		}
+		actual_numpy = lazy_to_array(swacmod.model_numpy.lazy_get_precipitation(input_data, nodes))
+		numpy.testing.assert_array_equal(expected_precipitation, actual_numpy)
+
 def oracle_get_precipitation(data):
 	result = []
 	for node in nodes:
 		precipitation = swacmod.model.get_precipitation(data, {}, node)
 		result.append(precipitation["rainfall_ts"])
 	return numpy.array(result)
+
+def lazy_to_array(lazy):
+	result = []
+	for node in nodes:
+		precipitation = lazy[node - 1]
+		result.append(precipitation)
+	return numpy.array(result)
+	
