@@ -4,6 +4,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
+import swacmod.feature_flags as ff
+
 # Standard Library
 import os
 import sys
@@ -15,8 +17,9 @@ import multiprocessing as mp
 from multiprocessing.heap import Arena
 import mmap
 import gc
-import traceback # *** remove import
-import datetime
+if ff.use_perf_features:
+    import traceback # *** remove import
+    import datetime
 
 # Third Party Libraries
 import numpy as np
@@ -25,8 +28,10 @@ from tqdm import tqdm
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
-import swacmod.model_numpy
+if ff.use_perf_features:
+    import swacmod.model_numpy
 # Compile and import model
+from swacmod import compile_model
 from swacmod import model as m
 
 # win fix
@@ -95,9 +100,10 @@ def get_output(data, node):
 
     start = time.time()
 
-    # *** Uncomment all these
     output = {}
-    for function in [
+
+    if ff.use_perf_features:
+        methods = [
             m.get_precipitation,
             # m.get_pe,
             # m.get_pefac,
@@ -130,7 +136,44 @@ def get_output(data, node):
             # m.get_average_out,
             # m.get_change,
             # m.get_balance,
-    ]:
+        ]
+    else:
+        methods = [
+            m.get_precipitation,
+            m.get_pe,
+            m.get_pefac,
+            m.get_canopy_storage,
+            m.get_net_pefac,
+            m.get_precip_to_ground,
+            m.get_snowfall_o,
+            m.get_rainfall_o,
+            m.get_snow_simple,
+            m.get_snow_complex,
+            m.get_net_rainfall,
+            m.get_rawrew,
+            m.get_tawtew,
+            m.get_ae,
+            m.get_unutilised_pe,
+            m.get_rejected_recharge,
+            m.get_perc_through_root,
+            m.get_subroot_leak,
+            m.get_interflow_bypass,
+            m.get_interflow_store_input,
+            m.get_interflow,
+            m.get_recharge_store_input,
+            m.get_recharge,
+            m.get_swabs,
+            m.get_swdis,
+            m.get_combined_str,
+            m.get_combined_ae,
+            m.get_evt,
+            m.get_average_in,
+            m.get_average_out,
+            m.get_change,
+            m.get_balance,
+    ]
+        
+    for function in methods:
 
         columns = function(data, output, node)
         output.update(columns)
@@ -167,17 +210,19 @@ def run_process(
     logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
 
-    # *** Remove section
-    data["params"]["output_recharge"] = False # Remove. Set to disable aggregation.
-    data["params"]["swrecharge_process"] = "disabled" # Remove. Set to disable aggregation.
-    data["params"]["output_sfr"] = False
-    data["params"]["excess_sw_process"] = "disabled"
-    data["params"]["output_evt"] = False
-    data["params"]["spatial_output_date"] = False
-    # ### End of section to remove
+    if ff.use_perf_features:
+        # *** Remove section
+        data["params"]["output_recharge"] = False # Remove. Set to disable aggregation.
+        data["params"]["swrecharge_process"] = "disabled" # Remove. Set to disable aggregation.
+        data["params"]["output_sfr"] = False
+        data["params"]["excess_sw_process"] = "disabled"
+        data["params"]["output_evt"] = False
+        data["params"]["spatial_output_date"] = False
+        # ### End of section to remove
 
-    get_output_seconds = 0.0
-    other_stuff_seconds = 0.0
+    if ff.use_perf_features:
+        get_output_seconds = 0.0
+        other_stuff_seconds = 0.0
 
     for node in ids:
 
@@ -185,13 +230,15 @@ def run_process(
 
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
-            seconds_start = time.time()
+            if ff.use_perf_features:
+                seconds_start = time.time()
             output = get_output(data, node)
-            seconds_end = time.time()
-            seconds_elapsed = seconds_end - seconds_start
-            get_output_seconds = get_output_seconds + seconds_elapsed
+            if ff.use_perf_features:
+                seconds_end = time.time()
+                seconds_elapsed = seconds_end - seconds_start
+                get_output_seconds = get_output_seconds + seconds_elapsed
 
-            seconds_start = time.time()
+                seconds_start = time.time()
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
                 if node in data["params"]["output_individual"]:
@@ -252,12 +299,14 @@ def run_process(
                     spatial[node] = m.aggregate(output,
                                                 area,
                                                 index=spatial_index)
-            seconds_end = time.time()
-            seconds_elapsed = seconds_end - seconds_start
-            other_stuff_seconds = other_stuff_seconds + seconds_elapsed
+            if ff.use_perf_features:
+                seconds_end = time.time()
+                seconds_elapsed = seconds_end - seconds_start
+                other_stuff_seconds = other_stuff_seconds + seconds_elapsed
     logging.info("mp.Process %d ended", num)
-    log(f"get_output_seconds  = {get_output_seconds}")
-    log(f"other_stuff_seconds = {other_stuff_seconds}")
+    if ff.use_perf_features:
+        log(f"get_output_seconds  = {get_output_seconds}")
+        log(f"other_stuff_seconds = {other_stuff_seconds}")
 
     return (
         reporting_agg,
@@ -319,16 +368,21 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     print('\nStart "%s"' % params["run_name"])
     logging.info("Start SWAcMod run")
+    if not ff.use_perf_features:
+        logging.info(compile_model.get_status())
 
-    log("Loading data START")
+    if ff.use_perf_features:
+        log("Loading data START")
     if data is None:
         data = io.load_and_validate(specs_file, input_file, input_dir)
-    log("Loading data END")
+    if ff.use_perf_features:
+        log("Loading data END")
 
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
-    data["params"]["num_cores"] = 1
+    if ff.use_perf_features:
+        data["params"]["num_cores"] = 1
     per = len(data["params"]["time_periods"])
     nnodes = data["params"]["num_nodes"]
     len_rch_agg = (nnodes * per) + 1
@@ -373,15 +427,17 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     else:
         spatial_index = None
 
-    seconds_start = time.time()
-    log("Numpy calculations START")
-    precipitation = swacmod.model_numpy.lazy_get_precipitation(data, ids)
-    log("Numpy calculations END")
-    seconds_end = time.time()
-    seconds_elapsed = seconds_end - seconds_start
-    log(f"Numpy calculation seconds: {seconds_elapsed}")
+    if ff.use_perf_features:
+        seconds_start = time.time()
+        log("Numpy calculations START")
+        precipitation = swacmod.model_numpy.lazy_get_precipitation(data, ids)
+        log("Numpy calculations END")
+        seconds_end = time.time()
+        seconds_elapsed = seconds_end - seconds_start
+        log(f"Numpy calculation seconds: {seconds_elapsed}")
 
-    log("Multiprocessing START")
+    if ff.use_perf_features:
+        log("Multiprocessing START")
     workers = []
     q = mp.Queue()
     lproc = mp.Process(target=listener, args=(q, nnodes))
@@ -418,17 +474,20 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         workers.append(Worker("worker%d" % process, q, proc, verbose=False))
 
     for p in workers:
-        log("Starting Worker")
+        if ff.use_perf_features:
+            log("Starting Worker")
         p.start()
 
     for p in workers:
         p.join()
-        log("Worker joined")
+        if ff.use_perf_features:
+            log("Worker joined")
 
     q.put(None)
     lproc.join()
 
-    log("Multiprocessing END")
+    if ff.use_perf_features:
+        log("Multiprocessing END")
 
     times["end_of_model"] = time.time()
 
@@ -506,7 +565,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             # copy new bits into cat output
             term = "runoff_recharge"
             for cat in reporting_agg2:
-                if "runoff_recharge" in reporting_agg2[cat] and False: # *** remove the and false.
+                if "runoff_recharge" in reporting_agg2[cat] and not ff.use_perf_features:
                     reporting_agg[cat]["combined_recharge"] += reporting_agg2[
                         cat][term][term]
                     reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][
@@ -518,18 +577,18 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         if not skip:
             io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
-        # *** Uncomment
-        # for num, key in enumerate(reporting_agg.keys()):
-        #     print("\t- Report file (%d of %d)" %
-        #           (num + 1, len(reporting_agg.keys())))
-        #     io.dump_water_balance(
-        #         data,
-        #         reporting_agg[key],
-        #         file_format,
-        #         u.CONSTANTS["OUTPUT_DIR"],
-        #         zone=key,
-        #         reduced=reduced,
-        #     )
+        if not ff.use_perf_features:
+            for num, key in enumerate(reporting_agg.keys()):
+                print("\t- Report file (%d of %d)" %
+                    (num + 1, len(reporting_agg.keys())))
+                io.dump_water_balance(
+                    data,
+                    reporting_agg[key],
+                    file_format,
+                    u.CONSTANTS["OUTPUT_DIR"],
+                    zone=key,
+                    reduced=reduced,
+                )
 
         for node in list(data["params"]["output_individual"]):
             print("\t- Node output file")
@@ -636,7 +695,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
 ###############################################################################
 if __name__ == "__main__":
-    log("Main program START")
+    if not ff.use_perf_features:
+        log("Main program START")
     mp.freeze_support()
 
     # Parser for command line arguments
@@ -699,7 +759,8 @@ if __name__ == "__main__":
         )
     else:
         try:
-            log("Calling run START")
+            if not ff.use_perf_features:
+                log("Calling run START")
             run(
                 test=ARGS.test,
                 debug=ARGS.debug,
@@ -707,10 +768,13 @@ if __name__ == "__main__":
                 reduced=ARGS.reduced,
                 skip=ARGS.skip_prompt,
             )
-            log("Calling run END")
+            if not ff.use_perf_features:
+                log("Calling run END")
         except Exception as err:
-            traceback.print_exc() # *** Remove
+            if not ff.use_perf_features:
+                traceback.print_exc() # *** Remove
             logging.error(err.__repr__())
             print("ERROR: %s" % err)
             print("")
-    log("Main program END")
+    if not ff.use_perf_features:
+        log("Main program END")
