@@ -29,7 +29,7 @@ from . import validation as v
 from . import finalization as f
 from . import __version__
 from . import time_series_data as time_series_data
-import feature_flags as ff
+from . import feature_flags as ff
 
 
 try:
