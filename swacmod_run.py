@@ -41,9 +41,10 @@ sys.maxint = 2**63 - 1
 SENTINEL = 1
 
 def log(message):
-	timestamp = datetime.datetime.now()
-	line = f"{timestamp} : swacmod_run.py : {message}"
-	print(line)
+    if ff.use_perf_features:
+        timestamp = datetime.datetime.now()
+        line = f"{timestamp} : swacmod_run.py : {message}"
+        print(line)
 
 def anonymous_arena_init(self, size, fd=-1):
     "Create Arena using an anonymous memory mapping."
