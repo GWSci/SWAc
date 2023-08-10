@@ -29,6 +29,7 @@ from . import validation as v
 from . import finalization as f
 from . import __version__
 from . import time_series_data as time_series_data
+import feature_flags as ff
 
 
 try:
@@ -683,10 +684,17 @@ def load_params_from_yaml(
     for param in tqdm(params, desc="SWAcMod load params     "):
         if isinstance(params[param], str) and "alt_format" in specs[param]:
             absolute = os.path.join(input_dir, params[param])
-            param_category = categorise_param(param, params[param])
+            if ff.use_perf_features:
+                param_category = categorise_param(param, params[param])
+            else:
+                param_category = "no param category"
             ext = params[param].split(".")[-1]
-            if ext not in specs[param]["alt_format"] and ext != "numpydumpy":
-                continue
+            if ff.use_perf_features:
+                if ext not in specs[param]["alt_format"] and ext != "numpydumpy":
+                    continue
+            else:
+                if ext not in specs[param]["alt_format"]:
+                    continue                
             if param_category == "time_peroiod_param":
                 params[param] = time_series_data.load_time_series_data(param, absolute, ext)
             elif ext == "csv":
@@ -741,8 +749,11 @@ def load_and_validate(specs_file, input_file, input_dir):
     f.finalize_params(data)
     f.finalize_series(data)
     c.check_required(data)
-    # v.validate_params(data)
-    # v.validate_series(data)
+    if ff.use_perf_features:
+        pass
+    else:
+        v.validate_params(data)
+        v.validate_series(data)
 
     return data
 
