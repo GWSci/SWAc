@@ -695,7 +695,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
 
 ###############################################################################
-if __name__ == "__main__":
+def run_main():
     if not ff.use_perf_features:
         log("Main program START")
     mp.freeze_support()
@@ -779,3 +779,6 @@ if __name__ == "__main__":
             print("")
     if not ff.use_perf_features:
         log("Main program END")
+
+if __name__ == "__main__":
+    run_main()
