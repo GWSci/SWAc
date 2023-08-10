@@ -12,6 +12,7 @@ import numpy as np
 # Internal modules
 from . import utils as u
 from . import time_series_data
+import feature_flags as ff
 
 
 try:
@@ -40,7 +41,10 @@ def expand_t_type(t_type):
     elif t_type == int:
         t_type = (int, int)
     elif t_type == list:
-        t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
+        if (ff.use_perf_features):
+            t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
+        else:
+            t_type = (list, np.ndarray)
 
     return t_type
 
@@ -54,10 +58,13 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         t_type = types.pop(0)
         t_type = expand_t_type(t_type)
 
-        expended_list = expand_t_type(list)
+        if ff.use_perf_features:
+            expanded_list = expand_t_type(list)
+        else:
+            expanded_list = (list, np.ndarray)
 
         new_len = None
-        if t_type == expended_list and len_list:
+        if t_type == expanded_list and len_list:
             new_len = len_list.pop(0)
 
         if not isinstance(param, t_type):
@@ -65,7 +72,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             raise u.ValidationError(msg % (name, MAPPING[t_type][0],
                                            type(param)))
 
-        if t_type == expended_list and new_len and len(param) != new_len:
+        if t_type == expanded_list and new_len and len(param) != new_len:
             msg = 'Parameter "%s" has to be a list of length %d, found %d'
             raise u.ValidationError(msg % (name, new_len, len(param)))
 
@@ -90,7 +97,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             types = []
             len_list = []
 
-        elif len(types) > 0 and t_type in [set, expended_list]:
+        elif len(types) > 0 and t_type in [set, expanded_list]:
             for value in param:
                 copy_t = [i for i in types]
                 copy_l = []
