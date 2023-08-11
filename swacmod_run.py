@@ -778,7 +778,7 @@ def run_main():
             if not ff.use_perf_features:
                 log("Calling run END")
         except Exception as err:
-            if not ff.use_perf_features:
+            if ff.use_perf_features:
                 traceback.print_exc() # *** Remove
             logging.error(err.__repr__())
             print("ERROR: %s" % err)
