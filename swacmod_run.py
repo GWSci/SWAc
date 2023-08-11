@@ -387,6 +387,14 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         num_nodes_new = min(num_nodes_initial, ff.max_node_count_override)
         log(f"Reduced num_nodes from {num_nodes_initial} to {num_nodes_new}.")
         data["params"]["num_nodes"] = num_nodes_new
+    
+    if ff.use_perf_features:
+        time_periods_initial = data["params"]["time_periods"]
+        time_periods_initial_count = len(time_periods_initial)
+        time_periods_new_count = min(time_periods_initial_count, ff.max_time_period_override)
+        time_periods_new = time_periods_initial[0:time_periods_new_count]
+        log(f"Reduced time_periods from {time_periods_initial_count} to {time_periods_new_count}.")
+        data["params"]["time_periods"] = time_periods_new
 
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
