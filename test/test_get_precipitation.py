@@ -1,5 +1,5 @@
 import numpy
-import swacmod.model
+import swacmod.model_plain_python as model
 import swacmod.model_numpy
 import unittest
 
@@ -67,7 +67,7 @@ class Test_Get_Precipitation(unittest.TestCase):
 def oracle_get_precipitation(data):
 	result = []
 	for node in nodes:
-		precipitation = swacmod.model.get_precipitation(data, {}, node)
+		precipitation = model.get_precipitation(data, {}, node)
 		result.append(precipitation["rainfall_ts"])
 	return numpy.array(result)
 

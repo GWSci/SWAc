@@ -31,8 +31,11 @@ from swacmod import input_output as io
 if ff.use_perf_features:
     import swacmod.model_numpy
 # Compile and import model
-from swacmod import compile_model
-from swacmod import model as m
+if ff.use_perf_features:
+    import swacmod.model_plain_python as m
+else:
+    from swacmod import compile_model
+    from swacmod import model as m
 
 # win fix
 sys.maxint = 2**63 - 1
@@ -520,6 +523,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             # aggregate amended recharge & runoff arrays by output periods
             for node in tqdm(list(m.all_days_mask(data).nodes),
                              desc="Aggregating Fluxes      "):
+                if ff.use_perf_features:
+                    if int(node) > nnodes:
+                        continue
+
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
 
@@ -641,13 +648,14 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     fout.writelines(lst_strm[2:])
                 del strm
             else:
-                sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
-                if data['params']['gwmodel_type'] == 'mfusg':
-                    io.dump_sfr_output(sfr)
-                elif data['params']['gwmodel_type'] == 'mf6':
-                    sfr.write()
-                del sfr
-                gc.collect()
+                if not ff.use_perf_features:
+                    sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
+                    if data['params']['gwmodel_type'] == 'mfusg':
+                        io.dump_sfr_output(sfr)
+                    elif data['params']['gwmodel_type'] == 'mf6':
+                        sfr.write()
+                    del sfr
+                    gc.collect()
 
         if data["params"]["output_evt"]:
             print("\t- EVT file")

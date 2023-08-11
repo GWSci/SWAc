@@ -10,6 +10,7 @@ from tqdm import tqdm
 import networkx as nx
 import sys
 import numpy as np
+import swacmod.feature_flags as ff
 
 import sys
 import os.path
@@ -727,6 +728,9 @@ def get_mf6rch_file(data, rchrate):
     irch = np.zeros((nodes, 1), dtype=int)
     if rch_params is not None:
         for inode, vals in rch_params.items():
+            if ff.use_perf_features:
+                if inode > nodes:
+                    continue
             irch[inode - 1, 0] = vals[0]
     else:
         for i in range(nodes):
@@ -928,13 +932,16 @@ def aggregate(output, area, reporting=None, index=None):
 
 
 def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
-                  flow, nodes_per):
+                  flow, nodes_per, num_nodes):
     """get flows for one period"""
 
     ro[:] = 0.0
     flow[:] = 0.0
 
     for node_swac, line in sorted_by_ca.items():
+        if ff.use_perf_features:
+            if node_swac >= num_nodes:
+                continue
         downstr, str_flag = line[:2]
         acc = 0.0
 
@@ -1070,6 +1077,9 @@ def get_sfr_file(data, runoff):
     # initialise reach & segment data
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
+        if ff.use_perf_features:
+            if node_swac > nodes:
+                continue
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
          depth, width) = line
         # for mf6 only
@@ -1132,6 +1142,9 @@ def get_sfr_file(data, runoff):
         Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
         for iseg in range(nss):
             conn = [iseg]
+            if ff.use_perf_features:
+                if not (iseg + 1) in seg_swac_dic:
+                    continue
             node_swac = seg_swac_dic[iseg + 1]
             downstr = sorted_by_ca[node_swac][idx['downstr']]
             for n in Gs.neighbors(node_swac):
@@ -1156,7 +1169,7 @@ def get_sfr_file(data, runoff):
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
         ro, flow = get_sfr_flows(sorted_by_ca, idx, runoff, done, areas,
-                                 swac_seg_dic, ro, flow, nodes * per)
+                                 swac_seg_dic, ro, flow, nodes * per, nodes)
 
         if data['params']['gwmodel_type'] == 'mfusg':
             for iseg in range(nss):
@@ -1365,7 +1378,7 @@ def get_str_file(data, runoff):
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
         ro, flow = get_sfr_flows(sorted_by_ca, idx, runoff, done, areas,
-                                 swac_seg_dic, ro, flow, nodes * per)
+                                 swac_seg_dic, ro, flow, nodes * per, nodes)
 
         for iseg in range(nss):
             rd[iseg]['flow'] = flow[iseg] + ro[iseg]
@@ -1634,6 +1647,9 @@ def get_evt_file(data, evtrate):
     mt = flopy.mf6.ModflowGwfevt.stress_period_data.empty
 
     for inode, vals in evt_params.items():
+        if ff.use_perf_features:
+            if inode >= nodes:
+                continue
         ievt[inode - 1, 0] = vals[0]
         surf[inode - 1, 0] = vals[1]
         exdp[inode - 1, 0] = vals[2]
@@ -1788,6 +1804,9 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True):
         if mask[node-1] == 1:
             G.add_node(node)
     for node_swac, line in sorted_by_ca.items():
+        if ff.use_perf_features:
+            if node_swac > nnodes:
+                continue
         if mask[node_swac-1] == 1 and line[0] > 0:
             G.add_edge(node_swac, line[0])
     return G
@@ -1831,6 +1850,9 @@ def all_days_mask(data):
                                                          source=node).items()]
             #  for n in nx.descendants(Gc, node):
             for n in lst:
+                if ff.use_perf_features:
+                    if n > nnodes:
+                        continue
                 mask[n-1] = 1
 
     return build_graph(nnodes, sorted_by_ca, mask)
