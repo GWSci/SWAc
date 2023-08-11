@@ -32,8 +32,10 @@ if ff.use_perf_features:
     import swacmod.model_numpy
 # Compile and import model
 if ff.use_perf_features:
+    print("importing plain python")
     import swacmod.model_plain_python as m
 else:
+    print("COmpileing model")
     from swacmod import compile_model
     from swacmod import model as m
 
