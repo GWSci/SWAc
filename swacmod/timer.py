@@ -6,13 +6,7 @@ def make_time_switcher():
 	return {"message_to_seconds": {}}
 
 def switch_to(time_switcher, message, time=time):
-	if "current_timer" in time_switcher:
-		timer_just_finished = stop_timing(time_switcher["current_timer"], time=time)
-		previous_message = timer_just_finished["message"]
-		previous_time = timer_just_finished["elapsed_seconds"]
-		time_switcher["message_to_seconds"][previous_message] = previous_time
-		del time_switcher["current_timer"]
-
+	time_switcher = switch_off(time_switcher, time=time)
 	time_switcher["current_timer"] = start_timing(message, time=time)
 	return time_switcher
 
