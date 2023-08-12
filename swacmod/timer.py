@@ -11,6 +11,7 @@ def switch_to(time_switcher, message, time=time):
 		previous_message = timer_just_finished["message"]
 		previous_time = timer_just_finished["elapsed_seconds"]
 		time_switcher["message_to_seconds"][previous_message] = previous_time
+		del time_switcher["current_timer"]
 
 	time_switcher["current_timer"] = start_timing(message, time=time)
 	return time_switcher
