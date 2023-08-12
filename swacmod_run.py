@@ -183,6 +183,11 @@ def run_process(
 ):
     """Run model for a chunk of nodes."""
     timer_token_run_process = timer.start_timing("run_main > run > run_process")
+    timer_token_run_process_output = timer.make_accumulation_timer("run_main > run > run_process (output)")
+    timer_token_run_process_rest = timer.make_accumulation_timer("run_main > run > run_process (rest)")
+
+    timer.continue_timing(timer_token_run_process_rest)
+
     io.start_logging(path=log_path, level=level)
     logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
@@ -203,7 +208,14 @@ def run_process(
 
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
+            
+            timer.stop_timing(timer_token_run_process_rest)
+            timer.continue_timing(timer_token_run_process_output)
+
             output = get_output(data, node)
+
+            timer.stop_timing(timer_token_run_process_output)
+            timer.continue_timing(timer_token_run_process_rest)
 
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
@@ -267,9 +279,14 @@ def run_process(
                                                 index=spatial_index)
     logging.info("mp.Process %d ended", num)
 
+    timer.stop_timing(timer_token_run_process_rest)
     timer_token_run_process = timer.stop_timing(timer_token_run_process)
 
-    timer.print_time_table([timer_token_run_process])
+    timer.print_time_table([
+        timer_token_run_process_output,
+        timer_token_run_process_rest,
+        timer_token_run_process,
+    ])
 
     return (
         reporting_agg,
