@@ -4,7 +4,8 @@ import time
 
 def make_accumulation_timer(message):
 	result = {
-		"elapsed_seconds": 0
+		"message": message,
+		"elapsed_seconds": 0,
 	}
 	return result
 
