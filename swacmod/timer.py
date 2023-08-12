@@ -17,18 +17,23 @@ def report_time(message, function):
 
 def start_timing(message):
 	seconds_start = time.time()
-	log(f"{message} START")
 	return {
 		"seconds_start": seconds_start,
 		"message" : message,
+		"elapsed_seconds": 0,
 	}
 
-def stop_timing(token):
+def continue_timing(token, time=time):
+	seconds_start = time.time()
+	token["seconds_start"] = seconds_start
+	return token
+
+def stop_timing(token, time=time):
+	initial_elapsed_seconds = token["elapsed_seconds"]
 	message = token["message"]
-	log(f"{message} STOP")
 	seconds_stop = time.time()
 	seconds_start = token["seconds_start"]
-	elapsed_seconds = seconds_stop - seconds_start
+	elapsed_seconds = initial_elapsed_seconds + seconds_stop - seconds_start
 	token["seconds_stop"] = seconds_stop
 	token["elapsed_seconds"] = elapsed_seconds
 	log(f"{message}: {elapsed_seconds} s")
