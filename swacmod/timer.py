@@ -22,7 +22,10 @@ def stop_timing(token):
 	seconds_stop = time.time()
 	seconds_start = token["seconds_start"]
 	elapsed_seconds = seconds_stop - seconds_start
+	token["seconds_stop"] = seconds_stop
+	token["elapsed_seconds"] = elapsed_seconds
 	log(f"{message}: {elapsed_seconds} s")
+	return token
 
 def log(message):
 	timestamp = datetime.datetime.now()
@@ -42,3 +45,6 @@ def report_frequencies(message, arr):
 	array_length = len(arr)
 	log(f"Frequencies: {message} : {unique_value_count} unique values out of {array_length}.")
 	log(f"Frequencies: {message} : Counts: {counts.tolist()}")
+
+def make_time_table(tokens):
+	return []
