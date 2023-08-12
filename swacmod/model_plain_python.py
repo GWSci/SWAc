@@ -349,10 +349,6 @@ def get_ae(data, output, node):
     value = values[-1][0]
     p_smd = ssmd
     smd = ssmd
-    var2, var5, var8a, var9, var10, var11, var12, var13
-    rapid_runoff_c, rapid_runoff, macropore, percol_in_root
-    net_pefac, tawtew, rawrew
-    num, i, var3, var4, var6
     length = len(series['date'])
     net_rainfall = output['net_rainfall']
     net_pefac_a = output['net_pefac']
@@ -591,8 +587,6 @@ def get_interflow(data, output, node):
     var8 = np.full([length],
                                 params['interflow_decay'][interflow_zone])
     volume = var0
-    var1, var6
-    num
     recharge = np.zeros(length)
     rivers = np.zeros(length)
 
@@ -660,7 +654,6 @@ def get_recharge(data, output, node):
     recharge = np.zeros(length)
     recharge_store_input = output['recharge_store_input']
     macropore_dir = output['macropore_dir']
-    num
 
     if params['recharge_attenuation_process'] == 'enabled':
         recharge[0] = irs
