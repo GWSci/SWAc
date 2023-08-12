@@ -2,6 +2,12 @@ import datetime
 import numpy
 import time
 
+def make_accumulation_timer(message):
+	result = {
+		"elapsed_seconds": 0
+	}
+	return result
+
 def report_time(message, function):
 	token = start_timing(message)
 	result = function()
