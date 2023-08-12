@@ -29,6 +29,9 @@ def continue_timing(token, time=time):
 	return token
 
 def stop_timing(token, time=time):
+	if not "seconds_start" in token:
+		return
+
 	initial_elapsed_seconds = token["elapsed_seconds"]
 	message = token["message"]
 	seconds_stop = time.time()
@@ -36,6 +39,7 @@ def stop_timing(token, time=time):
 	elapsed_seconds = initial_elapsed_seconds + seconds_stop - seconds_start
 	token["seconds_stop"] = seconds_stop
 	token["elapsed_seconds"] = elapsed_seconds
+	del token["seconds_start"]
 	log(f"{message}: {elapsed_seconds} s")
 	return token
 
