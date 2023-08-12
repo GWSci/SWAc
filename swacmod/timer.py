@@ -47,9 +47,7 @@ def report_frequencies(message, arr):
 	log(f"Frequencies: {message} : Counts: {counts.tolist()}")
 
 def make_time_table(tokens):
-	if 0 == len(tokens):
-		return []
-	max_message_length = len(tokens[0]["message"])
+	max_message_length = 0
 	for token in tokens:
 		message_length = len(token["message"])
 		if message_length > max_message_length:
