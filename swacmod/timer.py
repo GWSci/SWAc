@@ -51,11 +51,7 @@ def make_time_table(tokens):
 	max_decimal_point_location = _find_max_decimal_point_location(tokens)
 	result = []
 	for token in tokens:
-		message = token["message"]
-		message_padding = " " * (max_message_length - len(message))
-		elapsed_seconds = str(token['elapsed_seconds'])
-		time_padding = " " * (max_decimal_point_location - elapsed_seconds.find("."))
-		line = f"{message}{message_padding}: {time_padding}{elapsed_seconds}"
+		line = _format_table_row(token, max_message_length, max_decimal_point_location)
 		result.append(line)
 	return result
 
@@ -75,4 +71,12 @@ def _find_max_decimal_point_location(tokens):
 		decimal_point_location = seconds_str.find(".")
 		if decimal_point_location > result:
 			result = decimal_point_location
+	return result
+
+def _format_table_row(token, max_message_length, max_decimal_point_location):
+	message = token["message"]
+	message_padding = " " * (max_message_length - len(message))
+	elapsed_seconds = str(token['elapsed_seconds'])
+	time_padding = " " * (max_decimal_point_location - elapsed_seconds.find("."))
+	result = f"{message}{message_padding}: {time_padding}{elapsed_seconds}"
 	return result
