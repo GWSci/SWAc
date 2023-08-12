@@ -59,12 +59,11 @@ def make_time_table(tokens):
 	result = []
 	for token in tokens:
 		message = token["message"]
-		while len(message) < max_message_length:
-			message += " "
+		message_padding = " " * (max_message_length - len(message))
 		elapsed_seconds = str(token['elapsed_seconds'])
 		while elapsed_seconds.find(".") < max_decimal_point_location:
 			elapsed_seconds = " " + elapsed_seconds
-		line = f"{message}: {elapsed_seconds}"
+		line = f"{message}{message_padding}: {elapsed_seconds}"
 		result.append(line)
 	return result
 
