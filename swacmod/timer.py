@@ -2,6 +2,30 @@ import datetime
 import numpy
 import time
 
+def make_time_switcher():
+	return {"message_to_seconds": {}}
+
+def switch_to(time_switcher, message):
+	time_switcher["current_timer"] = start_timing(message)
+	return time_switcher
+
+def switch_off(time_switcher):
+	if not "current_timer" in time_switcher:
+		return time_switcher
+	
+	time_switcher["message_to_seconds"]["aardvark"] = 1
+	return time_switcher
+
+def time_switcher_report(time_switcher):
+	result = []
+	for [message, elapsed_seconds] in time_switcher["message_to_seconds"].items():
+		row = {
+			"message": message,
+			"elapsed_seconds": elapsed_seconds,
+		}
+		result.append(row)
+	return result
+
 def make_accumulation_timer(message):
 	result = {
 		"message": message,
