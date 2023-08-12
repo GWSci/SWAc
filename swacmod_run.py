@@ -438,9 +438,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     lproc = mp.Process(target=listener, args=(q, nnodes))
     lproc.start()
 
-    timer.stop_timing(timer_token_for_run_getting_ready_for_multiprocessing)
-    timer_token_for_run_multiprocessing = timer.start_timing("run_main > run (multiprocessing)")
-
     for process, chunk in enumerate(chunks):
 
         if chunk.size == 0:
@@ -470,6 +467,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         )
 
         workers.append(Worker("worker%d" % process, q, proc, verbose=False))
+
+    timer.stop_timing(timer_token_for_run_getting_ready_for_multiprocessing)
+    timer_token_for_run_multiprocessing = timer.start_timing("run_main > run (multiprocessing)")
 
     for p in workers:
         p.start()
