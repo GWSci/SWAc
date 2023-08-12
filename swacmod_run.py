@@ -232,25 +232,14 @@ def run_process(
         data["params"]["spatial_output_date"] = False
         # ### End of section to remove
 
-    if ff.use_perf_features:
-        get_output_seconds = 0.0
-        other_stuff_seconds = 0.0
-
     for node in ids:
 
         q.put(SENTINEL)
 
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
-            if ff.use_perf_features:
-                seconds_start = time.time()
             output = get_output(data, node)
-            if ff.use_perf_features:
-                seconds_end = time.time()
-                seconds_elapsed = seconds_end - seconds_start
-                get_output_seconds = get_output_seconds + seconds_elapsed
 
-                seconds_start = time.time()
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
                 if node in data["params"]["output_individual"]:
@@ -311,14 +300,7 @@ def run_process(
                     spatial[node] = m.aggregate(output,
                                                 area,
                                                 index=spatial_index)
-            if ff.use_perf_features:
-                seconds_end = time.time()
-                seconds_elapsed = seconds_end - seconds_start
-                other_stuff_seconds = other_stuff_seconds + seconds_elapsed
     logging.info("mp.Process %d ended", num)
-    if ff.use_perf_features:
-        log(f"get_output_seconds  = {get_output_seconds}")
-        log(f"other_stuff_seconds = {other_stuff_seconds}")
 
     return (
         reporting_agg,
@@ -387,12 +369,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     if not ff.use_perf_features:
         logging.info(compile_model.get_status())
 
-    if ff.use_perf_features:
-        log("Loading data START")
     if data is None:
         data = io.load_and_validate(specs_file, input_file, input_dir)
-    if ff.use_perf_features:
-        log("Loading data END")
 
     if ff.use_perf_features:
         num_nodes_initial = data["params"]["num_nodes"]
@@ -452,17 +430,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     else:
         spatial_index = None
 
-    if ff.use_perf_features:
-        seconds_start = time.time()
-        log("Numpy calculations START")
-        precipitation = swacmod.model_numpy.lazy_get_precipitation(data, ids)
-        log("Numpy calculations END")
-        seconds_end = time.time()
-        seconds_elapsed = seconds_end - seconds_start
-        log(f"Numpy calculation seconds: {seconds_elapsed}")
+    # if ff.use_perf_features:
+        # precipitation = swacmod.model_numpy.lazy_get_precipitation(data, ids)
 
-    if ff.use_perf_features:
-        log("Multiprocessing START")
     workers = []
     q = mp.Queue()
     lproc = mp.Process(target=listener, args=(q, nnodes))
@@ -502,20 +472,13 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         workers.append(Worker("worker%d" % process, q, proc, verbose=False))
 
     for p in workers:
-        if ff.use_perf_features:
-            log("Starting Worker")
         p.start()
 
     for p in workers:
         p.join()
-        if ff.use_perf_features:
-            log("Worker joined")
 
     q.put(None)
     lproc.join()
-
-    if ff.use_perf_features:
-        log("Multiprocessing END")
 
     timer.stop_timing(timer_token_for_run_multiprocessing)
     timer_token_for_run_output = timer.start_timing("run_main > run (output)")

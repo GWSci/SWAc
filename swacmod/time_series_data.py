@@ -23,7 +23,7 @@ class TimeSeriesData:
 
 class Numpy_Dumpy_Time_Series_Data(TimeSeriesData):
 	def __init__(self, filename):
-		log("Reading Numpydumpy START")
+		# log("Reading Numpydumpy START")
 		shape = convert_numpydumpy_filename_to_shape(filename)
 		try:
 			self.rows = numpy.memmap(
@@ -34,7 +34,7 @@ class Numpy_Dumpy_Time_Series_Data(TimeSeriesData):
 		except IOError as err:
 			message = f"Could not read file: {filename}"
 			raise u.InputOutputError(message)
-		log("Reading Numpydumpy END")
+		# log("Reading Numpydumpy END")
 
 	def row(self, index):
 		return self.rows[index]
