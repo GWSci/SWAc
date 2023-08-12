@@ -39,3 +39,15 @@ class test_timer_print_table(unittest.TestCase):
 			"hippopotamus: 3.45",
 		]
 		self.assertEqual(expected, actual)
+
+	def test_timer_print_table_aligns_decimal_point_in_times(self):
+		input_tokens = [
+			{"message": "bat", "elapsed_seconds": 12.34},
+			{"message": "cat", "elapsed_seconds": 5.6},
+		]
+		actual = timer.make_time_table(input_tokens)
+		expected = [
+			"bat: 12.34",
+			"cat:  5.6",
+		]
+		self.assertEqual(expected, actual)
