@@ -48,14 +48,7 @@ def report_frequencies(message, arr):
 
 def make_time_table(tokens):
 	max_message_length = _find_max_message_length(tokens)
-	max_decimal_point_location = 0
-
-	for token in tokens:
-		seconds = token["elapsed_seconds"]
-		seconds_str = str(seconds)
-		decimal_point_location = seconds_str.find(".")
-		if decimal_point_location > max_decimal_point_location:
-			max_decimal_point_location = decimal_point_location
+	max_decimal_point_location = _find_max_decimal_point_location(tokens)
 	result = []
 	for token in tokens:
 		message = token["message"]
@@ -72,4 +65,14 @@ def _find_max_message_length(tokens):
 		message_length = len(token["message"])
 		if message_length > result:
 			result = message_length
+	return result
+
+def _find_max_decimal_point_location(tokens):
+	result = 0
+	for token in tokens:
+		seconds = token["elapsed_seconds"]
+		seconds_str = str(seconds)
+		decimal_point_location = seconds_str.find(".")
+		if decimal_point_location > result:
+			result = decimal_point_location
 	return result
