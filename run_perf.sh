@@ -1,3 +1,4 @@
 source env/bin/activate
-python3 swacmod_run_perf.py "$@"
+export SWAc_use_perf_features=True
+python3 swacmod_run.py "$@"
 deactivate

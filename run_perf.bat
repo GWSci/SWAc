@@ -1,3 +1,4 @@
 call env/Scripts/activate.bat
-python swacmod_run_perf.py %*
+set SWAc_use_perf_features=True
+python swacmod_run.py %*
 deactivate
