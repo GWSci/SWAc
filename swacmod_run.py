@@ -218,6 +218,7 @@ def run_process(
         q,
 ):
     """Run model for a chunk of nodes."""
+    timer_token_run_process = timer.start_timing("run_main > run > run_process")
     io.start_logging(path=log_path, level=level)
     logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
@@ -301,6 +302,10 @@ def run_process(
                                                 area,
                                                 index=spatial_index)
     logging.info("mp.Process %d ended", num)
+
+    timer_token_run_process = timer.stop_timing(timer_token_run_process)
+
+    timer.print_time_table([timer_token_run_process])
 
     return (
         reporting_agg,
