@@ -11,9 +11,6 @@ def switch_to(time_switcher, message, time=time):
 	return time_switcher
 
 def switch_off(time_switcher, time=time):
-	if not "current_timer" in time_switcher:
-		return time_switcher
-
 	if "current_timer" in time_switcher:
 		timer_just_finished = stop_timing(time_switcher["current_timer"], time=time)
 		previous_message = timer_just_finished["message"]
