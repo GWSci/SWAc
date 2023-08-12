@@ -25,3 +25,17 @@ class test_timer_print_table(unittest.TestCase):
 			"bat     : 2.34",
 		]
 		self.assertEqual(expected, actual)
+
+	def test_timer_print_table_aligns_colon_for_multiple_rows_when_the_longest_row_is_not_the_first(self):
+		input_tokens = [
+			{"message": "aardvark", "elapsed_seconds": 1.23},
+			{"message": "bat", "elapsed_seconds": 2.34},
+			{"message": "hippopotamus", "elapsed_seconds": 3.45},
+		]
+		actual = timer.make_time_table(input_tokens)
+		expected = [
+			"aardvark    : 1.23",
+			"bat         : 2.34",
+			"hippopotamus: 3.45",
+		]
+		self.assertEqual(expected, actual)

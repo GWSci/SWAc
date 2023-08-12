@@ -50,6 +50,10 @@ def make_time_table(tokens):
 	if 0 == len(tokens):
 		return []
 	max_message_length = len(tokens[0]["message"])
+	for token in tokens:
+		message_length = len(token["message"])
+		if message_length > max_message_length:
+			max_message_length = message_length
 	result = []
 	for token in tokens:
 		message = token["message"]
