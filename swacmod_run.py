@@ -691,6 +691,14 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     timer.stop_timing(timer_token_for_run_output)
     timer.stop_timing(timer_token_for_run)
+    timer.print_time_table([
+        timer_token_for_run_before_loading_data,
+        timer_token_for_run_loading_data,
+        timer_token_for_run_getting_ready_for_multiprocessing,
+        timer_token_for_run_multiprocessing,
+        timer_token_for_run_output,
+        timer_token_for_run,
+    ])
     # return
 
 

@@ -46,6 +46,11 @@ def report_frequencies(message, arr):
 	log(f"Frequencies: {message} : {unique_value_count} unique values out of {array_length}.")
 	log(f"Frequencies: {message} : Counts: {counts.tolist()}")
 
+def print_time_table(tokens):
+	rows = make_time_table(tokens)
+	for row in rows:
+		log(row)
+
 def make_time_table(tokens):
 	max_message_length = _find_max_message_length(tokens)
 	max_decimal_point_location = _find_max_decimal_point_location(tokens)
