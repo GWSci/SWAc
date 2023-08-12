@@ -36,14 +36,11 @@ def stop_timing(token, time=time):
 		return token
 
 	initial_elapsed_seconds = token["elapsed_seconds"]
-	message = token["message"]
 	seconds_stop = time.time()
 	seconds_start = token["seconds_start"]
 	elapsed_seconds = initial_elapsed_seconds + seconds_stop - seconds_start
-	token["seconds_stop"] = seconds_stop
 	token["elapsed_seconds"] = elapsed_seconds
 	del token["seconds_start"]
-	log(f"{message}: {elapsed_seconds} s")
 	return token
 
 def log(message):
