@@ -24,13 +24,16 @@ def start_timing(message):
 	}
 
 def continue_timing(token, time=time):
+	if "seconds_start" in token:
+		return token
+
 	seconds_start = time.time()
 	token["seconds_start"] = seconds_start
 	return token
 
 def stop_timing(token, time=time):
 	if not "seconds_start" in token:
-		return
+		return token
 
 	initial_elapsed_seconds = token["elapsed_seconds"]
 	message = token["message"]
