@@ -5,11 +5,11 @@ import time
 def make_time_switcher():
 	return {"message_to_seconds": {}}
 
-def switch_to(time_switcher, message):
+def switch_to(time_switcher, message, time=time):
 	time_switcher["current_timer"] = start_timing(message)
 	return time_switcher
 
-def switch_off(time_switcher):
+def switch_off(time_switcher, time=time):
 	if not "current_timer" in time_switcher:
 		return time_switcher
 	
