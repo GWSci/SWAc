@@ -20,3 +20,9 @@ def report_array(name, arr):
 
 def report_frequencies(message, arr):
 	pass
+
+def print_time_table(tokens):
+	pass
+
+def make_time_table(tokens):
+	reuturn []
