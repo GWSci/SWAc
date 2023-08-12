@@ -25,4 +25,4 @@ def print_time_table(tokens):
 	pass
 
 def make_time_table(tokens):
-	reuturn []
+	return []
