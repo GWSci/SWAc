@@ -353,6 +353,8 @@ def listener(q, total):
 def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         data=None):
     """Run model for all nodes."""
+    timer_token_for_run = timer.start_timing("run_main > run")
+    timer_token_for_run_before_loading_data = timer.start_timing("run_main > run (before loading data)")
     times = {"start_of_run": time.time()}
 
     manager = mp.Manager()
@@ -372,6 +374,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     level = logging.DEBUG if debug else logging.INFO
 
+    timer.stop_timing(timer_token_for_run_before_loading_data)
+    timer_token_for_run_loading_data = timer.start_timing("run_main > run (loading data)")
     if data is None:
         params = io.load_yaml(input_file)
     else:
@@ -398,6 +402,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
+
+    timer.stop_timing(timer_token_for_run_loading_data)
+    timer_token_for_run_getting_ready_for_multiprocessing = timer.start_timing("run_main > run (getting ready for multiprocessing)")
 
     if ff.use_perf_features:
         data["params"]["num_cores"] = 1
@@ -461,6 +468,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     lproc = mp.Process(target=listener, args=(q, nnodes))
     lproc.start()
 
+    timer.stop_timing(timer_token_for_run_getting_ready_for_multiprocessing)
+    timer_token_for_run_multiprocessing = timer.start_timing("run_main > run (multiprocessing)")
+
     for process, chunk in enumerate(chunks):
 
         if chunk.size == 0:
@@ -506,6 +516,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     if ff.use_perf_features:
         log("Multiprocessing END")
+
+    timer.stop_timing(timer_token_for_run_multiprocessing)
+    timer_token_for_run_output = timer.start_timing("run_main > run (output)")
 
     times["end_of_model"] = time.time()
 
@@ -713,6 +726,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     gc.collect()
 
+    timer.stop_timing(timer_token_for_run_output)
+    timer.stop_timing(timer_token_for_run)
     # return
 
 
