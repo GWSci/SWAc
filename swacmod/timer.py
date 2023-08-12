@@ -46,8 +46,15 @@ def report_frequencies(message, arr):
 	log(f"Frequencies: {message} : {unique_value_count} unique values out of {array_length}.")
 	log(f"Frequencies: {message} : Counts: {counts.tolist()}")
 
-def token_to_row(token):
-	return f"{token['message']}: {token['elapsed_seconds']}"
-
 def make_time_table(tokens):
-	return list(map(token_to_row, tokens))
+	if 0 == len(tokens):
+		return []
+	max_message_length = len(tokens[0]["message"])
+	result = []
+	for token in tokens:
+		message = token["message"]
+		while len(message) < max_message_length:
+			message += " "
+		line = f"{message}: {token['elapsed_seconds']}"
+		result.append(line)
+	return result
