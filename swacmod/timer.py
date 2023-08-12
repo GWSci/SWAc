@@ -34,6 +34,10 @@ def time_switcher_report(time_switcher):
 		result.append(row)
 	return result
 
+def print_time_switcher_report(time_switcher):
+	tokens = time_switcher_report(time_switcher)
+	print_time_table(tokens)
+
 def make_accumulation_timer(message):
 	result = {
 		"message": message,
