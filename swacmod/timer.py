@@ -15,7 +15,11 @@ def switch_off(time_switcher, time=time):
 		timer_just_finished = stop_timing(time_switcher["current_timer"], time=time)
 		previous_message = timer_just_finished["message"]
 		previous_time = timer_just_finished["elapsed_seconds"]
-		time_switcher["message_to_seconds"][previous_message] = previous_time
+		if previous_message in time_switcher["message_to_seconds"]:
+			seconds_already_logged = time_switcher["message_to_seconds"][previous_message]
+		else:
+			seconds_already_logged = 0
+		time_switcher["message_to_seconds"][previous_message] = seconds_already_logged + previous_time
 		del time_switcher["current_timer"]
 
 	return time_switcher
