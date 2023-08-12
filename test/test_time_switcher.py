@@ -26,8 +26,8 @@ class test_time_switcher(unittest.TestCase):
 	def test_time_switcher_has_one_row_after_starting_and_stopping(self):
 		time = mock_time([2, 3])
 		time_switcher = timer.make_time_switcher()
-		timer.switch_to(time_switcher, "aardvark")
-		timer.switch_off(time_switcher)
+		timer.switch_to(time_switcher, "aardvark", time)
+		timer.switch_off(time_switcher, time)
 		actual = timer.time_switcher_report(time_switcher)
 		expected = [{"message": "aardvark", "elapsed_seconds": 1}]
 		self.assertEqual(expected, actual)
