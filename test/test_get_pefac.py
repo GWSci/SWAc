@@ -72,11 +72,13 @@ def get_pefac_optimised(data, output, node):
 	canopy = params['canopy_process']
 
 	calculate_pefac = fao == 'enabled' or canopy == 'enabled'
-	if calculate_pefac:
-		for day in range(days):
-			var1 = 0.0
-			for z in range(len_lu):
-				var1 = var1 + (kc[day, z] * zone_lu[z])
-			pefac[day] = pe[day] * var1
+	if not calculate_pefac:
+		return {'pefac': np.zeros(days)}
+
+	for day in range(days):
+		var1 = 0.0
+		for z in range(len_lu):
+			var1 = var1 + (kc[day, z] * zone_lu[z])
+		pefac[day] = pe[day] * var1
 
 	return {'pefac': np.array(pefac)}
