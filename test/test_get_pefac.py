@@ -1,9 +1,13 @@
 import unittest
 import numpy as np
+import swacmod.model_plain_python as model
+import swacmod.model_numpy as model_numpy
+import swacmod.timer as timer
 
 class test_get_pefac(unittest.TestCase):
 	def test_x(self):
 		data = {
+			"time_switcher": timer.make_time_switcher(),
 			"series": {
 				"date": [0, 0, 0, 0, 0], # Doesn't seem to matter what this is. Only its length is used.
 				"months": np.array([0, 2, 1, 4, 3], dtype=np.int64),
@@ -28,7 +32,7 @@ class test_get_pefac(unittest.TestCase):
 			"pe_ts": np.array([79, 83, 97, 101, 103], dtype=np.float64),
 		}
 		node = 1
-		expected = get_pefac_oracle(data, output, node)["pefac"]
+		expected = model.get_pefac(data, output, node)["pefac"]
 		actual = get_pefac_optimised(data, output, node)["pefac"]
 		np.testing.assert_array_equal(expected, actual)
 
