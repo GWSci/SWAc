@@ -106,7 +106,7 @@ def aggregate_reporting(reporting):
 
 
 ###############################################################################
-def get_output(data, node):
+def get_output(data, node, time_switcher):
     """Run the model."""
     logging.debug("\tRunning model for node %d", node)
 
@@ -151,6 +151,7 @@ def get_output(data, node):
         
     for function in methods:
 
+        timer.switch_to(time_switcher, function.__name__)
         columns = function(data, output, node)
         output.update(columns)
         logging.debug('\t\t"%s()" done', function.__name__)
@@ -207,7 +208,7 @@ def run_process(
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
             timer.switch_to(time_switcher, "run_main > run > run_process (output calculation)")
-            output = get_output(data, node)
+            output = get_output(data, node, time_switcher)
             timer.switch_to(time_switcher, "run_main > run > run_process (post calc)")
 
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
