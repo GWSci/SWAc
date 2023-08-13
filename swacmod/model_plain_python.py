@@ -70,11 +70,8 @@ def _print_info(name, arr):
         print(f"  pefac info: {name} = {arr}")
         
 
-is_print_pefac_info = True
 def get_pefac(data, output, node):
     """E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
-    time_switcher = data["time_switcher"]
-    timer.switch_to(time_switcher, "get_pefac extract data")
     series, params = data['series'], data['params']
     days = len(series['date'])
     pefac = np.zeros(days)
@@ -87,21 +84,8 @@ def get_pefac(data, output, node):
 
     fao = params['fao_process']
     canopy = params['canopy_process']
-
-    global is_print_pefac_info
-    if (is_print_pefac_info):
-        is_print_pefac_info = False
-        print(f"pefac info: days = {days}")
-        print(f"pefac info: len_lu = {len_lu}")
-        print(f"pefac info: series['months'] = {series['months']}")
-        _print_info("kc", kc)
-        _print_info("zone_lu", zone_lu)
-        _print_info("pe", pe)
-        _print_info("params['kc_list']", params['kc_list'])
-        _print_info("series['months']", series['months'])
         
     if fao == 'enabled' or canopy == 'enabled':
-        timer.switch_to(time_switcher, "get_pefac loops")
         for day in range(days):
             var1 = 0.0
             for z in range(len_lu):
