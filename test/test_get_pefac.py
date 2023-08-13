@@ -69,7 +69,6 @@ def get_pefac_optimised(data, output, node):
 		return {'pefac': np.zeros(days)}
 
 	pefac = np.zeros(days)
-	var1 = 0.0
 	pe = output['pe_ts']
 	kc = params['kc_list'][series['months']]
 	zone_lu = np.array(params['lu_spatial'][node], dtype=np.float64)
