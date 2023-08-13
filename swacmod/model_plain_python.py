@@ -11,6 +11,7 @@ import networkx as nx
 import sys
 import numpy as np
 import swacmod.feature_flags as ff
+import swacmod.timer as timer
 
 import sys
 import os.path
@@ -60,8 +61,20 @@ def get_pe(data, output, node):
 
 ###############################################################################
 
+def _print_info(name, arr):
+        print(f"-- {name}")
+        print(f"  pefac info: type({name}) = {type(arr)}")
+        if isinstance(arr, np.ndarray):
+            print(f"  pefac info: {name}.shape = {arr.shape}")
+            print(f"  pefac info: {name}.dtype = {arr.dtype}")
+        print(f"  pefac info: {name} = {arr}")
+        
+
+is_print_pefac_info = True
 def get_pefac(data, output, node):
     """E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
+    time_switcher = data["time_switcher"]
+    timer.switch_to(time_switcher, "get_pefac extract data")
     series, params = data['series'], data['params']
     days = len(series['date'])
     pefac = np.zeros(days)
@@ -75,7 +88,20 @@ def get_pefac(data, output, node):
     fao = params['fao_process']
     canopy = params['canopy_process']
 
+    global is_print_pefac_info
+    if (is_print_pefac_info):
+        is_print_pefac_info = False
+        print(f"pefac info: days = {days}")
+        print(f"pefac info: len_lu = {len_lu}")
+        print(f"pefac info: series['months'] = {series['months']}")
+        _print_info("kc", kc)
+        _print_info("zone_lu", zone_lu)
+        _print_info("pe", pe)
+        _print_info("params['kc_list']", params['kc_list'])
+        _print_info("series['months']", series['months'])
+        
     if fao == 'enabled' or canopy == 'enabled':
+        timer.switch_to(time_switcher, "get_pefac loops")
         for day in range(days):
             var1 = 0.0
             for z in range(len_lu):

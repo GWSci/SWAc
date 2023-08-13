@@ -185,6 +185,7 @@ def run_process(
     """Run model for a chunk of nodes."""
     timer_token_run_process = timer.start_timing("run_main > run > run_process")
     time_switcher = timer.make_time_switcher()
+    data["time_switcher"] = time_switcher
     timer.switch_to(time_switcher, "run_main > run > run_process (preamble)")
 
     io.start_logging(path=log_path, level=level)
