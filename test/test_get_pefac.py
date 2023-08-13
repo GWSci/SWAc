@@ -73,7 +73,6 @@ def get_pefac_optimised(data, output, node):
 	zone_lu = np.array(params['lu_spatial'][node], dtype=np.float64)
 	len_lu = len(params['lu_spatial'][node])
 
-	var1_arr = np.sum(kc[:, 0:len_lu] * zone_lu[0:len_lu], axis=1)
-	pefac = pe * var1_arr
+	pefac = pe * np.sum(kc[:, 0:len_lu] * zone_lu[0:len_lu], axis=1)
 
 	return {'pefac': np.array(pefac)}
