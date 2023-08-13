@@ -35,7 +35,7 @@ from tqdm import tqdm
 from swacmod import utils as u
 from swacmod import input_output as io
 if ff.use_perf_features:
-    import swacmod.model_numpy
+    import swacmod.model_numpy as mn
 # Compile and import model
 if ff.use_perf_features:
     print("Importing plain python model")
@@ -117,7 +117,7 @@ def get_output(data, node, time_switcher):
     methods = [
         m.get_precipitation,
         m.get_pe,
-        m.get_pefac,
+        mn.get_pefac if ff.use_perf_features else m.get_pefac,
         m.get_canopy_storage,
         m.get_net_pefac,
         m.get_precip_to_ground,
