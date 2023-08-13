@@ -35,23 +35,3 @@ class test_get_pefac(unittest.TestCase):
 		expected = model.get_pefac(data, output, node)["pefac"]
 		actual = model_numpy.get_pefac(data, output, node)["pefac"]
 		np.testing.assert_array_equal(expected, actual)
-
-def get_pefac_optimised(data, output, node):
-	"""E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
-	series, params = data['series'], data['params']
-	days = len(series['date'])
-
-	fao = params['fao_process']
-	canopy = params['canopy_process']
-	calculate_pefac = fao == 'enabled' or canopy == 'enabled'
-	if not calculate_pefac:
-		return {'pefac': np.zeros(days)}
-
-	pe = output['pe_ts']
-	kc = params['kc_list'][series['months']]
-	zone_lu = np.array(params['lu_spatial'][node], dtype=np.float64)
-	len_lu = len(params['lu_spatial'][node])
-
-	pefac = pe * np.sum(kc[:, 0:len_lu] * zone_lu[0:len_lu], axis=1)
-
-	return {'pefac': np.array(pefac)}
