@@ -74,11 +74,13 @@ def get_pefac_optimised(data, output, node):
 	len_lu = len(params['lu_spatial'][node])
 
 	pefac = np.zeros(days)
-	
+	var1_arr = np.zeros(days)
+
 	for day in range(days):
 		var1 = 0.0
 		for z in range(len_lu):
 			var1 = var1 + (kc[day, z] * zone_lu[z])
+		var1_arr[day] = var1
 		pefac[day] = pe[day] * var1
 
 	return {'pefac': np.array(pefac)}
