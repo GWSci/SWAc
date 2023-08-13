@@ -63,11 +63,11 @@ def get_pe(data, output, node):
 
 def _print_info(name, arr):
         print(f"-- {name}")
-        print(f"  pefac info: type({name}) = {type(arr)}")
+        print(f"  info: type({name}) = {type(arr)}")
         if isinstance(arr, np.ndarray):
-            print(f"  pefac info: {name}.shape = {arr.shape}")
-            print(f"  pefac info: {name}.dtype = {arr.dtype}")
-        print(f"  pefac info: {name} = {arr}")
+            print(f"  info: {name}.shape = {arr.shape}")
+            print(f"  info: {name}.dtype = {arr.dtype}")
+        print(f"  info: {name} = {arr}")
         
 
 def get_pefac(data, output, node):
@@ -308,6 +308,7 @@ def get_tawtew(data, output, node):
 
 ##############################################################################
 
+is_print_info = True
 def get_ae(data, output, node):
     """Multicolumn function.
 
@@ -373,6 +374,11 @@ def get_ae(data, output, node):
         col_runoff_recharge[:] = 0.0
 
     timer.switch_to(time_switcher, "get_ae (loop)")
+    global is_print_info
+    if is_print_info:
+        _print_info("net_rainfall", net_rainfall)
+        is_print_info = False
+
     for num in range(length):
         var2 = net_rainfall[num]
 
