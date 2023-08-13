@@ -114,13 +114,12 @@ def get_ae(data, output, node):
     tawtew_a = output['tawtew']
     rawrew_a = output['rawrew']
     months = np.array(series['months'], dtype=np.int64)
-    ma = 0.0
 
     if params['swrecharge_process'] == 'enabled':
         col_runoff_recharge[:] = 0.0
 
     macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
-    macro_act_factor_B = 1 if mac_opt == 'SMD' else 0
+    macro_act_factor_B = 1 - macro_act_factor_A
     
     for num in range(length):
         var2 = net_rainfall[num]
@@ -147,11 +146,8 @@ def get_ae(data, output, node):
 
         if params['macropore_process'] == 'enabled':
             var8a = var2 - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[var6][zone_mac])
-            if mac_opt == 'SMD':
-                ma = macro_act[var6][zone_mac]
-            else:
-                ma = sys.float_info.max
             if var8a > 0.0:
+                ma = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act[var6][zone_mac])
                 if p_smd < ma:
                     var9 = macro_prop[var6][zone_mac] * var8a
                     var10 = macro_limit[var6][zone_mac]
