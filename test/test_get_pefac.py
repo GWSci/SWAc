@@ -33,7 +33,7 @@ class test_get_pefac(unittest.TestCase):
 		}
 		node = 1
 		expected = model.get_pefac(data, output, node)["pefac"]
-		actual = get_pefac_optimised(data, output, node)["pefac"]
+		actual = model_numpy.get_pefac(data, output, node)["pefac"]
 		np.testing.assert_array_equal(expected, actual)
 
 def get_pefac_optimised(data, output, node):
