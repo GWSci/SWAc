@@ -105,6 +105,22 @@ def aggregate_reporting(reporting):
     return new_rep
 
 
+def compare_methods(unoptimised, optimised):
+    return lambda data, output, node: _compare_methods(unoptimised, optimised, data, output, node)
+
+def _compare_methods(unoptimised, optimised, data, output, node):
+    comparison_time_switcher = data["comparison_time_switcher"]
+    timer.switch_to(comparison_time_switcher, f"{unoptimised.__name__} (unoptimised)")
+    unoptimised_result = unoptimised(data, output, node)
+
+    timer.switch_to(comparison_time_switcher, f"{unoptimised.__name__} (optimised)")
+    optimised_result = optimised(data, output, node)
+    timer.switch_off(comparison_time_switcher)
+
+    np.testing.assert_equal(unoptimised_result, optimised_result)
+        
+    return optimised_result
+
 ###############################################################################
 def get_output(data, node, time_switcher):
     """Run the model."""
@@ -128,7 +144,7 @@ def get_output(data, node, time_switcher):
         m.get_net_rainfall,
         m.get_rawrew,
         m.get_tawtew,
-        m.get_ae,
+        compare_methods(m.get_ae, mn.get_ae) if ff.use_perf_features else m.get_ae,
         m.get_unutilised_pe,
         m.get_rejected_recharge,
         m.get_perc_through_root,
@@ -185,7 +201,9 @@ def run_process(
     """Run model for a chunk of nodes."""
     timer_token_run_process = timer.start_timing("run_main > run > run_process")
     time_switcher = timer.make_time_switcher()
+    comparison_time_switcher = timer.make_time_switcher()
     data["time_switcher"] = time_switcher
+    data["comparison_time_switcher"] = comparison_time_switcher
     timer.switch_to(time_switcher, "run_main > run > run_process (preamble)")
 
     io.start_logging(path=log_path, level=level)
@@ -278,6 +296,7 @@ def run_process(
     timer_token_run_process = timer.stop_timing(timer_token_run_process)
 
     timer.print_time_switcher_report(time_switcher)
+    timer.print_time_switcher_report(comparison_time_switcher)
     timer.print_time_table([
         timer_token_run_process,
     ])

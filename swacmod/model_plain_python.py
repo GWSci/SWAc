@@ -325,8 +325,6 @@ def get_ae(data, output, node):
     X) Ks (slope factor) [-]
     Y) AE (actual evapotranspiration) [mm/d]
     """
-    time_switcher = data["time_switcher"]
-    timer.switch_to(time_switcher, "get_ae (before loop)")
     series, params = data['series'], data['params']
     rrp = params['rapid_runoff_params']
     s_smd = params['smd']
@@ -373,7 +371,6 @@ def get_ae(data, output, node):
     if params['swrecharge_process'] == 'enabled':
         col_runoff_recharge[:] = 0.0
 
-    timer.switch_to(time_switcher, "get_ae (loop)")
     global is_print_info
     if is_print_info:
         _print_info("net_rainfall", net_rainfall)
@@ -382,7 +379,6 @@ def get_ae(data, output, node):
     for num in range(length):
         var2 = net_rainfall[num]
 
-        timer.switch_to(time_switcher, "get_ae (rapid_runoff_process)")
         if params['rapid_runoff_process'] == 'enabled':
             if smd > last_smd or var2 > last_ri:
                 rapid_runoff_c = value
@@ -403,45 +399,33 @@ def get_ae(data, output, node):
 
         var6 = months[num]
 
-        timer.switch_to(time_switcher, "get_ae (macropore_process)")
         if params['macropore_process'] == 'enabled':
-            timer.switch_to(time_switcher, "get_ae (if mac_opt)")
             if mac_opt == 'SMD':
-                timer.switch_to(time_switcher, "get_ae (== SMD)")
                 var8a = var2 - col_rapid_runoff[num]
                 ma = macro_act[var6][zone_mac]
             else:
-                timer.switch_to(time_switcher, "get_ae (!= SMD)")
                 var8a = (var2 - col_rapid_runoff[num]
                          - macro_act[var6][zone_mac])
                 ma = sys.float_info.max
-            timer.switch_to(time_switcher, "get_ae (if var8a)")
             if var8a > 0.0:
-                timer.switch_to(time_switcher, "get_ae (if p_smd)")
                 if p_smd < ma:
-                    timer.switch_to(time_switcher, "get_ae (if p_smd < ma)")
                     var9 = macro_prop[var6][zone_mac] * var8a
                     var10 = macro_limit[var6][zone_mac]
                     macropore = min(var10, var9)
                 else:
-                    timer.switch_to(time_switcher, "get_ae (if p_smd >= ma)")
                     macropore = 0.0
             else:
-                timer.switch_to(time_switcher, "get_ae (p_smd <= 0)")
                 macropore = 0.0
 
-            timer.switch_to(time_switcher, "get_ae (collation)")
             var10a = macro_rec[var6][zone_mac]
             col_macropore_att[num] = macropore * (1 - var10a)
             col_macropore_dir[num] = macropore * var10a
 
-        timer.switch_to(time_switcher, "get_ae (outside macropore if)")
         percol_in_root = (var2 - col_rapid_runoff[num]
                           - col_macropore_att[num]
                           - col_macropore_dir[num])
         col_percol_in_root[num] = percol_in_root
 
-        timer.switch_to(time_switcher, "get_ae (fao_process)")
         if params['fao_process'] == 'enabled':
             smd = max(p_smd, 0.0)
             col_smd[num] = smd
