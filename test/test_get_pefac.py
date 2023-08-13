@@ -36,31 +36,6 @@ class test_get_pefac(unittest.TestCase):
 		actual = get_pefac_optimised(data, output, node)["pefac"]
 		np.testing.assert_array_equal(expected, actual)
 
-# Taken from the original implementation of pefac
-def get_pefac_oracle(data, output, node):
-	"""E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
-	series, params = data['series'], data['params']
-	days = len(series['date'])
-	pefac = np.zeros(days)
-	var1 = 0.0
-	pe = output['pe_ts']
-	kc = params['kc_list'][series['months']]
-	zone_lu = np.array(params['lu_spatial'][node],
-									  dtype=np.float64)
-	len_lu = len(params['lu_spatial'][node])
-
-	fao = params['fao_process']
-	canopy = params['canopy_process']
-
-	if fao == 'enabled' or canopy == 'enabled':
-		for day in range(days):
-			var1 = 0.0
-			for z in range(len_lu):
-				var1 = var1 + (kc[day, z] * zone_lu[z])
-			pefac[day] = pe[day] * var1
-
-	return {'pefac': np.array(pefac)}
-
 def get_pefac_optimised(data, output, node):
 	"""E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
 	series, params = data['series'], data['params']
