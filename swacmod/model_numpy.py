@@ -73,7 +73,6 @@ def get_ae(data, output, node):
     X) Ks (slope factor) [-]
     Y) AE (actual evapotranspiration) [mm/d]
     """
-    time_switcher = data["time_switcher"]
     series, params = data['series'], data['params']
     rrp = params['rapid_runoff_params']
     s_smd = params['smd']
@@ -120,8 +119,9 @@ def get_ae(data, output, node):
     if params['swrecharge_process'] == 'enabled':
         col_runoff_recharge[:] = 0.0
 
-    global is_print_info
-
+    macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
+    macro_act_factor_B = 1 if mac_opt == 'SMD' else 0
+    
     for num in range(length):
         var2 = net_rainfall[num]
 
@@ -146,12 +146,10 @@ def get_ae(data, output, node):
         var6 = months[num]
 
         if params['macropore_process'] == 'enabled':
+            var8a = var2 - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[var6][zone_mac])
             if mac_opt == 'SMD':
-                var8a = var2 - col_rapid_runoff[num]
                 ma = macro_act[var6][zone_mac]
             else:
-                var8a = (var2 - col_rapid_runoff[num]
-                         - macro_act[var6][zone_mac])
                 ma = sys.float_info.max
             if var8a > 0.0:
                 if p_smd < ma:
