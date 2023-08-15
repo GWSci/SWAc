@@ -121,6 +121,8 @@ def get_ae(data, output, node):
     macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
     macro_act_factor_B = 1 - macro_act_factor_A
     
+    var13_arr = np.zeros(length)
+
     for num in range(length):
         var2 = net_rainfall[num]
 
@@ -190,16 +192,17 @@ def get_ae(data, output, node):
                     var11 = max(var12, 0.0)
             col_k_slope[num] = var11
 
-            var13 = percol_in_root
+            var13_arr[num] = percol_in_root
             if smd < rawrew or percol_in_root > net_pefac:
-                var13 = net_pefac
+                var13_arr[num] = net_pefac
             elif smd >= rawrew and smd <= tawtew:
-                var13 = var11 * (net_pefac - percol_in_root)
+                var13_arr[num] = var11 * (net_pefac - percol_in_root)
             else:
-                var13 = 0.0
-            col_ae[num] = var13
-            p_smd = smd + var13 - percol_in_root
+                var13_arr[num] = 0.0
+            p_smd = smd + var13_arr[num] - percol_in_root
             col_p_smd[num] = p_smd
+
+    col_ae = var13_arr
 
     col = {}
     col['rapid_runoff_c'] = col_rapid_runoff_c
