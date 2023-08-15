@@ -107,7 +107,6 @@ def get_ae(data, output, node):
     last_ri = class_ri[-1] - 1
     value = values[-1][0]
     p_smd = ssmd
-    smd = ssmd
     length = len(series['date'])
     net_rainfall = output['net_rainfall']
     net_pefac_a = output['net_pefac']
@@ -125,11 +124,15 @@ def get_ae(data, output, node):
     var6_arr = months
     var13_arr = np.zeros(length)
     p_smd_arr = np.zeros(length)
+    previous_smd_arr = np.zeros(length + 1)
+    previous_smd_arr[0] = ssmd
 
+    tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
+    
     for num in range(length):
         if params['rapid_runoff_process'] == 'enabled':
-            if smd > last_smd or var2_arr[num] > last_ri:
-                rapid_runoff_c = value
+            if previous_smd_arr[num] > last_smd or var2_arr[num] > last_ri:
+                col_rapid_runoff_c[num] = value
             else:
                 var3 = 0
                 for i in range(len_class_ri):
@@ -138,14 +141,11 @@ def get_ae(data, output, node):
                         break
                 var4 = 0
                 for i in range(len_class_smd):
-                    if class_smd[i] >= smd:
+                    if class_smd[i] >= previous_smd_arr[num]:
                         var4 = i
                         break
-                rapid_runoff_c = values[var3][var4]
-            col_rapid_runoff_c[num] = rapid_runoff_c
-            var5 = var2_arr[num] * rapid_runoff_c
-            rapid_runoff = (0.0 if var2_arr[num] < 0.0 else var5)
-            col_rapid_runoff[num] = rapid_runoff
+                col_rapid_runoff_c[num] = values[var3][var4]
+            col_rapid_runoff[num] = (0.0 if var2_arr[num] < 0.0 else (var2_arr[num] * col_rapid_runoff_c[num]))
 
         if params['macropore_process'] == 'enabled':
             var8a = var2_arr[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[var6_arr[num]][zone_mac])
@@ -169,28 +169,27 @@ def get_ae(data, output, node):
                           - col_macropore_dir[num])
 
         if params['fao_process'] == 'enabled':
-            smd = max(p_smd, 0.0)
-            col_smd[num] = smd
+            col_smd[num] = max(p_smd, 0.0)
+            previous_smd_arr[num + 1] = col_smd[num]
 
             if col_percol_in_root[num] > net_pefac_a[num]:
-                var11 = -1.0
+                col_k_slope[num] = -1.0
             else:
                 # tmp div zero
-                if (tawtew_a[num] - rawrew_a[num]) == 0.0:
+                if tawtew_a_minus_rawrew_a[num] == 0.0:
                     var12 = 1.0
                 else:
-                    var12 = (tawtew_a[num] - col_smd[num]) / (tawtew_a[num] - rawrew_a[num])
+                    var12 = (tawtew_a[num] - col_smd[num]) / tawtew_a_minus_rawrew_a[num]
 
                 if var12 >= 1.0:
-                    var11 = 1.0
+                    col_k_slope[num] = 1.0
                 else:
-                    var11 = max(var12, 0.0)
-            col_k_slope[num] = var11
+                    col_k_slope[num] = max(var12, 0.0)
 
             if col_smd[num] < rawrew_a[num] or col_percol_in_root[num] > net_pefac_a[num]:
                 var13_arr[num] = net_pefac_a[num]
             elif col_smd[num] >= rawrew_a[num] and col_smd[num] <= tawtew_a[num]:
-                var13_arr[num] = var11 * (net_pefac_a[num] - col_percol_in_root[num])
+                var13_arr[num] = col_k_slope[num] * (net_pefac_a[num] - col_percol_in_root[num])
             else:
                 var13_arr[num] = 0.0
             p_smd = col_smd[num] + var13_arr[num] - col_percol_in_root[num]
