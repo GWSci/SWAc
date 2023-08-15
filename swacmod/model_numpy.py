@@ -164,26 +164,22 @@ def get_ae(data, output, node):
             col_macropore_att[num] = macropore * (1 - var10a)
             col_macropore_dir[num] = macropore * var10a
 
-        percol_in_root = (var2_arr[num] - col_rapid_runoff[num]
+        col_percol_in_root[num] = (var2_arr[num] - col_rapid_runoff[num]
                           - col_macropore_att[num]
                           - col_macropore_dir[num])
-        col_percol_in_root[num] = percol_in_root
 
         if params['fao_process'] == 'enabled':
             smd = max(p_smd, 0.0)
             col_smd[num] = smd
-            net_pefac = net_pefac_a[num]
-            tawtew = tawtew_a[num]
-            rawrew = rawrew_a[num]
 
-            if percol_in_root > net_pefac:
+            if col_percol_in_root[num] > net_pefac_a[num]:
                 var11 = -1.0
             else:
                 # tmp div zero
-                if (tawtew - rawrew) == 0.0:
+                if (tawtew_a[num] - rawrew_a[num]) == 0.0:
                     var12 = 1.0
                 else:
-                    var12 = (tawtew - smd) / (tawtew - rawrew)
+                    var12 = (tawtew_a[num] - col_smd[num]) / (tawtew_a[num] - rawrew_a[num])
 
                 if var12 >= 1.0:
                     var11 = 1.0
@@ -191,14 +187,13 @@ def get_ae(data, output, node):
                     var11 = max(var12, 0.0)
             col_k_slope[num] = var11
 
-            var13_arr[num] = percol_in_root
-            if smd < rawrew or percol_in_root > net_pefac:
-                var13_arr[num] = net_pefac
-            elif smd >= rawrew and smd <= tawtew:
-                var13_arr[num] = var11 * (net_pefac - percol_in_root)
+            if col_smd[num] < rawrew_a[num] or col_percol_in_root[num] > net_pefac_a[num]:
+                var13_arr[num] = net_pefac_a[num]
+            elif col_smd[num] >= rawrew_a[num] and col_smd[num] <= tawtew_a[num]:
+                var13_arr[num] = var11 * (net_pefac_a[num] - col_percol_in_root[num])
             else:
                 var13_arr[num] = 0.0
-            p_smd = smd + var13_arr[num] - percol_in_root
+            p_smd = col_smd[num] + var13_arr[num] - col_percol_in_root[num]
             p_smd_arr[num] = p_smd
 
     col_p_smd = p_smd_arr 
