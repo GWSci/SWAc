@@ -123,6 +123,11 @@ def get_ae(data, output, node):
     tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
     var3_arr = _make_var3_arr(length, len_class_ri, class_ri, net_rainfall)
 
+    indexes = np.arange(length)
+    f = lambda num: macro_rec[months[num]][zone_mac]
+    fv = np.vectorize(f)
+    var10a_arr = fv(indexes)
+
     # calculated in loop
     previous_smd_arr = np.zeros(length + 1)
     previous_smd_arr[0] = ssmd
@@ -140,9 +145,8 @@ def get_ae(data, output, node):
         if params['macropore_process'] == 'enabled':
             macropore = _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit)
 
-            var10a = macro_rec[months[num]][zone_mac]
-            col_macropore_att[num] = macropore * (1 - var10a)
-            col_macropore_dir[num] = macropore * var10a
+            col_macropore_att[num] = macropore * (1 - var10a_arr[num])
+            col_macropore_dir[num] = macropore * var10a_arr[num]
 
         col_percol_in_root[num] = (net_rainfall[num] - col_rapid_runoff[num]
                           - col_macropore_att[num]

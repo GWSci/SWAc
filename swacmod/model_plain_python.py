@@ -382,6 +382,7 @@ def get_ae(data, output, node):
         _print_info("class_ri", class_ri)
         _print_info("series['date']", series['date'])
         _print_info("net_rainfall", net_rainfall)
+        _print_info("values", values)
         is_print_info = False
 
     for num in range(length):
