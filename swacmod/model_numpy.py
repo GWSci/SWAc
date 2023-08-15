@@ -123,6 +123,7 @@ def get_ae(data, output, node):
     
     var2_arr = net_rainfall
     var13_arr = np.zeros(length)
+    p_smd_arr = np.zeros(length)
 
     for num in range(length):
         if params['rapid_runoff_process'] == 'enabled':
@@ -199,8 +200,9 @@ def get_ae(data, output, node):
             else:
                 var13_arr[num] = 0.0
             p_smd = smd + var13_arr[num] - percol_in_root
-            col_p_smd[num] = p_smd
+            p_smd_arr[num] = p_smd
 
+    col_p_smd = p_smd_arr 
     col_ae = var13_arr
 
     col = {}
