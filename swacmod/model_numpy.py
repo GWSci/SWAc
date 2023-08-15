@@ -117,54 +117,34 @@ def get_ae(data, output, node):
     if params['swrecharge_process'] == 'enabled':
         col_runoff_recharge[:] = 0.0
 
+    # Fully calculated
     macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
     macro_act_factor_B = 1 - macro_act_factor_A
+    tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
     
-    var2_arr = net_rainfall
-    var6_arr = months
+    # calculated in loop
     var13_arr = np.zeros(length)
     p_smd_arr = np.zeros(length)
     previous_smd_arr = np.zeros(length + 1)
     previous_smd_arr[0] = ssmd
 
-    tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
     
     for num in range(length):
         if params['rapid_runoff_process'] == 'enabled':
-            if previous_smd_arr[num] > last_smd or var2_arr[num] > last_ri:
+            if previous_smd_arr[num] > last_smd or net_rainfall[num] > last_ri:
                 col_rapid_runoff_c[num] = value
             else:
-                var3 = 0
-                for i in range(len_class_ri):
-                    if class_ri[i] >= var2_arr[num]:
-                        var3 = i
-                        break
-                var4 = 0
-                for i in range(len_class_smd):
-                    if class_smd[i] >= previous_smd_arr[num]:
-                        var4 = i
-                        break
-                col_rapid_runoff_c[num] = values[var3][var4]
-            col_rapid_runoff[num] = (0.0 if var2_arr[num] < 0.0 else (var2_arr[num] * col_rapid_runoff_c[num]))
+                col_rapid_runoff_c[num] = _calc_col_rapid_runoff_c(len_class_ri, class_ri, net_rainfall, num, len_class_smd, class_smd, previous_smd_arr, values)
+            col_rapid_runoff[num] = (0.0 if net_rainfall[num] < 0.0 else (net_rainfall[num] * col_rapid_runoff_c[num]))
 
         if params['macropore_process'] == 'enabled':
-            var8a = var2_arr[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[var6_arr[num]][zone_mac])
-            if var8a > 0.0:
-                ma = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act[var6_arr[num]][zone_mac])
-                if p_smd < ma:
-                    var9 = macro_prop[var6_arr[num]][zone_mac] * var8a
-                    var10 = macro_limit[var6_arr[num]][zone_mac]
-                    macropore = min(var10, var9)
-                else:
-                    macropore = 0.0
-            else:
-                macropore = 0.0
+            macropore = _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit)
 
-            var10a = macro_rec[var6_arr[num]][zone_mac]
+            var10a = macro_rec[months[num]][zone_mac]
             col_macropore_att[num] = macropore * (1 - var10a)
             col_macropore_dir[num] = macropore * var10a
 
-        col_percol_in_root[num] = (var2_arr[num] - col_rapid_runoff[num]
+        col_percol_in_root[num] = (net_rainfall[num] - col_rapid_runoff[num]
                           - col_macropore_att[num]
                           - col_macropore_dir[num])
 
@@ -211,6 +191,35 @@ def get_ae(data, output, node):
     col['ae'] = col_ae
 
     return col
+
+def _calc_col_rapid_runoff_c(len_class_ri, class_ri, var2_arr, num, len_class_smd, class_smd, previous_smd_arr, values):
+    var3 = 0
+    for i in range(len_class_ri):
+        if class_ri[i] >= var2_arr[num]:
+            var3 = i
+            break
+    var4 = 0
+    for i in range(len_class_smd):
+        if class_smd[i] >= previous_smd_arr[num]:
+            var4 = i
+            break
+    result = values[var3][var4]
+    return result
+
+def _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit):
+    var8a = net_rainfall[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[months[num]][zone_mac])
+    if var8a > 0.0:
+        ma = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act[months[num]][zone_mac])
+        if p_smd < ma:
+            var9 = macro_prop[months[num]][zone_mac] * var8a
+            var10 = macro_limit[months[num]][zone_mac]
+            macropore = min(var10, var9)
+        else:
+            macropore = 0.0
+    else:
+        macropore = 0.0
+    return macropore
+
 
 class Lazy_Precipitation:
 	def __init__(self, zone_rf, coef_rf, rainfall_ts):
