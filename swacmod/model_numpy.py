@@ -155,23 +155,10 @@ def get_ae(data, output, node):
             if col_percol_in_root[num] > net_pefac_a[num]:
                 col_k_slope[num] = -1.0
             else:
-                # tmp div zero
-                if tawtew_a_minus_rawrew_a[num] == 0.0:
-                    var12 = 1.0
-                else:
-                    var12 = (tawtew_a[num] - col_smd[num]) / tawtew_a_minus_rawrew_a[num]
+                col_k_slope[num] = _calc_col_k_slope(tawtew_a_minus_rawrew_a, num, tawtew_a, col_smd)
 
-                if var12 >= 1.0:
-                    col_k_slope[num] = 1.0
-                else:
-                    col_k_slope[num] = max(var12, 0.0)
+            var13_arr[num] = _calc_var13_arr(col_smd, num, rawrew_a, col_percol_in_root, net_pefac_a, tawtew_a, col_k_slope)
 
-            if col_smd[num] < rawrew_a[num] or col_percol_in_root[num] > net_pefac_a[num]:
-                var13_arr[num] = net_pefac_a[num]
-            elif col_smd[num] >= rawrew_a[num] and col_smd[num] <= tawtew_a[num]:
-                var13_arr[num] = col_k_slope[num] * (net_pefac_a[num] - col_percol_in_root[num])
-            else:
-                var13_arr[num] = 0.0
             p_smd = col_smd[num] + var13_arr[num] - col_percol_in_root[num]
             p_smd_arr[num] = p_smd
 
@@ -220,7 +207,28 @@ def _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, mac
         macropore = 0.0
     return macropore
 
+def _calc_col_k_slope(tawtew_a_minus_rawrew_a, num, tawtew_a, col_smd):
+    if tawtew_a_minus_rawrew_a[num] == 0.0:
+        var12 = 1.0
+    else:
+        var12 = (tawtew_a[num] - col_smd[num]) / tawtew_a_minus_rawrew_a[num]
 
+    if var12 >= 1.0:
+        result = 1.0
+    else:
+        result = max(var12, 0.0)
+    return result
+
+def _calc_var13_arr(col_smd, num, rawrew_a, col_percol_in_root, net_pefac_a, tawtew_a, col_k_slope):
+    if col_smd[num] < rawrew_a[num] or col_percol_in_root[num] > net_pefac_a[num]:
+        var13 = net_pefac_a[num]
+    elif col_smd[num] >= rawrew_a[num] and col_smd[num] <= tawtew_a[num]:
+        var13 = col_k_slope[num] * (net_pefac_a[num] - col_percol_in_root[num])
+    else:
+        var13 = 0.0
+    return var13
+
+     
 class Lazy_Precipitation:
 	def __init__(self, zone_rf, coef_rf, rainfall_ts):
 		self.zone_rf = zone_rf
