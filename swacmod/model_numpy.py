@@ -121,18 +121,17 @@ def get_ae(data, output, node):
     macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
     macro_act_factor_B = 1 - macro_act_factor_A
     
+    var2_arr = net_rainfall
     var13_arr = np.zeros(length)
 
     for num in range(length):
-        var2 = net_rainfall[num]
-
         if params['rapid_runoff_process'] == 'enabled':
-            if smd > last_smd or var2 > last_ri:
+            if smd > last_smd or var2_arr[num] > last_ri:
                 rapid_runoff_c = value
             else:
                 var3 = 0
                 for i in range(len_class_ri):
-                    if class_ri[i] >= var2:
+                    if class_ri[i] >= var2_arr[num]:
                         var3 = i
                         break
                 var4 = 0
@@ -142,14 +141,14 @@ def get_ae(data, output, node):
                         break
                 rapid_runoff_c = values[var3][var4]
             col_rapid_runoff_c[num] = rapid_runoff_c
-            var5 = var2 * rapid_runoff_c
-            rapid_runoff = (0.0 if var2 < 0.0 else var5)
+            var5 = var2_arr[num] * rapid_runoff_c
+            rapid_runoff = (0.0 if var2_arr[num] < 0.0 else var5)
             col_rapid_runoff[num] = rapid_runoff
 
         var6 = months[num]
 
         if params['macropore_process'] == 'enabled':
-            var8a = var2 - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[var6][zone_mac])
+            var8a = var2_arr[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[var6][zone_mac])
             if var8a > 0.0:
                 ma = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act[var6][zone_mac])
                 if p_smd < ma:
@@ -165,7 +164,7 @@ def get_ae(data, output, node):
             col_macropore_att[num] = macropore * (1 - var10a)
             col_macropore_dir[num] = macropore * var10a
 
-        percol_in_root = (var2 - col_rapid_runoff[num]
+        percol_in_root = (var2_arr[num] - col_rapid_runoff[num]
                           - col_macropore_att[num]
                           - col_macropore_dir[num])
         col_percol_in_root[num] = percol_in_root
