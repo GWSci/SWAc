@@ -67,7 +67,11 @@ def _print_info(name, arr):
         if isinstance(arr, np.ndarray):
             print(f"  info: {name}.shape = {arr.shape}")
             print(f"  info: {name}.dtype = {arr.dtype}")
-        print(f"  info: {name} = {arr}")
+            print(f"  info: {name} = {arr}")
+        elif isinstance(arr, list):
+            print(f"  info: len({name}) = {len(arr)}")
+        else:
+            print(f"  info: {name} = {arr}")
         
 
 def get_pefac(data, output, node):
@@ -373,6 +377,10 @@ def get_ae(data, output, node):
 
     global is_print_info
     if is_print_info:
+        _print_info("net_rainfall", net_rainfall)
+        _print_info("class_smd", class_smd)
+        _print_info("class_ri", class_ri)
+        _print_info("series['date']", series['date'])
         _print_info("net_rainfall", net_rainfall)
         is_print_info = False
 

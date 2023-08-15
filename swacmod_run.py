@@ -106,7 +106,9 @@ def aggregate_reporting(reporting):
 
 
 def compare_methods(unoptimised, optimised):
-    return lambda data, output, node: _compare_methods(unoptimised, optimised, data, output, node)
+    result = lambda data, output, node: _compare_methods(unoptimised, optimised, data, output, node)
+    result.__name__ = unoptimised.__name__
+    return result
 
 def _compare_methods(unoptimised, optimised, data, output, node):
     comparison_time_switcher = data["comparison_time_switcher"]

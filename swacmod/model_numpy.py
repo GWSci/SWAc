@@ -128,14 +128,16 @@ def get_ae(data, output, node):
             if smd > last_smd or var2 > last_ri:
                 rapid_runoff_c = value
             else:
-                var3 = 0
+                var3 = len_class_ri
                 for i in range(len_class_ri):
-                    if class_ri[i] < var2:
-                        var3 += 1
-                var4 = 0
+                    if class_ri[i] >= var2:
+                        var3 = i
+                        break
+                var4 = len_class_smd
                 for i in range(len_class_smd):
-                    if class_smd[i] < smd:
-                        var4 += 1
+                    if class_smd[i] >= smd:
+                        var4 = i
+                        break
                 rapid_runoff_c = values[var3][var4]
             col_rapid_runoff_c[num] = rapid_runoff_c
             var5 = var2 * rapid_runoff_c
