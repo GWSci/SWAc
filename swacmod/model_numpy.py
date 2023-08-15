@@ -121,7 +121,10 @@ def get_ae(data, output, node):
     macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
     macro_act_factor_B = 1 - macro_act_factor_A
     tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
-    
+    var3_arr = np.zeros(length, dtype=np.int32)
+    for num in range(length):
+        var3_arr[num] = _calc_var3(len_class_ri, class_ri, net_rainfall, num)
+
     # calculated in loop
     previous_smd_arr = np.zeros(length + 1)
     previous_smd_arr[0] = ssmd
@@ -132,7 +135,7 @@ def get_ae(data, output, node):
             if previous_smd_arr[num] > last_smd or net_rainfall[num] > last_ri:
                 col_rapid_runoff_c[num] = value
             else:
-                var3 = _calc_var3(len_class_ri, class_ri, net_rainfall, num)
+                var3 = var3_arr[num]
                 col_rapid_runoff_c[num] = _calc_col_rapid_runoff_c(num, len_class_smd, class_smd, previous_smd_arr, values, var3)
             col_rapid_runoff[num] = (0.0 if net_rainfall[num] < 0.0 else (net_rainfall[num] * col_rapid_runoff_c[num]))
 
