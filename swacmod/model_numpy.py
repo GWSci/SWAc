@@ -123,8 +123,6 @@ def get_ae(data, output, node):
     tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
     
     # calculated in loop
-    var13_arr = np.zeros(length)
-    p_smd_arr = np.zeros(length)
     previous_smd_arr = np.zeros(length + 1)
     previous_smd_arr[0] = ssmd
 
@@ -134,7 +132,8 @@ def get_ae(data, output, node):
             if previous_smd_arr[num] > last_smd or net_rainfall[num] > last_ri:
                 col_rapid_runoff_c[num] = value
             else:
-                col_rapid_runoff_c[num] = _calc_col_rapid_runoff_c(len_class_ri, class_ri, net_rainfall, num, len_class_smd, class_smd, previous_smd_arr, values)
+                var3 = _calc_var3(len_class_ri, class_ri, net_rainfall, num)
+                col_rapid_runoff_c[num] = _calc_col_rapid_runoff_c(num, len_class_smd, class_smd, previous_smd_arr, values, var3)
             col_rapid_runoff[num] = (0.0 if net_rainfall[num] < 0.0 else (net_rainfall[num] * col_rapid_runoff_c[num]))
 
         if params['macropore_process'] == 'enabled':
@@ -157,13 +156,10 @@ def get_ae(data, output, node):
             else:
                 col_k_slope[num] = _calc_col_k_slope(tawtew_a_minus_rawrew_a, num, tawtew_a, col_smd)
 
-            var13_arr[num] = _calc_var13_arr(col_smd, num, rawrew_a, col_percol_in_root, net_pefac_a, tawtew_a, col_k_slope)
+            col_ae[num] = _calc_var13_arr(col_smd, num, rawrew_a, col_percol_in_root, net_pefac_a, tawtew_a, col_k_slope)
 
-            p_smd = col_smd[num] + var13_arr[num] - col_percol_in_root[num]
-            p_smd_arr[num] = p_smd
-
-    col_p_smd = p_smd_arr 
-    col_ae = var13_arr
+            p_smd = col_smd[num] + col_ae[num] - col_percol_in_root[num]
+            col_p_smd[num] = p_smd
 
     col = {}
     col['rapid_runoff_c'] = col_rapid_runoff_c
@@ -179,12 +175,7 @@ def get_ae(data, output, node):
 
     return col
 
-def _calc_col_rapid_runoff_c(len_class_ri, class_ri, var2_arr, num, len_class_smd, class_smd, previous_smd_arr, values):
-    var3 = 0
-    for i in range(len_class_ri):
-        if class_ri[i] >= var2_arr[num]:
-            var3 = i
-            break
+def _calc_col_rapid_runoff_c(num, len_class_smd, class_smd, previous_smd_arr, values, var3):
     var4 = 0
     for i in range(len_class_smd):
         if class_smd[i] >= previous_smd_arr[num]:
@@ -192,6 +183,14 @@ def _calc_col_rapid_runoff_c(len_class_ri, class_ri, var2_arr, num, len_class_sm
             break
     result = values[var3][var4]
     return result
+
+def _calc_var3(len_class_ri, class_ri, net_rainfall, num):
+    var3 = 0
+    for i in range(len_class_ri):
+        if class_ri[i] >= net_rainfall[num]:
+            var3 = i
+            break
+    return var3
 
 def _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit):
     var8a = net_rainfall[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[months[num]][zone_mac])
