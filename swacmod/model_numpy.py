@@ -121,9 +121,7 @@ def get_ae(data, output, node):
     macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
     macro_act_factor_B = 1 - macro_act_factor_A
     tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
-    var3_arr = np.zeros(length, dtype=np.int32)
-    for num in range(length):
-        var3_arr[num] = _calc_var3(len_class_ri, class_ri, net_rainfall, num)
+    var3_arr = _make_var3_arr(length, len_class_ri, class_ri, net_rainfall)
 
     # calculated in loop
     previous_smd_arr = np.zeros(length + 1)
@@ -187,13 +185,14 @@ def _calc_col_rapid_runoff_c(num, len_class_smd, class_smd, previous_smd_arr, va
     result = values[var3][var4]
     return result
 
-def _calc_var3(len_class_ri, class_ri, net_rainfall, num):
-    var3 = 0
-    for i in range(len_class_ri):
-        if class_ri[i] >= net_rainfall[num]:
-            var3 = i
-            break
-    return var3
+def _make_var3_arr(length, len_class_ri, class_ri, net_rainfall):
+    var3_arr = np.zeros(length, dtype=np.int32)
+    for num in range(length):
+        for i in range(len_class_ri):
+            if class_ri[i] >= net_rainfall[num]:
+                var3_arr[num] = i
+                break
+    return var3_arr
 
 def _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit):
     var8a = net_rainfall[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[months[num]][zone_mac])
