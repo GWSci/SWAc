@@ -122,6 +122,7 @@ def get_ae(data, output, node):
     macro_act_factor_B = 1 - macro_act_factor_A
     
     var2_arr = net_rainfall
+    var6_arr = months
     var13_arr = np.zeros(length)
     p_smd_arr = np.zeros(length)
 
@@ -146,22 +147,20 @@ def get_ae(data, output, node):
             rapid_runoff = (0.0 if var2_arr[num] < 0.0 else var5)
             col_rapid_runoff[num] = rapid_runoff
 
-        var6 = months[num]
-
         if params['macropore_process'] == 'enabled':
-            var8a = var2_arr[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[var6][zone_mac])
+            var8a = var2_arr[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[var6_arr[num]][zone_mac])
             if var8a > 0.0:
-                ma = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act[var6][zone_mac])
+                ma = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act[var6_arr[num]][zone_mac])
                 if p_smd < ma:
-                    var9 = macro_prop[var6][zone_mac] * var8a
-                    var10 = macro_limit[var6][zone_mac]
+                    var9 = macro_prop[var6_arr[num]][zone_mac] * var8a
+                    var10 = macro_limit[var6_arr[num]][zone_mac]
                     macropore = min(var10, var9)
                 else:
                     macropore = 0.0
             else:
                 macropore = 0.0
 
-            var10a = macro_rec[var6][zone_mac]
+            var10a = macro_rec[var6_arr[num]][zone_mac]
             col_macropore_att[num] = macropore * (1 - var10a)
             col_macropore_dir[num] = macropore * var10a
 
