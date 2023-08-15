@@ -118,6 +118,9 @@ def get_ae(data, output, node):
         col_runoff_recharge[:] = 0.0
 
     # Fully calculated
+    use_rapid_runoff_process = params['rapid_runoff_process'] == 'enabled'
+    use_macropore_process = params['macropore_process'] == 'enabled'
+    use_fao_process = params['fao_process'] == 'enabled'
     macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
     macro_act_factor_B = 1 - macro_act_factor_A
     tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
@@ -131,10 +134,9 @@ def get_ae(data, output, node):
     # calculated in loop
     previous_smd_arr = np.zeros(length + 1)
     previous_smd_arr[0] = ssmd
-
     
     for num in range(length):
-        if params['rapid_runoff_process'] == 'enabled':
+        if use_rapid_runoff_process:
             if previous_smd_arr[num] > last_smd or net_rainfall[num] > last_ri:
                 col_rapid_runoff_c[num] = value
             else:
@@ -142,7 +144,7 @@ def get_ae(data, output, node):
                 col_rapid_runoff_c[num] = _calc_col_rapid_runoff_c(num, len_class_smd, class_smd, previous_smd_arr, values, var3)
             col_rapid_runoff[num] = (0.0 if net_rainfall[num] < 0.0 else (net_rainfall[num] * col_rapid_runoff_c[num]))
 
-        if params['macropore_process'] == 'enabled':
+        if use_macropore_process:
             macropore = _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit)
 
             col_macropore_att[num] = macropore * (1 - var10a_arr[num])
@@ -152,7 +154,7 @@ def get_ae(data, output, node):
                           - col_macropore_att[num]
                           - col_macropore_dir[num])
 
-        if params['fao_process'] == 'enabled':
+        if use_fao_process:
             col_smd[num] = max(p_smd, 0.0)
             previous_smd_arr[num + 1] = col_smd[num]
 
