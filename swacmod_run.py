@@ -153,7 +153,7 @@ def get_output(data, node, time_switcher):
         m.get_subroot_leak,
         m.get_interflow_bypass,
         m.get_interflow_store_input,
-        m.get_interflow,
+        compare_methods(m.get_interflow, mn.get_interflow) if ff.use_perf_features else m.get_interflow,
         m.get_recharge_store_input,
         m.get_recharge,
         m.get_swabs,
@@ -241,9 +241,13 @@ def run_process(
 
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
+                
+                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_individual)")
                 if node in data["params"]["output_individual"]:
                     # if this node for individual output then preserve
                     single_node_output[node] = output.copy()
+
+                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - reporting_agg)")
                 key = (num, rep_zone)
                 area = data["params"]["node_areas"][node]
                 if key not in reporting_agg:
@@ -252,6 +256,7 @@ def run_process(
                     reporting_agg[key] = m.aggregate(
                         output, area, reporting=reporting_agg[key])
 
+                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_recharge)")
                 if data["params"]["output_recharge"]:
                     rech = {"recharge": output["combined_recharge"].copy()}
                     for i, p in enumerate(
@@ -262,6 +267,7 @@ def run_process(
                         recharge_agg[(nnodes * i) + int(node)] = p
                     rech = None
 
+                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - swrecharge_process)")
                 if data["params"]["swrecharge_process"] == "enabled":
 
                     rech = output["combined_recharge"].copy()
@@ -274,6 +280,7 @@ def run_process(
                         runoff[(nnodes * i) + int(node)] = p
                     ro = None
 
+                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_sfr)")
                 if (data["params"]["output_sfr"]
                         or data["params"]["excess_sw_process"] != "disabled"):
                     ro = {"runoff": output["combined_str"].copy()}
@@ -285,6 +292,7 @@ def run_process(
                         runoff_agg[(nnodes * i) + int(node)] = p
                     ro = None
 
+                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_evt)")
                 if data["params"]["output_evt"]:
                     evt = {"evtr": output["unutilised_pe"].copy()}
                     for i, p in enumerate(
@@ -295,6 +303,7 @@ def run_process(
                         evtr_agg[(nnodes * i) + int(node)] = p
                     evt = None
 
+                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - spatial_output_date)")
                 if data["params"]["spatial_output_date"]:
                     spatial[node] = m.aggregate(output,
                                                 area,

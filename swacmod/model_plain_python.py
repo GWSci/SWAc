@@ -53,7 +53,6 @@ def get_pe(data, output, node):
     if fao == 'enabled' or canopy == 'enabled':
         zone_pe = params['pe_zone_mapping'][node][0] - 1
         coef_pe = params['pe_zone_mapping'][node][1]
-        print(f"zone_pe = {zone_pe}. coef_pe = {coef_pe}")
         pe_ts = series['pe_ts'][:, zone_pe] * coef_pe
     else:
         pe_ts = np.zeros(len(series['date']))

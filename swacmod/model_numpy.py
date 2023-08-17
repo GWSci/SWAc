@@ -77,9 +77,6 @@ def get_ae(data, output, node):
 	X) Ks (slope factor) [-]
 	Y) AE (actual evapotranspiration) [mm/d]
 	"""
-	time_switcher = data["time_switcher"]
-	t.switch_to(time_switcher, "ae before loop")
-
 	series, params = data['series'], data['params']
 	rrp = params['rapid_runoff_params']
 	s_smd = params['smd']
@@ -217,6 +214,63 @@ def get_ae(data, output, node):
 	col['k_slope'] = col_k_slope
 	col['ae'] = col_ae
 	return col
+
+def get_interflow(data, output, node):
+	"""Multicolumn function.
+
+	AF) Interflow Store Volume [mm]
+	AG) Infiltration Recharge [mm/d]
+	AH) Interflow to Surface Water Courses [mm/d]
+	"""
+	series, params = data['series'], data['params']
+
+	length = len(series['date'])
+	col_interflow_volume = np.zeros(length)
+	col_infiltration_recharge = np.zeros(length)
+	col_interflow_to_rivers = np.zeros(length)
+	interflow_store_input = output['interflow_store_input']
+	interflow_zone = params['interflow_zone_mapping'][node]
+	var0 = params['init_interflow_store'][interflow_zone]
+	var5 = np.full([length],
+								params['infiltration_limit'][interflow_zone])
+	var8 = np.full([length],
+								params['interflow_decay'][interflow_zone])
+	volume = var0
+	recharge = np.zeros(length)
+	rivers = np.zeros(length)
+
+	if params['interflow_process'] == 'enabled':
+		col_interflow_volume = np.full([length], volume)
+		col_infiltration_recharge = recharge
+		col_interflow_to_rivers = rivers
+
+		if params["infiltration_limit_use_timeseries"]:
+			for day in range(length):
+				var5[day] = series['infiltration_limit_ts'][day][interflow_zone-1]
+
+		if params["interflow_decay_use_timeseries"]:
+			for day in range(length):
+				var8[day] = series['interflow_decay_ts'][day][interflow_zone-1]
+
+		recharge = np.where(np.asarray(var5) < volume,
+							volume, np.asarray(var5))
+		rivers = (np.full([length], volume) - np.asarray(recharge)) * var8
+
+		for num in range(length):
+			var1 = volume - min(var5[num], volume)
+			volume = interflow_store_input[num-1] + var1 * (1 - var8[num])
+			col_interflow_volume[num] = volume
+			col_infiltration_recharge[num] = min(var5[num], volume)
+			var6 = (col_interflow_volume[num] - col_infiltration_recharge[num])
+			col_interflow_to_rivers[num] = var6 * var8[num]
+
+	col = {}
+	col['interflow_volume'] = col_interflow_volume
+	col['infiltration_recharge'] = col_infiltration_recharge
+	col['interflow_to_rivers'] = col_interflow_to_rivers
+
+	return col
+
 
 class Lazy_Precipitation:
 	def __init__(self, zone_rf, coef_rf, rainfall_ts):
