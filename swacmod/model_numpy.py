@@ -133,6 +133,8 @@ def get_ae(data, output, node):
     var10a_arr = fv(indexes)
     
     macro_act_for_month_and_zone = np.vectorize(lambda num: macro_act[months[num]][zone_mac])(indexes)
+    net_rainfall_minus_macro_act_with_factor = net_rainfall - (macro_act_factor_A * macro_act_for_month_and_zone)
+    ma_arr = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act_for_month_and_zone)
 
 
     # calculated in loop
@@ -149,7 +151,7 @@ def get_ae(data, output, node):
             col_rapid_runoff[num] = (0.0 if net_rainfall[num] < 0.0 else (net_rainfall[num] * col_rapid_runoff_c[num]))
 
         if use_macropore_process:
-            macropore = _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit, macro_act_for_month_and_zone)
+            macropore = _calc_macropore(num, col_rapid_runoff, months, zone_mac, p_smd, macro_prop, macro_limit, ma_arr, net_rainfall_minus_macro_act_with_factor)
 
             col_macropore_att[num] = macropore * (1 - var10a_arr[num])
             col_macropore_dir[num] = macropore * var10a_arr[num]
@@ -204,11 +206,10 @@ def _make_var3_arr(length, len_class_ri, class_ri, net_rainfall):
                 break
     return var3_arr
 
-def _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit, macro_act_for_month_and_zone):
-    var8a = net_rainfall[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act_for_month_and_zone[num])
+def _calc_macropore(num, col_rapid_runoff, months, zone_mac, p_smd, macro_prop, macro_limit, ma_arr, net_rainfall_minus_macro_act_with_factor):
+    var8a = net_rainfall_minus_macro_act_with_factor[num] - col_rapid_runoff[num]
     if var8a > 0.0:
-        ma = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act_for_month_and_zone[num])
-        if p_smd < ma:
+        if p_smd < ma_arr[num]:
             var9 = macro_prop[months[num]][zone_mac] * var8a
             var10 = macro_limit[months[num]][zone_mac]
             macropore = min(var10, var9)
