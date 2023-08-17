@@ -73,6 +73,9 @@ def get_ae(data, output, node):
     X) Ks (slope factor) [-]
     Y) AE (actual evapotranspiration) [mm/d]
     """
+    time_switcher = data["time_switcher"]
+    t.switch_to(time_switcher, "ae before loop")
+
     series, params = data['series'], data['params']
     rrp = params['rapid_runoff_params']
     s_smd = params['smd']
@@ -124,6 +127,7 @@ def get_ae(data, output, node):
     macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
     macro_act_factor_B = 1 - macro_act_factor_A
     tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
+    var_12_denominator_is_zero = tawtew_a_minus_rawrew_a == 0.0
     var3_arr = _make_var3_arr(length, len_class_ri, class_ri, net_rainfall)
     is_net_rainfall_greater_than_last_ri = net_rainfall > last_ri
 
@@ -142,6 +146,7 @@ def get_ae(data, output, node):
     previous_smd_arr = np.zeros(length + 1)
     previous_smd_arr[0] = ssmd
     
+    t.switch_to(time_switcher, "ae loop")
     for num in range(length):
         if use_rapid_runoff_process:
             if is_net_rainfall_greater_than_last_ri[num] or previous_smd_arr[num] > last_smd:
@@ -168,10 +173,18 @@ def get_ae(data, output, node):
 
             if col_percol_in_root[num] > net_pefac_a[num]:
                 col_k_slope[num] = -1.0
+            elif var_12_denominator_is_zero[num]:
+                 col_k_slope[num] = 1.0
             else:
-                col_k_slope[num] = _calc_col_k_slope(tawtew_a_minus_rawrew_a, num, tawtew_a, col_smd)
+                var12 = (tawtew_a[num] - col_smd[num]) / tawtew_a_minus_rawrew_a[num]
+                col_k_slope[num] = min(max(var12, 0.0), 1.0)
 
-            col_ae[num] = _calc_var13_arr(col_smd, num, rawrew_a, col_percol_in_root, net_pefac_a, tawtew_a, col_k_slope)
+            if col_smd[num] < rawrew_a[num] or col_percol_in_root[num] > net_pefac_a[num]:
+                col_ae[num] = net_pefac_a[num]
+            elif col_smd[num] >= rawrew_a[num] and col_smd[num] <= tawtew_a[num]:
+                col_ae[num] = col_k_slope[num] * (net_pefac_a[num] - col_percol_in_root[num])
+            else:
+                col_ae[num] = 0.0
 
             p_smd = col_smd[num] + col_ae[num] - col_percol_in_root[num]
             col_p_smd[num] = p_smd
@@ -188,7 +201,6 @@ def get_ae(data, output, node):
     col['smd'] = col_smd
     col['k_slope'] = col_k_slope
     col['ae'] = col_ae
-
     return col
 
 def _calc_col_rapid_runoff_c(num, len_class_smd, class_smd, previous_smd_arr, values, var3):
@@ -209,28 +221,6 @@ def _make_var3_arr(length, len_class_ri, class_ri, net_rainfall):
                 break
     return var3_arr
 
-def _calc_col_k_slope(tawtew_a_minus_rawrew_a, num, tawtew_a, col_smd):
-    if tawtew_a_minus_rawrew_a[num] == 0.0:
-        var12 = 1.0
-    else:
-        var12 = (tawtew_a[num] - col_smd[num]) / tawtew_a_minus_rawrew_a[num]
-
-    if var12 >= 1.0:
-        result = 1.0
-    else:
-        result = max(var12, 0.0)
-    return result
-
-def _calc_var13_arr(col_smd, num, rawrew_a, col_percol_in_root, net_pefac_a, tawtew_a, col_k_slope):
-    if col_smd[num] < rawrew_a[num] or col_percol_in_root[num] > net_pefac_a[num]:
-        var13 = net_pefac_a[num]
-    elif col_smd[num] >= rawrew_a[num] and col_smd[num] <= tawtew_a[num]:
-        var13 = col_k_slope[num] * (net_pefac_a[num] - col_percol_in_root[num])
-    else:
-        var13 = 0.0
-    return var13
-
-     
 class Lazy_Precipitation:
 	def __init__(self, zone_rf, coef_rf, rainfall_ts):
 		self.zone_rf = zone_rf
