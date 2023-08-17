@@ -135,7 +135,8 @@ def get_ae(data, output, node):
     macro_act_for_month_and_zone = np.vectorize(lambda num: macro_act[months[num]][zone_mac])(indexes)
     net_rainfall_minus_macro_act_with_factor = net_rainfall - (macro_act_factor_A * macro_act_for_month_and_zone)
     ma_arr = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act_for_month_and_zone)
-
+    macro_prop_arr = np.vectorize(lambda num: macro_prop[months[num]][zone_mac])
+    var10_arr = np.vectorize(lambda num: macro_limit[months[num]][zone_mac])(indexes)
 
     # calculated in loop
     previous_smd_arr = np.zeros(length + 1)
@@ -151,7 +152,7 @@ def get_ae(data, output, node):
             col_rapid_runoff[num] = (0.0 if net_rainfall[num] < 0.0 else (net_rainfall[num] * col_rapid_runoff_c[num]))
 
         if use_macropore_process:
-            macropore = _calc_macropore(num, col_rapid_runoff, months, zone_mac, p_smd, macro_prop, macro_limit, ma_arr, net_rainfall_minus_macro_act_with_factor)
+            macropore = _calc_macropore(num, col_rapid_runoff, p_smd, ma_arr, net_rainfall_minus_macro_act_with_factor, var10_arr, macro_prop_arr)
 
             col_macropore_att[num] = macropore * (1 - var10a_arr[num])
             col_macropore_dir[num] = macropore * var10a_arr[num]
@@ -206,13 +207,12 @@ def _make_var3_arr(length, len_class_ri, class_ri, net_rainfall):
                 break
     return var3_arr
 
-def _calc_macropore(num, col_rapid_runoff, months, zone_mac, p_smd, macro_prop, macro_limit, ma_arr, net_rainfall_minus_macro_act_with_factor):
+def _calc_macropore(num, col_rapid_runoff, p_smd, ma_arr, net_rainfall_minus_macro_act_with_factor, var10_arr, macro_prop_arr):
     var8a = net_rainfall_minus_macro_act_with_factor[num] - col_rapid_runoff[num]
     if var8a > 0.0:
         if p_smd < ma_arr[num]:
-            var9 = macro_prop[months[num]][zone_mac] * var8a
-            var10 = macro_limit[months[num]][zone_mac]
-            macropore = min(var10, var9)
+            var9 = macro_prop_arr[num] * var8a
+            macropore = min(var10_arr[num], var9)
         else:
             macropore = 0.0
     else:
