@@ -133,7 +133,7 @@ def get_output(data, node, time_switcher):
     output = {}
 
     methods = [
-        m.get_precipitation,
+        mn.get_precipitation if ff.use_perf_features else m.get_precipitation, # compare_methods(m.get_precipitation, mn.get_precipitation) if ff.use_perf_features else m.get_precipitation,
         m.get_pe,
         mn.get_pefac if ff.use_perf_features else m.get_pefac,
         m.get_canopy_storage,
@@ -146,8 +146,7 @@ def get_output(data, node, time_switcher):
         m.get_net_rainfall,
         m.get_rawrew,
         m.get_tawtew,
-        mn.get_ae if ff.use_perf_features else m.get_ae,
-        # compare_methods(m.get_ae, mn.get_ae) if ff.use_perf_features else m.get_ae,
+        mn.get_ae if ff.use_perf_features else m.get_ae, # compare_methods(m.get_ae, mn.get_ae) if ff.use_perf_features else m.get_ae,
         m.get_unutilised_pe,
         m.get_rejected_recharge,
         m.get_perc_through_root,
@@ -207,6 +206,13 @@ def run_process(
     comparison_time_switcher = timer.make_time_switcher()
     data["time_switcher"] = time_switcher
     data["comparison_time_switcher"] = comparison_time_switcher
+
+    timer.switch_to(time_switcher, "run_main > run > run_process (lazy_get_precipitation)")
+
+    if ff.use_perf_features:
+        precipitation = mn.lazy_get_precipitation(data, ids)
+        data["precalculated_precipitation"] = precipitation
+
     timer.switch_to(time_switcher, "run_main > run > run_process (preamble)")
 
     io.start_logging(path=log_path, level=level)
@@ -431,9 +437,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                          data["params"]["start_date"]).days]
     else:
         spatial_index = None
-
-    # if ff.use_perf_features:
-        # precipitation = swacmod.model_numpy.lazy_get_precipitation(data, ids)
 
     workers = []
     q = mp.Queue()

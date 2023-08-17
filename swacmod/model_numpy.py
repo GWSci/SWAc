@@ -37,6 +37,11 @@ def lazy_get_precipitation(data, nodes):
 	t.stop_timing(token)
 	return result
 
+def get_precipitation(data, output, node):
+    """C) Precipitation [mm/d]."""
+    rainfall_ts = data["precalculated_precipitation"][node - 1]
+    return {'rainfall_ts': rainfall_ts}
+
 def get_pefac(data, output, node):
 	"""E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
 	series, params = data['series'], data['params']
@@ -219,9 +224,21 @@ class Lazy_Precipitation:
 		self.zone_rf = zone_rf
 		self.coef_rf = coef_rf
 		self.rainfall_ts = rainfall_ts
+		self.last_zone_rf = None
+		self.last_coef_rf = None
+		self.last_rainfall_ts = None
 	
 	def __getitem__(self, subscript):
 		zone_rf = self.zone_rf[subscript]
 		coef_rf = self.coef_rf[subscript]
-		rainfall_ts = self.rainfall_ts[:, zone_rf] * coef_rf
-		return rainfall_ts
+                
+		is_same_zone_rf = self.last_zone_rf == zone_rf
+		is_same_coef_rf = self.last_coef_rf == coef_rf
+		is_same_both = is_same_zone_rf and is_same_coef_rf
+                
+		if is_same_both:
+			return self.last_rainfall_ts
+		self.last_zone_rf = zone_rf
+		self.last_coef_rf = coef_rf
+		self.last_rainfall_ts = self.rainfall_ts[:, zone_rf] * coef_rf
+		return self.last_rainfall_ts
