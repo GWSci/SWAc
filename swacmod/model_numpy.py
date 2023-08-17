@@ -139,7 +139,6 @@ def get_ae(data, output, node):
     range_len_class_smd = range(len_class_smd)
     range_len_class_ri = range(len_class_ri)
         
-    t.switch_to(time_switcher, "ae loop")
     previous_smd = ssmd
 
     for num in range(length):
@@ -191,14 +190,15 @@ def get_ae(data, output, node):
                 col_k_slope[num] = min(max(var12, 0.0), 1.0)
 
             if col_smd_num < rawrew_a[num] or col_percol_in_root_num > net_pefac_a_num:
-                col_ae[num] = net_pefac_a_num
-            elif col_smd_num >= rawrew_a[num] and col_smd_num <= tawtew_a_num:
-                col_ae[num] = col_k_slope[num] * (net_pefac_a_num - col_percol_in_root_num)
+                col_ae_num = net_pefac_a_num
+            elif col_smd_num <= tawtew_a_num:
+                col_ae_num = col_k_slope[num] * (net_pefac_a_num - col_percol_in_root_num)
             else:
-                col_ae[num] = 0.0
+                col_ae_num = 0.0
 
-            p_smd = col_smd_num + col_ae[num] - col_percol_in_root_num
+            p_smd = col_smd_num + col_ae_num - col_percol_in_root_num
             col_p_smd[num] = p_smd
+            col_ae[num] = col_ae_num
             previous_smd = col_smd_num
 
     col = {}
