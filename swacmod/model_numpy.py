@@ -132,14 +132,13 @@ def get_ae(data, output, node):
     is_net_rainfall_greater_than_last_ri = net_rainfall > last_ri
 
     t.switch_to(time_switcher, "ae vectorized")
-    indexes = np.arange(length)
     var10a_arr = macro_rec[months, zone_mac]
     
-    macro_act_for_month_and_zone = np.vectorize(lambda num: macro_act[months[num]][zone_mac])(indexes)
+    macro_act_for_month_and_zone = macro_act[months, zone_mac]
     net_rainfall_minus_macro_act_with_factor = net_rainfall - (macro_act_factor_A * macro_act_for_month_and_zone)
     ma_arr = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act_for_month_and_zone)
-    macro_prop_arr = np.vectorize(lambda num: macro_prop[months[num]][zone_mac])
-    var10_arr = np.vectorize(lambda num: macro_limit[months[num]][zone_mac])(indexes)
+    macro_prop_arr = macro_prop[months, zone_mac]
+    var10_arr = macro_limit[months, zone_mac]
 
     # calculated in loop
     previous_smd_arr = np.zeros(length + 1)
