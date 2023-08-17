@@ -125,6 +125,7 @@ def get_ae(data, output, node):
     macro_act_factor_B = 1 - macro_act_factor_A
     tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
     var3_arr = _make_var3_arr(length, len_class_ri, class_ri, net_rainfall)
+    is_net_rainfall_greater_than_last_ri = net_rainfall > last_ri
 
     indexes = np.arange(length)
     f = lambda num: macro_rec[months[num]][zone_mac]
@@ -137,7 +138,7 @@ def get_ae(data, output, node):
     
     for num in range(length):
         if use_rapid_runoff_process:
-            if previous_smd_arr[num] > last_smd or net_rainfall[num] > last_ri:
+            if is_net_rainfall_greater_than_last_ri[num] or previous_smd_arr[num] > last_smd:
                 col_rapid_runoff_c[num] = value
             else:
                 var3 = var3_arr[num]
@@ -156,7 +157,6 @@ def get_ae(data, output, node):
 
         if use_fao_process:
             col_smd[num] = max(p_smd, 0.0)
-            previous_smd_arr[num + 1] = col_smd[num]
 
             if col_percol_in_root[num] > net_pefac_a[num]:
                 col_k_slope[num] = -1.0
@@ -167,6 +167,7 @@ def get_ae(data, output, node):
 
             p_smd = col_smd[num] + col_ae[num] - col_percol_in_root[num]
             col_p_smd[num] = p_smd
+        previous_smd_arr[num + 1] = col_smd[num]
 
     col = {}
     col['rapid_runoff_c'] = col_rapid_runoff_c
