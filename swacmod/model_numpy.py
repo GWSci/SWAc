@@ -131,6 +131,9 @@ def get_ae(data, output, node):
     f = lambda num: macro_rec[months[num]][zone_mac]
     fv = np.vectorize(f)
     var10a_arr = fv(indexes)
+    
+    macro_act_for_month_and_zone = np.vectorize(lambda num: macro_act[months[num]][zone_mac])(indexes)
+
 
     # calculated in loop
     previous_smd_arr = np.zeros(length + 1)
@@ -146,7 +149,7 @@ def get_ae(data, output, node):
             col_rapid_runoff[num] = (0.0 if net_rainfall[num] < 0.0 else (net_rainfall[num] * col_rapid_runoff_c[num]))
 
         if use_macropore_process:
-            macropore = _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit)
+            macropore = _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit, macro_act_for_month_and_zone)
 
             col_macropore_att[num] = macropore * (1 - var10a_arr[num])
             col_macropore_dir[num] = macropore * var10a_arr[num]
@@ -201,10 +204,10 @@ def _make_var3_arr(length, len_class_ri, class_ri, net_rainfall):
                 break
     return var3_arr
 
-def _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit):
-    var8a = net_rainfall[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act[months[num]][zone_mac])
+def _calc_macropore(net_rainfall, num, col_rapid_runoff, macro_act_factor_A, macro_act, months, zone_mac, macro_act_factor_B, p_smd, macro_prop, macro_limit, macro_act_for_month_and_zone):
+    var8a = net_rainfall[num] - col_rapid_runoff[num] - (macro_act_factor_A * macro_act_for_month_and_zone[num])
     if var8a > 0.0:
-        ma = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act[months[num]][zone_mac])
+        ma = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act_for_month_and_zone[num])
         if p_smd < ma:
             var9 = macro_prop[months[num]][zone_mac] * var8a
             var10 = macro_limit[months[num]][zone_mac]
