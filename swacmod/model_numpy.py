@@ -137,6 +137,8 @@ def get_ae(data, output, node):
     macro_prop_arr = macro_prop[months, zone_mac]
     var10_arr = macro_limit[months, zone_mac]
 
+    range_len_class_smd = range(len_class_smd)
+
     t.switch_to(time_switcher, "ae var3_arr")
     var3_arr = _make_var3_arr(length, len_class_ri, class_ri, net_rainfall)
     
@@ -146,16 +148,19 @@ def get_ae(data, output, node):
     
     t.switch_to(time_switcher, "ae loop")
     for num in range(length):
+        net_rainfall_num = net_rainfall[num]
+
         if use_rapid_runoff_process:
             if is_net_rainfall_greater_than_last_ri[num] or previous_smd_arr[num] > last_smd:
                 col_rapid_runoff_c[num] = value
             else:
-                for i in range(len_class_smd):
+                var3 = var3_arr[num]
+                for i in range_len_class_smd:
                     if class_smd[i] >= previous_smd_arr[num]:
-                        col_rapid_runoff_c[num] = values[var3_arr[num], i]
+                        col_rapid_runoff_c[num] = values[var3, i]
                         break
 
-            col_rapid_runoff[num] = (0.0 if net_rainfall[num] < 0.0 else (net_rainfall[num] * col_rapid_runoff_c[num]))
+            col_rapid_runoff[num] = (0.0 if net_rainfall_num < 0.0 else (net_rainfall_num * col_rapid_runoff_c[num]))
 
         if use_macropore_process:
             var8a = net_rainfall_minus_macro_act_with_factor[num] - col_rapid_runoff[num]
@@ -165,7 +170,7 @@ def get_ae(data, output, node):
                 col_macropore_att[num] = macropore * (1 - var10a_arr[num])
                 col_macropore_dir[num] = macropore * var10a_arr[num]
 
-        col_percol_in_root[num] = (net_rainfall[num] - col_rapid_runoff[num]
+        col_percol_in_root[num] = (net_rainfall_num - col_rapid_runoff[num]
                           - col_macropore_att[num]
                           - col_macropore_dir[num])
 
