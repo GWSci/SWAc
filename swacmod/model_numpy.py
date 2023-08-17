@@ -131,10 +131,9 @@ def get_ae(data, output, node):
     var3_arr = _make_var3_arr(length, len_class_ri, class_ri, net_rainfall)
     is_net_rainfall_greater_than_last_ri = net_rainfall > last_ri
 
+    t.switch_to(time_switcher, "ae vectorized")
     indexes = np.arange(length)
-    f = lambda num: macro_rec[months[num]][zone_mac]
-    fv = np.vectorize(f)
-    var10a_arr = fv(indexes)
+    var10a_arr = macro_rec[months, zone_mac]
     
     macro_act_for_month_and_zone = np.vectorize(lambda num: macro_act[months[num]][zone_mac])(indexes)
     net_rainfall_minus_macro_act_with_factor = net_rainfall - (macro_act_factor_A * macro_act_for_month_and_zone)
