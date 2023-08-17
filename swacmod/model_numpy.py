@@ -128,18 +128,18 @@ def get_ae(data, output, node):
     macro_act_factor_B = 1 - macro_act_factor_A
     tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
     var_12_denominator_is_zero = tawtew_a_minus_rawrew_a == 0.0
-    var3_arr = _make_var3_arr(length, len_class_ri, class_ri, net_rainfall)
     is_net_rainfall_greater_than_last_ri = net_rainfall > last_ri
 
-    t.switch_to(time_switcher, "ae vectorized")
-    var10a_arr = macro_rec[months, zone_mac]
-    
+    var10a_arr = macro_rec[months, zone_mac]    
     macro_act_for_month_and_zone = macro_act[months, zone_mac]
     net_rainfall_minus_macro_act_with_factor = net_rainfall - (macro_act_factor_A * macro_act_for_month_and_zone)
     ma_arr = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act_for_month_and_zone)
     macro_prop_arr = macro_prop[months, zone_mac]
     var10_arr = macro_limit[months, zone_mac]
 
+    t.switch_to(time_switcher, "ae var3_arr")
+    var3_arr = _make_var3_arr(length, len_class_ri, class_ri, net_rainfall)
+    
     # calculated in loop
     previous_smd_arr = np.zeros(length + 1)
     previous_smd_arr[0] = ssmd
@@ -150,8 +150,11 @@ def get_ae(data, output, node):
             if is_net_rainfall_greater_than_last_ri[num] or previous_smd_arr[num] > last_smd:
                 col_rapid_runoff_c[num] = value
             else:
-                var3 = var3_arr[num]
-                col_rapid_runoff_c[num] = _calc_col_rapid_runoff_c(num, len_class_smd, class_smd, previous_smd_arr, values, var3)
+                for i in range(len_class_smd):
+                    if class_smd[i] >= previous_smd_arr[num]:
+                        col_rapid_runoff_c[num] = values[var3_arr[num], i]
+                        break
+
             col_rapid_runoff[num] = (0.0 if net_rainfall[num] < 0.0 else (net_rainfall[num] * col_rapid_runoff_c[num]))
 
         if use_macropore_process:
@@ -200,15 +203,6 @@ def get_ae(data, output, node):
     col['k_slope'] = col_k_slope
     col['ae'] = col_ae
     return col
-
-def _calc_col_rapid_runoff_c(num, len_class_smd, class_smd, previous_smd_arr, values, var3):
-    var4 = 0
-    for i in range(len_class_smd):
-        if class_smd[i] >= previous_smd_arr[num]:
-            var4 = i
-            break
-    result = values[var3][var4]
-    return result
 
 def _make_var3_arr(length, len_class_ri, class_ri, net_rainfall):
     var3_arr = np.zeros(length, dtype=np.int32)
