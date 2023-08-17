@@ -120,7 +120,6 @@ def get_ae(data, output, node):
     if params['swrecharge_process'] == 'enabled':
         col_runoff_recharge[:] = 0.0
 
-    # Fully calculated
     use_rapid_runoff_process = params['rapid_runoff_process'] == 'enabled'
     use_macropore_process = params['macropore_process'] == 'enabled'
     use_fao_process = params['fao_process'] == 'enabled'
@@ -138,9 +137,7 @@ def get_ae(data, output, node):
     var10_arr = macro_limit[months, zone_mac]
 
     range_len_class_smd = range(len_class_smd)
-
-    t.switch_to(time_switcher, "ae var3_arr")
-    var3_arr = _make_var3_arr(length, len_class_ri, class_ri, net_rainfall)
+    range_len_class_ri = range(len_class_ri)
         
     t.switch_to(time_switcher, "ae loop")
     previous_smd = ssmd
@@ -152,7 +149,11 @@ def get_ae(data, output, node):
             if is_net_rainfall_greater_than_last_ri[num] or previous_smd > last_smd:
                 col_rapid_runoff_c[num] = value
             else:
-                var3 = var3_arr[num]
+                var3 = 0
+                for i in range_len_class_ri:
+                    if class_ri[i] >= net_rainfall_num:
+                        var3 = i
+                        break
                 for i in range_len_class_smd:
                     if class_smd[i] >= previous_smd:
                         col_rapid_runoff_c[num] = values[var3, i]
@@ -212,16 +213,6 @@ def get_ae(data, output, node):
     col['k_slope'] = col_k_slope
     col['ae'] = col_ae
     return col
-
-def _make_var3_arr(length, len_class_ri, class_ri, net_rainfall):
-    var3_arr = np.zeros(length, dtype=np.int32)
-    range_len_class_ri = range(len_class_ri)
-    for num in range(length):
-        for i in range_len_class_ri:
-            if class_ri[i] >= net_rainfall[num]:
-                var3_arr[num] = i
-                break
-    return var3_arr
 
 class Lazy_Precipitation:
 	def __init__(self, zone_rf, coef_rf, rainfall_ts):
