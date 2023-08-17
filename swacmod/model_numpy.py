@@ -141,60 +141,64 @@ def get_ae(data, output, node):
 
     t.switch_to(time_switcher, "ae var3_arr")
     var3_arr = _make_var3_arr(length, len_class_ri, class_ri, net_rainfall)
-    
-    # calculated in loop
-    previous_smd_arr = np.zeros(length + 1)
-    previous_smd_arr[0] = ssmd
-    
+        
     t.switch_to(time_switcher, "ae loop")
+    previous_smd = ssmd
+
     for num in range(length):
         net_rainfall_num = net_rainfall[num]
 
         if use_rapid_runoff_process:
-            if is_net_rainfall_greater_than_last_ri[num] or previous_smd_arr[num] > last_smd:
+            if is_net_rainfall_greater_than_last_ri[num] or previous_smd > last_smd:
                 col_rapid_runoff_c[num] = value
             else:
                 var3 = var3_arr[num]
                 for i in range_len_class_smd:
-                    if class_smd[i] >= previous_smd_arr[num]:
+                    if class_smd[i] >= previous_smd:
                         col_rapid_runoff_c[num] = values[var3, i]
                         break
 
-            col_rapid_runoff[num] = (0.0 if net_rainfall_num < 0.0 else (net_rainfall_num * col_rapid_runoff_c[num]))
+            col_rapid_runoff_num = (0.0 if net_rainfall_num < 0.0 else (net_rainfall_num * col_rapid_runoff_c[num]))
+            col_rapid_runoff[num] = col_rapid_runoff_num
 
         if use_macropore_process:
-            var8a = net_rainfall_minus_macro_act_with_factor[num] - col_rapid_runoff[num]
+            var8a = net_rainfall_minus_macro_act_with_factor[num] - col_rapid_runoff_num
             if var8a > 0.0 and p_smd < ma_arr[num]:
                 var9 = macro_prop_arr[num] * var8a
                 macropore = min(var10_arr[num], var9)
                 col_macropore_att[num] = macropore * (1 - var10a_arr[num])
                 col_macropore_dir[num] = macropore * var10a_arr[num]
 
-        col_percol_in_root[num] = (net_rainfall_num - col_rapid_runoff[num]
+        col_percol_in_root_num = (net_rainfall_num - col_rapid_runoff_num
                           - col_macropore_att[num]
                           - col_macropore_dir[num])
+        
+        col_percol_in_root[num] = col_percol_in_root_num
 
         if use_fao_process:
-            col_smd[num] = max(p_smd, 0.0)
+            net_pefac_a_num = net_pefac_a[num]
+            col_smd_num = max(p_smd, 0.0)
+            col_smd[num] = col_smd_num
+            tawtew_a_num = tawtew_a[num]
 
-            if col_percol_in_root[num] > net_pefac_a[num]:
+            if col_percol_in_root_num > net_pefac_a_num:
                 col_k_slope[num] = -1.0
             elif var_12_denominator_is_zero[num]:
-                 col_k_slope[num] = 1.0
+                col_k_slope[num] = 1.0
             else:
-                var12 = (tawtew_a[num] - col_smd[num]) / tawtew_a_minus_rawrew_a[num]
+                var12 = (tawtew_a_num - col_smd_num) / tawtew_a_minus_rawrew_a[num]
                 col_k_slope[num] = min(max(var12, 0.0), 1.0)
 
-            if col_smd[num] < rawrew_a[num] or col_percol_in_root[num] > net_pefac_a[num]:
-                col_ae[num] = net_pefac_a[num]
-            elif col_smd[num] >= rawrew_a[num] and col_smd[num] <= tawtew_a[num]:
-                col_ae[num] = col_k_slope[num] * (net_pefac_a[num] - col_percol_in_root[num])
+            if col_smd_num < rawrew_a[num] or col_percol_in_root_num > net_pefac_a_num:
+                col_ae[num] = net_pefac_a_num
+            elif col_smd_num >= rawrew_a[num] and col_smd_num <= tawtew_a_num:
+                col_ae[num] = col_k_slope[num] * (net_pefac_a_num - col_percol_in_root_num)
             else:
                 col_ae[num] = 0.0
 
-            p_smd = col_smd[num] + col_ae[num] - col_percol_in_root[num]
+            p_smd = col_smd_num + col_ae[num] - col_percol_in_root_num
             col_p_smd[num] = p_smd
-        previous_smd_arr[num + 1] = col_smd[num]
+            previous_smd = col_smd_num
 
     col = {}
     col['rapid_runoff_c'] = col_rapid_runoff_c
@@ -211,8 +215,9 @@ def get_ae(data, output, node):
 
 def _make_var3_arr(length, len_class_ri, class_ri, net_rainfall):
     var3_arr = np.zeros(length, dtype=np.int32)
+    range_len_class_ri = range(len_class_ri)
     for num in range(length):
-        for i in range(len_class_ri):
+        for i in range_len_class_ri:
             if class_ri[i] >= net_rainfall[num]:
                 var3_arr[num] = i
                 break
