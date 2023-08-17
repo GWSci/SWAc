@@ -383,6 +383,9 @@ def get_ae(data, output, node):
         _print_info("series['date']", series['date'])
         _print_info("net_rainfall", net_rainfall)
         _print_info("values", values)
+        _print_info("params['rapid_runoff_process']", params['rapid_runoff_process'])
+        _print_info("params['macropore_process']", params['macropore_process'])
+        _print_info("params['fao_process']", params['fao_process'])
         is_print_info = False
 
     for num in range(length):

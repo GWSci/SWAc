@@ -152,10 +152,12 @@ def get_ae(data, output, node):
             col_rapid_runoff[num] = (0.0 if net_rainfall[num] < 0.0 else (net_rainfall[num] * col_rapid_runoff_c[num]))
 
         if use_macropore_process:
-            macropore = _calc_macropore(num, col_rapid_runoff, p_smd, ma_arr, net_rainfall_minus_macro_act_with_factor, var10_arr, macro_prop_arr)
-
-            col_macropore_att[num] = macropore * (1 - var10a_arr[num])
-            col_macropore_dir[num] = macropore * var10a_arr[num]
+            var8a = net_rainfall_minus_macro_act_with_factor[num] - col_rapid_runoff[num]
+            if var8a > 0.0 and p_smd < ma_arr[num]:
+                var9 = macro_prop_arr[num] * var8a
+                macropore = min(var10_arr[num], var9)
+                col_macropore_att[num] = macropore * (1 - var10a_arr[num])
+                col_macropore_dir[num] = macropore * var10a_arr[num]
 
         col_percol_in_root[num] = (net_rainfall[num] - col_rapid_runoff[num]
                           - col_macropore_att[num]
@@ -206,18 +208,6 @@ def _make_var3_arr(length, len_class_ri, class_ri, net_rainfall):
                 var3_arr[num] = i
                 break
     return var3_arr
-
-def _calc_macropore(num, col_rapid_runoff, p_smd, ma_arr, net_rainfall_minus_macro_act_with_factor, var10_arr, macro_prop_arr):
-    var8a = net_rainfall_minus_macro_act_with_factor[num] - col_rapid_runoff[num]
-    if var8a > 0.0:
-        if p_smd < ma_arr[num]:
-            var9 = macro_prop_arr[num] * var8a
-            macropore = min(var10_arr[num], var9)
-        else:
-            macropore = 0.0
-    else:
-        macropore = 0.0
-    return macropore
 
 def _calc_col_k_slope(tawtew_a_minus_rawrew_a, num, tawtew_a, col_smd):
     if tawtew_a_minus_rawrew_a[num] == 0.0:
