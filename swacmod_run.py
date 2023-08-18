@@ -203,6 +203,7 @@ def run_process(
         reporting,
         single_node_output,
         q,
+        pbar=None
 ):
     """Run model for a chunk of nodes."""
     timer_token_run_process = timer.start_timing("run_main > run > run_process")
@@ -236,6 +237,8 @@ def run_process(
     for node in ids:
 
         q.put(SENTINEL)
+        if pbar is not None:
+            pbar.update()
 
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
@@ -493,6 +496,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     workers = []
     if ff.use_perf_features:
         q = queue.Queue()
+        pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
+
+        timer.stop_timing(timer_token_for_run_getting_ready_for_multiprocessing)
+        timer_token_for_run_multiprocessing = timer.start_timing("run_main > run (multiprocessing)")
+
         for process, chunk in enumerate(chunks):
 
             if chunk.size == 0:
@@ -516,12 +524,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 reporting,
                 single_node_output,
                 q,
+                pbar
             )
 
-        timer.stop_timing(timer_token_for_run_getting_ready_for_multiprocessing)
-        timer_token_for_run_multiprocessing = timer.start_timing("run_main > run (multiprocessing)")
-
         q.put(None)
+        pbar.update()
+        pbar.close()
 
     else:
         q = mp.Queue()
