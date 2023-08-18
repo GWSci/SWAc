@@ -259,7 +259,6 @@ def get_interflow(data, output, node):
 
 	return col
 
-
 class Lazy_Precipitation:
 	def __init__(self, zone_rf, coef_rf, rainfall_ts):
 		self.zone_rf = zone_rf
@@ -284,24 +283,108 @@ class Lazy_Precipitation:
 		self.last_rainfall_ts = self.rainfall_ts[:, zone_rf] * coef_rf
 		return self.last_rainfall_ts
 
-def aggregate(output, area, reporting=None, index=None):
-	"""Aggregate reporting over output periods."""
-	new_rep = {}
+def get_recharge(data, output, node):
+	"""Multicolumn function.
 
-	if index is not None:
-		not_scalar = (type(index[0]) is range or type(index[0]) is list)
+	AJ) Recharge Store Volume [mm]
+	AK) RCH: Combined Recharge [mm/d]
+	"""
+	series, params = data['series'], data['params']
+
+	length = len(series['date'])
+	col_recharge_store = np.zeros(length)
+	col_combined_recharge = np.zeros(length)
+	irs = params['recharge_attenuation_params'][node][0]
+	rlp = params['recharge_attenuation_params'][node][1]
+	rll = params['recharge_attenuation_params'][node][2]
+	recharge = np.zeros(length)
+	recharge_store_input = output['recharge_store_input']
+	macropore_dir = output['macropore_dir']
+
+	if params['recharge_attenuation_process'] == 'enabled':
+		recharge[0] = irs
+		col_recharge_store[0] = irs
+		col_combined_recharge[0] = (min((irs * rlp), rll) +
+									output['macropore_dir'][0])
+		for num in range(1, length):
+			recharge[num] = (recharge_store_input[num-1] +
+							 col_recharge_store[num-1] -
+							 col_combined_recharge[num-1] +
+							 macropore_dir[num-1])
+
+			col_recharge_store[num] = recharge[num]
+			col_combined_recharge[num] = (min((recharge[num] * rlp), rll) +
+										  output['macropore_dir'][num])
 	else:
-		not_scalar = False
+		col_recharge_store[0] = irs
+		for num in range(1, length):
+			col_combined_recharge[num] = (recharge_store_input[num] +
+										  output['macropore_dir'][num])
 
-	for key in output:
-		new_rep[key] = []
-		if not_scalar:
-			new_rep[key] = [output[key][i].mean(dtype=np.float64)
-							* area for i in index]
-		elif index is not None:
-			new_rep[key] = [output[key][index[0]] * area]
-		else:
-			new_rep[key] = output[key] * area
-		if reporting:
-			new_rep[key] += reporting[key]
-	return new_rep
+	col = {}
+	col['recharge_store'] = col_recharge_store
+	col['combined_recharge'] = col_combined_recharge
+	return col
+
+def get_swabs(data, output, node):
+	"""Surface water abtractions"""
+
+	from swacmod.utils import monthdelta, weekdelta
+
+	series, params = data['series'], data['params']
+	areas = data['params']['node_areas']
+	fac = 1000.0
+	freq_flag = data['params']['swabs_f']
+	dates = series['date']
+
+	swabs_ts = np.zeros(len(series['date']))
+	start_date = dates[0]
+
+	if node in params['swabs_locs']:
+		area = areas[node]
+		zone_swabs = params['swabs_locs'][node] - 1
+
+		if freq_flag == 0:
+			# daily input just populate
+			swabs_ts = series['swabs_ts'][:, zone_swabs] / area * fac
+
+		elif freq_flag == 1:
+			# if weeks convert to days
+			for iday, day in enumerate(dates):
+				week = weekdelta(start_date, day)
+				swabs_ts[iday] = (series['swabs_ts'][week, zone_swabs] / area
+								  * fac)
+
+		elif freq_flag == 2:
+			# if months convert to days
+			for iday, day in enumerate(dates):
+				month = monthdelta(start_date, day)
+				swabs_ts[iday] = (series['swabs_ts'][month, zone_swabs] / area
+								  * fac)
+
+	return {'swabs_ts': swabs_ts}
+
+def get_change(data, output, node):
+	"""AR) TOTAL STORAGE CHANGE [mm]."""
+	series = data['series']
+
+	length = len(series['date'])
+	col_change = np.zeros(length)
+	tmp0 = np.zeros(length)
+
+	tmp0 = (output['recharge_store_input'] -
+			(output['combined_recharge'] - output['macropore_dir']) +
+			(output['interflow_store_input'] - output['interflow_to_rivers']) -
+			output['infiltration_recharge'] +
+			(output['percol_in_root'] - output['ae']))
+
+	col_change = tmp0
+
+	for num in range(1, length):
+		if output['p_smd'][num] < 0.0:
+			col_change[num] += output['p_smd'][num]
+
+		col_change[num] += (output['sw_attenuation'][num]
+							- output['sw_attenuation'][num-1])
+
+	return {'total_storage_change': col_change}

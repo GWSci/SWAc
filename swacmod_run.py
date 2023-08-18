@@ -157,17 +157,17 @@ def get_output(data, node, time_switcher):
         m.get_subroot_leak,
         m.get_interflow_bypass,
         m.get_interflow_store_input,
-        m.get_interflow, #compare_methods(m.get_interflow, mn.get_interflow) if ff.use_perf_features else m.get_interflow,
+        compare_methods(m.get_interflow, mn.get_interflow) if ff.use_perf_features else m.get_interflow,
         m.get_recharge_store_input,
-        m.get_recharge,
-        m.get_swabs,
+        compare_methods(m.get_recharge, mn.get_recharge) if ff.use_perf_features else m.get_recharge,
+        compare_methods(m.get_swabs, mn.get_swabs) if ff.use_perf_features else m.get_swabs,
         m.get_swdis,
         m.get_combined_str,
         m.get_combined_ae,
         m.get_evt,
         m.get_average_in,
         m.get_average_out,
-        m.get_change,
+        compare_methods(m.get_change, mn.get_change) if ff.use_perf_features else m.get_change,
         m.get_balance,
     ]
         
@@ -279,7 +279,6 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
         # if this node for individual output then preserve
         single_node_output[node] = output.copy()
 
-    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - reporting_agg)")
     key = (num, rep_zone)
     area = data["params"]["node_areas"][node]
     if key not in reporting_agg:
@@ -288,7 +287,6 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
         reporting_agg[key] = m.aggregate(
             output, area, reporting=reporting_agg[key])
 
-    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_recharge)")
     if data["params"]["output_recharge"]:
         rech = {"recharge": output["combined_recharge"].copy()}
         for i, p in enumerate(
@@ -299,7 +297,6 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             recharge_agg[(nnodes * i) + int(node)] = p
         rech = None
 
-    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - swrecharge_process)")
     if data["params"]["swrecharge_process"] == "enabled":
 
         rech = output["combined_recharge"].copy()
@@ -312,7 +309,6 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             runoff[(nnodes * i) + int(node)] = p
         ro = None
 
-    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_sfr)")
     if (data["params"]["output_sfr"]
             or data["params"]["excess_sw_process"] != "disabled"):
         ro = {"runoff": output["combined_str"].copy()}
@@ -324,7 +320,6 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             runoff_agg[(nnodes * i) + int(node)] = p
         ro = None
 
-    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_evt)")
     if data["params"]["output_evt"]:
         evt = {"evtr": output["unutilised_pe"].copy()}
         for i, p in enumerate(
@@ -335,7 +330,6 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             evtr_agg[(nnodes * i) + int(node)] = p
         evt = None
 
-    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - spatial_output_date)")
     if data["params"]["spatial_output_date"]:
         spatial[node] = m.aggregate(output,
                                     area,
