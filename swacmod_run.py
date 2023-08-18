@@ -157,7 +157,7 @@ def get_output(data, node, time_switcher):
         m.get_subroot_leak,
         m.get_interflow_bypass,
         m.get_interflow_store_input,
-        compare_methods(m.get_interflow, mn.get_interflow) if ff.use_perf_features else m.get_interflow,
+        m.get_interflow, #compare_methods(m.get_interflow, mn.get_interflow) if ff.use_perf_features else m.get_interflow,
         m.get_recharge_store_input,
         m.get_recharge,
         m.get_swabs,
