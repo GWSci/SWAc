@@ -3,7 +3,7 @@ import numpy as np
 import swacmod.timer as t
 import sys
 from . import utils as u
-from swacmod.utils import monthdelta, weekdelta
+from swacmod.utils import monthdelta2, weekdelta
 
 
 def numpy_get_precipitation(data, nodes):
@@ -355,29 +355,26 @@ def get_swabs(data, output, node):
 		elif freq_flag == 2:
 			# if months convert to days
 			for iday, day in enumerate(dates):
-				month = monthdelta(start_date, day)
+				month = monthdelta2(start_date, day)
 				swabs_ts[iday] = (series_swabs_ts[month, zone_swabs] / area * fac)
 
 	return {'swabs_ts': swabs_ts}
 
 def get_change(data, output, node):
 	"""AR) TOTAL STORAGE CHANGE [mm]."""
-	series = data['series']
 	p_smd = output['p_smd']
 	sw_attenuation = output['sw_attenuation']
-
-	length = len(series['date'])
+	sw_attenuation_rolled = np.roll(sw_attenuation, 1)
+	sw_attenuation_difference = sw_attenuation - sw_attenuation_rolled
+	sw_attenuation_difference[0] = 0
+	p_smd_clipped = np.clip(p_smd, a_min=None, a_max=0)
+	p_smd_clipped[0] = 0
 
 	col_change = (output['recharge_store_input'] -
 			(output['combined_recharge'] - output['macropore_dir']) +
 			(output['interflow_store_input'] - output['interflow_to_rivers']) -
 			output['infiltration_recharge'] +
-			(output['percol_in_root'] - output['ae']))
-
-	for num in range(1, length):
-		if p_smd[num] < 0.0:
-			col_change[num] += p_smd[num]
-
-		col_change[num] += (sw_attenuation[num] - sw_attenuation[num-1])
+			(output['percol_in_root'] - output['ae'])
+			+ p_smd_clipped + sw_attenuation_difference)
 
 	return {'total_storage_change': col_change}
