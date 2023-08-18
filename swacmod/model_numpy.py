@@ -3,6 +3,8 @@ import numpy as np
 import swacmod.timer as t
 import sys
 from . import utils as u
+from swacmod.utils import monthdelta, weekdelta
+
 
 def numpy_get_precipitation(data, nodes):
 	token = t.start_timing("series and params")
@@ -304,8 +306,7 @@ def get_recharge(data, output, node):
 	if params['recharge_attenuation_process'] == 'enabled':
 		recharge[0] = irs
 		col_recharge_store[0] = irs
-		col_combined_recharge[0] = (min((irs * rlp), rll) +
-									output['macropore_dir'][0])
+		col_combined_recharge[0] = (min((irs * rlp), rll) + macropore_dir[0])
 		for num in range(1, length):
 			recharge[num] = (recharge_store_input[num-1] +
 							 col_recharge_store[num-1] -
@@ -313,13 +314,11 @@ def get_recharge(data, output, node):
 							 macropore_dir[num-1])
 
 			col_recharge_store[num] = recharge[num]
-			col_combined_recharge[num] = (min((recharge[num] * rlp), rll) +
-										  output['macropore_dir'][num])
+			col_combined_recharge[num] = (min((recharge[num] * rlp), rll) + macropore_dir[num])
 	else:
 		col_recharge_store[0] = irs
 		for num in range(1, length):
-			col_combined_recharge[num] = (recharge_store_input[num] +
-										  output['macropore_dir'][num])
+			col_combined_recharge[num] = (recharge_store_input[num] + macropore_dir[num])
 
 	col = {}
 	col['recharge_store'] = col_recharge_store
@@ -329,62 +328,56 @@ def get_recharge(data, output, node):
 def get_swabs(data, output, node):
 	"""Surface water abtractions"""
 
-	from swacmod.utils import monthdelta, weekdelta
-
 	series, params = data['series'], data['params']
-	areas = data['params']['node_areas']
-	fac = 1000.0
-	freq_flag = data['params']['swabs_f']
 	dates = series['date']
-
 	swabs_ts = np.zeros(len(series['date']))
-	start_date = dates[0]
 
 	if node in params['swabs_locs']:
+		areas = data['params']['node_areas']
+		fac = 1000.0
+		freq_flag = data['params']['swabs_f']
+		start_date = dates[0]
+
+		series_swabs_ts = series['swabs_ts']
 		area = areas[node]
 		zone_swabs = params['swabs_locs'][node] - 1
 
 		if freq_flag == 0:
 			# daily input just populate
-			swabs_ts = series['swabs_ts'][:, zone_swabs] / area * fac
+			swabs_ts = series_swabs_ts[:, zone_swabs] / area * fac
 
 		elif freq_flag == 1:
 			# if weeks convert to days
 			for iday, day in enumerate(dates):
 				week = weekdelta(start_date, day)
-				swabs_ts[iday] = (series['swabs_ts'][week, zone_swabs] / area
-								  * fac)
+				swabs_ts[iday] = (series_swabs_ts[week, zone_swabs] / area * fac)
 
 		elif freq_flag == 2:
 			# if months convert to days
 			for iday, day in enumerate(dates):
 				month = monthdelta(start_date, day)
-				swabs_ts[iday] = (series['swabs_ts'][month, zone_swabs] / area
-								  * fac)
+				swabs_ts[iday] = (series_swabs_ts[month, zone_swabs] / area * fac)
 
 	return {'swabs_ts': swabs_ts}
 
 def get_change(data, output, node):
 	"""AR) TOTAL STORAGE CHANGE [mm]."""
 	series = data['series']
+	p_smd = output['p_smd']
+	sw_attenuation = output['sw_attenuation']
 
 	length = len(series['date'])
-	col_change = np.zeros(length)
-	tmp0 = np.zeros(length)
 
-	tmp0 = (output['recharge_store_input'] -
+	col_change = (output['recharge_store_input'] -
 			(output['combined_recharge'] - output['macropore_dir']) +
 			(output['interflow_store_input'] - output['interflow_to_rivers']) -
 			output['infiltration_recharge'] +
 			(output['percol_in_root'] - output['ae']))
 
-	col_change = tmp0
-
 	for num in range(1, length):
-		if output['p_smd'][num] < 0.0:
-			col_change[num] += output['p_smd'][num]
+		if p_smd[num] < 0.0:
+			col_change[num] += p_smd[num]
 
-		col_change[num] += (output['sw_attenuation'][num]
-							- output['sw_attenuation'][num-1])
+		col_change[num] += (sw_attenuation[num] - sw_attenuation[num-1])
 
 	return {'total_storage_change': col_change}
