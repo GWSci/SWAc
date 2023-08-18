@@ -245,14 +245,17 @@ def get_interflow(data, output, node):
 			var8 = series['interflow_decay_ts'][day_indexes, interflow_zone-1]
 		else:
 			var8 = np.full([length], params['interflow_decay'][interflow_zone])
+		
+		one_minus_var8 = 1 - var8
 
 		for num in range(length):
 			var1 = volume - min(var5[num], volume)
-			volume = interflow_store_input[num-1] + var1 * (1 - var8[num])
+			volume = interflow_store_input[num-1] + var1 * one_minus_var8[num]
 			col_interflow_volume[num] = volume
-			col_infiltration_recharge[num] = min(var5[num], volume)
-			var6 = (col_interflow_volume[num] - col_infiltration_recharge[num])
-			col_interflow_to_rivers[num] = var6 * var8[num]
+		
+		col_infiltration_recharge = np.minimum(var5, col_interflow_volume)
+		var6_arr = col_interflow_volume - col_infiltration_recharge
+		col_interflow_to_rivers = var6_arr * var8
 
 	col = {}
 	col['interflow_volume'] = col_interflow_volume
