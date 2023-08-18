@@ -306,18 +306,19 @@ def get_recharge(data, output, node):
 	recharge_store_input = output['recharge_store_input']
 	macropore_dir = output['macropore_dir']
 
+	previous_recharge_store_and_macropore_dir = np.roll(recharge_store_input + macropore_dir, 1)
+
 	if params['recharge_attenuation_process'] == 'enabled':
 		recharge[0] = irs
 		col_recharge_store[0] = irs
 		col_combined_recharge[0] = (min((irs * rlp), rll) + macropore_dir[0])
 		for num in range(1, length):
-			recharge[num] = (recharge_store_input[num-1] +
-							 col_recharge_store[num-1] -
-							 col_combined_recharge[num-1] +
-							 macropore_dir[num-1])
+			recharge[num] = (previous_recharge_store_and_macropore_dir[num] +
+							 recharge[num-1] -
+							 col_combined_recharge[num-1])
 
-			col_recharge_store[num] = recharge[num]
 			col_combined_recharge[num] = (min((recharge[num] * rlp), rll) + macropore_dir[num])
+		col_recharge_store = recharge
 	else:
 		col_recharge_store[0] = irs
 		for num in range(1, length):
