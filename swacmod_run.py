@@ -241,73 +241,8 @@ def run_process(
 
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
-                
-                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_individual)")
-                if node in data["params"]["output_individual"]:
-                    # if this node for individual output then preserve
-                    single_node_output[node] = output.copy()
+                aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, spatial_index)
 
-                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - reporting_agg)")
-                key = (num, rep_zone)
-                area = data["params"]["node_areas"][node]
-                if key not in reporting_agg:
-                    reporting_agg[key] = m.aggregate(output, area)
-                else:
-                    reporting_agg[key] = m.aggregate(
-                        output, area, reporting=reporting_agg[key])
-
-                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_recharge)")
-                if data["params"]["output_recharge"]:
-                    rech = {"recharge": output["combined_recharge"].copy()}
-                    for i, p in enumerate(
-                            u.aggregate_output_col(data,
-                                                   rech,
-                                                   "recharge",
-                                                   method="average")):
-                        recharge_agg[(nnodes * i) + int(node)] = p
-                    rech = None
-
-                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - swrecharge_process)")
-                if data["params"]["swrecharge_process"] == "enabled":
-
-                    rech = output["combined_recharge"].copy()
-                    for i, p in enumerate(rech):
-                        recharge[(nnodes * i) + int(node)] = p
-                    rech = None
-
-                    ro = output["combined_str"].copy()
-                    for i, p in enumerate(ro):
-                        runoff[(nnodes * i) + int(node)] = p
-                    ro = None
-
-                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_sfr)")
-                if (data["params"]["output_sfr"]
-                        or data["params"]["excess_sw_process"] != "disabled"):
-                    ro = {"runoff": output["combined_str"].copy()}
-                    for i, p in enumerate(
-                            u.aggregate_output_col(data,
-                                                   ro,
-                                                   "runoff",
-                                                   method="average")):
-                        runoff_agg[(nnodes * i) + int(node)] = p
-                    ro = None
-
-                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_evt)")
-                if data["params"]["output_evt"]:
-                    evt = {"evtr": output["unutilised_pe"].copy()}
-                    for i, p in enumerate(
-                            u.aggregate_output_col(data,
-                                                   evt,
-                                                   "evtr",
-                                                   method="average")):
-                        evtr_agg[(nnodes * i) + int(node)] = p
-                    evt = None
-
-                timer.switch_to(time_switcher, "run_main > run > run_process (post calc - spatial_output_date)")
-                if data["params"]["spatial_output_date"]:
-                    spatial[node] = m.aggregate(output,
-                                                area,
-                                                index=spatial_index)
     logging.info("mp.Process %d ended", num)
 
     timer.switch_off(time_switcher)
@@ -331,6 +266,74 @@ def run_process(
         single_node_output,
     )
 
+def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, spatial_index):
+                
+    if node in data["params"]["output_individual"]:
+        # if this node for individual output then preserve
+        single_node_output[node] = output.copy()
+
+    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - reporting_agg)")
+    key = (num, rep_zone)
+    area = data["params"]["node_areas"][node]
+    if key not in reporting_agg:
+        reporting_agg[key] = m.aggregate(output, area)
+    else:
+        reporting_agg[key] = m.aggregate(
+            output, area, reporting=reporting_agg[key])
+
+    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_recharge)")
+    if data["params"]["output_recharge"]:
+        rech = {"recharge": output["combined_recharge"].copy()}
+        for i, p in enumerate(
+                u.aggregate_output_col(data,
+                                        rech,
+                                        "recharge",
+                                        method="average")):
+            recharge_agg[(nnodes * i) + int(node)] = p
+        rech = None
+
+    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - swrecharge_process)")
+    if data["params"]["swrecharge_process"] == "enabled":
+
+        rech = output["combined_recharge"].copy()
+        for i, p in enumerate(rech):
+            recharge[(nnodes * i) + int(node)] = p
+        rech = None
+
+        ro = output["combined_str"].copy()
+        for i, p in enumerate(ro):
+            runoff[(nnodes * i) + int(node)] = p
+        ro = None
+
+    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_sfr)")
+    if (data["params"]["output_sfr"]
+            or data["params"]["excess_sw_process"] != "disabled"):
+        ro = {"runoff": output["combined_str"].copy()}
+        for i, p in enumerate(
+                u.aggregate_output_col(data,
+                                        ro,
+                                        "runoff",
+                                        method="average")):
+            runoff_agg[(nnodes * i) + int(node)] = p
+        ro = None
+
+    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - output_evt)")
+    if data["params"]["output_evt"]:
+        evt = {"evtr": output["unutilised_pe"].copy()}
+        for i, p in enumerate(
+                u.aggregate_output_col(data,
+                                        evt,
+                                        "evtr",
+                                        method="average")):
+            evtr_agg[(nnodes * i) + int(node)] = p
+        evt = None
+
+    timer.switch_to(time_switcher, "run_main > run > run_process (post calc - spatial_output_date)")
+    if data["params"]["spatial_output_date"]:
+        spatial[node] = m.aggregate(output,
+                                    area,
+                                    index=spatial_index)
+    logging.info("mp.Process %d ended", num)
 
 ###############################################################################
 

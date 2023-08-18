@@ -225,36 +225,24 @@ def get_interflow(data, output, node):
 	series, params = data['series'], data['params']
 
 	length = len(series['date'])
+	day_indexes = np.arange(length)
 	col_interflow_volume = np.zeros(length)
 	col_infiltration_recharge = np.zeros(length)
 	col_interflow_to_rivers = np.zeros(length)
 	interflow_store_input = output['interflow_store_input']
 	interflow_zone = params['interflow_zone_mapping'][node]
-	var0 = params['init_interflow_store'][interflow_zone]
-	var5 = np.full([length],
-								params['infiltration_limit'][interflow_zone])
-	var8 = np.full([length],
-								params['interflow_decay'][interflow_zone])
-	volume = var0
-	recharge = np.zeros(length)
-	rivers = np.zeros(length)
+	volume = params['init_interflow_store'][interflow_zone]
 
 	if params['interflow_process'] == 'enabled':
-		col_interflow_volume = np.full([length], volume)
-		col_infiltration_recharge = recharge
-		col_interflow_to_rivers = rivers
-
 		if params["infiltration_limit_use_timeseries"]:
-			for day in range(length):
-				var5[day] = series['infiltration_limit_ts'][day][interflow_zone-1]
+			var5 = series['infiltration_limit_ts'][day_indexes, interflow_zone-1]
+		else:
+			var5 = np.full([length], params['infiltration_limit'][interflow_zone])
 
 		if params["interflow_decay_use_timeseries"]:
-			for day in range(length):
-				var8[day] = series['interflow_decay_ts'][day][interflow_zone-1]
-
-		recharge = np.where(np.asarray(var5) < volume,
-							volume, np.asarray(var5))
-		rivers = (np.full([length], volume) - np.asarray(recharge)) * var8
+			var8 = series['interflow_decay_ts'][day_indexes, interflow_zone-1]
+		else:
+			var8 = np.full([length], params['interflow_decay'][interflow_zone])
 
 		for num in range(length):
 			var1 = volume - min(var5[num], volume)
@@ -295,3 +283,25 @@ class Lazy_Precipitation:
 		self.last_coef_rf = coef_rf
 		self.last_rainfall_ts = self.rainfall_ts[:, zone_rf] * coef_rf
 		return self.last_rainfall_ts
+
+def aggregate(output, area, reporting=None, index=None):
+	"""Aggregate reporting over output periods."""
+	new_rep = {}
+
+	if index is not None:
+		not_scalar = (type(index[0]) is range or type(index[0]) is list)
+	else:
+		not_scalar = False
+
+	for key in output:
+		new_rep[key] = []
+		if not_scalar:
+			new_rep[key] = [output[key][i].mean(dtype=np.float64)
+							* area for i in index]
+		elif index is not None:
+			new_rep[key] = [output[key][index[0]] * area]
+		else:
+			new_rep[key] = output[key] * area
+		if reporting:
+			new_rep[key] += reporting[key]
+	return new_rep
