@@ -13,8 +13,11 @@ import time
 import random
 import logging
 import argparse
-import multiprocessing as mp
-from multiprocessing.heap import Arena
+if not ff.use_perf_features:
+    import multiprocessing as mp
+    from multiprocessing.heap import Arena
+else:
+    import queue
 
 if ff.use_perf_features:
     import swacmod.timer as timer
@@ -65,9 +68,10 @@ def anonymous_arena_init(self, size, fd=-1):
 
 
 # monkey patch for anonymous memory mapping python 3
-if sys.version_info > (3,):
-    if mp.get_start_method() == 'fork':
-        Arena.__init__ = anonymous_arena_init
+if not ff.use_perf_features:
+    if sys.version_info > (3,):
+        if mp.get_start_method() == 'fork':
+            Arena.__init__ = anonymous_arena_init
 
 
 class Worker:
@@ -359,13 +363,21 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     timer_token_for_run_before_loading_data = timer.start_timing("run_main > run (before loading data)")
     times = {"start_of_run": time.time()}
 
-    manager = mp.Manager()
-    reporting_agg = manager.dict()
-    reporting_agg2 = {}
-    reporting = manager.dict()
-    spatial = manager.dict()
+    if ff.use_perf_features:
+        reporting_agg = {}
+        reporting_agg2 = {}
+        reporting = {}
+        spatial = {}
 
-    single_node_output = manager.dict()
+        single_node_output = {}
+    else:
+        manager = mp.Manager()
+        reporting_agg = manager.dict()
+        reporting_agg2 = {}
+        reporting = manager.dict()
+        spatial = manager.dict()
+
+        single_node_output = manager.dict()
     specs_file = u.CONSTANTS["SPECS_FILE"]
     if test:
         input_file = u.CONSTANTS["TEST_INPUT_FILE"]
@@ -409,33 +421,61 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     per = len(data["params"]["time_periods"])
     nnodes = data["params"]["num_nodes"]
     len_rch_agg = (nnodes * per) + 1
-    recharge_agg = mp.Array("f", 1)
-    runoff_agg = mp.Array("f", 1)
-    runoff_recharge_agg = np.zeros((1))
-    evtr_agg = mp.Array("f", 1)
-    recharge = mp.Array("f", 1)
-    runoff = mp.Array("f", 1)
-    if params["swrecharge_process"] == "enabled" or data["params"][
-            "output_recharge"]:
-        recharge_agg = mp.Array("f",
-                                len_rch_agg)  # recharge by output period (agg)
+    if not ff.use_perf_features:
+        recharge_agg = mp.Array("f", 1)
+        runoff_agg = mp.Array("f", 1)
+        runoff_recharge_agg = np.zeros((1))
+        evtr_agg = mp.Array("f", 1)
+        recharge = mp.Array("f", 1)
+        runoff = mp.Array("f", 1)
+        if params["swrecharge_process"] == "enabled" or data["params"][
+                "output_recharge"]:
+            recharge_agg = mp.Array("f",
+                                    len_rch_agg)  # recharge by output period (agg)
 
-    if params["swrecharge_process"] == "enabled" or data["params"][
-            "output_sfr"]:
-        runoff_agg = mp.Array("f", len_rch_agg)
+        if params["swrecharge_process"] == "enabled" or data["params"][
+                "output_sfr"]:
+            runoff_agg = mp.Array("f", len_rch_agg)
 
-    if params["swrecharge_process"] == "enabled":
-        runoff_recharge_agg = np.zeros((len_rch_agg))
+        if params["swrecharge_process"] == "enabled":
+            runoff_recharge_agg = np.zeros((len_rch_agg))
 
-    if data["params"]["output_evt"]:
-        evtr_agg = mp.Array("f", len_rch_agg)
+        if data["params"]["output_evt"]:
+            evtr_agg = mp.Array("f", len_rch_agg)
 
-    days = len(data["series"]["date"])
-    len_rch = (nnodes * days) + 1
+        days = len(data["series"]["date"])
+        len_rch = (nnodes * days) + 1
 
-    if params["swrecharge_process"] == "enabled":
-        recharge = mp.sharedctypes.Array("f", len_rch, lock=True)
-        runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
+        if params["swrecharge_process"] == "enabled":
+            recharge = mp.sharedctypes.Array("f", len_rch, lock=True)
+            runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
+    else:
+        recharge_agg = np.zeros(1, dtype=np.single)
+        runoff_agg = np.zeros(1, dtype=np.single)
+        runoff_recharge_agg = np.zeros((1))
+        evtr_agg = np.zeros(1, dtype=np.single)
+        recharge = np.zeros(1, dtype=np.single)
+        runoff = np.zeros(1, dtype=np.single)
+        if params["swrecharge_process"] == "enabled" or data["params"][
+                "output_recharge"]:
+            recharge_agg = np.zeros(len_rch_agg, np.single)  # recharge by output period (agg)
+
+        if params["swrecharge_process"] == "enabled" or data["params"][
+                "output_sfr"]:
+            runoff_agg = np.zeros(len_rch_agg, dtype=np.single)
+
+        if params["swrecharge_process"] == "enabled":
+            runoff_recharge_agg = np.zeros((len_rch_agg))
+
+        if data["params"]["output_evt"]:
+            evtr_agg = np.zeros(len_rch_agg, dtype=np.single)
+
+        days = len(data["series"]["date"])
+        len_rch = (nnodes * days) + 1
+
+        if params["swrecharge_process"] == "enabled":
+            recharge = np.zeros(len_rch, dtype=np.single)
+            runoff = np.zeros(len_rch, dtype=np.single)
 
     ids = range(1, nnodes + 1)
     random.shuffle(list(ids))
@@ -451,18 +491,14 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         spatial_index = None
 
     workers = []
-    q = mp.Queue()
-    lproc = mp.Process(target=listener, args=(q, nnodes))
-    lproc.start()
+    if ff.use_perf_features:
+        q = queue.Queue()
+        for process, chunk in enumerate(chunks):
 
-    for process, chunk in enumerate(chunks):
+            if chunk.size == 0:
+                continue
 
-        if chunk.size == 0:
-            continue
-
-        proc = mp.Process(
-            target=run_process,
-            args=(
+            run_process(
                 process,
                 chunk,
                 data,
@@ -480,22 +516,59 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 reporting,
                 single_node_output,
                 q,
-            ),
-        )
+            )
 
-        workers.append(Worker("worker%d" % process, q, proc, verbose=False))
+        timer.stop_timing(timer_token_for_run_getting_ready_for_multiprocessing)
+        timer_token_for_run_multiprocessing = timer.start_timing("run_main > run (multiprocessing)")
 
-    timer.stop_timing(timer_token_for_run_getting_ready_for_multiprocessing)
-    timer_token_for_run_multiprocessing = timer.start_timing("run_main > run (multiprocessing)")
+        q.put(None)
 
-    for p in workers:
-        p.start()
+    else:
+        q = mp.Queue()
+        lproc = mp.Process(target=listener, args=(q, nnodes))
+        lproc.start()
 
-    for p in workers:
-        p.join()
+        for process, chunk in enumerate(chunks):
 
-    q.put(None)
-    lproc.join()
+            if chunk.size == 0:
+                continue
+
+            proc = mp.Process(
+                target=run_process,
+                args=(
+                    process,
+                    chunk,
+                    data,
+                    test,
+                    reporting_agg,
+                    recharge_agg,
+                    runoff_agg,
+                    evtr_agg,
+                    recharge,
+                    runoff,
+                    log_path,
+                    level,
+                    spatial,
+                    spatial_index,
+                    reporting,
+                    single_node_output,
+                    q,
+                ),
+            )
+
+            workers.append(Worker("worker%d" % process, q, proc, verbose=False))
+
+        timer.stop_timing(timer_token_for_run_getting_ready_for_multiprocessing)
+        timer_token_for_run_multiprocessing = timer.start_timing("run_main > run (multiprocessing)")
+
+        for p in workers:
+            p.start()
+
+        for p in workers:
+            p.join()
+
+        q.put(None)
+        lproc.join()
 
     timer.stop_timing(timer_token_for_run_multiprocessing)
     timer_token_for_run_output = timer.start_timing("run_main > run (output)")
@@ -724,7 +797,7 @@ def run_main():
     timer_token_for_run_main = timer.start_timing("run_main")
     if not ff.use_perf_features:
         log("Main program START")
-    mp.freeze_support()
+        mp.freeze_support()
 
     # Parser for command line arguments
     DESCRIPTION = """
