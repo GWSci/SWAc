@@ -13,7 +13,7 @@ import subprocess as sp
 # Third Party Libraries
 import psutil
 import numpy as np
-import functools
+from calendar import monthrange
 
 CONSTANTS = {}
 
@@ -262,21 +262,13 @@ def monthdelta(d1, d2):
             break
     return delta
 
-@functools.cache
 def monthdelta2(d1, d2):
     " difference in months between two dates"
-
-    from calendar import monthrange
-
-    delta = 0
-    while True:
-        mdays = monthrange(d1.year, d1.month)[1]
-        d1 += datetime.timedelta(days=mdays)
-        if d1 <= d2:
-            delta += 1
-        else:
-            break
-    return delta
+    year_diff = d2.year - d1.year
+    month_diff = d2.month - d1.month
+    day_correction = (-1) if d2.day < d1.day else 0
+    result = (12 * year_diff) + month_diff + day_correction
+    return result
 
 
 def weekdelta(d1, d2):

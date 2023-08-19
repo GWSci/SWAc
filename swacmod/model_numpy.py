@@ -329,12 +329,13 @@ def get_recharge(data, output, node):
 	col['combined_recharge'] = col_combined_recharge
 	return col
 
+_months = None
 def get_swabs(data, output, node):
 	"""Surface water abtractions"""
 
 	series, params = data['series'], data['params']
 	dates = series['date']
-	swabs_ts = np.zeros(len(series['date']))
+	swabs_ts = np.zeros(len(dates))
 
 	if node in params['swabs_locs']:
 		areas = data['params']['node_areas']
@@ -357,10 +358,13 @@ def get_swabs(data, output, node):
 				swabs_ts[iday] = (series_swabs_ts[week, zone_swabs] / area * fac)
 
 		elif freq_flag == 2:
+			global _months
 			# if months convert to days
-			for iday, day in enumerate(dates):
-				month = monthdelta2(start_date, day)
-				swabs_ts[iday] = (series_swabs_ts[month, zone_swabs] / area * fac)
+			if _months is None:
+				_months = np.zeros(len(dates), dtype=np.int64)
+				for iday, day in enumerate(dates):
+					_months[iday] = monthdelta2(start_date, day)
+			swabs_ts = (series_swabs_ts[_months, zone_swabs] / area * fac)
 
 	return {'swabs_ts': swabs_ts}
 
