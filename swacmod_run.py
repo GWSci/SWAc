@@ -166,7 +166,7 @@ def get_output(data, node, time_switcher):
         m.get_recharge_store_input,
         mn.get_recharge if ff.use_perf_features else m.get_recharge,
         model_numpy.get_swabs if ff.use_perf_features else m.get_swabs,
-        m.get_swdis,
+        compare_methods(m.get_swdis, model_numpy.get_swdis) if ff.use_perf_features else m.get_swdis,
         m.get_combined_str,
         m.get_combined_ae,
         m.get_evt,

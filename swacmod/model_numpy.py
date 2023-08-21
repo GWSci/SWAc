@@ -366,6 +366,42 @@ def get_swabs(data, output, node):
 
 	return {'swabs_ts': swabs_ts}
 
+def get_swdis(data, output, node):
+
+	series, params = data['series'], data['params']
+	dates = series['date']
+	swdis_ts = np.zeros(len(dates))
+
+	if node in params['swdis_locs']:
+		areas = data['params']['node_areas']
+		fac = 1000.0
+		freq_flag = data['params']['swdis_f']
+		start_date = dates[0]
+
+		series_swdis_ts = series['swdis_ts']
+		area = areas[node]
+		zone_swdis = params['swdis_locs'][node] - 1
+
+		if freq_flag == 0:
+			# daily input just populate
+			swdis_ts = series_swdis_ts[:, zone_swdis] / area * fac
+
+		elif freq_flag == 1:
+			# if weeks convert to days
+			for iday, day in enumerate(dates):
+				week = weekdelta(start_date, day)
+				swdis_ts[iday] = (series_swdis_ts[week, zone_swdis] / area * fac)
+
+		elif freq_flag == 2:
+			global _months
+			# if months convert to days
+			months = np.zeros(len(dates), dtype=np.int64)
+			for iday, day in enumerate(dates):
+				months[iday] = monthdelta2(start_date, day)
+			swdis_ts = (series_swdis_ts[months, zone_swdis] / area * fac)
+
+	return {'swdis_ts': swdis_ts}
+
 def get_change(data, output, node):
 	"""AR) TOTAL STORAGE CHANGE [mm]."""
 	p_smd = output['p_smd']
