@@ -558,10 +558,10 @@ def get_ae_op(data, output, node):
     # ma_arr = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act_for_month_and_zone)
     # macro_prop_arr = macro_prop[months, zone_mac]
     # var10_arr = macro_limit[months, zone_mac]
-    # 
-    # range_len_class_smd = range(len_class_smd)
-    # range_len_class_ri = range(len_class_ri)
-    # 
+    
+    range_len_class_smd = range(len_class_smd)
+    range_len_class_ri = range(len_class_ri)
+    
     # previous_smd = ssmd
 
     for num in range(length):
@@ -572,11 +572,11 @@ def get_ae_op(data, output, node):
                 col_rapid_runoff_c[num] = value
             else:
                 var3 = 0
-                for i in range(len_class_ri):
+                for i in range_len_class_ri:
                     if class_ri[i] >= var2:
                         var3 = i
                         break
-                for i in range(len_class_smd):
+                for i in range_len_class_smd:
                     if class_smd[i] >= smd:
                         col_rapid_runoff_c[num] = values[var3][i]
                         break
