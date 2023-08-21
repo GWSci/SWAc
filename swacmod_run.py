@@ -409,7 +409,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     if ff.use_perf_features:
         num_nodes_initial = data["params"]["num_nodes"]
         num_nodes_new = min(num_nodes_initial, ff.max_node_count_override)
-        log(f"Reduced num_nodes from {num_nodes_initial} to {num_nodes_new}.")
+        percentage = round((100 * num_nodes_new) / num_nodes_initial)
+        log(f"Reduced num_nodes from {num_nodes_initial} to {num_nodes_new}. ({percentage} %)")
         data["params"]["num_nodes"] = num_nodes_new
     
     if not skip:
