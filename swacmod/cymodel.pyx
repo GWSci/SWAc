@@ -910,21 +910,18 @@ def get_recharge_op(data, output, node):
 
     if params['recharge_attenuation_process'] == 'enabled':
         col_recharge_store[0] = irs
-        col_combined_recharge[0] = (min((irs * rlp), rll) +
-                                    output['macropore_dir'][0])
+        col_combined_recharge[0] = (min((irs * rlp), rll) + macropore_dir[0])
         for num in range(1, length):
             col_recharge_store[num] = (recharge_store_input[num-1] +
                              col_recharge_store[num-1] -
                              col_combined_recharge[num-1] +
                              macropore_dir[num-1])
 
-            col_combined_recharge[num] = (min((col_recharge_store[num] * rlp), rll) +
-                                          output['macropore_dir'][num])
+            col_combined_recharge[num] = (min((col_recharge_store[num] * rlp), rll) + macropore_dir[num])
     else:
         col_recharge_store[0] = irs
         for num in range(1, length):
-            col_combined_recharge[num] = (recharge_store_input[num] +
-                                          output['macropore_dir'][num])
+            col_combined_recharge[num] = (recharge_store_input[num] + macropore_dir[num])
 
     col = {}
     col['recharge_store'] = col_recharge_store.base
