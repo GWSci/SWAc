@@ -536,6 +536,7 @@ def get_ae_op(data, output, node):
         double[:] net_pefac_a = output['net_pefac']
         double[:] tawtew_a = output['tawtew']
         double[:] rawrew_a = output['rawrew']
+        double[:] tawtew_a_minus_rawrew_a = np.zeros_like(rawrew_a)
         long long[:] months = np.array(series['months'], dtype=np.int64)
         double ma = 0.0
 
@@ -545,9 +546,9 @@ def get_ae_op(data, output, node):
     use_rapid_runoff_process = params['rapid_runoff_process'] == 'enabled'
     use_macropore_process = params['macropore_process'] == 'enabled'
     use_fao_process = params['fao_process'] == 'enabled'
-    # macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
-    # macro_act_factor_B = 1 - macro_act_factor_A
-    # tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
+    macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
+    macro_act_factor_B = 1 - macro_act_factor_A
+    tawtew_a_minus_rawrew_a = np.subtract(tawtew_a, rawrew_a)
     # var_12_denominator_is_zero = tawtew_a_minus_rawrew_a == 0.0
     # is_net_rainfall_greater_than_last_ri = net_rainfall > last_ri
     # 
@@ -627,7 +628,7 @@ def get_ae_op(data, output, node):
                 if (tawtew - rawrew) == 0.0:
                     var12 = 1.0
                 else:
-                    var12 = (tawtew - smd) / (tawtew - rawrew)
+                    var12 = (tawtew - smd) / tawtew_a_minus_rawrew_a[num]
 
                 if var12 >= 1.0:
                     var11 = 1.0
