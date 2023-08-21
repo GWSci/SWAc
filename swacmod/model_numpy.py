@@ -330,67 +330,40 @@ def get_recharge(data, output, node):
 	return col
 
 def get_swabs(data, output, node):
-	"""Surface water abtractions"""
-
-	series, params = data['series'], data['params']
-	dates = series['date']
-	swabs_ts = np.zeros(len(dates))
-
-	if node in params['swabs_locs']:
-		areas = data['params']['node_areas']
-		fac = 1000.0
-		freq_flag = data['params']['swabs_f']
-		start_date = dates[0]
-
-		series_swabs_ts = series['swabs_ts']
-		area = areas[node]
-		zone_swabs = params['swabs_locs'][node] - 1
-
-		if freq_flag == 0:
-			# daily input just populate
-			swabs_ts = series_swabs_ts[:, zone_swabs] / area * fac
-
-		elif freq_flag == 1:
-			# if weeks convert to days
-			for iday, day in enumerate(dates):
-				week = weekdelta(start_date, day)
-				swabs_ts[iday] = (series_swabs_ts[week, zone_swabs] / area * fac)
-
-		elif freq_flag == 2:
-			global _months
-			# if months convert to days
-			months = np.zeros(len(dates), dtype=np.int64)
-			for iday, day in enumerate(dates):
-				months[iday] = monthdelta2(start_date, day)
-			swabs_ts = (series_swabs_ts[months, zone_swabs] / area * fac)
-
-	return {'swabs_ts': swabs_ts}
+	"""Surface water abstractions"""
+	params = data['params']
+	applicable_nodes = params['swabs_locs']
+	return _get_swdis_and_swabs_helper(data, node, applicable_nodes, 'swabs_f', 'swabs_ts')
 
 def get_swdis(data, output, node):
+	"""Surface water discharges"""
+	params = data['params']
+	applicable_nodes = params['swdis_locs']
+	return _get_swdis_and_swabs_helper(data, node, applicable_nodes, 'swdis_f', 'swdis_ts')
 
-	series, params = data['series'], data['params']
+def _get_swdis_and_swabs_helper(data, node, applicable_nodes, flag_name, ts_name):
+	series = data['series']
 	dates = series['date']
-	swdis_ts = np.zeros(len(dates))
-
-	if node in params['swdis_locs']:
+	result = np.zeros(len(dates))
+	if node in applicable_nodes:
 		areas = data['params']['node_areas']
 		fac = 1000.0
-		freq_flag = data['params']['swdis_f']
+		freq_flag = data['params'][flag_name]
 		start_date = dates[0]
 
-		series_swdis_ts = series['swdis_ts']
+		series_ts = series[ts_name]
 		area = areas[node]
-		zone_swdis = params['swdis_locs'][node] - 1
+		zone = applicable_nodes[node] - 1
 
 		if freq_flag == 0:
 			# daily input just populate
-			swdis_ts = series_swdis_ts[:, zone_swdis] / area * fac
+			result = series_ts[:, zone] / area * fac
 
 		elif freq_flag == 1:
 			# if weeks convert to days
 			for iday, day in enumerate(dates):
 				week = weekdelta(start_date, day)
-				swdis_ts[iday] = (series_swdis_ts[week, zone_swdis] / area * fac)
+				result[iday] = (series_ts[week, zone] / area * fac)
 
 		elif freq_flag == 2:
 			global _months
@@ -398,9 +371,9 @@ def get_swdis(data, output, node):
 			months = np.zeros(len(dates), dtype=np.int64)
 			for iday, day in enumerate(dates):
 				months[iday] = monthdelta2(start_date, day)
-			swdis_ts = (series_swdis_ts[months, zone_swdis] / area * fac)
+			result = (series_ts[months, zone] / area * fac)
 
-	return {'swdis_ts': swdis_ts}
+	return {ts_name: result}
 
 def get_change(data, output, node):
 	"""AR) TOTAL STORAGE CHANGE [mm]."""
