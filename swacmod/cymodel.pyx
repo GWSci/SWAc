@@ -14,7 +14,6 @@ import sys
 import cython
 cimport cython
 cimport numpy as np
-from libcpp cimport bool as bool_c
 
 import sys
 import os.path
@@ -528,10 +527,10 @@ def get_ae_op(data, output, node):
         double value = values[-1][0]
         double p_smd = ssmd
         double smd = ssmd
-        double var2, var5, var8a, var9, var10, var11, var12, var13
-        double rapid_runoff_c, rapid_runoff, macropore, percol_in_root
+        double var2, var8a, var9, var10, var11, var12, var13
+        double rapid_runoff, macropore, percol_in_root
         double net_pefac, tawtew, rawrew
-        size_t num, i, var3, var4, var6
+        size_t num, i, var3, var6
         size_t length = len(series['date'])
         double[:] net_rainfall = output['net_rainfall']
         double[:] net_pefac_a = output['net_pefac']
@@ -570,21 +569,21 @@ def get_ae_op(data, output, node):
 
         if use_rapid_runoff_process:
             if smd > last_smd or var2 > last_ri:
-                rapid_runoff_c = value
+                col_rapid_runoff_c[num] = value
             else:
                 var3 = 0
                 for i in range(len_class_ri):
-                    if class_ri[i] < var2:
-                        var3 += 1
-                var4 = 0
+                    if class_ri[i] >= var2:
+                        var3 = i
+                        break
                 for i in range(len_class_smd):
-                    if class_smd[i] < smd:
-                        var4 += 1
-                rapid_runoff_c = values[var3][var4]
-            col_rapid_runoff_c[num] = rapid_runoff_c
-            var5 = var2 * rapid_runoff_c
-            rapid_runoff = (0.0 if var2 < 0.0 else var5)
-            col_rapid_runoff[num] = rapid_runoff
+                    if class_smd[i] >= smd:
+                        col_rapid_runoff_c[num] = values[var3][i]
+                        break
+            if var2 < 0.0:
+                col_rapid_runoff[num] = 0.0
+            else:
+                col_rapid_runoff[num] = var2 * col_rapid_runoff_c[num]
 
         var6 = months[num]
 
