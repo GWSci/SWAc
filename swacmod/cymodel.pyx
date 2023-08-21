@@ -889,6 +889,48 @@ def get_recharge(data, output, node):
     col['combined_recharge'] = col_combined_recharge.base
     return col
 
+def get_recharge_op(data, output, node):
+    """Multicolumn function.
+
+    AJ) Recharge Store Volume [mm]
+    AK) RCH: Combined Recharge [mm/d]
+    """
+    series, params = data['series'], data['params']
+
+    cdef:
+        size_t length = len(series['date'])
+        double[:] col_recharge_store = np.zeros(length)
+        double[:] col_combined_recharge = np.zeros(length)
+        double irs = params['recharge_attenuation_params'][node][0]
+        double rlp = params['recharge_attenuation_params'][node][1]
+        double rll = params['recharge_attenuation_params'][node][2]
+        double[:] recharge_store_input = output['recharge_store_input']
+        double[:] macropore_dir = output['macropore_dir']
+        size_t num
+
+    if params['recharge_attenuation_process'] == 'enabled':
+        col_recharge_store[0] = irs
+        col_combined_recharge[0] = (min((irs * rlp), rll) +
+                                    output['macropore_dir'][0])
+        for num in range(1, length):
+            col_recharge_store[num] = (recharge_store_input[num-1] +
+                             col_recharge_store[num-1] -
+                             col_combined_recharge[num-1] +
+                             macropore_dir[num-1])
+
+            col_combined_recharge[num] = (min((col_recharge_store[num] * rlp), rll) +
+                                          output['macropore_dir'][num])
+    else:
+        col_recharge_store[0] = irs
+        for num in range(1, length):
+            col_combined_recharge[num] = (recharge_store_input[num] +
+                                          output['macropore_dir'][num])
+
+    col = {}
+    col['recharge_store'] = col_recharge_store.base
+    col['combined_recharge'] = col_combined_recharge.base
+    return col
+
 ###############################################################################
 
 
