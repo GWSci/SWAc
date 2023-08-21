@@ -164,7 +164,7 @@ def get_output(data, node, time_switcher):
         m.get_interflow_store_input,
         mn.get_interflow if ff.use_perf_features else m.get_interflow,
         m.get_recharge_store_input,
-        compare_methods(m.get_recharge, m.get_recharge_op) if ff.use_perf_features else m.get_recharge,
+        m.get_recharge_op if ff.use_perf_features else m.get_recharge,
         model_numpy.get_swabs if ff.use_perf_features else m.get_swabs,
         model_numpy.get_swdis if ff.use_perf_features else m.get_swdis,
         m.get_combined_str,
