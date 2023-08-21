@@ -155,7 +155,7 @@ def get_output(data, node, time_switcher):
         m.get_net_rainfall,
         m.get_rawrew,
         m.get_tawtew,
-        mn.get_ae if ff.use_perf_features else m.get_ae,
+        compare_methods(m.get_ae, m.get_ae_op) if ff.use_perf_features else m.get_ae,
         m.get_unutilised_pe,
         m.get_rejected_recharge,
         m.get_perc_through_root,

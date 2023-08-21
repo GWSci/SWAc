@@ -475,6 +475,191 @@ def get_ae(data, output, node):
 
     return col
 
+def get_ae_op(data, output, node):
+    """Multicolumn function.
+
+    N) Rapid Runoff Class [%]
+    O) Rapid Runoff [mm/d]
+    P) Runoff Recharge [mm/d]
+    Q) MacroPore: (attenuated) Bypass of Root Zone and Interflow,
+       subject to recharge attenuation [mm/d]
+    R) MacroPore: (direct) Bypass of Root Zone, Interflow and
+       Recharge Attenuation [mm/d]
+    S) Percolation into Root Zone [mm/d]
+    V) Potential Soil Moisture Defecit (pSMD) [mm]
+    W) Soil Moisture Defecit (SMD) [mm]
+    X) Ks (slope factor) [-]
+    Y) AE (actual evapotranspiration) [mm/d]
+    """
+    series, params = data['series'], data['params']
+    rrp = params['rapid_runoff_params']
+    s_smd = params['smd']
+    mac_opt = params['macropore_activation_option']
+
+    cdef:
+        double[:] col_rapid_runoff_c = np.zeros(len(series['date']))
+        double[:] col_rapid_runoff = np.zeros(len(series['date']))
+        double[:] col_runoff_recharge = np.zeros(len(series['date']))
+        double[:] col_macropore_att = np.zeros(len(series['date']))
+        double[:] col_macropore_dir = np.zeros(len(series['date']))
+        double[:] col_percol_in_root = np.zeros(len(series['date']))
+        double[:] col_p_smd = np.zeros(len(series['date']))
+        double[:] col_smd = np.zeros(len(series['date']))
+        double[:] col_k_slope = np.zeros(len(series['date']))
+        double[:] col_ae = np.zeros(len(series['date']))
+        size_t zone_mac = params['macropore_zone_mapping'][node] - 1
+        size_t zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
+        double ssmd = u.weighted_sum(params['soil_spatial'][node],
+                                     s_smd['starting_SMD'])
+        long long[:] class_smd = np.array(rrp[zone_rro]['class_smd'],
+                                          dtype=np.int64)
+        long long[:] class_ri = np.array(rrp[zone_rro]['class_ri'],
+                                         dtype=np.int64)
+        double[:, :] macro_prop = params['macro_prop']
+        double[:, :] macro_limit = params['macro_limit']
+        double[:, :] macro_act = params['macro_act']
+        double[:, :] macro_rec = params['macro_rec']
+        double[:, :] values = np.array(rrp[zone_rro]['values'])
+        size_t len_class_smd = len(class_smd)
+        size_t len_class_ri = len(class_ri)
+        double last_smd = class_smd[-1] - 1
+        double last_ri = class_ri[-1] - 1
+        double value = values[-1][0]
+        double p_smd = ssmd
+        double smd = ssmd
+        double var2, var5, var8a, var9, var10, var11, var12, var13
+        double rapid_runoff_c, rapid_runoff, macropore, percol_in_root
+        double net_pefac, tawtew, rawrew
+        size_t num, i, var3, var4, var6
+        size_t length = len(series['date'])
+        double[:] net_rainfall = output['net_rainfall']
+        double[:] net_pefac_a = output['net_pefac']
+        double[:] tawtew_a = output['tawtew']
+        double[:] rawrew_a = output['rawrew']
+        long long[:] months = np.array(series['months'], dtype=np.int64)
+        double ma = 0.0
+
+    if params['swrecharge_process'] == 'enabled':
+        col_runoff_recharge[:] = 0.0
+
+    use_rapid_runoff_process = params['rapid_runoff_process'] == 'enabled'
+    use_macropore_process = params['macropore_process'] == 'enabled'
+    use_fao_process = params['fao_process'] == 'enabled'
+    # macro_act_factor_A = 0 if mac_opt == 'SMD' else 1
+    # macro_act_factor_B = 1 - macro_act_factor_A
+    # tawtew_a_minus_rawrew_a = tawtew_a - rawrew_a
+    # var_12_denominator_is_zero = tawtew_a_minus_rawrew_a == 0.0
+    # is_net_rainfall_greater_than_last_ri = net_rainfall > last_ri
+    # 
+    # var10a_arr = macro_rec[months, zone_mac]
+    # macro_act_for_month_and_zone = macro_act[months, zone_mac]
+    # net_rainfall_minus_macro_act_with_factor = net_rainfall - (macro_act_factor_A * macro_act_for_month_and_zone)
+    # ma_arr = (macro_act_factor_A * sys.float_info.max) + (macro_act_factor_B * macro_act_for_month_and_zone)
+    # macro_prop_arr = macro_prop[months, zone_mac]
+    # var10_arr = macro_limit[months, zone_mac]
+    # 
+    # range_len_class_smd = range(len_class_smd)
+    # range_len_class_ri = range(len_class_ri)
+    # 
+    # previous_smd = ssmd
+
+    for num in range(length):
+        var2 = net_rainfall[num]
+
+        if use_rapid_runoff_process:
+            if smd > last_smd or var2 > last_ri:
+                rapid_runoff_c = value
+            else:
+                var3 = 0
+                for i in range(len_class_ri):
+                    if class_ri[i] < var2:
+                        var3 += 1
+                var4 = 0
+                for i in range(len_class_smd):
+                    if class_smd[i] < smd:
+                        var4 += 1
+                rapid_runoff_c = values[var3][var4]
+            col_rapid_runoff_c[num] = rapid_runoff_c
+            var5 = var2 * rapid_runoff_c
+            rapid_runoff = (0.0 if var2 < 0.0 else var5)
+            col_rapid_runoff[num] = rapid_runoff
+
+        var6 = months[num]
+
+        if use_macropore_process:
+            if mac_opt == 'SMD':
+                var8a = var2 - col_rapid_runoff[num]
+                ma = macro_act[var6][zone_mac]
+            else:
+                var8a = (var2 - col_rapid_runoff[num]
+                         - macro_act[var6][zone_mac])
+                ma = sys.float_info.max
+            if var8a > 0.0:
+                if p_smd < ma:
+                    var9 = macro_prop[var6][zone_mac] * var8a
+                    var10 = macro_limit[var6][zone_mac]
+                    macropore = min(var10, var9)
+                else:
+                    macropore = 0.0
+            else:
+                macropore = 0.0
+
+            var10a = macro_rec[var6][zone_mac]
+            col_macropore_att[num] = macropore * (1 - var10a)
+            col_macropore_dir[num] = macropore * var10a
+
+        percol_in_root = (var2 - col_rapid_runoff[num]
+                          - col_macropore_att[num]
+                          - col_macropore_dir[num])
+        col_percol_in_root[num] = percol_in_root
+
+        if use_fao_process:
+            smd = max(p_smd, 0.0)
+            col_smd[num] = smd
+            net_pefac = net_pefac_a[num]
+            tawtew = tawtew_a[num]
+            rawrew = rawrew_a[num]
+
+            if percol_in_root > net_pefac:
+                var11 = -1.0
+            else:
+                # tmp div zero
+                if (tawtew - rawrew) == 0.0:
+                    var12 = 1.0
+                else:
+                    var12 = (tawtew - smd) / (tawtew - rawrew)
+
+                if var12 >= 1.0:
+                    var11 = 1.0
+                else:
+                    var11 = max(var12, 0.0)
+            col_k_slope[num] = var11
+
+            var13 = percol_in_root
+            if smd < rawrew or percol_in_root > net_pefac:
+                var13 = net_pefac
+            elif smd >= rawrew and smd <= tawtew:
+                var13 = var11 * (net_pefac - percol_in_root)
+            else:
+                var13 = 0.0
+            col_ae[num] = var13
+            p_smd = smd + var13 - percol_in_root
+            col_p_smd[num] = p_smd
+
+    col = {}
+    col['rapid_runoff_c'] = col_rapid_runoff_c.base
+    col['rapid_runoff'] = col_rapid_runoff.base
+    col['runoff_recharge'] = col_runoff_recharge.base
+    col['macropore_att'] = col_macropore_att.base
+    col['macropore_dir'] = col_macropore_dir.base
+    col['percol_in_root'] = col_percol_in_root.base
+    col['p_smd'] = col_p_smd.base
+    col['smd'] = col_smd.base
+    col['k_slope'] = col_k_slope.base
+    col['ae'] = col_ae.base
+
+    return col
+
 ###############################################################################
 
 
