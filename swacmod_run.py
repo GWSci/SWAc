@@ -37,12 +37,17 @@ from tqdm import tqdm
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
-if ff.use_perf_features:
-    import swacmod.model_numpy as mn
+
 # Compile and import model
-if ff.use_perf_features:
-    print("Importing plain python model")
+import swacmod.model_numpy as model_numpy
+
+if ff.use_cython:
+    from swacmod import compile_model
+    from swacmod import model as m
+    from swacmod import model as mn
+elif ff.use_perf_features:
     import swacmod.model_plain_python as m
+    import swacmod.model_numpy as mn
 else:
     print("Compiling/importing cython model.")
     from swacmod import compile_model
@@ -215,7 +220,7 @@ def run_process(
     timer.switch_to(time_switcher, "run_main > run > run_process (lazy_get_precipitation)")
 
     if ff.use_perf_features:
-        precipitation = mn.lazy_get_precipitation(data, ids)
+        precipitation = model_numpy.lazy_get_precipitation(data, ids)
         data["precalculated_precipitation"] = precipitation
 
     timer.switch_to(time_switcher, "run_main > run > run_process (preamble)")
@@ -395,7 +400,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     print('\nStart "%s"' % params["run_name"])
     logging.info("Start SWAcMod run")
-    if not ff.use_perf_features:
+    if ff.use_cython:
         logging.info(compile_model.get_status())
 
     if data is None:

@@ -352,7 +352,7 @@ def dump_spatial_output(data, spatials, output_dir, reduced=False):
 
 
 def dump_sfr_output(sfr):
-    if ff.use_perf_features:
+    if not ff.use_cython:
         from swacmod.model_plain_python import write_sfr
     else:
         from swacmod.model import write_sfr
