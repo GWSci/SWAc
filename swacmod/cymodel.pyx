@@ -14,6 +14,8 @@ import sys
 import cython
 cimport cython
 cimport numpy as np
+import swacmod.feature_flags as ff
+from swacmod.feature_flags import max_node_count_override as num_nodes
 
 import sys
 import os.path
@@ -981,6 +983,9 @@ def get_mf6rch_file(data, rchrate):
     irch = np.zeros((nodes, 1), dtype=int)
     if rch_params is not None:
         for inode, vals in rch_params.iteritems():
+            if ff.use_perf_features:
+                    if inode > nodes:
+                        continue
             irch[inode - 1, 0] = vals[0]
     else:
         for i in range(nodes):
@@ -1193,6 +1198,9 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
     flow[:] = 0.0
 
     for node_swac, line in sorted_by_ca.items():
+        if ff.use_perf_features:
+            if node_swac >= num_nodes:
+                continue
         downstr, str_flag = line[:2]
         acc = 0.0
 
@@ -1328,6 +1336,9 @@ def get_sfr_file(data, runoff):
     # initialise reach & segment data
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
+        if ff.use_perf_features:
+            if node_swac > nodes:
+                continue
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
          depth, width) = line
         # for mf6 only
@@ -1390,6 +1401,9 @@ def get_sfr_file(data, runoff):
         Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
         for iseg in range(nss):
             conn = [iseg]
+            if ff.use_perf_features:
+                if not (iseg + 1) in seg_swac_dic:
+                    continue
             node_swac = seg_swac_dic[iseg + 1]
             downstr = sorted_by_ca[node_swac][idx['downstr']]
             for n in Gs.neighbors(node_swac):
@@ -1894,6 +1908,9 @@ def get_evt_file(data, evtrate):
     mt = flopy.mf6.ModflowGwfevt.stress_period_data.empty
 
     for inode, vals in evt_params.iteritems():
+        if ff.use_perf_features:
+            if inode >= nodes:
+                continue
         ievt[inode - 1, 0] = vals[0]
         surf[inode - 1, 0] = vals[1]
         exdp[inode - 1, 0] = vals[2]
@@ -2051,6 +2068,9 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True):
         if mask[node-1] == 1:
             G.add_node(node)
     for node_swac, line in sorted_by_ca.items():
+        if ff.use_perf_features:
+            if node_swac > nnodes:
+                continue
         if mask[node_swac-1] == 1 and line[0] > 0:
             G.add_edge(node_swac, line[0])
     return G
@@ -2096,6 +2116,9 @@ def all_days_mask(data):
                                                          source=node).items()]
             #  for n in nx.descendants(Gc, node):
             for n in lst:
+                if ff.use_perf_features:
+                    if n > nnodes:
+                        continue
                 mask[n-1] = 1
 
     return build_graph(nnodes, sorted_by_ca, mask)
