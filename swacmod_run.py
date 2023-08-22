@@ -756,21 +756,29 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             print("\t- EVT file")
 
             if data["params"]["excess_sw_process"] != "disabled":
+                timer.switch_to(output_timer_token, "output_evt (copying arrays)")
                 tmp = (np.copy(np.array(evtr_agg)) -
                        np.copy(np.array(runoff_agg)))
                 if data["params"]["excess_sw_process"] == "sw_rip":
+                    timer.switch_to(output_timer_token, "output_evt (sw_rip)")
                     evt = m.get_evt_file(data, tmp)
                 elif data["params"]["excess_sw_process"] == "sw_ow_evap":
+                    timer.switch_to(output_timer_token, "output_evt (sw_ow_evap)")
                     evt = m.get_evt_file(data, np.where(tmp > 0.0, 0.0, tmp))
                 elif data["params"]["excess_sw_process"] == "sw_only":
+                    timer.switch_to(output_timer_token, "output_evt (sw_only)")
                     evt = m.get_evt_file(data, -np.copy(np.array(runoff_agg)))
             else:
+                timer.switch_to(output_timer_token, "output_evt (else)")
                 evt = m.get_evt_file(data, evtr_agg)
 
             if data['params']['gwmodel_type'] == 'mfusg':
+                timer.switch_to(output_timer_token, "output_evt (mfusg)")
                 io.dump_evt_output(evt)
             elif data['params']['gwmodel_type'] == 'mf6':
+                timer.switch_to(output_timer_token, "output_evt (mf6)")
                 evt.write()
+            timer.switch_to(output_timer_token, "output_evt (cleaning up)")
             evt, tmp = None, None
             del evt, tmp
             gc.collect()
