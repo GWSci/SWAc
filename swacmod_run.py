@@ -581,14 +581,18 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     timer.stop_timing(timer_token_for_run_multiprocessing)
     timer_token_for_run_output = timer.start_timing("run_main > run (output)")
+    output_timer_token = timer.make_time_switcher()
+    timer.switch_to(output_timer_token, "before anything interesting")
 
     times["end_of_model"] = time.time()
 
     if not test:
 
         # aggregate over processes
+        timer.switch_to(output_timer_token, "reporting_agg")
         reporting_agg = aggregate_reporting(reporting_agg)
         
+        timer.switch_to(output_timer_token, "swrecharge_process")
         if params["swrecharge_process"] == "enabled":
 
             for cat in data["params"]["reporting_zone_mapping"].values():
@@ -671,9 +675,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                         cat][term][term]
 
         print("\nWriting output files:")
+        timer.switch_to(output_timer_token, "checking open files")
         if not skip:
             io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
+        timer.switch_to(output_timer_token, "reporting agg loop")
         if not ff.use_perf_features:
             for num, key in enumerate(reporting_agg.keys()):
                 print("\t- Report file (%d of %d)" %
@@ -687,6 +693,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     reduced=reduced,
                 )
 
+        timer.switch_to(output_timer_token, "output_individual")
         for node in list(data["params"]["output_individual"]):
             print("\t- Node output file")
             io.dump_water_balance(
@@ -698,9 +705,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 reduced=reduced,
             )
 
+        timer.switch_to(output_timer_token, "swrecharge_process")
         if params["swrecharge_process"] == "enabled":
             del runoff_recharge, tmp, runoff, recharge
             gc.collect()
+        timer.switch_to(output_timer_token, "output_recharge")
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
             if data['params']['gwmodel_type'] == 'mfusg':
@@ -710,6 +719,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             elif data['params']['gwmodel_type'] == 'mf96':
                 io.dump_mf96_recharge_file(data, recharge_agg)
 
+        timer.switch_to(output_timer_token, "spatial_output_date")
         if data["params"]["spatial_output_date"]:
             print("\t- Spatial file")
             io.dump_spatial_output(data,
@@ -717,6 +727,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                                    u.CONSTANTS["OUTPUT_DIR"],
                                    reduced=reduced)
 
+        timer.switch_to(output_timer_token, "output_sfr")
         if data["params"]["output_sfr"]:
             print("\t- SFR file")
             if data['params']['gwmodel_type'] == 'mf96':
@@ -740,6 +751,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     del sfr
                     gc.collect()
 
+        timer.switch_to(output_timer_token, "output_evt")
         if data["params"]["output_evt"]:
             print("\t- EVT file")
 
@@ -762,6 +774,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             evt, tmp = None, None
             del evt, tmp
             gc.collect()
+        
+        timer.switch_off(output_timer_token)
+        timer.print_time_switcher_report(output_timer_token)
 
     times["end_of_run"] = time.time()
 
