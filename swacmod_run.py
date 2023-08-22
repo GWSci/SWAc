@@ -282,9 +282,11 @@ def run_process(
 def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, spatial_index):
                 
     if node in data["params"]["output_individual"]:
+        timer.switch_to(time_switcher, "aggregate_output (output_individual)")
         # if this node for individual output then preserve
         single_node_output[node] = output.copy()
 
+    timer.switch_to(time_switcher, "aggregate_output > (call m.aggregate)")
     key = (num, rep_zone)
     area = data["params"]["node_areas"][node]
     if key not in reporting_agg:
@@ -293,6 +295,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
         reporting_agg[key] = m.aggregate(
             output, area, reporting=reporting_agg[key])
 
+    timer.switch_to(time_switcher, "aggregate_output > (output_recharge)")
     if data["params"]["output_recharge"]:
         rech = {"recharge": output["combined_recharge"].copy()}
         for i, p in enumerate(
@@ -303,6 +306,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             recharge_agg[(nnodes * i) + int(node)] = p
         rech = None
 
+    timer.switch_to(time_switcher, "aggregate_output > (swrecharge_process)")
     if data["params"]["swrecharge_process"] == "enabled":
 
         rech = output["combined_recharge"].copy()
@@ -315,6 +319,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             runoff[(nnodes * i) + int(node)] = p
         ro = None
 
+    timer.switch_to(time_switcher, "aggregate_output > (output_sfr)")
     if (data["params"]["output_sfr"]
             or data["params"]["excess_sw_process"] != "disabled"):
         ro = {"runoff": output["combined_str"].copy()}
@@ -326,6 +331,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             runoff_agg[(nnodes * i) + int(node)] = p
         ro = None
 
+    timer.switch_to(time_switcher, "aggregate_output > (output_evt)")
     if data["params"]["output_evt"]:
         evt = {"evtr": output["unutilised_pe"].copy()}
         for i, p in enumerate(
@@ -336,6 +342,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             evtr_agg[(nnodes * i) + int(node)] = p
         evt = None
 
+    timer.switch_to(time_switcher, "aggregate_output > (spatial_output_date)")
     if data["params"]["spatial_output_date"]:
         spatial[node] = m.aggregate(output,
                                     area,
