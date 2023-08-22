@@ -279,6 +279,19 @@ def run_process(
         single_node_output,
     )
 
+def compare_lambdas(name, time_switcher, unoptimised, optimised):
+
+    timer.switch_to(time_switcher, f"{name} (unoptimised)")
+    unoptimised_result = unoptimised()
+
+    timer.switch_to(time_switcher, f"{name} (optimised)")
+    optimised_result = optimised()
+
+    timer.switch_to(time_switcher, f"{name} (comparison)")
+    np.testing.assert_equal(unoptimised_result, optimised_result)
+        
+    return optimised_result
+
 def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, spatial_index):
                 
     if node in data["params"]["output_individual"]:
