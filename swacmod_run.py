@@ -584,15 +584,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     times["end_of_model"] = time.time()
 
-    log("if not test:")
     if not test:
 
         # aggregate over processes
         reporting_agg = aggregate_reporting(reporting_agg)
         
-        log('if params["swrecharge_process"] == "enabled":')
         if params["swrecharge_process"] == "enabled":
-            log("    Inside swrecharge_process")
 
             for cat in data["params"]["reporting_zone_mapping"].values():
                 reporting_agg2[cat] = {}
@@ -690,9 +687,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     reduced=reduced,
                 )
 
-        log('for node in list(data["params"]["output_individual"]):')
         for node in list(data["params"]["output_individual"]):
-            log("    inside output_individual")
             print("\t- Node output file")
             io.dump_water_balance(
                 data,
@@ -703,13 +698,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 reduced=reduced,
             )
 
-        log('if params["swrecharge_process"] == "enabled":')
         if params["swrecharge_process"] == "enabled":
-            log("    inside swrecharge_process")
             del runoff_recharge, tmp, runoff, recharge
             gc.collect()
         if data["params"]["output_recharge"]:
-            log("    inside output_recharge")
             print("\t- Recharge file")
             if data['params']['gwmodel_type'] == 'mfusg':
                 io.dump_recharge_file(data, recharge_agg)
@@ -718,18 +710,14 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             elif data['params']['gwmodel_type'] == 'mf96':
                 io.dump_mf96_recharge_file(data, recharge_agg)
 
-        log('if data["params"]["spatial_output_date"]:')
         if data["params"]["spatial_output_date"]:
-            log("    inside spatial_output_date")
             print("\t- Spatial file")
             io.dump_spatial_output(data,
                                    spatial,
                                    u.CONSTANTS["OUTPUT_DIR"],
                                    reduced=reduced)
 
-        log('if data["params"]["output_sfr"]:')
         if data["params"]["output_sfr"]:
-            log("   inside  output_sfr")
             print("\t- SFR file")
             if data['params']['gwmodel_type'] == 'mf96':
                 strm = m.get_str_file(data, np.copy(np.array(runoff_agg)))
@@ -752,9 +740,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     del sfr
                     gc.collect()
 
-        log('if data["params"]["output_evt"]:')
         if data["params"]["output_evt"]:
-            log("    Inside evt file")
             print("\t- EVT file")
 
             if data["params"]["excess_sw_process"] != "disabled":
@@ -776,7 +762,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             evt, tmp = None, None
             del evt, tmp
             gc.collect()
-            log("    FInished evt file")
 
     times["end_of_run"] = time.time()
 
