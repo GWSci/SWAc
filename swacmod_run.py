@@ -39,16 +39,12 @@ from swacmod import utils as u
 from swacmod import input_output as io
 
 # Compile and import model
+print("Compiling/importing cython model.")
 from swacmod import compile_model
 from swacmod import model as m
 
 if ff.use_perf_features:
-    from swacmod import model as mn
     import swacmod.model_numpy as model_numpy
-else:
-    print("Compiling/importing cython model.")
-    from swacmod import compile_model
-    from swacmod import model as m
 
 # win fix
 sys.maxint = 2**63 - 1
@@ -139,9 +135,9 @@ def get_output(data, node, time_switcher):
     output = {}
 
     methods = [
-        mn.get_precipitation if ff.use_perf_features else m.get_precipitation,
+        m.get_precipitation,
         m.get_pe,
-        mn.get_pefac if ff.use_perf_features else m.get_pefac,
+        m.get_pefac,
         m.get_canopy_storage,
         m.get_net_pefac,
         m.get_precip_to_ground,
@@ -159,7 +155,7 @@ def get_output(data, node, time_switcher):
         m.get_subroot_leak,
         m.get_interflow_bypass,
         m.get_interflow_store_input,
-        mn.get_interflow if ff.use_perf_features else m.get_interflow,
+        m.get_interflow,
         m.get_recharge_store_input,
         m.get_recharge_op if ff.use_perf_features else m.get_recharge,
         model_numpy.get_swabs if ff.use_perf_features else m.get_swabs,
@@ -213,12 +209,6 @@ def run_process(
     comparison_time_switcher = timer.make_time_switcher()
     data["time_switcher"] = time_switcher
     data["comparison_time_switcher"] = comparison_time_switcher
-
-    timer.switch_to(time_switcher, "run_main > run > run_process (lazy_get_precipitation)")
-
-    if ff.use_perf_features:
-        precipitation = model_numpy.lazy_get_precipitation(data, ids)
-        data["precalculated_precipitation"] = precipitation
 
     timer.switch_to(time_switcher, "run_main > run > run_process (preamble)")
 
