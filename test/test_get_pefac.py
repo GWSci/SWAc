@@ -1,6 +1,5 @@
 import unittest
 import numpy as np
-import swacmod.model_plain_python as model
 import swacmod.model_numpy as model_numpy
 import swacmod.timer as timer
 
@@ -32,6 +31,30 @@ class test_get_pefac(unittest.TestCase):
 			"pe_ts": np.array([79, 83, 97, 101, 103], dtype=np.float64),
 		}
 		node = 1
-		expected = model.get_pefac(data, output, node)["pefac"]
+		expected = get_pefac(data, output, node)["pefac"]
 		actual = model_numpy.get_pefac(data, output, node)["pefac"]
 		np.testing.assert_array_equal(expected, actual)
+
+def get_pefac(data, output, node):
+    """E) Vegetation-factored Potential Evapotranspiration (PEfac) [mm/d]."""
+    series, params = data['series'], data['params']
+    days = len(series['date'])
+    pefac = np.zeros(days)
+    var1 = 0.0
+    pe = output['pe_ts']
+    kc = params['kc_list'][series['months']]
+    zone_lu = np.array(params['lu_spatial'][node],
+                                      dtype=np.float64)
+    len_lu = len(params['lu_spatial'][node])
+
+    fao = params['fao_process']
+    canopy = params['canopy_process']
+        
+    if fao == 'enabled' or canopy == 'enabled':
+        for day in range(days):
+            var1 = 0.0
+            for z in range(len_lu):
+                var1 = var1 + (kc[day, z] * zone_lu[z])
+            pefac[day] = pe[day] * var1
+
+    return {'pefac': np.array(pefac)}

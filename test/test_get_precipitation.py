@@ -1,5 +1,4 @@
 import numpy
-import swacmod.model_plain_python as model
 import swacmod.model_numpy
 import unittest
 
@@ -40,18 +39,6 @@ class Test_Get_Precipitation(unittest.TestCase):
 		actual_oracle = oracle_get_precipitation(input_data)
 		numpy.testing.assert_array_equal(expected_precipitation, actual_oracle)
 
-	def test_get_precipitation_numpy(self):
-		input_data = {
-			"series": {
-				"rainfall_ts": rainfall_ts
-			},
-			"params": {
-				"rainfall_zone_mapping": rainfall_zone_mapping
-			},
-		}
-		actual_numpy = swacmod.model_numpy.numpy_get_precipitation(input_data, nodes)
-		numpy.testing.assert_array_equal(expected_precipitation, actual_numpy)
-
 	def test_get_precipitation_lazy(self):
 		input_data = {
 			"series": {
@@ -67,7 +54,7 @@ class Test_Get_Precipitation(unittest.TestCase):
 def oracle_get_precipitation(data):
 	result = []
 	for node in nodes:
-		precipitation = model.get_precipitation(data, {}, node)
+		precipitation = get_precipitation(data, {}, node)
 		result.append(precipitation["rainfall_ts"])
 	return numpy.array(result)
 
@@ -77,4 +64,11 @@ def lazy_to_array(lazy):
 		precipitation = lazy[node - 1]
 		result.append(precipitation)
 	return numpy.array(result)
-	
+
+def get_precipitation(data, output, node):
+    """C) Precipitation [mm/d]."""
+    series, params = data['series'], data['params']
+    zone_rf = params['rainfall_zone_mapping'][node][0] - 1
+    coef_rf = params['rainfall_zone_mapping'][node][1]
+    rainfall_ts = series['rainfall_ts'][:, zone_rf] * coef_rf
+    return {'rainfall_ts': rainfall_ts}

@@ -39,12 +39,12 @@ from swacmod import utils as u
 from swacmod import input_output as io
 
 # Compile and import model
-import swacmod.model_numpy as model_numpy
+from swacmod import compile_model
+from swacmod import model as m
 
 if ff.use_perf_features:
-    from swacmod import compile_model
-    from swacmod import model as m
     from swacmod import model as mn
+    import swacmod.model_numpy as model_numpy
 else:
     print("Compiling/importing cython model.")
     from swacmod import compile_model
