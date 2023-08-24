@@ -41,13 +41,10 @@ from swacmod import input_output as io
 # Compile and import model
 import swacmod.model_numpy as model_numpy
 
-if ff.use_cython:
+if ff.use_perf_features:
     from swacmod import compile_model
     from swacmod import model as m
     from swacmod import model as mn
-elif ff.use_perf_features:
-    import swacmod.model_plain_python as m
-    import swacmod.model_numpy as mn
 else:
     print("Compiling/importing cython model.")
     from swacmod import compile_model
@@ -421,8 +418,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     print('\nStart "%s"' % params["run_name"])
     logging.info("Start SWAcMod run")
-    if ff.use_cython:
-        logging.info(compile_model.get_status())
+    logging.info(compile_model.get_status())
 
     if data is None:
         data = io.load_and_validate(specs_file, input_file, input_dir)
