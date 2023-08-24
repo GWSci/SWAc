@@ -27,7 +27,6 @@ else:
 import mmap
 import gc
 if ff.use_perf_features:
-    import traceback # *** remove import
     import datetime
 
 # Third Party Libraries
@@ -42,9 +41,7 @@ from swacmod import input_output as io
 print("Compiling/importing cython model.")
 from swacmod import compile_model
 from swacmod import model as m
-
-if ff.use_perf_features:
-    import swacmod.model_numpy as model_numpy
+import swacmod.model_numpy as model_numpy
 
 # win fix
 sys.maxint = 2**63 - 1
@@ -148,7 +145,7 @@ def get_output(data, node, time_switcher):
         m.get_net_rainfall,
         m.get_rawrew,
         m.get_tawtew,
-        m.get_ae_op if ff.use_perf_features else m.get_ae,
+        m.get_ae_op,
         m.get_unutilised_pe,
         m.get_rejected_recharge,
         m.get_perc_through_root,
@@ -157,15 +154,15 @@ def get_output(data, node, time_switcher):
         m.get_interflow_store_input,
         m.get_interflow,
         m.get_recharge_store_input,
-        m.get_recharge_op if ff.use_perf_features else m.get_recharge,
-        model_numpy.get_swabs if ff.use_perf_features else m.get_swabs,
-        model_numpy.get_swdis if ff.use_perf_features else m.get_swdis,
+        m.get_recharge_op,
+        model_numpy.get_swabs,
+        model_numpy.get_swdis,
         m.get_combined_str,
         m.get_combined_ae,
         m.get_evt,
         m.get_average_in,
         m.get_average_out,
-        model_numpy.get_change if ff.use_perf_features else m.get_change,
+        model_numpy.get_change,
         m.get_balance,
     ]
         
@@ -215,17 +212,6 @@ def run_process(
     io.start_logging(path=log_path, level=level)
     logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
-
-    if ff.use_perf_features:
-        # *** Remove section
-        # data["params"]["output_recharge"] = False # Remove. Set to disable aggregation.
-        # data["params"]["swrecharge_process"] = "disabled" # Remove. Set to disable aggregation.
-        # data["params"]["output_sfr"] = False
-        # data["params"]["excess_sw_process"] = "disabled"
-        # data["params"]["output_evt"] = False
-        # data["params"]["spatial_output_date"] = False
-        pass
-        # ### End of section to remove
 
     for node in ids:
 
@@ -909,8 +895,6 @@ def run_main():
             if not ff.use_perf_features:
                 log("Calling run END")
         except Exception as err:
-            if ff.use_perf_features:
-                traceback.print_exc() # *** Remove
             logging.error(err.__repr__())
             print("ERROR: %s" % err)
             print("")
