@@ -19,14 +19,14 @@ if not ff.disable_multiprocessing:
 else:
     import queue
 
-if ff.use_perf_features:
+if ff.use_extra_logging:
     import swacmod.timer as timer
 else:
     import swacmod.no_timer as timer
 
 import mmap
 import gc
-if ff.use_perf_features:
+if ff.use_extra_logging:
     import datetime
 
 # Third Party Libraries
@@ -50,7 +50,7 @@ sys.maxint = 2**63 - 1
 SENTINEL = 1
 
 def log(message):
-    if ff.use_perf_features:
+    if ff.use_extra_logging:
         timestamp = datetime.datetime.now()
         line = f"{timestamp} : swacmod_run.py : {message}"
         print(line)
@@ -881,8 +881,6 @@ def run_main():
         )
     else:
         try:
-            if not ff.use_perf_features:
-                log("Calling run START")
             run(
                 test=ARGS.test,
                 debug=ARGS.debug,
@@ -890,14 +888,10 @@ def run_main():
                 reduced=ARGS.reduced,
                 skip=ARGS.skip_prompt,
             )
-            if not ff.use_perf_features:
-                log("Calling run END")
         except Exception as err:
             logging.error(err.__repr__())
             print("ERROR: %s" % err)
             print("")
-    if not ff.use_perf_features:
-        log("Main program END")
     timer.stop_timing(timer_token_for_run_main)
 
 if __name__ == "__main__":

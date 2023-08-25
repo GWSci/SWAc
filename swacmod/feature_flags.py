@@ -1,10 +1,21 @@
 import os
 
-use_perf_features = "True" == os.environ.get("SWAc_use_perf_features", "False")
+# Flags values when performance features are enabled.
 
-_node_count_override = True
-use_node_count_override = _node_count_override if use_perf_features else False
-max_node_count_override = 4181 if use_node_count_override else 10000000
-
+_node_count_override = False
+_max_node_count_override = 4181
 _disable_multiprocessing = True
-disable_multiprocessing = _disable_multiprocessing if use_perf_features else False
+_use_extra_logging = True
+_skip_validation = True
+
+# Set master flag from environment variable
+
+_use_perf_features = "True" == os.environ.get("SWAc_use_perf_features", "False")
+
+# Flags to query in code
+
+use_node_count_override = _node_count_override and _use_perf_features
+max_node_count_override = _max_node_count_override if use_node_count_override else 10000000
+disable_multiprocessing = _disable_multiprocessing and _use_perf_features
+use_extra_logging = _use_extra_logging and _use_perf_features 
+skip_validation = _skip_validation and _use_perf_features 
