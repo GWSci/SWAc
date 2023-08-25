@@ -2084,7 +2084,7 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True):
         if mask[node-1] == 1:
             G.add_node(node)
     for node_swac, line in sorted_by_ca.items():
-        if ff.use_perf_features:
+        if ff.use_node_count_override:
             if node_swac > nnodes:
                 continue
         if mask[node_swac-1] == 1 and line[0] > 0:

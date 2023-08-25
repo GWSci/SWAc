@@ -41,11 +41,7 @@ def expand_t_type(t_type):
     elif t_type == int:
         t_type = (int, int)
     elif t_type == list:
-        if (ff.use_perf_features):
-            t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
-        else:
-            t_type = (list, np.ndarray)
-
+        t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
     return t_type
 
 
@@ -58,10 +54,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         t_type = types.pop(0)
         t_type = expand_t_type(t_type)
 
-        if ff.use_perf_features:
-            expanded_list = expand_t_type(list)
-        else:
-            expanded_list = (list, np.ndarray)
+        expanded_list = expand_t_type(list)
 
         new_len = None
         if t_type == expanded_list and len_list:

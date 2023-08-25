@@ -684,17 +684,10 @@ def load_params_from_yaml(
     for param in tqdm(params, desc="SWAcMod load params     "):
         if isinstance(params[param], str) and "alt_format" in specs[param]:
             absolute = os.path.join(input_dir, params[param])
-            if ff.use_perf_features:
-                param_category = categorise_param(param, params[param])
-            else:
-                param_category = "no param category"
+            param_category = categorise_param(param, params[param])
             ext = params[param].split(".")[-1]
-            if ff.use_perf_features:
-                if ext not in specs[param]["alt_format"] and ext != "numpydumpy":
-                    continue
-            else:
-                if ext not in specs[param]["alt_format"]:
-                    continue                
+            if ext not in specs[param]["alt_format"] and ext != "numpydumpy":
+                continue
             if param_category == "time_peroiod_param":
                 params[param] = time_series_data.load_time_series_data(param, absolute, ext)
             elif ext == "csv":
