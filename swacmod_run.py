@@ -399,7 +399,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     if data is None:
         data = io.load_and_validate(specs_file, input_file, input_dir)
 
-    if ff.use_perf_features:
+    if ff.use_node_count_override:
         num_nodes_initial = data["params"]["num_nodes"]
         num_nodes_new = min(num_nodes_initial, ff.max_node_count_override)
         percentage = round((100 * num_nodes_new) / num_nodes_initial)
@@ -600,7 +600,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             # aggregate amended recharge & runoff arrays by output periods
             for node in tqdm(list(m.all_days_mask(data).nodes),
                              desc="Aggregating Fluxes      "):
-                if ff.use_perf_features:
+                if ff.use_node_count_override:
                     if int(node) > nnodes:
                         continue
 
@@ -656,7 +656,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             # copy new bits into cat output
             term = "runoff_recharge"
             for cat in reporting_agg2:
-                if "runoff_recharge" in reporting_agg2[cat] and not ff.use_perf_features:
+                if "runoff_recharge" in reporting_agg2[cat] and not ff.use_node_count_override:
                     reporting_agg[cat]["combined_recharge"] += reporting_agg2[
                         cat][term][term]
                     reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][
@@ -670,7 +670,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
         timer.switch_to(output_timer_token, "reporting agg loop")
-        if not ff.use_perf_features:
+        if not ff.use_node_count_override:
             for num, key in enumerate(reporting_agg.keys()):
                 print("\t- Report file (%d of %d)" %
                     (num + 1, len(reporting_agg.keys())))
@@ -732,7 +732,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     fout.writelines(lst_strm[2:])
                 del strm
             else:
-                if not ff.use_perf_features:
+                if not ff.use_node_count_override:
                     sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
                     if data['params']['gwmodel_type'] == 'mfusg':
                         io.dump_sfr_output(sfr)

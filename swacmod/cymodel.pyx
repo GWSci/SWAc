@@ -983,7 +983,7 @@ def get_mf6rch_file(data, rchrate):
     irch = np.zeros((nodes, 1), dtype=int)
     if rch_params is not None:
         for inode, vals in rch_params.iteritems():
-            if ff.use_perf_features:
+            if ff.use_node_count_override:
                     if inode > nodes:
                         continue
             irch[inode - 1, 0] = vals[0]
@@ -1352,7 +1352,7 @@ def get_sfr_file(data, runoff):
     # initialise reach & segment data
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
-        if ff.use_perf_features:
+        if ff.use_node_count_override:
             if node_swac > nodes:
                 continue
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
@@ -1924,7 +1924,7 @@ def get_evt_file(data, evtrate):
     mt = flopy.mf6.ModflowGwfevt.stress_period_data.empty
 
     for inode, vals in evt_params.iteritems():
-        if ff.use_perf_features:
+        if ff.use_node_count_override:
             if inode >= nodes:
                 continue
         ievt[inode - 1, 0] = vals[0]
@@ -2132,7 +2132,7 @@ def all_days_mask(data):
                                                          source=node).items()]
             #  for n in nx.descendants(Gc, node):
             for n in lst:
-                if ff.use_perf_features:
+                if ff.use_node_count_override:
                     if n > nnodes:
                         continue
                 mask[n-1] = 1
