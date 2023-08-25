@@ -412,8 +412,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     timer.stop_timing(timer_token_for_run_loading_data)
     timer_token_for_run_getting_ready_for_multiprocessing = timer.start_timing("run_main > run (getting ready for multiprocessing)")
 
-    if ff.use_perf_features:
-        data["params"]["num_cores"] = 1
     per = len(data["params"]["time_periods"])
     nnodes = data["params"]["num_nodes"]
     len_rch_agg = (nnodes * per) + 1
