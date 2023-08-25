@@ -1214,7 +1214,7 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
     flow[:] = 0.0
 
     for node_swac, line in sorted_by_ca.items():
-        if ff.use_perf_features:
+        if ff.use_node_count_override:
             if node_swac >= num_nodes:
                 continue
         downstr, str_flag = line[:2]
@@ -1417,7 +1417,7 @@ def get_sfr_file(data, runoff):
         Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
         for iseg in range(nss):
             conn = [iseg]
-            if ff.use_perf_features:
+            if ff.use_node_count_override:
                 if not (iseg + 1) in seg_swac_dic:
                     continue
             node_swac = seg_swac_dic[iseg + 1]

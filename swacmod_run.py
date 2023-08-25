@@ -13,7 +13,7 @@ import time
 import random
 import logging
 import argparse
-if not ff.use_perf_features:
+if not ff.disable_multiprocessing:
     import multiprocessing as mp
     from multiprocessing.heap import Arena
 else:
@@ -63,7 +63,7 @@ def anonymous_arena_init(self, size, fd=-1):
 
 
 # monkey patch for anonymous memory mapping python 3
-if not ff.use_perf_features:
+if not ff.disable_multiprocessing:
     if sys.version_info > (3,):
         if mp.get_start_method() == 'fork':
             Arena.__init__ = anonymous_arena_init
@@ -359,7 +359,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     timer_token_for_run_before_loading_data = timer.start_timing("run_main > run (before loading data)")
     times = {"start_of_run": time.time()}
 
-    if ff.use_perf_features:
+    if ff.disable_multiprocessing:
         reporting_agg = {}
         reporting_agg2 = {}
         reporting = {}
@@ -415,7 +415,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     per = len(data["params"]["time_periods"])
     nnodes = data["params"]["num_nodes"]
     len_rch_agg = (nnodes * per) + 1
-    if not ff.use_perf_features:
+    if not ff.disable_multiprocessing:
         recharge_agg = mp.Array("f", 1)
         runoff_agg = mp.Array("f", 1)
         runoff_recharge_agg = np.zeros((1))
@@ -485,7 +485,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         spatial_index = None
 
     workers = []
-    if ff.use_perf_features:
+    if ff.disable_multiprocessing:
         q = queue.Queue()
         pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
 
@@ -817,7 +817,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 ###############################################################################
 def run_main():
     timer_token_for_run_main = timer.start_timing("run_main")
-    if not ff.use_perf_features:
+    if not ff.disable_multiprocessing:
         log("Main program START")
         mp.freeze_support()
 
