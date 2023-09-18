@@ -589,14 +589,20 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 reporting_agg2[cat] = {}
 
             # ended up needing this for catchment output - bit silly
-            runoff_recharge = np.frombuffer(runoff.get_obj(),
-                                            dtype=np.float32).copy()
+            if ff.disable_multiprocessing:
+                runoff_recharge = runoff.copy()
+            else:
+                runoff_recharge = np.frombuffer(runoff.get_obj(),
+                                                dtype=np.float32).copy()
 
             # do RoR
             runoff, recharge = m.do_swrecharge_mask(data, runoff, recharge)
             # get RoR for cat output purposes
-            runoff_recharge -= np.frombuffer(runoff.get_obj(),
-                                             dtype=np.float32)
+            if ff.disable_multiprocessing:
+                runoff_recharge -= runoff
+            else:
+                runoff_recharge -= np.frombuffer(runoff.get_obj(),
+                                                dtype=np.float32)
             # aggregate amended recharge & runoff arrays by output periods
             for node in tqdm(list(m.all_days_mask(data).nodes),
                              desc="Aggregating Fluxes      "):
@@ -607,9 +613,18 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
 
-                tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32)
+                if ff.disable_multiprocessing:
+                    tmp = recharge
+                else:
+                    tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32)
+                
                 rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-                tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
+                
+                if ff.disable_multiprocessing:
+                    tmp = runoff
+                else:
+                    tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
+                    
                 ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
                 ror_array = np.array(runoff_recharge[idx],
                                      dtype=np.float64,
