@@ -1,5 +1,4 @@
 import datetime
-import numpy
 import time
 
 def make_time_switcher():
