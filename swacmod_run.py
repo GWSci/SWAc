@@ -19,6 +19,8 @@ if not ff.disable_multiprocessing:
 else:
     import queue
 
+import swacmod.performance_logging as performance_logging
+
 if ff.use_extra_logging:
     import swacmod.timer as timer
 else:
@@ -48,12 +50,6 @@ sys.maxint = 2**63 - 1
 
 # sentinel for iteration count
 SENTINEL = 1
-
-def log(message):
-    if ff.use_extra_logging:
-        timestamp = datetime.datetime.now()
-        line = f"{timestamp} : swacmod_run.py : {message}"
-        print(line)
 
 def anonymous_arena_init(self, size, fd=-1):
     "Create Arena using an anonymous memory mapping."
@@ -403,7 +399,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         num_nodes_initial = data["params"]["num_nodes"]
         num_nodes_new = min(num_nodes_initial, ff.max_node_count_override)
         percentage = round((100 * num_nodes_new) / num_nodes_initial)
-        log(f"Reduced num_nodes from {num_nodes_initial} to {num_nodes_new}. ({percentage} %)")
+        performance_logging.swacmod_run_log(f"Reduced num_nodes from {num_nodes_initial} to {num_nodes_new}. ({percentage} %)")
         data["params"]["num_nodes"] = num_nodes_new
     
     if not skip:
@@ -822,7 +818,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 ###############################################################################
 def run_main():
     if not ff.disable_multiprocessing:
-        log("Main program START")
         mp.freeze_support()
 
     # Parser for command line arguments
