@@ -45,15 +45,6 @@ def start_timing(message, time=time):
 		"elapsed_seconds": 0,
 	}
 
-# Only used in tests
-def continue_timing(token, time=time):
-	if "seconds_start" in token:
-		return token
-
-	seconds_start = time.time()
-	token["seconds_start"] = seconds_start
-	return token
-
 def stop_timing(token, time=time):
 	if not "seconds_start" in token:
 		return token

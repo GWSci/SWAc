@@ -13,9 +13,6 @@ def print_time_switcher_report(time_switcher):
 def start_timing(message):
 	return {}
 
-def continue_timing(token, time=None):
-	pass
-
 def stop_timing(token):
 	pass
 
