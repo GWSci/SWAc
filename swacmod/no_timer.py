@@ -1,5 +1,3 @@
-import datetime
-import numpy
 import time
 
 def make_time_switcher():
@@ -9,9 +7,6 @@ def switch_to(time_switcher, message, time=time):
 	pass
 
 def switch_off(time_switcher, time=time):
-	pass
-
-def time_switcher_report(time_switcher):
 	pass
 
 def print_time_switcher_report(time_switcher):

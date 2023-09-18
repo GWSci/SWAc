@@ -24,7 +24,7 @@ def switch_off(time_switcher, time=time):
 
 	return time_switcher
 
-def time_switcher_report(time_switcher):
+def _time_switcher_report(time_switcher):
 	result = []
 	for [message, elapsed_seconds] in time_switcher["message_to_seconds"].items():
 		row = {
@@ -35,7 +35,7 @@ def time_switcher_report(time_switcher):
 	return result
 
 def print_time_switcher_report(time_switcher):
-	tokens = time_switcher_report(time_switcher)
+	tokens = _time_switcher_report(time_switcher)
 	print_time_table(tokens)
 
 def make_accumulation_timer(message):
