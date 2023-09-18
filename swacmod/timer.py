@@ -80,15 +80,6 @@ def log(message):
 	line = f"{timestamp} : {message}"
 	print(line)
 
-def report_frequencies(message, arr):
-	values, counts = numpy.unique(arr, return_counts=True)
-	counts = numpy.sort(counts)
-	counts = numpy.flip(counts)
-	unique_value_count = len(values)
-	array_length = len(arr)
-	log(f"Frequencies: {message} : {unique_value_count} unique values out of {array_length}.")
-	log(f"Frequencies: {message} : Counts: {counts.tolist()}")
-
 def print_time_table(tokens):
 	rows = make_time_table(tokens)
 	for row in rows:
