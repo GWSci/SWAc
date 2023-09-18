@@ -4,6 +4,7 @@ import datetime
 import logging
 import numpy
 import os
+import swacmod.performance_logging as performance_logging
 import yaml
 
 try:
@@ -45,7 +46,6 @@ class Numpy_Dumpy_Time_Series_Data(TimeSeriesData):
 
 class CsvTimeSeriesData(TimeSeriesData):
 	def __init__(self, param_name, csv_filename):
-		log("Reading CSV START")
 		try:
 			reader = csv.reader(open(csv_filename, "r"))
 		except IOError as err:
@@ -59,7 +59,6 @@ class CsvTimeSeriesData(TimeSeriesData):
 		except IndexError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
-		log("Reading CSV END")
 
 	def row(self, index):
 		return self.rows[index]
@@ -72,7 +71,6 @@ class CsvTimeSeriesData(TimeSeriesData):
 
 class CsvTimeSeriesData_File_Backed(TimeSeriesData):
 	def __init__(self, base_path, param_name, csv_filename):
-		log("Reading CSV START")
 		try:
 			reader = csv.reader(open(csv_filename, "r"))
 		except IOError as err:
@@ -86,7 +84,6 @@ class CsvTimeSeriesData_File_Backed(TimeSeriesData):
 		except IndexError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
-		log("Reading CSV END")
 
 	def row(self, index):
 		return self.rows[index]
@@ -233,9 +230,7 @@ def load_time_series_data(base_path, param, filename, ext):
 		log(f"Could not load file: {filename}")
 
 def log(message):
-	timestamp = datetime.datetime.now()
-	line = f"{timestamp} : {message}"
-	print(line)
+	performance_logging.time_series_data_log(message)
 
 def convert_numpydumpy_filename_to_shape(filename):
     parts = filename.split(".")
