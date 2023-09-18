@@ -6,12 +6,12 @@ def make_time_switcher():
 
 def switch_to(time_switcher, message, time=time):
 	time_switcher = switch_off(time_switcher, time=time)
-	time_switcher["current_timer"] = start_timing(message, time=time)
+	time_switcher["current_timer"] = _start_timing(message, time=time)
 	return time_switcher
 
 def switch_off(time_switcher, time=time):
 	if "current_timer" in time_switcher:
-		timer_just_finished = stop_timing(time_switcher["current_timer"], time=time)
+		timer_just_finished = _stop_timing(time_switcher["current_timer"], time=time)
 		previous_message = timer_just_finished["message"]
 		previous_time = timer_just_finished["elapsed_seconds"]
 		if previous_message in time_switcher["message_to_seconds"]:
@@ -23,6 +23,10 @@ def switch_off(time_switcher, time=time):
 
 	return time_switcher
 
+def print_time_switcher_report(time_switcher):
+	tokens = _time_switcher_report(time_switcher)
+	print_time_table(tokens)
+
 def _time_switcher_report(time_switcher):
 	result = []
 	for [message, elapsed_seconds] in time_switcher["message_to_seconds"].items():
@@ -33,11 +37,7 @@ def _time_switcher_report(time_switcher):
 		result.append(row)
 	return result
 
-def print_time_switcher_report(time_switcher):
-	tokens = _time_switcher_report(time_switcher)
-	print_time_table(tokens)
-
-def start_timing(message, time=time):
+def _start_timing(message, time=time):
 	seconds_start = time.time()
 	return {
 		"seconds_start": seconds_start,
@@ -45,7 +45,7 @@ def start_timing(message, time=time):
 		"elapsed_seconds": 0,
 	}
 
-def stop_timing(token, time=time):
+def _stop_timing(token, time=time):
 	if not "seconds_start" in token:
 		return token
 
