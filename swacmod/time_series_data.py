@@ -206,7 +206,7 @@ def report_using_data_file_backend(filename):
 	file_size = os.stat(filename).st_size
 	file_size_string = convert_bytes_to_human_readable_string(file_size)
 	message = f"Using data file backend. ({file_size_string}) {filename}"
-	performance_logging.time_series_data_log(message)
+	performance_logging.log_performance(message)
 
 def load_time_series_data(base_path, param, filename, ext):
 	is_in_memory = calculate_is_in_memory(filename)
@@ -227,7 +227,7 @@ def load_time_series_data(base_path, param, filename, ext):
 			report_using_data_file_backend(filename)
 			return YamlTimeSeriesData_File_Backed(base_path, param, filename)
 	else:
-		performance_logging.time_series_data_log(f"Could not load file: {filename}")
+		performance_logging.log_performance(f"Could not load file: {filename}")
 
 def convert_numpydumpy_filename_to_shape(filename):
     parts = filename.split(".")

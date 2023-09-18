@@ -399,7 +399,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         num_nodes_initial = data["params"]["num_nodes"]
         num_nodes_new = min(num_nodes_initial, ff.max_node_count_override)
         percentage = round((100 * num_nodes_new) / num_nodes_initial)
-        performance_logging.swacmod_run_log(f"Reduced num_nodes from {num_nodes_initial} to {num_nodes_new}. ({percentage} %)")
+        performance_logging.log_performance(f"Reduced num_nodes from {num_nodes_initial} to {num_nodes_new}. ({percentage} %)")
         data["params"]["num_nodes"] = num_nodes_new
     
     if not skip:

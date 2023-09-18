@@ -60,7 +60,7 @@ def _stop_timing(token, time=time):
 def _print_time_table(tokens):
 	rows = _make_time_table(tokens)
 	for row in rows:
-		performance_logging.timer_log(row)
+		performance_logging.log_performance(row)
 
 def _make_time_table(tokens):
 	max_message_length = _find_max_message_length(tokens)
