@@ -7,5 +7,5 @@ class Test_Filename_For_Backing_File(unittest.TestCase):
 		filename = "cat.csv"
 		shape = "dog"
 		actual = ts.calculate_filename_for_backing_file(base_path, filename, shape)
-		expected = "aardvark/bat/cat.csv.dog.numpydumpy"
+		expected = "aardvark/bat/cat.csv.dog.swacmod_array"
 		self.assertEqual(expected, actual)
