@@ -28,8 +28,6 @@ else:
 
 import mmap
 import gc
-if ff.use_extra_logging:
-    import datetime
 
 # Third Party Libraries
 import numpy as np
