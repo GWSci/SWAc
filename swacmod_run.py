@@ -821,7 +821,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
 ###############################################################################
 def run_main():
-    timer_token_for_run_main = timer.start_timing("run_main")
     if not ff.disable_multiprocessing:
         log("Main program START")
         mp.freeze_support()
@@ -897,7 +896,6 @@ def run_main():
             logging.error(err.__repr__())
             print("ERROR: %s" % err)
             print("")
-    timer.stop_timing(timer_token_for_run_main)
 
 if __name__ == "__main__":
     run_main()
