@@ -354,7 +354,8 @@ def listener(q, total):
 def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         data=None):
     """Run model for all nodes."""
-    timer_token_for_run = timer.start_timing("run_main > run")
+    total_timer_switcher_for_run = timer.make_time_switcher()
+    timer.switch_to(total_timer_switcher_for_run, "run_main > run")
     timer_switcher_for_run = timer.make_time_switcher()
     timer.switch_to(timer_switcher_for_run, "run_main > run (before loading data)")
     times = {"start_of_run": time.time()}
@@ -812,8 +813,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     gc.collect()
 
     timer.switch_off(timer_switcher_for_run)
-    timer.stop_timing(timer_token_for_run)
+    timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
+    timer.print_time_switcher_report(total_timer_switcher_for_run)
     # return
 
 
