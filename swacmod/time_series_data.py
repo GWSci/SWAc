@@ -148,7 +148,7 @@ def convert_rows_to_file_backed_array(rows, csv_filename):
 
 def calculate_filename_for_backing_file(base_path, filename, shape):
 	basename = os.path.basename(filename)
-	result = f"temp_scratch_files/{basename}.{shape}.numpydumpy"
+	result = f"{base_path}{basename}.{shape}.numpydumpy"
 	return result
 
 def calculate_dtype_for_python_list(x):
