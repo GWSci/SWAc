@@ -12,9 +12,3 @@ def print_time_switcher_report(time_switcher):
 
 def log(message):
 	pass
-
-def print_time_table(tokens):
-	pass
-
-def make_time_table(tokens):
-	return []

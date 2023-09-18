@@ -25,7 +25,7 @@ def switch_off(time_switcher, time=time):
 
 def print_time_switcher_report(time_switcher):
 	tokens = _time_switcher_report(time_switcher)
-	print_time_table(tokens)
+	_print_time_table(tokens)
 
 def _time_switcher_report(time_switcher):
 	result = []
@@ -62,12 +62,12 @@ def log(message):
 	line = f"{timestamp} : {message}"
 	print(line)
 
-def print_time_table(tokens):
-	rows = make_time_table(tokens)
+def _print_time_table(tokens):
+	rows = _make_time_table(tokens)
 	for row in rows:
 		log(row)
 
-def make_time_table(tokens):
+def _make_time_table(tokens):
 	max_message_length = _find_max_message_length(tokens)
 	max_decimal_point_location = _find_max_decimal_point_location(tokens)
 	result = []
