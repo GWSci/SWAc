@@ -73,7 +73,7 @@ class CsvTimeSeriesData(TimeSeriesData):
 		return self.rows.__getitem__(subscript)
 
 class CsvTimeSeriesData_File_Backed(TimeSeriesData):
-	def __init__(self, param_name, csv_filename):
+	def __init__(self, base_path, param_name, csv_filename):
 		log("Reading CSV START")
 		try:
 			reader = csv.reader(open(csv_filename, "r"))
@@ -84,7 +84,7 @@ class CsvTimeSeriesData_File_Backed(TimeSeriesData):
 			rows = [[float(j) for j in row]
 					for row in reader]
 			
-			self.rows = convert_rows_to_file_backed_array(rows, csv_filename)
+			self.rows = convert_rows_to_file_backed_array(base_path, rows, csv_filename)
 		except IndexError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
@@ -118,13 +118,13 @@ class YamlTimeSeriesData(TimeSeriesData):
 		return self.rows.__getitem__(subscript)
 
 class YamlTimeSeriesData_File_Backed(TimeSeriesData):
-	def __init__(self, param_name, csv_filename):
+	def __init__(self, base_path, param_name, csv_filename):
 		try:
 			rows = load_yaml(csv_filename)[param_name]
 		except (IOError, KeyError) as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
-		self.rows = convert_rows_to_file_backed_array(rows, csv_filename)
+		self.rows = convert_rows_to_file_backed_array(base_path, rows, csv_filename)
 
 	def row(self, index):
 		return self.rows[index]
@@ -135,11 +135,11 @@ class YamlTimeSeriesData_File_Backed(TimeSeriesData):
 	def __getitem__(self, subscript):
 		return self.rows.__getitem__(subscript)
 
-def convert_rows_to_file_backed_array(rows, csv_filename):
+def convert_rows_to_file_backed_array(base_path, rows, csv_filename):
 	dtype = calculate_dtype_for_python_list(rows)
 	shape = calculate_shape_for_python_list(rows)
 	result = numpy.memmap(
-		filename = calculate_filename_for_backing_file("temp_scratch_files/", csv_filename, shape), 
+		filename = calculate_filename_for_backing_file(base_path, csv_filename, shape), 
 		dtype = dtype,
 		mode = "w+",
 		shape = shape)
@@ -212,7 +212,7 @@ def report_using_data_file_backend(filename):
 	message = f"Using data file backend. ({file_size_string}) {filename}"
 	log(message)
 
-def load_time_series_data(param, filename, ext):
+def load_time_series_data(base_path, param, filename, ext):
 	is_in_memory = calculate_is_in_memory(filename)
 	if ext == "numpydumpy":
 		return Numpy_Dumpy_Time_Series_Data(filename)
@@ -221,13 +221,13 @@ def load_time_series_data(param, filename, ext):
 			return CsvTimeSeriesData(param, filename)
 		else:
 			report_using_data_file_backend(filename)
-			return CsvTimeSeriesData_File_Backed(param, filename)
+			return CsvTimeSeriesData_File_Backed(base_path, param, filename)
 	elif ext == "yml":
 		if is_in_memory:
 			return YamlTimeSeriesData(param, filename)
 		else:
 			report_using_data_file_backend(filename)
-			return YamlTimeSeriesData_File_Backed(param, filename)
+			return YamlTimeSeriesData_File_Backed(base_path, param, filename)
 	else:
 		log(f"Could not load file: {filename}")
 

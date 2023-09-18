@@ -689,7 +689,8 @@ def load_params_from_yaml(
             if ext not in specs[param]["alt_format"] and ext != "numpydumpy":
                 continue
             if param_category == "time_peroiod_param":
-                params[param] = time_series_data.load_time_series_data(param, absolute, ext)
+                base_path = "temp_scratch_files/"
+                params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
             elif ext == "csv":
                 try:
                     reader = csv.reader(open(absolute, "r"))
