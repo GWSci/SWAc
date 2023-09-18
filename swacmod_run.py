@@ -356,6 +356,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         data=None):
     """Run model for all nodes."""
     timer_token_for_run = timer.start_timing("run_main > run")
+    timer_switcher_for_run = timer.make_time_switcher()
+    timer.switch_to(timer_switcher_for_run, "run_main > run (before loading data)")
     timer_token_for_run_before_loading_data = timer.start_timing("run_main > run (before loading data)")
     times = {"start_of_run": time.time()}
 
@@ -385,6 +387,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     level = logging.DEBUG if debug else logging.INFO
 
     timer.stop_timing(timer_token_for_run_before_loading_data)
+    timer.switch_to(timer_switcher_for_run, "run_main > run (loading data)")
     timer_token_for_run_loading_data = timer.start_timing("run_main > run (loading data)")
     if data is None:
         params = io.load_yaml(input_file)
@@ -410,6 +413,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
     timer.stop_timing(timer_token_for_run_loading_data)
+    timer.switch_to(timer_switcher_for_run, "run_main > run (getting ready for multiprocessing)")
     timer_token_for_run_getting_ready_for_multiprocessing = timer.start_timing("run_main > run (getting ready for multiprocessing)")
 
     per = len(data["params"]["time_periods"])
@@ -490,6 +494,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
 
         timer.stop_timing(timer_token_for_run_getting_ready_for_multiprocessing)
+        timer.switch_to(timer_switcher_for_run, "run_main > run (multiprocessing)")
         timer_token_for_run_multiprocessing = timer.start_timing("run_main > run (multiprocessing)")
 
         for process, chunk in enumerate(chunks):
@@ -558,6 +563,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             workers.append(Worker("worker%d" % process, q, proc, verbose=False))
 
         timer.stop_timing(timer_token_for_run_getting_ready_for_multiprocessing)
+        timer.switch_to(timer_switcher_for_run, "run_main > run (multiprocessing)")
         timer_token_for_run_multiprocessing = timer.start_timing("run_main > run (multiprocessing)")
 
         for p in workers:
@@ -570,6 +576,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         lproc.join()
 
     timer.stop_timing(timer_token_for_run_multiprocessing)
+    timer.switch_to(timer_switcher_for_run, "run_main > run (output)")
     timer_token_for_run_output = timer.start_timing("run_main > run (output)")
     output_timer_token = timer.make_time_switcher()
     timer.switch_to(output_timer_token, "before anything interesting")
@@ -817,6 +824,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     gc.collect()
 
     timer.stop_timing(timer_token_for_run_output)
+    timer.switch_off(timer_switcher_for_run)
     timer.stop_timing(timer_token_for_run)
     timer.print_time_table([
         timer_token_for_run_before_loading_data,
@@ -826,6 +834,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         timer_token_for_run_output,
         timer_token_for_run,
     ])
+    timer.print_time_switcher_report(timer_switcher_for_run)
     # return
 
 
