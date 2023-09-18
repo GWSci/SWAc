@@ -80,11 +80,6 @@ def log(message):
 	line = f"{timestamp} : {message}"
 	print(line)
 
-def report_array(name, arr):
-	gb = arr.nbytes / 1024 / 1024 / 1024
-	message = f"{name} {arr.dtype} {arr.shape} {gb} gb"
-	log(message)
-
 def report_frequencies(message, arr):
 	values, counts = numpy.unique(arr, return_counts=True)
 	counts = numpy.sort(counts)

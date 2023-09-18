@@ -25,9 +25,6 @@ def stop_timing(token):
 def log(message):
 	pass
 
-def report_array(name, arr):
-	pass
-
 def report_frequencies(message, arr):
 	pass
 
