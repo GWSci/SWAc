@@ -10,9 +10,6 @@ def switch_off(time_switcher, time=None):
 def print_time_switcher_report(time_switcher):
 	pass
 
-def make_accumulation_timer(message):
-	pass
-
 def start_timing(message):
 	return {}
 
