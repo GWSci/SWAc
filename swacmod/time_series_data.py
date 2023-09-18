@@ -146,7 +146,8 @@ def convert_rows_to_file_backed_array(base_path, rows, csv_filename):
 
 def calculate_filename_for_backing_file(base_path, filename, shape):
 	basename = os.path.basename(filename)
-	result = f"{base_path}{basename}.{shape}.swacmod_array"
+	backing_file_name = f"{basename}.{shape}.swacmod_array"
+	result = os.path.join(base_path, backing_file_name)
 	return result
 
 def calculate_dtype_for_python_list(x):
