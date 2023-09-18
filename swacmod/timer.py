@@ -1,4 +1,4 @@
-import datetime
+import swacmod.performance_logging as performance_logging
 import time
 
 def make_time_switcher():
@@ -57,15 +57,10 @@ def _stop_timing(token, time=time):
 	del token["seconds_start"]
 	return token
 
-def log(message):
-	timestamp = datetime.datetime.now()
-	line = f"{timestamp} : {message}"
-	print(line)
-
 def _print_time_table(tokens):
 	rows = _make_time_table(tokens)
 	for row in rows:
-		log(row)
+		performance_logging.timer_log(row)
 
 def _make_time_table(tokens):
 	max_message_length = _find_max_message_length(tokens)
