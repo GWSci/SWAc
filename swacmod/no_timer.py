@@ -1,12 +1,10 @@
-import time
-
 def make_time_switcher():
 	pass
 
-def switch_to(time_switcher, message, time=time):
+def switch_to(time_switcher, message, time=None):
 	pass
 
-def switch_off(time_switcher, time=time):
+def switch_off(time_switcher, time=None):
 	pass
 
 def print_time_switcher_report(time_switcher):
@@ -22,7 +20,7 @@ def report_time(message, function):
 def start_timing(message):
 	return {}
 
-def continue_timing(token, time=time):
+def continue_timing(token, time=None):
 	pass
 
 def stop_timing(token):
