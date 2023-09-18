@@ -47,6 +47,10 @@
 # This parameter is required.
 run_name: my_run
 
+# Directory to store temporary file-backed arrays
+# This parameter is required.
+temp_file_backed_array_directory: temp_scratch_files/
+
 # Number of nodes in the 2D water accounting model
 # This parameter is required.
 num_nodes: 10
