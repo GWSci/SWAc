@@ -201,7 +201,8 @@ def run_process(
         pbar=None
 ):
     """Run model for a chunk of nodes."""
-    timer_token_run_process = timer.start_timing("run_main > run > run_process")
+    timer_token_run_process = timer.make_time_switcher()
+    timer.switch_to(timer_token_run_process, "run_main > run > run_process")
     time_switcher = timer.make_time_switcher()
     comparison_time_switcher = timer.make_time_switcher()
     data["time_switcher"] = time_switcher
@@ -232,13 +233,11 @@ def run_process(
     logging.info("mp.Process %d ended", num)
 
     timer.switch_off(time_switcher)
-    timer_token_run_process = timer.stop_timing(timer_token_run_process)
+    timer.switch_off(timer_token_run_process)
 
     timer.print_time_switcher_report(time_switcher)
     timer.print_time_switcher_report(comparison_time_switcher)
-    timer.print_time_table([
-        timer_token_run_process,
-    ])
+    timer.print_time_switcher_report(timer_token_run_process)
 
     return (
         reporting_agg,
