@@ -9,6 +9,3 @@ def switch_off(time_switcher, time=None):
 
 def print_time_switcher_report(time_switcher):
 	pass
-
-def log(message):
-	pass
