@@ -139,14 +139,14 @@ def convert_rows_to_file_backed_array(rows, csv_filename):
 	dtype = calculate_dtype_for_python_list(rows)
 	shape = calculate_shape_for_python_list(rows)
 	result = numpy.memmap(
-		filename = calculate_filename_for_backing_file(csv_filename, shape), 
+		filename = calculate_filename_for_backing_file("temp_scratch_files/", csv_filename, shape), 
 		dtype = dtype,
 		mode = "w+",
 		shape = shape)
 	result[:] = rows[:]
 	return result
 
-def calculate_filename_for_backing_file(filename, shape):
+def calculate_filename_for_backing_file(base_path, filename, shape):
 	basename = os.path.basename(filename)
 	result = f"temp_scratch_files/{basename}.{shape}.numpydumpy"
 	return result
