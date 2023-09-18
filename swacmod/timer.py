@@ -38,17 +38,12 @@ def print_time_switcher_report(time_switcher):
 	tokens = _time_switcher_report(time_switcher)
 	print_time_table(tokens)
 
+# Only used in tests
 def make_accumulation_timer(message):
 	result = {
 		"message": message,
 		"elapsed_seconds": 0,
 	}
-	return result
-
-def report_time(message, function):
-	token = start_timing(message)
-	result = function()
-	stop_timing(token)
 	return result
 
 def start_timing(message, time=time):
@@ -59,6 +54,7 @@ def start_timing(message, time=time):
 		"elapsed_seconds": 0,
 	}
 
+# Only used in tests
 def continue_timing(token, time=time):
 	if "seconds_start" in token:
 		return token

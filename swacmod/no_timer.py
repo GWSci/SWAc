@@ -13,10 +13,6 @@ def print_time_switcher_report(time_switcher):
 def make_accumulation_timer(message):
 	pass
 
-def report_time(message, function):
-	result = function()
-	return result
-
 def start_timing(message):
 	return {}
 
