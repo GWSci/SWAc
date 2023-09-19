@@ -38,7 +38,6 @@ from swacmod import utils as u
 from swacmod import input_output as io
 
 # Compile and import model
-print("Compiling/importing cython model.")
 from swacmod import compile_model
 from swacmod import model as m
 import swacmod.model_numpy as model_numpy
