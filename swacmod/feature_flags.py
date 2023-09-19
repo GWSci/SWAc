@@ -6,7 +6,7 @@ _node_count_override = False
 _max_node_count_override = 4181
 _disable_multiprocessing = True
 _use_extra_logging = True
-_skip_validation = True
+_skip_validation = False
 
 # Set master flag from environment variable
 
