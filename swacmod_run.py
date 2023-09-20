@@ -21,10 +21,7 @@ else:
 
 import swacmod.performance_logging as performance_logging
 
-if ff.use_extra_logging:
-    import swacmod.timer as timer
-else:
-    import swacmod.no_timer as timer
+import swacmod.timer as timer
 
 import mmap
 import gc
