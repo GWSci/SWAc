@@ -20,8 +20,7 @@ EXTENSIONS = [Extension("model",
                                             "-flto",
                                             "-march=native",
                                             "-O2",
-                                            "-funroll-loops",
-                                            "-floop-nest-optimize"],
+                                            "-funroll-loops"],
                         extra_link_args=["-flto",
                                          "-O2"])]
 
