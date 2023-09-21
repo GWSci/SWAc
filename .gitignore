@@ -1,3 +1,5 @@
+.DS_Store
+.vscode/
 *.py[cod]
 *.so
 *.c
@@ -18,3 +20,7 @@ build/
 .gitconfig
 .eggs
 venv/
+Pip*
+env/
+temp*
+temp_scratch_files/
