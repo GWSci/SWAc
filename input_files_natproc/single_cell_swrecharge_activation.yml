@@ -1,0 +1,14 @@
+# Columns are macropore zones
+single_cell_swrecharge_activation:
+     1: [0.1, 0.1]   # January
+     2: [0.1, 0.1]   # February
+     3: [0.1, 0.1]   # March
+     4: [0.1, 0.1]   # April
+     5: [0.1, 0.1]   # May
+     6: [0.1, 0.1]   # June
+     7: [0.1, 0.1]   # July
+     8: [0.1, 0.1]   # August
+     9: [0.1, 0.1]   # September
+     10: [0.1, 0.1]  # October
+     11: [0.1, 0.1]  # November
+     12: [0.1, 0.1]  # December
