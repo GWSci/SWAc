@@ -19,6 +19,7 @@ import sys
 import os.path
 sys.path.append(os.path.join(os.path.dirname(u.__file__), ".."))
 from SnowTest.snow_melt import SnowMelt
+import swacmod.feature_flags as ff
 
 
 ###############################################################################
@@ -106,8 +107,9 @@ def get_canopy_storage(data, output, node):
         canopy_storage[canopy_storage > mcs] = mcs
         canopy_storage = np.where(canopy_storage > output['pefac'],
                                   output['pefac'], canopy_storage)
-        canopy_storage = np.where(output['pefac'] < 0.0,
-                                  0.0, canopy_storage)
+        if ff.use_natproc:
+            canopy_storage = np.where(output['pefac'] < 0.0,
+                                    0.0, canopy_storage)
     else:
         canopy_storage = np.zeros(len(series['date']))
 
