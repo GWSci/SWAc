@@ -456,16 +456,14 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     ror = {"runoff_recharge": ror_array}
 
                     if "runoff_recharge" not in reporting_agg2[rep_zone]:
-                        reporting_agg2[rep_zone][
-                            "runoff_recharge"] = m.aggregate(ror, area, pond_area)
+                        reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+                            ror, area, pond_area)
                     else:
-                        reporting_agg2[rep_zone][
-                            "runoff_recharge"] = m.aggregate(
-                                ror,
-                                area,
-                                pond_area,
-                                reporting=reporting_agg2[rep_zone]
-                                ["runoff_recharge"])
+                        reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+                            ror,
+                            area,
+                            pond_area,
+                            reporting=reporting_agg2[rep_zone]["runoff_recharge"])
 
                 # check for single node
                 if node in data["params"]["output_individual"]:
