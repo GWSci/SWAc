@@ -28,6 +28,7 @@ from . import checks as c
 from . import validation as v
 from . import finalization as f
 from . import __version__
+import swacmod.feature_flags as ff
 
 
 try:
@@ -279,8 +280,12 @@ def dump_mf96_recharge_file(data, recharge):
                                                   data["params"]["irchcb"]))
         for per in range(len(data["params"]["time_periods"])):
             rech_file.write("{0:10d}{1:10d}\n".format(inrech, inirch))
-            rech_file.write("        18    0.0010(6g12.4)" +
-                            "                    -3\n")
+            if ff.use_natproc:
+                rech_file.write("        18    0.0010(6g12.4)" +
+                                "                    -3\n")
+            else:
+                rech_file.write("        18    1.0000(6g12.4)" +
+                                "                    -3\n")
             row = ""
             i_row = 0
             for node in range(data["params"]["num_nodes"]):
