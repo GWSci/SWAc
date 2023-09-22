@@ -428,7 +428,6 @@ def val_swdis_locs(data, name):
             keys=range(1, tot)
         )
 
-
         c.check_values_limits(
             values=swdisl.values(),
             name="zone in %s" % name,
