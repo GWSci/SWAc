@@ -26,6 +26,7 @@ from swacmod import input_output as io
 # Compile and import model
 from swacmod import compile_model
 from swacmod import model as m
+import swacmod.feature_flags as ff
 
 # win fix
 sys.maxint = 2**63 - 1
@@ -45,7 +46,6 @@ def anonymous_arena_init(self, size, fd=-1):
 if sys.version_info > (3,):
     if mp.get_start_method() == 'fork':
         Arena.__init__ = anonymous_arena_init
-
 
 class Worker:
     "mp worker"
@@ -406,14 +406,22 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 reporting_agg2[cat] = {}
 
             # ended up needing this for catchment output - bit silly
-            runoff_recharge = np.frombuffer(runoff.get_obj(),
-                                            dtype=np.float32).copy()
+            if ff.use_natproc:
+                runoff_recharge = np.frombuffer(recharge.get_obj(),
+                                                dtype=np.float32).copy()
+            else:
+                runoff_recharge = np.frombuffer(runoff.get_obj(),
+                                                dtype=np.float32).copy()
 
             # do RoR
             runoff, recharge = m.do_swrecharge_mask(data, runoff, recharge)
             # get RoR for cat output purposes
-            runoff_recharge -= np.frombuffer(runoff.get_obj(),
-                                             dtype=np.float32)
+            if ff.use_natproc:
+                runoff_recharge = np.frombuffer(recharge.get_obj(),
+                                                dtype=np.float32) - runoff_recharge
+            else:
+                runoff_recharge -= np.frombuffer(runoff.get_obj(),
+                                                dtype=np.float32)
             # aggregate amended recharge & runoff arrays by output periods
             for node in tqdm(list(m.all_days_mask(data).nodes),
                              desc="Aggregating Fluxes      "):
@@ -450,7 +458,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
                 # amend catchment output values
                 rep_zone = data["params"]["reporting_zone_mapping"][node]
-                if True:
+                if ff.use_natproc:
+                    do_this_bit = rep_zone > 0
+                else:
+                    do_this_bit = True
+                if do_this_bit:
                     area = data["params"]["node_areas"][node]
                     ror = {"runoff_recharge": ror_array}
 
