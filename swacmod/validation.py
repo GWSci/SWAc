@@ -418,10 +418,10 @@ def val_swdis_locs(data, name):
     3) values (i.e. swabs ids) have to be > 1 and <= number of swabs
     """
     swdisl = data["params"][name]
-
+    swdisn = data["params"]["swdis_locs"]
     tot = len(data["params"]["swdis_locs"]) + 1
 
-    if True:
+    if swdisn != {0: 0}:
 
         c.check_type(
             param=swdisl, name=name, t_types=data["specs"][name]["type"],
@@ -431,7 +431,7 @@ def val_swdis_locs(data, name):
         c.check_values_limits(
             values=swdisl.values(),
             name="zone in %s" % name,
-            low_l=0,
+            low_l=1,
             include_low=True,
             high_l=tot,
             include_high=True,
