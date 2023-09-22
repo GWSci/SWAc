@@ -1045,6 +1045,17 @@ def fin_sw_params(data, name):
 
 
 ###############################################################################
+def fin_sw_zone_mapping(data, name):
+    """Finalize the "sw_zone_mapping" parameter.
+
+    1) if not provided, set it to all 1s.
+    """
+    if data["params"][name] is None:
+        nodes = data["params"]["num_nodes"]
+        data["params"][name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
 def fin_sw_zone_names(data, name):
     """Finalize the "sw_zone_names" parameter.
 
@@ -1153,6 +1164,23 @@ def fin_sw_bed_infiltration(data, name):
 
     params["sw_bed_infiltn"] = sorted(params[name].items(), key=lambda x: x[0])
     params["sw_bed_infiltn"] = np.array([i[1] for i in params["sw_bed_infiltn"]])
+
+
+###############################################################################
+def fin_sw_downstream(data, name):
+    """Finalize the "sw_downstream" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data["params"]
+    zones = data["params"]["sw_zone_names"]
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params["sw_downstr"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_downstr"] = np.array([i[1] for i in params["sw_downstr"]])
 
 
 ###############################################################################
