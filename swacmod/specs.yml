@@ -768,6 +768,24 @@ recharge_node_mapping:
 # Process: SW Release #
 #######################
 
+sw_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+sw_params:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+###############################
+# Process: SW Release Natproc #
+###############################
+
 sw_process_natproc:
     required: true
     type:
