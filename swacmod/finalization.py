@@ -76,6 +76,16 @@ def fin_num_cores(data, name):
 
 
 ###############################################################################
+def fin_disv(data, name):
+    """Finalize the "disv" parameter.
+
+    1) if not provided, set it to False.
+    """
+    if data["params"][name] is None:
+        data["params"][name] = False
+
+
+###############################################################################
 def fin_output_recharge(data, name):
     """Finalize the "output_recharge" parameter.
 
@@ -83,6 +93,7 @@ def fin_output_recharge(data, name):
     """
     if data["params"][name] is None:
         data["params"][name] = True
+
 
 
 ###############################################################################
@@ -426,6 +437,76 @@ def fin_swrecharge_zone_names(data, name):
     if params[name] is None:
         zones = len(set(params["swrecharge_zone_mapping"].values()))
         params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_single_cell_swrecharge_zone_mapping(data, name):
+    """Finalize the "single_cell_swrecharge_zone_mapping" parameter.
+    1) if not provided, set it to all 0s.
+    """
+    if data['params'][name] is None:
+        nodes = data['params']['num_nodes']
+        data['params'][name] = dict((k, 1) for k in range(1, nodes + 1))
+
+
+###############################################################################
+def fin_single_cell_swrecharge_zone_names(data, name):
+    """Finalize the "single_cell_swrecharge_zone_names" parameter.
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data['params']
+    if params[name] is None:
+        zones = len(set(params['single_cell_swrecharge_zone_mapping'].values()))
+        params[name] = dict((k, 'Zone%d' % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_single_cell_swrecharge_proportion(data, name):
+    """Finalize the "single_cell_swrecharge_proportion" parameter.
+    1) if not provided, set it to 0.
+    """
+    params = data['params']
+    zones = data['params']['single_cell_swrecharge_zone_names']
+    if params['swrecharge_process'] == 'disabled':
+        if params[name] is None:
+            params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
+            logging.info('\t\tDefaulted "%s" to [0.0]', name)
+
+        params['ror_prop'] = sorted(params[name].items(), key=lambda x: x[0])
+        params['ror_prop'] = np.array([i[1] for i in params['ror_prop']])
+
+
+###############################################################################
+def fin_single_cell_swrecharge_limit(data, name):
+    """Finalize the "single_cell_swrecharge_limit" parameter.
+    1) if not provided, set it to 99999.
+    """
+    params = data['params']
+    zones = data['params']['single_cell_swrecharge_zone_names']
+
+    if params['swrecharge_process'] == 'disabled':
+        if params[name] is None:
+            params[name] = dict((k, [99999.9 for _ in zones]) for k in
+                                range(1, 13))
+            logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+        params['ror_limit'] = sorted(params[name].items(), key=lambda x: x[0])
+        params['ror_limit'] = np.array([i[1] for i in params['ror_limit']])
+
+
+###############################################################################
+def fin_single_cell_swrecharge_activation(data, name):
+    """Finalize the "rorecharge_activation" parameter.
+    1) if not provided, set it to 0.0.
+    """
+    params = data['params']
+    zones = data['params']['single_cell_swrecharge_zone_names']
+    if params[name] is None:
+        params[name] = dict((k, [0.0 for _ in zones]) for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [0.0]', name)
+
+    params['ror_act'] = sorted(params[name].items(), key=lambda x: x[0])
+    params['ror_act'] = np.array([i[1] for i in params['ror_act']])
 
 
 ###############################################################################
@@ -961,6 +1042,117 @@ def fin_sw_params(data, name):
         data["params"][name] = dict((k, [0.0, 1.0])
                                     for k in range(1, nodes + 1))
         logging.info('\t\tDefaulted "%s" to %s', name, [0.0, 1.0])
+
+
+###############################################################################
+def fin_sw_zone_names(data, name):
+    """Finalize the "sw_zone_names" parameter.
+
+    1) if not provided, set it to "Zone1", "Zone2" etc.
+    """
+    params = data["params"]
+    if params[name] is None:
+        zones = len(set(params["reporting_zone_mapping"].values()))
+        params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
+
+
+###############################################################################
+def fin_sw_init_ponding(data, name):
+    """Finalize the "sw_init_ponding" parameter.
+
+    1) if not provided, set it to 0.0.
+    """
+    params = data["params"]
+    if params[name] is None:
+        params[name] = 0.0
+
+
+###############################################################################
+def fin_sw_ponding_area(data, name):
+    """Finalize the "ponding_area" parameter.
+    1) if not provided, set it to 0.0.
+    """
+
+    params = data["params"]
+    if data["params"][name] is None:
+        default = 0.0
+        if data["params"]["sw_zone_names"] is None:
+            zones = 1
+        else:
+            zones = len(data["params"]["sw_zone_names"])
+        data["params"][name] = {zone: default for zone in range(1, zones + 1)}
+        logging.info('\t\tDefaulted "%s" to %.2f', name, default)
+
+    params["sw_pond_area"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_pond_area"] = np.array([i[1]
+                                       for i in params["sw_pond_area"]])
+
+
+###############################################################################
+def fin_sw_pe_to_open_water(data, name):
+    """Finalize the "sw_pe_to_open_water" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data["params"]
+    zones = data["params"]["sw_zone_names"]
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params["sw_pe_to_open_wat"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_pe_to_open_wat"] = np.array([i[1]
+                                            for i in params["sw_pe_to_open_wat"]])
+
+###############################################################################
+def fin_sw_direct_recharge(data, name):
+    """Finalize the "sw_direct_recharge" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data["params"]
+    zones = data["params"]["sw_zone_names"]
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params["sw_direct_rech"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_direct_rech"] = np.array([i[1] for i in params["sw_direct_rech"]])
+
+###############################################################################
+def fin_sw_activation(data, name):
+    """Finalize the "sw_activation" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data["params"]
+    zones = data["params"]["sw_zone_names"]
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params["sw_activ"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_activ"] = np.array([i[1] for i in params["sw_activ"]])
+
+
+###############################################################################
+def fin_sw_bed_infiltration(data, name):
+    """Finalize the "sw_bed_infiltration" parameter.
+
+    1) if not provided, set it to 99999.
+    """
+    params = data["params"]
+    zones = data["params"]["sw_zone_names"]
+    if params[name] is None:
+        params[name] = dict((k, [99999.9 for _ in zones])
+                            for k in range(1, 13))
+        logging.info('\t\tDefaulted "%s" to [99999]', name)
+
+    params["sw_bed_infiltn"] = sorted(params[name].items(), key=lambda x: x[0])
+    params["sw_bed_infiltn"] = np.array([i[1] for i in params["sw_bed_infiltn"]])
 
 
 ###############################################################################
