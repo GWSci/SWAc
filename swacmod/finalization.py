@@ -1336,6 +1336,9 @@ def fin_swabs_ts(data, name):
     """Finalize the "swabs_ts" series."""
 
     series = data["series"]
+    if series[name] is None:
+        series[name] = [0.0]
+
     series[name] = np.array(series[name])
 
 
