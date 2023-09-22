@@ -1593,7 +1593,8 @@ FUNC_PARAMS = [
     fin_evt_parameters,
     fin_ievtcb,
     fin_nevtopt,
-    fin_gwmodel_type
+    fin_gwmodel_type,
+    fin_disv
 ]
 
 
