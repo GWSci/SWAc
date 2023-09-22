@@ -13,6 +13,7 @@ import numpy as np
 
 # Internal modules
 from . import utils as u
+import swacmod.feature_flags as ff
 
 
 try:
@@ -850,10 +851,14 @@ def fin_percolation_rejection(data, name):
     """Finalize the "percolation_rejection" parameter.
     1) if not provided, set it to a large number.
     """
+
     if data["params"][name] is None:
         default = 99999.0
         zones = len(data["params"]["landuse_zone_names"])
-        data["params"][name] = [default for _ in range(zones)]
+        if ff.use_natproc:
+            data["params"]["percolation_rejection"] = {"percolation_rejection": [default for _ in range(zones)]}
+        else:
+            data["params"][name] = [default for _ in range(zones)]
         logging.info('\t\tDefaulted "%s" to %.2f', name, default)
 
 
@@ -1042,7 +1047,6 @@ def fin_sw_params(data, name):
         data["params"][name] = dict((k, [0.0, 1.0])
                                     for k in range(1, nodes + 1))
         logging.info('\t\tDefaulted "%s" to %s', name, [0.0, 1.0])
-
 
 ###############################################################################
 def fin_sw_zone_mapping(data, name):
