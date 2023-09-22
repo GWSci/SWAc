@@ -164,6 +164,12 @@ def run_process(
 
         q.put(SENTINEL)
 
+        if data["params"]['sw_process_natproc'] == 'enabled':
+            zone_sw = data["params"]['sw_zone_mapping'][node]
+            pond_area = data["params"]['sw_ponding_area'][zone_sw]
+        else:
+            pond_area = 0.0
+
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
             output = get_output(data, node)
@@ -413,6 +419,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
 
+                if params['sw_process_natproc'] == 'enabled':
+                    zone_sw = data['params']['sw_zone_mapping'][node]
+                    pond_area = data['params']['sw_ponding_area'][zone_sw]
+                else:
+                    pond_area = 0.0
+
                 tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32)
                 rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
                 tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
@@ -437,17 +449,18 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
                 # amend catchment output values
                 rep_zone = data["params"]["reporting_zone_mapping"][node]
-                area = data["params"]["node_areas"][node]
-                ror = {"runoff_recharge": ror_array}
+                if True:
+                    area = data["params"]["node_areas"][node]
+                    ror = {"runoff_recharge": ror_array}
 
-                if "runoff_recharge" not in reporting_agg2[rep_zone]:
-                    reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                        ror, area)
-                else:
-                    reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                        ror,
-                        area,
-                        reporting=reporting_agg2[rep_zone]["runoff_recharge"])
+                    if "runoff_recharge" not in reporting_agg2[rep_zone]:
+                        reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+                            ror, area)
+                    else:
+                        reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+                            ror,
+                            area,
+                            reporting=reporting_agg2[rep_zone]["runoff_recharge"])
 
                 # check for single node
                 if node in data["params"]["output_individual"]:
