@@ -932,10 +932,53 @@ def val_swrecharge_zone_mapping(data, name):
     )
 
 
+
+###############################################################################
+def val_rorecharge_zone_names(data, name):
+    """Validate rorecharge_zone_names.
+    1) type has to be a dictionary of strings
+    """
+    rrn = data['params'][name]
+    c.check_type(param=rrn, name=name, t_types=data['specs'][name]['type'])
+
+
+###############################################################################
+def val_single_cell_swrecharge_zone_mapping(data, name):
+    """Validate single_cell_swrecharge_zone_mapping.
+    1) type has to be a dictionary of integers
+    2) all node ids have to be present
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
+    """
+    rorzm = data['params'][name]
+    tot = data['params']['num_nodes']
+    rzn = data['params']['single_cell_swrecharge_zone_names']
+
+    c.check_type(param=rorzm,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 keys=range(1, tot + 1))
+
+    c.check_values_limits(values=rorzm.values(),
+                          name=name,
+                          low_l=0,
+                          include_low=True,
+                          high_l=len(rzn),
+                          include_high=True)
+
+
+###############################################################################
+def val_single_cell_swrecharge_zone_names(data, name):
+    """Validate single_cell_swrecharge_zone_names.
+
+    1) type has to be a dictionary of strings
+    """
+    mzn = data["params"][name]
+    c.check_type(param=mzn, name=name, t_types=data["specs"][name]["type"])
+
+
 ###############################################################################
 def val_macropore_zone_names(data, name):
     """Validate macropore_zone_names.
-
     1) type has to be a dictionary of strings
     """
     mzn = data["params"][name]
@@ -1257,6 +1300,86 @@ def val_rapid_runoff_params(data, name):
             include_low=True,
             include_high=True,
         )
+
+
+###############################################################################
+def val_rorecharge_process(data, name):
+    """Validate rorecharge_process.
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    rop = data['params'][name]
+    rrp = data['params']['rapid_runoff_process']
+    if rop == 'enabled' and rrp == 'disabled':
+        msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
+        raise u.ValidationError(msg % (name, 'rapid_runoff_process'))
+
+    c.check_type(param=rop,
+                 name=name,
+                 t_types=data['specs'][name]['type'])
+
+    c.check_values_limits(values=[rop],
+                          name=name,
+                          constraints=data['specs'][name]['constraints'])
+
+
+###############################################################################
+def val_single_cell_swrecharge_proportion(data, name):
+    """Validate single_cell_swrecharge_proportion.
+    1) type has to be a dict of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires lenght equal to the number of zones
+    4) all elements of each list have to be 0 <= x <= 1
+    """
+    rrp = data['params'][name]
+    rzn = data['params']['single_cell_swrecharge_zone_names']
+
+    c.check_type(param=rrp,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(rzn)],
+                 keys=range(1, 13))
+
+    c.check_values_limits(values=[j for i in rrp.values() for j in i],
+                          name=name,
+                          low_l=0,
+                          high_l=1.0,
+                          include_low=True,
+                          include_high=True)
+
+
+###############################################################################
+def val_single_cell_swrecharge_limit(data, name):
+    """Validate single_cell_swrecharge_limit.
+    1) type has to be a dict of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires lenght equal to the number of zones
+    """
+    rrl = data['params'][name]
+    rzn = data['params']['single_cell_swrecharge_zone_names']
+
+    c.check_type(param=rrl,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(rzn)],
+                 keys=range(1, 13))
+
+
+###############################################################################
+def val_single_cell_swrecharge_activation(data, name):
+    """Validate single_cell_swrecharge_activation.
+    1) type has to be a dict of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires lenght equal to the number of zones
+    """
+    rra = data['params'][name]
+    rzn = data['params']['single_cell_swrecharge_zone_names']
+
+    c.check_type(param=rra,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(rzn)],
+                 keys=range(1, 13))
 
 
 ###############################################################################
@@ -2011,6 +2134,236 @@ def val_recharge_attenuation_params(data, name):
         high_l=1.0,
         include_high=True,
     )
+
+
+###############################################################################
+def val_sw_process_natproc(data, name):
+    """Validate sw_process_natproc.
+
+    1) type has to be a string
+    2) value has to be one in ['enabled', 'disabled']
+    """
+    rap = data["params"][name]
+
+    c.check_type(param=rap, name=name, t_types=data["specs"][name]["type"])
+
+    c.check_values_limits(
+        values=[rap], name=name, constraints=data["specs"][name]["constraints"]
+    )
+
+###############################################################################
+def val_sw_zone_names(data, name):
+    """Validate sw_zone_names.
+
+    1) type has to be a dictionary of strings
+    """
+    if data["params"]['sw_process_natproc'] == "enabled":
+        rrn = data["params"][name]
+        c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
+
+
+###############################################################################
+def val_sw_zone_mapping(data, name):
+    """Validate sw_zone_mapping.
+
+    1) type has to be a dictionary of integers
+    2) all node ids have to be present
+    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
+    """
+    if data["params"]['sw_process_natproc'] == "enabled":
+        rorzm = data["params"][name]
+        tot = data["params"]["num_nodes"]
+        rzn = data["params"]["sw_zone_names"]
+
+        c.check_type(
+            param=rorzm,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            keys=range(1, tot + 1),
+        )
+
+        c.check_values_limits(
+            values=rorzm.values(),
+            name=name,
+            low_l=0,
+            include_low=True,
+            high_l=len(rzn),
+            include_high=True,
+        )
+
+
+###############################################################################
+def val_sw_downstream(data, name):
+    """Validate sw_downstream.
+
+    1) type has to be a dict of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires lenght equal to the number of zones
+    4) all elements of each list have to be 0 <= x <= 1
+    """
+    if data["params"]['sw_process_natproc'] == "enabled":
+        rrp = data["params"][name]
+        rzn = data["params"]["sw_zone_names"]
+
+        c.check_type(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[len(rzn)],
+            keys=range(1, 13),
+        )
+
+
+        c.check_values_limits(
+            values=[j for i in rrp.values() for j in i],
+            name=name,
+            low_l=0,
+            high_l=1.0,
+            include_low=True,
+            include_high=True,
+        )
+
+
+###############################################################################
+def val_sw_bed_infiltration(data, name):
+    """Validate bed_infiltration.
+
+    1) type has to be a dict of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires lenght equal to the number of zones
+    4) all elements of each list have to be 0 <= x <= 1
+    """
+    if data["params"]['sw_process_natproc'] == "enabled":
+        rrp = data["params"][name]
+        rzn = data["params"]["sw_zone_names"]
+
+        c.check_type(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[len(rzn)],
+            keys=range(1, 13),
+        )
+
+        c.check_values_limits(
+            values=[j for i in rrp.values() for j in i],
+            name=name,
+            low_l=0,
+            high_l=1.0,
+            include_low=True,
+            include_high=True,
+        )
+
+
+###############################################################################
+def val_sw_direct_recharge(data, name):
+    """Validate direct_recharge.
+
+    1) type has to be a dict of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires lenght equal to the number of zones
+    4) all elements of each list have to be 0 <= x <= 1
+    """
+    if data["params"]['sw_process_natproc'] == "enabled":
+        rrp = data["params"][name]
+        rzn = data["params"]["sw_zone_names"]
+
+        c.check_type(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[len(rzn)],
+            keys=range(1, 13),
+        )
+
+        c.check_values_limits(
+            values=[j for i in rrp.values() for j in i],
+            name=name,
+            low_l=0,
+            high_l=1.0,
+            include_low=True,
+            include_high=True,
+        )
+
+###############################################################################
+def val_sw_activation(data, name):
+    """Validate sw_activation.
+
+    1) type has to be a dict of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires length equal to the number of zones
+    """
+    if data["params"]['sw_process_natproc'] == "enabled":
+        rrp = data["params"][name]
+        rzn = data["params"]["sw_zone_names"]
+
+        c.check_type(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[len(rzn)],
+            keys=range(1, 13),
+        )
+
+
+###############################################################################
+def val_sw_pe_to_open_water(data, name):
+    """Validate pe_to_open_water.
+
+    1) type has to be a dict of lists
+    2) the top list requires length 12 (months)
+    3) the bottom list requires length equal to the number of zones
+    """
+    if data["params"]['sw_process_natproc'] == "enabled":
+        rrp = data["params"][name]
+        rzn = data["params"]["sw_zone_names"]
+
+        c.check_type(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[len(rzn)],
+            keys=range(1, 13),
+        )
+
+
+###############################################################################
+def val_sw_init_ponding(data, name):
+    """Validate nsw_init_ponding.
+
+    1) type has to be a float
+    """
+    if data["params"]['sw_process_natproc'] == "enabled":
+        num = data["params"][name]
+        c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
+
+###############################################################################
+def val_sw_max_ponding(data, name):
+    """Validate sw_max_ponding.
+
+    1) type has to be float
+    """
+    if data["params"]['sw_process_natproc'] == "enabled":
+        num = data["params"][name]
+        c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
+
+###############################################################################
+def val_sw_ponding_area(data, name):
+    """Validate sw_ponding_area.
+
+    1) type has to be float
+    2) value has to be 0.0 < x <= 1.0
+    """
+    if data["params"]['sw_process_natproc'] == "enabled":
+        num = data["params"][name]
+        c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
+        c.check_values_limits(
+            values=[num],
+            name=name,
+            low_l=0.0,
+            high_l=1.0,
+            include_high=True,
+        )
 
 
 ###############################################################################
