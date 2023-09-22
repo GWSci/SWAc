@@ -768,7 +768,7 @@ recharge_node_mapping:
 # Process: SW Release #
 #######################
 
-sw_process:
+sw_process_natproc:
     required: true
     type:
         - !!python/name:str

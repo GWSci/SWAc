@@ -165,7 +165,7 @@ def run_process(
 
         q.put(SENTINEL)
 
-        if data["params"]['sw_process'] == 'enabled':
+        if data["params"]['sw_process_natproc'] == 'enabled':
             zone_sw = data["params"]['sw_zone_mapping'][node]
             pond_area = data["params"]['sw_ponding_area'][zone_sw]
         else:
@@ -425,7 +425,7 @@ def run(test=False,
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
 
-                if params['sw_process'] == 'enabled':
+                if params['sw_process_natproc'] == 'enabled':
                     zone_sw = data['params']['sw_zone_mapping'][node]
                     pond_area = data['params']['sw_ponding_area'][zone_sw]
                 else:

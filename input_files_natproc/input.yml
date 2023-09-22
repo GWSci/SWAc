@@ -536,7 +536,7 @@ recharge_attenuation_params: recharge_attenuation_params.yml
 # SW release process: can be either "enabled" or "disabled"
 # This parameter is required
 # If enabled all FAO inputs should reflect open water
-sw_process: enabled
+sw_process_natproc: enabled
 
 # SW Release Zone Mapping
 # This parameter is optional
