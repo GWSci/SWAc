@@ -47,10 +47,8 @@ if sys.version_info > (3,):
     if mp.get_start_method() == 'fork':
         Arena.__init__ = anonymous_arena_init
 
-
 class Worker:
     "mp worker"
-
     def __init__(self, name, result_queue, process, verbose=True):
         self.name = name
         self.result_queue = result_queue
