@@ -694,20 +694,6 @@ recharge_attenuation_params:
         - !!python/name:list
         - !!python/name:float
 
-recharge_attenuation_zone_names:
-    required: false
-    alt_format: [yml]
-    type:
-        - !!python/name:dict
-        - !!python/name:str
-
-recharge_attenuation_zone_mapping:
-    required: false
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:dict
-        - !!python/name:int
-
 recharge_node_mapping:
     required: false
     alt_format: [yml, csv]
