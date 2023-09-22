@@ -1,0 +1,3 @@
+# Columns are zones
+smd:
+    starting_SMD: [100, 100]

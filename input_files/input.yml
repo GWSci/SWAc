@@ -1,0 +1,656 @@
+###############################################################################
+#                   YAML Configuration file for SWAcMod
+#
+# Variables marked as "This parameter can accept a path to [extension]"
+# (see "rapid_runoff_params") can also contain a path to a file with that
+# extention in their place.
+#
+# Example, for the "time_period" parameter, this can be:
+#
+# 1) a YAML object
+#    time_period:
+#      1: [1, 31]
+#      2: [32, 60]
+#      3: [61, 92]
+#
+# 2) A reference to a YAML file with the same object
+#    time_period: time_period.yml
+#
+# 3) A reference to a CSV file with an analogous object
+#    time_period: time_period.csv
+#
+#    where the CSV file contains (no header)
+#    1,1,31
+#    2,32,60
+#    3,62,92
+#
+#    Rules for converting YAML to CSV:
+#    - If the object is a dictionary (see "time_period"), keys will be the
+#      first column in the CSV file.
+#
+# All paths can be either absolute or relative to this file. If the
+# path is invalid, e.g. one of the directories does not exist, the program will
+# not try to create it.
+#
+# If you get a yaml.parser.ParserError, please see guidelines for the YAML
+# syntax here:
+# http://docs.ansible.com/ansible/YAMLSyntax.html
+#
+###############################################################################
+
+
+#####################
+# Global parameters #
+#####################
+
+# Pattern for output file names.
+# This parameter is required.
+run_name: my_run
+
+# Number of nodes in the 2D water accounting model
+# This parameter is required.
+num_nodes: 10
+
+# Area of each node.
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+node_areas: node_areas.yml
+
+# X,Ya of each node.
+# This parameter is optional.
+# This parameter can accept a path to YAML or CSV
+node_xy: node_xy.csv
+
+# Start date for the time series. Has to be in format "YYYY-MM-DD".
+# This parameter is required.
+start_date: 1980-01-01
+
+# Output data will be aggregated according to these time windows.
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+time_periods: time_periods.csv
+
+# Number of cores to be used
+# This parameter is optional.
+# If not specified, all cores will be used
+# If negative, all cores - abs(num_cores) will be used
+num_cores: 1
+
+# Output recharge file switch
+# Can be either true or false
+# This parameter is optional. If not specified, it will be set to "true".
+output_recharge: true
+
+# Output balance file for individual nodes. Accepts comma-separated values,
+# ranges and overlapping values, e.g. "1, 3, 68-83, 5-7, 6".
+# It also accepts "all" and "none" values.
+# This parameter is optional. If not specified, it will be set to "none".
+#output_individual: "1-10"
+
+# IRCHCB.
+# This parameter is an integer.
+# This parameter is optional. If not specified, it will be set to 50.
+irchcb: 50
+
+# Number of nodes per line of recharge file.
+# This parameter is a positive integer.
+# This parameter is optional. If not specified, it will be set to 10.
+nodes_per_line: 5
+
+# Map recharge to specific nodes.
+# This parameter can accept a path to YAML or CSV
+# Optional, if omitted assumes recharge goes to upper most active layer
+# file is in the format SWAcNode,MFNode
+recharge_node_mapping: rch_nodes.csv
+
+
+# Output unit conversion factor
+# This parameter is a positive float.
+# This parameter is optional. If not specified, it will be set to 1.0
+output_fac: 1.0
+
+# Output data for all nodes on a single day. Has to be in format "YYYY-MM-DD".
+# Also accepts "none".
+# This parameter is optional. If not specified, it will be set to "none".
+spatial_output_date: 1980-01-01
+
+
+##############################################
+# Model parameters: Zones names and mappings #
+##############################################
+
+# Reporting zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+reporting_zone_mapping: reporting_zone_mapping.yml
+
+# Reporting zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+reporting_zone_names: reporting_zone_names.yml
+
+# Rainfall zone mapping.
+# This parameter is required
+# This parameter can accept a path to YAML or CSV
+rainfall_zone_mapping: rainfall_zone_mapping.yml
+
+# Rainfall zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+rainfall_zone_names: rainfall_zone_names.yml
+
+# PE zone mapping.
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+pe_zone_mapping: pe_zone_mapping.yml
+
+# PE zone names.
+# This parameter is optional.
+# This parameter can accept a path to YAML or CSV
+pe_zone_names: pe_zone_names.yml
+
+# Temperature zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+temperature_zone_mapping: temperature_zone_mapping.yml
+
+# Temperature zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+temperature_zone_names: temperature_zone_names.yml
+
+# Tmax_C zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+tmax_c_zone_mapping: tmax_c_zone_mapping.yml
+
+# Tmax_C zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+tmax_c_zone_names: tmax_c_zone_names.yml
+
+# Tmin_C zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+tmin_c_zone_mapping: tmin_c_zone_mapping.yml
+
+# Tmin_C zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+tmin_c_zone_names: tmin_c_zone_names.yml
+
+# windSp zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+windsp_zone_mapping: windsp_zone_mapping.yml
+
+# windSp zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+windsp_zone_names: windsp_zone_names.yml
+
+
+# Subroot zone mapping.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+subroot_zone_mapping: subroot_zone_mapping.yml
+
+# Subroot zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+subroot_zone_names: subroot_zone_names.yml
+
+# Rapid Runoff Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+rapid_runoff_zone_mapping: rapid_runoff_zone_mapping.yml
+
+# Rapid runoff zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+rapid_runoff_zone_names: rapid_runoff_zone_names.yml
+
+# Runoff Recharge Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+swrecharge_zone_mapping: swrecharge_zone_mapping.yml
+
+# Runoff recharge zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+swrecharge_zone_names: swrecharge_zone_names.yml
+
+# Macropore Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+macropore_zone_mapping: macropore_zone_mapping.yml
+
+# Macropore zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+macropore_zone_names: macropore_zone_names.yml
+
+# Soil zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+soil_zone_names: soil_zone_names.yml
+
+# Land zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+landuse_zone_names: landuse_zone_names.yml
+
+
+############################################
+# Process: Canopy interception and storage #
+############################################
+
+# Canopy process: can be either "enabled" or "disabled"
+# This parameter is required
+canopy_process: enabled
+
+# Canopy Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+canopy_zone_mapping: canopy_zone_mapping.yml
+
+# Canopy zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+canopy_zone_names: canopy_zone_names.yml
+
+
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+free_throughfall: free_throughfall.yml
+
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+max_canopy_storage: max_canopy_storage.yml
+
+
+#################
+# Process: Snow #
+#################
+
+# Simple snow process: can be either "enabled" or "disabled"
+# This parameter is required
+snow_process_simple: enabled
+
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+snow_params_simple: snow_params.yml
+
+# Complex snow process: can be either "enabled" or "disabled"
+# This parameter is required
+snow_process_complex: disabled
+
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+snow_params_complex: snow_params_complex.yml
+
+#######################################################
+# Process: Proportion of rainfall converted to Runoff #
+#######################################################
+
+# Rapid runoff process: can be either "enabled" or "disabled"
+# This parameter is required
+rapid_runoff_process: enabled
+
+# Proportion of rainfall converted to runoff.
+# This parameter is optional
+# This parameter can accept a path to YAML
+rapid_runoff_params: rapid_runoff_params.yml
+
+
+############################
+# Process: Runoff Recharge #
+############################
+
+# Runoff Recharge process: can be either "enabled" or "disabled"
+# This parameter is required
+swrecharge_process: enabled
+
+# Runoff Recharge Proportion of RO
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+swrecharge_proportion: swrecharge_proportion.yml
+
+# Runoff Recharge Limit [mm]
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+swrecharge_limit: swrecharge_limit.yml
+
+######################
+# Process: Macropore #
+######################
+
+# Macropore process: can be either "enabled" or "disabled"
+# This parameter is required
+macropore_process: enabled
+
+# MacroPore: Proportion of Percolating Water Bypassing Root Zone
+# and Interflow [mm]
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+macropore_proportion: macropore_proportion.yml
+
+# MacroPore Bypass Limit [mm]
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+macropore_limit: macropore_limit.yml
+
+# MacroPore Bypass Activation [mm]
+# This parameter is optional. If not specified, it will be set to 0.0.
+# This parameter can accept a path to YAML or CSV
+macropore_activation: macropore_activation.yml
+
+# MacroPore Proportion Direct Recharge
+# This parameter is optional. If not specified, it will be set to 0.0.
+# This parameter can accept a path to YAML or CSV
+macropore_recharge: macropore_recharge.yml
+
+# MacroPore Activation Option
+# This parameter is optional. If not specified, it will be set to SMD.
+# RI = rainfall intensity, SMD = previous day's SMD
+#macropore_activation_option: "RI"
+
+###################################
+# Process: FAO: SMD-AE Accounting #
+###################################
+
+# FAO process: can be either "enabled" or "disabled"
+# This parameter is required
+fao_process: enabled
+
+# Input landuse and soil with "ls" or just landuse with "l"
+# This parameter is optional. If not specified, it defaults to "ls".
+fao_input: 'l'
+
+# Soil Properties (FC, WP, p)
+# This parameter is optional.
+# If not specified and "fao_input" is "ls", "fao_process" will be set to
+# "disabled"
+# This parameter can accept a path to YAML or CSV
+soil_static_params: soil_static_params.yml
+
+# SMD Properties (starting SMD)
+# This parameter is optional.
+# If not specified and "fao_input" is "ls", "fao_process" will be set to
+# "disabled"
+# This parameter can accept a path to YAML or CSV
+smd: smd.yml
+
+# Soil Spatial
+# This parameter is optional.
+# If not specified and "fao_input" is "ls", "fao_process" will be set to
+# "disabled"
+# This parameter can accept a path to YAML or CSV
+soil_spatial: soil_spatial.yml
+
+# LU Spatial
+# This parameter is optional.
+# If not specified, "fao_process" will be set to "disabled"
+# This parameter can accept a path to YAML or CSV
+lu_spatial: lu_spatial.yml
+
+# LU Time Variant: Zr
+# This parameter is optional.
+# If not specified and "fao_input" is "ls", "fao_process" will be set to
+# "disabled"
+# This parameter can accept a path to YAML or CSV
+zr: zr.yml
+
+# LU Time Variant: Kc
+# This parameter is optional.
+# If not specified, "fao_process" will be set to "disabled"
+# This parameter can accept a path to YAML or CSV
+kc: kc.yml
+
+# TAW
+# This parameter is optional.
+# If not specified and "fao_input" is "l", "fao_input" will be set to "ls".
+# This parameter can accept a path to YAML or CSV
+taw: taw.yml
+
+# RAW
+# This parameter is optional.
+# If not specified and "fao_input" is "l", "fao_input" will be set to "ls".
+# This parameter can accept a path to YAML or CSV
+raw: raw.yml
+
+# Percolation Limit (Rejected Recharge initiation)
+# This parameter is optional.
+# This parameter can accept a path to YAML or CSV
+percolation_rejection: percolation_rejection.yml
+
+percolation_rejection_use_timeseries: true
+
+percolation_rejection_ts: percolation_rejection_ts.yml
+
+############################################
+# Process: Percentage of leakage to Permit #
+############################################
+
+# Leakage process: can be either "enabled" or "disabled"
+# This parameter is required
+leakage_process: enabled
+
+# Fraction of leakage to Permit
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+subsoilzone_leakage_fraction: subsoilzone_leakage_fraction.yml
+
+
+######################
+# Process: Interflow #
+######################
+
+# Interflow process: can be either "enabled" or "disabled"
+# This parameter is required
+interflow_process: enabled
+
+# Interflow parameters (Initial interflow store, Store bypass, Infiltration,
+#                       Interflow to rivers )
+
+# Interflow Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+interflow_zone_mapping: interflow_zone_mapping.yml
+
+# Runoff recharge zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+interflow_zone_names: interflow_zone_names.yml
+
+init_interflow_store: init_interflow_store.yml
+
+interflow_store_bypass: interflow_store_bypass.yml
+
+infiltration_limit: infiltration_limit.yml
+
+interflow_decay: interflow_decay.yml
+
+infiltration_limit_use_timeseries: true
+
+interflow_decay_use_timeseries: true
+
+infiltration_limit_ts: infiltration_limit_ts.yml
+
+interflow_decay_ts: interflow_decay_ts.yml
+
+###############################################
+# Process: Recharge Release to Saturated Zone #
+###############################################
+
+# Interflow process: can be either "enabled" or "disabled"
+# This parameter is required
+recharge_attenuation_process: enabled
+
+# Recharge Parameters
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+recharge_attenuation_params: recharge_attenuation_params.yml
+
+
+#######################
+# Process: SW Release #
+#######################
+
+# SW release process: can be either "enabled" or "disabled"
+# This parameter is required
+sw_process: enabled
+
+# SW Parameters
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+sw_params: sw_params.yml
+
+############################################
+# Process: Routed Runoff                   #
+############################################
+
+# Routing process: can be either "enabled" or "disabled"
+# This parameter is required
+routing_process: enabled
+
+# Routing network topology and SFR parameters
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+# key = swac node
+#  values =
+#  1 downstr - swac node downstream of this one
+#  2 str_flag - 1 = stream cell, 0 = *not* stream cell
+#  3 node_mf - modflow node number of this node 
+#  4 RCHLEN - the modflow SFR variable RCHLEN
+#  5 ca - the upstream contributing area 
+#  6 STRTOP - the modflow SFR variable STRTOP
+#  7 STRTHICK - the modflow SFR variable STRTHICK
+#  8 STRHC1 - the modflow SFR variable STRHC1
+#  9 DEPTH2 - the modflow SFR variable DEPTH2
+#  10 WIDTH2 - the modflow SFR variable WIDTH2
+routing_topology: routing_parameters.csv
+
+# Output modflow sfr2 file switch
+# Can be either true or false
+# This parameter is optional. If not specified, it will be set to "false".
+output_sfr: true
+
+# Modflow 6 sfr obs input file
+# This parameter is optional.
+sfr_obs: gauges_sfr.obs
+
+# istcb1.
+# Has to be an integer.
+# This parameter is optional. If not specified, it will be set to 50.
+istcb1: 50
+
+# istcb2
+# Has to be an integer.
+# This parameter is optional. If not specified, it will be set to 55.
+istcb2: 55
+
+# Surface water discharges time-series m3/day
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+swdis_ts: swdis_ts.csv
+
+# # Surface water discharges points
+# # This parameter can accept a path to YAML or CSV
+swdis_locs: swdis_locs.yml
+
+# swdis_f
+# Surface water discharges time-series frequency
+# Has to be an integer: 0 = daily, 1 = weekly, 2 = monthly
+# This parameter is optional. If not specified, it will be set to 0 (daily).
+#swdis_f: 0
+
+# Surface water abstractions time-series m3/day
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+swabs_ts: swabs_ts.csv
+
+# swabs_f
+# Surface water abstractions time-series frequency
+# Has to be an integer: 0 = daily, 1 = weekly, 2 = monthly
+# This parameter is optional. If not specified, it will be set to 0 (daily).
+#swabs_f: 0
+
+
+# Surface water discharges points
+# This parameter can accept a path to YAML or CSV
+swabs_locs: swabs_locs.csv
+
+
+###############
+# Time series #
+###############
+
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+rainfall_ts: rainfall_ts.yml
+
+# This parameter is required.
+# This parameter can accept a path to YAML or CSV
+#rainfall_rasters: rainfall_rasters.yml
+
+# This parameter is optional.
+# This parameter is required only if the FAO or the Canopy process is enabled.
+# This parameter can accept a path to YAML or CSV
+pe_ts: pe_ts.yml
+
+# This parameter is optional.
+# This parameter is required only if the Snow process is enabled.
+# This parameter can accept a path to YAML or CSV
+temperature_ts: temperature_ts.yml
+
+# This parameter is optional.
+# This parameter is required only if the Snow process is enabled.
+# This parameter can accept a path to YAML or CSV
+tmax_c_ts: tmax_c_ts.yml
+
+# This parameter is optional.
+# This parameter is required only if the Snow process is enabled.
+# This parameter can accept a path to YAML or CSV
+tmin_c_ts: tmin_c_ts.yml
+
+# This parameter is optional.
+# This parameter is required only if the Snow process is enabled.
+# This parameter can accept a path to YAML or CSV
+windsp_ts: windsp_ts.yml
+
+
+# This parameter is optional.
+# This parameter is required only if the Leakage process is enabled.
+# This parameter can accept a path to YAML or CSV
+subroot_leakage_ts: subroot_leakage_ts.yml
+
+gwmodel_type: mf6
+mf96_lrc: [2, 2, 5]
+
+##############
+#EVT         #
+##############
+
+# Output evt file switch
+# Can be either true or false
+# This parameter is optional. If not specified, it will be set to "false".
+output_evt: true
+
+# allow excess sw to modflow evt process
+excess_sw_process: disabled
+
+# evt parameters (ievt, surf, exdp)
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+evt_parameters: evt_params.csv
+
+# ievtcb
+# This parameter is an integer.
+# This parameter is optional. If not specified, it will be set to 50.
+#ievtcb: 50
+
+# nevtopt
+# This parameter is an integer.
+# This parameter is optional. If not specified, it will be set to 2.
+#nevtopt: 2
