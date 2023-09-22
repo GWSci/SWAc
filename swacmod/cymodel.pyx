@@ -925,7 +925,7 @@ def get_balance(data, output, node):
 ###############################################################################
 
 
-def aggregate(output, area, reporting=None, index=None):
+def aggregate(output, area, ponded_frac, reporting=None, index=None):
     """Aggregate reporting over output periods."""
     new_rep = {}
 

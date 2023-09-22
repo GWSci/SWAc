@@ -181,10 +181,10 @@ def run_process(
                 key = (num, rep_zone)
                 area = data["params"]["node_areas"][node]
                 if key not in reporting_agg:
-                    reporting_agg[key] = m.aggregate(output, area)
+                    reporting_agg[key] = m.aggregate(output, area, pond_area)
                 else:
                     reporting_agg[key] = m.aggregate(
-                        output, area, reporting=reporting_agg[key])
+                        output, area, pond_area, reporting=reporting_agg[key])
 
                 if data["params"]["output_recharge"]:
                     rech = {"recharge": output["combined_recharge"].copy()}
@@ -232,6 +232,7 @@ def run_process(
                 if data["params"]["spatial_output_date"]:
                     spatial[node] = m.aggregate(output,
                                                 area,
+                                                pond_area,
                                                 index=spatial_index)
 
     logging.info("mp.Process %d ended", num)
@@ -455,11 +456,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
                     if "runoff_recharge" not in reporting_agg2[rep_zone]:
                         reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                            ror, area)
+                            ror, area, pond_area)
                     else:
                         reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
                             ror,
                             area,
+                            pond_area,
                             reporting=reporting_agg2[rep_zone]["runoff_recharge"])
 
                 # check for single node
