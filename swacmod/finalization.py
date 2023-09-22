@@ -1578,6 +1578,7 @@ FUNC_PARAMS = [
     fin_percolation_rejection_use_timeseries,
     fin_subsoilzone_leakage_fraction,
     fin_recharge_attenuation_params,
+    fin_sw_params,
     fin_sw_zone_mapping,
     fin_sw_zone_names,
     fin_sw_pe_to_open_water,
