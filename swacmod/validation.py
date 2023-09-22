@@ -34,7 +34,7 @@ def val_num_cores(data, name):
         values=[num],
         name=name,
         low_l=0,
-        high_l=multiprocessing.cpu_count() + (multiprocessing.cpu_count() / 2),
+        high_l=multiprocessing.cpu_count(),
         include_high=True,
     )
 
