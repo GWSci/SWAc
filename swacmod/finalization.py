@@ -1033,16 +1033,16 @@ def fin_recharge_attenuation_params(data, name):
 
 
 ###############################################################################
-# def fin_sw_params(data, name):
-#     """Finalize the "sw_params" parameter.
+def fin_sw_params(data, name):
+    """Finalize the "sw_params" parameter.
 
-#     1) if not provided, set it to all [0.0, 1.0].
-#     """
-#     if data["params"][name] is None:
-#         nodes = data["params"]["num_nodes"]
-#         data["params"][name] = dict((k, [0.0, 1.0])
-#                                     for k in range(1, nodes + 1))
-#         logging.info('\t\tDefaulted "%s" to %s', name, [0.0, 1.0])
+    1) if not provided, set it to all [0.0, 1.0].
+    """
+    if data["params"][name] is None:
+        nodes = data["params"]["num_nodes"]
+        data["params"][name] = dict((k, [0.0, 1.0])
+                                    for k in range(1, nodes + 1))
+        logging.info('\t\tDefaulted "%s" to %s', name, [0.0, 1.0])
 
 ###############################################################################
 def fin_sw_zone_mapping(data, name):
