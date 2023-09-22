@@ -1326,6 +1326,8 @@ def fin_swdis_ts(data, name):
     """Finalize the "swdis_ts" series."""
 
     series = data["series"]
+    if series[name] is None:
+        series[name] = [0.0]
     series[name] = np.array(series[name])
 
 
