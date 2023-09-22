@@ -321,6 +321,17 @@ swrecharge_proportion: swrecharge_proportion.yml
 # This parameter can accept a path to YAML or CSV
 swrecharge_limit: swrecharge_limit.yml
 
+################################################
+# Process: Single Cell Runoff Recharge         #
+################################################
+
+# Runoff Recharge in single cells process:
+#  can be either "enabled" or "disabled"
+# you won't want the routed process
+# "swrecharge_process" active at the same time
+# This parameter is required
+single_cell_swrecharge_process: disabled
+
 ######################
 # Process: Macropore #
 ######################
@@ -505,6 +516,15 @@ sw_process: enabled
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 sw_params: sw_params.yml
+
+###############################
+# Process: SW Release Natproc #
+###############################
+
+# SW release process: can be either "enabled" or "disabled"
+# This parameter is required
+# If enabled all FAO inputs should reflect open water
+sw_process_natproc: disabled
 
 ############################################
 # Process: Routed Runoff                   #

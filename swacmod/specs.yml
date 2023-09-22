@@ -297,6 +297,20 @@ swrecharge_zone_mapping:
         - !!python/name:dict
         - !!python/name:int
 
+sw_zone_names:
+    required: false
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:str
+
+sw_zone_mapping:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
 macropore_zone_names:
     required: false
     alt_format: [yml]
@@ -442,6 +456,54 @@ swrecharge_limit:
         - !!python/name:list
         - !!python/name:float
 
+
+########################################
+# Process: Single Cell Runoff Recharge #
+#######################################
+
+single_cell_swrecharge_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+single_cell_swrecharge_zone_names:
+    required: false
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:str
+
+single_cell_swrecharge_zone_mapping:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
+single_cell_swrecharge_proportion:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+single_cell_swrecharge_limit:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+single_cell_swrecharge_activation:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
 
 ######################
 # Process: Macropore #
@@ -720,6 +782,73 @@ sw_params:
         - !!python/name:list
         - !!python/name:float
 
+###############################
+# Process: SW Release Natproc #
+###############################
+
+sw_process_natproc:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+sw_init_ponding:
+    required: false
+    type:
+        - !!python/name:float
+
+sw_max_ponding:
+    required: false
+    type:
+        - !!python/name:float
+
+sw_ponding_area:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+sw_downstream:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_activation:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_bed_infiltration:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_direct_recharge:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_pe_to_open_water:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
 ######
 ###################################
 # Model parameters: Routed Runoff #
@@ -855,3 +984,8 @@ node_xy:
         - !!python/name:dict
         - !!python/name:list
         - !!python/name:float
+
+disv:
+    required: false
+    type:
+        - !!python/name:bool
