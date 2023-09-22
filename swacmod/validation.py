@@ -456,8 +456,9 @@ def val_swabs_locs(data, name):
     3) values (i.e. swabs ids) have to be > 1 and <= number of swabs
     """
     swabsl = data["params"][name]
+    swabsn = data["params"]["swabs_locs"]
 
-    if True:
+    if swabsn != {0: 0}:
 
         tot = len(data["params"]["swabs_locs"]) + 1
 
