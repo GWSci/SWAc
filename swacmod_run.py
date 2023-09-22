@@ -460,7 +460,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
                 # amend catchment output values
                 rep_zone = data["params"]["reporting_zone_mapping"][node]
-                if rep_zone > 0:
+                if ff.use_natproc:
+                    do_this_bit = rep_zone > 0
+                else:
+                    do_this_bit = True
+                if do_this_bit:
                     area = data["params"]["node_areas"][node]
                     ror = {"runoff_recharge": ror_array}
 
