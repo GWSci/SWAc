@@ -14,6 +14,8 @@ import subprocess as sp
 import psutil
 import numpy as np
 
+import swacmod.feature_flags as ff
+
 CONSTANTS = {}
 
 CONSTANTS['CODE_DIR'] = os.path.dirname(os.path.abspath(__file__))
@@ -30,23 +32,35 @@ CONSTANTS['TEST_INPUT_FILE'] = os.path.join(CONSTANTS['TEST_INPUT_DIR'],
                                             'input.yml')
 CONSTANTS['TEST_RESULTS_FILE'] = os.path.join(CONSTANTS['TEST_DIR'],
                                               'results.csv')
-
-CONSTANTS['COL_ORDER'] = [
-    'date', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage', 'net_pefac',
-    'precip_to_ground', 'snowfall_o', 'rainfall_o', 'snowpack', 'snowmelt',
-    'net_rainfall', 'rapid_runoff', 'runoff_recharge', 'macropore_att',
-    'macropore_dir', 'percol_in_root', 'rawrew', 'tawtew', 'p_smd', 'smd',
-    'ae', 'rejected_recharge', 'perc_through_root', 'subroot_leak',
-    'interflow_bypass', 'interflow_store_input', 'interflow_volume',
-    'infiltration_recharge', 'interflow_to_rivers', 'recharge_store_input',
-    'recharge_store', 'combined_recharge', 'atten_input',
-    'sw_attenuation', 'pond_direct', 'pond_atten', 'open_water_ae',
-    'atten_input_actual',
-    'pond_over', 'sw_other', 'open_water_evap', 'swabs_ts',
-    'swdis_ts', 'combined_str', 'combined_ae', 'evt', 'average_in',
-    'average_out', 'total_storage_change', 'balance'
-]
-
+if ff.use_natproc:
+    CONSTANTS['COL_ORDER'] = [
+        'date', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage', 'net_pefac',
+        'precip_to_ground', 'snowfall_o', 'rainfall_o', 'snowpack', 'snowmelt',
+        'net_rainfall', 'rapid_runoff', 'runoff_recharge', 'macropore_att',
+        'macropore_dir', 'percol_in_root', 'rawrew', 'tawtew', 'p_smd', 'smd',
+        'ae', 'rejected_recharge', 'perc_through_root', 'subroot_leak',
+        'interflow_bypass', 'interflow_store_input', 'interflow_volume',
+        'infiltration_recharge', 'interflow_to_rivers', 'recharge_store_input',
+        'recharge_store', 'combined_recharge', 'atten_input',
+        'sw_attenuation', 'pond_direct', 'pond_atten', 'open_water_ae',
+        'atten_input_actual',
+        'pond_over', 'sw_other', 'open_water_evap', 'swabs_ts',
+        'swdis_ts', 'combined_str', 'combined_ae', 'evt', 'average_in',
+        'average_out', 'total_storage_change', 'balance'
+    ]
+else:
+    CONSTANTS['COL_ORDER'] = [
+        'date', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage', 'net_pefac',
+        'precip_to_ground', 'snowfall_o', 'rainfall_o', 'snowpack', 'snowmelt',
+        'net_rainfall', 'rapid_runoff', 'runoff_recharge', 'macropore_att',
+        'macropore_dir', 'percol_in_root', 'rawrew', 'tawtew', 'p_smd', 'smd',
+        'ae', 'rejected_recharge', 'perc_through_root', 'subroot_leak',
+        'interflow_bypass', 'interflow_store_input', 'interflow_volume',
+        'infiltration_recharge', 'interflow_to_rivers', 'recharge_store_input',
+        'recharge_store', 'combined_recharge', 'sw_attenuation', 'swabs_ts',
+        'swdis_ts', 'combined_str', 'combined_ae', 'evt', 'average_in',
+        'average_out', 'total_storage_change', 'balance'
+    ]
 
 def full_area(area, ponded_fraction):
     return np.float64(area)
@@ -77,36 +91,63 @@ for p in ['sw_attenuation', 'pond_direct', 'pond_atten', 'pond_over', 'sw_other'
 # Header
 # Column needs conversion
 # Column included in reduced output
-CONSTANTS['BALANCE_CONVERSIONS'] = [
-    ('DATE', False, True), ('nDays', False, True), ('Area', False, True),
-    ('Precipitation', True, False), ('PEt', True, False),
-    ('VegetationPE_PEfac', True, False), ('CanopyStorage', True, False),
-    ('PEfacLessCanopy_AE', True, False),
-    ('Precipitation_Groundlevel', True, False), ('Snowfall', True, False),
-    ('Precipitation_Rainfall', True, False), ('SnowPack', True, False),
-    ('SnowMelt', True, False), ('Rainfall_SnowMelt', True, False),
-    ('RapidRunoff', True, False), ('RunoffRecharge', True, False),
-    ('MacroPoreAttenuated', True, False), ('MacroPoreDirect', True, False),
-    ('Percolation_RootZone', True, False), ('RAWREW', True, False),
-    ('TAWTEW', True, False), ('pSMD', True, False), ('SMD', True, False),
-    ('AE', True, False), ('RejectedRecharge', True, False),
-    ('PercolationThroughRootZone', True, False),
-    ('SubRootZoneLeakege', True, False), ('BypassingInterflow', True, False),
-    ('InputInterflowStore', True, False), ('InterflowStoreVol', True, False),
-    ('InfiltrationRecharge', True, False), ('InterflowtoSW', True, False),
-    ('InputRechargeStore', True, False), ('RechargeStoreVol', True, False),
-    ('CombinedRecharge', True, True), ('SWAttenInputPot', True, False),
-    ('SWAttenuation', True, False),
-    ('PondDirect', True, False),('PondAtten', True, False),
-    ('OpenWaterAE', True, False),('SWAttenInputAct', True, False),
-    ('PondOverspill', True, False), ('OtherSW', True, False),
-    ('OpenWaterPE', True, False),
-    ('SWAbstractions', False, False), ('SWDischarges', False, False),
-    ('CombinedSW', True, True), ('CombinedAE', True, True),
-    ('UnitilisedPE', True, True), ('AVERAGE_IN', True, False),
-    ('AVERAGE_OUT', True, False), ('TOTAL_STORAGE_CHANGE', True, False),
-    ('BALANCE', True, False)
-]
+if ff.use_natproc:
+    CONSTANTS['BALANCE_CONVERSIONS'] = [
+        ('DATE', False, True), ('nDays', False, True), ('Area', False, True),
+        ('Precipitation', True, False), ('PEt', True, False),
+        ('VegetationPE_PEfac', True, False), ('CanopyStorage', True, False),
+        ('PEfacLessCanopy_AE', True, False),
+        ('Precipitation_Groundlevel', True, False), ('Snowfall', True, False),
+        ('Precipitation_Rainfall', True, False), ('SnowPack', True, False),
+        ('SnowMelt', True, False), ('Rainfall_SnowMelt', True, False),
+        ('RapidRunoff', True, False), ('RunoffRecharge', True, False),
+        ('MacroPoreAttenuated', True, False), ('MacroPoreDirect', True, False),
+        ('Percolation_RootZone', True, False), ('RAWREW', True, False),
+        ('TAWTEW', True, False), ('pSMD', True, False), ('SMD', True, False),
+        ('AE', True, False), ('RejectedRecharge', True, False),
+        ('PercolationThroughRootZone', True, False),
+        ('SubRootZoneLeakege', True, False), ('BypassingInterflow', True, False),
+        ('InputInterflowStore', True, False), ('InterflowStoreVol', True, False),
+        ('InfiltrationRecharge', True, False), ('InterflowtoSW', True, False),
+        ('InputRechargeStore', True, False), ('RechargeStoreVol', True, False),
+        ('CombinedRecharge', True, True), ('SWAttenInputPot', True, False),
+        ('SWAttenuation', True, False),
+        ('PondDirect', True, False),('PondAtten', True, False),
+        ('OpenWaterAE', True, False),('SWAttenInputAct', True, False),
+        ('PondOverspill', True, False), ('OtherSW', True, False),
+        ('OpenWaterPE', True, False),
+        ('SWAbstractions', False, False), ('SWDischarges', False, False),
+        ('CombinedSW', True, True), ('CombinedAE', True, True),
+        ('UnitilisedPE', True, True), ('AVERAGE_IN', True, False),
+        ('AVERAGE_OUT', True, False), ('TOTAL_STORAGE_CHANGE', True, False),
+        ('BALANCE', True, False)
+    ]
+else:
+    CONSTANTS['BALANCE_CONVERSIONS'] = [
+        ('DATE', False, True), ('nDays', False, True), ('Area', False, True),
+        ('Precipitation', True, False), ('PEt', True, False),
+        ('VegetationPE_PEfac', True, False), ('CanopyStorage', True, False),
+        ('PEfacLessCanopy_AE', True, False),
+        ('Precipitation_Groundlevel', True, False), ('Snowfall', True, False),
+        ('Precipitation_Rainfall', True, False), ('SnowPack', True, False),
+        ('SnowMelt', True, False), ('Rainfall_SnowMelt', True, False),
+        ('RapidRunoff', True, False), ('RunoffRecharge', True, False),
+        ('MacroPoreAttenuated', True, False), ('MacroPoreDirect', True, False),
+        ('Percolation_RootZone', True, False), ('RAWREW', True, False),
+        ('TAWTEW', True, False), ('pSMD', True, False), ('SMD', True, False),
+        ('AE', True, False), ('RejectedRecharge', True, False),
+        ('PercolationThroughRootZone', True, False),
+        ('SubRootZoneLeakege', True, False), ('BypassingInterflow', True, False),
+        ('InputInterflowStore', True, False), ('InterflowStoreVol', True, False),
+        ('InfiltrationRecharge', True, False), ('InterflowtoSW', True, False),
+        ('InputRechargeStore', True, False), ('RechargeStoreVol', True, False),
+        ('CombinedRecharge', True, True), ('SWAttenuation', True, False),
+        ('SWAbstractions', False, False), ('SWDischarges', False, False),
+        ('CombinedSW', True, True), ('CombinedAE', True, True),
+        ('UnitilisedPE', True, True), ('AVERAGE_IN', True, False),
+        ('AVERAGE_OUT', True, False), ('TOTAL_STORAGE_CHANGE', True, False),
+        ('BALANCE', True, False)
+    ]
 
 
 ###############################################################################
