@@ -470,9 +470,18 @@ def val_swabs_locs(data, name):
         c.check_values_limits(
             values=swabsl.values(),
             name="zone in %s" % name,
-            low_l=0,
+            low_l=1,
             include_low=True,
             high_l=tot,
+            include_high=True,
+        )
+
+        c.check_values_limits(
+            values=swabsl.keys(),
+            name="node in %s" % name,
+            low_l=1,
+            include_low=True,
+            high_l=data["params"]["num_nodes"],
             include_high=True,
         )
 
