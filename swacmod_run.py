@@ -42,7 +42,7 @@ def anonymous_arena_init(self, size, fd=-1):
 
 
 # monkey patch for anonymous memory mapping python 3
-if sys.version_info > (3, ):
+if sys.version_info > (3,):
     if mp.get_start_method() == 'fork':
         Arena.__init__ = anonymous_arena_init
 
@@ -138,23 +138,23 @@ def get_output(data, node):
 
 ###############################################################################
 def run_process(
-    num,
-    ids,
-    data,
-    test,
-    reporting_agg,
-    recharge_agg,
-    runoff_agg,
-    evtr_agg,
-    recharge,
-    runoff,
-    log_path,
-    level,
-    spatial,
-    spatial_index,
-    reporting,
-    single_node_output,
-    q,
+        num,
+        ids,
+        data,
+        test,
+        reporting_agg,
+        recharge_agg,
+        runoff_agg,
+        evtr_agg,
+        recharge,
+        runoff,
+        log_path,
+        level,
+        spatial,
+        spatial_index,
+        reporting,
+        single_node_output,
+        q,
 ):
     """Run model for a chunk of nodes."""
     io.start_logging(path=log_path, level=level)
@@ -268,11 +268,7 @@ def listener(q, total):
 ###############################################################################
 
 
-def run(test=False,
-        debug=False,
-        file_format=None,
-        reduced=False,
-        skip=False,
+def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         data=None):
     """Run model for all nodes."""
     times = {"start_of_run": time.time()}
@@ -346,11 +342,11 @@ def run(test=False,
     chunks = np.array_split(ids, data["params"]["num_cores"])
     times["end_of_input"] = time.time()
     if data["params"]["spatial_output_date"] == "mean":
-        spatial_index = [range(days)
-                         ] + [u.month_indices(i + 1, data) for i in range(12)]
+        spatial_index = [range(days)] + [u.month_indices(i+1, data)
+                                         for i in range(12)]
     elif data["params"]["spatial_output_date"] is not None:
         spatial_index = [(data["params"]["spatial_output_date"] -
-                          data["params"]["start_date"]).days]
+                         data["params"]["start_date"]).days]
     else:
         spatial_index = None
 
@@ -438,6 +434,7 @@ def run(test=False,
                 ror_array = np.array(runoff_recharge[idx],
                                      dtype=np.float64,
                                      copy=True)
+
                 # aggregate single node of recharge array
                 rch_agg = u.aggregate_array(data, rch_array)
                 # aggregate single node of runoff array
@@ -521,7 +518,6 @@ def run(test=False,
         if params["swrecharge_process"] == "enabled":
             del runoff_recharge, tmp, runoff, recharge
             gc.collect()
-
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
             if data['params']['gwmodel_type'] == 'mfusg':
