@@ -8,6 +8,7 @@ dist/
 deploy
 deploy.py
 output_files/
+output_files_natproc/
 swacmod/deploy.py
 pylint.conf
 swacmod.egg-info/
