@@ -690,6 +690,20 @@ def get_interflow(data, output, node):
 
 def get_recharge_store_input(data, output, node):
     """AI) Input to Recharge Store [mm/d]."""
+
+    params = data['params']
+
+    cdef:
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+    if params['sw_process_natproc'] == 'enabled':
+        zone_sw = params['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
     recharge_store_input = (output['infiltration_recharge'] +
                             output['interflow_bypass'] +
                             output['macropore_att'] +
@@ -718,7 +732,16 @@ def get_recharge(data, output, node):
         double[:] recharge = np.zeros(length)
         double[:] recharge_store_input = output['recharge_store_input']
         double[:] macropore_dir = output['macropore_dir']
-        size_t num
+        size_t num, zone_sw
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_area
+
+
+    if params['sw_process_natproc'] == 'enabled':
+        zone_sw = params['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
 
     if params['recharge_attenuation_process'] == 'enabled':
         recharge[0] = irs
@@ -890,6 +913,18 @@ def get_combined_str(data, output, node):
 
 def get_combined_ae(data, output, node):
     """AN) AE: Combined AE [mm/d]."""
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+    if data['params']['sw_process_natproc'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
     combined_ae = output['canopy_storage'] + output['ae']
     return {'combined_ae': combined_ae}
 
@@ -898,7 +933,19 @@ def get_combined_ae(data, output, node):
 
 def get_evt(data, output, node):
     """AO) EVT: Unitilised PE [mm/d]."""
-    return {'evt': output['unutilised_pe']}
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+    if data['params']['sw_process_natproc'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    return {'evt': (1.0 - pond_area) * output['unutilised_pe']}
 
 ###############################################################################
 
@@ -915,6 +962,18 @@ def get_average_in(data, output, node):
 
 def get_average_out(data, output, node):
     """AQ) AVERAGE OUT [mm]."""
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+    if data['params']['sw_process_natproc'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
     average_out = (output['combined_str'] +
                    output['combined_recharge'] +
                    output['ae'] +
@@ -929,12 +988,23 @@ def get_average_out(data, output, node):
 def get_change(data, output, node):
     """AR) TOTAL STORAGE CHANGE [mm]."""
     series = data['series']
+    params = data['params']
 
     cdef:
         size_t length = len(series['date'])
         double[:] col_change = np.zeros(length)
         double[:] tmp0 = np.zeros(length)
-        size_t num
+        size_t num, zone_sw
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_area, not_ponded
+
+    if params['sw_process_natproc'] == 'enabled':
+        zone_sw = params['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    not_ponded = 1.0 - pond_area
 
     tmp0 = (output['recharge_store_input'] -
             (output['combined_recharge'] - output['macropore_dir']) +
