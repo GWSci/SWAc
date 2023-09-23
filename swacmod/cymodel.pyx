@@ -909,7 +909,7 @@ def get_combined_str(data, output, node):
                            output['swdis_ts'][0] +
                            output['rapid_runoff'][0] -
                            output['runoff_recharge'][0]), 0.0)
-        size_t day
+        size_t num
         int month
 
     combined_str = (output['interflow_to_rivers'] +
@@ -919,22 +919,22 @@ def get_combined_str(data, output, node):
                     output['runoff_recharge'] +
                     output['rejected_recharge'])
 
-    for day in range(length):
-        if combined_str[day] < 0.0:
-            output['swabs_ts'][day] = (output['interflow_to_rivers'][day] +
-                                       output['swdis_ts'][day] +
-                                       output['rapid_runoff'][day] -
-                                       output['runoff_recharge'][day] +
-                                       output['rejected_recharge'][day])
+    for num in range(length):
+        if combined_str[num] < 0.0:
+            output['swabs_ts'][num] = (output['interflow_to_rivers'][num] +
+                                       output['swdis_ts'][num] +
+                                       output['rapid_runoff'][num] -
+                                       output['runoff_recharge'][num] +
+                                       output['rejected_recharge'][num])
 
     if params['sw_process_natproc'] == 'enabled':
 
         col_attenuation[0] = params['sw_init_ponding']
         zone_sw = params['sw_zone_mapping'][node] - 1
 
-        for day in range(1, length):
-            base = combined_str[day]
-            month = months[day] #+ 1
+        for num in range(1, length):
+            base = combined_str[num]
+            month = months[num] #+ 1
             open_water_evap = 0.0
             open_water_ae = 0.0
             pond_overspill = 0.0
@@ -947,39 +947,39 @@ def get_combined_str(data, output, node):
 
             # don't attenuate negative flows
             if base < 0.0 or (not sw_ponding_area[zone_sw] > 0.0):
-                col_combined_str[day] = base
-                col_attenuation[day] = col_attenuation[day - 1]
-                old_col_attenuation[day] = old_col_attenuation[day - 1]
+                col_combined_str[num] = base
+                col_attenuation[num] = col_attenuation[num - 1]
+                old_col_attenuation[num] = old_col_attenuation[num - 1]
             else:
-                if col_attenuation[day - 1] > sw_activation[month][zone_sw]:
+                if col_attenuation[num - 1] > sw_activation[month][zone_sw]:
                     open_water_evap = (sw_ponding_area[zone_sw] *
                                        sw_pe_to_open_water[month][zone_sw] *
-                                       output['pe_ts'][day])
+                                       output['pe_ts'][num])
                 input_to_atten_store = (sw_ponding_area[zone_sw] *
-                                        output['rainfall_ts'][day] - open_water_evap +
+                                        output['rainfall_ts'][num] - open_water_evap +
                                         ((1.0 - sw_ponding_area[zone_sw]) *
-                                        (output['interflow_to_rivers'][day] +
-                                         output['rapid_runoff'][day] +
-                                         output['rejected_recharge'][day] -
-                                         output['runoff_recharge'][day])))
+                                        (output['interflow_to_rivers'][num] +
+                                         output['rapid_runoff'][num] +
+                                         output['rejected_recharge'][num] -
+                                         output['runoff_recharge'][num])))
 
                 tmp0 = ((1.0 - sw_ponding_area[zone_sw])
                         / sw_ponding_area[zone_sw])
                 tmp0_new = (1.0 / sw_ponding_area[zone_sw])
-                pond_depth = col_attenuation[day - 1] + tmp0 * input_to_atten_store
-                pond_depth_new = col_attenuation[day - 1] + tmp0_new * input_to_atten_store
+                pond_depth = col_attenuation[num - 1] + tmp0 * input_to_atten_store
+                pond_depth_new = col_attenuation[num - 1] + tmp0_new * input_to_atten_store
 
                 if pond_depth_new > params['sw_max_ponding']:
                     pond_overspill = pond_depth_new - params['sw_max_ponding']
 
-                tmp1 = col_attenuation[day - 1] + tmp0 * input_to_atten_store - pond_overspill
+                tmp1 = col_attenuation[num - 1] + tmp0 * input_to_atten_store - pond_overspill
 
                 if tmp1 > sw_activation[month][zone_sw]:
                     other_sw_flow = (sw_downstream[month][zone_sw] *
                                       (tmp1 - sw_activation[month][zone_sw]))
 
-                col_combined_str[day] = (output['swabs_ts'][day] +
-                                         output['swdis_ts'][day] +
+                col_combined_str[num] = (output['swabs_ts'][num] +
+                                         output['swdis_ts'][num] +
                                          (sw_ponding_area[zone_sw]
                                           * (pond_overspill + other_sw_flow)))
 
@@ -987,17 +987,17 @@ def get_combined_str(data, output, node):
                         pond_overspill -
                         other_sw_flow)
 
-                if (col_attenuation[day - 1] + tmp2) > sw_activation[month][zone_sw]:
+                if (col_attenuation[num - 1] + tmp2) > sw_activation[month][zone_sw]:
                     pond_direct = (sw_bed_infiltration[month][zone_sw] *
                                    sw_direct_recharge[month][zone_sw] *
-                                   (col_attenuation[day - 1] + tmp2 -
+                                   (col_attenuation[num - 1] + tmp2 -
                                     sw_activation[month][zone_sw]))
                     pond_atten = (sw_bed_infiltration[month][zone_sw] *
                                   (1.0 - sw_direct_recharge[month][zone_sw]) *
-                                  (col_attenuation[day - 1] + tmp2 -
+                                  (col_attenuation[num - 1] + tmp2 -
                                    sw_activation[month][zone_sw]))
 
-                old_col_attenuation[day] = (col_attenuation[day - 1] +
+                old_col_attenuation[num] = (col_attenuation[num - 1] +
                                             (1.0 / sw_ponding_area[zone_sw]) *
                                             input_to_atten_store -
                                             pond_overspill -
@@ -1005,32 +1005,32 @@ def get_combined_str(data, output, node):
                                             pond_direct -
                                             pond_atten)
 
-                col_attenuation[day] = max(0.0, old_col_attenuation[day])
+                col_attenuation[num] = max(0.0, old_col_attenuation[num])
 
-                if old_col_attenuation[day] < 0.0:
+                if old_col_attenuation[num] < 0.0:
                     open_water_ae = (open_water_evap +
                                      sw_ponding_area[zone_sw]
-                                     * old_col_attenuation[day])
+                                     * old_col_attenuation[num])
                 else:
                     open_water_ae = open_water_evap
 
                 input_to_atten_store_actual = (sw_ponding_area[zone_sw] *
-                                               output['rainfall_ts'][day] -
+                                               output['rainfall_ts'][num] -
                                                open_water_ae +
                                                ((1.0 - sw_ponding_area[zone_sw]) *
-                                               (output['interflow_to_rivers'][day] +
-                                                output['rapid_runoff'][day] +
-                                                output['rejected_recharge'][day] -
-                                                output['runoff_recharge'][day])))
+                                               (output['interflow_to_rivers'][num] +
+                                                output['rapid_runoff'][num] +
+                                                output['rejected_recharge'][num] -
+                                                output['runoff_recharge'][num])))
 
-                col_pond_direct[day] = pond_direct
-                col_pond_atten[day] = pond_atten
-                col_pond_over[day] = pond_overspill
-                col_sw_other[day] = other_sw_flow
-                col_open_water_evap[day] = open_water_evap
-                col_open_water_ae[day] = open_water_ae
-                col_atten_input[day] = input_to_atten_store
-                col_atten_input_actual[day] = input_to_atten_store_actual
+                col_pond_direct[num] = pond_direct
+                col_pond_atten[num] = pond_atten
+                col_pond_over[num] = pond_overspill
+                col_sw_other[num] = other_sw_flow
+                col_open_water_evap[num] = open_water_evap
+                col_open_water_ae[num] = open_water_ae
+                col_atten_input[num] = input_to_atten_store
+                col_atten_input_actual[num] = input_to_atten_store_actual
 
     else:
         col_combined_str = combined_str
