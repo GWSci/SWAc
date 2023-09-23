@@ -770,7 +770,11 @@ def get_recharge(data, output, node):
                                            (output['pond_direct'][num] +
                                             output['pond_atten'][num])))
     else:
-        col_recharge_store[0] = irs
+        if ff.use_natproc:
+            # This branch does not modify or set the whole array here, so I think that setting index zero to irs here is a bug.
+            pass
+        else:
+            col_recharge_store[0] = irs
         for num in range(1, length):
             col_combined_recharge[num] = (recharge_store_input[num] +
                                           ((1.0 - pond_area) *
@@ -841,8 +845,12 @@ def get_mf6rch_file(data, rchrate):
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
         for i in range(nodes):
             if irch[i, 0] > 0:
-                spd[per][i] = ((irch[i, 0] - 1,),
-                               rchrate[(nodes * per) + i + 1] * fac)
+                if data['params']['disv']:
+                    spd[per][i] = ((0, irch[i, 0] - 1),
+                                   rchrate[(nodes * per) + i + 1] * fac)
+                else:
+                    spd[per][i] = ((irch[i, 0] - 1,),
+                                   rchrate[(nodes * per) + i + 1] * fac)
 
     rch_out = flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(m,
                                                        fixed_cell=False,
@@ -904,7 +912,6 @@ def get_combined_str(data, output, node):
                            output['swdis_ts'][0] +
                            output['rapid_runoff'][0] -
                            output['runoff_recharge'][0]), 0.0)
-        size_t day
         int month
         size_t num
 
@@ -1080,7 +1087,10 @@ def get_combined_ae(data, output, node):
     else:
         pond_area = 0.0
 
-    combined_ae = output['canopy_storage'] + output['ae']
+    combined_ae = (((1.0 - pond_area) * output['canopy_storage']) +
+                   ((1.0 - pond_area) * output['ae']) +
+                   output['open_water_ae'])
+
     return {'combined_ae': combined_ae}
 
 ###############################################################################
