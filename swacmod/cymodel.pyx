@@ -809,12 +809,15 @@ def get_mf6rch_file(data, rchrate):
     m = flopy.mf6.mfmodel.MFModel(sim,
                                   modelname=path)
     njag = nodes + 2
-    flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
-                                               nodes=nodes,
-                                               ja=np.zeros((njag),
-                                                           dtype=int),
-                                               nja=njag, area=1.0, iac=[1],
-                                               ihc=[1])
+    if data['params']['disv']:
+        flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(m)
+    else:
+        flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
+                                                nodes=nodes,
+                                                ja=np.zeros((njag),
+                                                            dtype=int),
+                                                nja=njag, area=1.0, iac=[1],
+                                                ihc=[1])
 
     flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                          loading_package=False,
