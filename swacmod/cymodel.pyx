@@ -603,9 +603,23 @@ def get_interflow_bypass(data, output, node):
 
 def get_interflow_store_input(data, output, node):
     """AE) Input to Interflow Store [mm/d]."""
-    interflow_store_input = (output['perc_through_root'] +
-                             output['subroot_leak'] -
-                             output['interflow_bypass'])
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area, not_ponded
+        size_t zone_sw
+
+    if data['params']['sw_process_natproc'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    not_ponded = 1.0 - pond_area
+
+    interflow_store_input = ((output['perc_through_root'] +
+                             output['subroot_leak']) -
+                             (not_ponded * output['interflow_bypass']))
 
     return {'interflow_store_input': interflow_store_input}
 
