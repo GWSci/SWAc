@@ -401,7 +401,6 @@ def get_ae(data, output, node):
     for num in range(length):
         var2 = net_rainfall[num]
         var6 = months[num]
-
         if params['rapid_runoff_process'] == 'enabled':
             if smd > last_smd or var2 > last_ri:
                 rapid_runoff_c = value
@@ -428,8 +427,6 @@ def get_ae(data, output, node):
                     col_runoff_recharge[num] = (var8 if var7 > var8 else var7)
                 else:
                     col_runoff_recharge[num] = 0.0
-
-        var6 = months[num]
 
         if params['macropore_process'] == 'enabled':
             if mac_opt == 'SMD':
