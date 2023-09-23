@@ -855,8 +855,28 @@ def get_combined_str(data, output, node):
     cdef:
         size_t length = len(series['date'])
         double[:] col_attenuation = np.zeros(length)
+        double[:] old_col_attenuation = np.zeros(length)
+        double[:] col_atten_input = np.zeros(length)
+        double[:] col_atten_input_actual = np.zeros(length)
+        double[:] col_pond_direct = np.zeros(length)
+        double[:] col_pond_atten = np.zeros(length)
+        double[:] col_pond_over = np.zeros(length)
+        double[:] col_sw_other = np.zeros(length)
+        double[:] col_open_water_evap = np.zeros(length)
+        double[:] col_open_water_ae = np.zeros(length)
         double[:] col_combined_str = np.zeros(length)
         double[:] combined_str = np.zeros(length)
+        long long[:] months = np.array(series['months'], dtype=np.int64)
+        size_t zone_sw = params['sw_zone_mapping'][1] - 1
+        double[:, :] sw_pe_to_open_water = params['sw_pe_to_open_wat']
+        double[:, :] sw_direct_recharge = params['sw_direct_rech']
+        double[:, :] sw_activation = params['sw_activ']
+        double[:, :] sw_bed_infiltration = params['sw_bed_infiltn']
+        double[:, :] sw_downstream = params['sw_downstr']
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_depth, other_sw_flow, pond_overspill, tmp0, tmp1
+        double pond_depth_new, tmp0_new, input_to_atten_store_actual, tmp2
+        double input_to_atten_store, pond_direct, pond_atten
         # double[:] some_zeros = np.zeros(length)
         double rlp = params['sw_params'][node][1]
         double base = max((params['sw_params'][node][0] +
@@ -865,6 +885,8 @@ def get_combined_str(data, output, node):
                            output['swdis_ts'][0] +
                            output['rapid_runoff'][0] -
                            output['runoff_recharge'][0]), 0.0)
+        size_t day
+        int month
         size_t num
 
     combined_str = (output['interflow_to_rivers'] +
