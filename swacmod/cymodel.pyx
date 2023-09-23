@@ -757,10 +757,10 @@ def get_recharge(data, output, node):
                                      output['pond_atten'][0]))
 
         for num in range(1, length):
-            recharge[num] = (recharge_store_input[num-1] +
-                             col_recharge_store[num-1] -
-                             col_combined_recharge[num-1] +
-                             macropore_dir[num-1])
+            recharge[num] = (recharge_store_input[num-1]
+                             + col_recharge_store[num-1]
+                             - col_combined_recharge[num-1]
+                             + macropore_dir[num-1])
 
             col_recharge_store[num] = recharge[num]
             col_combined_recharge[num] = (min((recharge[num] * rlp), rll) +
