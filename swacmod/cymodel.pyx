@@ -1172,16 +1172,18 @@ def get_change(data, output, node):
     not_ponded = 1.0 - pond_area
 
     tmp0 = (output['recharge_store_input'] -
-            (output['combined_recharge'] - output['macropore_dir']) +
-            (output['interflow_store_input'] - output['interflow_to_rivers']) -
+            (output['combined_recharge'] -
+             not_ponded * output['macropore_dir'] - pond_area * output['pond_direct']) +
+            not_ponded * (output['interflow_store_input'] - output['interflow_to_rivers']) -
             output['infiltration_recharge'] +
-            (output['percol_in_root'] - output['ae']))
+            pond_area * output['subroot_leak'] +
+            not_ponded * (output['percol_in_root'] - output['ae']))
 
     col_change = tmp0
 
     for num in range(1, length):
         if output['p_smd'][num] < 0.0:
-            col_change[num] += output['p_smd'][num]
+            col_change[num] += (not_ponded * output['p_smd'][num])
 
         col_change[num] += (output['sw_attenuation'][num]
                             - output['sw_attenuation'][num-1])
