@@ -705,9 +705,11 @@ def get_recharge_store_input(data, output, node):
         pond_area = 0.0
 
     recharge_store_input = (output['infiltration_recharge'] +
-                            output['interflow_bypass'] +
-                            output['macropore_att'] +
-                            output['runoff_recharge'])
+                            ((1.0 - pond_area) *
+                             (output['interflow_bypass'] +
+                             output['macropore_att'] +
+                             output['runoff_recharge'])) +
+                            (pond_area * output['pond_atten']))
 
     return {'recharge_store_input': recharge_store_input}
 
