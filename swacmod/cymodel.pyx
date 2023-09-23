@@ -927,7 +927,25 @@ def get_combined_str(data, output, node):
                                        output['runoff_recharge'][num] +
                                        output['rejected_recharge'][num])
 
-    if params['sw_process_natproc'] == 'enabled':
+    if params['sw_process'] == 'enabled':
+        # don't attenuate negative flows
+        if base < 0.0:
+            rlp = 1.0
+        col_combined_str[0] = rlp * base
+        col_attenuation[0] = base - col_combined_str[0]
+
+        for num in range(1, length):
+            base = (col_attenuation[num-1] +
+                    combined_str[num])
+            # don't attenuate negative flows
+            if base < 0.0:
+                rlp = 1.0
+            else:
+                rlp = params['sw_params'][node][1]
+            col_combined_str[num] = rlp * base
+            col_attenuation[num] = base - col_combined_str[num]
+
+    elif params['sw_process_natproc'] == 'enabled':
 
         col_attenuation[0] = params['sw_init_ponding']
         zone_sw = params['sw_zone_mapping'][node] - 1
