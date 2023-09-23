@@ -689,9 +689,7 @@ def get_interflow(data, output, node):
 
 
 def get_recharge_store_input(data, output, node):
-    """
-    AI) Input to Recharge Store [mm/d].
-    """
+    """AI) Input to Recharge Store [mm/d]."""
 
     params = data['params']
 
