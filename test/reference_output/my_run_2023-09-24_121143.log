@@ -1,0 +1,35 @@
+Version 2.0.0
+
+    Although this program has been subjected to rigorous review, Groundwater
+    Science Ltd. reserves the right to update the software as needed pursuant
+    to further analysis and review. No warranty, expressed or implied, is made
+    by Groundwater Science Ltd. as to the functionality of the software nor
+    shall the fact of release constitute any such warranty. Furthermore, the
+    tool is released on condition that Groundwater Science Ltd. shall not be
+    held liable for any damages resulting from its authorised or unauthorised
+    use.
+    
+2023-09-24 12:11:43,189 --- (16275) INFO - Start SWAcMod run
+2023-09-24 12:11:43,189 --- (16275) INFO - model build: True
+2023-09-24 12:11:43,189 --- (16275) INFO - 	Loading parameters and time series
+2023-09-24 12:11:56,956 --- (16275) INFO - 	Finalizing parameters
+2023-09-24 12:11:56,957 --- (16275) INFO - 	Done.
+2023-09-24 12:11:56,957 --- (16275) INFO - 	Finalizing time series
+2023-09-24 12:11:56,985 --- (16275) INFO - 		Switched "pe_ts" to "required"
+2023-09-24 12:11:56,989 --- (16275) INFO - 		Switched "temperature_ts" to "required"
+2023-09-24 12:11:56,990 --- (16275) INFO - 		Defaulted "tmax_c_ts" to 0.0
+2023-09-24 12:11:56,990 --- (16275) INFO - 		Defaulted "tmin_c_ts" to 0.0
+2023-09-24 12:11:56,991 --- (16275) INFO - 		Defaulted "windsp_ts" to 0.0
+2023-09-24 12:11:56,995 --- (16275) INFO - 		Switched "subroot_leakage_ts" to "required"
+2023-09-24 12:11:57,002 --- (16275) INFO - 	Done.
+2023-09-24 12:11:57,002 --- (16275) INFO - 	Validating parameters
+2023-09-24 12:11:57,006 --- (16275) INFO - 	Done.
+2023-09-24 12:11:57,006 --- (16275) INFO - 	Validating time series
+2023-09-24 12:11:57,721 --- (16275) INFO - 	Done.
+2023-09-24 12:11:58,178 --- (16501) INFO - mp.Process 0 started (10 nodes)
+2023-09-24 12:11:59,987 --- (16501) INFO - mp.Process 0 ended
+2023-09-24 12:12:00,123 --- (16275) INFO - 	Aggregating reporting across processes
+2023-09-24 12:12:00,243 --- (16275) INFO - 	Dumping water balance for zone 1
+2023-09-24 12:12:00,244 --- (16275) INFO - 	Dumping water balance for zone 2
+2023-09-24 12:12:00,908 --- (16275) INFO - 	Dumping spatial output for my_runSpatial1980-01-01.csv
+2023-09-24 12:12:01,043 --- (16275) INFO - End SWAcMod run
