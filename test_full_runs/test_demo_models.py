@@ -75,3 +75,20 @@ class Test_Demo_Models(unittest.TestCase):
 		fixture.assert_file_is_identical("my_runSpatial1980-01-01.csv")
 		fixture.assert_file_is_identical("my_run_z_1.csv")
 		fixture.assert_file_is_identical("my_run_z_2.csv")
+
+	def test_demo_natproc_model(self):
+		fixture = TestFixture(self, "test/reference_output_natproc/", "output_files_natproc/", "input_files_natproc/input.yml")
+		fixture.clear_output_directory()
+
+		default_use_natproc = ff.use_natproc
+		try:
+			ff.use_natproc = True
+			fixture.run_swacmod()
+		finally:
+			ff.use_natproc = default_use_natproc
+		fixture.assert_all_but_first_line_identical("my_run.evt")
+		fixture.assert_all_but_first_line_identical("my_run.rch")
+		fixture.assert_all_but_first_line_identical("my_run.sfr")
+		fixture.assert_file_is_identical("my_runSpatial1980-01-01.csv")
+		fixture.assert_file_is_identical("my_run_z_1.csv")
+		fixture.assert_file_is_identical("my_run_z_2.csv")
