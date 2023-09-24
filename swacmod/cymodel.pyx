@@ -908,6 +908,7 @@ def get_combined_str(data, output, node):
         # double[:] some_zeros = np.zeros(length)
         double rlp = params['sw_params'][node][1]
         double base = max((params['sw_params'][node][0] +
+                           params['sw_init_ponding'] +
                            output['interflow_to_rivers'][0] +
                            output['swabs_ts'][0] +
                            output['swdis_ts'][0] +
