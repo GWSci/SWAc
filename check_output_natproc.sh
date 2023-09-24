@@ -24,9 +24,9 @@ rm "$output_folder"/*
 
 ./run.sh -i ./input_files_natproc/input.yml -o "./$output_folder"
 
-# diff_all_but_first_line my_run.evt
-# diff_all_but_first_line my_run.rch
-# diff_all_but_first_line my_run.sfr
-# diff_entire_file my_runSpatial1980-01-01.csv
-# diff_entire_file my_run_z_1.csv
-# diff_entire_file my_run_z_2.csv
+diff_all_but_first_line my_run.evt
+diff_all_but_first_line my_run.rch
+diff_all_but_first_line my_run.sfr
+diff_entire_file my_runSpatial1980-01-01.csv
+diff_entire_file my_run_z_1.csv
+diff_entire_file my_run_z_2.csv
