@@ -1657,7 +1657,10 @@ def get_str_file(data, runoff):
                     # conn.append(-float(swac_seg_dic[n] - 1))
                     pass
                 else:
-                    conn.append((swac_seg_dic[n] - 1))
+                    if ff.use_natproc:
+                        conn.append((swac_seg_dic[n]))
+                    else:
+                        conn.append((swac_seg_dic[n] - 1))
 
         # update num connections
         cd.append(conn + [0] * (11 - len(conn)))
