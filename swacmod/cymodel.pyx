@@ -2112,16 +2112,15 @@ def get_ror_flows_sfr(sorted_by_ca, runoff, nodes, day, areas): #, cat):
     return flow
 
 
-def get_ror_flows_tree(G, runoff, nodes, day, leaf_nodes):
+def get_ror_flows_tree(G, runoff, nodes, day):
 
     """get total flows for RoR one day with mask"""
 
-    cdef double[:] flow = np.zeros(nodes)
-    cdef int[:] done = np.zeros((nodes), dtype=np.intc)
-    cdef long long node_swac, node, d
-    cdef long long c = nodes * day
-    cdef double acc
-
+    flow = np.zeros((nodes))
+    done = np.zeros((nodes), dtype='int')
+    c = nodes * day
+    leaf_nodes = [x for x in G.nodes()
+                  if G.out_degree(x) == 1 and G.in_degree(x) == 0]
     for node_swac in leaf_nodes:
         node = node_swac
         acc = max(0.0, runoff[c + node])
