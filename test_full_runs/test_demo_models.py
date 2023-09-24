@@ -43,3 +43,5 @@ class Test_Demo_Models(unittest.TestCase):
 		fixture.clear_output_directory()
 		fixture.run_swacmod()
 		fixture.assert_file_is_identical("my_runSpatial1980-01-01.csv")
+		fixture.assert_file_is_identical("my_run_z_1.csv")
+		fixture.assert_file_is_identical("my_run_z_2.csv")
