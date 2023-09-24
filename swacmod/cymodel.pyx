@@ -1230,8 +1230,10 @@ def aggregate(output, area, ponded_frac, reporting=None, index=None):
 
     if index is not None:
         not_scalar = (type(index[0]) is range or type(index[0]) is list)
+        convert = np.float64
     else:
         not_scalar = False
+        convert = lambda x: x
 
     for key in output:
 
@@ -1245,12 +1247,12 @@ def aggregate(output, area, ponded_frac, reporting=None, index=None):
             new_rep[key] = [output[key][i].mean(dtype=np.float64)
                             * area_fn(area, ponded_frac) for i in index]
         elif index is not None:
-            new_rep[key] = [output[key][index[0]] *
+            new_rep[key] = [convert(output[key][index[0]]) *
                             area_fn(area, ponded_frac)]
         else:
-            new_rep[key] = output[key] * area_fn(area, ponded_frac)
+            new_rep[key] = convert(output[key]) * area_fn(area, ponded_frac)
         if reporting:
-            new_rep[key] += reporting[key]
+            new_rep[key] += convert(reporting[key])
     return new_rep
 
 ###############################################################################
