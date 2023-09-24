@@ -1141,9 +1141,24 @@ def get_average_out(data, output, node):
     else:
         pond_area = 0.0
 
-    average_out = (output['combined_str'] +
-                   output['combined_recharge'] +
-                   output['combined_ae'])
+    if ff.use_natproc:
+        # The natproc branch replaced the terms 'ae', 'canopy_storage' and 'swabs_ts'
+        # with a term for 'combined_ae'.
+        #
+        # 'combined_ae' includes terms for:
+        #     * 'ae'
+        #     * 'canopy_storage'
+        #     * 'open_water_ae'
+        # but it does not include a term for 'swabs_ts'.
+        average_out = (output['combined_str'] +
+                    output['combined_recharge'] +
+                    output['combined_ae'])
+    else:
+        average_out = (output['combined_str'] +
+                    output['combined_recharge'] +
+                    output['ae'] +
+                    output['canopy_storage'] +
+                    output['swabs_ts'])
 
     return {'average_out': average_out}
 
