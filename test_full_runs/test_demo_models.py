@@ -10,6 +10,10 @@ class TestFixture():
 		self.reference_output_folder = reference_output_folder
 		self.output_folder = output_folder
 	
+	def clear_output_directory(self):
+		for f in Path(self.output_folder).iterdir():
+			f.unlink()		
+
 	def assert_file_is_identical(self, filename):
 		expected_path = Path(self.reference_output_folder) / filename
 		expected_contents = expected_path.read_text()
@@ -26,8 +30,7 @@ class Test_Demo_Models(unittest.TestCase):
 
 		fixture = TestFixture(self, reference_output_folder, output_folder)
 
-		for f in Path(output_folder).iterdir():
-			f.unlink()
+		fixture.clear_output_directory()
 
 		default_input_file = u.CONSTANTS["INPUT_FILE"]
 		default_input_dir = u.CONSTANTS["INPUT_DIR"]
