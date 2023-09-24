@@ -2008,6 +2008,15 @@ def get_evt_file(data, evtrate):
 
 
 def do_swrecharge_mask(data, runoff, recharge):
+    if ff.use_natproc:
+        return do_swrecharge_mask_natproc(data, runoff, recharge)
+    else:
+        return do_swrecharge_mask_original(data, runoff, recharge)
+
+###############################################################################
+
+
+def do_swrecharge_mask_original(data, runoff, recharge):
     """do ror with monthly mask"""
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
@@ -2072,6 +2081,72 @@ def do_swrecharge_mask(data, runoff, recharge):
                 recharge[(nnodes * day) + node] += qty
                 runoff[(nnodes * day) + node] -= qty
         # pbar.update(day)
+    return runoff, recharge
+
+
+###############################################################################
+
+
+def do_swrecharge_mask_natproc(data, runoff, recharge):
+    """do ror with monthly mask"""
+    series, params = data['series'], data['params']
+    nnodes = data['params']['num_nodes']
+    rte_topo = data['params']['routing_topology']
+    areas = data['params']['node_areas']
+    catchment = data['params']["reporting_zone_mapping"]
+    #  try here
+    # cdef double[:] ror = np.zeros(nodes)
+
+    cdef:
+        size_t length = len(series['date'])
+        double[:, :] ror_prop = params['ror_prop']
+        double[:, :] ror_limit = params['ror_limit']
+        long long[:] months = np.array(series['months'], dtype=np.int64)
+        #double[:] area_array = np.array(areas, dtype=np.float64)
+        size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
+        int day, month, node
+        double fac = 0.001
+        double qty_mmd, qty_m3d
+
+    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
+                                      key=lambda x: x[1][4]))
+
+    # 'downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
+    #         'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
+
+    for day in tqdm(range(length), desc="Accumulating SW recharge"):
+        month = months[day]
+
+        # accumulate flows for today
+        acc_flow = get_ror_flows_sfr(sorted_by_ca, runoff, nnodes, day, areas) #, catchment)
+
+        for node, line in sorted_by_ca.items():
+            ro = acc_flow[node - 1]
+            cat = params["reporting_zone_mapping"][node]
+            if ro > 0.0 and cat > 0:
+                downstr = line[0]
+                zone_ror = params['swrecharge_zone_mapping'][node]
+                fac_ro = ror_prop[month][zone_ror - 1] * ro
+                lim = ror_limit[month][zone_ror - 1]
+                qty_m3d = min(fac_ro, lim)
+
+                if qty_m3d > 0.0:
+
+                    qty_mmd = (qty_m3d / areas[node] / fac)
+                    recharge[(nnodes * day) + node] += qty_mmd
+                    acc_flow[node - 1] -= qty_m3d
+
+                    # remove qty from accumulated ro at nodes downstream
+                    while downstr > 1:
+                        acc_flow[downstr - 1] = max(0.0, acc_flow[downstr - 1] - qty_m3d)
+                        node_swac = downstr
+
+                        # get new downstr node
+                        downstr = sorted_by_ca[node_swac][0]
+                        cat = params["reporting_zone_mapping"][node_swac]
+                        if cat < 1:
+                            break
+
     return runoff, recharge
 
 
