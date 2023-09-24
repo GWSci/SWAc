@@ -39,14 +39,7 @@ class TestFixture():
 
 class Test_Demo_Models(unittest.TestCase):
 	def test_demo_model(self):
-		reference_output_folder = "test/reference_output/"
-		output_folder = "output_files/"
-		input_file = "input_files/input.yml"
-
-		fixture = TestFixture(self, reference_output_folder, output_folder, input_file)
-
+		fixture = TestFixture(self, "test/reference_output/", "output_files/", "input_files/input.yml")
 		fixture.clear_output_directory()
-
 		fixture.run_swacmod()
-
 		fixture.assert_file_is_identical("my_runSpatial1980-01-01.csv")
