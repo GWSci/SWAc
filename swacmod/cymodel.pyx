@@ -1089,6 +1089,7 @@ def get_combined_ae(data, output, node):
     combined_ae = (((1.0 - pond_area) * output['canopy_storage']) +
                    ((1.0 - pond_area) * output['ae']) +
                    output['open_water_ae'])
+
     return {'combined_ae': combined_ae}
 
 ###############################################################################
@@ -1654,7 +1655,10 @@ def get_str_file(data, runoff):
                     # conn.append(-float(swac_seg_dic[n] - 1))
                     pass
                 else:
-                    conn.append((swac_seg_dic[n]))
+                    if ff.use_natproc:
+                        conn.append((swac_seg_dic[n]))
+                    else:
+                        conn.append((swac_seg_dic[n] - 1))
 
         # update num connections
         cd.append(conn + [0] * (11 - len(conn)))
