@@ -23,7 +23,7 @@ class TestFixture():
 			u.CONSTANTS["INPUT_FILE"] = self.input_file
 			u.CONSTANTS["INPUT_DIR"] = os.path.dirname(self.input_file)
 			u.CONSTANTS["OUTPUT_DIR"] = self.output_folder
-			swacmod_run.run()
+			swacmod_run.run(file_format="csv")
 		finally:
 			u.CONSTANTS["INPUT_FILE"] = default_input_file
 			u.CONSTANTS["INPUT_DIR"] = default_input_dir
