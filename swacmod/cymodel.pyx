@@ -2010,6 +2010,86 @@ def get_evt_file(data, evtrate):
 
 
 def do_swrecharge_mask(data, runoff, recharge):
+    if ff.use_natproc:
+        return do_swrecharge_mask_natproc(data, runoff, recharge)
+    else:
+        return do_swrecharge_mask_original(data, runoff, recharge)
+
+###############################################################################
+
+
+def do_swrecharge_mask_original(data, runoff, recharge):
+    """do ror with monthly mask"""
+    series, params = data['series'], data['params']
+    nnodes = data['params']['num_nodes']
+    rte_topo = data['params']['routing_topology']
+
+    cdef:
+        size_t length = len(series['date'])
+        double[:, :] ror_prop = params['ror_prop']
+        double[:, :] ror_limit = params['ror_limit']
+        long long[:] months = np.array(series['months'], dtype=np.int64)
+        size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
+        int day, month
+
+    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
+                                      key=lambda x: x[1][4]))
+
+    # 'downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
+    #         'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
+
+    # complete graph
+    Gc = build_graph(nnodes, sorted_by_ca, np.full((nnodes), 1, dtype='int'))
+
+    def compute_upstream_month_mask(month_number):
+        cdef int i = month_number
+        cdef int z
+        mask = np.full((nnodes), 0, dtype='int')
+        for node in range(1, nnodes + 1):
+            z = params['swrecharge_zone_mapping'][node] - 1
+            fac = ror_prop[i][z]
+            lim = ror_limit[i][z]
+            if min(fac, lim) > 0.0:
+                mask[node-1] = 1
+                # add upstream bits
+                lst = [n[0] for n in
+                       nx.shortest_path_length(Gc, target=node).items()]
+                for n in lst:
+                    #  for n in nx.ancestors(Gc, node):
+                    mask[n-1] = 1
+        return build_graph(nnodes, sorted_by_ca, mask)
+
+    # compute monthly mask dictionary
+    Gp = {}
+    for month in range(12):
+        Gp[month] = compute_upstream_month_mask(month)
+
+    # pbar = tqdm(total=range(length))
+    for day in tqdm(range(length), desc="Accumulating SW recharge"):
+        month = months[day]
+
+        # accumulate flows for today
+        acc_flow = get_ror_flows_tree(Gp[month],
+                                      runoff, nnodes, day)
+        # iterate over nodes relevent to this month's RoR parameters
+        for node in list(Gp[month].nodes):
+            ro = acc_flow[node - 1]
+            if ro > 0.0:
+                zone_ror = params['swrecharge_zone_mapping'][node] - 1
+                fac_ro = ror_prop[month][zone_ror] * ro
+                lim = ror_limit[month][zone_ror]
+                qty = min(fac_ro, lim)
+                # col_runoff_recharge[day] = qty
+                recharge[(nnodes * day) + node] += qty
+                runoff[(nnodes * day) + node] -= qty
+        # pbar.update(day)
+    return runoff, recharge
+
+
+###############################################################################
+
+
+def do_swrecharge_mask_natproc(data, runoff, recharge):
     """do ror with monthly mask"""
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
