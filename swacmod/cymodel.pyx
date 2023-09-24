@@ -1186,8 +1186,13 @@ def get_change(data, output, node):
         if output['p_smd'][num] < 0.0:
             col_change[num] += (not_ponded * output['p_smd'][num])
 
-        col_change[num] += (output['sw_attenuation'][num]
-                            - output['sw_attenuation'][num-1])
+        if ff.use_natproc:
+            # Not sure about this. Introducing the pond_area factor here means that this term will be zero if there is no ponding. This may have been a mistake.
+            col_change[num] += (pond_area * (output['sw_attenuation'][num]
+                                - output['sw_attenuation'][num-1]))
+        else:
+            col_change[num] += (output['sw_attenuation'][num]
+                                - output['sw_attenuation'][num-1])
 
     return {'total_storage_change': col_change.base}
 
