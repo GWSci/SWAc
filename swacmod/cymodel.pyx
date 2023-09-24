@@ -763,11 +763,20 @@ def get_recharge(data, output, node):
                                      output['pond_atten'][0]))
 
         for num in range(1, length):
-            recharge[num] = (recharge_store_input[num-1]
-                             + col_recharge_store[num-1]
-                             - col_combined_recharge[num-1]
-                             + ((1.0 - pond_area) * macropore_dir[num-1])
-                             + (pond_area * (output['pond_direct'][num-1] + output['pond_atten'][num-1])))
+            if ff.use_natproc:
+                recharge[num] = (recharge_store_input[num-1] +
+                                col_recharge_store[num-1] -
+                                (col_combined_recharge[num-1] -
+                                ((1.0 - pond_area) *
+                                macropore_dir[num-1])
+                                - (pond_area * (output['pond_direct'][num-1] +
+                                                output['pond_atten'][num-1]))))
+            else:
+                recharge[num] = (recharge_store_input[num-1]
+                                + col_recharge_store[num-1]
+                                - col_combined_recharge[num-1]
+                                + ((1.0 - pond_area) * macropore_dir[num-1])
+                                + (pond_area * (output['pond_direct'][num-1] + output['pond_atten'][num-1])))
 
             col_recharge_store[num] = recharge[num]
             col_combined_recharge[num] = (min((recharge[num] * rlp), rll) +
