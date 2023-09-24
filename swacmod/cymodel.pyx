@@ -2078,6 +2078,45 @@ def do_swrecharge_mask(data, runoff, recharge):
 ###############################################################################
 
 
+def get_ror_flows_sfr(sorted_by_ca, runoff, nodes, day, areas): #, cat):
+    """get flows for one period"""
+
+    cdef int[:] done = np.zeros((nodes), dtype=np.intc)
+    cdef double[:] flow = np.zeros(nodes)
+    cdef long long node_swac, downstr
+    cdef long long c = nodes * day
+    cdef double acc
+    cdef double fac = 0.001
+ 
+
+    for node_swac, line in sorted_by_ca.items():
+        # rep_zone = cat[node_swac]
+        # if rep_zone > 0:
+        downstr = line[0] #, str_flag = line[:2]
+        acc = 0.0
+
+        # accumulate pre-stream flows into network
+        while downstr > 0: # and rep_zone > 0:
+
+            # not str
+            if done[node_swac - 1] < 1:
+                acc += max(0.0, runoff[c + node_swac]) * float(areas[node_swac]) * fac
+                flow[node_swac - 1] += acc
+                done[node_swac - 1] = 1
+
+            else:
+                flow[node_swac - 1] += acc
+                # acc = 0.0
+                # break
+            # new node
+            node_swac = downstr
+            # get new downstr node
+            downstr = sorted_by_ca[node_swac][0]
+            # rep_zone = cat[node_swac]
+
+    return flow
+
+
 def get_ror_flows_tree(G, runoff, nodes, day):
 
     """get total flows for RoR one day with mask"""
