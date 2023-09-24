@@ -5,14 +5,29 @@ from swacmod import utils as u
 import os
 
 class TestFixture():
-	def __init__(self, test_instance, reference_output_folder, output_folder):
+	def __init__(self, test_instance, reference_output_folder, output_folder, input_file):
 		self.test_instance = test_instance
 		self.reference_output_folder = reference_output_folder
 		self.output_folder = output_folder
+		self.input_file = input_file
 	
 	def clear_output_directory(self):
 		for f in Path(self.output_folder).iterdir():
 			f.unlink()		
+
+	def run_swacmod(self):
+		default_input_file = u.CONSTANTS["INPUT_FILE"]
+		default_input_dir = u.CONSTANTS["INPUT_DIR"]
+		default_output_dir = u.CONSTANTS["OUTPUT_DIR"]
+		try:
+			u.CONSTANTS["INPUT_FILE"] = self.input_file
+			u.CONSTANTS["INPUT_DIR"] = os.path.dirname(self.input_file)
+			u.CONSTANTS["OUTPUT_DIR"] = self.output_folder
+			swacmod_run.run()
+		finally:
+			u.CONSTANTS["INPUT_FILE"] = default_input_file
+			u.CONSTANTS["INPUT_DIR"] = default_input_dir
+			u.CONSTANTS["OUTPUT_DIR"] = default_output_dir
 
 	def assert_file_is_identical(self, filename):
 		expected_path = Path(self.reference_output_folder) / filename
@@ -28,21 +43,10 @@ class Test_Demo_Models(unittest.TestCase):
 		output_folder = "output_files/"
 		input_file = "input_files/input.yml"
 
-		fixture = TestFixture(self, reference_output_folder, output_folder)
+		fixture = TestFixture(self, reference_output_folder, output_folder, input_file)
 
 		fixture.clear_output_directory()
 
-		default_input_file = u.CONSTANTS["INPUT_FILE"]
-		default_input_dir = u.CONSTANTS["INPUT_DIR"]
-		default_output_dir = u.CONSTANTS["OUTPUT_DIR"]
-		try:
-			u.CONSTANTS["INPUT_FILE"] = input_file
-			u.CONSTANTS["INPUT_DIR"] = os.path.dirname(input_file)
-			u.CONSTANTS["OUTPUT_DIR"] = output_folder
-			swacmod_run.run()
-		finally:
-			u.CONSTANTS["INPUT_FILE"] = default_input_file
-			u.CONSTANTS["INPUT_DIR"] = default_input_dir
-			u.CONSTANTS["OUTPUT_DIR"] = default_output_dir
+		fixture.run_swacmod()
 
 		fixture.assert_file_is_identical("my_runSpatial1980-01-01.csv")
