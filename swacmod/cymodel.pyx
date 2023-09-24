@@ -905,7 +905,10 @@ def get_combined_str(data, output, node):
         double pond_depth, other_sw_flow, pond_overspill, tmp0, tmp1
         double pond_depth_new, tmp0_new, input_to_atten_store_actual, tmp2
         double input_to_atten_store, pond_direct, pond_atten
-        double base = max((params['sw_init_ponding'] +
+        # double[:] some_zeros = np.zeros(length)
+        double rlp = params['sw_params'][node][1]
+        double base = max((params['sw_params'][node][0] +
+                           params['sw_init_ponding'] +
                            output['interflow_to_rivers'][0] +
                            output['swabs_ts'][0] +
                            output['swdis_ts'][0] +
