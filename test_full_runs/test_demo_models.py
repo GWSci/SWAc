@@ -10,6 +10,7 @@ class TestFixture():
 		self.reference_output_folder = reference_output_folder
 		self.output_folder = output_folder
 		self.input_file = input_file
+		test_instance.maxDiff = None
 	
 	def clear_output_directory(self):
 		for f in Path(self.output_folder).iterdir():
@@ -29,6 +30,19 @@ class TestFixture():
 			u.CONSTANTS["INPUT_DIR"] = default_input_dir
 			u.CONSTANTS["OUTPUT_DIR"] = default_output_dir
 
+	def assert_all_but_first_line_identical(self, filename):
+		expected_path = Path(self.reference_output_folder) / filename
+		expected_contents = expected_path.read_text()
+		expected = self.remove_first_line(expected_contents)
+		actual_path = Path(self.output_folder) / filename
+		actual_contents = actual_path.read_text()
+		actual = self.remove_first_line(actual_contents)
+		self.test_instance.assertEqual(expected, actual)
+
+	def remove_first_line(self, s):
+		first_line_end_index = s.find('\n') + 1
+		return s[first_line_end_index:]
+
 	def assert_file_is_identical(self, filename):
 		expected_path = Path(self.reference_output_folder) / filename
 		expected_contents = expected_path.read_text()
@@ -42,6 +56,9 @@ class Test_Demo_Models(unittest.TestCase):
 		fixture = TestFixture(self, "test/reference_output/", "output_files/", "input_files/input.yml")
 		fixture.clear_output_directory()
 		fixture.run_swacmod()
+		fixture.assert_all_but_first_line_identical("my_run.evt")
+		fixture.assert_all_but_first_line_identical("my_run.rch")
+		fixture.assert_all_but_first_line_identical("my_run.sfr")
 		fixture.assert_file_is_identical("my_runSpatial1980-01-01.csv")
 		fixture.assert_file_is_identical("my_run_z_1.csv")
 		fixture.assert_file_is_identical("my_run_z_2.csv")
