@@ -2156,8 +2156,18 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True):
             if mask[node-1] == 1:
                 G.add_node(node)
     for node_swac, line in sorted_by_ca.items():
-        if mask[node_swac-1] == 1 and line[0] > 0:
-            G.add_edge(node_swac, line[0])
+        if ff.use_natproc:
+            downstr = int(line[0])
+        else:
+            downstr = line[0]
+        if downstr > 0:
+            if ff.use_natproc:
+                if downstr not in G.nodes:
+                    G.add_node(downstr, ca=sorted_by_ca[downstr][4])
+            else:
+                pass
+            if mask[node_swac-1] == 1:
+                G.add_edge(node_swac, downstr)
     return G
 
 
