@@ -2077,7 +2077,6 @@ def do_swrecharge_mask(data, runoff, recharge):
 
 ###############################################################################
 
-
 def get_ror_flows_sfr(sorted_by_ca, runoff, nodes, day, areas): #, cat):
     """get flows for one period"""
 
@@ -2087,7 +2086,7 @@ def get_ror_flows_sfr(sorted_by_ca, runoff, nodes, day, areas): #, cat):
     cdef long long c = nodes * day
     cdef double acc
     cdef double fac = 0.001
- 
+
 
     for node_swac, line in sorted_by_ca.items():
         # rep_zone = cat[node_swac]
