@@ -1351,12 +1351,15 @@ def get_sfr_file(data, runoff):
                                       modelname=path)
         njag = nodes + 2
         lenx = int((njag/2) - (nodes/2))
-        flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
-                                                   nodes=nodes,
-                                                   ja=np.zeros((njag),
-                                                               dtype=int),
-                                                   nja=njag, ihc=[1],
-                                                   iac=[1])
+        if data['params']['disv']:
+            flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(m)
+        else:
+            flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
+                                                       nodes=nodes,
+                                                       ja=np.zeros((njag),
+                                                                   dtype=int),
+                                                       nja=njag, ihc=[1],
+                                                       iac=[1])
 
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
@@ -1415,9 +1418,15 @@ def get_sfr_file(data, runoff):
 
             elif data['params']['gwmodel_type'] == 'mf6':
                 if node_mf > 0:
-                    n = (node_mf - 1,)
+                    if data['params']['disv']:
+                        n = (0, node_mf - 1)
+                    else:
+                        n = (node_mf - 1,)
                 else:
-                    n = (-100000000, )
+                    if data['params']['disv']:
+                        n = (-100000000, 0)
+                    else:
+                        n = (-100000000, )
 
                 rd.append([str_count, n, length, width,
                            0.0001, z, bed_thk, str_k, 0.0001, 1, 1.0, 0])
