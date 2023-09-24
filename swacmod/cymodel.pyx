@@ -1234,14 +1234,21 @@ def aggregate(output, area, ponded_frac, reporting=None, index=None):
         not_scalar = False
 
     for key in output:
+
+        # lookup key in utils constants to see which area to use
+        if ff.use_natproc:
+            area_fn = u.CONSTANTS['AREA_FN'][key]
+        else:
+            area_fn = lambda area, ponded_fraction: area
         new_rep[key] = []
         if not_scalar:
             new_rep[key] = [output[key][i].mean(dtype=np.float64)
-                            * area for i in index]
+                            * area_fn(area, ponded_frac) for i in index]
         elif index is not None:
-            new_rep[key] = [output[key][index[0]] * area]
+            new_rep[key] = [output[key][index[0]] *
+                            area_fn(area, ponded_frac)]
         else:
-            new_rep[key] = output[key] * area
+            new_rep[key] = output[key] * area_fn(area, ponded_frac)
         if reporting:
             new_rep[key] += reporting[key]
     return new_rep
