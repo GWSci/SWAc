@@ -3,6 +3,7 @@ from pathlib import Path
 import swacmod_run
 from swacmod import utils as u
 import os
+import swacmod.feature_flags as ff
 
 class TestFixture():
 	def __init__(self, test_instance, reference_output_folder, output_folder, input_file):
@@ -61,7 +62,13 @@ class Test_Demo_Models(unittest.TestCase):
 	def test_demo_model(self):
 		fixture = TestFixture(self, "test/reference_output/", "output_files/", "input_files/input.yml")
 		fixture.clear_output_directory()
-		fixture.run_swacmod()
+
+		default_use_natproc = ff.use_natproc
+		try:
+			ff.use_natproc = False
+			fixture.run_swacmod()
+		finally:
+			ff.use_natproc = default_use_natproc
 		fixture.assert_all_but_first_line_identical("my_run.evt")
 		fixture.assert_all_but_first_line_identical("my_run.rch")
 		fixture.assert_all_but_first_line_identical("my_run.sfr")
