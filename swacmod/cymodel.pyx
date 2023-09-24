@@ -1148,7 +1148,6 @@ def get_average_out(data, output, node):
 
 def get_change(data, output, node):
     """AR) TOTAL STORAGE CHANGE [mm]."""
-
     series = data['series']
     params = data['params']
 
@@ -1182,8 +1181,13 @@ def get_change(data, output, node):
         if output['p_smd'][num] < 0.0:
             col_change[num] += (not_ponded * output['p_smd'][num])
 
-        col_change[num] += (pond_area * (output['sw_attenuation'][num]
-                            - output['sw_attenuation'][num-1]))
+        if ff.use_natproc:
+            # Not sure about this. Introducing the pond_area factor here means that this term will be zero if there is no ponding. This may have been a mistake.
+            col_change[num] += (pond_area * (output['sw_attenuation'][num]
+                                - output['sw_attenuation'][num-1]))
+        else:
+            col_change[num] += (output['sw_attenuation'][num]
+                                - output['sw_attenuation'][num-1])
 
     return {'total_storage_change': col_change.base}
 
@@ -1353,8 +1357,7 @@ def get_sfr_file(data, runoff):
                                                        nodes=nodes,
                                                        ja=np.zeros((njag),
                                                                    dtype=int),
-                                                       nja=njag,
-                                                       ihc=[1],
+                                                       nja=njag, ihc=[1],
                                                        iac=[1])
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
@@ -1416,7 +1419,7 @@ def get_sfr_file(data, runoff):
                     if data['params']['disv']:
                         n = (0, node_mf - 1)
                     else:
-                        n = (node_mf - 1, )
+                        n = (node_mf - 1,)
                 else:
                     if data['params']['disv']:
                         n = (-100000000, 0)
@@ -1924,9 +1927,9 @@ def get_evt_file(data, evtrate):
                                                    nodes=nodes,
                                                    ja=np.zeros((njag),
                                                                dtype=int),
-                                                   nja=njag,
-                                                   ihc=[1],
-                                                   iac=[1])
+                                                   nja=njag, iac=[1],
+                                                   ihc=[1])
+
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
                                              time_units=None,
