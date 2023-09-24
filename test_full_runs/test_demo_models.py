@@ -44,12 +44,17 @@ class TestFixture():
 		return s[first_line_end_index:]
 
 	def assert_file_is_identical(self, filename):
-		expected_path = Path(self.reference_output_folder) / filename
-		expected_contents = expected_path.read_text()
-		actual_path = Path(self.output_folder) / filename
-		actual_contents = actual_path.read_text()
-		self.test_instance.assertEqual(expected_contents, actual_contents)
+		expected, actual = self.read_reference_and_actual(filename)
+		self.test_instance.assertEqual(expected, actual)
+	
+	def read_reference_and_actual(self, filename):
+		expected_contents = self.read_file(self.reference_output_folder, filename)
+		actual_contents = self.read_file(self.output_folder, filename)
+		return expected_contents, actual_contents
 
+	def read_file(self, folder, filename):
+		path = Path(folder) / filename
+		return path.read_text()
 
 class Test_Demo_Models(unittest.TestCase):
 	def test_demo_model(self):
