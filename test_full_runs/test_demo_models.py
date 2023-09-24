@@ -31,13 +31,14 @@ class TestFixture():
 			u.CONSTANTS["OUTPUT_DIR"] = default_output_dir
 
 	def assert_all_but_first_line_identical(self, filename):
-		expected_path = Path(self.reference_output_folder) / filename
-		expected_contents = expected_path.read_text()
-		expected = self.remove_first_line(expected_contents)
-		actual_path = Path(self.output_folder) / filename
-		actual_contents = actual_path.read_text()
-		actual = self.remove_first_line(actual_contents)
+		expected, actual = self.read_reference_and_actual_removing_first_line(filename)
 		self.test_instance.assertEqual(expected, actual)
+
+	def read_reference_and_actual_removing_first_line(self, filename):
+		expected, actual = self.read_reference_and_actual(filename)
+		expected = self.remove_first_line(expected)
+		actual = self.remove_first_line(actual)
+		return expected, actual
 
 	def remove_first_line(self, s):
 		first_line_end_index = s.find('\n') + 1
