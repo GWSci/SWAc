@@ -1363,6 +1363,7 @@ def get_sfr_file(data, runoff):
                                                                    dtype=int),
                                                        nja=njag, ihc=[1],
                                                        iac=[1])
+
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
                                              time_units=None,
