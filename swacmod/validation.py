@@ -428,6 +428,7 @@ def val_swdis_locs(data, name):
             keys=range(1, tot)
         )
 
+
         c.check_values_limits(
             values=swdisl.values(),
             name="zone in %s" % name,
@@ -978,6 +979,7 @@ def val_single_cell_swrecharge_zone_names(data, name):
 ###############################################################################
 def val_macropore_zone_names(data, name):
     """Validate macropore_zone_names.
+
     1) type has to be a dictionary of strings
     """
     mzn = data["params"][name]
