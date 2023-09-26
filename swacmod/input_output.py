@@ -28,7 +28,8 @@ from . import checks as c
 from . import validation as v
 from . import finalization as f
 from . import __version__
-import swacmod.feature_flags as ff
+from . import time_series_data as time_series_data
+from . import feature_flags as ff
 
 
 try:
@@ -575,6 +576,94 @@ def convert_one_yaml_to_csv(filein):
 
 
 ###############################################################################
+
+def categorise_param(param, value):
+    time_period_params = [
+        "interflow_decay_ts",
+        "percolation_rejection_ts",
+        "rainfall_ts",
+        "temperature_ts",
+        "tmax_c_ts",
+        "tmin_c_ts",
+        "pe_ts",
+        "windsp_ts",
+    ]
+    non_time_period_params = [
+        "infiltration_limit_ts", # Not used in the large model but there is a file that looks like it could be used for less that 1 MB.
+        "subroot_leakage_ts", # Less than 1 MB in a large real model.
+        "swabs_ts", # Less than 2 MB in a large real model.
+        "swdis_ts", # Less than 1 MB in a large real model.
+        "canopy_zone_mapping",
+        "canopy_zone_names",
+        "evt_parameters",
+        "free_throughfall",
+        "infiltration_limit",
+        "init_interflow_store",
+        "interflow_decay",
+        "interflow_store_bypass",
+        "interflow_zone_mapping",
+        "interflow_zone_names",
+        "kc",
+        "landuse_zone_names",
+        "lu_spatial",
+        "macropore_activation",
+        "macropore_limit",
+        "macropore_proportion",
+        "macropore_recharge",
+        "macropore_zone_mapping",
+        "macropore_zone_names",
+        "max_canopy_storage",
+        "node_areas",
+        "node_xy",
+        "pe_zone_mapping",
+        "pe_zone_names",
+        "percolation_rejection",
+        "rainfall_zone_mapping",
+        "rainfall_zone_names",
+        "rapid_runoff_params",
+        "rapid_runoff_zone_mapping",
+        "rapid_runoff_zone_names",
+        "raw",
+        "recharge_attenuation_params",
+        "recharge_node_mapping",
+        "reporting_zone_mapping",
+        "reporting_zone_names",
+        "routing_topology",
+        "snow_params_simple",
+        "soil_static_params",
+        "soil_zone_names",
+        "subroot_zone_names",
+        "subsoilzone_leakage_fraction",
+        "snow_params_complex",
+        "soil_spatial",
+        "subroot_zone_mapping",
+        "smd",
+        "swdis_locs",
+        "sw_params",
+        "swabs_locs",
+        "swrecharge_limit",
+        "swrecharge_proportion",
+        "swrecharge_zone_mapping",
+        "swrecharge_zone_names",
+        "taw",
+        "temperature_zone_mapping",
+        "temperature_zone_names",
+        "time_periods",
+        "tmax_c_zone_mapping",
+        "tmax_c_zone_names",
+        "tmin_c_zone_mapping",
+        "tmin_c_zone_names",
+        "windsp_zone_mapping",
+        "windsp_zone_names",
+        "zr",
+    ]
+    if param in time_period_params:
+        return "time_peroiod_param"
+    if param in non_time_period_params:
+        return "non_time_peroiod_param"
+    print(f"Uncategorised param. param = {param}. value = {value}.")
+    return "uncategorised_param"
+
 def load_params_from_yaml(
         specs_file=u.CONSTANTS["SPECS_FILE"],
         input_file=u.CONSTANTS["INPUT_FILE"],
@@ -654,8 +743,11 @@ def load_and_validate(specs_file, input_file, input_dir):
     f.finalize_params(data)
     f.finalize_series(data)
     c.check_required(data)
-    v.validate_params(data)
-    v.validate_series(data)
+    if ff.skip_validation:
+        pass
+    else:
+        v.validate_params(data)
+        v.validate_series(data)
 
     return data
 
