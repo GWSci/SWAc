@@ -337,6 +337,14 @@ def monthdelta(d1, d2):
             break
     return delta
 
+def monthdelta2(d1, d2):
+    " difference in months between two dates"
+    year_diff = d2.year - d1.year
+    month_diff = d2.month - d1.month
+    day_correction = (-1) if d2.day < d1.day else 0
+    result = (12 * year_diff) + month_diff + day_correction
+    return result
+
 
 def weekdelta(d1, d2):
     " difference in weeks between two dates"
