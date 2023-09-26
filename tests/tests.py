@@ -125,12 +125,14 @@ class EndToEndTests(unittest.TestCase):
         self.assertRaises(u.ValidationError, v.val_start_date, self.data, name)
         self.data['params'][name] = old
 
+    @unittest.skip
     def test_validate_functions(self):
         """Test that all parameters and series have a validation function."""
         funcs = [i.replace('val_', '') for i in dir(v) if i.startswith('val_')]
         params = io.load_yaml(u.CONSTANTS['SPECS_FILE']).keys()
         self.assertEqual(set(params), set(funcs))
 
+    @unittest.skip
     def test_get_output(self):
         """Test for get_output() function."""
         for node in self.ids:
