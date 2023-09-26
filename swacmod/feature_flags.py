@@ -17,4 +17,4 @@ max_node_count_override = _max_node_count_override if use_node_count_override el
 disable_multiprocessing = True
 skip_validation = _skip_validation and _use_experimental_perf_features 
 
-use_natproc = False
+use_natproc = True
