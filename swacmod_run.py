@@ -485,10 +485,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     workers = []
     if ff.disable_multiprocessing:
+        q = queue.Queue()
+        pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
+
         timer.switch_to(timer_switcher_for_run, "run_main > run (multiprocessing)")
-        q = mp.Queue()
-        lproc = mp.Process(target=listener, args=(q, nnodes))
-        lproc.start()
 
         for process, chunk in enumerate(chunks):
 
@@ -513,10 +513,13 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 reporting,
                 single_node_output,
                 q,
+                pbar
             )
 
         q.put(None)
-        lproc.join()
+        pbar.update()
+        pbar.close()
+
     else:
         q = mp.Queue()
         lproc = mp.Process(target=listener, args=(q, nnodes))
