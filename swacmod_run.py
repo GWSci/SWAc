@@ -410,33 +410,62 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     per = len(data["params"]["time_periods"])
     nnodes = data["params"]["num_nodes"]
     len_rch_agg = (nnodes * per) + 1
-    recharge_agg = mp.Array("f", 1)
-    runoff_agg = mp.Array("f", 1)
-    runoff_recharge_agg = np.zeros((1))
-    evtr_agg = mp.Array("f", 1)
-    recharge = mp.Array("f", 1)
-    runoff = mp.Array("f", 1)
-    if params["swrecharge_process"] == "enabled" or data["params"][
-            "output_recharge"]:
-        recharge_agg = mp.Array("f",
-                                len_rch_agg)  # recharge by output period (agg)
+    if not ff.disable_multiprocessing:
+        recharge_agg = mp.Array("f", 1)
+        runoff_agg = mp.Array("f", 1)
+        runoff_recharge_agg = np.zeros((1))
+        evtr_agg = mp.Array("f", 1)
+        recharge = mp.Array("f", 1)
+        runoff = mp.Array("f", 1)
+        if params["swrecharge_process"] == "enabled" or data["params"][
+                "output_recharge"]:
+            recharge_agg = mp.Array("f",
+                                    len_rch_agg)  # recharge by output period (agg)
 
-    if params["swrecharge_process"] == "enabled" or data["params"][
-            "output_sfr"]:
-        runoff_agg = mp.Array("f", len_rch_agg)
+        if params["swrecharge_process"] == "enabled" or data["params"][
+                "output_sfr"]:
+            runoff_agg = mp.Array("f", len_rch_agg)
 
-    if params["swrecharge_process"] == "enabled":
-        runoff_recharge_agg = np.zeros((len_rch_agg))
+        if params["swrecharge_process"] == "enabled":
+            runoff_recharge_agg = np.zeros((len_rch_agg))
 
-    if data["params"]["output_evt"]:
-        evtr_agg = mp.Array("f", len_rch_agg)
+        if data["params"]["output_evt"]:
+            evtr_agg = mp.Array("f", len_rch_agg)
 
-    days = len(data["series"]["date"])
-    len_rch = (nnodes * days) + 1
+        days = len(data["series"]["date"])
+        len_rch = (nnodes * days) + 1
 
-    if params["swrecharge_process"] == "enabled":
-        recharge = mp.sharedctypes.Array("f", len_rch, lock=True)
-        runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
+        if params["swrecharge_process"] == "enabled":
+            recharge = mp.sharedctypes.Array("f", len_rch, lock=True)
+            runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
+    else:
+        recharge_agg = mp.Array("f", 1)
+        runoff_agg = mp.Array("f", 1)
+        runoff_recharge_agg = np.zeros((1))
+        evtr_agg = mp.Array("f", 1)
+        recharge = mp.Array("f", 1)
+        runoff = mp.Array("f", 1)
+        if params["swrecharge_process"] == "enabled" or data["params"][
+                "output_recharge"]:
+            recharge_agg = mp.Array("f",
+                                    len_rch_agg)  # recharge by output period (agg)
+
+        if params["swrecharge_process"] == "enabled" or data["params"][
+                "output_sfr"]:
+            runoff_agg = mp.Array("f", len_rch_agg)
+
+        if params["swrecharge_process"] == "enabled":
+            runoff_recharge_agg = np.zeros((len_rch_agg))
+
+        if data["params"]["output_evt"]:
+            evtr_agg = mp.Array("f", len_rch_agg)
+
+        days = len(data["series"]["date"])
+        len_rch = (nnodes * days) + 1
+
+        if params["swrecharge_process"] == "enabled":
+            recharge = mp.sharedctypes.Array("f", len_rch, lock=True)
+            runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
 
     ids = range(1, nnodes + 1)
     random.shuffle(list(ids))
