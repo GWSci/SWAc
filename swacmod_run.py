@@ -4,6 +4,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
+import swacmod.feature_flags as ff
+
 # Standard Library
 import os
 import sys
@@ -11,8 +13,16 @@ import time
 import random
 import logging
 import argparse
-import multiprocessing as mp
-from multiprocessing.heap import Arena
+if not ff.disable_multiprocessing:
+    import multiprocessing as mp
+    from multiprocessing.heap import Arena
+else:
+    import queue
+
+import swacmod.performance_logging as performance_logging
+
+import swacmod.timer as timer
+
 import mmap
 import gc
 
@@ -23,17 +33,17 @@ from tqdm import tqdm
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
+
 # Compile and import model
 from swacmod import compile_model
 from swacmod import model as m
-import swacmod.feature_flags as ff
+import swacmod.model_numpy as model_numpy
 
 # win fix
 sys.maxint = 2**63 - 1
 
 # sentinel for iteration count
 SENTINEL = 1
-
 
 def anonymous_arena_init(self, size, fd=-1):
     "Create Arena using an anonymous memory mapping."
