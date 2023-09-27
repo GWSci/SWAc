@@ -360,12 +360,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     if ff.disable_multiprocessing:
         manager = mp.Manager()
-        reporting_agg = manager.dict()
+        reporting_agg = {}
         reporting_agg2 = {}
-        reporting = manager.dict()
-        spatial = manager.dict()
+        reporting = {}
+        spatial = {}
 
-        single_node_output = manager.dict()
+        single_node_output = {}
     else:
         manager = mp.Manager()
         reporting_agg = manager.dict()
