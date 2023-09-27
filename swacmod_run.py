@@ -677,7 +677,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
             # copy new bits into cat output
             term = "runoff_recharge"
-            for cat in reporting_agg2:
+            for cat in reporting_agg2 and not ff.use_node_count_override:
                 if "runoff_recharge" in reporting_agg2[cat]:
                     reporting_agg[cat]["combined_recharge"] += reporting_agg2[
                         cat][term][term]
@@ -687,20 +687,23 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                         cat][term][term]
 
         print("\nWriting output files:")
+        timer.switch_to(output_timer_token, "checking open files")
         if not skip:
             io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
-        for num, key in enumerate(reporting_agg.keys()):
-            print("\t- Report file (%d of %d)" %
-                  (num + 1, len(reporting_agg.keys())))
-            io.dump_water_balance(
-                data,
-                reporting_agg[key],
-                file_format,
-                u.CONSTANTS["OUTPUT_DIR"],
-                zone=key,
-                reduced=reduced,
-            )
+        timer.switch_to(output_timer_token, "reporting agg loop")
+        if not ff.use_node_count_override:
+            for num, key in enumerate(reporting_agg.keys()):
+                print("\t- Report file (%d of %d)" %
+                    (num + 1, len(reporting_agg.keys())))
+                io.dump_water_balance(
+                    data,
+                    reporting_agg[key],
+                    file_format,
+                    u.CONSTANTS["OUTPUT_DIR"],
+                    zone=key,
+                    reduced=reduced,
+                )
 
         for node in list(data["params"]["output_individual"]):
             print("\t- Node output file")
@@ -713,9 +716,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 reduced=reduced,
             )
 
+        timer.switch_to(output_timer_token, "swrecharge_process")
         if params["swrecharge_process"] == "enabled":
             del runoff_recharge, tmp, runoff, recharge
             gc.collect()
+        timer.switch_to(output_timer_token, "output_recharge")
         if data["params"]["output_recharge"]:
             print("\t- Recharge file")
             if data['params']['gwmodel_type'] == 'mfusg':
@@ -725,6 +730,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             elif data['params']['gwmodel_type'] == 'mf96':
                 io.dump_mf96_recharge_file(data, recharge_agg)
 
+        timer.switch_to(output_timer_token, "spatial_output_date")
         if data["params"]["spatial_output_date"]:
             print("\t- Spatial file")
             io.dump_spatial_output(data,
@@ -732,6 +738,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                                    u.CONSTANTS["OUTPUT_DIR"],
                                    reduced=reduced)
 
+        timer.switch_to(output_timer_token, "output_sfr")
         if data["params"]["output_sfr"]:
             print("\t- SFR file")
             if data['params']['gwmodel_type'] == 'mf96':
@@ -746,36 +753,50 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     fout.writelines(lst_strm[2:])
                 del strm
             else:
-                sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
-                if data['params']['gwmodel_type'] == 'mfusg':
-                    io.dump_sfr_output(sfr)
-                elif data['params']['gwmodel_type'] == 'mf6':
-                    sfr.write()
-                del sfr
-                gc.collect()
+                if not ff.use_node_count_override:
+                    sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
+                    if data['params']['gwmodel_type'] == 'mfusg':
+                        io.dump_sfr_output(sfr)
+                    elif data['params']['gwmodel_type'] == 'mf6':
+                        sfr.write()
+                    del sfr
+                    gc.collect()
 
+        timer.switch_to(output_timer_token, "output_evt")
         if data["params"]["output_evt"]:
             print("\t- EVT file")
 
             if data["params"]["excess_sw_process"] != "disabled":
+                timer.switch_to(output_timer_token, "output_evt (copying arrays)")
                 tmp = (np.copy(np.array(evtr_agg)) -
                        np.copy(np.array(runoff_agg)))
                 if data["params"]["excess_sw_process"] == "sw_rip":
+                    timer.switch_to(output_timer_token, "output_evt (sw_rip)")
                     evt = m.get_evt_file(data, tmp)
                 elif data["params"]["excess_sw_process"] == "sw_ow_evap":
+                    timer.switch_to(output_timer_token, "output_evt (sw_ow_evap)")
                     evt = m.get_evt_file(data, np.where(tmp > 0.0, 0.0, tmp))
                 elif data["params"]["excess_sw_process"] == "sw_only":
+                    timer.switch_to(output_timer_token, "output_evt (sw_only)")
                     evt = m.get_evt_file(data, -np.copy(np.array(runoff_agg)))
             else:
+                timer.switch_to(output_timer_token, "output_evt (else)")
                 evt = m.get_evt_file(data, evtr_agg)
 
             if data['params']['gwmodel_type'] == 'mfusg':
+                timer.switch_to(output_timer_token, "output_evt (mfusg)")
                 io.dump_evt_output(evt)
             elif data['params']['gwmodel_type'] == 'mf6':
+                timer.switch_to(output_timer_token, "output_evt (mf6)")
                 evt.write()
+            timer.switch_to(output_timer_token, "output_evt (cleaning up)")
             evt, tmp = None, None
             del evt, tmp
             gc.collect()
+
+        
+        timer.switch_off(output_timer_token)
+        timer.print_time_switcher_report(output_timer_token)
 
     times["end_of_run"] = time.time()
 
@@ -802,6 +823,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     gc.collect()
 
+    timer.switch_off(timer_switcher_for_run)
+    timer.switch_off(total_timer_switcher_for_run)
+    timer.print_time_switcher_report(timer_switcher_for_run)
+    timer.print_time_switcher_report(total_timer_switcher_for_run)
     # return
 
 
