@@ -113,13 +113,14 @@ def _compare_methods(unoptimised, optimised, data, output, node):
     return optimised_result
 
 ###############################################################################
-def get_output(data, node):
+def get_output(data, node, time_switcher):
     """Run the model."""
     logging.debug("\tRunning model for node %d", node)
 
     start = time.time()
 
     output = {}
+
     methods = [
         m.get_precipitation,
         m.get_pe,
@@ -156,6 +157,7 @@ def get_output(data, node):
     ]
     for function in methods:
 
+        timer.switch_to(time_switcher, function.__name__)
         columns = function(data, output, node)
         output.update(columns)
         logging.debug('\t\t"%s()" done', function.__name__)
@@ -185,8 +187,18 @@ def run_process(
         reporting,
         single_node_output,
         q,
+        pbar=None
 ):
     """Run model for a chunk of nodes."""
+    timer_token_run_process = timer.make_time_switcher()
+    timer.switch_to(timer_token_run_process, "run_main > run > run_process")
+    time_switcher = timer.make_time_switcher()
+    comparison_time_switcher = timer.make_time_switcher()
+    data["time_switcher"] = time_switcher
+    data["comparison_time_switcher"] = comparison_time_switcher
+
+    timer.switch_to(time_switcher, "run_main > run > run_process (preamble)")
+
     io.start_logging(path=log_path, level=level)
     logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
@@ -194,6 +206,8 @@ def run_process(
     for node in ids:
 
         q.put(SENTINEL)
+        if pbar is not None:
+            pbar.update()
 
         if data["params"]['sw_process_natproc'] == 'enabled':
             zone_sw = data["params"]['sw_zone_mapping'][node]
@@ -203,7 +217,10 @@ def run_process(
 
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
-            output = get_output(data, node)
+            timer.switch_to(time_switcher, "run_main > run > run_process (output calculation)")
+            output = get_output(data, node, time_switcher)
+            timer.switch_to(time_switcher, "run_main > run > run_process (post calc)")
+
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
                 if node in data["params"]["output_individual"]:
