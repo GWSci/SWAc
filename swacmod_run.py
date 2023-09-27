@@ -635,9 +635,15 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 else:
                     pond_area = 0.0
 
-                tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32)
+                if ff.disable_multiprocessing:
+                    tmp = recharge
+                else:
+                    tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32)
                 rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-                tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
+                if ff.disable_multiprocessing:
+                    tmp = runoff
+                else:
+                    tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
                 ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
                 ror_array = np.array(runoff_recharge[idx],
                                      dtype=np.float64,
