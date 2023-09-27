@@ -157,6 +157,7 @@ def get_output(data, node, time_switcher):
         m.get_change,
         m.get_balance,
     ]
+
     for function in methods:
 
         timer.switch_to(time_switcher, function.__name__)
@@ -261,7 +262,7 @@ def compare_lambdas(name, time_switcher, unoptimised, optimised):
     np.testing.assert_equal(unoptimised_result, optimised_result)
         
     return optimised_result
- 
+
 def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, spatial_index, pond_area):
     if node in data["params"]["output_individual"]:
         timer.switch_to(time_switcher, "aggregate_output (output_individual)")
@@ -626,6 +627,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 if ff.use_node_count_override:
                     if int(node) > nnodes:
                         continue
+
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
 
