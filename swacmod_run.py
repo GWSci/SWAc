@@ -677,8 +677,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
             # copy new bits into cat output
             term = "runoff_recharge"
-            for cat in reporting_agg2 and not ff.use_node_count_override:
-                if "runoff_recharge" in reporting_agg2[cat]:
+            for cat in reporting_agg2:
+                if "runoff_recharge" in reporting_agg2[cat] and not ff.use_node_count_override:
                     reporting_agg[cat]["combined_recharge"] += reporting_agg2[
                         cat][term][term]
                     reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][
@@ -705,6 +705,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     reduced=reduced,
                 )
 
+        timer.switch_to(output_timer_token, "output_individual")
         for node in list(data["params"]["output_individual"]):
             print("\t- Node output file")
             io.dump_water_balance(
@@ -794,7 +795,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             del evt, tmp
             gc.collect()
 
-        
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
 
@@ -831,8 +831,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
 
 ###############################################################################
-if __name__ == "__main__":
-    mp.freeze_support()
+def run_main():
+    if not ff.disable_multiprocessing:
+        mp.freeze_support()
 
     # Parser for command line arguments
     DESCRIPTION = """
@@ -905,3 +906,6 @@ if __name__ == "__main__":
             logging.error(err.__repr__())
             print("ERROR: %s" % err)
             print("")
+
+if __name__ == "__main__":
+    run_main()
