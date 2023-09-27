@@ -17,6 +17,8 @@ if not ff.disable_multiprocessing:
     import multiprocessing as mp
     from multiprocessing.heap import Arena
 else:
+    import multiprocessing as mp
+    from multiprocessing.heap import Arena
     import queue
 
 import swacmod.performance_logging as performance_logging
@@ -482,6 +484,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     workers = []
     if ff.disable_multiprocessing:
+        timer.switch_to(timer_switcher_for_run, "run_main > run (multiprocessing)")
         q = mp.Queue()
         lproc = mp.Process(target=listener, args=(q, nnodes))
         lproc.start()
@@ -559,6 +562,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
             workers.append(Worker("worker%d" % process, q, proc, verbose=False))
 
+        timer.switch_to(timer_switcher_for_run, "run_main > run (multiprocessing)")
+
         for p in workers:
             p.start()
 
@@ -606,6 +611,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             # aggregate amended recharge & runoff arrays by output periods
             for node in tqdm(list(m.all_days_mask(data).nodes),
                              desc="Aggregating Fluxes      "):
+                if ff.use_node_count_override:
+                    if int(node) > nnodes:
+                        continue
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
 
