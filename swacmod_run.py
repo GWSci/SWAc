@@ -17,8 +17,6 @@ if not ff.disable_multiprocessing:
     import multiprocessing as mp
     from multiprocessing.heap import Arena
 else:
-    import multiprocessing as mp
-    from multiprocessing.heap import Arena
     import queue
 
 import swacmod.performance_logging as performance_logging
