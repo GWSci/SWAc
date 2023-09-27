@@ -568,13 +568,19 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         q.put(None)
         lproc.join()
 
+    timer.switch_to(timer_switcher_for_run, "run_main > run (output)")
+    output_timer_token = timer.make_time_switcher()
+    timer.switch_to(output_timer_token, "before anything interesting")
+
     times["end_of_model"] = time.time()
 
     if not test:
 
         # aggregate over processes
+        timer.switch_to(output_timer_token, "reporting_agg")
         reporting_agg = aggregate_reporting(reporting_agg)
 
+        timer.switch_to(output_timer_token, "swrecharge_process")
         if params["swrecharge_process"] == "enabled":
 
             for cat in data["params"]["reporting_zone_mapping"].values():
