@@ -495,36 +495,25 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             if chunk.size == 0:
                 continue
 
-            proc = mp.Process(
-                target=run_process,
-                args=(
-                    process,
-                    chunk,
-                    data,
-                    test,
-                    reporting_agg,
-                    recharge_agg,
-                    runoff_agg,
-                    evtr_agg,
-                    recharge,
-                    runoff,
-                    log_path,
-                    level,
-                    spatial,
-                    spatial_index,
-                    reporting,
-                    single_node_output,
-                    q,
-                ),
+            run_process(
+                process,
+                chunk,
+                data,
+                test,
+                reporting_agg,
+                recharge_agg,
+                runoff_agg,
+                evtr_agg,
+                recharge,
+                runoff,
+                log_path,
+                level,
+                spatial,
+                spatial_index,
+                reporting,
+                single_node_output,
+                q,
             )
-
-            workers.append(Worker("worker%d" % process, q, proc, verbose=False))
-
-        for p in workers:
-            p.start()
-
-        for p in workers:
-            p.join()
 
         q.put(None)
         lproc.join()
