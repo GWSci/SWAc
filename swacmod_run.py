@@ -53,9 +53,11 @@ def anonymous_arena_init(self, size, fd=-1):
 
 
 # monkey patch for anonymous memory mapping python 3
-if sys.version_info > (3,):
-    if mp.get_start_method() == 'fork':
-        Arena.__init__ = anonymous_arena_init
+if not ff.disable_multiprocessing:
+    if sys.version_info > (3,):
+        if mp.get_start_method() == 'fork':
+            Arena.__init__ = anonymous_arena_init
+
 
 class Worker:
     "mp worker"
@@ -92,6 +94,24 @@ def aggregate_reporting(reporting):
     return new_rep
 
 
+def compare_methods(unoptimised, optimised):
+    result = lambda data, output, node: _compare_methods(unoptimised, optimised, data, output, node)
+    result.__name__ = unoptimised.__name__
+    return result
+
+def _compare_methods(unoptimised, optimised, data, output, node):
+    comparison_time_switcher = data["comparison_time_switcher"]
+    timer.switch_to(comparison_time_switcher, f"{unoptimised.__name__} (unoptimised)")
+    unoptimised_result = unoptimised(data, output, node)
+
+    timer.switch_to(comparison_time_switcher, f"{unoptimised.__name__} (optimised)")
+    optimised_result = optimised(data, output, node)
+    timer.switch_off(comparison_time_switcher)
+
+    np.testing.assert_equal(unoptimised_result, optimised_result)
+        
+    return optimised_result
+
 ###############################################################################
 def get_output(data, node):
     """Run the model."""
@@ -100,40 +120,41 @@ def get_output(data, node):
     start = time.time()
 
     output = {}
-    for function in [
-            m.get_precipitation,
-            m.get_pe,
-            m.get_pefac,
-            m.get_canopy_storage,
-            m.get_net_pefac,
-            m.get_precip_to_ground,
-            m.get_snowfall_o,
-            m.get_rainfall_o,
-            m.get_snow_simple,
-            m.get_snow_complex,
-            m.get_net_rainfall,
-            m.get_rawrew,
-            m.get_tawtew,
-            m.get_ae,
-            m.get_unutilised_pe,
-            m.get_rejected_recharge,
-            m.get_perc_through_root,
-            m.get_subroot_leak,
-            m.get_interflow_bypass,
-            m.get_interflow_store_input,
-            m.get_interflow,
-            m.get_swabs,
-            m.get_swdis,
-            m.get_combined_str,
-            m.get_recharge_store_input,
-            m.get_recharge,
-            m.get_combined_ae,
-            m.get_evt,
-            m.get_average_in,
-            m.get_average_out,
-            m.get_change,
-            m.get_balance,
-    ]:
+    methods = [
+        m.get_precipitation,
+        m.get_pe,
+        m.get_pefac,
+        m.get_canopy_storage,
+        m.get_net_pefac,
+        m.get_precip_to_ground,
+        m.get_snowfall_o,
+        m.get_rainfall_o,
+        m.get_snow_simple,
+        m.get_snow_complex,
+        m.get_net_rainfall,
+        m.get_rawrew,
+        m.get_tawtew,
+        m.get_ae,
+        m.get_unutilised_pe,
+        m.get_rejected_recharge,
+        m.get_perc_through_root,
+        m.get_subroot_leak,
+        m.get_interflow_bypass,
+        m.get_interflow_store_input,
+        m.get_interflow,
+        m.get_swabs,
+        m.get_swdis,
+        m.get_combined_str,
+        m.get_recharge_store_input,
+        m.get_recharge,
+        m.get_combined_ae,
+        m.get_evt,
+        m.get_average_in,
+        m.get_average_out,
+        m.get_change,
+        m.get_balance,
+    ]
+    for function in methods:
 
         columns = function(data, output, node)
         output.update(columns)
