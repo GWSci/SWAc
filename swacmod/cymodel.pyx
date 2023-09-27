@@ -1541,6 +1541,22 @@ def aggregate(output, area, ponded_frac, reporting=None, index=None):
             new_rep[key] += convert(reporting[key])
     return new_rep
 
+def aggregate_op(output, area):
+    """Aggregate reporting over output periods."""
+    new_rep = {}
+    for key in output:
+        new_rep[key] = output[key] * area
+    return new_rep
+
+def aggregate_reporting_op(output, area, reporting):
+    """Aggregate reporting over output periods."""
+    new_rep = {}
+    for key in output:
+        new_rep[key] = output[key] * area
+        if reporting:
+            new_rep[key] += reporting[key]
+    return new_rep
+
 ###############################################################################
 
 
