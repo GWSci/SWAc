@@ -359,7 +359,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     times = {"start_of_run": time.time()}
 
     if ff.disable_multiprocessing:
-        manager = mp.Manager()
         reporting_agg = {}
         reporting_agg2 = {}
         reporting = {}
@@ -442,16 +441,15 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             recharge = mp.sharedctypes.Array("f", len_rch, lock=True)
             runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
     else:
-        recharge_agg = mp.Array("f", 1)
+        recharge_agg = np.zeros(1, dtype=np.single)
         runoff_agg = mp.Array("f", 1)
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = mp.Array("f", 1)
-        recharge = mp.Array("f", 1)
+        recharge = np.zeros(1, dtype=np.single)
         runoff = mp.Array("f", 1)
         if params["swrecharge_process"] == "enabled" or data["params"][
                 "output_recharge"]:
-            recharge_agg = mp.Array("f",
-                                    len_rch_agg)  # recharge by output period (agg)
+            recharge_agg = np.zeros(len_rch_agg, np.single)  # recharge by output period (agg)
 
         if params["swrecharge_process"] == "enabled" or data["params"][
                 "output_sfr"]:
@@ -467,7 +465,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         len_rch = (nnodes * days) + 1
 
         if params["swrecharge_process"] == "enabled":
-            recharge = mp.sharedctypes.Array("f", len_rch, lock=True)
+            recharge = np.zeros(len_rch, dtype=np.single)
             runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
 
     ids = range(1, nnodes + 1)
