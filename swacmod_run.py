@@ -444,7 +444,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         recharge_agg = np.zeros(1, dtype=np.single)
         runoff_agg = np.zeros(1, dtype=np.single)
         runoff_recharge_agg = np.zeros((1))
-        evtr_agg = mp.Array("f", 1)
+        evtr_agg = np.zeros(1, dtype=np.single)
         recharge = np.zeros(1, dtype=np.single)
         runoff = np.zeros(1, dtype=np.single)
         if params["swrecharge_process"] == "enabled" or data["params"][
@@ -459,7 +459,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             runoff_recharge_agg = np.zeros((len_rch_agg))
 
         if data["params"]["output_evt"]:
-            evtr_agg = mp.Array("f", len_rch_agg)
+            evtr_agg = np.zeros(len_rch_agg, dtype=np.single)
 
         days = len(data["series"]["date"])
         len_rch = (nnodes * days) + 1
