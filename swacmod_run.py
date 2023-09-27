@@ -349,15 +349,28 @@ def listener(q, total):
 def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         data=None):
     """Run model for all nodes."""
+    total_timer_switcher_for_run = timer.make_time_switcher()
+    timer.switch_to(total_timer_switcher_for_run, "run_main > run")
+    timer_switcher_for_run = timer.make_time_switcher()
+    timer.switch_to(timer_switcher_for_run, "run_main > run (before loading data)")
     times = {"start_of_run": time.time()}
 
-    manager = mp.Manager()
-    reporting_agg = manager.dict()
-    reporting_agg2 = {}
-    reporting = manager.dict()
-    spatial = manager.dict()
+    if ff.disable_multiprocessing:
+        manager = mp.Manager()
+        reporting_agg = manager.dict()
+        reporting_agg2 = {}
+        reporting = manager.dict()
+        spatial = manager.dict()
 
-    single_node_output = manager.dict()
+        single_node_output = manager.dict()
+    else:
+        manager = mp.Manager()
+        reporting_agg = manager.dict()
+        reporting_agg2 = {}
+        reporting = manager.dict()
+        spatial = manager.dict()
+
+        single_node_output = manager.dict()
     specs_file = u.CONSTANTS["SPECS_FILE"]
     if test:
         input_file = u.CONSTANTS["TEST_INPUT_FILE"]
@@ -368,6 +381,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     level = logging.DEBUG if debug else logging.INFO
 
+    timer.switch_to(timer_switcher_for_run, "run_main > run (loading data)")
     if data is None:
         params = io.load_yaml(input_file)
     else:
@@ -381,8 +395,17 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     if data is None:
         data = io.load_and_validate(specs_file, input_file, input_dir)
 
+    if ff.use_node_count_override:
+        num_nodes_initial = data["params"]["num_nodes"]
+        num_nodes_new = min(num_nodes_initial, ff.max_node_count_override)
+        percentage = round((100 * num_nodes_new) / num_nodes_initial)
+        performance_logging.log_performance(f"Reduced num_nodes from {num_nodes_initial} to {num_nodes_new}. ({percentage} %)")
+        data["params"]["num_nodes"] = num_nodes_new
+    
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
+
+    timer.switch_to(timer_switcher_for_run, "run_main > run (getting ready for multiprocessing)")
 
     per = len(data["params"]["time_periods"])
     nnodes = data["params"]["num_nodes"]
