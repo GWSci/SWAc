@@ -227,6 +227,13 @@ def run_process(
 
     logging.info("mp.Process %d ended", num)
 
+    timer.switch_off(time_switcher)
+    timer.switch_off(timer_token_run_process)
+
+    timer.print_time_switcher_report(time_switcher)
+    timer.print_time_switcher_report(comparison_time_switcher)
+    timer.print_time_switcher_report(timer_token_run_process)
+
     return (
         reporting_agg,
         recharge_agg,
@@ -240,10 +247,25 @@ def run_process(
     )
 
 
+def compare_lambdas(name, time_switcher, unoptimised, optimised):
+
+    timer.switch_to(time_switcher, f"{name} (unoptimised)")
+    unoptimised_result = unoptimised()
+
+    timer.switch_to(time_switcher, f"{name} (optimised)")
+    optimised_result = optimised()
+
+    timer.switch_to(time_switcher, f"{name} (comparison)")
+    np.testing.assert_equal(unoptimised_result, optimised_result)
+        
+    return optimised_result
+ 
 def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, spatial_index, pond_area):
     if node in data["params"]["output_individual"]:
+        timer.switch_to(time_switcher, "aggregate_output (output_individual)")
         # if this node for individual output then preserve
         single_node_output[node] = output.copy()
+    timer.switch_to(time_switcher, "aggregate_output > (call m.aggregate)")
     key = (num, rep_zone)
     area = data["params"]["node_areas"][node]
     if key not in reporting_agg:
@@ -252,6 +274,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
         reporting_agg[key] = m.aggregate(
             output, area, pond_area, reporting=reporting_agg[key])
 
+    timer.switch_to(time_switcher, "aggregate_output > (output_recharge)")
     if data["params"]["output_recharge"]:
         rech = {"recharge": output["combined_recharge"].copy()}
         for i, p in enumerate(
@@ -262,6 +285,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             recharge_agg[(nnodes * i) + int(node)] = p
         rech = None
 
+    timer.switch_to(time_switcher, "aggregate_output > (swrecharge_process)")
     if data["params"]["swrecharge_process"] == "enabled":
 
         rech = output["combined_recharge"].copy()
@@ -274,6 +298,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             runoff[(nnodes * i) + int(node)] = p
         ro = None
 
+    timer.switch_to(time_switcher, "aggregate_output > (output_sfr)")
     if (data["params"]["output_sfr"]
             or data["params"]["excess_sw_process"] != "disabled"):
         ro = {"runoff": output["combined_str"].copy()}
@@ -285,6 +310,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             runoff_agg[(nnodes * i) + int(node)] = p
         ro = None
 
+    timer.switch_to(time_switcher, "aggregate_output > (output_evt)")
     if data["params"]["output_evt"]:
         evt = {"evtr": output["unutilised_pe"].copy()}
         for i, p in enumerate(
@@ -295,11 +321,13 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             evtr_agg[(nnodes * i) + int(node)] = p
         evt = None
 
+    timer.switch_to(time_switcher, "aggregate_output > (spatial_output_date)")
     if data["params"]["spatial_output_date"]:
         spatial[node] = m.aggregate(output,
                                     area,
                                     pond_area,
                                     index=spatial_index)
+    logging.info("mp.Process %d ended", num)
 
 ###############################################################################
 
