@@ -481,48 +481,92 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         spatial_index = None
 
     workers = []
-    q = mp.Queue()
-    lproc = mp.Process(target=listener, args=(q, nnodes))
-    lproc.start()
+    if ff.disable_multiprocessing:
+        q = mp.Queue()
+        lproc = mp.Process(target=listener, args=(q, nnodes))
+        lproc.start()
 
-    for process, chunk in enumerate(chunks):
+        for process, chunk in enumerate(chunks):
 
-        if chunk.size == 0:
-            continue
+            if chunk.size == 0:
+                continue
 
-        proc = mp.Process(
-            target=run_process,
-            args=(
-                process,
-                chunk,
-                data,
-                test,
-                reporting_agg,
-                recharge_agg,
-                runoff_agg,
-                evtr_agg,
-                recharge,
-                runoff,
-                log_path,
-                level,
-                spatial,
-                spatial_index,
-                reporting,
-                single_node_output,
-                q,
-            ),
-        )
+            proc = mp.Process(
+                target=run_process,
+                args=(
+                    process,
+                    chunk,
+                    data,
+                    test,
+                    reporting_agg,
+                    recharge_agg,
+                    runoff_agg,
+                    evtr_agg,
+                    recharge,
+                    runoff,
+                    log_path,
+                    level,
+                    spatial,
+                    spatial_index,
+                    reporting,
+                    single_node_output,
+                    q,
+                ),
+            )
 
-        workers.append(Worker("worker%d" % process, q, proc, verbose=False))
+            workers.append(Worker("worker%d" % process, q, proc, verbose=False))
 
-    for p in workers:
-        p.start()
+        for p in workers:
+            p.start()
 
-    for p in workers:
-        p.join()
+        for p in workers:
+            p.join()
 
-    q.put(None)
-    lproc.join()
+        q.put(None)
+        lproc.join()
+    else:
+        q = mp.Queue()
+        lproc = mp.Process(target=listener, args=(q, nnodes))
+        lproc.start()
+
+        for process, chunk in enumerate(chunks):
+
+            if chunk.size == 0:
+                continue
+
+            proc = mp.Process(
+                target=run_process,
+                args=(
+                    process,
+                    chunk,
+                    data,
+                    test,
+                    reporting_agg,
+                    recharge_agg,
+                    runoff_agg,
+                    evtr_agg,
+                    recharge,
+                    runoff,
+                    log_path,
+                    level,
+                    spatial,
+                    spatial_index,
+                    reporting,
+                    single_node_output,
+                    q,
+                ),
+            )
+
+            workers.append(Worker("worker%d" % process, q, proc, verbose=False))
+
+        for p in workers:
+            p.start()
+
+        for p in workers:
+            p.join()
+
+        q.put(None)
+        lproc.join()
 
     times["end_of_model"] = time.time()
 
