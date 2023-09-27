@@ -442,18 +442,18 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
     else:
         recharge_agg = np.zeros(1, dtype=np.single)
-        runoff_agg = mp.Array("f", 1)
+        runoff_agg = np.zeros(1, dtype=np.single)
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = mp.Array("f", 1)
         recharge = np.zeros(1, dtype=np.single)
-        runoff = mp.Array("f", 1)
+        runoff = np.zeros(1, dtype=np.single)
         if params["swrecharge_process"] == "enabled" or data["params"][
                 "output_recharge"]:
             recharge_agg = np.zeros(len_rch_agg, np.single)  # recharge by output period (agg)
 
         if params["swrecharge_process"] == "enabled" or data["params"][
                 "output_sfr"]:
-            runoff_agg = mp.Array("f", len_rch_agg)
+            runoff_agg = np.zeros(len_rch_agg, dtype=np.single)
 
         if params["swrecharge_process"] == "enabled":
             runoff_recharge_agg = np.zeros((len_rch_agg))
@@ -466,7 +466,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
         if params["swrecharge_process"] == "enabled":
             recharge = np.zeros(len_rch, dtype=np.single)
-            runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
+            runoff = np.zeros(len_rch, dtype=np.single)
 
     ids = range(1, nnodes + 1)
     random.shuffle(list(ids))
