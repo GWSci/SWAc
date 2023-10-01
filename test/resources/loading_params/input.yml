@@ -1,1 +1,2 @@
 nitrate_process: enabled
+nitrate_depth_to_water: nitrate_dtw.csv
