@@ -675,6 +675,7 @@ def load_params_from_yaml(
         specs_file=u.CONSTANTS["SPECS_FILE"],
         input_file=u.CONSTANTS["INPUT_FILE"],
         input_dir=u.CONSTANTS["INPUT_DIR"],
+        tqdm=tqdm
 ):
     """Load model specifications, parameters and time series."""
     logging.info("\tLoading parameters and time series")

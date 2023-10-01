@@ -24,5 +24,6 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 def load_params():
 	input = input_output.load_params_from_yaml(
 		input_file="./test/resources/loading_params/input.yml", 
-		input_dir="./test/resources/loading_params/")
+		input_dir="./test/resources/loading_params/",
+		tqdm=lambda x, desc: x)
 	return input["params"]
