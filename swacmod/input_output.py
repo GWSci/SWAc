@@ -704,9 +704,10 @@ def load_params_from_yaml(
                 params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
             elif ext == "csv":
                 try:
-                    reader = csv.reader(open(absolute, "r"))
-                    rows = [[ast.literal_eval(j) for j in row]
-                            for row in reader]
+                    with open(absolute, "r") as csv_file:
+                        reader = csv.reader(csv_file)
+                        rows = [[ast.literal_eval(j) for j in row]
+                                for row in reader]
                 except IOError as err:
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
