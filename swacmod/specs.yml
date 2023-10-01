@@ -768,6 +768,31 @@ recharge_node_mapping:
         - !!python/name:dict
         - !!python/name:int
 
+#######################
+# Process: Nitrate #
+#######################
+
+nitrate_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+nitrate_depth_to_water:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+nitrate_depth_to_water:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
 
 #######################
 # Process: SW Release #

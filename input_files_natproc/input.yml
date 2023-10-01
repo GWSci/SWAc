@@ -534,6 +534,12 @@ recharge_attenuation_params: recharge_attenuation_params.yml
 
 
 #######################
+# Process: Nitrate #
+#######################
+
+nitrate_process: disabled
+
+#######################
 # Process: SW Release #
 #######################
 
