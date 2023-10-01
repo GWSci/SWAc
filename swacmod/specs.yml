@@ -786,7 +786,7 @@ nitrate_depth_to_water:
         - !!python/name:list
         - !!python/name:float
 
-nitrate_depth_to_water:
+nitrate_leaching:
     required: false
     alt_format: [yml, csv]
     type:
