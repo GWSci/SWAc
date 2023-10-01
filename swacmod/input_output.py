@@ -705,13 +705,12 @@ def load_params_from_yaml(
             elif ext == "csv":
                 try:
                     reader = csv.reader(open(absolute, "r"))
+                    rows = [[ast.literal_eval(j) for j in row]
+                            for row in reader]
                 except IOError as err:
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
                 try:
-                    rows = [[ast.literal_eval(j) for j in row]
-                            for row in reader]
-
                     if param.endswith("_ts") or param == "time_periods":
                         params[param] = rows
                     else:
