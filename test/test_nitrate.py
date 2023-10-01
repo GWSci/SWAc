@@ -21,7 +21,15 @@ class Test_Nitrate(unittest.TestCase):
 		her_at_95_percent = 210.0
 		max_load = 10000
 
-		self.assertEqual(5000, cumulative_fraction_leaked_per_year(max_load, her_at_5_percent, her_at_50_percent, her_at_95_percent, 110.0))
+		testee = lambda her: cumulative_fraction_leaked_per_year(
+				max_load, her_at_5_percent, her_at_50_percent, her_at_95_percent, her)
 
-def cumulative_fraction_leaked_per_year(max_load, her_at_5_percent, her_at_50_percent, her_at_95_percent, her):
+		self.assertEqual(5000, testee(110.0))
+
+def cumulative_fraction_leaked_per_year(
+		max_load,
+		her_at_5_percent,
+		her_at_50_percent,
+		her_at_95_percent,
+		her):
 	return max_load * 0.5
