@@ -24,11 +24,11 @@ class Test_Nitrate(unittest.TestCase):
 		testee = lambda her: cumulative_fraction_leaked_per_year(
 				max_load, her_at_5_percent, her_at_50_percent, her_at_95_percent, her)
 
-		self.assertAlmostEqual(500.0, testee(10.0))
-		self.assertAlmostEqual(3200.0, testee(70.0))
-		self.assertAlmostEqual(5000.0, testee(110.0))
-		self.assertAlmostEqual(7025.0, testee(200.0))
-		self.assertAlmostEqual(9500.0, testee(310.0))
+		self.assertAlmostEqual(0.05, testee(10.0))
+		self.assertAlmostEqual(0.32, testee(70.0))
+		self.assertAlmostEqual(0.5, testee(110.0))
+		self.assertAlmostEqual(0.7025, testee(200.0))
+		self.assertAlmostEqual(0.95, testee(310.0))
 
 def cumulative_fraction_leaked_per_year(
 		max_load,
@@ -44,5 +44,4 @@ def cumulative_fraction_leaked_per_year(
 	m = 0.45 / (upper - lower)
 	c = 0.5 - (her_at_50_percent * m)
 	y = (m * x) + c
-	percentage = y
-	return max_load * percentage
+	return y
