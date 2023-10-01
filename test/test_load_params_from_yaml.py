@@ -7,6 +7,4 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 			input_file="./test/resources/loading_params/input.yml", 
 			input_dir="./test/resources/loading_params/")
 		params = input["params"]
-		actual = params["nitrate_process"]
-		expected = "enabled"
-		self.assertEquals(expected, actual)
+		self.assertEqual("enabled", params["nitrate_process"])
