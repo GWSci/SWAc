@@ -31,5 +31,5 @@
 #   unsaturated zone (see final bullet below).
 #
 
-def _calculate_daily_HER(data, output, node):
+def _calculate_her_mm_per_day(data, output, node):
 	return output["rainfall_ts"] - output["ae"]

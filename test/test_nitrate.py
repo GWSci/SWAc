@@ -11,7 +11,7 @@ class Test_Nitrate(unittest.TestCase):
 			'ae': np.array([10, 20, 30]),
 		}
 		node = None
-		actual = nitrate._calculate_daily_HER(data, output, node)
+		actual = nitrate._calculate_her_mm_per_day(data, output, node)
 
 		expected = np.array([100, 200, 300])
 		np.testing.assert_array_equal(expected, actual)
@@ -84,7 +84,7 @@ def calculate_total_mass_leached_for_test(days, her_per_day):
 			her_per_day)
 
 def calculate_total_mass_leached_from_cell_on_days(
-		max_load_per_year,
+		max_load_per_year_kg_per_cell,
 		her_at_5_percent,
 		her_at_50_percent,
 		her_at_95_percent,
@@ -92,17 +92,17 @@ def calculate_total_mass_leached_from_cell_on_days(
 		her_per_day):
 	length = len(days)
 	result = np.zeros(length)
-	remaining_for_year = max_load_per_year
+	remaining_for_year = max_load_per_year_kg_per_cell
 	for i in range(length):
 		day = days[i]
 		her = her_per_day[i]
 		if (day.month == 10) and (day.day == 1):
-			remaining_for_year = max_load_per_year
+			remaining_for_year = max_load_per_year_kg_per_cell
 		fraction_leached = cumulative_fraction_leaked_per_day(her_at_5_percent,
 			her_at_50_percent,
 			her_at_95_percent,
 			her)
-		mass_leached_for_day = min(remaining_for_year, max_load_per_year * fraction_leached)
+		mass_leached_for_day = min(remaining_for_year, max_load_per_year_kg_per_cell * fraction_leached)
 		remaining_for_year -= mass_leached_for_day
 		result[i] = mass_leached_for_day
 	return result
