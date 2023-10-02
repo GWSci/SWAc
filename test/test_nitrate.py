@@ -76,7 +76,8 @@ def calculate_total_mass_leached_from_cell_on_days(
 			her_at_50_percent,
 			her_at_95_percent,
 			her)
-		result[i] = max_load_per_year * fraction_leached
+		mass_leached_for_day = max_load_per_year * fraction_leached
+		result[i] = mass_leached_for_day
 	return result
 	
 def cumulative_fraction_leaked_per_year(
