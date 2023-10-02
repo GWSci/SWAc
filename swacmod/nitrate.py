@@ -83,28 +83,13 @@ def _calculate_total_mass_leached_from_cell_on_days(
 		result[i] = mass_leached_for_day
 	return result
 
-def _cumulative_fraction_leaked_per_day(
-		her_at_5_percent,
-		her_at_50_percent,
-		her_at_95_percent,
-		her_per_day):
+def _cumulative_fraction_leaked_per_day(her_at_5_percent, her_at_50_percent, her_at_95_percent, her_per_day):
 	days_in_year = 365.25
 	her_per_year = days_in_year * her_per_day
-	x = her_per_year
-	is_below_50_percent = her_per_year < her_at_50_percent
-	upper = her_at_50_percent if is_below_50_percent else her_at_95_percent
-	lower = her_at_5_percent if is_below_50_percent else her_at_50_percent
-	# y = mx + c
-	m = 0.45 / (upper - lower)
-	c = 0.5 - (her_at_50_percent * m)
-	y = (m * x) + c
+	y = _cumulative_fraction_leaked_per_year(her_at_5_percent, her_at_50_percent, her_at_95_percent, her_per_year)
 	return y / days_in_year
 
-def _cumulative_fraction_leaked_per_year(
-		her_at_5_percent,
-		her_at_50_percent,
-		her_at_95_percent,
-		her_per_year):
+def _cumulative_fraction_leaked_per_year(her_at_5_percent, her_at_50_percent, her_at_95_percent, her_per_year):
 	x = her_per_year
 	is_below_50_percent = her_per_year < her_at_50_percent
 	upper = her_at_50_percent if is_below_50_percent else her_at_95_percent
