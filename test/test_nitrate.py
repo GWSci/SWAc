@@ -58,6 +58,7 @@ class Test_Nitrate(unittest.TestCase):
 				her_per_day)
 		
 		np.testing.assert_array_equal([], testee([], []))
+		np.testing.assert_array_equal([2000.0], testee([""], [20.0]))
 
 def calculate_total_mass_leached_from_cell_on_days(
 		max_load_per_year,
@@ -66,7 +67,16 @@ def calculate_total_mass_leached_from_cell_on_days(
 		her_at_95_percent,
 		days,
 		her_per_day):
-	pass
+	length = len(days)
+	result = np.zeros(length)
+	for i in range(length):
+		her = her_per_day[i]
+		fraction_leached = cumulative_fraction_leaked_per_day(her_at_5_percent,
+			her_at_50_percent,
+			her_at_95_percent,
+			her)
+		result[i] = max_load_per_year * fraction_leached
+	return result
 	
 def cumulative_fraction_leaked_per_year(
 		her_at_5_percent,
