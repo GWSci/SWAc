@@ -70,18 +70,47 @@ class Test_Nitrate(unittest.TestCase):
 				[her_for_60_percent] * 6))
 	
 	def test_calculate_m0_kg_per_day(self):
-		data = None
-		output = None
-		node = None
-		her_array_mm_per_day = []
+		max_load_per_year = 10000 * 365.25 * 4
+		her_at_5_percent = 5 * 365.25
+		her_at_50_percent = 50 * 365.25
+		her_at_95_percent = 95 * 365.25
 
-		max_load_per_year = 10000 * 365.25
-		expected = [0.6 * max_load_per_year, 0.4 * max_load_per_year, 0, 0.6 * max_load_per_year, 0.4 * max_load_per_year, 0]
+		data = {
+			"series": {
+				"date" : [date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30), date(2023, 10, 1), date(2023, 10, 2), date(2023, 10, 3)]
+			}, "params": {
+				"node_areas" : {
+					3: [2500]
+				}, "nitrate_leaching" : {
+					# Node,UNIQUE,X,Y,LOAD0,HER_5_MaxL,HER_50_Max,HER_95_Max,5PercLoadM,50PercLoad,95PercLoad
+					3: [0, 0, 0, max_load_per_year, her_at_5_percent, her_at_50_percent, her_at_95_percent, 0, 0, 0]
+				}
+			},
+		}
+		output = None
+		node = 3
+		her_array_mm_per_day = [60 * 365.25] * 6
+
+		max_load_per_cell_per_year = 10000 * 365.25
+		expected = [0.6 * max_load_per_cell_per_year, 0.4 * max_load_per_cell_per_year, 0, 0.6 * max_load_per_cell_per_year, 0.4 * max_load_per_cell_per_year, 0]
 
 		actual = calculate_m0_kg_per_day(data, output, node, her_array_mm_per_day)
 
+		np.testing.assert_array_equal(expected, actual)
+
 def calculate_m0_kg_per_day(data, output, node, her_array_mm_per_day):
-	pass
+	params = data["params"]
+	nitrate_leaching = params["nitrate_leaching"][node]
+	max_load_per_year_kg_per_hectare = nitrate_leaching[3]
+	hectare_area_m_sq = 10000
+	cell_area_m_sq = params["node_areas"][node][0]
+	max_load_per_year_kg_per_cell = max_load_per_year_kg_per_hectare * cell_area_m_sq / hectare_area_m_sq
+	her_at_5_percent = nitrate_leaching[4]
+	her_at_50_percent = nitrate_leaching[5]
+	her_at_95_percent = nitrate_leaching[6]
+	days = data["series"]["date"]
+	m0_array_kg_per_day = calculate_total_mass_leached_from_cell_on_days(max_load_per_year_kg_per_cell, her_at_5_percent, her_at_50_percent, her_at_95_percent, days, her_array_mm_per_day)
+	return m0_array_kg_per_day
 		
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
