@@ -98,6 +98,22 @@ class Test_Nitrate(unittest.TestCase):
 
 		np.testing.assert_array_equal(expected, actual)		
 
+	def test_calculate_m1_arr_mm_per_day(self):
+		data = None
+		output = {
+			"perc_through_root" : np.array([10])
+		}
+		node = None
+		her_array_mm_per_day = np.array([40.0])
+		m0_kg_per_day = np.array([1000.0])
+
+		expected = np.array([250])
+
+		actual = calculate_m1_arr_mm_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day)
+
+def calculate_m1_arr_mm_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day):
+	pass
+
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
 		her_at_5_percent = 5 * 365.25
