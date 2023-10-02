@@ -100,16 +100,25 @@ class Test_Nitrate(unittest.TestCase):
 
 def calculate_m0_kg_per_day(data, output, node, her_array_mm_per_day):
 	params = data["params"]
+	cell_area_m_sq = params["node_areas"][node][0]
+	days = data["series"]["date"]
+
 	nitrate_leaching = params["nitrate_leaching"][node]
 	max_load_per_year_kg_per_hectare = nitrate_leaching[3]
-	hectare_area_m_sq = 10000
-	cell_area_m_sq = params["node_areas"][node][0]
-	max_load_per_year_kg_per_cell = max_load_per_year_kg_per_hectare * cell_area_m_sq / hectare_area_m_sq
 	her_at_5_percent = nitrate_leaching[4]
 	her_at_50_percent = nitrate_leaching[5]
 	her_at_95_percent = nitrate_leaching[6]
-	days = data["series"]["date"]
-	m0_array_kg_per_day = calculate_total_mass_leached_from_cell_on_days(max_load_per_year_kg_per_cell, her_at_5_percent, her_at_50_percent, her_at_95_percent, days, her_array_mm_per_day)
+
+	hectare_area_m_sq = 10000
+	max_load_per_year_kg_per_cell = max_load_per_year_kg_per_hectare * cell_area_m_sq / hectare_area_m_sq
+	
+	m0_array_kg_per_day = calculate_total_mass_leached_from_cell_on_days(
+		max_load_per_year_kg_per_cell,
+		her_at_5_percent,
+		her_at_50_percent,
+		her_at_95_percent,
+		days,
+		her_array_mm_per_day)
 	return m0_array_kg_per_day
 		
 
