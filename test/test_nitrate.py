@@ -60,6 +60,21 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_equal([], testee([], []))
 		np.testing.assert_array_equal([2000.0], testee([""], [20.0]))
 		np.testing.assert_array_equal([2000.0, 8000.0,], testee(["", ""], [20.0, 80.0]))
+
+	def test_calculate_total_mass_leached_from_cell_on_days_limits_by_max_load_for_the_year(self):
+		max_load_per_year = 10000 * 365.25
+		her_at_5_percent = 5 * 365.25
+		her_at_50_percent = 50 * 365.25
+		her_at_95_percent = 95 * 365.25
+
+		testee = lambda days, her_per_day: calculate_total_mass_leached_from_cell_on_days(
+				max_load_per_year,
+				her_at_5_percent,
+				her_at_50_percent,
+				her_at_95_percent,
+				days,
+				her_per_day)
+		
 		np.testing.assert_array_equal([max_load_per_year], testee([""], [150 * 365.25]))
 
 def calculate_total_mass_leached_from_cell_on_days(
