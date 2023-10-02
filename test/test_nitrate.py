@@ -59,6 +59,7 @@ class Test_Nitrate(unittest.TestCase):
 		
 		np.testing.assert_array_equal([], testee([], []))
 		np.testing.assert_array_equal([2000.0], testee([""], [20.0]))
+		np.testing.assert_array_equal([2000.0, 8000.0,], testee(["", ""], [20.0, 80.0]))
 
 def calculate_total_mass_leached_from_cell_on_days(
 		max_load_per_year,
