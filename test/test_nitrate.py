@@ -53,6 +53,9 @@ class Test_Nitrate(unittest.TestCase):
 		max_load_per_year = 10000 * 365.25
 		testee = calculate_total_mass_leached_for_test
 		np.testing.assert_array_equal([max_load_per_year], testee([""], [150 * 365.25]))
+		np.testing.assert_array_equal(
+			[0.6 * max_load_per_year, 0.4 * max_load_per_year, 0],
+			testee(["", "", ""], [60 * 365.25, 60 * 365.25, 60 * 365.25]))
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
@@ -85,6 +88,7 @@ def calculate_total_mass_leached_from_cell_on_days(
 			her_at_95_percent,
 			her)
 		mass_leached_for_day = min(remaining_for_year, max_load_per_year * fraction_leached)
+		remaining_for_year -= mass_leached_for_day
 		result[i] = mass_leached_for_day
 	return result
 	
