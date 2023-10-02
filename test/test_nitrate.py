@@ -1,3 +1,4 @@
+from datetime import date
 import unittest
 import numpy as np
 import swacmod.nitrate as nitrate
@@ -46,16 +47,27 @@ class Test_Nitrate(unittest.TestCase):
 	def test_calculate_total_mass_leached_from_cell_on_days(self):
 		testee = calculate_total_mass_leached_for_test
 		np.testing.assert_array_equal([], testee([], []))
-		np.testing.assert_array_equal([2000.0], testee([""], [20.0]))
-		np.testing.assert_array_equal([2000.0, 8000.0,], testee(["", ""], [20.0, 80.0]))
+		np.testing.assert_array_equal([2000.0], testee([date(2023, 1, 1)], [20.0]))
+		np.testing.assert_array_equal([2000.0, 8000.0,], testee([date(2023, 1, 1), date(2023, 1, 2)], [20.0, 80.0]))
 
 	def test_calculate_total_mass_leached_from_cell_on_days_limits_by_max_load_for_the_year(self):
 		max_load_per_year = 10000 * 365.25
 		testee = calculate_total_mass_leached_for_test
-		np.testing.assert_array_equal([max_load_per_year], testee([""], [150 * 365.25]))
+		np.testing.assert_array_equal([max_load_per_year], testee([date(2023, 1, 1)], [150 * 365.25]))
 		np.testing.assert_array_equal(
 			[0.6 * max_load_per_year, 0.4 * max_load_per_year, 0],
-			testee(["", "", ""], [60 * 365.25, 60 * 365.25, 60 * 365.25]))
+			testee([date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3)], [60 * 365.25, 60 * 365.25, 60 * 365.25]))
+
+	def test_calculate_total_mass_leached_from_cell_on_days_resets_limit_on_1st_october(self):
+		max_load_per_year = 10000 * 365.25
+		her_for_60_percent = 60 * 365.25
+		testee = calculate_total_mass_leached_for_test
+		np.testing.assert_array_equal([max_load_per_year], testee([date(2023, 1, 1)], [150 * 365.25]))
+		np.testing.assert_array_equal(
+			[0.6 * max_load_per_year, 0.4 * max_load_per_year, 0, 0.6 * max_load_per_year, 0.4 * max_load_per_year, 0],
+			testee(
+				[date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30), date(2023, 10, 1), date(2023, 10, 2), date(2023, 10, 3)],
+				[her_for_60_percent] * 6))
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
@@ -82,7 +94,10 @@ def calculate_total_mass_leached_from_cell_on_days(
 	result = np.zeros(length)
 	remaining_for_year = max_load_per_year
 	for i in range(length):
+		day = days[i]
 		her = her_per_day[i]
+		if (day.month == 10) and (day.day == 1):
+			remaining_for_year = max_load_per_year
 		fraction_leached = cumulative_fraction_leaked_per_day(her_at_5_percent,
 			her_at_50_percent,
 			her_at_95_percent,
