@@ -1,8 +1,8 @@
-# - Derive a continuous relationship between annual HER and % leached nitrate
+# + Derive a continuous relationship between annual HER and % leached nitrate
 #   for each model cell, based on the 5, 50 and 95% values given by NEAP-N (see
 #   bullet below for the csv of this).
 #
-# - Divide by 365.25 to get the above rate in daily HER.
+# + Divide by 365.25 to get the above rate in daily HER.
 #
 # + Calculate daily HER for each cell from rainfall minus AE.
 #
