@@ -44,19 +44,7 @@ class Test_Nitrate(unittest.TestCase):
 		self.assertAlmostEqual(0.95 / 365.25, testee(310.0 / 365.25))
 
 	def test_calculate_total_mass_leached_from_cell_on_days(self):
-		max_load_per_year = 10000 * 365.25
-		her_at_5_percent = 5 * 365.25
-		her_at_50_percent = 50 * 365.25
-		her_at_95_percent = 95 * 365.25
-
-		testee = lambda days, her_per_day: calculate_total_mass_leached_from_cell_on_days(
-				max_load_per_year,
-				her_at_5_percent,
-				her_at_50_percent,
-				her_at_95_percent,
-				days,
-				her_per_day)
-		
+		testee = calculate_total_mass_leached_for_test
 		np.testing.assert_array_equal([], testee([], []))
 		np.testing.assert_array_equal([2000.0], testee([""], [20.0]))
 		np.testing.assert_array_equal([2000.0, 8000.0,], testee(["", ""], [20.0, 80.0]))
