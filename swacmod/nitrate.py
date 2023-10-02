@@ -6,7 +6,7 @@
 #
 # + Calculate daily HER for each cell from rainfall minus AE.
 #
-# - Calculate total mass M0 leached from the cell on that day, ensuring that it
+# + Calculate total mass M0 leached from the cell on that day, ensuring that it
 #   doesn’t exhaust the maximum leachable total for the year (when added to
 #   leaching from previous days in the hydrological year since 1st October).
 #
