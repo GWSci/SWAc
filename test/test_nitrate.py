@@ -71,13 +71,14 @@ def calculate_total_mass_leached_from_cell_on_days(
 		her_per_day):
 	length = len(days)
 	result = np.zeros(length)
+	remaining_for_year = max_load_per_year
 	for i in range(length):
 		her = her_per_day[i]
 		fraction_leached = cumulative_fraction_leaked_per_day(her_at_5_percent,
 			her_at_50_percent,
 			her_at_95_percent,
 			her)
-		mass_leached_for_day = min(max_load_per_year, max_load_per_year * fraction_leached)
+		mass_leached_for_day = min(remaining_for_year, max_load_per_year * fraction_leached)
 		result[i] = mass_leached_for_day
 	return result
 	
