@@ -68,6 +68,21 @@ class Test_Nitrate(unittest.TestCase):
 			testee(
 				[date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30), date(2023, 10, 1), date(2023, 10, 2), date(2023, 10, 3)],
 				[her_for_60_percent] * 6))
+	
+	def test_calculate_m0_kg_per_day(self):
+		data = None
+		output = None
+		node = None
+		her_array_mm_per_day = []
+
+		max_load_per_year = 10000 * 365.25
+		expected = [0.6 * max_load_per_year, 0.4 * max_load_per_year, 0, 0.6 * max_load_per_year, 0.4 * max_load_per_year, 0]
+
+		actual = calculate_m0_kg_per_day(data, output, node, her_array_mm_per_day)
+
+def calculate_m0_kg_per_day(data, output, node, her_array_mm_per_day):
+	pass
+		
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
