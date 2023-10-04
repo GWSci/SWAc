@@ -178,9 +178,12 @@ class Test_Nitrate(unittest.TestCase):
 		m2_arr_kg_per_day = np.array([40.0, 50.0, 60.0])
 
 		actual = _calculate_mi_kg_per_day(m1a_arr_kg_per_day, m2_arr_kg_per_day)
+		expected = np.array([140.0, 250.0, 360.0])
+
+		np.testing.assert_array_almost_equal(expected, actual)
 
 def _calculate_mi_kg_per_day(m1a_arr_kg_per_day, m2_arr_kg_per_day):
-	pass
+	return m1a_arr_kg_per_day + m2_arr_kg_per_day
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
