@@ -160,9 +160,8 @@ class Test_Nitrate(unittest.TestCase):
 
 	def test_calculate_m3_kg_per_day(self):
 		data = None
-		#  TODO The name of runoff needs to be updated once I know the right one to use.
 		output = {
-			"runoff" : np.array([100.0]),
+			"rapid_runoff" : np.array([100.0]),
 			"runoff_recharge" : np.array([45.0]),
 		}
 		node = None
