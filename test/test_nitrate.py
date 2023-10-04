@@ -112,7 +112,7 @@ class Test_Nitrate(unittest.TestCase):
 		actual = nitrate._calculate_m1_arr_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day)
 		np.testing.assert_array_equal(expected, actual)	
 
-	def test_calculate_m1a_arr_mm_per_day(self):
+	def test_calculate_m1a_arr_mm_per_day_for_just_one_day(self):
 		data = None
 		output = {
 			"interflow_volume" : np.array([20]),
@@ -135,7 +135,12 @@ def _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day):
 	soil_percolation_mm_per_day = interflow_volume_mm + infiltration_recharge_mm_per_day + interflow_to_rivers_mm_per_day
 	proportion = interflow_volume_mm / soil_percolation_mm_per_day
 
-	m1a_arr_kg_per_day = m1_arr_kg_per_day * proportion
+	length = m1_arr_kg_per_day.size
+	m1a_arr_kg_per_day = np.zeros(length)
+
+	for i in range(length):
+		m1a_arr_kg_per_day[i] = m1_arr_kg_per_day[i] * proportion[i]
+	
 	return m1a_arr_kg_per_day
 	
 def calculate_total_mass_leached_for_test(days, her_per_day):
