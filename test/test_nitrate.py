@@ -157,8 +157,9 @@ def _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day):
 
 	for i in range(length):
 		mit_kg += m1_arr_kg_per_day[i]
-		m1a_arr_kg_per_day[i] = mit_kg * proportion[i]
-		mit_kg -= m1a_arr_kg_per_day[i]
+		m1a_kg_per_day = mit_kg * proportion[i]
+		mit_kg -= m1a_kg_per_day
+		m1a_arr_kg_per_day[i] = m1a_kg_per_day
 	
 	return m1a_arr_kg_per_day
 	
