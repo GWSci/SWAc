@@ -144,7 +144,6 @@ class Test_Nitrate(unittest.TestCase):
 	
 	def test_calculate_m2_kg_per_day(self):
 		data = None
-		#  TODO The name of macropore needs to be updated once I know the right one to use.
 		output = {
 			"runoff_recharge" : np.array([100.0, 0.0]),
 			"macropore_att" : np.array([0.0, 40.0]),
