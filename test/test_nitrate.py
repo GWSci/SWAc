@@ -127,6 +127,22 @@ class Test_Nitrate(unittest.TestCase):
 		actual = _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day)
 		np.testing.assert_array_almost_equal(expected, actual)	
 
+	def test_calculate_m1a_arr_mm_per_day_for_three_days_with_accumulation_in_MiT(self):
+		data = None
+		output = {
+			"interflow_volume" : np.array([20, 30, 10]),
+			"infiltration_recharge" : np.array([40, 35, 90]),
+			"interflow_to_rivers" : np.array([40, 35, 0]),
+		}
+		node = None
+		m1_arr_kg_per_day = np.array([12, 20.4, 29])
+		mit = [9.6, 21]
+
+		expected = np.array([2.4, 9, 5])
+
+		actual = _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day)
+		np.testing.assert_array_almost_equal(expected, actual)	
+
 def _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day):
 	interflow_volume_mm = output["interflow_volume"]
 	infiltration_recharge_mm_per_day = output["infiltration_recharge"]
@@ -137,9 +153,12 @@ def _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day):
 
 	length = m1_arr_kg_per_day.size
 	m1a_arr_kg_per_day = np.zeros(length)
+	mit_kg = 0
 
 	for i in range(length):
-		m1a_arr_kg_per_day[i] = m1_arr_kg_per_day[i] * proportion[i]
+		mit_kg += m1_arr_kg_per_day[i]
+		m1a_arr_kg_per_day[i] = mit_kg * proportion[i]
+		mit_kg -= m1a_arr_kg_per_day[i]
 	
 	return m1a_arr_kg_per_day
 	
