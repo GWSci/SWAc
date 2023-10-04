@@ -105,3 +105,23 @@ def _calculate_m1_arr_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg
 	pp = perc_through_root_mm_per_day / her_array_mm_per_day
 	m1_kg_per_day = pp * m0_kg_per_day
 	return m1_kg_per_day
+
+def _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day):
+	interflow_volume_mm = output["interflow_volume"]
+	infiltration_recharge_mm_per_day = output["infiltration_recharge"]
+	interflow_to_rivers_mm_per_day = output["interflow_to_rivers"]
+
+	soil_percolation_mm_per_day = interflow_volume_mm + infiltration_recharge_mm_per_day + interflow_to_rivers_mm_per_day
+	proportion = interflow_volume_mm / soil_percolation_mm_per_day
+
+	length = m1_arr_kg_per_day.size
+	m1a_arr_kg_per_day = np.zeros(length)
+	mit_kg = 0
+
+	for i in range(length):
+		mit_kg += m1_arr_kg_per_day[i]
+		m1a_kg_per_day = mit_kg * proportion[i]
+		mit_kg -= m1a_kg_per_day
+		m1a_arr_kg_per_day[i] = m1a_kg_per_day
+	
+	return m1a_arr_kg_per_day
