@@ -136,7 +136,6 @@ class Test_Nitrate(unittest.TestCase):
 		}
 		node = None
 		m1_arr_kg_per_day = np.array([12, 20.4, 29])
-		mit = [9.6, 21]
 
 		expected = np.array([2.4, 9, 5])
 
