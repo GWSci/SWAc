@@ -150,11 +150,11 @@ class Test_Nitrate(unittest.TestCase):
 			"macropore" : np.array([0.0, 100.0]),
 		}
 		node = None
-		her_array_mm_per_day = np.array([10.0, 10.0])
-		m0_array_kg_per_day = np.array([50.0, 50.0])
+		her_array_mm_per_day = np.array([10.0, 20.0])
+		m0_array_kg_per_day = np.array([50.0, 60.0])
 
 		actual = nitrate._calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
-		expected = np.array([500.0, 500.0])
+		expected = np.array([500.0, 300.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)		
 
