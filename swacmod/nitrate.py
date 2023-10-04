@@ -100,7 +100,7 @@ def _cumulative_fraction_leaked_per_year(her_at_5_percent, her_at_50_percent, he
 	y = (m * x) + c
 	return y
 
-def _calculate_m1_arr_mm_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day):
+def _calculate_m1_arr_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day):
 	perc_through_root_mm_per_day = output["perc_through_root"]
 	pp = perc_through_root_mm_per_day / her_array_mm_per_day
 	m1_kg_per_day = pp * m0_kg_per_day

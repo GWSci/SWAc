@@ -109,7 +109,7 @@ class Test_Nitrate(unittest.TestCase):
 
 		expected = np.array([250])
 
-		actual = nitrate._calculate_m1_arr_mm_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day)
+		actual = nitrate._calculate_m1_arr_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day)
 		np.testing.assert_array_equal(expected, actual)	
 
 	def test_calculate_m1a_arr_mm_per_day(self):
