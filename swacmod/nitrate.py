@@ -132,3 +132,11 @@ def _calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_
 	p_non = (runoff_recharge_mm_per_day + macropore_mm_per_day) / her_array_mm_per_day
 	m2_kg_per_day = m0_array_kg_per_day * p_non
 	return m2_kg_per_day
+
+def _calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
+	runoff_mm_per_day = output["runoff"]
+	runoff_recharge_mm_per_day = output["runoff_recharge"]
+	m3_kg_per_day = (m0_array_kg_per_day
+		* (runoff_mm_per_day - runoff_recharge_mm_per_day)
+		/ her_array_mm_per_day)
+	return m3_kg_per_day

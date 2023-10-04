@@ -169,18 +169,10 @@ class Test_Nitrate(unittest.TestCase):
 		her_array_mm_per_day = np.array([11.0])
 		m0_array_kg_per_day = np.array([7.0])
 		
-		actual = _calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+		actual = nitrate._calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		expected = np.array([35.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)
-
-def _calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
-	runoff_mm_per_day = output["runoff"]
-	runoff_recharge_mm_per_day = output["runoff_recharge"]
-	m3_kg_per_day = (m0_array_kg_per_day
-		* (runoff_mm_per_day - runoff_recharge_mm_per_day)
-		/ her_array_mm_per_day)
-	return m3_kg_per_day
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
