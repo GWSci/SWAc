@@ -147,7 +147,8 @@ class Test_Nitrate(unittest.TestCase):
 		#  TODO The name of macropore needs to be updated once I know the right one to use.
 		output = {
 			"runoff_recharge" : np.array([100.0, 0.0]),
-			"macropore" : np.array([0.0, 100.0]),
+			"macropore_att" : np.array([0.0, 40.0]),
+			"macropore_dir" : np.array([0.0, 60.0]),
 		}
 		node = None
 		her_array_mm_per_day = np.array([10.0, 20.0])
