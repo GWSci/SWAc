@@ -159,7 +159,6 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)		
 
 def calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
-	length = her_array_mm_per_day.size
 	runoff_recharge_mm_per_day = output["runoff_recharge"]
 	macropore_mm_per_day = output["macropore"]
 	p_non = (runoff_recharge_mm_per_day + macropore_mm_per_day) / her_array_mm_per_day
