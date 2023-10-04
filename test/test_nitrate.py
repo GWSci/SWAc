@@ -146,20 +146,24 @@ class Test_Nitrate(unittest.TestCase):
 		data = None
 		#  TODO The name of macropore needs to be updated once I know the right one to use.
 		output = {
-			"runoff_recharge" : [],
-			"macropore" : [],
+			"runoff_recharge" : np.array([100.0]),
+			"macropore" : np.array([0.0]),
 		}
 		node = None
-		her_array_mm_per_day = []
-		m0_array_kg_per_day = []
+		her_array_mm_per_day = np.array([10.0])
+		m0_array_kg_per_day = np.array([50.0])
 
 		actual = calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
-		expected = []
+		expected = np.array([500.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)		
 
 def calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
-	pass
+	length = her_array_mm_per_day.size
+	runoff_recharge_mm_per_day = output["runoff_recharge"]
+	p_non = runoff_recharge_mm_per_day / her_array_mm_per_day
+	m2_kg_per_day = m0_array_kg_per_day * p_non
+	return m2_kg_per_day
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
