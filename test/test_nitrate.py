@@ -98,7 +98,7 @@ class Test_Nitrate(unittest.TestCase):
 
 		np.testing.assert_array_equal(expected, actual)		
 
-	def test_calculate_m1_arr_mm_per_day(self):
+	def test_calculate_m1_arr_kg_per_day(self):
 		data = None
 		output = {
 			"perc_through_root" : np.array([10])
@@ -112,7 +112,7 @@ class Test_Nitrate(unittest.TestCase):
 		actual = nitrate._calculate_m1_arr_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day)
 		np.testing.assert_array_equal(expected, actual)	
 
-	def test_calculate_m1a_arr_mm_per_day_for_just_one_day(self):
+	def test_calculate_m1a_arr_kg_per_day_for_just_one_day(self):
 		data = None
 		output = {
 			"interflow_volume" : np.array([20]),
@@ -127,7 +127,7 @@ class Test_Nitrate(unittest.TestCase):
 		actual = nitrate._calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day)
 		np.testing.assert_array_almost_equal(expected, actual)	
 
-	def test_calculate_m1a_arr_mm_per_day_for_three_days_with_accumulation_in_MiT(self):
+	def test_calculate_m1a_arr_kg_per_day_for_three_days_with_accumulation_in_MiT(self):
 		data = None
 		output = {
 			"interflow_volume" : np.array([20, 30, 10]),
