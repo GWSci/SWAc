@@ -154,6 +154,9 @@ class Test_Nitrate(unittest.TestCase):
 		m0_array_kg_per_day = []
 
 		actual = calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+		expected = []
+
+		np.testing.assert_array_almost_equal(expected, actual)		
 
 def calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
 	pass
