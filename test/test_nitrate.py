@@ -194,12 +194,9 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 	
 	def test_convert_kg_to_tons_array(self):
-		np.testing.assert_array_almost_equal(np.array([]), _convert_kg_to_tons_array(np.array([])))
-		np.testing.assert_array_almost_equal(np.array([1.0]), _convert_kg_to_tons_array(np.array([1000.0])))
-		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), _convert_kg_to_tons_array(np.array([500, 1000.0, 3000.0])))
-
-def _convert_kg_to_tons_array(arr_kg):
-	return arr_kg / 1000.0
+		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(np.array([])))
+		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(np.array([1000.0])))
+		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), nitrate._convert_kg_to_tons_array(np.array([500, 1000.0, 3000.0])))
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
