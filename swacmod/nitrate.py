@@ -11,7 +11,7 @@ def calculate_nitrate(data, output, node):
 	mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
 	daily_proportion_reaching_water_table_array = _calculate_daily_proportion_reaching_water_table_arr(data, output, node)
 	total_mass_on_day_array_kg = _calculate_total_mass_on_day_kg(daily_proportion_reaching_water_table_array, mi_array_kg_per_day)
-	total_mass_on_day_tons = _convert_kg_to_tons_array(total_mass_on_day_array_kg)
+	total_mass_on_day_array_tons = _convert_kg_to_tons_array(total_mass_on_day_array_kg)
 	recharge_concentration_kg_per_m3 = _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_array_kg)
 
 
