@@ -207,7 +207,7 @@ class Test_Nitrate(unittest.TestCase):
 		data = {
 			"params": {
 				"node_areas": {7: [2500.0]},
-				"nitrate_depth_to_water": {7: [100]},
+				"nitrate_depth_to_water": {7: [0.00205411]},
 				"nitrate_leaching": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
 			}, "series" : {
 				"date": [date(2023, 1, 1), date(2023, 1, 2), ]
@@ -235,7 +235,7 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([20.0, 20.0]), actual["m2_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([30.0, 30.0]), actual["m3_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([30.0, 38.0]), actual["mi_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 1.110223e-16]), actual["proportion_reaching_water_table_array_per_day"])
+		np.testing.assert_array_almost_equal(np.array([0.0, 0.6]), actual["proportion_reaching_water_table_array_per_day"])
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
