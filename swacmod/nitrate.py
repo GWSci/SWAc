@@ -10,9 +10,9 @@ def calculate_nitrate(data, output, node):
 	m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 	mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
 	proportion_reaching_water_table_array_per_day = _calculate_daily_proportion_reaching_water_table_arr(data, output, node)
-	total_mass_on_day_array_kg = _calculate_total_mass_on_day_kg(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
-	total_mass_on_day_array_tons = _convert_kg_to_tons_array(total_mass_on_day_array_kg)
-	recharge_concentration_kg_per_m3 = _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_array_kg)
+	total_mass_array_kg_per_day = _calculate_total_mass_on_day_kg(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
+	total_mass_array_tons_per_day = _convert_kg_to_tons_array(total_mass_array_kg_per_day)
+	recharge_concentration_kg_per_m3 = _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_array_kg_per_day)
 
 
 def _calculate_her_array_mm_per_day(data, output, node):
@@ -167,10 +167,10 @@ def _calculate_total_mass_on_day_kg(proportion_reaching_water_table_array_per_da
 			result_kg[day] += mass_reaching_water_table_kg
 	return result_kg
 
-def _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_array_kg):
+def _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_array_kg_per_day):
 	# TODO This is incorrect as recharge is in mm but we need m3, so it is the wrong dimension entirely.
 	combined_recharge_mm_per_day = output["combined_recharge"]
-	return total_mass_on_day_array_kg / combined_recharge_mm_per_day
+	return total_mass_array_kg_per_day / combined_recharge_mm_per_day
 
 def _convert_kg_to_tons_array(arr_kg):
 	return arr_kg / 1000.0
