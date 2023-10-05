@@ -220,9 +220,9 @@ class Test_Nitrate(unittest.TestCase):
 			"interflow_volume": np.array([1.0]),
 			"infiltration_recharge": np.array([2.0]),
 			"interflow_to_rivers": np.array([2.0]),
-			"runoff_recharge": np.array([5]),
-			"macropore_att": np.array([5]),
-			"macropore_dir": np.array([5]),
+			"runoff_recharge": np.array([8.0]),
+			"macropore_att": np.array([4.0]),
+			"macropore_dir": np.array([4.0]),
 			"rapid_runoff": np.array([5]),
 			"combined_recharge": np.array([5]),
 		}
@@ -232,6 +232,7 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([100.0]), actual["m0_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([50.0]), actual["m1_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([10.0]), actual["m1a_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([20.0]), actual["m2_array_kg_per_day"])
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
