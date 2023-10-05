@@ -6,8 +6,8 @@ def calculate_nitrate(data, output, node):
 	m0_array_kg_per_day = _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day)
 	m1_array_kg_per_day = _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 	m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
-	m2_array_kg_per_day = _calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
-	m3_kg_per_day = _calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+	m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+	m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 	mi_kg_per_day = _calculate_mi_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
 	daily_proportion_reaching_water_table = _calculate_daily_proportion_reaching_water_table_arr(data, output, node)
 	total_mass_on_day_kg = _calculate_total_mass_on_day_kg(daily_proportion_reaching_water_table, mi_kg_per_day)
@@ -108,7 +108,7 @@ def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 	
 	return m1a_array_kg_per_day
 
-def _calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
+def _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
 	runoff_recharge_mm_per_day = output["runoff_recharge"]
 	macropore_att_mm_per_day = output["macropore_att"]
 	macropore_dir_mm_per_day = output["macropore_dir"]
@@ -117,13 +117,13 @@ def _calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_
 	m2_kg_per_day = m0_array_kg_per_day * p_non
 	return m2_kg_per_day
 
-def _calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
+def _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
 	runoff_mm_per_day = output["rapid_runoff"]
 	runoff_recharge_mm_per_day = output["runoff_recharge"]
-	m3_kg_per_day = (m0_array_kg_per_day
+	m3_array_kg_per_day = (m0_array_kg_per_day
 		* (runoff_mm_per_day - runoff_recharge_mm_per_day)
 		/ her_array_mm_per_day)
-	return m3_kg_per_day
+	return m3_array_kg_per_day
 
 def _calculate_mi_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 	return m1a_array_kg_per_day + m2_array_kg_per_day

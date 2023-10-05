@@ -142,7 +142,7 @@ class Test_Nitrate(unittest.TestCase):
 		actual = nitrate._calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
 		np.testing.assert_array_almost_equal(expected, actual)
 	
-	def test_calculate_m2_kg_per_day(self):
+	def test_calculate_m2_array_kg_per_day(self):
 		data = None
 		output = {
 			"runoff_recharge" : np.array([100.0, 0.0]),
@@ -153,12 +153,12 @@ class Test_Nitrate(unittest.TestCase):
 		her_array_mm_per_day = np.array([10.0, 20.0])
 		m0_array_kg_per_day = np.array([50.0, 60.0])
 
-		actual = nitrate._calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+		actual = nitrate._calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		expected = np.array([500.0, 300.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)
 
-	def test_calculate_m3_kg_per_day(self):
+	def test_calculate_m3_array_kg_per_day(self):
 		data = None
 		output = {
 			"rapid_runoff" : np.array([100.0]),
@@ -168,7 +168,7 @@ class Test_Nitrate(unittest.TestCase):
 		her_array_mm_per_day = np.array([11.0])
 		m0_array_kg_per_day = np.array([7.0])
 		
-		actual = nitrate._calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+		actual = nitrate._calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		expected = np.array([35.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)
