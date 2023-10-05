@@ -197,6 +197,12 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(np.array([])))
 		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(np.array([1000.0])))
 		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), nitrate._convert_kg_to_tons_array(np.array([500, 1000.0, 3000.0])))
+	
+	# def test_calculate_nitrate(self):
+	# 	data = None
+	# 	output = None
+	# 	node = None
+	# 	actual = nitrate.calculate_nitrate(data, output, node)
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
