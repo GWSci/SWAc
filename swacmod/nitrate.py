@@ -4,8 +4,8 @@ import numpy as np
 def calculate_nitrate(data, output, node):
 	her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
 	m0_array_kg_per_day = _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day)
-	m1_arr_kg_per_day = _calculate_m1_arr_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
-	m1a_arr_kg_per_day = _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day)
+	m1_array_kg_per_day = _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+	m1a_arr_kg_per_day = _calculate_m1a_arr_kg_per_day(data, output, node, m1_array_kg_per_day)
 	m2_arr_kg_per_day = _calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 	m3_kg_per_day = _calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 	mi_kg_per_day = _calculate_mi_kg_per_day(m1a_arr_kg_per_day, m2_arr_kg_per_day)
@@ -82,13 +82,13 @@ def _cumulative_fraction_leaked_per_year(her_at_5_percent, her_at_50_percent, he
 	y = (m * x) + c
 	return y
 
-def _calculate_m1_arr_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day):
+def _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day):
 	perc_through_root_mm_per_day = output["perc_through_root"]
 	pp = perc_through_root_mm_per_day / her_array_mm_per_day
 	m1_kg_per_day = pp * m0_kg_per_day
 	return m1_kg_per_day
 
-def _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day):
+def _calculate_m1a_arr_kg_per_day(data, output, node, m1_array_kg_per_day):
 	interflow_volume_mm = output["interflow_volume"]
 	infiltration_recharge_mm_per_day = output["infiltration_recharge"]
 	interflow_to_rivers_mm_per_day = output["interflow_to_rivers"]
@@ -96,12 +96,12 @@ def _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day):
 	soil_percolation_mm_per_day = interflow_volume_mm + infiltration_recharge_mm_per_day + interflow_to_rivers_mm_per_day
 	proportion = interflow_volume_mm / soil_percolation_mm_per_day
 
-	length = m1_arr_kg_per_day.size
+	length = m1_array_kg_per_day.size
 	m1a_arr_kg_per_day = np.zeros(length)
 	mit_kg = 0
 
 	for i in range(length):
-		mit_kg += m1_arr_kg_per_day[i]
+		mit_kg += m1_array_kg_per_day[i]
 		m1a_kg_per_day = mit_kg * proportion[i]
 		mit_kg -= m1a_kg_per_day
 		m1a_arr_kg_per_day[i] = m1a_kg_per_day
