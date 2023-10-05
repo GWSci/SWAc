@@ -144,6 +144,9 @@ def _calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_
 		/ her_array_mm_per_day)
 	return m3_kg_per_day
 
+def _calculate_mi_kg_per_day(m1a_arr_kg_per_day, m2_arr_kg_per_day):
+	return m1a_arr_kg_per_day + m2_arr_kg_per_day
+
 def _calculate_daily_proportion_reaching_water_table(DTW, t):
 	f_t = _calculate_cumulative_proportion_reaching_water_table(DTW, t)
 	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(DTW, t - 1)
