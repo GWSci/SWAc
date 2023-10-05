@@ -181,6 +181,19 @@ class Test_Nitrate(unittest.TestCase):
 		expected = np.array([140.0, 250.0, 360.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)
+	
+	def test_calculate_recharge_concentration_kg_per_m3(self):
+		data = None
+		output = {
+			'combined_recharge': np.array([2.0, 3.0, 5.0]),
+		}
+		node = None
+		total_mass_on_day_kg = [14.0, 33.0, 65.0]
+		expected = [7.0, 11.0, 13.0]
+		actual = _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_kg)
+
+def _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_kg):
+	pass
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
