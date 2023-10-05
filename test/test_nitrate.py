@@ -173,11 +173,11 @@ class Test_Nitrate(unittest.TestCase):
 
 		np.testing.assert_array_almost_equal(expected, actual)
 	
-	def test_calculate_mi_kg_per_day(self):
+	def test_calculate_mi_array_kg_per_day(self):
 		m1a_array_kg_per_day = np.array([100.0, 200.0, 300.0])
 		m2_array_kg_per_day = np.array([40.0, 50.0, 60.0])
 
-		actual = nitrate._calculate_mi_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
+		actual = nitrate._calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
 		expected = np.array([140.0, 250.0, 360.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)
