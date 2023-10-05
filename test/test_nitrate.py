@@ -188,9 +188,9 @@ class Test_Nitrate(unittest.TestCase):
 			'combined_recharge': np.array([2.0, 3.0, 5.0]),
 		}
 		node = None
-		total_mass_array_kg_per_day = [14.0, 33.0, 65.0]
+		mass_reaching_water_table_array_kg_per_day = [14.0, 33.0, 65.0]
 		expected = [7.0, 11.0, 13.0]
-		actual = nitrate._calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_array_kg_per_day)
+		actual = nitrate._calculate_recharge_concentration_kg_per_m3(data, output, node, mass_reaching_water_table_array_kg_per_day)
 		np.testing.assert_array_almost_equal(expected, actual)
 	
 	def test_convert_kg_to_tons_array(self):
