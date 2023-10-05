@@ -11,6 +11,8 @@ def calculate_nitrate(data, output, node):
 	mi_kg_per_day = _calculate_mi_kg_per_day(m1a_arr_kg_per_day, m2_arr_kg_per_day)
 	daily_proportion_reaching_water_table = _calculate_daily_proportion_reaching_water_table_arr(data, output, node)
 	total_mass_on_day_kg = _calculate_total_mass_on_day_kg(daily_proportion_reaching_water_table, mi_kg_per_day)
+	recharge_concentration_kg_per_m3 = _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_kg)
+	
 
 def _calculate_her_mm_per_day(data, output, node):
 	return output["rainfall_ts"] - output["ae"]
