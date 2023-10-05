@@ -198,11 +198,36 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(np.array([1000.0])))
 		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), nitrate._convert_kg_to_tons_array(np.array([500, 1000.0, 3000.0])))
 	
-	# def test_calculate_nitrate(self):
-	# 	data = None
-	# 	output = None
-	# 	node = None
-	# 	actual = nitrate.calculate_nitrate(data, output, node)
+	def test_calculate_nitrate(self):
+		max_load_per_year_kg_per_hectare = 2500
+		her_at_5_percent = 10
+		her_at_50_percent = 100
+		her_at_95_percent = 190
+
+		data = {
+			"params": {
+				"node_areas": {7: [10]},
+				"nitrate_depth_to_water": {7: [100]},
+				"nitrate_leaching": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
+			}, "series" : {
+				"date": [date(2023, 1, 1)]
+			},
+		}
+		output = {
+			"rainfall_ts": np.array([20]),
+			"ae": np.array([5]),
+			"perc_through_root": np.array([10]),
+			"interflow_volume": np.array([5]),
+			"infiltration_recharge": np.array([5]),
+			"interflow_to_rivers": np.array([5]),
+			"runoff_recharge": np.array([5]),
+			"macropore_att": np.array([5]),
+			"macropore_dir": np.array([5]),
+			"rapid_runoff": np.array([5]),
+			"combined_recharge": np.array([5]),
+		}
+		node = 7
+		actual = nitrate.calculate_nitrate(data, output, node)
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
