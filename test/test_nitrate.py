@@ -69,7 +69,7 @@ class Test_Nitrate(unittest.TestCase):
 				[date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30), date(2023, 10, 1), date(2023, 10, 2), date(2023, 10, 3)],
 				[her_for_60_percent] * 6))
 	
-	def test_calculate_m0_kg_per_day(self):
+	def test_calculate_m0_array_kg_per_day(self):
 		max_load_per_year = 10000 * 365.25 * 4
 		her_at_5_percent = 5 * 365.25
 		her_at_50_percent = 50 * 365.25
@@ -94,7 +94,7 @@ class Test_Nitrate(unittest.TestCase):
 		max_load_per_cell_per_year = 10000 * 365.25
 		expected = [0.6 * max_load_per_cell_per_year, 0.4 * max_load_per_cell_per_year, 0, 0.6 * max_load_per_cell_per_year, 0.4 * max_load_per_cell_per_year, 0]
 
-		actual = nitrate._calculate_m0_kg_per_day(data, output, node, her_array_mm_per_day)
+		actual = nitrate._calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day)
 
 		np.testing.assert_array_equal(expected, actual)		
 
