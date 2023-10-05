@@ -33,11 +33,8 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 	def test_total_mass_leached_on_day_for_1_day(self):
 		daily_proportion_reaching_water_table = np.array([0.3])
 		mi_kg_per_day = np.array([100])
-		mass_reaching_water_table_kg = [
-			[30.0]
-		]
-		expected_total_mass_on_day_kg = np.array(
-			[30.0])
+		mass_reaching_water_table_kg = [[30.0]]
+		expected_total_mass_on_day_kg = np.array([30.0])
 		actual = calculate_total_mass_on_day(daily_proportion_reaching_water_table, mi_kg_per_day)
 		np.testing.assert_array_almost_equal(expected_total_mass_on_day_kg, actual)
 
