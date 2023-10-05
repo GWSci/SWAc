@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 # + Derive a continuous relationship between annual HER and % leached nitrate
@@ -142,3 +143,34 @@ def _calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_
 		* (runoff_mm_per_day - runoff_recharge_mm_per_day)
 		/ her_array_mm_per_day)
 	return m3_kg_per_day
+
+def _calculate_daily_proportion_reaching_water_table(DTW, t):
+	f_t = _calculate_cumulative_proportion_reaching_water_table(DTW, t)
+	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(DTW, t - 1)
+	return -(f_t - f_t_prev)
+
+def _calculate_cumulative_proportion_reaching_water_table(DTW, t):
+	if (t <= 0):
+		return 1
+
+	a = 1.38
+	μ = 1.58
+	σ = 3.96
+
+	numerator = math.log((1.7/0.0029) * (DTW/t), a) - μ
+	denominator = σ * math.sqrt(2)
+
+	result = 0.5 * math.erfc(- numerator / denominator)
+	return result
+
+def _calculate_total_mass_on_day_kg(daily_proportion_reaching_water_table, mi_kg_per_day):
+	length = daily_proportion_reaching_water_table.size
+	result_kg = np.zeros(length)
+	for day_nitrate_was_leached in range(length):
+		mass_leached_on_day_kg = mi_kg_per_day[day_nitrate_was_leached]
+		for day_proportion_reaches_water_table in range(length - day_nitrate_was_leached):
+			day = day_nitrate_was_leached + day_proportion_reaches_water_table
+			proportion = daily_proportion_reaching_water_table[day_proportion_reaches_water_table]
+			mass_reaching_water_table_kg = proportion * mass_leached_on_day_kg
+			result_kg[day] += mass_reaching_water_table_kg
+	return result_kg
