@@ -22,11 +22,11 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		self.assertEqual(6927, t)
 
 def n_prop_i(DTW, t):
-	f_t = calculate_cumulative_nitrogen_reaching_water_table(DTW, t)
-	f_t_prev = calculate_cumulative_nitrogen_reaching_water_table(DTW, t - 1)
+	f_t = calculate_cumulative_proportion_reaching_water_table(DTW, t)
+	f_t_prev = calculate_cumulative_proportion_reaching_water_table(DTW, t - 1)
 	return -(f_t - f_t_prev)
 
-def calculate_cumulative_nitrogen_reaching_water_table(DTW, t):
+def calculate_cumulative_proportion_reaching_water_table(DTW, t):
 	if (t <= 0):
 		return 1
 
