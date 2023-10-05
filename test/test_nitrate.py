@@ -194,6 +194,7 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 
 def _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_kg):
+	# TODO This is incorrect as recharge is in mm but we need m3, so it is the wrong dimension entirely.
 	combined_recharge_mm_per_day = output["combined_recharge"]
 	return total_mass_on_day_kg / combined_recharge_mm_per_day
 
