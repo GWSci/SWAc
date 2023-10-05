@@ -92,5 +92,6 @@ def calculate_total_mass_on_day(daily_proportion_reaching_water_table, mi_kg_per
 		for day_proportion_reaches_water_table in range(length - day_nitrate_was_leached):
 			day = day_nitrate_was_leached + day_proportion_reaches_water_table
 			proportion = daily_proportion_reaching_water_table[day_proportion_reaches_water_table]
-			result[day] += proportion * mass_leached_on_day
+			mass_reaching_water_table = proportion * mass_leached_on_day
+			result[day] += mass_reaching_water_table
 	return result
