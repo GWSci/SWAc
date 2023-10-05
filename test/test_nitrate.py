@@ -216,7 +216,7 @@ class Test_Nitrate(unittest.TestCase):
 		output = {
 			"rainfall_ts": np.array([130.0]),
 			"ae": np.array([50.0]),
-			"perc_through_root": np.array([10]),
+			"perc_through_root": np.array([40.0]),
 			"interflow_volume": np.array([5]),
 			"infiltration_recharge": np.array([5]),
 			"interflow_to_rivers": np.array([5]),
@@ -229,7 +229,8 @@ class Test_Nitrate(unittest.TestCase):
 		node = 7
 		actual = nitrate.calculate_nitrate(data, output, node)
 		np.testing.assert_array_almost_equal(np.array([80.0]), actual["her_array_mm_per_day"])
-		np.testing.assert_array_almost_equal(np.array([100]), actual["m0_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([100.0]), actual["m0_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([50.0]), actual["m1_array_kg_per_day"])
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
