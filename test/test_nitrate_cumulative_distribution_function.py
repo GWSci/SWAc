@@ -89,7 +89,7 @@ def calculate_total_mass_on_day(daily_proportion_reaching_water_table, mi_kg_per
 	result = np.zeros(length)
 	for mass_index in range(length):
 		mass = mi_kg_per_day[mass_index]
-		for proportion_index in range(length):
+		for proportion_index in range(length - mass_index):
 			day = mass_index + proportion_index
 			proportion = daily_proportion_reaching_water_table[proportion_index]
 			if (day < length):
