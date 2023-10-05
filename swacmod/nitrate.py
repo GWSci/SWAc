@@ -163,3 +163,8 @@ def _calculate_total_mass_on_day_kg(daily_proportion_reaching_water_table, mi_kg
 			mass_reaching_water_table_kg = proportion * mass_leached_on_day_kg
 			result_kg[day] += mass_reaching_water_table_kg
 	return result_kg
+
+def _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_kg):
+	# TODO This is incorrect as recharge is in mm but we need m3, so it is the wrong dimension entirely.
+	combined_recharge_mm_per_day = output["combined_recharge"]
+	return total_mass_on_day_kg / combined_recharge_mm_per_day

@@ -190,13 +190,8 @@ class Test_Nitrate(unittest.TestCase):
 		node = None
 		total_mass_on_day_kg = [14.0, 33.0, 65.0]
 		expected = [7.0, 11.0, 13.0]
-		actual = _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_kg)
+		actual = nitrate._calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_kg)
 		np.testing.assert_array_almost_equal(expected, actual)
-
-def _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_kg):
-	# TODO This is incorrect as recharge is in mm but we need m3, so it is the wrong dimension entirely.
-	combined_recharge_mm_per_day = output["combined_recharge"]
-	return total_mass_on_day_kg / combined_recharge_mm_per_day
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
