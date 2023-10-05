@@ -87,10 +87,10 @@ def calculate_cumulative_proportion_reaching_water_table(DTW, t):
 def calculate_total_mass_on_day(daily_proportion_reaching_water_table, mi_kg_per_day):
 	length = daily_proportion_reaching_water_table.size
 	result = np.zeros(length)
-	for mass_index in range(length):
-		mass = mi_kg_per_day[mass_index]
-		for proportion_index in range(length - mass_index):
-			day = mass_index + proportion_index
+	for day_nitrate_was_leached in range(length):
+		mass_leached_on_day = mi_kg_per_day[day_nitrate_was_leached]
+		for proportion_index in range(length - day_nitrate_was_leached):
+			day = day_nitrate_was_leached + proportion_index
 			proportion = daily_proportion_reaching_water_table[proportion_index]
-			result[day] += proportion * mass
+			result[day] += proportion * mass_leached_on_day
 	return result
