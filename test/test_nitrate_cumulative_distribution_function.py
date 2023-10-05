@@ -37,7 +37,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		}
 		output = None
 		node = 3
-		expected = np.array([0.0, 0.0, 0.0])
+		expected = np.array([0.0, 1.110223e-16, 8.770762e-15])
 		actual = nitrate._calculate_daily_proportion_reaching_water_table_arr(data, output, node)
 		np.testing.assert_array_almost_equal(expected, actual)
 

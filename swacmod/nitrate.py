@@ -125,7 +125,10 @@ def _calculate_mi_kg_per_day(m1a_arr_kg_per_day, m2_arr_kg_per_day):
 
 def _calculate_daily_proportion_reaching_water_table_arr(data, output, node):
 	length = data["series"]["date"].size
+	depth_to_water_m = data["params"]["nitrate_depth_to_water"][node][0]
 	result = np.zeros(length)
+	for i in range(length):
+		result[i] = _calculate_daily_proportion_reaching_water_table(depth_to_water_m, i)
 	return result
 
 def _calculate_daily_proportion_reaching_water_table(DTW, t):
