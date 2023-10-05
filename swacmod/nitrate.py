@@ -2,7 +2,7 @@ import math
 import numpy as np
 
 def calculate_nitrate(data, output, node):
-	her_array_mm_per_day = _calculate_her_mm_per_day(data, output, node)
+	her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
 	m0_array_kg_per_day = _calculate_m0_kg_per_day(data, output, node, her_array_mm_per_day)
 	m1_arr_kg_per_day = _calculate_m1_arr_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 	m1a_arr_kg_per_day = _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day)
@@ -15,7 +15,7 @@ def calculate_nitrate(data, output, node):
 	recharge_concentration_kg_per_m3 = _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_kg)
 
 
-def _calculate_her_mm_per_day(data, output, node):
+def _calculate_her_array_mm_per_day(data, output, node):
 	return output["rainfall_ts"] - output["ae"]
 
 def _calculate_m0_kg_per_day(data, output, node, her_array_mm_per_day):
