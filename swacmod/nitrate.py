@@ -9,8 +9,8 @@ def calculate_nitrate(data, output, node):
 	m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 	m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 	mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
-	daily_proportion_reaching_water_table = _calculate_daily_proportion_reaching_water_table_arr(data, output, node)
-	total_mass_on_day_kg = _calculate_total_mass_on_day_kg(daily_proportion_reaching_water_table, mi_array_kg_per_day)
+	daily_proportion_reaching_water_table_array = _calculate_daily_proportion_reaching_water_table_arr(data, output, node)
+	total_mass_on_day_kg = _calculate_total_mass_on_day_kg(daily_proportion_reaching_water_table_array, mi_array_kg_per_day)
 	total_mass_on_day_tons = _convert_kg_to_tons_array(total_mass_on_day_kg)
 	recharge_concentration_kg_per_m3 = _calculate_recharge_concentration_kg_per_m3(data, output, node, total_mass_on_day_kg)
 
@@ -155,14 +155,14 @@ def _calculate_cumulative_proportion_reaching_water_table(DTW, t):
 	result = 0.5 * (1 + math.erf(- numerator / denominator))
 	return result
 
-def _calculate_total_mass_on_day_kg(daily_proportion_reaching_water_table, mi_array_kg_per_day):
-	length = daily_proportion_reaching_water_table.size
+def _calculate_total_mass_on_day_kg(daily_proportion_reaching_water_table_array, mi_array_kg_per_day):
+	length = daily_proportion_reaching_water_table_array.size
 	result_kg = np.zeros(length)
 	for day_nitrate_was_leached in range(length):
 		mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
 		for day_proportion_reaches_water_table in range(length - day_nitrate_was_leached):
 			day = day_nitrate_was_leached + day_proportion_reaches_water_table
-			proportion = daily_proportion_reaching_water_table[day_proportion_reaches_water_table]
+			proportion = daily_proportion_reaching_water_table_array[day_proportion_reaches_water_table]
 			mass_reaching_water_table_kg = proportion * mass_leached_on_day_kg
 			result_kg[day] += mass_reaching_water_table_kg
 	return result_kg
