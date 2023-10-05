@@ -210,31 +210,32 @@ class Test_Nitrate(unittest.TestCase):
 				"nitrate_depth_to_water": {7: [100]},
 				"nitrate_leaching": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
 			}, "series" : {
-				"date": [date(2023, 1, 1)]
+				"date": [date(2023, 1, 1), date(2023, 1, 2), ]
 			},
 		}
 		output = {
-			"rainfall_ts": np.array([130.0]),
-			"ae": np.array([50.0]),
-			"perc_through_root": np.array([40.0]),
-			"interflow_volume": np.array([1.0]),
-			"infiltration_recharge": np.array([2.0]),
-			"interflow_to_rivers": np.array([2.0]),
-			"runoff_recharge": np.array([8.0]),
-			"macropore_att": np.array([4.0]),
-			"macropore_dir": np.array([4.0]),
-			"rapid_runoff": np.array([32.0]),
-			"combined_recharge": np.array([5]),
+			"rainfall_ts": np.array([130.0, 130.0]),
+			"ae": np.array([50.0, 50.0]),
+			"perc_through_root": np.array([40.0, 40.0]),
+			"interflow_volume": np.array([1.0, 1.0]),
+			"infiltration_recharge": np.array([2.0, 2.0]),
+			"interflow_to_rivers": np.array([2.0, 2.0]),
+			"runoff_recharge": np.array([8.0, 8.0]),
+			"macropore_att": np.array([4.0, 4.0]),
+			"macropore_dir": np.array([4.0, 4.0]),
+			"rapid_runoff": np.array([32.0, 32.0]),
+			"combined_recharge": np.array([5, 5]),
 		}
 		node = 7
 		actual = nitrate.calculate_nitrate(data, output, node)
-		np.testing.assert_array_almost_equal(np.array([80.0]), actual["her_array_mm_per_day"])
-		np.testing.assert_array_almost_equal(np.array([100.0]), actual["m0_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([50.0]), actual["m1_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([10.0]), actual["m1a_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([20.0]), actual["m2_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([30.0]), actual["m3_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([30.0]), actual["mi_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([80.0, 80.0]), actual["her_array_mm_per_day"])
+		np.testing.assert_array_almost_equal(np.array([100.0, 100.0]), actual["m0_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([50.0, 50.0]), actual["m1_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([10.0, 18.0]), actual["m1a_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([20.0, 20.0]), actual["m2_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([30.0, 30.0]), actual["m3_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([30.0, 38.0]), actual["mi_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([0.0, 1.110223e-16]), actual["proportion_reaching_water_table_array_per_day"])
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
