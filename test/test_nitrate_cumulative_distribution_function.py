@@ -1,4 +1,5 @@
 import math
+import swacmod.nitrate
 import numpy as np
 import unittest
 
@@ -7,7 +8,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		DTW = 100
 		sum = 0
 		for t in range(1, 1000000):
-			sum += calculate_daily_proportion_reaching_water_table(DTW, t)
+			sum += _calculate_daily_proportion_reaching_water_table(DTW, t)
 		self.assertAlmostEqual(1, sum, places=2)
 
 	def test_maximum_of_daily_proportion_should_appear_after_several_years(self):
@@ -15,7 +16,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		t = 0
 		previous_nitrate = 0
 		while True:
-			nitrate = calculate_daily_proportion_reaching_water_table(DTW, t + 1)
+			nitrate = _calculate_daily_proportion_reaching_water_table(DTW, t + 1)
 			if nitrate < previous_nitrate:
 				break
 			t += 1
@@ -65,12 +66,12 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		actual = _calculate_total_mass_on_day_kg(daily_proportion_reaching_water_table, mi_kg_per_day)
 		np.testing.assert_array_almost_equal(expected_total_mass_on_day_kg, actual)
 
-def calculate_daily_proportion_reaching_water_table(DTW, t):
-	f_t = calculate_cumulative_proportion_reaching_water_table(DTW, t)
-	f_t_prev = calculate_cumulative_proportion_reaching_water_table(DTW, t - 1)
+def _calculate_daily_proportion_reaching_water_table(DTW, t):
+	f_t = _calculate_cumulative_proportion_reaching_water_table(DTW, t)
+	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(DTW, t - 1)
 	return -(f_t - f_t_prev)
 
-def calculate_cumulative_proportion_reaching_water_table(DTW, t):
+def _calculate_cumulative_proportion_reaching_water_table(DTW, t):
 	if (t <= 0):
 		return 1
 
