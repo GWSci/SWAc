@@ -1,4 +1,3 @@
-import math
 import swacmod.nitrate as nitrate
 import numpy as np
 import unittest
