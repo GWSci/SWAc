@@ -1,3 +1,4 @@
+from datetime import date
 import swacmod.nitrate as nitrate
 import numpy as np
 import unittest
@@ -21,6 +22,25 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 			t += 1
 			previous_nitrate = current_nitrate
 		self.assertEqual(6927, t)
+	
+	def test_calculate_daily_proportion_reaching_water_table_arr(self):
+		data = {
+			"series": {
+				"date" : np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
+			}, "params": {
+				"node_areas" : {
+					3: [2500]
+				}, "nitrate_depth_to_water" : {
+					3: [100]
+				}
+			},
+		}
+		output = None
+		node = 3
+		expected = np.array([0.0, 0.0, 0.0])
+		actual = nitrate._calculate_daily_proportion_reaching_water_table_arr(data, output, node)
+		np.testing.assert_array_almost_equal(expected, actual)
+
 	
 	def test_total_mass_leached_on_day_for_zero_days(self):
 		daily_proportion_reaching_water_table = np.array([])

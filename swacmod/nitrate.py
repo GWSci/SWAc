@@ -1,6 +1,15 @@
 import math
 import numpy as np
 
+def calculate_nitrate(data, output, node):
+	her_array_mm_per_day = _calculate_her_mm_per_day(data, output, node)
+	m0_array_kg_per_day = _calculate_m0_kg_per_day(data, output, node, her_array_mm_per_day)
+	m1_arr_kg_per_day = _calculate_m1_arr_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+	m1a_arr_kg_per_day = _calculate_m1a_arr_kg_per_day(data, output, node, m1_arr_kg_per_day)
+	m2_arr_kg_per_day = _calculate_m2_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+	m3_kg_per_day = _calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+	mi_kg_per_day = _calculate_mi_kg_per_day(m1a_arr_kg_per_day, m2_arr_kg_per_day)
+
 def _calculate_her_mm_per_day(data, output, node):
 	return output["rainfall_ts"] - output["ae"]
 
@@ -113,6 +122,11 @@ def _calculate_m3_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_
 
 def _calculate_mi_kg_per_day(m1a_arr_kg_per_day, m2_arr_kg_per_day):
 	return m1a_arr_kg_per_day + m2_arr_kg_per_day
+
+def _calculate_daily_proportion_reaching_water_table_arr(data, output, node):
+	length = data["series"]["date"].size
+	result = np.zeros(length)
+	return result
 
 def _calculate_daily_proportion_reaching_water_table(DTW, t):
 	f_t = _calculate_cumulative_proportion_reaching_water_table(DTW, t)
