@@ -78,8 +78,8 @@ def aggregate_nitrate(aggregation, data, output, node):
 	node_areas = data["params"]["node_areas"]
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
 	combined_recharge_m_cubed = _calculate_combined_recharge_m_cubed(data, output, node)
-	shape = (len(time_periods), len(node_areas))
 	if aggregation is None:
+		shape = (len(time_periods), len(node_areas))
 		aggregation = np.zeros(shape = shape)
 	if len(time_periods) > 0:
 		sum_of_nitrate_tons = 0.0
