@@ -59,13 +59,13 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 			}
 		}
 		output = {
-			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30, 1001, 7429]),
+			"nitrate_reaching_water_table_array_tons_per_day" : np.array([10000.0, 6000.0, 65.0]),
 			"combined_recharge" : np.array([300.0, 1100.0, 1900.0]),
 		}
 		node = 0
 
 		actual = aggregate_nitrate(data, output, node)
-		expected = np.array([[26.0]])
+		expected = np.array([[27.0]])
 		np.testing.assert_array_equal(expected, actual)
 
 def aggregate_nitrate(data, output, node):
@@ -79,10 +79,12 @@ def aggregate_nitrate(data, output, node):
 	shape = (len(time_periods), len(node_areas))
 	result = np.zeros(shape = shape)
 	if (len(node_areas) > 0) and (len(time_periods) > 0):
+		sum_of_nitrate_tons = 0.0
+		sum_of_recharge_m_cubed = 0.0
 		for day in range(len(dates)):
-			x = nitrate_reaching_water_table_array_tons_per_day[day] / combined_recharge_m_cubed[day]
-			print(f"x = {x}")
-			result[0, 0] += x
+			sum_of_nitrate_tons += nitrate_reaching_water_table_array_tons_per_day[day]
+			sum_of_recharge_m_cubed += combined_recharge_m_cubed[day]
+		result[0, 0] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
 	return result
 
 def _convert_mm_to_m(arr):
