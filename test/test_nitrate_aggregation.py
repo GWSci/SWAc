@@ -87,6 +87,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 				}
 			}
 		}
+		data = make_data({0: [5.0, 13.0, 23.0]}, {0: [1, 4]})
 		output = {
 			"nitrate_reaching_water_table_array_tons_per_day" : np.array([10000.0, 6000.0, 65.0]),
 			"combined_recharge" : np.array([300.0, 1100.0, 1900.0]),
@@ -96,6 +97,20 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		actual = aggregate_nitrate(None, data, output, node)
 		expected = np.array([[27.0]])
 		np.testing.assert_array_equal(expected, actual)
+
+def make_data(node_areas, time_periods):
+	dates = []
+	for i in range(1, time_periods[len(time_periods) - 1][1]):
+		dates.append(date(2023, 1, i + 1))
+	return {
+		"series": {
+			"date" : dates
+		}, "params" : {
+			"node_areas" : node_areas,
+			"time_periods" : time_periods
+		}
+	}
+
 
 def aggregate_nitrate(aggregation, data, output, node):
 	dates = data["series"]["date"]
