@@ -45,11 +45,11 @@ def aggregate_nitrate(data, output, node):
 	num_nodes = len(node_areas)
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
 	combined_recharge_mm = output["combined_recharge"]
+	combined_recharge_m = _convert_mm_to_m(combined_recharge_mm)
 	shape = (len(time_periods), num_nodes)
 	result = np.zeros(shape = shape)
 	if (num_nodes > 0):
-		combined_recharge_m = _convert_mm_to_m(combined_recharge_mm)
-		result[0, 0] = nitrate_reaching_water_table_array_tons_per_day[0] / (combined_recharge_m * node_areas[node][0])
+		result[0, 0] = nitrate_reaching_water_table_array_tons_per_day[0] / (combined_recharge_m[0] * node_areas[node][0])
 	return result
 
 def _convert_mm_to_m(arr):
