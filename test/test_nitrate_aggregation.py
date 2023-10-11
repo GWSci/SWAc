@@ -4,16 +4,6 @@ import unittest
 
 class Test_Nitrate_Aggregation(unittest.TestCase):
 	def test_nitrate_aggregation_for_empty_data(self):
-		data = {
-			"series": {
-				"date" : [date(2023, 9, 28)]
-			}, "params" : {
-				"node_areas" : {
-					0: [10.0]
-				},
-				"time_periods" : {}
-			}
-		}
 		data = make_data(node_areas = {0: [10.0]}, time_periods = {})
 		output = {
 			"nitrate_reaching_water_table_array_tons_per_day" : np.array([]),
