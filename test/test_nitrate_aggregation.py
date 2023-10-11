@@ -25,17 +25,6 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_nitrate_aggregation_for_one_day(self):
-		data = {
-			"series": {
-				"date" : [date(2023, 9, 28)]
-			}, "params" : {
-				"node_areas" : {
-					0: [5]
-				}, "time_periods" : {
-					0: [1, 2]
-				}
-			}
-		}
 		data = make_data(node_areas = {0: [5]}, time_periods = {0: [1, 2]})
 		output = {
 			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30]),
