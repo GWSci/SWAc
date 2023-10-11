@@ -97,7 +97,7 @@ def _calculate_combined_recharge_m_cubed(data, output, node):
 	node_areas = data["params"]["node_areas"]
 	combined_recharge_mm = output["combined_recharge"]
 	combined_recharge_m = _convert_mm_to_m(combined_recharge_mm)
-	combined_recharge_m_cubed = combined_recharge_m * node_areas[node]
+	combined_recharge_m_cubed = combined_recharge_m * node_areas[node][0]
 	return combined_recharge_m_cubed
 
 def _make_aggregation_array(data):
