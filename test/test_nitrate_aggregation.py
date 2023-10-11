@@ -46,9 +46,9 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_nitrate_aggregation_for_several_days_in_same_time_period(self):
-		data = make_data(node_areas = {0: [5.0, 13.0, 23.0]}, time_periods = {0: [1, 4]})
+		data = make_data(node_areas = {0: [5.0]}, time_periods = {0: [1, 4]})
 		output = {
-			"nitrate_reaching_water_table_array_tons_per_day" : np.array([10000.0, 6000.0, 65.0]),
+			"nitrate_reaching_water_table_array_tons_per_day" : np.array([4000.0, 400.0, 55.0]),
 			"combined_recharge" : np.array([300.0, 1100.0, 1900.0]),
 		}
 		node = 0
