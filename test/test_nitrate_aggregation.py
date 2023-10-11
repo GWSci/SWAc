@@ -36,6 +36,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 				}
 			}
 		}
+		data = make_data(node_areas = {0: [5]}, time_periods = {0: [1, 2]})
 		output = {
 			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30]),
 			"combined_recharge" : np.array([300.0]),
