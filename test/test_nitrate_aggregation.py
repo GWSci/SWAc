@@ -6,7 +6,6 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		data = {
 			"params" : {
 				"node_areas" : {},
-				"num_nodes" : 0,
 				"time_periods" : {}
 			}
 		}
@@ -25,8 +24,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 			"params" : {
 				"node_areas" : {
 					0: [5]
-				}, "num_nodes" : 1,
-				"time_periods" : {
+				}, "time_periods" : {
 					0: [1, 2]
 				}
 			}
@@ -44,7 +42,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 def aggregate_nitrate(data, output, node):
 	time_periods = data["params"]["time_periods"]
 	node_areas = data["params"]["node_areas"]
-	num_nodes = data["params"]["num_nodes"]
+	num_nodes = len(node_areas)
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
 	combined_recharge_mm = output["combined_recharge"]
 	shape = (len(time_periods), num_nodes)
