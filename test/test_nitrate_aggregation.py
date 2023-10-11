@@ -77,15 +77,20 @@ def aggregate_nitrate(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
 	combined_recharge_m_cubed = _calculate_combined_recharge_m_cubed(data, output, node)
+
 	if aggregation is None:
 		aggregation = _make_aggregation_array(data)
+
 	sum_of_nitrate_tons = 0.0
 	sum_of_recharge_m_cubed = 0.0
+
 	for day in range(len(dates)):
 		sum_of_nitrate_tons += nitrate_reaching_water_table_array_tons_per_day[day]
 		sum_of_recharge_m_cubed += combined_recharge_m_cubed[day]
+
 	if len(time_periods) > 0:
 		aggregation[0, node] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
+
 	return aggregation
 
 def _calculate_combined_recharge_m_cubed(data, output, node):
