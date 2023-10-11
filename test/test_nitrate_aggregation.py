@@ -75,12 +75,10 @@ def make_data(node_areas, time_periods):
 def aggregate_nitrate(aggregation, data, output, node):
 	dates = data["series"]["date"]
 	time_periods = data["params"]["time_periods"]
-	node_areas = data["params"]["node_areas"]
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
 	combined_recharge_m_cubed = _calculate_combined_recharge_m_cubed(data, output, node)
 	if aggregation is None:
-		shape = (len(time_periods), len(node_areas))
-		aggregation = np.zeros(shape = shape)
+		aggregation = _make_aggregation_array(data)
 	if len(time_periods) > 0:
 		sum_of_nitrate_tons = 0.0
 		sum_of_recharge_m_cubed = 0.0
@@ -96,6 +94,13 @@ def _calculate_combined_recharge_m_cubed(data, output, node):
 	combined_recharge_m = _convert_mm_to_m(combined_recharge_mm)
 	combined_recharge_m_cubed = combined_recharge_m * node_areas[node]
 	return combined_recharge_m_cubed
+
+def _make_aggregation_array(data):
+	time_periods = data["params"]["time_periods"]
+	node_areas = data["params"]["node_areas"]
+	shape = (len(time_periods), len(node_areas))
+	aggregation = np.zeros(shape = shape)
+	return aggregation
 
 def _convert_mm_to_m(arr):
 	return arr / 100.0
