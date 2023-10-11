@@ -20,7 +20,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = aggregate_nitrate(data, output, node)
+		actual = aggregate_nitrate(None, data, output, node)
 		expected = np.zeros(shape = (0, 1))
 		np.testing.assert_array_equal(expected, actual)
 
@@ -42,8 +42,37 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = aggregate_nitrate(data, output, node)
+		actual = aggregate_nitrate(None, data, output, node)
 		expected = np.array([[2.0]])
+		np.testing.assert_array_equal(expected, actual)
+
+	def test_nitrate_aggregation_for_two_nodes_and_one_day(self):
+		data = {
+			"series": {
+				"date" : [date(2023, 9, 28)]
+			}, "params" : {
+				"node_areas" : {
+					0: [5],
+					1: [11],
+				}, "time_periods" : {
+					0: [1, 2]
+				}
+			}
+		}
+		output_node_0 = {
+			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30]),
+			"combined_recharge" : np.array([300.0]),
+		}
+		node_0 = 0
+		output_node_1 = {
+			"nitrate_reaching_water_table_array_tons_per_day" : np.array([1001]),
+			"combined_recharge" : np.array([1300.0]),
+		}
+		node_1 = 1
+
+		actual = aggregate_nitrate(None, data, output_node_0, node_0)
+		actual = aggregate_nitrate(actual, data, output_node_1, node_1)
+		expected = np.array([[2.0, 7.0]])
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_nitrate_aggregation_for_several_days_in_same_time_period(self):
@@ -64,11 +93,11 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = aggregate_nitrate(data, output, node)
+		actual = aggregate_nitrate(None, data, output, node)
 		expected = np.array([[27.0]])
 		np.testing.assert_array_equal(expected, actual)
 
-def aggregate_nitrate(data, output, node):
+def aggregate_nitrate(aggregation, data, output, node):
 	dates = data["series"]["date"]
 	time_periods = data["params"]["time_periods"]
 	node_areas = data["params"]["node_areas"]
@@ -77,15 +106,16 @@ def aggregate_nitrate(data, output, node):
 	combined_recharge_m = _convert_mm_to_m(combined_recharge_mm)
 	combined_recharge_m_cubed = combined_recharge_m * node_areas[node]
 	shape = (len(time_periods), len(node_areas))
-	result = np.zeros(shape = shape)
+	if aggregation is None:
+		aggregation = np.zeros(shape = shape)
 	if (len(node_areas) > 0) and (len(time_periods) > 0):
 		sum_of_nitrate_tons = 0.0
 		sum_of_recharge_m_cubed = 0.0
 		for day in range(len(dates)):
 			sum_of_nitrate_tons += nitrate_reaching_water_table_array_tons_per_day[day]
 			sum_of_recharge_m_cubed += combined_recharge_m_cubed[day]
-		result[0, 0] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
-	return result
+		aggregation[0, node] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
+	return aggregation
 
 def _convert_mm_to_m(arr):
 	return arr / 100.0
