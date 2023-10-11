@@ -14,6 +14,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 				"time_periods" : {}
 			}
 		}
+		data = make_data(node_areas = {0: [10.0]}, time_periods = {})
 		output = {
 			"nitrate_reaching_water_table_array_tons_per_day" : np.array([]),
 			"combined_recharge" : np.array([]),
@@ -68,8 +69,9 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 
 def make_data(node_areas, time_periods):
 	dates = []
-	for i in range(1, time_periods[len(time_periods) - 1][1]):
-		dates.append(date(2023, 1, i + 1))
+	if len(time_periods) > 0:
+		for i in range(1, time_periods[len(time_periods) - 1][1]):
+			dates.append(date(2023, 1, i + 1))
 	return {
 		"series": {
 			"date" : dates
