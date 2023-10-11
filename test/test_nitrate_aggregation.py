@@ -108,7 +108,7 @@ def aggregate_nitrate(aggregation, data, output, node):
 	shape = (len(time_periods), len(node_areas))
 	if aggregation is None:
 		aggregation = np.zeros(shape = shape)
-	if (len(node_areas) > 0) and (len(time_periods) > 0):
+	if len(time_periods) > 0:
 		sum_of_nitrate_tons = 0.0
 		sum_of_recharge_m_cubed = 0.0
 		for day in range(len(dates)):
