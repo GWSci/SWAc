@@ -2,7 +2,7 @@ import numpy as np
 import unittest
 
 class Test_Nitrate_Aggregation(unittest.TestCase):
-	def test_x(self):
+	def test_nitrate_aggregation_for_empty_data(self):
 		data = {
 			"params" : {
 				"time_periods" : {}
