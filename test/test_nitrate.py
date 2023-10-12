@@ -116,8 +116,8 @@ class Test_Nitrate(unittest.TestCase):
 	def test_calculate_m1a_array_kg_per_day_for_just_one_day(self):
 		data = None
 		output = {
-			"interflow_volume" : np.array([20]),
-			"infiltration_recharge" : np.array([40]),
+			"interflow_volume" : np.array([40]),
+			"infiltration_recharge" : np.array([20]),
 			"interflow_to_rivers" : np.array([40]),
 		}
 		node = None
@@ -131,12 +131,12 @@ class Test_Nitrate(unittest.TestCase):
 	def test_calculate_m1a_array_kg_per_day_for_three_days_with_accumulation_in_MiT(self):
 		data = None
 		output = {
-			"interflow_volume" : np.array([20, 30, 10]),
-			"infiltration_recharge" : np.array([40, 35, 90]),
+			"interflow_volume" : np.array([40, 35, 90]),
+			"infiltration_recharge" : np.array([20, 30, 10]),
 			"interflow_to_rivers" : np.array([40, 35, 0]),
 		}
 		node = None
-		m1_array_kg_per_day = np.array([12, 20.4, 29])
+		m1_array_kg_per_day = np.array([12, 25.2, 39.5])
 
 		expected = np.array([2.4, 9, 5])
 
@@ -208,9 +208,9 @@ class Test_Nitrate(unittest.TestCase):
 			"rainfall_ts": np.array([130.0, 130.0]),
 			"ae": np.array([50.0, 50.0]),
 			"perc_through_root": np.array([40.0, 40.0]),
-			"interflow_volume": np.array([1.0, 1.0]),
-			"infiltration_recharge": np.array([2.0, 2.0]),
-			"interflow_to_rivers": np.array([2.0, 2.0]),
+			"interflow_volume": np.array([2.0, 20.0]),
+			"infiltration_recharge": np.array([1.0, 9.0]),
+			"interflow_to_rivers": np.array([2.0, 6.0]),
 			"runoff_recharge": np.array([8.0, 8.0]),
 			"macropore_att": np.array([4.0, 4.0]),
 			"macropore_dir": np.array([4.0, 4.0]),

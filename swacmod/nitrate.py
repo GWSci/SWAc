@@ -127,12 +127,17 @@ def _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_
 	return m1_kg_per_day
 
 def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
-	interflow_volume_mm = output["interflow_volume"]
+	end_interflow_store_volume_mm = output["interflow_volume"]
 	infiltration_recharge_mm_per_day = output["infiltration_recharge"]
 	interflow_to_rivers_mm_per_day = output["interflow_to_rivers"]
 
-	soil_percolation_mm_per_day = interflow_volume_mm + infiltration_recharge_mm_per_day + interflow_to_rivers_mm_per_day
-	proportion = interflow_volume_mm / soil_percolation_mm_per_day
+	interflow_store_components_mm_per_day = end_interflow_store_volume_mm + infiltration_recharge_mm_per_day + interflow_to_rivers_mm_per_day
+
+	# 0 when denominator is zero
+	recharge_proportion = infiltration_recharge_mm_per_day / interflow_store_components_mm_per_day
+
+	# 0 when denominator is zero
+	interflow_proportion = interflow_to_rivers_mm_per_day / interflow_store_components_mm_per_day
 
 	length = m1_array_kg_per_day.size
 	m1a_array_kg_per_day = np.zeros(length)
@@ -140,8 +145,11 @@ def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 
 	for i in range(length):
 		mit_kg += m1_array_kg_per_day[i]
-		m1a_kg_per_day = mit_kg * proportion[i]
-		mit_kg -= m1a_kg_per_day
+		m1a_kg_per_day = mit_kg * recharge_proportion[i]
+		m1b_kg_per_day = mit_kg * interflow_proportion[i]
+
+		mit_kg = mit_kg - m1a_kg_per_day - m1b_kg_per_day
+
 		m1a_array_kg_per_day[i] = m1a_kg_per_day
 	
 	return m1a_array_kg_per_day
@@ -151,6 +159,8 @@ def _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_
 	macropore_att_mm_per_day = output["macropore_att"]
 	macropore_dir_mm_per_day = output["macropore_dir"]
 	macropore_mm_per_day = macropore_att_mm_per_day + macropore_dir_mm_per_day
+
+	# when HER == 0, p_non = 0
 	p_non = (runoff_recharge_mm_per_day + macropore_mm_per_day) / her_array_mm_per_day
 	m2_kg_per_day = m0_array_kg_per_day * p_non
 	return m2_kg_per_day
@@ -158,6 +168,7 @@ def _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_
 def _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
 	runoff_mm_per_day = output["rapid_runoff"]
 	runoff_recharge_mm_per_day = output["runoff_recharge"]
+	# when HER == 0, m3 = 0
 	m3_array_kg_per_day = (m0_array_kg_per_day
 		* (runoff_mm_per_day - runoff_recharge_mm_per_day)
 		/ her_array_mm_per_day)
@@ -193,6 +204,7 @@ def _calculate_daily_proportion_reaching_water_table(DTW, t):
 	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(DTW, t - 1)
 	return f_t - f_t_prev
 
+# First day should be 1, not zero.
 def _calculate_cumulative_proportion_reaching_water_table(DTW, t):
 	if (t <= 0):
 		return 0
