@@ -57,6 +57,18 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		expected = np.array([[27.0]])
 		np.testing.assert_array_equal(expected, actual)
 
+	def test_nitrate_aggregation_for_several_days_each_in_its_own_time_period(self):
+		data = make_data(node_areas = {0: [5.0]}, time_periods = {0: [1, 2], 1: [2, 3], 2: [3, 4]})
+		output = {
+			"nitrate_reaching_water_table_array_tons_per_day" : np.array([435.0, 1705.0, 3515.0]),
+			"combined_recharge" : np.array([300.0, 1100.0, 1900.0]),
+		}
+		node = 0
+
+		actual = aggregate_nitrate(None, data, output, node)
+		expected = np.array([[29.0], [31.0], [37.0]])
+		np.testing.assert_array_equal(expected, actual)
+
 def make_data(node_areas, time_periods):
 	dates = []
 	if len(time_periods) > 0:
@@ -84,12 +96,18 @@ def aggregate_nitrate(aggregation, data, output, node):
 	sum_of_nitrate_tons = 0.0
 	sum_of_recharge_m_cubed = 0.0
 
+	time_period_index = 0
 	for day in range(len(dates)):
+		if (day + 1) == time_periods[time_period_index][1]:
+			aggregation[time_period_index, node] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
+			sum_of_nitrate_tons = 0.0
+			sum_of_recharge_m_cubed = 0.0
+			time_period_index += 1
 		sum_of_nitrate_tons += nitrate_reaching_water_table_array_tons_per_day[day]
 		sum_of_recharge_m_cubed += combined_recharge_m_cubed[day]
 
 	if len(time_periods) > 0:
-		aggregation[0, node] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
+		aggregation[time_period_index, node] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
 
 	return aggregation
 
