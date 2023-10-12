@@ -39,6 +39,8 @@ from swacmod import compile_model
 from swacmod import model as m
 import swacmod.model_numpy as model_numpy
 
+import swacmod.nitrate as nitrate
+
 # win fix
 sys.maxint = 2**63 - 1
 
@@ -154,6 +156,7 @@ def get_output(data, node, time_switcher):
         m.get_average_out,
         m.get_change,
         m.get_balance,
+        nitrate.calculate_nitrate,
     ]
 
     for function in methods:
