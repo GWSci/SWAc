@@ -2,10 +2,13 @@ import numpy as np
 import unittest
 
 class Test_Make_Nitrate_Csv_Output(unittest.TestCase):
+	def setUp(self):
+		self.expected_header_row = ["Stress Period", "Node", "Recharge Concentration (metric tons/m³)"]
+
 	def test_make_nitrate_csv_output_for_empty_aggregation(self):
 		nitrate_aggregation = np.array([])
 		expected = [
-			["Stress Period", "Node", "Recharge Concentration (metric tons/m³)"],
+			self.expected_header_row,
 		]
 		actual = make_nitrate_csv_output(nitrate_aggregation)
 		self.assertEqual(expected, actual)
@@ -13,7 +16,7 @@ class Test_Make_Nitrate_Csv_Output(unittest.TestCase):
 	def test_make_nitrate_csv_output_for_one_entry(self):
 		nitrate_aggregation = np.array([[2.0]])
 		expected = [
-			["Stress Period", "Node", "Recharge Concentration (metric tons/m³)"],
+			self.expected_header_row,
 			[1, 1, 2.0],
 		]
 		actual = make_nitrate_csv_output(nitrate_aggregation)
@@ -22,7 +25,7 @@ class Test_Make_Nitrate_Csv_Output(unittest.TestCase):
 	def test_make_nitrate_csv_output_for_three_nodes(self):
 		nitrate_aggregation = np.array([[2.0, 3.0, 5.0]])
 		expected = [
-			["Stress Period", "Node", "Recharge Concentration (metric tons/m³)"],
+			self.expected_header_row,
 			[1, 1, 2.0],
 			[1, 2, 3.0],
 			[1, 3, 5.0],
@@ -37,7 +40,7 @@ class Test_Make_Nitrate_Csv_Output(unittest.TestCase):
 			[5.0],
 		])
 		expected = [
-			["Stress Period", "Node", "Recharge Concentration (metric tons/m³)"],
+			self.expected_header_row,
 			[1, 1, 2.0],
 			[2, 1, 3.0],
 			[3, 1, 5.0],
@@ -52,7 +55,7 @@ class Test_Make_Nitrate_Csv_Output(unittest.TestCase):
 			[11.0, 13.0],
 		])
 		expected = [
-			["Stress Period", "Node", "Recharge Concentration (metric tons/m³)"],
+			self.expected_header_row,
 			[1, 1,  2.0],
 			[1, 2,  3.0],
 			[2, 1,  5.0],
