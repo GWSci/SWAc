@@ -156,7 +156,7 @@ def get_output(data, node, time_switcher):
         m.get_average_out,
         m.get_change,
         m.get_balance,
-        nitrate.calculate_nitrate,
+        nitrate.get_nitrate,
     ]
 
     for function in methods:
@@ -228,7 +228,7 @@ def run_process(
 
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
-                aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, spatial_index, pond_area)
+                aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, spatial_index, pond_area)
 
     logging.info("mp.Process %d ended", num)
 
@@ -265,7 +265,7 @@ def compare_lambdas(name, time_switcher, unoptimised, optimised):
         
     return optimised_result
 
-def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, spatial_index, pond_area):
+def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, spatial_index, pond_area):
     if node in data["params"]["output_individual"]:
         timer.switch_to(time_switcher, "aggregate_output (output_individual)")
         # if this node for individual output then preserve
@@ -325,6 +325,10 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
                                         method="average")):
             evtr_agg[(nnodes * i) + int(node)] = p
         evt = None
+
+    timer.switch_to(time_switcher, "aggregate_output > (nitrate)")
+    if data["params"]["nitrate_process"] == "enabled":
+        nitrate.aggregate_nitrate(nitrate_aggregation, data, output, node)
 
     timer.switch_to(time_switcher, "aggregate_output > (spatial_output_date)")
     if data["params"]["spatial_output_date"]:

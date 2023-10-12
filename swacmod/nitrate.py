@@ -1,6 +1,12 @@
 import math
 import numpy as np
 
+def get_nitrate(data, output, node):
+	nitrate = calculate_nitrate(data, output, node)
+	return {
+		"nitrate_reaching_water_table_array_tons_per_day" : nitrate["nitrate_reaching_water_table_array_tons_per_day"],
+	}
+
 def calculate_nitrate(data, output, node):
 	if "enabled" == data["params"]["nitrate_process"]:
 		her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
