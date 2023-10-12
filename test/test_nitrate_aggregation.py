@@ -83,6 +83,12 @@ def make_data(node_areas, time_periods):
 		}
 	}
 
+def _make_aggregation_array(data):
+	time_periods = data["params"]["time_periods"]
+	node_areas = data["params"]["node_areas"]
+	shape = (len(time_periods), len(node_areas))
+	aggregation = np.zeros(shape = shape)
+	return aggregation
 
 def aggregate_nitrate(aggregation, data, output, node):
 	if aggregation is None:
@@ -110,13 +116,6 @@ def _calculate_combined_recharge_m_cubed(data, output, node):
 	combined_recharge_m = _convert_mm_to_m(combined_recharge_mm)
 	combined_recharge_m_cubed = combined_recharge_m * node_areas[node][0]
 	return combined_recharge_m_cubed
-
-def _make_aggregation_array(data):
-	time_periods = data["params"]["time_periods"]
-	node_areas = data["params"]["node_areas"]
-	shape = (len(time_periods), len(node_areas))
-	aggregation = np.zeros(shape = shape)
-	return aggregation
 
 def _convert_mm_to_m(arr):
 	return arr / 100.0
