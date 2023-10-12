@@ -90,12 +90,8 @@ def aggregate_nitrate(aggregation, data, output, node):
 
 	time_periods = data["params"]["time_periods"]
 
-	if len(time_periods) == 0:
-		return aggregation
-
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
 	combined_recharge_m_cubed = _calculate_combined_recharge_m_cubed(data, output, node)
-
 
 	for time_period_index in range(len(time_periods)):
 		time_period = time_periods[time_period_index]
