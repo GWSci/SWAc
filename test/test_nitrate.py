@@ -271,6 +271,16 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["nitrate_reaching_water_table_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["nitrate_reaching_water_table_array_tons_per_day"])
 
+	def test_output_file_path(self):
+		data = {
+			"params" : {
+				"run_name" : "aardvark",
+			}
+		}
+		expected = ""
+		actual = nitrate.make_output_filename(data)
+		
+
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
 		her_at_5_percent = 5 * 365.25
