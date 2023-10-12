@@ -1,6 +1,8 @@
 import csv
 import math
 import numpy as np
+import os
+import swacmod.utils as utils
 
 def get_nitrate(data, output, node):
 	nitrate = calculate_nitrate(data, output, node)
@@ -252,4 +254,8 @@ def write_nitrate_csv_file(filename, nitrate_csv_output):
 		writer.writerows(nitrate_csv_output)
 
 def make_output_filename(data):
-	pass
+	run_name = data["params"]["run_name"]
+	file = run_name + "_nitrate.csv"
+	folder = utils.CONSTANTS["OUTPUT_DIR"]
+	return os.path.join(folder, file)
+ 

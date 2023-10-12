@@ -1,6 +1,7 @@
 from datetime import date
 import unittest
 import numpy as np
+import os
 import swacmod.nitrate as nitrate
 
 class Test_Nitrate(unittest.TestCase):
@@ -279,7 +280,11 @@ class Test_Nitrate(unittest.TestCase):
 		}
 		expected = ""
 		actual = nitrate.make_output_filename(data)
-		
+		sep = os.path.sep
+		expected = "output_files" + sep + "aardvark_nitrate.csv"
+		isPassed = actual.endswith(expected)
+		message = f"Expected '{actual}' to end with '{expected}'."
+		self.assertTrue(isPassed, message)
 
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
