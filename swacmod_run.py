@@ -182,6 +182,7 @@ def run_process(
         recharge_agg,
         runoff_agg,
         evtr_agg,
+        nitrate_aggregation,
         recharge,
         runoff,
         log_path,
@@ -418,6 +419,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         runoff_agg = mp.Array("f", 1)
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = mp.Array("f", 1)
+        nitrate_aggregation = nitrate.make_aggregation_array(data)
         recharge = mp.Array("f", 1)
         runoff = mp.Array("f", 1)
         if params["swrecharge_process"] == "enabled" or data["params"][
@@ -446,6 +448,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         runoff_agg = np.zeros(1, dtype=np.single)
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = np.zeros(1, dtype=np.single)
+        nitrate_aggregation = nitrate.make_aggregation_array(data)
         recharge = np.zeros(1, dtype=np.single)
         runoff = np.zeros(1, dtype=np.single)
         if params["swrecharge_process"] == "enabled" or data["params"][
@@ -503,6 +506,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 recharge_agg,
                 runoff_agg,
                 evtr_agg,
+                nitrate_aggregation,
                 recharge,
                 runoff,
                 log_path,
@@ -540,6 +544,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     recharge_agg,
                     runoff_agg,
                     evtr_agg,
+                    nitrate_aggregation,
                     recharge,
                     runoff,
                     log_path,
