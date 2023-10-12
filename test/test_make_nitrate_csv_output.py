@@ -30,6 +30,21 @@ class Test_Make_Nitrate_Csv_Output(unittest.TestCase):
 		actual = make_nitrate_csv_output(nitrate_aggregation)
 		self.assertEqual(expected, actual)
 
+	def test_make_nitrate_csv_output_for_three_stress_periods(self):
+		nitrate_aggregation = np.array([
+			[2.0],
+			[3.0],
+			[5.0],
+		])
+		expected = [
+			["Stress Period", "Node", "Recharge Concentration (metric tons/m³)"],
+			[1, 1, 2.0],
+			[1, 1, 2.0],
+			[1, 1, 2.0],
+		]
+		actual = make_nitrate_csv_output(nitrate_aggregation)
+		self.assertEqual(expected, actual)
+
 def make_nitrate_csv_output(nitrate_aggregation):
 	result = []
 	result.append(["Stress Period", "Node", "Recharge Concentration (metric tons/m³)"])
