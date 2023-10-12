@@ -5,7 +5,7 @@ import unittest
 
 class Test_Nitrate_Aggregation(unittest.TestCase):
 	def test_nitrate_aggregation_for_empty_data(self):
-		data = make_data(node_areas = {0: [10.0]}, time_periods = {})
+		data = make_data(node_areas = {0: 10.0}, time_periods = {})
 		output = {
 			"nitrate_reaching_water_table_array_tons_per_day" : np.array([]),
 			"combined_recharge" : np.array([]),
@@ -18,7 +18,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_nitrate_aggregation_for_one_day(self):
-		data = make_data(node_areas = {0: [5]}, time_periods = {0: [1, 2]})
+		data = make_data(node_areas = {0: 5}, time_periods = {0: [1, 2]})
 		output = {
 			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30]),
 			"combined_recharge" : np.array([300.0]),
@@ -31,7 +31,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_nitrate_aggregation_for_two_nodes_and_one_day(self):
-		data = make_data(node_areas = {0: [5], 1: [11]}, time_periods = {0: [1, 2]})
+		data = make_data(node_areas = {0: 5, 1: 11}, time_periods = {0: [1, 2]})
 		output_node_0 = {
 			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30]),
 			"combined_recharge" : np.array([300.0]),
@@ -50,7 +50,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_nitrate_aggregation_for_several_days_in_same_time_period(self):
-		data = make_data(node_areas = {0: [5.0]}, time_periods = {0: [1, 4]})
+		data = make_data(node_areas = {0: 5.0}, time_periods = {0: [1, 4]})
 		output = {
 			"nitrate_reaching_water_table_array_tons_per_day" : np.array([4000.0, 400.0, 55.0]),
 			"combined_recharge" : np.array([300.0, 1100.0, 1900.0]),
@@ -63,7 +63,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_nitrate_aggregation_for_several_days_each_in_its_own_time_period(self):
-		data = make_data(node_areas = {0: [5.0]}, time_periods = {0: [1, 2], 1: [2, 3], 2: [3, 4]})
+		data = make_data(node_areas = {0: 5.0}, time_periods = {0: [1, 2], 1: [2, 3], 2: [3, 4]})
 		output = {
 			"nitrate_reaching_water_table_array_tons_per_day" : np.array([435.0, 1705.0, 3515.0]),
 			"combined_recharge" : np.array([300.0, 1100.0, 1900.0]),

@@ -81,7 +81,7 @@ class Test_Nitrate(unittest.TestCase):
 				"date" : [date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30), date(2023, 10, 1), date(2023, 10, 2), date(2023, 10, 3)]
 			}, "params": {
 				"node_areas" : {
-					3: [2500]
+					3: 2500
 				}, "nitrate_leaching" : {
 					# Node,UNIQUE,X,Y,LOAD0,HER_5_MaxL,HER_50_Max,HER_95_Max,5PercLoadM,50PercLoad,95PercLoad
 					3: [0, 0, 0, max_load_per_year, her_at_5_percent, her_at_50_percent, her_at_95_percent, 0, 0, 0]
@@ -196,7 +196,7 @@ class Test_Nitrate(unittest.TestCase):
 
 		data = {
 			"params": {
-				"node_areas": {7: [2500.0]},
+				"node_areas": {7: 2500.0},
 				"nitrate_depth_to_water": {7: [0.00205411]},
 				"nitrate_leaching": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
 				"nitrate_process": "enabled",
@@ -238,7 +238,7 @@ class Test_Nitrate(unittest.TestCase):
 
 		data = {
 			"params": {
-				"node_areas": {7: [2500.0]},
+				"node_areas": {7: 2500.0},
 				"nitrate_depth_to_water": {7: [0.00205411]},
 				"nitrate_leaching": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
 				"nitrate_process": "disabled",

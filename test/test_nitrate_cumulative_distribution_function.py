@@ -37,7 +37,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 				"date" : np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
 			}, "params": {
 				"node_areas" : {
-					3: [2500]
+					3: 2500
 				}, "nitrate_depth_to_water" : {
 					3: [100]
 				}

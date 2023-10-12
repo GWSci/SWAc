@@ -58,7 +58,7 @@ def _calculate_her_array_mm_per_day(data, output, node):
 
 def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day):
 	params = data["params"]
-	cell_area_m_sq = params["node_areas"][node][0]
+	cell_area_m_sq = params["node_areas"][node]
 	days = data["series"]["date"]
 
 	nitrate_leaching = params["nitrate_leaching"][node]
@@ -248,7 +248,7 @@ def _calculate_combined_recharge_m_cubed(data, output, node):
 	node_areas = data["params"]["node_areas"]
 	combined_recharge_mm = output["combined_recharge"]
 	combined_recharge_m = _convert_mm_to_m(combined_recharge_mm)
-	combined_recharge_m_cubed = combined_recharge_m * node_areas[node][0]
+	combined_recharge_m_cubed = combined_recharge_m * node_areas[node]
 	return combined_recharge_m_cubed
 
 def _convert_mm_to_m(arr):
