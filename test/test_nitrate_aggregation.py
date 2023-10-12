@@ -83,7 +83,7 @@ def make_data(node_areas, time_periods):
 		}
 	}
 
-def _make_aggregation_array(data):
+def make_aggregation_array(data):
 	time_periods = data["params"]["time_periods"]
 	node_areas = data["params"]["node_areas"]
 	shape = (len(time_periods), len(node_areas))
@@ -92,7 +92,7 @@ def _make_aggregation_array(data):
 
 def aggregate_nitrate(aggregation, data, output, node):
 	if aggregation is None:
-		aggregation = _make_aggregation_array(data)
+		aggregation = make_aggregation_array(data)
 
 	time_periods = data["params"]["time_periods"]
 
