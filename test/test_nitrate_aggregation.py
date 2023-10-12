@@ -96,9 +96,6 @@ def make_aggregation_array(data):
 	return aggregation
 
 def aggregate_nitrate(aggregation, data, output, node):
-	if aggregation is None:
-		aggregation = make_aggregation_array(data)
-
 	time_periods = data["params"]["time_periods"]
 
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
