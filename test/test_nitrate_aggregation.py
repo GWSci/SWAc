@@ -98,8 +98,8 @@ def aggregate_nitrate(aggregation, data, output, node):
 
 	time_period_index = 0
 	for i in range(len(dates)):
-		day = i
-		if (day + 1) == time_periods[time_period_index][1]:
+		day = i + 1
+		if day == time_periods[time_period_index][1]:
 			aggregation[time_period_index, node] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
 			sum_of_nitrate_tons = 0.0
 			sum_of_recharge_m_cubed = 0.0
