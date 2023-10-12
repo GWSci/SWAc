@@ -104,8 +104,8 @@ def aggregate_nitrate(aggregation, data, output, node):
 			sum_of_nitrate_tons = 0.0
 			sum_of_recharge_m_cubed = 0.0
 			time_period_index += 1
-		sum_of_nitrate_tons += nitrate_reaching_water_table_array_tons_per_day[day]
-		sum_of_recharge_m_cubed += combined_recharge_m_cubed[day]
+		sum_of_nitrate_tons += nitrate_reaching_water_table_array_tons_per_day[i]
+		sum_of_recharge_m_cubed += combined_recharge_m_cubed[i]
 
 	if len(time_periods) > 0:
 		aggregation[time_period_index, node] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
