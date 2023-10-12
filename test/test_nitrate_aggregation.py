@@ -11,7 +11,8 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = aggregate_nitrate(None, data, output, node)
+		actual = make_aggregation_array(data)
+		actual = aggregate_nitrate(actual, data, output, node)
 		expected = np.zeros(shape = (0, 1))
 		np.testing.assert_array_equal(expected, actual)
 
@@ -23,7 +24,8 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = aggregate_nitrate(None, data, output, node)
+		actual = make_aggregation_array(data)
+		actual = aggregate_nitrate(actual, data, output, node)
 		expected = np.array([[2.0]])
 		np.testing.assert_array_equal(expected, actual)
 
@@ -40,7 +42,8 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node_1 = 1
 
-		actual = aggregate_nitrate(None, data, output_node_0, node_0)
+		actual = make_aggregation_array(data)
+		actual = aggregate_nitrate(actual, data, output_node_0, node_0)
 		actual = aggregate_nitrate(actual, data, output_node_1, node_1)
 		expected = np.array([[2.0, 7.0]])
 		np.testing.assert_array_equal(expected, actual)
@@ -53,7 +56,8 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = aggregate_nitrate(None, data, output, node)
+		actual = make_aggregation_array(data)
+		actual = aggregate_nitrate(actual, data, output, node)
 		expected = np.array([[27.0]])
 		np.testing.assert_array_equal(expected, actual)
 
@@ -65,7 +69,8 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = aggregate_nitrate(None, data, output, node)
+		actual = make_aggregation_array(data)
+		actual = aggregate_nitrate(actual, data, output, node)
 		expected = np.array([[29.0], [31.0], [37.0]])
 		np.testing.assert_array_equal(expected, actual)
 
