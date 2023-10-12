@@ -2,28 +2,44 @@ import math
 import numpy as np
 
 def calculate_nitrate(data, output, node):
-	her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
-	m0_array_kg_per_day = _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day)
-	m1_array_kg_per_day = _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
-	m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
-	m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
-	m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
-	mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
-	proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node)
-	nitrate_reaching_water_table_array_kg_per_day = _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
-	nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(nitrate_reaching_water_table_array_kg_per_day)
-	return {
-		"her_array_mm_per_day" : her_array_mm_per_day,
-		"m0_array_kg_per_day" : m0_array_kg_per_day,
-		"m1_array_kg_per_day" : m1_array_kg_per_day,
-		"m1a_array_kg_per_day" : m1a_array_kg_per_day,
-		"m2_array_kg_per_day" : m2_array_kg_per_day,
-		"m3_array_kg_per_day" : m3_array_kg_per_day,
-		"mi_array_kg_per_day" : mi_array_kg_per_day,
-		"proportion_reaching_water_table_array_per_day" : proportion_reaching_water_table_array_per_day,
-		"nitrate_reaching_water_table_array_kg_per_day" : nitrate_reaching_water_table_array_kg_per_day,
-		"nitrate_reaching_water_table_array_tons_per_day" : nitrate_reaching_water_table_array_tons_per_day,
-	}
+	if "enabled" == data["params"]["nitrate_process"]:
+		her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
+		m0_array_kg_per_day = _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day)
+		m1_array_kg_per_day = _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+		m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
+		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
+		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node)
+		nitrate_reaching_water_table_array_kg_per_day = _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
+		nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(nitrate_reaching_water_table_array_kg_per_day)
+		return {
+			"her_array_mm_per_day" : her_array_mm_per_day,
+			"m0_array_kg_per_day" : m0_array_kg_per_day,
+			"m1_array_kg_per_day" : m1_array_kg_per_day,
+			"m1a_array_kg_per_day" : m1a_array_kg_per_day,
+			"m2_array_kg_per_day" : m2_array_kg_per_day,
+			"m3_array_kg_per_day" : m3_array_kg_per_day,
+			"mi_array_kg_per_day" : mi_array_kg_per_day,
+			"proportion_reaching_water_table_array_per_day" : proportion_reaching_water_table_array_per_day,
+			"nitrate_reaching_water_table_array_kg_per_day" : nitrate_reaching_water_table_array_kg_per_day,
+			"nitrate_reaching_water_table_array_tons_per_day" : nitrate_reaching_water_table_array_tons_per_day,
+		}
+	else:
+		length = output["rainfall_ts"].size
+		empty_array = np.zeros(length)
+		return {
+			"her_array_mm_per_day" : empty_array,
+			"m0_array_kg_per_day" : empty_array,
+			"m1_array_kg_per_day" : empty_array,
+			"m1a_array_kg_per_day" : empty_array,
+			"m2_array_kg_per_day" : empty_array,
+			"m3_array_kg_per_day" : empty_array,
+			"mi_array_kg_per_day" : empty_array,
+			"proportion_reaching_water_table_array_per_day" : empty_array,
+			"nitrate_reaching_water_table_array_kg_per_day" : empty_array,
+			"nitrate_reaching_water_table_array_tons_per_day" : empty_array,
+		}
 
 
 def _calculate_her_array_mm_per_day(data, output, node):
