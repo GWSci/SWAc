@@ -1,4 +1,5 @@
 import csv
+import logging
 import math
 import numpy as np
 import os
@@ -19,6 +20,7 @@ def calculate_nitrate(data, output, node):
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
+		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day)
 		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node)
 		nitrate_reaching_water_table_array_kg_per_day = _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
 		nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(nitrate_reaching_water_table_array_kg_per_day)
@@ -163,6 +165,20 @@ def _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_
 
 def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 	return m1a_array_kg_per_day + m2_array_kg_per_day
+
+def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day):
+	m0_kg = m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day
+	is_m0_as_expected = np.allclose(m0_kg, m0_array_kg_per_day)
+	if not is_m0_as_expected:
+		for i in range(m0_kg.size):
+			if not np.isclose(m0_kg[i], m0_array_kg_per_day[i]):
+				break
+		m0 = m0_array_kg_per_day[i]
+		m1 = m1_array_kg_per_day[i]
+		m2 = m2_array_kg_per_day[i]
+		m3 = m3_array_kg_per_day[i]
+		message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3. The first day that does not balance is at index {i}. M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg and M3 = {m3} kg."
+		logging.warning(message)
 
 def _calculate_proportion_reaching_water_table_array_per_day(data, output, node):
 	length = len(data["series"]["date"])
