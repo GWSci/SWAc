@@ -815,6 +815,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             del evt, tmp
             gc.collect()
 
+        timer.switch_to(output_timer_token, "output_nitrate")
+        if data["params"]["nitrate_process"] == "enabled":
+            pass
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
 
