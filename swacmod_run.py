@@ -419,6 +419,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     nnodes = data["params"]["num_nodes"]
     len_rch_agg = (nnodes * per) + 1
     if not ff.disable_multiprocessing:
+        print("Using multiprocessing.")
         recharge_agg = mp.Array("f", 1)
         runoff_agg = mp.Array("f", 1)
         runoff_recharge_agg = np.zeros((1))
@@ -448,6 +449,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             recharge = mp.sharedctypes.Array("f", len_rch, lock=True)
             runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
     else:
+        print("Using single process.")
         recharge_agg = np.zeros(1, dtype=np.single)
         runoff_agg = np.zeros(1, dtype=np.single)
         runoff_recharge_agg = np.zeros((1))
