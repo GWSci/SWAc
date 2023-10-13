@@ -263,7 +263,13 @@ def _convert_kg_to_tons_array(arr_kg):
 def make_aggregation_array(data):
 	time_periods = data["params"]["time_periods"]
 	node_areas = data["params"]["node_areas"]
-	shape = (len(time_periods), len(node_areas))
+	if ff.use_node_count_override:
+		len_time_periods = 0
+		while time_periods[len_time_periods][1] < ff.max_node_count_override:
+			len_time_periods += 1
+		shape = (len_time_periods, len(node_areas))
+	else:
+		shape = (len(time_periods), len(node_areas))
 	aggregation = np.zeros(shape = shape)
 	return aggregation
 
