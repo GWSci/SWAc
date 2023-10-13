@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 import os
 import swacmod.nitrate as nitrate
+import swacmod.timer as timer
 
 class Test_Nitrate(unittest.TestCase):
 	def test_calculate_daily_HER(self):
@@ -227,6 +228,7 @@ class Test_Nitrate(unittest.TestCase):
 		her_at_95_percent = 190
 
 		data = {
+			"time_switcher": timer.make_time_switcher(),
 			"params": {
 				"node_areas": {7: 2500.0},
 				"nitrate_depth_to_water": {7: [0.00205411]},
@@ -269,6 +271,7 @@ class Test_Nitrate(unittest.TestCase):
 		her_at_95_percent = 190
 
 		data = {
+			"time_switcher": timer.make_time_switcher(),
 			"params": {
 				"node_areas": {7: 2500.0},
 				"nitrate_depth_to_water": {7: [0.00205411]},

@@ -12,6 +12,7 @@ def get_nitrate(data, output, node):
 	}
 
 def calculate_nitrate(data, output, node):
+	time_switcher = data["time_switcher"]
 	if "enabled" == data["params"]["nitrate_process"]:
 		her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
 		m0_array_kg_per_day = _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day)
