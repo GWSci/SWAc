@@ -154,6 +154,13 @@ class Test_Nitrate(unittest.TestCase):
 		actual = nitrate._calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
 		np.testing.assert_array_almost_equal(expected, actual)	
 
+		input_interflow_volume = np.array([40])
+		input_infiltration_recharge = np.array([20])
+		input_interflow_to_rivers = np.array([40])
+		input_m1_array_kg_per_day = np.array([12])
+		expected = np.array([2.4])
+		self.assert_m1a_array(input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected)
+
 	def test_calculate_m1a_array_kg_per_day_for_three_days_with_accumulation_in_MiT(self):
 		input_interflow_volume = np.array([40, 35, 90])
 		input_infiltration_recharge = np.array([20, 30, 10])
