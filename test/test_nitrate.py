@@ -6,16 +6,6 @@ import swacmod.nitrate as nitrate
 
 class Test_Nitrate(unittest.TestCase):
 	def test_calculate_daily_HER(self):
-		data = None
-		output = {
-			'rainfall_ts': np.array([110.0, 220.0, 330.0]),
-			'ae': np.array([10.0, 20.0, 30.0]),
-		}
-		node = None
-		actual = nitrate._calculate_her_array_mm_per_day(data, output, node)
-
-		expected = np.array([100.0, 200.0, 300.0])
-		np.testing.assert_array_equal(expected, actual)
 		input_rainfall_ts = np.array([110.0, 220.0, 330.0])
 		input_ae = np.array([10.0, 20.0, 30.0])
 		expected = np.array([100.0, 200.0, 300.0])
