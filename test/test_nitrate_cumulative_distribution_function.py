@@ -1,6 +1,7 @@
 from datetime import date
 import swacmod.nitrate as nitrate
 import numpy as np
+import swacmod.timer as timer
 import unittest
 
 class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
@@ -51,7 +52,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 
 	
 	def test_total_mass_leached_on_day_for_zero_days(self):
-		data = None
+		data = {"time_switcher" : timer.make_time_switcher()}
 		output = None
 		node = None
 		proportion_reaching_water_table_array_per_day = np.array([])
@@ -62,7 +63,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected_total_mass_on_day_kg, actual)
 
 	def test_total_mass_leached_on_day_for_1_day(self):
-		data = None
+		data = {"time_switcher" : timer.make_time_switcher()}
 		output = None
 		node = None
 		proportion_reaching_water_table_array_per_day = np.array([0.3])
@@ -73,7 +74,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected_total_mass_on_day_kg, actual)
 
 	def test_total_mass_leached_on_day_for_two_days(self):
-		data = None
+		data = {"time_switcher" : timer.make_time_switcher()}
 		output = None
 		node = None
 		proportion_reaching_water_table_array_per_day = np.array([0.3, 0.4])
@@ -88,7 +89,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected_total_mass_on_day_kg, actual)
 
 	def test_total_mass_leached_on_day(self):
-		data = None
+		data = {"time_switcher" : timer.make_time_switcher()}
 		output = None
 		node = None
 		proportion_reaching_water_table_array_per_day = np.array([0.0, 0.3, 0.4, 0.2, 0.1])
