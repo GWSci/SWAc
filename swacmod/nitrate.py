@@ -267,13 +267,7 @@ def _convert_kg_to_tons_array(arr_kg):
 def make_aggregation_array(data):
 	time_periods = data["params"]["time_periods"]
 	node_areas = data["params"]["node_areas"]
-	if ff.use_node_count_override:
-		len_time_periods = 0
-		while time_periods[len_time_periods][1] < ff.max_node_count_override:
-			len_time_periods += 1
-		shape = (len_time_periods, len(node_areas))
-	else:
-		shape = (len(time_periods), len(node_areas))
+	shape = (_len_time_periods(time_periods), len(node_areas))
 	aggregation = np.zeros(shape = shape)
 	return aggregation
 
@@ -282,7 +276,7 @@ def aggregate_nitrate(aggregation, data, output, node):
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
 	combined_recharge_m_cubed = _calculate_combined_recharge_m_cubed(data, output, node)
 
-	for time_period_index in range(len(time_periods)):
+	for time_period_index in range(_len_time_periods(time_periods)):
 		time_period = time_periods[time_period_index]
 		first_day_index = time_period[0] - 1
 		last_day_index = time_period[1] - 1
@@ -295,6 +289,16 @@ def aggregate_nitrate(aggregation, data, output, node):
 				break
 
 	return aggregation
+
+def _len_time_periods(time_periods):
+	if ff.use_node_count_override:
+		len_time_periods = 0
+		while time_periods[len_time_periods][1] < ff.max_node_count_override:
+			len_time_periods += 1
+		return len_time_periods
+	else:
+		return len(time_periods)
+	
 
 def _calculate_combined_recharge_m_cubed(data, output, node):
 	node_areas = data["params"]["node_areas"]
