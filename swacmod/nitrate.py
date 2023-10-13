@@ -3,6 +3,7 @@ import logging
 import math
 import numpy as np
 import os
+import swacmod.feature_flags as ff
 import swacmod.timer as timer
 import swacmod.utils as utils
 
@@ -278,6 +279,10 @@ def aggregate_nitrate(aggregation, data, output, node):
 		sum_of_nitrate_tons = nitrate_reaching_water_table_array_tons_per_day[first_day_index:last_day_index].sum()
 		sum_of_recharge_m_cubed = combined_recharge_m_cubed[first_day_index:last_day_index].sum()
 		aggregation[time_period_index, node] += _divide_arrays(sum_of_nitrate_tons, sum_of_recharge_m_cubed)
+
+		if ff.max_node_count_override:
+			if last_day_index > ff.max_node_count_override:
+				break
 
 	return aggregation
 
