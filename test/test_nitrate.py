@@ -28,6 +28,20 @@ class Test_Nitrate(unittest.TestCase):
 
 		expected = np.array([100.0, 0.0, 0.0])
 		np.testing.assert_array_equal(expected, actual)
+		input_rainfall_ts = np.array([110.0, 0.0, 330.0])
+		input_ae = np.array([10.0, 0.0, 330.0])
+		self.assert_her(input_rainfall_ts, input_ae, expected)
+
+	def assert_her(self, input_rainfall_ts, input_ae, expected):
+		data = None
+		output = {
+			'rainfall_ts': input_rainfall_ts,
+			'ae': input_ae,
+		}
+		node = None
+		actual = nitrate._calculate_her_array_mm_per_day(data, output, node)
+
+		np.testing.assert_array_equal(expected, actual)
 
 	def test_cumulative_fraction_leaked_per_year(self):
 		her_at_5_percent = 10.0
