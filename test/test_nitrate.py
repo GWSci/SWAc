@@ -178,16 +178,16 @@ class Test_Nitrate(unittest.TestCase):
 	def test_calculate_m2_array_kg_per_day(self):
 		data = None
 		output = {
-			"runoff_recharge" : np.array([100.0, 0.0]),
-			"macropore_att" : np.array([0.0, 40.0]),
-			"macropore_dir" : np.array([0.0, 60.0]),
+			"runoff_recharge" : np.array([100.0, 0.0, 0.0]),
+			"macropore_att" : np.array([0.0, 40.0, 40.0]),
+			"macropore_dir" : np.array([0.0, 60.0, 60.0]),
 		}
 		node = None
-		her_array_mm_per_day = np.array([10.0, 20.0])
-		m0_array_kg_per_day = np.array([50.0, 60.0])
+		her_array_mm_per_day = np.array([10.0, 20.0, 0.0])
+		m0_array_kg_per_day = np.array([50.0, 60.0, 60.0])
 
 		actual = nitrate._calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
-		expected = np.array([500.0, 300.0])
+		expected = np.array([500.0, 300.0, 0.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)
 
