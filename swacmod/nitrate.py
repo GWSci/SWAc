@@ -200,7 +200,6 @@ def _calculate_daily_proportion_reaching_water_table(DTW, t):
 	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(DTW, t - 1)
 	return f_t - f_t_prev
 
-# First day should be 1, not zero.
 def _calculate_cumulative_proportion_reaching_water_table(DTW, t):
 	if (t <= 0):
 		return 0
