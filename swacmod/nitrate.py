@@ -3,6 +3,7 @@ import logging
 import math
 import numpy as np
 import os
+import swacmod.timer as timer
 import swacmod.utils as utils
 
 def get_nitrate(data, output, node):
@@ -14,17 +15,40 @@ def get_nitrate(data, output, node):
 def calculate_nitrate(data, output, node):
 	time_switcher = data["time_switcher"]
 	if "enabled" == data["params"]["nitrate_process"]:
+		timer.switch_to(time_switcher, "Nitrate: _calculate_her_array_mm_per_day")
 		her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
+
+		timer.switch_to(time_switcher, "Nitrate: _calculate_m0_array_kg_per_day")
 		m0_array_kg_per_day = _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day)
+
+		timer.switch_to(time_switcher, "Nitrate: _calculate_m1_array_kg_per_day")
 		m1_array_kg_per_day = _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+
+		timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day")
 		m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
+
+		timer.switch_to(time_switcher, "Nitrate: _calculate_m2_array_kg_per_day")
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+
+		timer.switch_to(time_switcher, "Nitrate: _calculate_m3_array_kg_per_day")
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+
+		timer.switch_to(time_switcher, "Nitrate: _calculate_mi_array_kg_per_day")
 		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
+
+		timer.switch_to(time_switcher, "Nitrate: _check_masses_balance")
 		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day)
+
+		timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day")
 		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node)
+
+		timer.switch_to(time_switcher, "Nitrate: _calculate_mass_reaching_water_table_array_kg_per_day")
 		nitrate_reaching_water_table_array_kg_per_day = _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
+
+		timer.switch_to(time_switcher, "Nitrate: _convert_kg_to_tons_array")
 		nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(nitrate_reaching_water_table_array_kg_per_day)
+
+		timer.switch_to(time_switcher, "Nitrate: return")
 		return {
 			"her_array_mm_per_day" : her_array_mm_per_day,
 			"m0_array_kg_per_day" : m0_array_kg_per_day,
