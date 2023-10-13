@@ -135,10 +135,7 @@ def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 	interflow_to_rivers_mm_per_day = output["interflow_to_rivers"]
 
 	interflow_store_components_mm_per_day = end_interflow_store_volume_mm + infiltration_recharge_mm_per_day + interflow_to_rivers_mm_per_day
-
 	recharge_proportion = _divide_arrays(infiltration_recharge_mm_per_day, interflow_store_components_mm_per_day)
-
-	# 0 when denominator is zero
 	interflow_proportion = _divide_arrays(interflow_to_rivers_mm_per_day, interflow_store_components_mm_per_day)
 
 	length = m1_array_kg_per_day.size
