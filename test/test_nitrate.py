@@ -49,21 +49,15 @@ class Test_Nitrate(unittest.TestCase):
 		self.assertAlmostEqual(0.95, testee(310.0))
 
 	def test_cumulative_fraction_leaked_per_year_can_be_more_than_1(self):
-		her_at_5_percent = 10.0
-		her_at_50_percent = 110.0
-		her_at_95_percent = 310.0
-
-		testee = lambda her: nitrate._cumulative_fraction_leaked_per_year(
-				her_at_5_percent, her_at_50_percent, her_at_95_percent, her)
-
-		self.assertAlmostEqual(1.1, testee(376.666666))
 		self.assert_cumulative_fraction_leaked_per_year(10.0, 110.0, 310.0, 376.666666, 1.1)
 
 	def assert_cumulative_fraction_leaked_per_year(self, her_at_5_percent, her_at_50_percent, her_at_95_percent, her, expected):
 		testee = lambda her: nitrate._cumulative_fraction_leaked_per_year(
 				her_at_5_percent, her_at_50_percent, her_at_95_percent, her)
 
-		self.assertAlmostEqual(expected, testee(her))
+		actual = testee(her)
+
+		self.assertAlmostEqual(expected, actual)
 
 	def test_cumulative_fraction_leaked_per_day(self):
 		her_at_5_percent = 10.0
