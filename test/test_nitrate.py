@@ -128,13 +128,13 @@ class Test_Nitrate(unittest.TestCase):
 	def test_calculate_m1_array_kg_per_day(self):
 		data = None
 		output = {
-			"perc_through_root" : np.array([10])
+			"perc_through_root" : np.array([10.0, 10.0])
 		}
 		node = None
-		her_array_mm_per_day = np.array([40.0])
-		m0_kg_per_day = np.array([1000.0])
+		her_array_mm_per_day = np.array([40.0, 0.0])
+		m0_kg_per_day = np.array([1000.0, 1000.0])
 
-		expected = np.array([250])
+		expected = np.array([250.0, 0.0])
 
 		actual = nitrate._calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day)
 		np.testing.assert_array_equal(expected, actual)	
