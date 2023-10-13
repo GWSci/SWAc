@@ -54,7 +54,7 @@ def calculate_nitrate(data, output, node):
 
 
 def _calculate_her_array_mm_per_day(data, output, node):
-	return output["rainfall_ts"] - output["ae"]
+	return np.maximum(0.0, output["rainfall_ts"] - output["ae"])
 
 def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day):
 	params = data["params"]
