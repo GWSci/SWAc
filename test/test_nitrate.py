@@ -140,21 +140,29 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_equal(expected, actual)	
 
 	def test_calculate_m1a_array_kg_per_day_for_just_one_day(self):
-		input_interflow_volume = np.array([40])
-		input_infiltration_recharge = np.array([20])
-		input_interflow_to_rivers = np.array([40])
-		input_m1_array_kg_per_day = np.array([12])
+		input_interflow_volume = np.array([40.0])
+		input_infiltration_recharge = np.array([20.0])
+		input_interflow_to_rivers = np.array([40.0])
+		input_m1_array_kg_per_day = np.array([12.0])
 		expected = np.array([2.4])
 		self.assert_m1a_array(input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected)
 
 	def test_calculate_m1a_array_kg_per_day_for_three_days_with_accumulation_in_MiT(self):
-		input_interflow_volume = np.array([40, 35, 90])
-		input_infiltration_recharge = np.array([20, 30, 10])
-		input_interflow_to_rivers = np.array([40, 35, 0])
+		input_interflow_volume = np.array([40.0, 35.0, 90.0])
+		input_infiltration_recharge = np.array([20.0, 30.0, 10.0])
+		input_interflow_to_rivers = np.array([40.0, 35.0, 0.0])
 		input_m1_array_kg_per_day = np.array([12, 25.2, 39.5])
-		expected = np.array([2.4, 9, 5])
+		expected = np.array([2.4, 9.0, 5.0])
 		self.assert_m1a_array(input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected)
 	
+	def test_calculate_m1a_array_kg_per_day_when_interflow_store_components_equal_zero(self):
+		input_interflow_volume = np.array([0.0, 0.0, 40.0])
+		input_infiltration_recharge = np.array([0.0, 0.0, 20.0])
+		input_interflow_to_rivers = np.array([0.0, 0.0, 40.0])
+		input_m1_array_kg_per_day = np.array([4.0, 4.0, 4.0])
+		expected = np.array([0.0, 0.0, 2.4])
+		self.assert_m1a_array(input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected)
+
 	def assert_m1a_array(self, input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected):
 		data = None
 		output = {
