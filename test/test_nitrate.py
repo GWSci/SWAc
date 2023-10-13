@@ -18,18 +18,9 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_calculate_daily_HER_can_be_zero(self):
-		data = None
-		output = {
-			'rainfall_ts': np.array([110.0, 0.0, 330.0]),
-			'ae': np.array([10.0, 0.0, 330.0]),
-		}
-		node = None
-		actual = nitrate._calculate_her_array_mm_per_day(data, output, node)
-
-		expected = np.array([100.0, 0.0, 0.0])
-		np.testing.assert_array_equal(expected, actual)
 		input_rainfall_ts = np.array([110.0, 0.0, 330.0])
 		input_ae = np.array([10.0, 0.0, 330.0])
+		expected = np.array([100.0, 0.0, 0.0])
 		self.assert_her(input_rainfall_ts, input_ae, expected)
 
 	def assert_her(self, input_rainfall_ts, input_ae, expected):
