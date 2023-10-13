@@ -20,7 +20,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 	def test_nitrate_aggregation_for_one_day(self):
 		data = make_data(node_areas = {0: 5}, time_periods = {0: [1, 2]})
 		output = {
-			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30]),
+			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30.0]),
 			"combined_recharge" : np.array([300.0]),
 		}
 		node = 0
@@ -30,15 +30,28 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		expected = np.array([[2.0]])
 		np.testing.assert_array_equal(expected, actual)
 
+	def test_nitrate_aggregation_when_sum_of_recharge_is_zero(self):
+		data = make_data(node_areas = {0: 5}, time_periods = {0: [1, 2]})
+		output = {
+			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30.0]),
+			"combined_recharge" : np.array([0.0]),
+		}
+		node = 0
+
+		actual = nitrate.make_aggregation_array(data)
+		actual = nitrate.aggregate_nitrate(actual, data, output, node)
+		expected = np.array([[0.0]])
+		np.testing.assert_array_equal(expected, actual)
+
 	def test_nitrate_aggregation_for_two_nodes_and_one_day(self):
 		data = make_data(node_areas = {0: 5, 1: 11}, time_periods = {0: [1, 2]})
 		output_node_0 = {
-			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30]),
+			"nitrate_reaching_water_table_array_tons_per_day" : np.array([30.0]),
 			"combined_recharge" : np.array([300.0]),
 		}
 		node_0 = 0
 		output_node_1 = {
-			"nitrate_reaching_water_table_array_tons_per_day" : np.array([1001]),
+			"nitrate_reaching_water_table_array_tons_per_day" : np.array([1001.0]),
 			"combined_recharge" : np.array([1300.0]),
 		}
 		node_1 = 1
