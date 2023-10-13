@@ -19,7 +19,7 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 			2: [102, 202.2, 302.2, 402.2, 502.2, 602.2, 702.2, 802.2, 902.2, 102.2],
 			3: [103, 203.3, 303.3, 403.3, 503.3, 603.3, 703.3, 803.3, 903.3, 103.3],
 		}
-		self.assertEqual(expected, load_params()["nitrate_leaching"])
+		self.assertEqual(expected, load_params()["nitrate_loading"])
 
 def load_params():
 	input = input_output.load_params_from_yaml(

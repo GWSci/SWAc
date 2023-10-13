@@ -614,7 +614,7 @@ def categorise_param(param, value):
         "macropore_zone_names",
         "max_canopy_storage",
         "nitrate_depth_to_water",
-        "nitrate_leaching",
+        "nitrate_loading",
         "node_areas",
         "node_xy",
         "pe_zone_mapping",

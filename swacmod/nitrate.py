@@ -61,11 +61,11 @@ def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day):
 	cell_area_m_sq = params["node_areas"][node]
 	days = data["series"]["date"]
 
-	nitrate_leaching = params["nitrate_leaching"][node]
-	max_load_per_year_kg_per_hectare = nitrate_leaching[3]
-	her_at_5_percent = nitrate_leaching[4]
-	her_at_50_percent = nitrate_leaching[5]
-	her_at_95_percent = nitrate_leaching[6]
+	nitrate_loading = params["nitrate_loading"][node]
+	max_load_per_year_kg_per_hectare = nitrate_loading[3]
+	her_at_5_percent = nitrate_loading[4]
+	her_at_50_percent = nitrate_loading[5]
+	her_at_95_percent = nitrate_loading[6]
 
 	hectare_area_m_sq = 10000
 	max_load_per_year_kg_per_cell = max_load_per_year_kg_per_hectare * cell_area_m_sq / hectare_area_m_sq

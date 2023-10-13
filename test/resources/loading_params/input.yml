@@ -1,3 +1,3 @@
 nitrate_process: enabled
 nitrate_depth_to_water: nitrate_dtw.csv
-nitrate_leaching: nitrate_leaching.csv
+nitrate_loading: nitrate_loading.csv
