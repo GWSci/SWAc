@@ -122,9 +122,12 @@ def _cumulative_fraction_leaked_per_year(her_at_5_percent, her_at_50_percent, he
 
 def _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day):
 	perc_through_root_mm_per_day = output["perc_through_root"]
-	pp = np.divide(perc_through_root_mm_per_day, her_array_mm_per_day, out = np.zeros_like(perc_through_root_mm_per_day), where = her_array_mm_per_day != 0)
+	pp = _divide_arrays(perc_through_root_mm_per_day, her_array_mm_per_day)
 	m1_kg_per_day = pp * m0_kg_per_day
 	return m1_kg_per_day
+
+def _divide_arrays(a, b):
+	return np.divide(a, b, out = np.zeros_like(a), where = b != 0)
 
 def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 	end_interflow_store_volume_mm = output["interflow_volume"]
