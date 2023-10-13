@@ -43,7 +43,7 @@ def calculate_nitrate(data, output, node):
 		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node)
 
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass_reaching_water_table_array_kg_per_day")
-		nitrate_reaching_water_table_array_kg_per_day = _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
+		nitrate_reaching_water_table_array_kg_per_day = _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
 
 		timer.switch_to(time_switcher, "Nitrate: _convert_kg_to_tons_array")
 		nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(nitrate_reaching_water_table_array_kg_per_day)
@@ -239,7 +239,7 @@ def _calculate_cumulative_proportion_reaching_water_table(DTW, t):
 	result = 0.5 * (1 + math.erf(- numerator / denominator))
 	return result
 
-def _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day):
+def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day):
 	length = proportion_reaching_water_table_array_per_day.size
 	result_kg = np.zeros(length)
 	for day_nitrate_was_leached in range(length):

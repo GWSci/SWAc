@@ -817,8 +817,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
         timer.switch_to(output_timer_token, "output_nitrate")
         if data["params"]["nitrate_process"] == "enabled":
+            timer.switch_to(output_timer_token, "output_nitrate > make_output_filename")
             filename = nitrate.make_output_filename(data)
+            timer.switch_to(output_timer_token, "output_nitrate > make_nitrate_csv_output")
             nitrate_csv_rows = nitrate.make_nitrate_csv_output(nitrate_aggregation)
+            timer.switch_to(output_timer_token, "output_nitrate > write_nitrate_csv_file")
             nitrate.write_nitrate_csv_file(filename, nitrate_csv_rows)
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
