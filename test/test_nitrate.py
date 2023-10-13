@@ -17,7 +17,7 @@ class Test_Nitrate(unittest.TestCase):
 		expected = np.array([100.0, 0.0, 0.0])
 		self.assert_her(input_rainfall_ts, input_ae, expected)
 
-	def test_calculate_daily_HER_cannot_be_less_than_zero_be_zero(self):
+	def test_calculate_daily_HER_cannot_be_less_than_zero(self):
 		input_rainfall_ts = np.array([110.0, -2.0, 0.0, 3.0])
 		input_ae = np.array([10.0, 0.0, 1.0, 5.0])
 		expected = np.array([100.0, 0.0, 0.0, 0])
