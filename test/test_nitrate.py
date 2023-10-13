@@ -46,6 +46,11 @@ class Test_Nitrate(unittest.TestCase):
 
 	def test_cumulative_fraction_leaked_per_year_cannot_be_less_than_than_0(self):
 		self.assert_cumulative_fraction_leaked_per_year(7.0, 52.0, 102.0, 5, 0.03)
+		self.assert_cumulative_fraction_leaked_per_year(7.0, 52.0, 102.0, 4, 0.02)
+		self.assert_cumulative_fraction_leaked_per_year(7.0, 52.0, 102.0, 3, 0.01)
+		self.assert_cumulative_fraction_leaked_per_year(7.0, 52.0, 102.0, 2, 0.00)
+		self.assert_cumulative_fraction_leaked_per_year(7.0, 52.0, 102.0, 1, 0.00)
+		self.assert_cumulative_fraction_leaked_per_year(7.0, 52.0, 102.0, 0, 0.00)
 
 	def assert_cumulative_fraction_leaked_per_year(self, her_at_5_percent, her_at_50_percent, her_at_95_percent, her, expected):
 		actual = nitrate._cumulative_fraction_leaked_per_year(
