@@ -43,8 +43,5 @@ class Test_Make_Repeated_Array_Offset(unittest.TestCase):
 	def test_sum_columns(self):
 		input_array = np.array([[1, 2, 3, 4, 5], [10, 20, 30, 40, 50], [100, 200, 300, 400, 500]])
 		expected = np.array([111, 222, 333, 444, 555])
-		actual = _sum_columns(input_array)
+		actual = nitrate._sum_columns(input_array)
 		np.testing.assert_array_equal(expected, actual)
-
-def _sum_columns(array):
-	return array.sum(axis = 0)

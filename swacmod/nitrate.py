@@ -262,6 +262,7 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, pr
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution")
 	x = _make_repeated_array_offset(proportion_reaching_water_table_array_per_day)
 	mass_reaching_water_table_2d_array_kg = _convert_repeating_proportions_to_mass_reaching_water_table_2d_array_kg(x, mi_array_kg_per_day)
+	result_kg = _sum_columns(mass_reaching_water_table_2d_array_kg)
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > return")
 	return np.array(result_kg[:length])
 
@@ -283,6 +284,9 @@ def _convert_repeating_proportions_to_mass_reaching_water_table_2d_array_kg(
 		sliding_proportion_reaching_water_table_array_per_day,
 		mi_array_kg_per_day):
 	return sliding_proportion_reaching_water_table_array_per_day * mi_array_kg_per_day[:, np.newaxis]
+
+def _sum_columns(array):
+	return array.sum(axis = 0)
 
 def _convert_kg_to_tons_array(arr_kg):
 	return arr_kg / 1000.0
