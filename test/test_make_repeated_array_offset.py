@@ -39,3 +39,12 @@ class Test_Make_Repeated_Array_Offset(unittest.TestCase):
 		expected = np.array([[14, 21, 35, 0, 0], [0, 22, 33, 55, 0], [0, 0, 26, 39, 65]])
 		actual = nitrate._convert_repeating_proportions_to_mass_reaching_water_table_2d_array_kg(repeating_array, multiply_by)
 		np.testing.assert_array_equal(expected, actual)
+
+	def test_sum_columns(self):
+		input_array = np.array([[1, 2, 3, 4, 5], [10, 20, 30, 40, 50], [100, 200, 300, 400, 500]])
+		expected = np.array([111, 222, 333, 444, 555])
+		actual = _sum_columns(input_array)
+		np.testing.assert_array_equal(expected, actual)
+
+def _sum_columns(array):
+	return array.sum(axis = 0)
