@@ -279,6 +279,11 @@ def _make_repeated_array_offset(array):
 	result = result[r, c - r]
 	return result
 
+def _convert_repeating_proportions_to_mass_reaching_water_table_2d_array_kg(
+		sliding_proportion_reaching_water_table_array_per_day,
+		mass_reaching_water_table_array_kg):
+	return sliding_proportion_reaching_water_table_array_per_day * mass_reaching_water_table_array_kg[:, np.newaxis]
+
 def _convert_kg_to_tons_array(arr_kg):
 	return arr_kg / 1000.0
 
