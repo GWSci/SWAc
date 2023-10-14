@@ -24,7 +24,7 @@ def make_repeated_array_offset(array):
 	length = len(array)
 	if length == 2:
 		padded_length = 3
-		padded_array = np.zeros(3)
+		padded_array = np.zeros(padded_length)
 		padded_array[0:length] = array
 	else:
 		padded_array = array
