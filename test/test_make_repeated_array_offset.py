@@ -29,11 +29,11 @@ class Test_Make_Repeated_Array_Offset(unittest.TestCase):
 def make_repeated_array_offset(array):
 	length = len(array)
 	if length == 3:
-		padded_length = 5
+		padded_length = length + length - 1
 		padded_array = np.zeros(padded_length)
 		padded_array[0:length] = array
 	elif length == 2:
-		padded_length = 3
+		padded_length = length + length - 1
 		padded_array = np.zeros(padded_length)
 		padded_array[0:length] = array
 	else:
