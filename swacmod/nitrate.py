@@ -263,6 +263,20 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, pr
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > return")
 	return np.array(result_kg[:length])
 
+def _make_repeated_array_offset(array):
+	length = len(array)
+	if length == 0:
+		padded_array = array
+		padded_length = length
+	else:
+		padded_length = length + length - 1
+		padded_array = np.zeros(padded_length)
+		padded_array[0:length] = array
+	result = np.broadcast_to(padded_array, shape=(length, padded_length))
+	r, c = np.ogrid[:result.shape[0], :result.shape[1]]
+	result = result[r, c - r]
+	return result
+
 def _convert_kg_to_tons_array(arr_kg):
 	return arr_kg / 1000.0
 
