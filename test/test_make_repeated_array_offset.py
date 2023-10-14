@@ -9,4 +9,4 @@ class Test_Make_Repeated_Array_Offset(unittest.TestCase):
 		np.testing.assert_array_equal(expected, actual)
 	
 def make_repeated_array_offset(input_array):
-	pass
+	return np.zeros_like(input_array)
