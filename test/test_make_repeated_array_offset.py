@@ -8,5 +8,5 @@ class Test_Make_Repeated_Array_Offset(unittest.TestCase):
 		actual = make_repeated_array_offset(input_array)
 		np.testing.assert_array_equal(expected, actual)
 	
-def make_repeated_array_offset(input_array):
-	return np.zeros_like(input_array)
+def make_repeated_array_offset(array):
+	return np.zeros_like(array)
