@@ -70,6 +70,13 @@ class Test_Make_Repeated_Array_Offset(unittest.TestCase):
 		actual = nitrate._convert_repeating_proportions_to_mass_reaching_water_table_2d_array_kg(repeating_array, multiply_by)
 		np.testing.assert_array_equal(expected, actual)
 
+	def test_multiply_repeated_array_along_an_axis_transposed(self):
+		repeating_array = np.array([[2,0,0], [3, 2, 0], [5, 3, 2], [0, 5, 3], [0, 0, 5]])
+		multiply_by = np.array([7, 11, 13])
+		expected = np.array([[14, 0, 0], [21, 22, 0], [35, 33, 26], [0, 55, 39], [0, 0, 65]])
+		actual = nitrate._convert_repeating_proportions_to_mass_reaching_water_table_2d_array_transposed_kg(repeating_array, multiply_by)
+		np.testing.assert_array_equal(expected, actual)
+
 	def test_sum_columns(self):
 		input_array = np.array([[1, 2, 3, 4, 5], [10, 20, 30, 40, 50], [100, 200, 300, 400, 500]])
 		expected = np.array([111, 222, 333, 444, 555])

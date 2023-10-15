@@ -346,6 +346,11 @@ def _convert_repeating_proportions_to_mass_reaching_water_table_2d_array_kg(
 		mi_array_kg_per_day):
 	return sliding_proportion_reaching_water_table_array_per_day * mi_array_kg_per_day[:, np.newaxis]
 
+def _convert_repeating_proportions_to_mass_reaching_water_table_2d_array_transposed_kg(
+		sliding_proportion_reaching_water_table_array_per_day,
+		mi_array_kg_per_day):
+	return sliding_proportion_reaching_water_table_array_per_day * mi_array_kg_per_day
+
 def _sum_columns(array):
 	return array.sum(axis = 0)
 
