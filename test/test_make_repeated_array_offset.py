@@ -82,3 +82,9 @@ class Test_Make_Repeated_Array_Offset(unittest.TestCase):
 		expected = np.array([111, 222, 333, 444, 555])
 		actual = nitrate._sum_columns(input_array)
 		np.testing.assert_array_equal(expected, actual)
+
+	def test_sum_columns_transposed(self):
+		input_array = np.array([[1, 10, 100], [2, 20, 200], [3, 30, 300], [4, 40, 400], [5, 50, 500]])
+		expected = np.array([111, 222, 333, 444, 555])
+		actual = nitrate._sum_columns_transposed(input_array)
+		np.testing.assert_array_equal(expected, actual)

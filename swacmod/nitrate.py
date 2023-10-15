@@ -354,6 +354,9 @@ def _convert_repeating_proportions_to_mass_reaching_water_table_2d_array_transpo
 def _sum_columns(array):
 	return array.sum(axis = 0)
 
+def _sum_columns_transposed(array):
+	return array.sum(axis = 1)
+
 def _convert_kg_to_tons_array(arr_kg):
 	return arr_kg / 1000.0
 
