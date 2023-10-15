@@ -262,6 +262,7 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, pr
 		result_kg[result_start:result_end] += np.array(mass_reaching_water_table_array_kg)
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > resize")
 		mass_reaching_water_table_array_kg.resize(double_length)
+		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > roll")
 		mass_reaching_water_table_array_kg = np.roll(mass_reaching_water_table_array_kg, day_nitrate_was_leached)
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > other add to result")
 		result_kg2 += mass_reaching_water_table_array_kg
