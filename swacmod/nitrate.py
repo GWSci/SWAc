@@ -260,12 +260,12 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, pr
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > add to result")
 		result_kg[result_start:result_end] += np.array(mass_reaching_water_table_array_kg)
 
-	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution")
-	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution > make repeated_array_offset")
-	x = _make_repeated_array_offset2(proportion_reaching_water_table_array_per_day, time_switcher)
-	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution > mass_reaching_water_table_2d_array_kg")
-	mass_reaching_water_table_2d_array_kg = _convert_repeating_proportions_to_mass_reaching_water_table_2d_array_kg(x, mi_array_kg_per_day)
-	result_kg = _sum_columns(mass_reaching_water_table_2d_array_kg)
+	# timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution")
+	# timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution > make repeated_array_offset")
+	# x = _make_repeated_array_offset2(proportion_reaching_water_table_array_per_day, time_switcher)
+	# timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution > mass_reaching_water_table_2d_array_kg")
+	# mass_reaching_water_table_2d_array_kg = _convert_repeating_proportions_to_mass_reaching_water_table_2d_array_kg(x, mi_array_kg_per_day)
+	# result_kg = _sum_columns(mass_reaching_water_table_2d_array_kg)
 
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution transposed")
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution transposed > make repeated_array_offset")
