@@ -51,11 +51,11 @@ class Test_Make_Repeated_Array_Offset(unittest.TestCase):
 		actual = nitrate._make_repeated_array_offset_transposed(input_array)
 		np.testing.assert_array_equal(expected, actual)
 
-	# def test_making_repeated_array_offset_transposed_from_length_3(self):
-	# 	input_array = np.array([2, 3, 5])
-	# 	expected = np.array([[2, 3, 5, 0, 0], [0, 2, 3, 5, 0], [0, 0, 2, 3, 5]])
-	# 	actual = nitrate._make_repeated_array_offset_transposed(input_array)
-	# 	np.testing.assert_array_equal(expected, actual)
+	def test_making_repeated_array_offset_transposed_from_length_3(self):
+		input_array = np.array([2, 3, 5])
+		expected = np.array([[2, 0, 0], [3, 2, 0], [5, 3, 2], [0, 5, 3], [0, 0, 5]])
+		actual = nitrate._make_repeated_array_offset_transposed(input_array)
+		np.testing.assert_array_equal(expected, actual)
 
 	# def test_making_repeated_array_offset_transposed_from_length_4(self):
 	# 	input_array = np.array([2, 3, 5, 7])
