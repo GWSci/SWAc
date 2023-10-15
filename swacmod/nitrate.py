@@ -251,12 +251,9 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, pr
 		mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
 		mass_reaching_water_table_array_kg = proportion_reaching_water_table_array_per_day * mass_leached_on_day_kg
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > calculate indexes")
-		result_start = day_nitrate_was_leached
-		result_remaining = len(result_kg) - result_start
-		copy_length = min(result_remaining, len(mass_reaching_water_table_array_kg))
-		result_end = result_start + copy_length
+		result_end = day_nitrate_was_leached + min(double_length - day_nitrate_was_leached, length)
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > add to result")
-		result_kg[result_start:result_end] += np.array(mass_reaching_water_table_array_kg)
+		result_kg[day_nitrate_was_leached:result_end] += np.array(mass_reaching_water_table_array_kg)
 
 	# result_kg = _make_result_2d(time_switcher, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
 	# result_kg = _make_result_transposed(time_switcher, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
