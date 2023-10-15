@@ -260,7 +260,7 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, pr
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > add to result")
 		result_kg[result_start:result_end] += np.array(mass_reaching_water_table_array_kg)
 
-	result_kg = _make_result_2d(time_switcher, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
+	# result_kg = _make_result_2d(time_switcher, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
 	# result_kg = _make_result_transposed(time_switcher, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
 
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > return")
