@@ -259,12 +259,21 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, pr
 		mass_end = mass_start + copy_length
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > add to result")
 		result_kg[result_start:result_end] += np.array(mass_reaching_water_table_array_kg)
+
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution")
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution > make repeated_array_offset")
 	x = _make_repeated_array_offset2(proportion_reaching_water_table_array_per_day, time_switcher)
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution > mass_reaching_water_table_2d_array_kg")
 	mass_reaching_water_table_2d_array_kg = _convert_repeating_proportions_to_mass_reaching_water_table_2d_array_kg(x, mi_array_kg_per_day)
 	result_kg = _sum_columns(mass_reaching_water_table_2d_array_kg)
+
+	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution transposed")
+	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution transposed > make repeated_array_offset")
+	x = _make_repeated_array_offset_transposed2(proportion_reaching_water_table_array_per_day, time_switcher)
+	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution transposed > mass_reaching_water_table_2d_array_kg")
+	# mass_reaching_water_table_2d_array_kg = _convert_repeating_proportions_to_mass_reaching_water_table_2d_array_kg(x, mi_array_kg_per_day)
+	# result_kg = _sum_columns(mass_reaching_water_table_2d_array_kg)
+
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > return")
 	return np.array(result_kg[:length])
 
@@ -293,6 +302,24 @@ def _make_repeated_array_offset_transposed(array):
 		padded_array[0:length, 0:length] = array[:, np.newaxis]
 	result = np.broadcast_to(padded_array, shape=(padded_length, length))
 	r, c = np.ogrid[:result.shape[0], :result.shape[1]]
+	result = result[r - c, c]
+	return result
+
+def _make_repeated_array_offset_transposed2(array, time_switcher):
+	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution transposed > make repeated_array_offset > lengths")
+	length = len(array)
+	if length == 0:
+		padded_array = array[:, np.newaxis]
+		padded_length = length
+	else:
+		padded_length = length + length - 1
+		padded_array = np.zeros((padded_length, 1))
+		padded_array[0:length, 0:length] = array[:, np.newaxis]
+	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution transposed > make repeated_array_offset > broadcast")
+	result = np.broadcast_to(padded_array, shape=(padded_length, length))
+	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution transposed > make repeated_array_offset > r c")
+	r, c = np.ogrid[:result.shape[0], :result.shape[1]]
+	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution transposed > make repeated_array_offset > result")
 	result = result[r - c, c]
 	return result
 
