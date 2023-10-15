@@ -285,15 +285,15 @@ def _make_repeated_array_offset(array):
 def _make_repeated_array_offset_transposed(array):
 	length = len(array)
 	if length == 0:
-		padded_array = array
+		padded_array = array[:, np.newaxis]
 		padded_length = length
 	else:
 		padded_length = length + length - 1
-		padded_array = np.zeros(padded_length)
-		padded_array[0:length] = array
-	result = np.broadcast_to(padded_array, shape=(length, padded_length))
+		padded_array = np.zeros((padded_length, 1))
+		padded_array[0:length, 0:length] = array[:, np.newaxis]
+	result = np.broadcast_to(padded_array, shape=(padded_length, length))
 	r, c = np.ogrid[:result.shape[0], :result.shape[1]]
-	result = result[r, c - r]
+	result = result[r - c, c]
 	return result
 
 def _make_repeated_array_offset2(array, time_switcher):
