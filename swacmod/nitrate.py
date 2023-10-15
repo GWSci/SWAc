@@ -246,6 +246,7 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, pr
 	length = proportion_reaching_water_table_array_per_day.size
 	double_length = length * 2
 	result_kg = np.zeros(double_length)
+	result_kg2 = np.zeros(double_length)
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > for day_nitrate_was_leached")
 	for day_nitrate_was_leached in range(length):
 		mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
@@ -259,12 +260,17 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, pr
 		mass_end = mass_start + copy_length
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > add to result")
 		result_kg[result_start:result_end] += np.array(mass_reaching_water_table_array_kg)
+		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > resize")
+		mass_reaching_water_table_array_kg.resize(double_length)
+		mass_reaching_water_table_array_kg = np.roll(mass_reaching_water_table_array_kg, day_nitrate_was_leached)
+		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > other add to result")
+		result_kg2 += mass_reaching_water_table_array_kg
 
 	# result_kg = _make_result_2d(time_switcher, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
 	# result_kg = _make_result_transposed(time_switcher, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
 
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > return")
-	return np.array(result_kg[:length])
+	return np.array(result_kg2[:length])
 
 def _make_result_2d(time_switcher, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day):
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > 2D solution")
