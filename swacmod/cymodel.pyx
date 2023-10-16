@@ -1515,7 +1515,6 @@ def calculate_mass_reaching_water_table_array_kg_per_day(data, output, size_t no
         size_t result_end
         size_t i
         double[:] proportion = proportion_reaching_water_table_array_per_day
-        double[:] mass_reaching_water_table_array_kg = np.zeros(length)
         double[:] mi = mi_array_kg_per_day
         double[:] result_kg = np.zeros(length)
         double mass_leached_on_day_kg
@@ -1530,13 +1529,9 @@ def calculate_mass_reaching_water_table_array_kg_per_day(data, output, size_t no
         result_end = length - day_nitrate_was_leached
         timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > mass_leached_on_day_kg")
         mass_leached_on_day_kg = mi[day_nitrate_was_leached]
-        timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > mass_reaching_water_table_array_kg")
-        mass_reaching_water_table_array_kg = np.zeros(length)
-        for i in range(length):
-            mass_reaching_water_table_array_kg[i] = proportion[i] * mass_leached_on_day_kg
         timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > add to result")
         for i in range(result_end):
-            result_kg[day_nitrate_was_leached + i] += mass_reaching_water_table_array_kg[i]
+            result_kg[day_nitrate_was_leached + i] += proportion[i] * mass_leached_on_day_kg
 
     timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > return")
     return np.array(result_kg[:length])
