@@ -1508,7 +1508,12 @@ def get_balance(data, output, node):
 
     return {'balance': balance}
 
-def calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day):
+def calculate_mass_reaching_water_table_array_kg_per_day(data, output, size_t node, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day):
+    cdef:
+        size_t length
+        size_t day_nitrate_was_leached
+        size_t result_end
+
     time_switcher = data["time_switcher"]
     timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > init variables")
     length = proportion_reaching_water_table_array_per_day.size
