@@ -1553,12 +1553,14 @@ def _cumulative_fraction_leaked_per_day(double her_at_5_percent, double her_at_5
 def _cumulative_fraction_leaked_per_year(double her_at_5_percent, double her_at_50_percent, double her_at_95_percent, double her_per_year):
     cdef:
         double x, upper, lower, m, c, y
-        bint is_below_50_percent
 
     x = her_per_year
-    is_below_50_percent = her_per_year < her_at_50_percent
-    upper = her_at_50_percent if is_below_50_percent else her_at_95_percent
-    lower = her_at_5_percent if is_below_50_percent else her_at_50_percent
+    if her_per_year < her_at_50_percent:
+        upper = her_at_50_percent
+        lower = her_at_5_percent
+    else:
+        upper = her_at_95_percent
+        lower = her_at_50_percent
     # y = mx + c
     m = 0.45 / (upper - lower)
     c = 0.5 - (her_at_50_percent * m)
