@@ -174,7 +174,7 @@ def _divide_arrays(a, b):
 	return np.divide(a, b, out = np.zeros_like(a), where = b != 0)
 
 def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
-	return m._calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
+	return m._calculate_m1a_array_kg_per_day(output, m1_array_kg_per_day)
 
 def _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
 	runoff_recharge_mm_per_day = output["runoff_recharge"]

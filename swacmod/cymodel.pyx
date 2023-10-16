@@ -1529,8 +1529,7 @@ def calculate_mass_reaching_water_table_array_kg_per_day(double[:] proportion_re
 
     return np.array(result_kg)
 
-def _calculate_m1a_array_kg_per_day(data, output, node, double[:] m1_array_kg_per_day):
-
+def _calculate_m1a_array_kg_per_day(output, double[:] m1_array_kg_per_day):
     cdef:
         size_t length
         size_t i
@@ -1545,9 +1544,6 @@ def _calculate_m1a_array_kg_per_day(data, output, node, double[:] m1_array_kg_pe
         double[:] interflow_proportion
         double[:] m1a_array_kg_per_day
 
-    time_switcher = data["time_switcher"]
-
-
     interflow_store_components_mm_per_day = np.add(np.add(end_interflow_store_volume_mm, infiltration_recharge_mm_per_day), interflow_to_rivers_mm_per_day)
     recharge_proportion = _divide_arrays(infiltration_recharge_mm_per_day, interflow_store_components_mm_per_day)
     interflow_proportion = _divide_arrays(interflow_to_rivers_mm_per_day, interflow_store_components_mm_per_day)
@@ -1556,7 +1552,6 @@ def _calculate_m1a_array_kg_per_day(data, output, node, double[:] m1_array_kg_pe
     m1a_array_kg_per_day = np.zeros(length)
     mit_kg = 0
 
-    timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for")
     for i in range(length):
         mit_kg += m1_array_kg_per_day[i]
         m1a_kg_per_day = mit_kg * recharge_proportion[i]
