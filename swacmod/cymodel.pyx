@@ -1508,7 +1508,7 @@ def get_balance(data, output, node):
 
     return {'balance': balance}
 
-def calculate_mass_reaching_water_table_array_kg_per_day(data, output, size_t node, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day):
+def calculate_mass_reaching_water_table_array_kg_per_day(data, output, size_t node, double[:] proportion_reaching_water_table_array_per_day, double[:] mi_array_kg_per_day):
     cdef:
         size_t length
         size_t day_nitrate_was_leached
@@ -1536,7 +1536,7 @@ def calculate_mass_reaching_water_table_array_kg_per_day(data, output, size_t no
             result_kg[day_nitrate_was_leached + i] += proportion[i] * mass_leached_on_day_kg
 
     timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > return")
-    return np.array(result_kg[:length])
+    return np.array(result_kg)
 
 ###############################################################################
 
