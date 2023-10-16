@@ -1513,6 +1513,7 @@ def calculate_mass_reaching_water_table_array_kg_per_day(data, output, size_t no
         size_t length
         size_t day_nitrate_was_leached
         size_t result_end
+        size_t i
         double[:] proportion = proportion_reaching_water_table_array_per_day
         double[:] mass_reaching_water_table_array_kg = np.zeros(length)
         double[:] mi = mi_array_kg_per_day
