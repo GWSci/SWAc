@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 import os
 from swacmod import compile_model
+import swacmod.model as m
 import swacmod.nitrate as nitrate
 import swacmod.timer as timer
 
@@ -55,7 +56,7 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_cumulative_fraction_leaked_per_year(7.0, 52.0, 102.0, 0, 0.00)
 
 	def assert_cumulative_fraction_leaked_per_year(self, her_at_5_percent, her_at_50_percent, her_at_95_percent, her, expected):
-		actual = nitrate._cumulative_fraction_leaked_per_year(
+		actual = m._cumulative_fraction_leaked_per_year(
 				her_at_5_percent, her_at_50_percent, her_at_95_percent, her)
 		self.assertAlmostEqual(expected, actual)
 
