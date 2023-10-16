@@ -253,11 +253,8 @@ def _calculate_proportion_reaching_water_table_array_per_day(data, output, node,
 
 def __calculate_proportion_reaching_water_table_array_per_day(length, depth_to_water_m, time_switcher):
 	result = np.zeros(length)
-	timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day > for")
 	for i in range(length):
 		result[i] = _calculate_daily_proportion_reaching_water_table(depth_to_water_m, i)
-		timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day > for")
-	timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day > result")
 	return result
 
 def _calculate_daily_proportion_reaching_water_table(DTW, t):
