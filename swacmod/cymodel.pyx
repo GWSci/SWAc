@@ -1543,8 +1543,11 @@ def _calculate_total_mass_leached_from_cell_on_days(
     timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > result")
     return result
 
-def _cumulative_fraction_leaked_per_day(her_at_5_percent, her_at_50_percent, her_at_95_percent, her_per_day):
-    days_in_year = 365.25
+def _cumulative_fraction_leaked_per_day(double her_at_5_percent, double her_at_50_percent, double her_at_95_percent, double her_per_day):
+    cdef:
+        double days_in_year = 365.25
+        double her_per_year, y
+
     her_per_year = days_in_year * her_per_day
     y = _cumulative_fraction_leaked_per_year(her_at_5_percent, her_at_50_percent, her_at_95_percent, her_per_year)
     return y / days_in_year
