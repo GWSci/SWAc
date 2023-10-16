@@ -1529,6 +1529,47 @@ def calculate_mass_reaching_water_table_array_kg_per_day(double[:] proportion_re
 
     return np.array(result_kg)
 
+def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
+    time_switcher = data["time_switcher"]
+
+    end_interflow_store_volume_mm = output["interflow_volume"]
+    infiltration_recharge_mm_per_day = output["infiltration_recharge"]
+    interflow_to_rivers_mm_per_day = output["interflow_to_rivers"]
+
+    interflow_store_components_mm_per_day = end_interflow_store_volume_mm + infiltration_recharge_mm_per_day + interflow_to_rivers_mm_per_day
+    recharge_proportion = _divide_arrays(infiltration_recharge_mm_per_day, interflow_store_components_mm_per_day)
+    interflow_proportion = _divide_arrays(interflow_to_rivers_mm_per_day, interflow_store_components_mm_per_day)
+
+    length = m1_array_kg_per_day.size
+    m1a_array_kg_per_day = np.zeros(length)
+    mit_kg = 0
+
+    timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for")
+    for i in range(length):
+        
+        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > mit_kg")
+        mit_kg += m1_array_kg_per_day[i]
+
+        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > m1a_kg_per_day")
+        m1a_kg_per_day = mit_kg * recharge_proportion[i]
+
+        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > m1b_kg_per_day")
+        m1b_kg_per_day = mit_kg * interflow_proportion[i]
+
+        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > mit_kg -")
+        mit_kg = mit_kg - m1a_kg_per_day - m1b_kg_per_day
+
+        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > m1a_array_kg_per_day[i]")
+        m1a_array_kg_per_day[i] = m1a_kg_per_day
+
+        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for")
+    
+    timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > return")
+    return m1a_array_kg_per_day
+
+def _divide_arrays(a, b):
+    return np.divide(a, b, out = np.zeros_like(a), where = b != 0)
+
 ###############################################################################
 
 
