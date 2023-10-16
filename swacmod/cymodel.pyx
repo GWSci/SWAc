@@ -1514,6 +1514,9 @@ def calculate_mass_reaching_water_table_array_kg_per_day(data, output, size_t no
         size_t day_nitrate_was_leached
         size_t result_end
         double[:] proportion = proportion_reaching_water_table_array_per_day
+        double[:] mass_reaching_water_table_array_kg = np.zeros(length)
+        double[:] mi = mi_array_kg_per_day
+        double mass_leached_on_day_kg
 
     time_switcher = data["time_switcher"]
     timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > init variables")
@@ -1524,9 +1527,11 @@ def calculate_mass_reaching_water_table_array_kg_per_day(data, output, size_t no
         timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > calculate indexes")
         result_end = length - day_nitrate_was_leached
         timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > mass_leached_on_day_kg")
-        mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
+        mass_leached_on_day_kg = mi[day_nitrate_was_leached]
         timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > mass_reaching_water_table_array_kg")
-        mass_reaching_water_table_array_kg = proportion * mass_leached_on_day_kg
+        mass_reaching_water_table_array_kg = np.zeros(length)
+        for i in range(length):
+            mass_reaching_water_table_array_kg[i] = proportion[i] * mass_leached_on_day_kg
         timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > add to result")
         result_kg[day_nitrate_was_leached:] += mass_reaching_water_table_array_kg[:result_end]
 
