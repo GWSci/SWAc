@@ -143,7 +143,8 @@ def _calculate_total_mass_leached_from_cell_on_days(
 		remaining_for_year -= mass_leached_for_day
 		timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for > result[i]")
 		result[i] = mass_leached_for_day
-		timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > result")
+		timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for")
+	timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > result")
 	return result
 
 def _cumulative_fraction_leaked_per_day(her_at_5_percent, her_at_50_percent, her_at_95_percent, her_per_day):
@@ -189,10 +190,13 @@ def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 
 	timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for")
 	for i in range(length):
+		
 		timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > mit_kg")
 		mit_kg += m1_array_kg_per_day[i]
+
 		timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > m1a_kg_per_day")
 		m1a_kg_per_day = mit_kg * recharge_proportion[i]
+
 		timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > m1b_kg_per_day")
 		m1b_kg_per_day = mit_kg * interflow_proportion[i]
 
@@ -201,6 +205,7 @@ def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 
 		timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > m1a_array_kg_per_day[i]")
 		m1a_array_kg_per_day[i] = m1a_kg_per_day
+
 		timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for")
 	
 	timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > return")
