@@ -65,7 +65,7 @@ class Test_Nitrate(unittest.TestCase):
 		her_at_50_percent = 110.0
 		her_at_95_percent = 310.0
 
-		testee = lambda her: nitrate._cumulative_fraction_leaked_per_day(
+		testee = lambda her: m._cumulative_fraction_leaked_per_day(
 				her_at_5_percent, her_at_50_percent, her_at_95_percent, her)
 
 		self.assertAlmostEqual(0.05 / 365.25, testee(10.0 / 365.25))
@@ -334,7 +334,7 @@ def calculate_total_mass_leached_for_test(days, her_per_day):
 		her_at_50_percent = 50 * 365.25
 		her_at_95_percent = 95 * 365.25
 
-		return nitrate._calculate_total_mass_leached_from_cell_on_days(
+		return m._calculate_total_mass_leached_from_cell_on_days(
 			max_load_per_year,
 			her_at_5_percent,
 			her_at_50_percent,
