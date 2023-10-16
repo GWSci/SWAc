@@ -244,22 +244,15 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(data, output, node, pr
 	time_switcher = data["time_switcher"]
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > init variables")
 	length = proportion_reaching_water_table_array_per_day.size
-	double_length = length * 2
-	double_length_proportion_reaching_water_table_array_per_day = np.array(proportion_reaching_water_table_array_per_day, copy = True)
-	double_length_proportion_reaching_water_table_array_per_day.resize(double_length)
-	result_kg = np.zeros(double_length)
+	result_kg = np.zeros(length)
 	timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > for day_nitrate_was_leached")
 	for day_nitrate_was_leached in range(length):
 		mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
-		# mass_reaching_water_table_array_kg = proportion_reaching_water_table_array_per_day * mass_leached_on_day_kg
-		double_length_mass_reaching_water_table_array_kg = double_length_proportion_reaching_water_table_array_per_day * mass_leached_on_day_kg
+		mass_reaching_water_table_array_kg = proportion_reaching_water_table_array_per_day * mass_leached_on_day_kg
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > calculate indexes")
-		# result_end = day_nitrate_was_leached + min(double_length - day_nitrate_was_leached, length)
+		result_end = length - day_nitrate_was_leached
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > add to result")
-		result_kg += double_length_mass_reaching_water_table_array_kg
-		# result_kg[day_nitrate_was_leached:result_end] += np.array(mass_reaching_water_table_array_kg)
-		timer.switch_to(time_switcher, "Nitrate: _calculate_mass... > roll")
-		double_length_proportion_reaching_water_table_array_per_day = np.roll(double_length_proportion_reaching_water_table_array_per_day, 1)
+		result_kg[day_nitrate_was_leached:] += mass_reaching_water_table_array_kg[:result_end]
 
 	# result_kg = _make_result_2d(time_switcher, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
 	# result_kg = _make_result_transposed(time_switcher, proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
