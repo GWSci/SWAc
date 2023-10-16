@@ -239,13 +239,16 @@ def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_arr
 
 def _calculate_proportion_reaching_water_table_array_per_day(data, output, node):	
 	time_switcher = data["time_switcher"]
-	timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day > pre")
 	length = len(data["series"]["date"])
 	depth_to_water_m = data["params"]["nitrate_depth_to_water"][node][0]
+	return __calculate_proportion_reaching_water_table_array_per_day(length, depth_to_water_m, time_switcher)
+
+def __calculate_proportion_reaching_water_table_array_per_day(length, depth_to_water_m, time_switcher):
 	result = np.zeros(length)
 	timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day > for")
 	for i in range(length):
 		result[i] = _calculate_daily_proportion_reaching_water_table(depth_to_water_m, i)
+		timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day > for")
 	timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day > result")
 	return result
 
