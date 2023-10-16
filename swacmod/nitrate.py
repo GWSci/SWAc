@@ -19,7 +19,7 @@ def calculate_nitrate(data, output, node):
 	time_switcher = data["time_switcher"]
 	if "enabled" == data["params"]["nitrate_process"]:
 		proportion_0 = np.zeros(length)
-		proportion_100 = __calculate_proportion_reaching_water_table_array_per_day(length, 100.0, time_switcher)
+		proportion_100 = data["proportion_100"]
 
 		timer.switch_to(time_switcher, "Nitrate: _calculate_her_array_mm_per_day")
 		her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)

@@ -208,6 +208,12 @@ def run_process(
     logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
 
+    timer.switch_to(time_switcher, "run_main > run > init nitrate")
+    if "enabled" == data["params"]["nitrate_process"]:
+        proportion_100 = nitrate.__calculate_proportion_reaching_water_table_array_per_day(len(data["series"]['date']), 100.0, time_switcher)
+        data["proportion_100"] = proportion_100
+    timer.switch_to(time_switcher, "run_main > run > for")
+
     for node in ids:
 
         q.put(SENTINEL)
