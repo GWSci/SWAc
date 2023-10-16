@@ -84,6 +84,9 @@ def _calculate_her_array_mm_per_day(data, output, node):
 	return np.maximum(0.0, output["rainfall_ts"] - output["ae"])
 
 def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day):
+	time_switcher = data["time_switcher"]
+	timer.switch_to(time_switcher, "Nitrate: _calculate_mass_reaching_water_table_array_kg_per_day > pre")
+	
 	params = data["params"]
 	cell_area_m_sq = params["node_areas"][node]
 	days = data["series"]["date"]
@@ -95,8 +98,10 @@ def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day):
 	her_at_95_percent = nitrate_loading[6]
 
 	hectare_area_m_sq = 10000
+	timer.switch_to(time_switcher, "Nitrate: _calculate_mass_reaching_water_table_array_kg_per_day > max_load_per_year_kg_per_cell")
 	max_load_per_year_kg_per_cell = max_load_per_year_kg_per_hectare * cell_area_m_sq / hectare_area_m_sq
 
+	timer.switch_to(time_switcher, "Nitrate: _calculate_mass_reaching_water_table_array_kg_per_day > m0_array_kg_per_day")
 	m0_array_kg_per_day = _calculate_total_mass_leached_from_cell_on_days(
 		max_load_per_year_kg_per_cell,
 		her_at_5_percent,
@@ -157,18 +162,26 @@ def _divide_arrays(a, b):
 	return np.divide(a, b, out = np.zeros_like(a), where = b != 0)
 
 def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
+	time_switcher = data["time_switcher"]
+	timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > pre")
+
 	end_interflow_store_volume_mm = output["interflow_volume"]
 	infiltration_recharge_mm_per_day = output["infiltration_recharge"]
 	interflow_to_rivers_mm_per_day = output["interflow_to_rivers"]
 
+	timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > interflow_store_components_mm_per_day")
 	interflow_store_components_mm_per_day = end_interflow_store_volume_mm + infiltration_recharge_mm_per_day + interflow_to_rivers_mm_per_day
+	timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > recharge_proportion")
 	recharge_proportion = _divide_arrays(infiltration_recharge_mm_per_day, interflow_store_components_mm_per_day)
+	timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > interflow_proportion")
 	interflow_proportion = _divide_arrays(interflow_to_rivers_mm_per_day, interflow_store_components_mm_per_day)
 
+	timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > before for")
 	length = m1_array_kg_per_day.size
 	m1a_array_kg_per_day = np.zeros(length)
 	mit_kg = 0
 
+	timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for")
 	for i in range(length):
 		mit_kg += m1_array_kg_per_day[i]
 		m1a_kg_per_day = mit_kg * recharge_proportion[i]
@@ -178,6 +191,7 @@ def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 
 		m1a_array_kg_per_day[i] = m1a_kg_per_day
 	
+	timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > return")
 	return m1a_array_kg_per_day
 
 def _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
@@ -214,12 +228,16 @@ def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_arr
 		message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3. The first day that does not balance is at index {i}. M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg and M3 = {m3} kg."
 		logging.warning(message)
 
-def _calculate_proportion_reaching_water_table_array_per_day(data, output, node):
+def _calculate_proportion_reaching_water_table_array_per_day(data, output, node):	
+	time_switcher = data["time_switcher"]
+	timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day > pre")
 	length = len(data["series"]["date"])
 	depth_to_water_m = data["params"]["nitrate_depth_to_water"][node][0]
 	result = np.zeros(length)
+	timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day > for")
 	for i in range(length):
 		result[i] = _calculate_daily_proportion_reaching_water_table(depth_to_water_m, i)
+	timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day > result")
 	return result
 
 def _calculate_daily_proportion_reaching_water_table(DTW, t):

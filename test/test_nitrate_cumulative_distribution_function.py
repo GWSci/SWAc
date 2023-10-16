@@ -36,6 +36,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 	
 	def test_calculate_daily_proportion_reaching_water_table_arr(self):
 		data = {
+			"time_switcher": timer.make_time_switcher(),
 			"series": {
 				"date" : np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
 			}, "params": {

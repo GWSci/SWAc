@@ -105,6 +105,7 @@ class Test_Nitrate(unittest.TestCase):
 		her_at_95_percent = 95 * 365.25
 
 		data = {
+			"time_switcher": timer.make_time_switcher(),
 			"series": {
 				"date" : [date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30), date(2023, 10, 1), date(2023, 10, 2), date(2023, 10, 3)]
 			}, "params": {
@@ -166,7 +167,9 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_m1a_array(input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected)
 
 	def assert_m1a_array(self, input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected):
-		data = None
+		data = {
+			"time_switcher": timer.make_time_switcher(),
+		}
 		output = {
 			"interflow_volume" : input_interflow_volume,
 			"infiltration_recharge" : input_infiltration_recharge,
