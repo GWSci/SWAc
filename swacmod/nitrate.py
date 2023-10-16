@@ -15,8 +15,12 @@ def get_nitrate(data, output, node):
 	}
 
 def calculate_nitrate(data, output, node):
+	length = output["rainfall_ts"].size
 	time_switcher = data["time_switcher"]
 	if "enabled" == data["params"]["nitrate_process"]:
+		proportion_0 = np.zeros(length)
+		proportion_100 = __calculate_proportion_reaching_water_table_array_per_day(length, 100.0, time_switcher)
+
 		timer.switch_to(time_switcher, "Nitrate: _calculate_her_array_mm_per_day")
 		her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
 
@@ -42,7 +46,7 @@ def calculate_nitrate(data, output, node):
 		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day)
 
 		timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day")
-		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node)
+		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, proportion_0, proportion_100)
 
 		timer.switch_to(time_switcher, "Nitrate: _calculate_mass_reaching_water_table_array_kg_per_day")
 		nitrate_reaching_water_table_array_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day))
@@ -64,7 +68,6 @@ def calculate_nitrate(data, output, node):
 			"nitrate_reaching_water_table_array_tons_per_day" : nitrate_reaching_water_table_array_tons_per_day,
 		}
 	else:
-		length = output["rainfall_ts"].size
 		empty_array = np.zeros(length)
 		return {
 			"her_array_mm_per_day" : empty_array,
@@ -237,11 +240,16 @@ def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_arr
 		message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3. The first day that does not balance is at index {i}. M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg and M3 = {m3} kg."
 		logging.warning(message)
 
-def _calculate_proportion_reaching_water_table_array_per_day(data, output, node):	
+def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, proportion_0, proportion_100):	
 	time_switcher = data["time_switcher"]
 	length = len(data["series"]["date"])
 	depth_to_water_m = data["params"]["nitrate_depth_to_water"][node][0]
-	return __calculate_proportion_reaching_water_table_array_per_day(length, depth_to_water_m, time_switcher)
+	if depth_to_water_m == 0.0:
+		return proportion_0
+	elif depth_to_water_m == 100.0:
+		return proportion_100
+	else:
+		return __calculate_proportion_reaching_water_table_array_per_day(length, depth_to_water_m, time_switcher)
 
 def __calculate_proportion_reaching_water_table_array_per_day(length, depth_to_water_m, time_switcher):
 	result = np.zeros(length)
