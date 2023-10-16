@@ -1516,6 +1516,7 @@ def calculate_mass_reaching_water_table_array_kg_per_day(data, output, size_t no
         double[:] proportion = proportion_reaching_water_table_array_per_day
         double[:] mass_reaching_water_table_array_kg = np.zeros(length)
         double[:] mi = mi_array_kg_per_day
+        double[:] result_kg = np.zeros(length)
         double mass_leached_on_day_kg
 
     time_switcher = data["time_switcher"]
