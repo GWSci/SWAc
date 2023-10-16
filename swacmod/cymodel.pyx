@@ -1529,6 +1529,10 @@ def _calculate_total_mass_leached_from_cell_on_days(
     for i in range(length):
         day = days[i]
         her = her_per_day[i]
+
+        if her == 0.0:
+            continue
+
         if (day.month == 10) and (day.day == 1):
             remaining_for_year = max_load_per_year_kg_per_cell
         fraction_leached = _cumulative_fraction_leaked_per_day(her_at_5_percent,

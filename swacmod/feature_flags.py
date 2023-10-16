@@ -3,7 +3,7 @@ import os
 # Flags values when experimental performance features are enabled.
 
 _node_count_override = True
-_max_node_count_override = 987
+_max_node_count_override = 1597
 _skip_validation = False
 
 # Set master flag from environment variable
