@@ -1530,6 +1530,9 @@ def calculate_mass_reaching_water_table_array_kg_per_day(double[:] proportion_re
     return np.array(result_kg)
 
 def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
+
+    
+
     time_switcher = data["time_switcher"]
 
     end_interflow_store_volume_mm = output["interflow_volume"]
@@ -1546,25 +1549,11 @@ def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 
     timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for")
     for i in range(length):
-        
-        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > mit_kg")
         mit_kg += m1_array_kg_per_day[i]
-
-        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > m1a_kg_per_day")
         m1a_kg_per_day = mit_kg * recharge_proportion[i]
-
-        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > m1b_kg_per_day")
         m1b_kg_per_day = mit_kg * interflow_proportion[i]
-
-        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > mit_kg -")
         mit_kg = mit_kg - m1a_kg_per_day - m1b_kg_per_day
-
-        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for > m1a_array_kg_per_day[i]")
-        m1a_array_kg_per_day[i] = m1a_kg_per_day
-
-        timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > for")
-    
-    timer.switch_to(time_switcher, "Nitrate: _calculate_m1a_array_kg_per_day > return")
+        m1a_array_kg_per_day[i] = m1a_kg_per_day    
     return m1a_array_kg_per_day
 
 def _divide_arrays(a, b):
