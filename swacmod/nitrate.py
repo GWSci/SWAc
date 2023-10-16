@@ -117,7 +117,8 @@ def _calculate_total_mass_leached_from_cell_on_days(
 		her_at_50_percent,
 		her_at_95_percent,
 		days,
-		her_per_day):
+		her_per_day,
+		time_switcher = timer.make_time_switcher()):
 	length = len(days)
 	result = np.zeros(length)
 	remaining_for_year = max_load_per_year_kg_per_cell
