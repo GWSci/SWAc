@@ -1509,37 +1509,35 @@ def get_balance(data, output, node):
     return {'balance': balance}
 
 def _calculate_total_mass_leached_from_cell_on_days(
-        max_load_per_year_kg_per_cell,
-        her_at_5_percent,
-        her_at_50_percent,
-        her_at_95_percent,
+        double max_load_per_year_kg_per_cell,
+        double her_at_5_percent,
+        double her_at_50_percent,
+        double her_at_95_percent,
         days,
-        her_per_day,
+        double[:] her_per_day,
         time_switcher = timer.make_time_switcher()):
+    cdef:
+        size_t length, i
+        double remaining_for_year, her, fraction_leached, mass_leached_for_day
+        double[:] result
+
     timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > pre")
     length = len(days)
     result = np.zeros(length)
     remaining_for_year = max_load_per_year_kg_per_cell
     timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for")
     for i in range(length):
-        timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for > pre")
         day = days[i]
         her = her_per_day[i]
-        timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for > reset")
         if (day.month == 10) and (day.day == 1):
             remaining_for_year = max_load_per_year_kg_per_cell
-        timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for > fraction_leached")
         fraction_leached = _cumulative_fraction_leaked_per_day(her_at_5_percent,
             her_at_50_percent,
             her_at_95_percent,
             her)
-        timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for > mass_leached_for_day")
         mass_leached_for_day = min(remaining_for_year, max_load_per_year_kg_per_cell * fraction_leached)
-        timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for > remaining_for_year")
         remaining_for_year -= mass_leached_for_day
-        timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for > result[i]")
         result[i] = mass_leached_for_day
-        timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for")
     timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > result")
     return result
 

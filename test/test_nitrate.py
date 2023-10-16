@@ -76,28 +76,28 @@ class Test_Nitrate(unittest.TestCase):
 
 	def test_calculate_total_mass_leached_from_cell_on_days(self):
 		testee = calculate_total_mass_leached_for_test
-		np.testing.assert_array_equal([], testee([], []))
-		np.testing.assert_array_equal([2000.0], testee([date(2023, 1, 1)], [20.0]))
-		np.testing.assert_array_equal([2000.0, 8000.0,], testee([date(2023, 1, 1), date(2023, 1, 2)], [20.0, 80.0]))
+		np.testing.assert_array_equal([], testee([], np.array([])))
+		np.testing.assert_array_equal([2000.0], testee([date(2023, 1, 1)], np.array([20.0])))
+		np.testing.assert_array_equal([2000.0, 8000.0,], testee([date(2023, 1, 1), date(2023, 1, 2)], np.array([20.0, 80.0])))
 
 	def test_calculate_total_mass_leached_from_cell_on_days_limits_by_max_load_for_the_year(self):
 		max_load_per_year = 10000 * 365.25
 		testee = calculate_total_mass_leached_for_test
-		np.testing.assert_array_equal([max_load_per_year], testee([date(2023, 1, 1)], [150 * 365.25]))
+		np.testing.assert_array_equal([max_load_per_year], testee([date(2023, 1, 1)], np.array([150 * 365.25])))
 		np.testing.assert_array_equal(
 			[0.6 * max_load_per_year, 0.4 * max_load_per_year, 0],
-			testee([date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3)], [60 * 365.25, 60 * 365.25, 60 * 365.25]))
+			testee([date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3)], np.array([60 * 365.25, 60 * 365.25, 60 * 365.25])))
 
 	def test_calculate_total_mass_leached_from_cell_on_days_resets_limit_on_1st_october(self):
 		max_load_per_year = 10000 * 365.25
 		her_for_60_percent = 60 * 365.25
 		testee = calculate_total_mass_leached_for_test
-		np.testing.assert_array_equal([max_load_per_year], testee([date(2023, 1, 1)], [150 * 365.25]))
+		np.testing.assert_array_equal([max_load_per_year], testee([date(2023, 1, 1)], np.array([150 * 365.25])))
 		np.testing.assert_array_equal(
 			[0.6 * max_load_per_year, 0.4 * max_load_per_year, 0, 0.6 * max_load_per_year, 0.4 * max_load_per_year, 0],
 			testee(
 				[date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30), date(2023, 10, 1), date(2023, 10, 2), date(2023, 10, 3)],
-				[her_for_60_percent] * 6))
+				np.array([her_for_60_percent, her_for_60_percent, her_for_60_percent, her_for_60_percent, her_for_60_percent, her_for_60_percent])))
 	
 	def test_calculate_m0_array_kg_per_day(self):
 		max_load_per_year = 10000 * 365.25 * 4
@@ -120,7 +120,7 @@ class Test_Nitrate(unittest.TestCase):
 		}
 		output = None
 		node = 3
-		her_array_mm_per_day = [60 * 365.25] * 6
+		her_array_mm_per_day = np.array([60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25])
 
 		max_load_per_cell_per_year = 10000 * 365.25
 		expected = [0.6 * max_load_per_cell_per_year, 0.4 * max_load_per_cell_per_year, 0, 0.6 * max_load_per_cell_per_year, 0.4 * max_load_per_cell_per_year, 0]
