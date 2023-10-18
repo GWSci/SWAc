@@ -55,16 +55,16 @@ class Test_Make_Nitrate_Csv_Output(unittest.TestCase):
 			[ 5.0,  7.0],
 			[11.0, 13.0],
 		])
-		expected = [
-			self.expected_header_row,
-			[1, 1,  2.0],
-			[1, 2,  3.0],
-			[2, 1,  5.0],
-			[2, 2,  7.0],
-			[3, 1, 11.0],
-			[3, 2, 13.0],
-		]
-		actual = nitrate.make_nitrate_csv_output(nitrate_aggregation)
+		expected = (
+			self.expected_header_row_str +
+			"1,1,2.0\r\n" +
+			"1,2,3.0\r\n" +
+			"2,1,5.0\r\n" +
+			"2,2,7.0\r\n" +
+			"3,1,11.0\r\n" +
+			"3,2,13.0\r\n"
+		)
+		actual = make_nitrate_csv_adapter(nitrate_aggregation)
 		self.assertEqual(expected, actual)
 
 def make_nitrate_csv_adapter(nitrate_aggregation):
