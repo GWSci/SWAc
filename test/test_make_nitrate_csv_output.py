@@ -82,9 +82,8 @@ def make_nitrate_csv_adapter(nitrate_aggregation):
 
 class OpenSpy:
 	def __init__(self):
-		self.string_capture = None
-
-	def open(self, filename, mode, newline):
 		self.string_capture = io.StringIO()
 		self.string_capture.close = lambda: None
+
+	def open(self, filename, mode, newline):
 		return self.string_capture
