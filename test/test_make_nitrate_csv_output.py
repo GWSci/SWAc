@@ -40,13 +40,13 @@ class Test_Make_Nitrate_Csv_Output(unittest.TestCase):
 			[3.0],
 			[5.0],
 		])
-		expected = [
-			self.expected_header_row,
-			[1, 1, 2.0],
-			[2, 1, 3.0],
-			[3, 1, 5.0],
-		]
-		actual = nitrate.make_nitrate_csv_output(nitrate_aggregation)
+		expected = (
+			self.expected_header_row_str +
+			"1,1,2.0\r\n" +
+			"2,1,3.0\r\n" +
+			"3,1,5.0\r\n"
+		)
+		actual = make_nitrate_csv_adapter(nitrate_aggregation)
 		self.assertEqual(expected, actual)
 
 	def test_make_nitrate_csv_output_for_multiple_nodes_and_stress_periods(self):
