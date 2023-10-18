@@ -257,16 +257,6 @@ def write_nitrate_csv(data, nitrate_aggregation, open=open):
 
 	write_nitrate_csv_file(filename, nitrate_csv_rows, open)
 
-def make_nitrate_csv_output(nitrate_aggregation):
-	result = []
-	result.append(["Stress Period", "Node", "Recharge Concentration (metric tons/m3)"])
-	for stress_period_index, node_index in np.ndindex(nitrate_aggregation.shape):
-		stress_period = stress_period_index + 1
-		node = node_index + 1
-		recharge_concentration = nitrate_aggregation[stress_period_index, node_index]
-		result.append([stress_period, node, recharge_concentration])
-	return result
-
 def write_nitrate_csv_file(filename, nitrate_csv_output, open=open):
 	with open(filename, "w", newline="") as f:
 		writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC, dialect='excel')
