@@ -74,9 +74,7 @@ def make_nitrate_csv_adapter(nitrate_aggregation):
 		}
 	}
 	spy = OpenSpy()
-	filename = nitrate.make_output_filename(data)
-	nitrate_csv_rows = nitrate.make_nitrate_csv_output(nitrate_aggregation)
-	nitrate.write_nitrate_csv_file(filename, nitrate_csv_rows, spy.open)
+	nitrate.write_nitrate_csv(data, nitrate_aggregation, spy.open)
 	spy.string_capture.seek(0)
 	return spy.string_capture.read()
 

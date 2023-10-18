@@ -243,6 +243,11 @@ def _calculate_combined_recharge_m_cubed(data, output, node):
 def _convert_mm_to_m(arr):
 	return arr / 100.0
 
+def write_nitrate_csv(data, nitrate_aggregation, open=open):
+	filename = make_output_filename(data)
+	nitrate_csv_rows = make_nitrate_csv_output(nitrate_aggregation)
+	write_nitrate_csv_file(filename, nitrate_csv_rows, open)
+
 def make_nitrate_csv_output(nitrate_aggregation):
 	result = []
 	result.append(["Stress Period", "Node", "Recharge Concentration (metric tons/m3)"])
