@@ -1632,6 +1632,35 @@ def _divide_arrays(double[:] a, double[:] b):
             result[i] = a[i] / b[i]
     return result
 
+def _aggregate_nitrate(
+            time_periods,
+            size_t len_time_periods,
+            double[:] nitrate_reaching_water_table_array_tons_per_day,
+            double[:] combined_recharge_m_cubed,
+            double[:,:] aggregation,
+            size_t node):
+    cdef:
+        size_t time_period_index, first_day_index, last_day_index, i
+        double sum_of_nitrate_tons, sum_of_recharge_m_cubed
+
+    for time_period_index in range(len_time_periods):
+        time_period = time_periods[time_period_index]
+        first_day_index = time_period[0] - 1
+        last_day_index = time_period[1] - 1
+        sum_of_nitrate_tons = 0.0
+        sum_of_recharge_m_cubed = 0.0
+        for i in range(first_day_index, last_day_index):
+            sum_of_nitrate_tons += nitrate_reaching_water_table_array_tons_per_day[i]
+            sum_of_recharge_m_cubed += combined_recharge_m_cubed[i]
+        if sum_of_recharge_m_cubed != 0:
+            aggregation[time_period_index, node] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
+
+        if ff.max_node_count_override:
+            if last_day_index > ff.max_node_count_override:
+                break
+
+    return aggregation
+
 ###############################################################################
 
 
