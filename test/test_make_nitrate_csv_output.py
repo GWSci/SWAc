@@ -6,11 +6,11 @@ import unittest
 class Test_Make_Nitrate_Csv_Output(unittest.TestCase):
 	def setUp(self):
 		self.expected_header_row = ["Stress Period", "Node", "Recharge Concentration (metric tons/m3)"]
-		self.expected_header_row_str = '"Stress Period","Node","Recharge Concentration (metric tons/m3)"'
+		self.expected_header_row_str = '"Stress Period","Node","Recharge Concentration (metric tons/m3)"\r\n'
 
 	def test_make_nitrate_csv_output_for_empty_aggregation(self):
 		nitrate_aggregation = np.array([])
-		expected = self.expected_header_row_str + "\r\n"
+		expected = self.expected_header_row_str
 		actual = make_nitrate_csv_adapter(nitrate_aggregation)
 		self.assertEqual(expected, actual)
 
