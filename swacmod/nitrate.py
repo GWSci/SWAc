@@ -255,12 +255,9 @@ def write_nitrate_csv(data, nitrate_aggregation, open=open):
 		result.append([stress_period, node, recharge_concentration])
 	nitrate_csv_rows = result
 
-	write_nitrate_csv_file(filename, nitrate_csv_rows, open)
-
-def write_nitrate_csv_file(filename, nitrate_csv_output, open=open):
 	with open(filename, "w", newline="") as f:
 		writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC, dialect='excel')
-		writer.writerows(nitrate_csv_output)
+		writer.writerows(nitrate_csv_rows)
 
 def make_output_filename(data):
 	run_name = data["params"]["run_name"]
