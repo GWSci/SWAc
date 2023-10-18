@@ -214,13 +214,7 @@ def aggregate_nitrate(aggregation, data, output, node):
 	return aggregation
 
 def _len_time_periods(time_periods):
-	if ff.use_node_count_override:
-		len_time_periods = 0
-		while time_periods[len_time_periods][1] < ff.max_node_count_override:
-			len_time_periods += 1
-		return len_time_periods
-	else:
-		return len(time_periods)
+	return len(time_periods)
 	
 
 def _calculate_combined_recharge_m_cubed(data, output, node):
