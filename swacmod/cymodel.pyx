@@ -1661,7 +1661,7 @@ def _aggregate_nitrate(
 
     return aggregation
 
-def write_nitrate_csv_bytes(filename, nitrate_aggregation, open=open):
+def write_nitrate_csv_bytes(filename, nitrate_aggregation):
     stress_period_count = nitrate_aggregation.shape[0]
     node_count = nitrate_aggregation.shape[1]
 

@@ -227,10 +227,10 @@ def _calculate_combined_recharge_m_cubed(data, output, node):
 def _convert_mm_to_m(arr):
 	return arr / 100.0
 
-def write_nitrate_csv(data, nitrate_aggregation, open=open):
-	write_nitrate_csv_old(data, nitrate_aggregation, open=open)
+def write_nitrate_csv(data, nitrate_aggregation):
+	write_nitrate_csv_old(data, nitrate_aggregation)
 
-def write_nitrate_csv_old(data, nitrate_aggregation, open=open):
+def write_nitrate_csv_old(data, nitrate_aggregation):
 	filename = make_output_filename(data)
 	with open(filename, "w", newline="") as f:
 		writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC, dialect='excel')
@@ -241,7 +241,7 @@ def write_nitrate_csv_old(data, nitrate_aggregation, open=open):
 			recharge_concentration = nitrate_aggregation[stress_period_index, node_index]
 			writer.writerow([stress_period, node, recharge_concentration])
 
-def write_nitrate_csv_bytes_cython(data, nitrate_aggregation, open=open):
+def write_nitrate_csv_bytes_cython(data, nitrate_aggregation):
 	filename = make_output_filename(data)
 	m.write_nitrate_csv_bytes(filename, nitrate_aggregation, open)
 
