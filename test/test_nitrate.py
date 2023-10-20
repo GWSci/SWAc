@@ -240,6 +240,11 @@ class Test_Nitrate(unittest.TestCase):
 			"time_switcher": timer.make_time_switcher(),
 			"params": {
 				"node_areas": {7: 2500.0},
+				"nitrate_calibration_a": 1.38,
+				"nitrate_calibration_mu": 1.58,
+				"nitrate_calibration_sigma": 3.96,
+				"nitrate_calibration_mean_hydraulic_conductivity": 1.7,
+				"nitrate_calibration_mean_velocity_of_unsaturated_transport": 0.0029,
 				"nitrate_depth_to_water": {7: [0.00205411]},
 				"nitrate_loading": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
 				"nitrate_process": "enabled",

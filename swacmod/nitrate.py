@@ -17,7 +17,14 @@ def get_nitrate(data, output, node):
 def calculate_nitrate(data, output, node):
 	length = output["rainfall_ts"].size
 	time_switcher = data["time_switcher"]
-	if "enabled" == data["params"]["nitrate_process"]:
+	params = data["params"]
+	if "enabled" == params["nitrate_process"]:
+		
+		a = params["nitrate_calibration_a"]
+		μ = params["nitrate_calibration_mu"]
+		σ = params["nitrate_calibration_sigma"]
+		mean_hydraulic_conductivity = params["nitrate_calibration_mean_hydraulic_conductivity"]
+		mean_velocity_of_unsaturated_transport = params["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
 		proportion_0 = np.zeros(length)
 		proportion_100 = data["proportion_100"]
 
@@ -46,7 +53,7 @@ def calculate_nitrate(data, output, node):
 		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day)
 
 		# timer.switch_to(time_switcher, "Nitrate: _calculate_proportion_reaching_water_table_array_per_day")
-		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, proportion_0, proportion_100)
+		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
 
 		# timer.switch_to(time_switcher, "Nitrate: _calculate_mass_reaching_water_table_array_kg_per_day")
 		nitrate_reaching_water_table_array_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day))
@@ -158,7 +165,7 @@ def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_arr
 		message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3. The first day that does not balance is at index {i}. M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg and M3 = {m3} kg."
 		logging.warning(message)
 
-def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, proportion_0, proportion_100):	
+def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100):	
 	time_switcher = data["time_switcher"]
 	length = len(data["series"]["date"])
 	depth_to_water_m = data["params"]["nitrate_depth_to_water"][node][0]
@@ -167,20 +174,20 @@ def _calculate_proportion_reaching_water_table_array_per_day(data, output, node,
 	elif depth_to_water_m == 100.0:
 		return proportion_100
 	else:
-		return __calculate_proportion_reaching_water_table_array_per_day(length, depth_to_water_m, time_switcher)
+		return __calculate_proportion_reaching_water_table_array_per_day(length, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, time_switcher)
 
-def __calculate_proportion_reaching_water_table_array_per_day(length, depth_to_water_m, time_switcher):
+def __calculate_proportion_reaching_water_table_array_per_day(length, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, time_switcher):
 	result = np.zeros(length)
 	for i in range(length):
-		result[i] = _calculate_daily_proportion_reaching_water_table(depth_to_water_m, i)
+		result[i] = _calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, i)
 	return result
 
-def _calculate_daily_proportion_reaching_water_table(DTW, t):
-	f_t = _calculate_cumulative_proportion_reaching_water_table(DTW, t)
-	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(DTW, t - 1)
+def _calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
+	f_t = _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
+	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t - 1)
 	return f_t - f_t_prev
 
-def _calculate_cumulative_proportion_reaching_water_table(DTW, t):
+def _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
 	if (t <= 0):
 		return 0
 

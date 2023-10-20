@@ -210,7 +210,14 @@ def run_process(
 
     timer.switch_to(time_switcher, "run_main > run > init nitrate")
     if "enabled" == data["params"]["nitrate_process"]:
-        proportion_100 = nitrate.__calculate_proportion_reaching_water_table_array_per_day(len(data["series"]['date']), 100.0, time_switcher)
+        a = params["nitrate_calibration_a"]
+        params = data["params"]
+        μ = params["nitrate_calibration_mu"]
+        σ = params["nitrate_calibration_sigma"]
+        mean_hydraulic_conductivity = params["nitrate_calibration_mean_hydraulic_conductivity"]
+        mean_velocity_of_unsaturated_transport = params["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
+
+        proportion_100 = nitrate.__calculate_proportion_reaching_water_table_array_per_day(len(data["series"]['date']), a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, 100.0, time_switcher)
         data["proportion_100"] = proportion_100
     timer.switch_to(time_switcher, "run_main > run > for")
 

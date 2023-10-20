@@ -16,18 +16,28 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 	# 		print(f"{t},{cumulative},{day}")			
 
 	def test_sum_of_daily_proportion_should_equal_1(self):
+		a = 1.38
+		μ = 1.58
+		σ = 3.96
+		mean_hydraulic_conductivity = 1.7
+		mean_velocity_of_unsaturated_transport = 0.0029, 
 		DTW = 100
 		sum = 0
 		for t in range(1, 1000000):
-			sum += nitrate._calculate_daily_proportion_reaching_water_table(DTW, t)
+			sum += nitrate._calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
 		self.assertAlmostEqual(1, sum, places=2)
 
 	def test_maximum_of_daily_proportion_should_appear_after_several_years(self):
+		a = 1.38
+		μ = 1.58
+		σ = 3.96
+		mean_hydraulic_conductivity = 1.7
+		mean_velocity_of_unsaturated_transport = 0.0029, 
 		DTW = 100
 		t = 0
 		previous_nitrate = 0
 		while True:
-			current_nitrate = nitrate._calculate_daily_proportion_reaching_water_table(DTW, t + 1)
+			current_nitrate = nitrate._calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t + 1)
 			if current_nitrate < previous_nitrate:
 				break
 			t += 1
@@ -35,6 +45,11 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		self.assertEqual(6927, t)
 	
 	def test_calculate_daily_proportion_reaching_water_table_arr(self):
+		a = 1.38
+		μ = 1.58
+		σ = 3.96
+		mean_hydraulic_conductivity = 1.7
+		mean_velocity_of_unsaturated_transport = 0.0029
 		data = {
 			"time_switcher": timer.make_time_switcher(),
 			"series": {
@@ -52,10 +67,15 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		expected = np.array([0.0, 1.110223e-16, 8.770762e-15])
 		proportion_0 = None
 		proportion_100 = None
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, proportion_0, proportion_100)
+		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_daily_proportion_reaching_water_table_arr_when_dtw_is_0(self):
+		a = 1.38
+		μ = 1.58
+		σ = 3.96
+		mean_hydraulic_conductivity = 1.7
+		mean_velocity_of_unsaturated_transport = 0.0029
 		data = {
 			"time_switcher": timer.make_time_switcher(),
 			"series": {
@@ -72,10 +92,15 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		node = 3
 		proportion_0 = "xxx"
 		proportion_100 = None
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, proportion_0, proportion_100)
+		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
 		self.assertEqual("xxx", actual)
 
 	def test_calculate_daily_proportion_reaching_water_table_arr_when_dtw_is_100(self):
+		a = 1.38
+		μ = 1.58
+		σ = 3.96
+		mean_hydraulic_conductivity = 1.7
+		mean_velocity_of_unsaturated_transport = 0.0029
 		data = {
 			"time_switcher": timer.make_time_switcher(),
 			"series": {
@@ -92,7 +117,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		node = 3
 		proportion_0 = None
 		proportion_100 = "xxx"
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, proportion_0, proportion_100)
+		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
 		self.assertEqual("xxx", actual)
 	
 	def test_total_mass_leached_on_day_for_zero_days(self):
