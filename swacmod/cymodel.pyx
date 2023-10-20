@@ -1661,6 +1661,24 @@ def _aggregate_nitrate(
 
     return aggregation
 
+def write_nitrate_csv_bytes(filename, nitrate_aggregation, open=open):
+    stress_period_count = nitrate_aggregation.shape[0]
+    node_count = nitrate_aggregation.shape[1]
+
+    int_to_bytes = []
+    for i in range(1, 1 + max(stress_period_count, node_count)):
+        int_to_bytes.append(str(i).encode())
+
+    with open(filename, "wb") as f:
+        f.write(b'"Stress Period","Node","Recharge Concentration (metric tons/m3)"\r\n')
+        for stress_period_index in range(stress_period_count):
+            stress_period_bytes = int_to_bytes[stress_period_index]
+            for node_index in range(node_count):
+                node = node_index + 1
+                recharge_concentration = nitrate_aggregation[stress_period_index, node_index]
+                line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, recharge_concentration)
+                f.write(line)
+
 ###############################################################################
 
 
