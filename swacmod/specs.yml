@@ -778,6 +778,31 @@ nitrate_process:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
+nitrate_calibration_a:
+    required: false
+    type:
+        - !!python/name:float
+
+nitrate_calibration_mu:
+    required: false
+    type:
+        - !!python/name:float
+
+nitrate_calibration_sigma:
+    required: false
+    type:
+        - !!python/name:float
+
+nitrate_calibration_mean_hydraulic_conductivity:
+    required: false
+    type:
+        - !!python/name:float
+
+nitrate_calibration_mean_velocity_of_unsaturated_transport:
+    required: false
+    type:
+        - !!python/name:float
+
 nitrate_depth_to_water:
     required: false
     alt_format: [yml, csv]
