@@ -1566,7 +1566,10 @@ def _cumulative_fraction_leaked_per_year(double her_at_5_percent, double her_at_
         upper = her_at_95_percent
         lower = her_at_50_percent
     # y = mx + c
-    m = 0.45 / (upper - lower)
+    if upper == lower:
+        m = 0
+    else:
+        m = 0.45 / (upper - lower)
     c = 0.5 - (her_at_50_percent * m)
     y = (m * x) + c
     return max(0, y)
