@@ -210,8 +210,8 @@ def run_process(
 
     timer.switch_to(time_switcher, "run_main > run > init nitrate")
     if "enabled" == data["params"]["nitrate_process"]:
-        a = params["nitrate_calibration_a"]
         params = data["params"]
+        a = params["nitrate_calibration_a"]
         μ = params["nitrate_calibration_mu"]
         σ = params["nitrate_calibration_sigma"]
         mean_hydraulic_conductivity = params["nitrate_calibration_mean_hydraulic_conductivity"]
