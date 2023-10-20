@@ -27,6 +27,9 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 	def test_nitrate_calibration_mu_is_read_from_input_file(self):
 		self.assertEqual(1.58, load_params()["nitrate_calibration_mu"])
 
+	def test_nitrate_calibration_sigma_is_read_from_input_file(self):
+		self.assertEqual(3.96, load_params()["nitrate_calibration_sigma"])
+
 def load_params():
 	input = input_output.load_params_from_yaml(
 		input_file="./test/resources/loading_params/input.yml", 
