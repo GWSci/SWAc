@@ -30,6 +30,9 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 	def test_nitrate_calibration_sigma_is_read_from_input_file(self):
 		self.assertEqual(3.96, load_params()["nitrate_calibration_sigma"])
 
+	def test_nitrate_calibration_mean_hydraulic_conductivity_is_read_from_input_file(self):
+		self.assertEqual(1.7, load_params()["nitrate_calibration_mean_hydraulic_conductivity"])
+
 def load_params():
 	input = input_output.load_params_from_yaml(
 		input_file="./test/resources/loading_params/input.yml", 
