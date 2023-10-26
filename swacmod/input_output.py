@@ -712,6 +712,7 @@ def load_params_from_yaml(
                 base_path = params["temp_file_backed_array_directory"]
                 params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
             elif ext == "csv":
+                logging.debug("\t\tLoading %s", absolute)
                 try:
                     with open(absolute, "r") as csv_file:
                         reader = csv.reader(csv_file)
