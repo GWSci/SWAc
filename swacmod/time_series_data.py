@@ -47,20 +47,14 @@ class Numpy_Dumpy_Time_Series_Data(TimeSeriesData):
 
 class CsvTimeSeriesData(TimeSeriesData):
 	def __init__(self, param_name, csv_filename):
-		
 		try:
-			reader = csv.reader(open(csv_filename, "r"))
-		except IOError as err:
-			message = f"Could not read file: {csv_filename}"
-			raise u.InputOutputError(message)
-		try:
-			rows = [[float(j) for j in row]
-					for row in reader]
-			
-			self.rows = rows
+			with csv_resource.reader_for(csv_filename) as reader:
+				rows = [[float(j) for j in row]
+						for row in reader]			
 		except IndexError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
+		self.rows = rows
 
 	def row(self, index):
 		return self.rows[index]
