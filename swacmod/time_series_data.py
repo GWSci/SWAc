@@ -1,6 +1,4 @@
 import ast
-import csv
-import datetime
 import logging
 import numpy
 import os
