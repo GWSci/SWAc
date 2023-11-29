@@ -30,6 +30,7 @@ from . import finalization as f
 from . import __version__
 from . import time_series_data as time_series_data
 from . import feature_flags as ff
+import swacmod.csv_resource as csv_resource
 
 
 try:
@@ -714,8 +715,7 @@ def load_params_from_yaml(
             elif ext == "csv":
                 logging.debug("\t\tLoading %s", absolute)
                 try:
-                    with open(absolute, "r") as csv_file:
-                        reader = csv.reader(csv_file)
+                    with csv_resource.reader_for(absolute) as reader:
                         rows = [[ast.literal_eval(j) for j in row]
                                 for row in reader]
                 except IOError as err:

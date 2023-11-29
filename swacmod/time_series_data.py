@@ -5,6 +5,7 @@ import logging
 import numpy
 import os
 import swacmod.performance_logging as performance_logging
+import swacmod.csv_resource as csv_resource
 import yaml
 
 try:
@@ -46,6 +47,7 @@ class Numpy_Dumpy_Time_Series_Data(TimeSeriesData):
 
 class CsvTimeSeriesData(TimeSeriesData):
 	def __init__(self, param_name, csv_filename):
+		
 		try:
 			reader = csv.reader(open(csv_filename, "r"))
 		except IOError as err:
@@ -72,14 +74,10 @@ class CsvTimeSeriesData(TimeSeriesData):
 class CsvTimeSeriesData_File_Backed(TimeSeriesData):
 	def __init__(self, base_path, param_name, csv_filename):
 		try:
-			reader = csv.reader(open(csv_filename, "r"))
-		except IOError as err:
-			message = f"Could not read file: {csv_filename}"
-			raise u.InputOutputError(message)
-		try:
-			rows = [[float(j) for j in row]
-					for row in reader]
-			
+			with csv_resource.reader_for(csv_filename) as reader:
+				rows = [[float(j) for j in row]
+						for row in reader]
+				
 			self.rows = convert_rows_to_file_backed_array(base_path, rows, csv_filename)
 		except IndexError as err:
 			message = f"Could not read file: {csv_filename}"
