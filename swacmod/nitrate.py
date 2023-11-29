@@ -13,7 +13,7 @@ def get_nitrate(data, output, node):
 		"nitrate_reaching_water_table_array_tons_per_day" : nitrate["nitrate_reaching_water_table_array_tons_per_day"],
 	}
 
-def calculate_nitrate(data, output, node):
+def calculate_nitrate(data, output, node, logging = logging):
 	length = output["rainfall_ts"].size
 	params = data["params"]
 	if "enabled" == params["nitrate_process"]:
@@ -33,7 +33,7 @@ def calculate_nitrate(data, output, node):
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
-		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day)
+		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, logging)
 		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
 		nitrate_reaching_water_table_array_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day))
 		nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(nitrate_reaching_water_table_array_kg_per_day)
@@ -118,16 +118,15 @@ def _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_
 
 def _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
 	runoff_mm_per_day = output["rapid_runoff"]
-	runoff_recharge_mm_per_day = output["runoff_recharge"]
 	m3_array_kg_per_day = _divide_arrays(
-		m0_array_kg_per_day * (runoff_mm_per_day - runoff_recharge_mm_per_day),
+		m0_array_kg_per_day * (runoff_mm_per_day),
 		her_array_mm_per_day)
 	return m3_array_kg_per_day
 
 def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 	return m1a_array_kg_per_day + m2_array_kg_per_day
 
-def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day):
+def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, logging):
 	m0_kg = m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day
 	is_m0_as_expected = np.allclose(m0_kg, m0_array_kg_per_day)
 	if not is_m0_as_expected:

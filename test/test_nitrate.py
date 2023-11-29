@@ -203,8 +203,7 @@ class Test_Nitrate(unittest.TestCase):
 	def test_calculate_m3_array_kg_per_day(self):
 		data = None
 		output = {
-			"rapid_runoff" : np.array([100.0, 100.0]),
-			"runoff_recharge" : np.array([45.0, 45.0]),
+			"rapid_runoff" : np.array([55.0, 55.0]),
 		}
 		node = None
 		her_array_mm_per_day = np.array([11.0, 0.0])
@@ -266,13 +265,13 @@ class Test_Nitrate(unittest.TestCase):
 			"combined_recharge": np.array([5, 5]),
 		}
 		node = 7
-		actual = nitrate.calculate_nitrate(data, output, node)
+		actual = nitrate.calculate_nitrate(data, output, node, logging = DummyLogger())
 		np.testing.assert_array_almost_equal(np.array([80.0, 80.0]), actual["her_array_mm_per_day"])
 		np.testing.assert_array_almost_equal(np.array([100.0, 100.0]), actual["m0_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([50.0, 50.0]), actual["m1_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([10.0, 18.0]), actual["m1a_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([20.0, 20.0]), actual["m2_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([30.0, 30.0]), actual["m3_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([40.0, 40.0]), actual["m3_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([30.0, 38.0]), actual["mi_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.6]), actual["proportion_reaching_water_table_array_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 18.0]), actual["nitrate_reaching_water_table_array_kg_per_day"])
@@ -349,3 +348,7 @@ def calculate_total_mass_leached_for_test(days, her_per_day):
 			her_at_95_percent,
 			days,
 			her_per_day)
+
+class DummyLogger:
+	def warning(self, str):
+		pass
