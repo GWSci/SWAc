@@ -76,12 +76,12 @@ class CsvTimeSeriesData_File_Backed(TimeSeriesData):
 		try:
 			with csv_resource.reader_for(csv_filename) as reader:
 				rows = [[float(j) for j in row]
-						for row in reader]
-				
-			self.rows = convert_rows_to_file_backed_array(base_path, rows, csv_filename)
+						for row in reader]				
 		except IndexError as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)
+
+		self.rows = convert_rows_to_file_backed_array(base_path, rows, csv_filename)
 
 	def row(self, index):
 		return self.rows[index]
