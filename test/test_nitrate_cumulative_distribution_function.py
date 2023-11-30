@@ -1,5 +1,4 @@
 from datetime import date
-from swacmod import compile_model
 import swacmod.model as m
 import swacmod.nitrate as nitrate
 import numpy as np
@@ -7,14 +6,6 @@ import swacmod.timer as timer
 import unittest
 
 class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
-	# def test_x(self):
-	# 	DTW = 100
-	# 	print("t,f,n_prop_i")
-	# 	for t in range(0, 100000, 1000):
-	# 		cumulative = nitrate._calculate_cumulative_proportion_reaching_water_table(DTW, t)
-	# 		day = nitrate._calculate_daily_proportion_reaching_water_table(DTW, t)
-	# 		print(f"{t},{cumulative},{day}")			
-
 	def test_sum_of_daily_proportion_should_equal_1(self):
 		a = 1.38
 		μ = 1.58
