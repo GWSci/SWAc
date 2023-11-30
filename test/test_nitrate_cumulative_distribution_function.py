@@ -58,13 +58,13 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 				"node_areas" : {
 					3: 50
 				}, "nitrate_depth_to_water" : {
-					3: [0.0001]
+					3: [0.001]
 				}
 			},
 		}
 		output = None
 		node = 3
-		expected = np.array([0.0, 0.9956426, 0.0035860])
+		expected = np.array([0.0, 0.793244, 0.120028])
 		proportion_0 = None
 		proportion_100 = None
 		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
