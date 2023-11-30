@@ -170,7 +170,7 @@ def _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydrau
 	μ = 1.58
 	σ = 3.96
 
-	numerator = math.log((1.7/0.0029) * (DTW/t), a) - μ
+	numerator = math.log((mean_hydraulic_conductivity/mean_velocity_of_unsaturated_transport) * (DTW/t), a) - μ
 	denominator = σ * math.sqrt(2)
 
 	result = 0.5 * (1 + math.erf(- numerator / denominator))

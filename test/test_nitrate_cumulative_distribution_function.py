@@ -20,7 +20,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		μ = 1.58
 		σ = 3.96
 		mean_hydraulic_conductivity = 1.7
-		mean_velocity_of_unsaturated_transport = 0.0029, 
+		mean_velocity_of_unsaturated_transport = 0.0029
 		DTW = 100
 		sum = 0
 		for t in range(1, 1000000):
@@ -32,7 +32,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		μ = 1.58
 		σ = 3.96
 		mean_hydraulic_conductivity = 1.7
-		mean_velocity_of_unsaturated_transport = 0.0029, 
+		mean_velocity_of_unsaturated_transport = 0.0029
 		DTW = 100
 		t = 0
 		previous_nitrate = 0
