@@ -70,6 +70,19 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
 		np.testing.assert_array_almost_equal(expected, actual)
 
+	def test_calculate_cumulative_proportion_reaching_water_table_varies_with_params(self):
+		a = 1.38
+		μ = 1.58
+		σ = 3.96
+		mean_hydraulic_conductivity = 1.7
+		mean_velocity_of_unsaturated_transport = 0.0029
+		DTW = 0.001
+		t = 1
+		original = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
+		different_a = nitrate._calculate_cumulative_proportion_reaching_water_table(100, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
+		self.assertEqual(0.793244345253982, original)
+		self.assertEqual(0.6657750500569044, different_a)
+
 	def test_calculate_daily_proportion_reaching_water_table_arr_when_dtw_is_0(self):
 		a = 1.38
 		μ = 1.58
