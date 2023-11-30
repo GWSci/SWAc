@@ -80,8 +80,10 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		t = 1
 		original = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
 		different_a = nitrate._calculate_cumulative_proportion_reaching_water_table(100, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
+		different_μ = nitrate._calculate_cumulative_proportion_reaching_water_table(a, 0.05, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
 		self.assertEqual(0.793244345253982, original)
 		self.assertEqual(0.6657750500569044, different_a)
+		self.assertEqual(0.793244345253982, different_μ)
 
 	def test_calculate_daily_proportion_reaching_water_table_arr_when_dtw_is_0(self):
 		a = 1.38
