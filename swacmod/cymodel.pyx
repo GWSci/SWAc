@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# cython: language_level=3, boundscheck=False
+# cython: language_level=3, boundscheck=True, wraparound=True
 
 
 # Third Party Libraries
