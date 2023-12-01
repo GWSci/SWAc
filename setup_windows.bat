@@ -8,6 +8,6 @@ if %errorlevel% neq 0 (
 @echo on
 python -m venv env || exit /b
 
-call env/Scripts/activate.bat
-pip install -r requirements3.txt
-deactivate
+call env/Scripts/activate.bat || exit /b
+pip install -r requirements3.txt || exit /b
+deactivate || exit /b
