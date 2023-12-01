@@ -1,5 +1,5 @@
 @echo off
-where python
+where python >nul 2>nul
 if %errorlevel% neq 0 (
     echo Cannot find Python. Please install it from www.python.org and rerun this script.
     exit /b
