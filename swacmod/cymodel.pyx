@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# cython: language_level=3, boundscheck=False
+# cython: language_level=3, boundscheck=False, wraparound=True
 
 
 # Third Party Libraries
@@ -798,6 +798,7 @@ def get_interflow(data, output, node):
         size_t num
         double[:] recharge = np.zeros(length)
         double[:] rivers = np.zeros(length)
+        double previous_interflow_store_input = 0.0
 
     if params['interflow_process'] == 'enabled':
         col_interflow_volume = np.full([length], volume)
@@ -816,13 +817,15 @@ def get_interflow(data, output, node):
                             volume, np.asarray(var5))
         rivers = (np.full([length], volume) - np.asarray(recharge)) * var8
 
+        previous_interflow_store_input = 0.0
         for num in range(length):
             var1 = volume - min(var5[num], volume)
-            volume = interflow_store_input[num-1] + var1 * (1 - var8[num])
+            volume = previous_interflow_store_input + var1 * (1 - var8[num])
             col_interflow_volume[num] = volume
             col_infiltration_recharge[num] = min(var5[num], volume)
             var6 = (col_interflow_volume[num] - col_infiltration_recharge[num])
             col_interflow_to_rivers[num] = var6 * var8[num]
+            previous_interflow_store_input = interflow_store_input[num]
 
     col = {}
     col['interflow_volume'] = col_interflow_volume.base
