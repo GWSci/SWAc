@@ -160,7 +160,7 @@ def _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day,
 	return M4out_array_kg
 
 def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, logging):
-	m0_kg = m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day
+	m0_kg = m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day + m4_array_kg_per_day - m4out_array_kg_per_day
 	is_m0_as_expected = np.allclose(m0_kg, m0_array_kg_per_day)
 	if not is_m0_as_expected:
 		for i in range(m0_kg.size):
