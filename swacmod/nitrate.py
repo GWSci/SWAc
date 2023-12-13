@@ -128,8 +128,7 @@ def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 
 def _calculate_dSMD_array_mm_per_day(data, output, node):
 	smd_array_mm_per_day = output["smd"]
-	x = np.array(smd_array_mm_per_day)
-	x = np.roll(x, -1)
+	x = np.roll(smd_array_mm_per_day, -1)
 	if (x.size > 0):
 		x[-1] = 0.0
 	return smd_array_mm_per_day - x
