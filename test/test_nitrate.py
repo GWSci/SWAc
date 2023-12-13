@@ -254,21 +254,12 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_M4_array_mm_per_day_for_zero_days(self):
-		data = None
-		output = {
-			"smd" : np.array([]),
-			"tawtew": np.array([]),
-		}
-		node = None
 		dSMD_array_mm_per_day = np.array([])
 		her_array_mm_per_day = np.array([])
 		m0_array_kg_per_day = np.array([])
-		actual_M4, actual_M4out = nitrate._calculate_M4_and_M4out_arrays_mm_per_day_for_zero_days(
-			data, output, node, dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day)
-		expected_M4 = np.array([])
-		expected_M4out = np.array([])
-		np.testing.assert_array_almost_equal(expected_M4, actual_M4)
-		np.testing.assert_array_almost_equal(expected_M4out, actual_M4out)
+		actual = nitrate._calculate_M4_array_mm_per_day_for_zero_days(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day)
+		expected = np.array([])
+		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_M4_array_mm_per_day_for_one_day_zero_dSMD(self):
 		data = None
