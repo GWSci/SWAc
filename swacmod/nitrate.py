@@ -135,7 +135,15 @@ def _calculate_dSMD_array_mm_per_day(data, output, node):
 
 def _calculate_M4_and_M4out_arrays_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day):
 	M4_array_kg = _calculate_M4_array_mm_per_day_for_zero_days(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day)
+	M4out_array_kg = _calculate_M4out_array_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
+	return M4_array_kg, M4out_array_kg
 
+def _calculate_M4_array_mm_per_day_for_zero_days(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day):
+	Psmd = np.maximum(0.0, dSMD_array_mm_per_day) / her_array_mm_per_day
+	M4_array_kg = Psmd * m0_array_kg_per_day
+	return M4_array_kg
+
+def _calculate_M4out_array_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, M4_array_kg):
 	TAW_array_mm = output["tawtew"]
 	SMD_array_mm = output["smd"]
 	soil_store_array_mm = TAW_array_mm - SMD_array_mm
@@ -147,12 +155,7 @@ def _calculate_M4_and_M4out_arrays_mm_per_day_for_zero_days(data, output, node, 
 		M4out_kg = prop_soil_store[day] * M4tot_kg
 		M4out_array_kg[day] = M4out_kg
 		M4tot_kg -= M4out_kg
-	return M4_array_kg, M4out_array_kg
-
-def _calculate_M4_array_mm_per_day_for_zero_days(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day):
-	Psmd = np.maximum(0.0, dSMD_array_mm_per_day) / her_array_mm_per_day
-	M4_array_kg = Psmd * m0_array_kg_per_day
-	return M4_array_kg
+	return M4out_array_kg
 
 def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, logging):
 	m0_kg = m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day
