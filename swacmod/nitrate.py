@@ -133,6 +133,9 @@ def _calculate_dSMD_array_mm_per_day(data, output, node):
 		next_day_smd[-1] = 0.0
 	return smd - next_day_smd
 
+def _calculate_M4_and_M4out_arrays_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day):
+	pass
+
 def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, logging):
 	m0_kg = m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day
 	is_m0_as_expected = np.allclose(m0_kg, m0_array_kg_per_day)
