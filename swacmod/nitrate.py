@@ -133,7 +133,7 @@ def _calculate_dSMD_array_mm_per_day(data, output, node):
 		next_day_smd[-1] = 0.0
 	return smd - next_day_smd
 
-def _calculate_M4_and_M4out_arrays_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day):
+def _calculate_M4_and_M4out_arrays_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, her_array_mm_per_day):
 	M4 = np.array([])
 	M4out = np.array([])
 	return M4, M4out
