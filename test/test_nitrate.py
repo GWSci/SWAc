@@ -243,6 +243,16 @@ class Test_Nitrate(unittest.TestCase):
 		expected = np.array([7.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
+	def test_calculate_dSMD_array_mm_per_day_for_three_days(self):
+		data = None
+		output = {
+			"smd" : np.array([100.0, 10.0, 1.0]),
+		}
+		node = None
+		actual = nitrate._calculate_dSMD_array_mm_per_day(data, output, node)
+		expected = np.array([90.0, 9.0, 1.0])
+		np.testing.assert_array_almost_equal(expected, actual)
+
 	def test_convert_kg_to_tons_array(self):
 		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(np.array([])))
 		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(np.array([1000.0])))
