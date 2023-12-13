@@ -134,13 +134,13 @@ def _calculate_dSMD_array_mm_per_day(data, output, node):
 	return smd - next_day_smd
 
 def _calculate_M4_and_M4out_arrays_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day):
-	Psmd = np.maximum(0, dSMD_array_mm_per_day) / her_array_mm_per_day
+	Psmd = np.maximum(0.0, dSMD_array_mm_per_day) / her_array_mm_per_day
 	M4_array_kg = Psmd * m0_array_kg_per_day
 
 	TAW_array_mm = output["tawtew"]
 	SMD_array_mm = output["smd"]
 	soil_store_array_mm = TAW_array_mm - SMD_array_mm
-	prop_soil_store = - np.minimum(0, dSMD_array_mm_per_day) / soil_store_array_mm
+	prop_soil_store = - np.minimum(0.0, dSMD_array_mm_per_day) / soil_store_array_mm
 	M4out_array_kg = np.zeros_like(dSMD_array_mm_per_day)
 	M4tot_kg = 0
 	for day in range(M4out_array_kg.size):
