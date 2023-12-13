@@ -127,11 +127,12 @@ def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 	return m1a_array_kg_per_day + m2_array_kg_per_day
 
 def _calculate_dSMD_array_mm_per_day(data, output, node):
-	x = np.array(output["smd"])
+	smd_array_mm_per_day = output["smd"]
+	x = np.array(smd_array_mm_per_day)
 	x = np.roll(x, -1)
 	if (x.size > 0):
 		x[-1] = 0.0
-	return output["smd"] - x
+	return smd_array_mm_per_day - x
 
 def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, logging):
 	m0_kg = m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day
