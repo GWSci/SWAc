@@ -33,7 +33,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(data, output, node)
-		m4_array_kg_per_day = _calculate_M4_array_mm_per_day_for_zero_days(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day)
+		m4_array_kg_per_day = _calculate_M4_array_mm_per_day(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day)
 		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
 		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, logging)
 		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
@@ -138,7 +138,7 @@ def _calculate_dSMD_array_mm_per_day(data, output, node):
 		next_day_smd[-1] = 0.0
 	return smd - next_day_smd
 
-def _calculate_M4_array_mm_per_day_for_zero_days(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day):
+def _calculate_M4_array_mm_per_day(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day):
 	Psmd = np.maximum(0.0, dSMD_array_mm_per_day) / her_array_mm_per_day
 	M4_array_kg = Psmd * m0_array_kg_per_day
 	return M4_array_kg
