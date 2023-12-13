@@ -126,6 +126,9 @@ def _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_
 def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 	return m1a_array_kg_per_day + m2_array_kg_per_day
 
+def _calculate_dSMD_array_mm_per_day(data, output, node):
+	return output["smd"]
+
 def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, logging):
 	m0_kg = m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day
 	is_m0_as_expected = np.allclose(m0_kg, m0_array_kg_per_day)
