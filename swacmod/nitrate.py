@@ -59,6 +59,8 @@ def calculate_nitrate(data, output, node, logging = logging):
 			"m1a_array_kg_per_day" : empty_array,
 			"m2_array_kg_per_day" : empty_array,
 			"m3_array_kg_per_day" : empty_array,
+			"m4_array_kg_per_day" : empty_array,
+			"m4out_array_kg_per_day" : empty_array,
 			"mi_array_kg_per_day" : empty_array,
 			"proportion_reaching_water_table_array_per_day" : empty_array,
 			"nitrate_reaching_water_table_array_kg_per_day" : empty_array,
