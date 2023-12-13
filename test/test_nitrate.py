@@ -256,6 +256,7 @@ class Test_Nitrate(unittest.TestCase):
 	def test_calculate_M4_and_M4out_arrays_mm_per_day_for_zero_days(self):
 		data = None
 		output = {
+			"tawtew": np.array([]),
 		}
 		node = None
 		dSMD_array_mm_per_day = np.array([])
