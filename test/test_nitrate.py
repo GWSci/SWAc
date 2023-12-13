@@ -315,7 +315,7 @@ class Test_Nitrate(unittest.TestCase):
 		node = None
 		dSMD_array_mm_per_day = np.array([])
 		M4_array_kg = np.array([])
-		actual = nitrate._calculate_M4out_array_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
+		actual = nitrate._calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
 		expected = np.array([])
 		np.testing.assert_array_almost_equal(expected, actual)
 
@@ -328,7 +328,7 @@ class Test_Nitrate(unittest.TestCase):
 		node = None
 		dSMD_array_mm_per_day = np.array([0.0])
 		M4_array_kg = np.array([0.0])
-		actual = nitrate._calculate_M4out_array_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
+		actual = nitrate._calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
 		expected = np.array([0.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
@@ -341,7 +341,7 @@ class Test_Nitrate(unittest.TestCase):
 		node = None
 		dSMD_array_mm_per_day = np.array([22.0])
 		M4_array_kg = np.array([55.0])
-		actual = nitrate._calculate_M4out_array_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
+		actual = nitrate._calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
 		expected = np.array([0.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
@@ -354,7 +354,7 @@ class Test_Nitrate(unittest.TestCase):
 		node = None
 		dSMD_array_mm_per_day = np.array([-22.0])
 		M4_array_kg = np.array([0.0])
-		actual = nitrate._calculate_M4out_array_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
+		actual = nitrate._calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
 		expected = np.array([0.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
@@ -367,7 +367,7 @@ class Test_Nitrate(unittest.TestCase):
 		node = None
 		dSMD_array_mm_per_day = np.array([34.0, 57.0, 115.0])
 		M4_array_kg = np.array([119.0, 209.0, 299.0])
-		actual = nitrate._calculate_M4out_array_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
+		actual = nitrate._calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
 		expected = np.array([0.0, 0.0, 0.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
@@ -380,7 +380,7 @@ class Test_Nitrate(unittest.TestCase):
 		node = None
 		dSMD_array_mm_per_day = np.array([34.0, 57.0, 115.0, -27.0, -29.0, -31])
 		M4_array_kg = np.array([119.0, 209.0, 299.0, 0.0, 0.0, 0.0])
-		actual = nitrate._calculate_M4out_array_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
+		actual = nitrate._calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
 		expected = np.array([0.0, 0.0, 0.0, 33.0, 198.0, 36.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 

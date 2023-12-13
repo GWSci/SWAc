@@ -143,7 +143,7 @@ def _calculate_M4_array_mm_per_day(dSMD_array_mm_per_day, her_array_mm_per_day, 
 	M4_array_kg = Psmd * m0_array_kg_per_day
 	return M4_array_kg
 
-def _calculate_M4out_array_mm_per_day_for_zero_days(data, output, node, dSMD_array_mm_per_day, M4_array_kg):
+def _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg):
 	TAW_array_mm = output["tawtew"]
 	SMD_array_mm = output["smd"]
 	soil_store_array_mm = TAW_array_mm - SMD_array_mm
