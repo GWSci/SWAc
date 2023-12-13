@@ -147,6 +147,7 @@ def _calculate_M4_and_M4out_arrays_mm_per_day_for_zero_days(data, output, node, 
 		M4tot_kg += M4_array_kg[day]
 		M4out_kg = prop_soil_store[day] * M4tot_kg
 		M4out_array_kg[day] = M4out_kg
+		M4tot_kg -= M4out_kg
 	return M4_array_kg, M4out_array_kg
 
 def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, logging):
