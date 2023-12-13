@@ -424,6 +424,7 @@ class Test_Nitrate(unittest.TestCase):
 			"macropore_dir": np.array([4.0, 4.0]),
 			"rapid_runoff": np.array([32.0, 32.0]),
 			"combined_recharge": np.array([5, 5]),
+			"smd" : np.array([20.0, -4.0]),
 		}
 		node = 7
 		actual = nitrate.calculate_nitrate(data, output, node, logging = DummyLogger())
@@ -433,6 +434,7 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([10.0, 18.0]), actual["m1a_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([20.0, 20.0]), actual["m2_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([40.0, 40.0]), actual["m3_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([30.0, 0.0]), actual["m4_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([30.0, 38.0]), actual["mi_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.6]), actual["proportion_reaching_water_table_array_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 18.0]), actual["nitrate_reaching_water_table_array_kg_per_day"])
@@ -468,6 +470,7 @@ class Test_Nitrate(unittest.TestCase):
 			"macropore_dir": np.array([4.0, 4.0]),
 			"rapid_runoff": np.array([32.0, 32.0]),
 			"combined_recharge": np.array([5, 5]),
+			"smd" : np.array([30.0, 6.0]),
 		}
 		node = 7
 		actual = nitrate.calculate_nitrate(data, output, node)
