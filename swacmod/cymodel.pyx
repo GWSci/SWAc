@@ -1086,7 +1086,6 @@ def get_recharge(data, output, node):
 def get_mf6rch_file(data, rchrate):
     """get mf6 RCH object."""
 
-    import flopy
     import numpy as np
     import os.path
 
@@ -1791,7 +1790,6 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
 def get_sfr_file(data, runoff):
     """get SFR object."""
 
-    import flopy
     import numpy as np
     import copy
     import os.path
@@ -2064,7 +2062,6 @@ def get_sfr_file(data, runoff):
 def get_str_file(data, runoff):
     """get STR object."""
 
-    import flopy
     import numpy as np
     import copy
     import os.path
@@ -2407,7 +2404,6 @@ def get_swabs(data, output, node):
 def get_evt_file(data, evtrate):
     """get EVT object."""
 
-    import flopy
     import numpy as np
     import os.path
 
