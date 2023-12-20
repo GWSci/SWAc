@@ -1,13 +1,13 @@
 backcall==0.2.0
 Cython==0.29.35
 decorator==4.4.1
-flopy==3.3.6
+flopy==3.3.2
 h5py==3.8.0
 ipython==7.15.0
 ipython-genutils==0.2.0
 jedi==0.17.0
 networkx==3.1
-numpy==1.25.0
+numpy==1.23.2
 pandas==2.0.0
 parso==0.7.0
 pexpect==4.8.0
