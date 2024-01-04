@@ -410,9 +410,7 @@ class Test_Nitrate(unittest.TestCase):
 		self.assertTrue(actual)
 
 	def test_is_mass_balanced_for_balanced_singleton_arrays(self):
-		m0_kg = np.array([1.234])
-		m0_array_kg_per_day = np.array([1.234])
-		self.assertTrue(nitrate._is_mass_balanced(m0_kg, m0_array_kg_per_day))
+		self.assert_masses_balanced([1.234], [1.234])
 
 	def test_is_mass_balanced_for_unbalanced_singleton_arrays(self):
 		m0_kg = np.array([1.234])
