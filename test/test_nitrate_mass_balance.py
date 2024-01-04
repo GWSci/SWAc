@@ -155,17 +155,12 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_M4out_array_mm_per_day(expected, input_smd, input_tawtew, input_dSMD_array_mm_per_day, input_M4_array_kg)
 
 	def test_calculate_M4out_array_mm_per_day_for_three_days_positive_dSMD_followed_by_three_days_negative_dSMD(self):
-		data = None
-		output = {
-			"smd" : np.array([1.0, 1.0, 1.0, 87.0, 13.0, 59.0]),
-			"tawtew": np.array([3.0, 3.0, 3.0, 600.0, 100.0, 400.0]),
-		}
-		node = None
-		dSMD_array_mm_per_day = np.array([34.0, 57.0, 115.0, -27.0, -29.0, -31])
-		M4_array_kg = np.array([119.0, 209.0, 299.0, 0.0, 0.0, 0.0])
-		actual = nitrate._calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg)
-		expected = np.array([0.0, 0.0, 0.0, 33.0, 198.0, 36.0])
-		np.testing.assert_array_almost_equal(expected, actual)
+		input_smd = [1.0, 1.0, 1.0, 87.0, 13.0, 59.0]
+		input_tawtew = [3.0, 3.0, 3.0, 600.0, 100.0, 400.0]
+		input_dSMD_array_mm_per_day = [34.0, 57.0, 115.0, -27.0, -29.0, -31]
+		input_M4_array_kg = [119.0, 209.0, 299.0, 0.0, 0.0, 0.0]
+		expected = [0.0, 0.0, 0.0, 33.0, 198.0, 36.0]
+		self.assert_M4out_array_mm_per_day(expected, input_smd, input_tawtew, input_dSMD_array_mm_per_day, input_M4_array_kg)
 
 	def test_is_mass_balanced_for_empty_arrays(self):
 		self.assert_masses_balanced([], [])
