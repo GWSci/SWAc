@@ -29,14 +29,7 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_dSMD_array_mm_per_day_for_one_day(self):
-		data = None
-		output = {
-			"smd" : np.array([7.0]),
-		}
-		node = None
-		actual = nitrate._calculate_dSMD_array_mm_per_day(data, output, node)
-		expected = np.array([7.0])
-		np.testing.assert_array_almost_equal(expected, actual)
+		self.assert_dSMD_array_mm_per_day([7.0], [7.0])
 
 	def test_calculate_dSMD_array_mm_per_day_for_three_days(self):
 		self.assert_dSMD_array_mm_per_day([90.0, 9.0, 1.0], [100.0, 10.0, 1.0])
