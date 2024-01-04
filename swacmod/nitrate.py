@@ -141,9 +141,11 @@ def _calculate_dSMD_array_mm_per_day(data, output, node):
 	return smd - next_day_smd
 
 def _calculate_M4_array_mm_per_day(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day):
-	positive_dSMD_array_mm_per_day = np.maximum(0.0, dSMD_array_mm_per_day)
-	Psmd = np.zeros_like(positive_dSMD_array_mm_per_day)
-	Psmd = np.divide(positive_dSMD_array_mm_per_day, her_array_mm_per_day, out = Psmd, where=(her_array_mm_per_day != 0))
+	Psmd = np.divide(
+		np.maximum(0.0, dSMD_array_mm_per_day),
+		her_array_mm_per_day,
+		out = np.zeros_like(dSMD_array_mm_per_day),
+		where=(her_array_mm_per_day != 0))
 	M4_array_kg = Psmd * m0_array_kg_per_day
 	return M4_array_kg
 
