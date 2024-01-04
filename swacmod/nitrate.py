@@ -35,6 +35,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(pp, p_non, m0_array_kg_per_day, her_array_mm_per_day)
 		dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(data, output, node)
+		Psmd = _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day)
 		m4_array_kg_per_day = _calculate_M4_array_mm_per_day(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day)
 		m4out_array_kg_per_day = _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, m4_array_kg_per_day)
 		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
@@ -156,6 +157,14 @@ def _calculate_M4_array_mm_per_day(dSMD_array_mm_per_day, her_array_mm_per_day, 
 		where=(her_array_mm_per_day != 0))
 	M4_array_kg = Psmd * m0_array_kg_per_day
 	return M4_array_kg
+
+def _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day):
+	Psmd = np.divide(
+		np.maximum(0.0, dSMD_array_mm_per_day),
+		her_array_mm_per_day,
+		out = np.zeros_like(dSMD_array_mm_per_day),
+		where=(her_array_mm_per_day != 0))
+	return Psmd
 
 def _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg):
 	TAW_array_mm = output["tawtew"]
