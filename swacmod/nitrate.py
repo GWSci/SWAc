@@ -139,7 +139,7 @@ def _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_
 	return m3_array_kg_per_day
 
 def _calculate_m3_array_kg_per_day_new(pp, p_non, m0_array_kg_per_day):
-	return m0_array_kg_per_day * (1 - pp)
+	return m0_array_kg_per_day * (1 - pp - p_non)
 
 
 def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
