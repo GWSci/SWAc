@@ -406,6 +406,8 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_masses_not_balanced([1.234], [5.678])
 		self.assert_masses_balanced([1.234, 5.678, 9.012], [1.234, 5.678, 9.012])
 		self.assert_masses_not_balanced([1.234, 5.678, 9.012], [1.234, 7.890, 9.012])
+		self.assert_masses_balanced([0], [1e-8])
+		self.assert_masses_not_balanced([0], [1e-7])
 
 	def assert_masses_balanced(self, m1, m2):
 		m1_np = np.array(m1)
