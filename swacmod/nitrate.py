@@ -164,21 +164,34 @@ def _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day,
 	return M4out_array_kg
 
 def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, logging):
-	m0_kg = m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day + m4_array_kg_per_day - m4out_array_kg_per_day
-	is_m0_as_expected = np.allclose(m0_kg, m0_array_kg_per_day)
+	m0_kg = _calculate_m0_kg_for_balance(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day)
+	is_m0_as_expected = _is_mass_balanced(m0_kg, m0_array_kg_per_day)
 	if not is_m0_as_expected:
-		for i in range(m0_kg.size):
-			if not np.isclose(m0_kg[i], m0_array_kg_per_day[i]):
-				break
-		m0 = m0_array_kg_per_day[i]
-		m1 = m1_array_kg_per_day[i]
-		m2 = m2_array_kg_per_day[i]
-		m3 = m3_array_kg_per_day[i]
-		m4 = m4_array_kg_per_day[i]
-		m4out = m4out_array_kg_per_day[i]
-		diff = abs(m0_kg[i] - m0_array_kg_per_day[i])
-		message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3 + M4 - M4out. The first day that does not balance is at index {i} with a difference of {diff} kg. M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg and M3 = {m3} kg; M4 = {m4} kg; M4out = {m4out} kg."
+		i = _find_unbalanced_day_to_report(m0_kg, m0_array_kg_per_day)
+		message = _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, m0_kg, i)
 		logging.warning(message)
+
+def _calculate_m0_kg_for_balance(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day):
+	return m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day + m4_array_kg_per_day - m4out_array_kg_per_day
+
+def _is_mass_balanced(m0_kg, m0_array_kg_per_day):
+	return np.allclose(m0_kg, m0_array_kg_per_day)
+
+def _find_unbalanced_day_to_report(m0_kg, m0_array_kg_per_day):
+	for i in range(m0_kg.size):
+		if not np.isclose(m0_kg[i], m0_array_kg_per_day[i]):
+			return i
+
+def _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, m0_kg, i):
+	m0 = m0_array_kg_per_day[i]
+	m1 = m1_array_kg_per_day[i]
+	m2 = m2_array_kg_per_day[i]
+	m3 = m3_array_kg_per_day[i]
+	m4 = m4_array_kg_per_day[i]
+	m4out = m4out_array_kg_per_day[i]
+	diff = abs(m0_kg[i] - m0_array_kg_per_day[i])
+	message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3 + M4 - M4out. The first day that does not balance is at index {i} with a difference of {diff} kg. M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg and M3 = {m3} kg; M4 = {m4} kg; M4out = {m4out} kg."
+	return message
 
 def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100):	
 	time_switcher = data["time_switcher"]
