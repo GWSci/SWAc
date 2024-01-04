@@ -31,6 +31,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		pp = _calculate_pp(data, output, node, her_array_mm_per_day)
 		m1_array_kg_per_day = _calculate_m1_array_kg_per_day(m0_array_kg_per_day, pp)
 		m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
+		p_non = _calculate_p_non(data, output, node, her_array_mm_per_day)
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(data, output, node)
@@ -117,6 +118,14 @@ def _divide_arrays(a, b):
 
 def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 	return m._calculate_m1a_array_kg_per_day(output, m1_array_kg_per_day)
+
+def _calculate_p_non(data, output, node, her_array_mm_per_day):
+	runoff_recharge_mm_per_day = output["runoff_recharge"]
+	macropore_att_mm_per_day = output["macropore_att"]
+	macropore_dir_mm_per_day = output["macropore_dir"]
+	macropore_mm_per_day = macropore_att_mm_per_day + macropore_dir_mm_per_day
+	p_non = _divide_arrays((runoff_recharge_mm_per_day + macropore_mm_per_day), her_array_mm_per_day)
+	return p_non
 
 def _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
 	runoff_recharge_mm_per_day = output["runoff_recharge"]
