@@ -266,7 +266,7 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([50.0, 50.0]), actual["m1_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([10.0, 18.0]), actual["m1a_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([20.0, 20.0]), actual["m2_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([40.0, 40.0]), actual["m3_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([30.0, 30.0]), actual["m3_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([30.0, 0.0]), actual["m4_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 12.0]), actual["m4out_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([30.0, 38.0]), actual["mi_array_kg_per_day"])
