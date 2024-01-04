@@ -32,7 +32,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		m1_array_kg_per_day = _calculate_m1_array_kg_per_day(m0_array_kg_per_day, pp)
 		m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
 		p_non = _calculate_p_non(data, output, node, her_array_mm_per_day)
-		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day, p_non)
+		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(data, output, node)
 		m4_array_kg_per_day = _calculate_M4_array_mm_per_day(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day)
@@ -127,7 +127,7 @@ def _calculate_p_non(data, output, node, her_array_mm_per_day):
 	p_non = _divide_arrays((runoff_recharge_mm_per_day + macropore_mm_per_day), her_array_mm_per_day)
 	return p_non
 
-def _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day, p_non):
+def _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non):
 	m2_kg_per_day = m0_array_kg_per_day * p_non
 	return m2_kg_per_day
 
