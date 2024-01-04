@@ -136,7 +136,7 @@ def _calculate_m3_array_kg_per_day(pp, p_non, m0_array_kg_per_day, her_array_mm_
 	Pro = np.where(
 		her_array_mm_per_day <= 0,
 		0,
-		1 - pp - p_non)
+		1 - pp - p_non - Psmd)
 	return m0_array_kg_per_day * Pro
 
 def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
