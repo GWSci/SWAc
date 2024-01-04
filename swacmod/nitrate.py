@@ -29,7 +29,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
 		m0_array_kg_per_day = _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day)
 		pp = _calculate_pp(data, output, node, her_array_mm_per_day)
-		m1_array_kg_per_day = _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
+		m1_array_kg_per_day = _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day, pp)
 		m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day)
@@ -108,9 +108,7 @@ def _calculate_pp(data, output, node, her_array_mm_per_day):
 	pp = _divide_arrays(perc_through_root_mm_per_day, her_array_mm_per_day)
 	return pp
 
-def _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day):
-	perc_through_root_mm_per_day = output["perc_through_root"]
-	pp = _divide_arrays(perc_through_root_mm_per_day, her_array_mm_per_day)
+def _calculate_m1_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_kg_per_day, pp):
 	m1_kg_per_day = pp * m0_kg_per_day
 	return m1_kg_per_day
 
