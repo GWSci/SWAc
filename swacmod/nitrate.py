@@ -178,7 +178,7 @@ def _is_mass_balanced(m0_kg, m0_array_kg_per_day):
 	return np.allclose(m0_kg, m0_array_kg_per_day, atol=0.0001)
 
 def _find_unbalanced_day_to_report(m0_kg, m0_array_kg_per_day):
-	return np.argmax(m0_kg - m0_array_kg_per_day)
+	return np.argmax(np.abs(m0_kg - m0_array_kg_per_day))
 
 def _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, m0_kg, i):
 	m0 = m0_array_kg_per_day[i]
