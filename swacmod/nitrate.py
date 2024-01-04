@@ -131,16 +131,8 @@ def _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non):
 	m2_kg_per_day = m0_array_kg_per_day * p_non
 	return m2_kg_per_day
 
-def _calculate_m3_array_kg_per_day(data, output, node, her_array_mm_per_day, m0_array_kg_per_day):
-	runoff_mm_per_day = output["rapid_runoff"]
-	m3_array_kg_per_day = _divide_arrays(
-		m0_array_kg_per_day * (runoff_mm_per_day),
-		her_array_mm_per_day)
-	return m3_array_kg_per_day
-
 def _calculate_m3_array_kg_per_day_new(pp, p_non, m0_array_kg_per_day):
 	return m0_array_kg_per_day * (1 - pp - p_non)
-
 
 def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 	return m1a_array_kg_per_day + m2_array_kg_per_day
