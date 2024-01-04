@@ -421,6 +421,15 @@ class Test_Nitrate(unittest.TestCase):
 		actual = nitrate._is_mass_balanced(m1_np, m2_np)
 		self.assertFalse(actual)
 
+	def test_find_unbalanced_day_to_report(self):
+		self.assert_unbalanced_day_to_report(0, [1.0], [2.0])
+	
+	def assert_unbalanced_day_to_report(self, expected, m1, m2):
+		m1_np = np.array(m1)
+		m2_np = np.array(m2)
+		actual = nitrate._find_unbalanced_day_to_report(m1_np, m2_np)
+		self.assertEqual(expected, actual)
+
 	def test_convert_kg_to_tons_array(self):
 		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(np.array([])))
 		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(np.array([1000.0])))
