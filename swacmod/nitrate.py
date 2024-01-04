@@ -176,7 +176,8 @@ def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_arr
 		m3 = m3_array_kg_per_day[i]
 		m4 = m4_array_kg_per_day[i]
 		m4out = m4out_array_kg_per_day[i]
-		message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3 + M4 - M4out. The first day that does not balance is at index {i}. M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg and M3 = {m3} kg; M4 = {m4} kg; M4out = {m4out} kg."
+		diff = abs(m0_kg[i] - m0_array_kg_per_day[i])
+		message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3 + M4 - M4out. The first day that does not balance is at index {i} with a difference of {diff} kg. M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg and M3 = {m3} kg; M4 = {m4} kg; M4out = {m4out} kg."
 		logging.warning(message)
 
 def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100):	
