@@ -426,6 +426,7 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_unbalanced_day_to_report(0, [10.0, 2.0], [5.0, 1.0])
 		self.assert_unbalanced_day_to_report(1, [2.0, 10.0], [1.0, 5.0])
 		self.assert_unbalanced_day_to_report(0, [5.0, 1.0], [10.0, 2.0])
+		self.assert_unbalanced_day_to_report(1, [1.0, 5.0], [2.0, 10.0])
 	
 	def assert_unbalanced_day_to_report(self, expected, m1, m2):
 		m1_np = np.array(m1)
