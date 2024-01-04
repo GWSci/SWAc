@@ -420,6 +420,11 @@ class Test_Nitrate(unittest.TestCase):
 		m0_array_kg_per_day = np.array([1.234, 5.678, 9.012])
 		self.assertTrue(nitrate._is_mass_balanced(m0_kg, m0_array_kg_per_day))
 
+	def test_is_mass_balanced_for_unbalanced_arrays(self):
+		m0_kg = np.array([1.234, 5.678, 9.012])
+		m0_array_kg_per_day = np.array([1.234, 7.890, 9.012])
+		self.assertFalse(nitrate._is_mass_balanced(m0_kg, m0_array_kg_per_day))
+
 	def test_convert_kg_to_tons_array(self):
 		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(np.array([])))
 		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(np.array([1000.0])))
