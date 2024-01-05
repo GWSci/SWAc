@@ -768,6 +768,16 @@ recharge_node_mapping:
         - !!python/name:dict
         - !!python/name:int
 
+###############################
+# Process: Historical Nitrate #
+###############################
+
+historical_nitrate_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
 #######################
 # Process: Nitrate #
 #######################

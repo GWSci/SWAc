@@ -532,6 +532,11 @@ recharge_attenuation_process: enabled
 # This parameter can accept a path to YAML or CSV
 recharge_attenuation_params: recharge_attenuation_params.yml
 
+###############################
+# Process: Historical Nitrate #
+###############################
+
+historical_nitrate_process: disabled
 
 #######################
 # Process: Nitrate #
