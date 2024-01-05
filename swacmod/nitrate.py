@@ -7,6 +7,9 @@ import swacmod.feature_flags as ff
 import swacmod.utils as utils
 import swacmod.model as m
 
+def get_historical_nitrate(data, output, node):
+	pass
+
 def get_nitrate(data, output, node):
 	nitrate = calculate_nitrate(data, output, node)
 	return {
