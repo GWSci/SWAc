@@ -4,6 +4,9 @@ import unittest
 
 class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 	def setUp(self):
+		self.set_values_from_spreadsheet()
+
+	def set_values_from_spreadsheet(self):
 		# Values taken from example spreadsheet.
 		# Names are the same as the spreadsheet with the following changes:
 		#  - spaces replaced with underscores
