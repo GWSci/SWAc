@@ -9,7 +9,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		input_date = [date(2023, 1, 1), date(2023, 1, 2), ]
 		input_historical_date = None
 		input_historical_mi = None
-		
+		input_node = 3
+
 		expected = np.zeros(2)
 
 		data = {
@@ -20,7 +21,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			},
 		}
 		output = {}
-		node = 3
+		node = input_node
 		process_result = nitrate.get_historical_nitrate(data, output, node)
 		actual = process_result["historical_nitrate_reaching_water_table_array_tons_per_day"]
 		np.testing.assert_array_almost_equal(expected, actual)
