@@ -5,16 +5,22 @@ import unittest
 
 class Test_Historical_Nitrate(unittest.TestCase):
 	def test_historical_nitrate_returns_zeros_when_disabled(self):
+		input_process_enabled = "disabled"
+		input_date = [date(2023, 1, 1), date(2023, 1, 2), ]
+		input_historical_date = None
+		input_historical_mi = None
+		
+		expected = np.zeros(2)
+
 		data = {
 			"params": {
-				"historical_nitrate_process": "disabled",
+				"historical_nitrate_process": input_process_enabled,
 			}, "series" : {
-				"date": [date(2023, 1, 1), date(2023, 1, 2), ]
+				"date": input_date
 			},
 		}
 		output = {}
 		node = 3
 		output = nitrate.get_historical_nitrate(data, output, node)
 		actual = output["historical_nitrate_reaching_water_table_array_tons_per_day"]
-		expected = np.zeros(2)
 		np.testing.assert_array_almost_equal(expected, actual)
