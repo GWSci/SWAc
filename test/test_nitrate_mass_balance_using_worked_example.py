@@ -5,6 +5,7 @@ import unittest
 class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 	def setUp(self):
 		self.set_values_from_spreadsheet()
+		self.set_input_parameters()
 
 	def set_values_from_spreadsheet(self):
 		# Values taken from example spreadsheet.
@@ -44,13 +45,15 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.Total_NO3_to_receptors_kg = 0.7367072
 		self.Mass_Balance_Error_kg = 0.0000000
 
-	def test_worked_example_HER(self):
-		data = {}
-		output = {
+	def set_input_parameters(self):
+		self.data = {}
+		self.output = {
 			"rainfall_ts" : np.array([self.Precipitation]),
 			"ae" : np.array(self.AE),
 		}
-		node = 0
+		self.node = 0
+
+	def test_worked_example_HER(self):
 		expected = [self.HER_mm_per_d]
-		actual = nitrate._calculate_her_array_mm_per_day(data, output, node)
+		actual = nitrate._calculate_her_array_mm_per_day(self.data, self.output, self.node)
 		np.testing.assert_array_almost_equal(expected, actual)
