@@ -8,7 +8,9 @@ import swacmod.utils as utils
 import swacmod.model as m
 
 def get_historical_nitrate(data, output, node):
-	pass
+	return {
+		"historical_nitrate_reaching_water_table_array_tons_per_day": None,
+	}
 
 def get_nitrate(data, output, node):
 	nitrate = calculate_nitrate(data, output, node)

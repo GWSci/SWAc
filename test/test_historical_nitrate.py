@@ -14,4 +14,5 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		output = {}
 		node = 3
 		output = nitrate.get_historical_nitrate(data, output, node)
+		actual = output["historical_nitrate_reaching_water_table_array_tons_per_day"]
 		self.assertEqual(1, 1)
