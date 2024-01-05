@@ -156,6 +156,7 @@ def get_output(data, node, time_switcher):
         m.get_average_out,
         m.get_change,
         m.get_balance,
+        nitrate.get_historical_nitrate,
         nitrate.get_nitrate,
     ]
 
