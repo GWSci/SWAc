@@ -13,18 +13,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 		expected = np.zeros(2)
 
-		data = {
-			"params": {
-				"historical_nitrate_process": input_process_enabled,
-			}, "series" : {
-				"date": input_date
-			},
-		}
-		output = {}
-		node = input_node
-		process_result = nitrate.get_historical_nitrate(data, output, node)
-		actual = process_result["historical_nitrate_reaching_water_table_array_tons_per_day"]
-		np.testing.assert_array_almost_equal(expected, actual)
 		self.assert_historical_nitrate(expected, input_process_enabled, input_date, input_historical_date, input_historical_mi, input_node)
 
 	def assert_historical_nitrate(self, expected, input_process_enabled, input_date, input_historical_date, input_historical_mi, input_node):
