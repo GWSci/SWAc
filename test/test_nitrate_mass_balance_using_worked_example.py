@@ -49,7 +49,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.data = {}
 		self.output = {
 			"rainfall_ts" : np.array([self.Precipitation]),
-			"ae" : np.array(self.AE),
+			"ae" : np.array([self.AE]),
 			"smd" : np.array([self.SMD]),
 		}
 		self.node = 0
