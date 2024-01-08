@@ -147,22 +147,15 @@ class Test_Nitrate(unittest.TestCase):
 		actual = nitrate._calculate_m1_array_kg_per_day(m0_kg_per_day, pp)
 		np.testing.assert_array_equal(expected, actual)	
 
-	def test_calculate_m1_array_kg_per_day_new(self):
-		# From Calc sheet:
-		# Psoilperc*(M4tot_initial+M4in)
-
-		# From the formula:
-		# M1 (kg) = B26 = B23*(B13+B25)
-		# B23 = Psoilperc
-		# B13 = Msoil_tot_initial (kg)
-		# B25 = Msoil_in (kg)
-
-		# From Node_12719_WB sheet:
-		# M1 (kg) = AS3 = AP3*(AM3+AI3)
-		# AP3 = Psoilperc (-)
-		# AM3 = M0 (kg/cell)
-		# AI3 = Msoil_tot_initial (kg)
+	def test_calculate_m1_array_kg_per_day_for_zero_days_new(self):
 		# M1 (kg) = Psoilperc * (M0 + Msoil_tot_initial)
+		input_Psoilperc = []
+		input_m0_array_kg_per_day = []
+		input_M_soil_tot_kg = []
+		expected = []
+		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg)
+
+	def assert_m1_array_kg_per_day(self, expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg):
 		pass
 
 	def test_calculate_m1a_array_kg_per_day_for_just_one_day(self):

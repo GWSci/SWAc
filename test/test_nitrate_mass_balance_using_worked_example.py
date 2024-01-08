@@ -65,6 +65,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.Msoil_in_kg_array = np.array([self.Msoil_in_kg])
 		self.her_array_mm_per_day = np.array([self.HER_mm_per_d])
 		self.Psmd_array = np.array([self.Psmd])
+		self.Psoilperc_array = np.array([self.Psoilperc])
 		self.Pherperc_array = np.array([self.Pherperc])
 		self.dSMD_array_mm_per_day = np.array([self.dSMD_mm])
 		self.p_non_array = np.array([self.Pnon])
