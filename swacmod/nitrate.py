@@ -120,7 +120,10 @@ def _calculate_pp(data, output, node, her_array_mm_per_day):
 	return pp
 
 def _calculate_m1_array_kg_per_day_new(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg):
-	return Psoilperc * m0_array_kg_per_day
+	M_soil_tot_initial_kg = np.roll(M_soil_tot_kg, 1)
+	if (M_soil_tot_initial_kg.size > 0):
+		M_soil_tot_initial_kg[0] = 0.0
+	return Psoilperc * (m0_array_kg_per_day + M_soil_tot_initial_kg)
 
 def _calculate_M_soil_tot_kg(M_soil_in_kg, Psoilperc):
 	result_kg = np.zeros_like(M_soil_in_kg)
