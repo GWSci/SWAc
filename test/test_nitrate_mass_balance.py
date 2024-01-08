@@ -4,6 +4,15 @@ from swacmod import compile_model
 import swacmod.nitrate as nitrate
 
 class Test_Nitrate_Mass_Balance(unittest.TestCase):
+	def test_calculate_Pro(self):
+		her_array_mm_per_day = np.array([1.0, 1.0, 1.0, 1.0, 0.0, -1.0, 1.0])
+		p_non = np.array([0.0, 0.0, 2.0/3.0, 0.2, 0.2, 0.2, 0.0])
+		Psmd = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8])
+		pherperc = np.array([0.0, 0.5, 0.0, 0.3, 0.3, 0.3, 0.0])
+		expected = np.array([])
+		actual = nitrate._calculate_Pro(her_array_mm_per_day, p_non, pherperc, Psmd)
+		
+
 	def test_calculate_m3_array_kg_per_day(self):
 		her_array_mm_per_day = np.array([1.0, 1.0, 1.0, 1.0, 0.0, -1.0, 1.0])
 		pp = np.array([0.0, 0.5, 0.0, 0.3, 0.3, 0.3, 0.0])
