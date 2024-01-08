@@ -47,6 +47,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non)
 		Pro = _calculate_Pro(her_array_mm_per_day, p_non, Pherperc, Psmd)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(m0_array_kg_per_day, Pro)
+		m4_array_kg_per_day = _calculate_M4_array_mm_per_day_new(M_soil_tot_kg, m1_array_kg_per_day)
 		m4_array_kg_per_day = _calculate_M4_array_mm_per_day(dSMD_array_mm_per_day, her_array_mm_per_day, m0_array_kg_per_day, Psmd)
 		m4out_array_kg_per_day = _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, m4_array_kg_per_day)
 		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
