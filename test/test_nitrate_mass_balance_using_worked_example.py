@@ -65,6 +65,8 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.Pherperc_array = np.array([self.Pherperc])
 		self.dSMD_array_mm_per_day = np.array([self.dSMD_mm])
 		self.p_non_array = np.array([self.Pnon])
+		self.p_non_array = np.array([self.Pnon])
+		self.Pro_array = np.array([self.Pro])
 
 	def test_worked_example_HER(self):
 		expected = self.her_array_mm_per_day
@@ -104,4 +106,9 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 	def test_worked_example_Pro(self):
 		expected = [self.Pro]
 		actual = nitrate._calculate_Pro(self.her_array_mm_per_day, self.p_non_array, self.Pherperc_array, self.Psmd_array)
+		np.testing.assert_array_almost_equal(expected, actual)
+
+	def test_worked_example_M3(self):
+		expected = [self.M3_kg]
+		actual = nitrate._calculate_m3_array_kg_per_day(self.m0_array_kg_per_day, self.Pro_array)
 		np.testing.assert_array_almost_equal(expected, actual)
