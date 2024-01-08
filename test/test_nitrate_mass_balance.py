@@ -45,6 +45,12 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		expected = [0.2, 0.3, 0.5]
 		self.assert_Psoilperc(expected, input_perc_through_root_mm_per_day, input_TAW_array_mm)
 
+	def test_calculate_Psoilperc_when_percolation_equal_to_zero(self):
+		input_perc_through_root_mm_per_day = np.array([0.0])
+		input_TAW_array_mm = np.array([1.0])
+		expected = [0.0]
+		self.assert_Psoilperc(expected, input_perc_through_root_mm_per_day, input_TAW_array_mm)
+
 	def assert_Psoilperc(self, expected, input_perc_through_root_mm_per_day, input_TAW_array_mm):
 		data = None
 		output = {
