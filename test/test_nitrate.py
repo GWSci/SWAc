@@ -148,7 +148,6 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_calculate_m1_array_kg_per_day_for_zero_days_new(self):
-		# M1 (kg) = Psoilperc * (M0 + Msoil_tot_initial)
 		input_Psoilperc = []
 		input_m0_array_kg_per_day = []
 		input_M_soil_tot_kg = []
@@ -156,7 +155,6 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg)
 
 	def test_calculate_m1_array_kg_per_day_for_one_day_new(self):
-		# M1 (kg) = Psoilperc * (M0 + Msoil_tot_initial)
 		input_Psoilperc = [0.2]
 		input_m0_array_kg_per_day = [15.0]
 		input_M_soil_tot_kg = [7.0]
@@ -164,7 +162,6 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg)
 
 	def test_calculate_m1_array_kg_per_day_for_two_days_new(self):
-		# M1 (kg) = Psoilperc * (M0 + Msoil_tot_initial)
 		input_Psoilperc = [0.2, 0.1]
 		input_m0_array_kg_per_day = [15.0, 20.0]
 		input_M_soil_tot_kg = [10.0, 20.0]
