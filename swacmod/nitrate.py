@@ -36,6 +36,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
 		m0_array_kg_per_day = _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day)
 		pp = _calculate_pp(data, output, node, her_array_mm_per_day)
+		Psoilperc = _calculate_Psoilperc(data, output, node)
 		m1_array_kg_per_day = _calculate_m1_array_kg_per_day(m0_array_kg_per_day, pp)
 		m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
 		p_non = _calculate_p_non(data, output, node, her_array_mm_per_day)
