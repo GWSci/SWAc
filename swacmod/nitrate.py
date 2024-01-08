@@ -116,11 +116,6 @@ def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day):
 		time_switcher)
 	return m0_array_kg_per_day
 
-def _calculate_pp(data, output, node, her_array_mm_per_day):
-	perc_through_root_mm_per_day = output["perc_through_root"]
-	pp = _divide_arrays(perc_through_root_mm_per_day, her_array_mm_per_day)
-	return pp
-
 def _calculate_m1_array_kg_per_day(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg):
 	M_soil_tot_initial_kg = np.roll(M_soil_tot_kg, 1)
 	if (M_soil_tot_initial_kg.size > 0):
