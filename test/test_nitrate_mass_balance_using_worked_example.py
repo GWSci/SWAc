@@ -50,7 +50,9 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.output = {
 			"rainfall_ts" : np.array([self.Precipitation]),
 			"ae" : np.array([self.AE]),
+			"perc_through_root" : np.array([self.Percolation_through_root_zone]),
 			"smd" : np.array([self.SMD]),
+			"tawtew" : np.array([self.TAW]),
 		}
 		self.node = 0
 
@@ -70,4 +72,9 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 	def test_worked_example_Psmd(self):
 		expected = [self.Psmd]
 		actual = nitrate._calculate_Psmd(self.her_array_mm_per_day, self.dSMD_array_mm_per_day)
+		np.testing.assert_array_almost_equal(expected, actual)
+
+	def test_worked_example_Psoilperc(self):
+		expected = [self.Psoilperc]
+		actual = nitrate._calculate_Psoilperc(self.data, self.output, self.node)
 		np.testing.assert_array_almost_equal(expected, actual)
