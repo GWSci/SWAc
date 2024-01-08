@@ -92,6 +92,12 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		expected = [0.0]
 		self.assert_Pherperc(expected, input_perc_through_root_mm_per_day, input_her_array_mm_per_day)
 
+	def test_calculate_Pherperc_when_percolation_less_than_zero(self):
+		input_perc_through_root_mm_per_day = np.array([-1.0])
+		input_her_array_mm_per_day = np.array([2.0])
+		expected = [0.0]
+		self.assert_Pherperc(expected, input_perc_through_root_mm_per_day, input_her_array_mm_per_day)
+
 	def assert_Pherperc(self, expected, input_perc_through_root_mm_per_day, input_her_array_mm_per_day):
 		data = None
 		output = {
