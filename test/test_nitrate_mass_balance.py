@@ -140,6 +140,13 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		expected = []
 		self.assert_M_soil_tot_kg_for_zero_days(expected, input_Msoil_in, input_Psoilperc)
 
+	def test_M_soil_tot_kg_for_one_days(self):
+		# M_soil_tot_kg = (Msoil_tot_initial + Msoil_in) * (1 - Psoilperc)
+		input_Msoil_in = [6.0]
+		input_Psoilperc = [0.5]
+		expected = [3.0]
+		self.assert_M_soil_tot_kg_for_zero_days(expected, input_Msoil_in, input_Psoilperc)
+
 	def assert_M_soil_tot_kg_for_zero_days(self, expected, input_Msoil_in, input_Psoilperc):
 		expected_numpy = np.array(expected)
 		Msoil_in = np.array(input_Msoil_in)

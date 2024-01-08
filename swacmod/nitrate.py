@@ -120,7 +120,7 @@ def _calculate_pp(data, output, node, her_array_mm_per_day):
 	return pp
 
 def _calculate_M_soil_tot_kg(M_soil_in_kg, Psoilperc):
-	return []
+	return M_soil_in_kg * (1 - Psoilperc)
 
 def _calculate_m1_array_kg_per_day(m0_kg_per_day, pp):
 	m1_kg_per_day = pp * m0_kg_per_day
