@@ -47,7 +47,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non)
 		Pro = _calculate_Pro(her_array_mm_per_day, p_non, Pherperc, Psmd)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(m0_array_kg_per_day, Pro)
-		m4_array_kg_per_day = _calculate_M4_array_mm_per_day_new(M_soil_tot_kg, m1_array_kg_per_day)
+		m4_array_kg_per_day = _calculate_M4_array_mm_per_day(M_soil_tot_kg, m1_array_kg_per_day)
 		m4out_array_kg_per_day = _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, m4_array_kg_per_day)
 		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
 		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, logging)
@@ -176,7 +176,7 @@ def _calculate_dSMD_array_mm_per_day(data, output, node):
 		next_day_smd[-1] = 0.0
 	return smd - np.maximum(0, p_smd)
 
-def _calculate_M4_array_mm_per_day_new(input_M_soil_tot_kg, input_m1_array_kg_per_day):
+def _calculate_M4_array_mm_per_day(input_M_soil_tot_kg, input_m1_array_kg_per_day):
 	return input_M_soil_tot_kg - input_m1_array_kg_per_day
 
 def _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day):
