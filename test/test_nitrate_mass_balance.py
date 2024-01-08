@@ -145,10 +145,16 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		# M_soil_tot_kg[day] = M_soil_tot_kg[day - 1] + Msoil_in - M1
 		pass
 
-	def test_calculate_M4_array_mm_per_day(self):
+	def test_calculate_M4_array_mm_per_day_for_zero_days(self):
 		input_M_soil_tot_kg = []
 		input_m1_array_kg_per_day = []
 		expected = []
+		self.assert_M4_array_mm_per_day(expected, input_M_soil_tot_kg, input_m1_array_kg_per_day)
+
+	def test_calculate_M4_array_mm_per_day_for_one_day(self):
+		input_M_soil_tot_kg = [11.0]
+		input_m1_array_kg_per_day = [3.0]
+		expected = [8.0]
 		self.assert_M4_array_mm_per_day(expected, input_M_soil_tot_kg, input_m1_array_kg_per_day)
 
 		# From Calcs sheet:
