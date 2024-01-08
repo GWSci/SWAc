@@ -158,7 +158,7 @@ class Test_Nitrate(unittest.TestCase):
 		m0_array_kg_per_day = np.array(input_m0_array_kg_per_day)
 		M_soil_tot_kg = np.array(input_M_soil_tot_kg)
 		expected_numpy = np.array(expected)
-		actual = nitrate._calculate_m1_array_kg_per_day_new(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg)
+		actual = nitrate._calculate_m1_array_kg_per_day(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg)
 		np.testing.assert_array_equal(expected_numpy, actual)
 
 	def test_calculate_m1a_array_kg_per_day_for_just_one_day(self):

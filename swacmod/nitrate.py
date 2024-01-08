@@ -41,7 +41,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		Psmd = _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day)
 		M_soil_in_kg = _calculate_M_soil_in_kg(m0_array_kg_per_day, Psmd, Pherperc)
 		M_soil_tot_kg = _calculate_M_soil_tot_kg(M_soil_in_kg, Psoilperc)
-		m1_array_kg_per_day = _calculate_m1_array_kg_per_day_new(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg)
+		m1_array_kg_per_day = _calculate_m1_array_kg_per_day(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg)
 		m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
 		p_non = _calculate_p_non(data, output, node, her_array_mm_per_day)
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non)
@@ -121,7 +121,7 @@ def _calculate_pp(data, output, node, her_array_mm_per_day):
 	pp = _divide_arrays(perc_through_root_mm_per_day, her_array_mm_per_day)
 	return pp
 
-def _calculate_m1_array_kg_per_day_new(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg):
+def _calculate_m1_array_kg_per_day(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg):
 	M_soil_tot_initial_kg = np.roll(M_soil_tot_kg, 1)
 	if (M_soil_tot_initial_kg.size > 0):
 		M_soil_tot_initial_kg[0] = 0.0
