@@ -140,7 +140,11 @@ def _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non):
 	return m2_kg_per_day
 
 def _calculate_Pro(her_array_mm_per_day, p_non, pherperc, Psmd):
-	pass
+	Pro = np.where(
+		her_array_mm_per_day <= 0,
+		0,
+		1 - p_non - pherperc - Psmd)
+	return Pro
 
 def _calculate_m3_array_kg_per_day(pp, p_non, m0_array_kg_per_day, her_array_mm_per_day, Psmd):
 	Pro = np.where(
