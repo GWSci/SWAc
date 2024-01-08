@@ -180,6 +180,9 @@ def _calculate_Psoilperc(data, output, node):
 	denominator_mm = (perc_through_root_mm_per_day + TAW_array_mm)
 	return _divide_arrays(numerator_mm, denominator_mm)
 
+def _calculate_Pherperc(data, output, node, her_array_mm_per_day):
+	return []
+
 def _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg):
 	TAW_array_mm = output["tawtew"]
 	SMD_array_mm = output["smd"]

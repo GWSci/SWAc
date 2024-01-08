@@ -74,6 +74,22 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		expected_numpy = np.array(expected)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 
+	def test_calculate_Pherperc_for_zero_days(self):
+		input_perc_through_root_mm_per_day = np.array([])
+		input_her_array_mm_per_day = np.array([])
+		expected = []
+		self.assert_Pherperc(expected, input_perc_through_root_mm_per_day, input_her_array_mm_per_day)
+
+	def assert_Pherperc(self, expected, input_perc_through_root_mm_per_day, input_her_array_mm_per_day):
+		data = None
+		output = {
+			"perc_through_root": input_perc_through_root_mm_per_day,
+		}
+		node = None
+		actual = nitrate._calculate_Pherperc(data, output, node, input_her_array_mm_per_day)
+		expected_numpy = np.array(expected)
+		np.testing.assert_array_almost_equal(expected_numpy, actual)
+
 	def test_calculate_M4_array_mm_per_day_for_zero_days(self):
 		dSMD_array_mm_per_day = np.array([])
 		her_array_mm_per_day = np.array([])
