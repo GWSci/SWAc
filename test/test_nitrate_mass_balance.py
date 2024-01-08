@@ -11,7 +11,7 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		pherperc = np.array([0.0, 0.5, 0.0, 0.3, 0.3, 0.3, 0.0])
 		expected = np.array([])
 		actual = nitrate._calculate_Pro(her_array_mm_per_day, p_non, pherperc, Psmd)
-		
+		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_m3_array_kg_per_day(self):
 		her_array_mm_per_day = np.array([1.0, 1.0, 1.0, 1.0, 0.0, -1.0, 1.0])
