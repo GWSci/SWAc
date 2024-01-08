@@ -176,7 +176,9 @@ def _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day):
 def _calculate_Psoilperc(data, output, node):
 	perc_through_root_mm_per_day = output["perc_through_root"]
 	TAW_array_mm = output["tawtew"]
-	return _divide_arrays(perc_through_root_mm_per_day, (perc_through_root_mm_per_day + TAW_array_mm))
+	numerator_mm = perc_through_root_mm_per_day
+	denominator_mm = (perc_through_root_mm_per_day + TAW_array_mm)
+	return _divide_arrays(numerator_mm, denominator_mm)
 
 def _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg):
 	TAW_array_mm = output["tawtew"]
