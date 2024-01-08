@@ -176,8 +176,8 @@ def _calculate_dSMD_array_mm_per_day(data, output, node):
 		next_day_smd[-1] = 0.0
 	return smd - np.maximum(0, p_smd)
 
-def _calculate_M4_array_mm_per_day(input_M_soil_tot_kg, input_m1_array_kg_per_day):
-	return input_M_soil_tot_kg - input_m1_array_kg_per_day
+def _calculate_M4_array_mm_per_day(M_soil_tot_kg, m1_array_kg_per_day):
+	return M_soil_tot_kg - m1_array_kg_per_day
 
 def _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day):
 	Psmd = np.divide(
