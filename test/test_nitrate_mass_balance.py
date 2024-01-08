@@ -37,7 +37,9 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		input_perc_through_root_mm_per_day = np.array([])
 		input_TAW_array_mm = np.array([])
 		expected = []
-		
+		self.assert_Psoilperc(expected, input_perc_through_root_mm_per_day, input_TAW_array_mm)
+
+	def assert_Psoilperc(self, expected, input_perc_through_root_mm_per_day, input_TAW_array_mm):
 		data = None
 		output = {
 			"perc_through_root": input_perc_through_root_mm_per_day,
