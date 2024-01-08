@@ -34,14 +34,17 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 
 	def test_calculate_Psoilperc(self):
+		input_perc_through_root_mm_per_day = np.array([])
+		input_TAW_array_mm = np.array([])
+		expected = []
+		
 		data = None
 		output = {
-			"perc_through_root": np.array([]),
-			"tawtew": np.array([]),
+			"perc_through_root": input_perc_through_root_mm_per_day,
+			"tawtew": input_TAW_array_mm,
 		}
 		node = None
 		actual = nitrate._calculate_Psoilperc(data, output, node)
-		expected = []
 		expected_numpy = np.array(expected)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 
