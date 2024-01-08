@@ -173,6 +173,9 @@ def _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day):
 		where=(her_array_mm_per_day != 0))
 	return Psmd
 
+def _calculate_Psoilperc(data, output, node):
+	return []
+
 def _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg):
 	TAW_array_mm = output["tawtew"]
 	SMD_array_mm = output["smd"]
