@@ -155,6 +155,14 @@ class Test_Nitrate(unittest.TestCase):
 		expected = []
 		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg)
 
+	def test_calculate_m1_array_kg_per_day_for_one_day_new(self):
+		# M1 (kg) = Psoilperc * (M0 + Msoil_tot_initial)
+		input_Psoilperc = [0.2]
+		input_m0_array_kg_per_day = [15.0]
+		input_M_soil_tot_kg = [7.0]
+		expected = [3.0]
+		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg)
+
 	def assert_m1_array_kg_per_day(self, expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg):
 		pass
 
