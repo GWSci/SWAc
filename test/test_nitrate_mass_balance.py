@@ -33,10 +33,16 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		expected_numpy = np.array(expected)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 
-	def test_calculate_Psoilperc(self):
+	def test_calculate_Psoilperc_for_zero_days(self):
 		input_perc_through_root_mm_per_day = np.array([])
 		input_TAW_array_mm = np.array([])
 		expected = []
+		self.assert_Psoilperc(expected, input_perc_through_root_mm_per_day, input_TAW_array_mm)
+
+	def test_calculate_Psoilperc_when_percolation_greater_than_zero(self):
+		input_perc_through_root_mm_per_day = np.array([2.0, 30.0, 500.0])
+		input_TAW_array_mm = np.array([8.0, 70.0, 500.0])
+		expected = [0.2, 0.3, 0.5]
 		self.assert_Psoilperc(expected, input_perc_through_root_mm_per_day, input_TAW_array_mm)
 
 	def assert_Psoilperc(self, expected, input_perc_through_root_mm_per_day, input_TAW_array_mm):
