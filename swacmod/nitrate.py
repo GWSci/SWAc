@@ -186,6 +186,9 @@ def _calculate_Pherperc(data, output, node, her_array_mm_per_day):
 		np.maximum(0, perc_through_root_mm_per_day),
 		her_array_mm_per_day)
 
+def calculate_M_soil_in_kg(m0_array_kg_per_day, Psmd, Pherperc):
+	pass
+
 def _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg):
 	TAW_array_mm = output["tawtew"]
 	SMD_array_mm = output["smd"]
