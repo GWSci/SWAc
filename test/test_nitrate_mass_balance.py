@@ -21,7 +21,7 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		Psmd = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8])
 		expected = np.array([2.0, 3.0, 5.0, 7.0, 0.0, 0.0, 11.0])
 		Pro = np.array([1.0, 0.5, 1.0/3.0, 0.5, 0.0, 0.0, 0.2 ])
-		actual = nitrate._calculate_m3_array_kg_per_day(m0_array_kg_per_day, her_array_mm_per_day, Psmd, Pro)
+		actual = nitrate._calculate_m3_array_kg_per_day(m0_array_kg_per_day, Pro)
 		np.testing.assert_array_almost_equal(expected, actual)
 	
 	def test_calculate_dSMD_array_mm_per_day_for_zero_days(self):
