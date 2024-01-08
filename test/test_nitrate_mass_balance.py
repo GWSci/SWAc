@@ -30,6 +30,7 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 
 	def test_calculate_dSMD_array_mm_per_day_for_three_days(self):
 		self.assert_dSMD_array_mm_per_day([90.0, 9.0, 1.0], [100.0, 10.0, 1.0], [10.0, 1.0, 0.0])
+		self.assert_dSMD_array_mm_per_day([7.0, 100.0, 1000.0], [10.0, 100.0, 1000.0], [3.0, 0.0, -20.0])
 
 	def assert_dSMD_array_mm_per_day(self, expected, input_smd, input_potential_smd):
 		data = None
