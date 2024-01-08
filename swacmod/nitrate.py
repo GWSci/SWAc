@@ -171,6 +171,9 @@ def _calculate_M4_array_mm_per_day(dSMD_array_mm_per_day, her_array_mm_per_day, 
 	M4_array_kg = Psmd * m0_array_kg_per_day
 	return M4_array_kg
 
+def _calculate_M4_array_mm_per_day_new(input_M_soil_tot_kg, input_m1_array_kg_per_day):
+	pass
+
 def _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day):
 	Psmd = np.divide(
 		np.maximum(0.0, dSMD_array_mm_per_day),
