@@ -145,7 +145,7 @@ class Test_Nitrate(unittest.TestCase):
 
 		pp = nitrate._calculate_pp(data, output, node, her_array_mm_per_day)
 		actual = nitrate._calculate_m1_array_kg_per_day(m0_kg_per_day, pp)
-		np.testing.assert_array_equal(expected, actual)	
+		np.testing.assert_array_equal(expected, actual)
 
 	def test_calculate_m1_array_kg_per_day_for_zero_days_new(self):
 		# M1 (kg) = Psoilperc * (M0 + Msoil_tot_initial)
@@ -164,7 +164,12 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg)
 
 	def assert_m1_array_kg_per_day(self, expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg):
-		pass
+		Psoilperc = np.array(input_Psoilperc)
+		m0_array_kg_per_day = np.array(input_m0_array_kg_per_day)
+		M_soil_tot_kg = np.array(input_M_soil_tot_kg)
+		expected_numpy = np.array(expected)
+		actual = nitrate._calculate_m1_array_kg_per_day_new(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg)
+		np.testing.assert_array_equal(expected_numpy, actual)
 
 	def test_calculate_m1a_array_kg_per_day_for_just_one_day(self):
 		input_interflow_volume = np.array([40.0])
