@@ -204,8 +204,8 @@ def _calculate_mass_balance_error_kg(m0_array_kg_per_day, total_NO3_to_receptors
 	return m0_array_kg_per_day - total_NO3_to_receptors_kg
 
 def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging):
-	is_m0_as_expected = _is_mass_balanced(mass_balance_error_kg)
-	if not is_m0_as_expected:
+	is_mass_balanced = _is_mass_balanced(mass_balance_error_kg)
+	if not is_mass_balanced:
 		i = _find_unbalanced_day_to_report(mass_balance_error_kg)
 		message = _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, i, mass_balance_error_kg, total_NO3_to_receptors_kg)
 		logging.warning(message)
