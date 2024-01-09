@@ -48,7 +48,6 @@ def calculate_nitrate(data, output, node, logging = logging):
 		Pro = _calculate_Pro(her_array_mm_per_day, p_non, Pherperc, Psmd)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(m0_array_kg_per_day, Pro)
 		m4_array_kg_per_day = _calculate_M4_array_mm_per_day(M_soil_tot_kg, m1_array_kg_per_day)
-		m4out_array_kg_per_day = _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, m4_array_kg_per_day)
 		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
 		total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day)
 		mass_balance_error_kg = _calculate_mass_balance_error_kg(m0_array_kg_per_day, total_NO3_to_receptors_kg)
@@ -197,20 +196,6 @@ def _calculate_Pherperc(data, output, node, her_array_mm_per_day):
 
 def _calculate_M_soil_in_kg(m0_array_kg_per_day, Psmd, Pherperc):
 	return m0_array_kg_per_day * (Psmd + Pherperc)
-
-def _calculate_M4out_array_mm_per_day(data, output, node, dSMD_array_mm_per_day, M4_array_kg):
-	TAW_array_mm = output["tawtew"]
-	SMD_array_mm = output["smd"]
-	soil_store_array_mm = TAW_array_mm - SMD_array_mm
-	prop_soil_store = - np.minimum(0.0, dSMD_array_mm_per_day) / soil_store_array_mm
-	M4out_array_kg = np.zeros_like(dSMD_array_mm_per_day)
-	M4tot_kg = 0
-	for day in range(M4out_array_kg.size):
-		M4tot_kg += M4_array_kg[day]
-		M4out_kg = prop_soil_store[day] * M4tot_kg
-		M4out_array_kg[day] = M4out_kg
-		M4tot_kg -= M4out_kg
-	return M4out_array_kg
 
 def _calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day):
 	return m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day + m4_array_kg_per_day
