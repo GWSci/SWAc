@@ -285,3 +285,8 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		expected = np.array([9121.0, 8332.0, 7543.0, 6754.0])
 		actual = nitrate._calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day)
 		np.testing.assert_array_almost_equal(expected, actual)
+
+	def test_calculate_mass_balance_error_kg(self):
+		m0_array_kg_per_day = np.array([10.0, 20.0, 30.0])
+		total_NO3_to_receptors_kg = np.array([3.0, 20.0, 32.0])
+		actual = nitrate._calculate_mass_balance_error_kg(m0_array_kg_per_day, total_NO3_to_receptors_kg)
