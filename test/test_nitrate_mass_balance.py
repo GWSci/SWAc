@@ -255,15 +255,11 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_masses_not_balanced([0], [1e-3], [-1e-3])
 
 	def assert_masses_balanced(self, m1, m2, error = None):
-		m1_np = np.array(m1)
-		m2_np = np.array(m2)
 		error_np = np.array(error)
 		actual = nitrate._is_mass_balanced(error_np)
 		self.assertTrue(actual)
 
 	def assert_masses_not_balanced(self, m1, m2, error = None):
-		m1_np = np.array(m1)
-		m2_np = np.array(m2)
 		error_np = np.array(error)
 		actual = nitrate._is_mass_balanced(error_np)
 		self.assertFalse(actual)
