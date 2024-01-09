@@ -171,11 +171,9 @@ def _calculate_M4_array_mm_per_day(M_soil_tot_kg, m1_array_kg_per_day):
 	return M_soil_tot_kg - m1_array_kg_per_day
 
 def _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day):
-	Psmd = np.divide(
+	Psmd = _divide_arrays(
 		np.maximum(0.0, dSMD_array_mm_per_day),
-		her_array_mm_per_day,
-		out = np.zeros_like(dSMD_array_mm_per_day),
-		where=(her_array_mm_per_day != 0))
+		her_array_mm_per_day)
 	return Psmd
 
 def _calculate_Psoilperc(data, output, node):
