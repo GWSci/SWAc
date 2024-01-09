@@ -142,7 +142,10 @@ def _calculate_p_non(data, output, node, her_array_mm_per_day):
 	macropore_att_mm_per_day = output["macropore_att"]
 	macropore_dir_mm_per_day = output["macropore_dir"]
 	macropore_mm_per_day = macropore_att_mm_per_day + macropore_dir_mm_per_day
-	p_non = _divide_arrays((runoff_recharge_mm_per_day + macropore_mm_per_day), her_array_mm_per_day)
+	p_non = np.where(
+		her_array_mm_per_day <= 0,
+		0,
+		_divide_arrays((runoff_recharge_mm_per_day + macropore_mm_per_day), her_array_mm_per_day))
 	return p_non
 
 def _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non):
