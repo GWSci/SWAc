@@ -232,7 +232,7 @@ def _calculate_m0_kg_for_balance(m1_array_kg_per_day, m2_array_kg_per_day, m3_ar
 	return m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day + m4_array_kg_per_day - m4out_array_kg_per_day
 
 def _is_mass_balanced(m0_kg, m0_array_kg_per_day, mass_balance_error_kg):
-	return np.allclose(m0_kg, m0_array_kg_per_day, atol=0.0001)
+	return np.allclose(mass_balance_error_kg, 0.0, atol=0.0001)
 
 def _find_unbalanced_day_to_report(mass_balance_error_kg):
 	return np.argmax(np.abs(mass_balance_error_kg))
