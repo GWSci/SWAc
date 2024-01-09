@@ -275,7 +275,7 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		m1_np = np.array(m1)
 		m2_np = np.array(m2)
 		mass_balance_error_kg_np = np.array(mass_balance_error_kg)
-		actual = nitrate._find_unbalanced_day_to_report(m1_np, m2_np, mass_balance_error_kg_np)
+		actual = nitrate._find_unbalanced_day_to_report(mass_balance_error_kg_np)
 		self.assertEqual(expected, actual)
 
 	def test_total_NO3_to_receptors_kg(self):
