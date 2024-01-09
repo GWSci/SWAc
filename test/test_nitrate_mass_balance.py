@@ -188,10 +188,10 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_masses_not_balanced([1.234 - 5.678])
 		self.assert_masses_balanced([0.0, 0.0, 0.0])
 		self.assert_masses_not_balanced([0.0, 5.678 - 7.890, 0.0])
-		self.assert_masses_balanced([-1e-4])
-		self.assert_masses_balanced([1e-4])
-		self.assert_masses_not_balanced([1e-3])
-		self.assert_masses_not_balanced([-1e-3])
+		self.assert_masses_balanced([-1e-8])
+		self.assert_masses_balanced([1e-8])
+		self.assert_masses_not_balanced([1e-7])
+		self.assert_masses_not_balanced([-1e-7])
 
 	def assert_masses_balanced(self, error = None):
 		error_np = np.array(error)

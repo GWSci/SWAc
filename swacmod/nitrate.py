@@ -211,7 +211,7 @@ def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_arr
 		logging.warning(message)
 
 def _is_mass_balanced(mass_balance_error_kg):
-	return np.allclose(mass_balance_error_kg, 0.0, atol=0.0001)
+	return np.allclose(mass_balance_error_kg, 0.0)
 
 def _find_unbalanced_day_to_report(mass_balance_error_kg):
 	return np.argmax(np.abs(mass_balance_error_kg))
