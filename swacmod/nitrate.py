@@ -237,14 +237,14 @@ def _is_mass_balanced(m0_kg, m0_array_kg_per_day):
 def _find_unbalanced_day_to_report(mass_balance_error_kg):
 	return np.argmax(np.abs(mass_balance_error_kg))
 
-def _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m0_kg, i):
+def _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m0_kg, i, mass_balance_error_kg):
 	m0 = m0_array_kg_per_day[i]
 	m1 = m1_array_kg_per_day[i]
 	m2 = m2_array_kg_per_day[i]
 	m3 = m3_array_kg_per_day[i]
 	m4 = m4_array_kg_per_day[i]
-	diff = abs(m0_kg[i] - m0_array_kg_per_day[i])
-	message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3 + M4. The day with the largest difference is at index {i} with a difference of {diff} kg. M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg; M3 = {m3} kg; M4 = {m4} kg."
+	mass_balance_error = mass_balance_error_kg[i]
+	message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index {i} with a mass balance error of {mass_balance_error} kg. M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg; M3 = {m3} kg; M4 = {m4} kg."
 	return message
 
 def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100):	
