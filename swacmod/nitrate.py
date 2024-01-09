@@ -52,7 +52,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
 		total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day)
 		mass_balance_error_kg = _calculate_mass_balance_error_kg(m0_array_kg_per_day, total_NO3_to_receptors_kg)
-		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, total_NO3_to_receptors_kg, logging)
+		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging)
 		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
 		nitrate_reaching_water_table_array_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day))
 		nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(nitrate_reaching_water_table_array_kg_per_day)
@@ -220,7 +220,7 @@ def _calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_da
 def _calculate_mass_balance_error_kg(m0_array_kg_per_day, total_NO3_to_receptors_kg):
 	return m0_array_kg_per_day - total_NO3_to_receptors_kg
 
-def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, total_NO3_to_receptors_kg, logging):
+def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging):
 	m0_kg = _calculate_m0_kg_for_balance(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day)
 	is_m0_as_expected = _is_mass_balanced(m0_kg, m0_array_kg_per_day)
 	if not is_m0_as_expected:
