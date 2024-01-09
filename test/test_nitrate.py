@@ -136,29 +136,33 @@ class Test_Nitrate(unittest.TestCase):
 		input_Psoilperc = []
 		input_m0_array_kg_per_day = []
 		input_M_soil_tot_kg = []
+		input_M_soil_in_kg = []
 		expected = []
-		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg)
+		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg, input_M_soil_in_kg)
 
 	def test_calculate_m1_array_kg_per_day_for_one_day_new(self):
 		input_Psoilperc = [0.2]
 		input_m0_array_kg_per_day = [15.0]
 		input_M_soil_tot_kg = [7.0]
+		input_M_soil_in_kg = [15.0]
 		expected = [3.0]
-		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg)
+		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg, input_M_soil_in_kg)
 
 	def test_calculate_m1_array_kg_per_day_for_two_days_new(self):
 		input_Psoilperc = [0.2, 0.1]
 		input_m0_array_kg_per_day = [15.0, 20.0]
 		input_M_soil_tot_kg = [10.0, 20.0]
+		input_M_soil_in_kg = [15.0, 20.0]
 		expected = [3.0, 3.0]
-		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg)
+		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg, input_M_soil_in_kg)
 
-	def assert_m1_array_kg_per_day(self, expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg):
+	def assert_m1_array_kg_per_day(self, expected, input_Psoilperc, input_m0_array_kg_per_day, input_M_soil_tot_kg, input_M_soil_in_kg):
 		Psoilperc = np.array(input_Psoilperc)
 		m0_array_kg_per_day = np.array(input_m0_array_kg_per_day)
 		M_soil_tot_kg = np.array(input_M_soil_tot_kg)
+		M_soil_in_kg = np.array(input_M_soil_in_kg)
 		expected_numpy = np.array(expected)
-		actual = nitrate._calculate_m1_array_kg_per_day(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg)
+		actual = nitrate._calculate_m1_array_kg_per_day(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg, M_soil_in_kg)
 		np.testing.assert_array_equal(expected_numpy, actual)
 
 	def test_calculate_m1a_array_kg_per_day_for_just_one_day(self):
