@@ -165,9 +165,6 @@ def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 def _calculate_dSMD_array_mm_per_day(data, output, node):
 	smd = output["smd"]
 	p_smd = output["p_smd"]
-	next_day_smd = np.roll(smd, -1)
-	if (next_day_smd.size > 0):
-		next_day_smd[-1] = 0.0
 	return smd - np.maximum(0, p_smd)
 
 def _calculate_M4_array_mm_per_day(M_soil_tot_kg, m1_array_kg_per_day):
