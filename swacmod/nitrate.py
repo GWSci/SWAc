@@ -124,11 +124,11 @@ def _calculate_m1_array_kg_per_day(Psoilperc, m0_array_kg_per_day, M_soil_tot_kg
 def _calculate_M_soil_tot_kg(M_soil_in_kg, Psoilperc):
 	result_kg = np.zeros_like(M_soil_in_kg)
 	P = 1 - Psoilperc
-	Msoil_tot_initial_kg = 0.0
+	M_soil_tot_initial_kg = 0.0
 	for i in range(M_soil_in_kg.size):
-		M_soil_tot_kg = (Msoil_tot_initial_kg + M_soil_in_kg[i]) * P[i]
+		M_soil_tot_kg = (M_soil_tot_initial_kg + M_soil_in_kg[i]) * P[i]
 		result_kg[i] = M_soil_tot_kg
-		Msoil_tot_initial_kg = M_soil_tot_kg
+		M_soil_tot_initial_kg = M_soil_tot_kg
 	return result_kg
 
 def _divide_arrays(a, b):
