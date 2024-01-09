@@ -276,7 +276,6 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["m2_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["m3_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["m4_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["m4out_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["mi_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["proportion_reaching_water_table_array_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["nitrate_reaching_water_table_array_kg_per_day"])
