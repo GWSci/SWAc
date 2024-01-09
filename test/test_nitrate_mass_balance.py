@@ -276,3 +276,11 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		m2_np = np.array(m2)
 		actual = nitrate._find_unbalanced_day_to_report(m1_np, m2_np)
 		self.assertEqual(expected, actual)
+
+	def test_total_NO3_to_receptors_kg(self):
+		m1_array_kg_per_day = np.array([1.0, 2.0, 3.0, 4.0])
+		m2_array_kg_per_day = np.array([20.0, 30.0, 40.0, 50.0])
+		m3_array_kg_per_day = np.array([100.0, 300.0, 500.0, 700.0])
+		m4_array_kg_per_day = np.array([9000.0, 8000.0, 7000.0, 6000.0])
+		expected = np.array([9121.0, 8332.0, 7543.0, 6754.0])
+		actual = nitrate._calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day)
