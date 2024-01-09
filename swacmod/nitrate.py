@@ -224,7 +224,7 @@ def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_arr
 	m0_kg = _calculate_m0_kg_for_balance(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day)
 	is_m0_as_expected = _is_mass_balanced(m0_kg, m0_array_kg_per_day)
 	if not is_m0_as_expected:
-		i = _find_unbalanced_day_to_report(m0_kg, m0_array_kg_per_day)
+		i = _find_unbalanced_day_to_report(m0_kg, m0_array_kg_per_day, mass_balance_error_kg)
 		message = _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, m0_kg, i)
 		logging.warning(message)
 
@@ -234,7 +234,7 @@ def _calculate_m0_kg_for_balance(m1_array_kg_per_day, m2_array_kg_per_day, m3_ar
 def _is_mass_balanced(m0_kg, m0_array_kg_per_day):
 	return np.allclose(m0_kg, m0_array_kg_per_day, atol=0.0001)
 
-def _find_unbalanced_day_to_report(m0_kg, m0_array_kg_per_day):
+def _find_unbalanced_day_to_report(m0_kg, m0_array_kg_per_day, mass_balance_error_kg):
 	return np.argmax(np.abs(m0_kg - m0_array_kg_per_day))
 
 def _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, m4out_array_kg_per_day, m0_kg, i):
