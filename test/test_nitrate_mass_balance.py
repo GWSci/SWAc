@@ -244,13 +244,13 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_M4out_array_mm_per_day(expected, input_smd, input_tawtew, input_dSMD_array_mm_per_day, input_M4_array_kg)
 
 	def test_is_mass_balanced_for_empty_arrays(self):
-		self.assert_masses_balanced([], [])
-		self.assert_masses_balanced([1.234], [1.234])
-		self.assert_masses_not_balanced([1.234], [5.678])
-		self.assert_masses_balanced([1.234, 5.678, 9.012], [1.234, 5.678, 9.012])
-		self.assert_masses_not_balanced([1.234, 5.678, 9.012], [1.234, 7.890, 9.012])
-		self.assert_masses_balanced([0], [1e-4])
-		self.assert_masses_not_balanced([0], [1e-3])
+		self.assert_masses_balanced([], [], [])
+		self.assert_masses_balanced([1.234], [1.234], [0.0])
+		self.assert_masses_not_balanced([1.234], [5.678], [1.234 - 5.678])
+		self.assert_masses_balanced([1.234, 5.678, 9.012], [1.234, 5.678, 9.012], [0.0, 0.0, 0.0])
+		self.assert_masses_not_balanced([1.234, 5.678, 9.012], [1.234, 7.890, 9.012], [0.0, 5.678 - 7.890, 0.0])
+		self.assert_masses_balanced([0], [1e-4], [-1e-4])
+		self.assert_masses_not_balanced([0], [1e-3], [1e-3])
 
 	def assert_masses_balanced(self, m1, m2, error = None):
 		m1_np = np.array(m1)
