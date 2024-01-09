@@ -265,15 +265,13 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assertFalse(actual)
 
 	def test_find_unbalanced_day_to_report(self):
-		self.assert_unbalanced_day_to_report(0, [1.0], [2.0], [-1.0])
-		self.assert_unbalanced_day_to_report(0, [10.0, 2.0], [5.0, 1.0], [5.0, 1.0])
-		self.assert_unbalanced_day_to_report(1, [2.0, 10.0], [1.0, 5.0], [1.0, 5.0])
-		self.assert_unbalanced_day_to_report(0, [5.0, 1.0], [10.0, 2.0], [-5.0, -1.0])
-		self.assert_unbalanced_day_to_report(1, [1.0, 5.0], [2.0, 10.0], [-1.0, -5.0])
+		self.assert_unbalanced_day_to_report(0, [-1.0])
+		self.assert_unbalanced_day_to_report(0, [5.0, 1.0])
+		self.assert_unbalanced_day_to_report(1, [1.0, 5.0])
+		self.assert_unbalanced_day_to_report(0, [-5.0, -1.0])
+		self.assert_unbalanced_day_to_report(1, [-1.0, -5.0])
 	
-	def assert_unbalanced_day_to_report(self, expected, m1, m2, mass_balance_error_kg):
-		m1_np = np.array(m1)
-		m2_np = np.array(m2)
+	def assert_unbalanced_day_to_report(self, expected, mass_balance_error_kg):
 		mass_balance_error_kg_np = np.array(mass_balance_error_kg)
 		actual = nitrate._find_unbalanced_day_to_report(mass_balance_error_kg_np)
 		self.assertEqual(expected, actual)
