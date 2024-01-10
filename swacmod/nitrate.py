@@ -195,9 +195,6 @@ def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 	return m._calculate_m1a_array_kg_per_day(output, m1_array_kg_per_day)
 
 def _calculate_p_non(data, output, node, her_array_mm_per_day, blackboard):
-	runoff_recharge_mm_per_day = output["runoff_recharge"]
-	macropore_att_mm_per_day = output["macropore_att"]
-	macropore_dir_mm_per_day = output["macropore_dir"]
 	macropore_mm_per_day = blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day
 	p_non = np.where(
 		blackboard.her_array_mm_per_day <= 0,
