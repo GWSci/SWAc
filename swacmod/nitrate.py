@@ -29,6 +29,8 @@ class NitrateBlackboard:
 		self.cell_area_m_sq = None
 		self.days = None
 		self.nitrate_loading = None
+		self.perc_through_root_mm_per_day = None
+		self.TAW_array_mm = None
 		self.rainfall_ts = None
 		self.ae = None
 		self.a = None
@@ -70,6 +72,9 @@ def calculate_nitrate(data, output, node, logging = logging):
 	blackboard.length = output["rainfall_ts"].size
 	blackboard.nitrate_loading = params["nitrate_loading"][blackboard.node]
 	blackboard.logging = logging
+	blackboard.perc_through_root_mm_per_day = output["perc_through_root"]
+	blackboard.TAW_array_mm = output["tawtew"]
+
 	if "enabled" == params["nitrate_process"]:
 		blackboard.rainfall_ts = output["rainfall_ts"]
 		blackboard.ae = output["ae"]
