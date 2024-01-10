@@ -223,7 +223,7 @@ def _calculate_dSMD_array_mm_per_day(blackboard):
 	return blackboard.smd - np.maximum(0, blackboard.p_smd)
 
 def _calculate_M4_array_mm_per_day(M_soil_in_kg, m1_array_kg_per_day, blackboard):
-	return M_soil_in_kg - m1_array_kg_per_day
+	return blackboard.M_soil_in_kg - blackboard.m1_array_kg_per_day
 
 def _calculate_Psmd(blackboard):
 	Psmd = _divide_arrays(
