@@ -89,7 +89,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		expected = [self.Psmd]
 		self.blackboard.her_array_mm_per_day = self.her_array_mm_per_day
 		self.blackboard.dSMD_array_mm_per_day = self.dSMD_array_mm_per_day
-		actual = nitrate._calculate_Psmd(self.her_array_mm_per_day, self.dSMD_array_mm_per_day, self.blackboard)
+		actual = nitrate._calculate_Psmd(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_Psoilperc(self):
