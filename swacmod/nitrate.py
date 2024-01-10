@@ -97,7 +97,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.Pherperc = _calculate_Pherperc(blackboard)
 		blackboard.dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(blackboard)
 		blackboard.Psmd = _calculate_Psmd(blackboard)
-		blackboard.M_soil_in_kg = _calculate_M_soil_in_kg(blackboard.m0_array_kg_per_day, blackboard.Psmd, blackboard.Pherperc)
+		blackboard.M_soil_in_kg = _calculate_M_soil_in_kg(blackboard.m0_array_kg_per_day, blackboard.Psmd, blackboard.Pherperc, blackboard)
 		blackboard.M_soil_tot_kg = _calculate_M_soil_tot_kg(blackboard.M_soil_in_kg, blackboard.Psoilperc)
 		blackboard.m1_array_kg_per_day = _calculate_m1_array_kg_per_day(blackboard.Psoilperc, blackboard.M_soil_tot_kg, blackboard.M_soil_in_kg)
 		blackboard.m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, blackboard.m1_array_kg_per_day)
@@ -238,7 +238,7 @@ def _calculate_Pherperc(blackboard):
 		np.maximum(0, blackboard.perc_through_root_mm_per_day),
 		blackboard.her_array_mm_per_day)
 
-def _calculate_M_soil_in_kg(m0_array_kg_per_day, Psmd, Pherperc):
+def _calculate_M_soil_in_kg(m0_array_kg_per_day, Psmd, Pherperc, blackboard):
 	return m0_array_kg_per_day * (Psmd + Pherperc)
 
 def _calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day):
