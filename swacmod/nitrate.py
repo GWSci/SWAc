@@ -239,7 +239,7 @@ def _calculate_Pherperc(blackboard):
 		blackboard.her_array_mm_per_day)
 
 def _calculate_M_soil_in_kg(m0_array_kg_per_day, Psmd, Pherperc, blackboard):
-	return m0_array_kg_per_day * (Psmd + Pherperc)
+	return blackboard.m0_array_kg_per_day * (blackboard.Psmd + blackboard.Pherperc)
 
 def _calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day):
 	return m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day + m4_array_kg_per_day
