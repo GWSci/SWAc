@@ -33,7 +33,8 @@ class Test_Nitrate(unittest.TestCase):
 			'ae': input_ae,
 		}
 		node = None
-		actual = nitrate._calculate_her_array_mm_per_day(data, output, node)
+		blackboard = nitrate.NitrateBlackboard()
+		actual = nitrate._calculate_her_array_mm_per_day(data, output, node, blackboard)
 
 		np.testing.assert_array_equal(expected, actual)
 

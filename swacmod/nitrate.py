@@ -72,7 +72,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.proportion_0 = np.zeros(blackboard.length)
 		blackboard.proportion_100 = data["proportion_100"]
 
-		blackboard.her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
+		blackboard.her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node, blackboard)
 		blackboard.m0_array_kg_per_day = _calculate_m0_array_kg_per_day(data, output, node, blackboard.her_array_mm_per_day)
 		blackboard.Psoilperc = _calculate_Psoilperc(data, output, node)
 		blackboard.Pherperc = _calculate_Pherperc(data, output, node, blackboard.her_array_mm_per_day)
@@ -125,7 +125,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		}
 
 
-def _calculate_her_array_mm_per_day(data, output, node):
+def _calculate_her_array_mm_per_day(data, output, node, blackboard):
 	return np.maximum(0.0, output["rainfall_ts"] - output["ae"])
 
 def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day):
