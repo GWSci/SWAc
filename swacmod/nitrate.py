@@ -25,8 +25,11 @@ class NitrateBlackboard:
 		# self.data = None
 		# self.output = None
 		self.node = None
+		self.time_switcher = None
 		self.logging = None
 		self.length = None
+		self.cell_area_m_sq = None
+		self.days = None
 		# self.params = None
 		self.rainfall_ts = None
 		self.ae = None
@@ -60,11 +63,14 @@ class NitrateBlackboard:
 		self.nitrate_reaching_water_table_array_tons_per_day = None
 
 def calculate_nitrate(data, output, node, logging = logging):
+	params = data["params"]
 	blackboard = NitrateBlackboard()
 	blackboard.node = node
+	blackboard.time_switcher = data["time_switcher"]
+	blackboard.cell_area_m_sq = params["node_areas"][blackboard.node]
+	blackboard.days = data["series"]["date"]
 	blackboard.length = output["rainfall_ts"].size
 	blackboard.logging = logging
-	params = data["params"]
 	if "enabled" == params["nitrate_process"]:
 		blackboard.rainfall_ts = output["rainfall_ts"]
 		blackboard.ae = output["ae"]
