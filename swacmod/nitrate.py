@@ -81,6 +81,9 @@ def calculate_nitrate(data, output, node, logging = logging):
 	blackboard.TAW_array_mm = output["tawtew"]
 	blackboard.smd = output["smd"]
 	blackboard.p_smd = output["p_smd"]
+	blackboard.runoff_recharge_mm_per_day = output["runoff_recharge"]
+	blackboard.macropore_att_mm_per_day = output["macropore_att"]
+	blackboard.macropore_dir_mm_per_day = output["macropore_dir"]
 
 	if "enabled" == params["nitrate_process"]:
 		blackboard.rainfall_ts = output["rainfall_ts"]
