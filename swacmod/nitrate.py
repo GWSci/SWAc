@@ -214,7 +214,7 @@ def _calculate_Pro(blackboard):
 	return Pro
 
 def _calculate_m3_array_kg_per_day(m0_array_kg_per_day, Pro, blackboard):
-	return m0_array_kg_per_day * Pro
+	return blackboard.m0_array_kg_per_day * blackboard.Pro
 
 def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 	return m1a_array_kg_per_day + m2_array_kg_per_day
