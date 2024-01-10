@@ -24,7 +24,7 @@ class NitrateBlackboard:
 	def __init__(self):
 		# self.data = None
 		# self.output = None
-		# self.node = None
+		self.node = None
 		self.logging = None
 		self.length = None
 		# self.params = None
@@ -61,6 +61,7 @@ class NitrateBlackboard:
 
 def calculate_nitrate(data, output, node, logging = logging):
 	blackboard = NitrateBlackboard()
+	blackboard.node = node
 	blackboard.length = output["rainfall_ts"].size
 	blackboard.logging = logging
 	params = data["params"]
@@ -136,10 +137,10 @@ def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day, bla
 	time_switcher = data["time_switcher"]
 	
 	params = data["params"]
-	cell_area_m_sq = params["node_areas"][node]
+	cell_area_m_sq = params["node_areas"][blackboard.node]
 	days = data["series"]["date"]
 
-	nitrate_loading = params["nitrate_loading"][node]
+	nitrate_loading = params["nitrate_loading"][blackboard.node]
 	max_load_per_year_kg_per_hectare = nitrate_loading[3]
 	her_at_5_percent = nitrate_loading[4]
 	her_at_50_percent = nitrate_loading[5]
