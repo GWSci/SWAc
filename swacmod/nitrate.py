@@ -112,7 +112,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.Pro = _calculate_Pro(blackboard)
 		blackboard.m3_array_kg_per_day = _calculate_m3_array_kg_per_day(blackboard)
 		blackboard.m4_array_kg_per_day = _calculate_M4_array_mm_per_day(blackboard)
-		blackboard.mi_array_kg_per_day = _calculate_mi_array_kg_per_day(blackboard.m1a_array_kg_per_day, blackboard.m2_array_kg_per_day)
+		blackboard.mi_array_kg_per_day = _calculate_mi_array_kg_per_day(blackboard.m1a_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard)
 		blackboard.total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day)
 		blackboard.mass_balance_error_kg = _calculate_mass_balance_error_kg(blackboard.m0_array_kg_per_day, blackboard.total_NO3_to_receptors_kg)
 		_check_masses_balance(node, blackboard.m0_array_kg_per_day, blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day, blackboard.total_NO3_to_receptors_kg, blackboard.mass_balance_error_kg, blackboard.logging)
@@ -216,7 +216,7 @@ def _calculate_Pro(blackboard):
 def _calculate_m3_array_kg_per_day(blackboard):
 	return blackboard.m0_array_kg_per_day * blackboard.Pro
 
-def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
+def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day, blackboard):
 	return m1a_array_kg_per_day + m2_array_kg_per_day
 
 def _calculate_dSMD_array_mm_per_day(blackboard):
