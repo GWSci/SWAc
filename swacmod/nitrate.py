@@ -33,6 +33,9 @@ class NitrateBlackboard:
 		self.TAW_array_mm = None
 		self.smd = None
 		self.p_smd = None
+		self.runoff_recharge_mm_per_day = None
+		self.macropore_att_mm_per_day = None
+		self.macropore_dir_mm_per_day = None
 		self.rainfall_ts = None
 		self.ae = None
 		self.a = None
