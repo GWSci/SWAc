@@ -46,10 +46,6 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.Mass_Balance_Error_kg = 0.0000000
 
 	def set_input_parameters(self):
-		self.data = {}
-		self.output = {}
-		self.node = 0
-
 		self.m0_array_kg_per_day = np.array([self.M0_kg_per_cell])
 		self.m1_array_kg_per_day = np.array([self.M1_kg])
 		self.Msoil_in_kg_array = np.array([self.Msoil_in_kg])
