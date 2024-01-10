@@ -128,7 +128,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.node = 3
 		blackboard.time_switcher = timer.make_time_switcher()
 		blackboard.days = [date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30), date(2023, 10, 1), date(2023, 10, 2), date(2023, 10, 3)]
-		blackboard.cell_area_m_sq = {3: 2500}
+		blackboard.cell_area_m_sq = 2500
 		blackboard.her_array_mm_per_day = her_array_mm_per_day
 		blackboard.nitrate_loading = {
 			# Node,UNIQUE,X,Y,LOAD0,HER_5_MaxL,HER_50_Max,HER_95_Max,5PercLoadM,50PercLoad,95PercLoad
