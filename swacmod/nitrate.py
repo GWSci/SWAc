@@ -139,8 +139,6 @@ def _calculate_her_array_mm_per_day(blackboard):
 	return np.maximum(0.0, blackboard.rainfall_ts - blackboard.ae)
 
 def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day, blackboard):
-	time_switcher = data["time_switcher"]
-	
 	params = data["params"]
 	cell_area_m_sq = params["node_areas"][blackboard.node]
 	days = data["series"]["date"]
@@ -161,7 +159,7 @@ def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day, bla
 		her_at_95_percent,
 		days,
 		blackboard.her_array_mm_per_day,
-		time_switcher)
+		blackboard.time_switcher)
 	return m0_array_kg_per_day
 
 def _calculate_m1_array_kg_per_day(Psoilperc, M_soil_tot_kg, M_soil_in_kg):
