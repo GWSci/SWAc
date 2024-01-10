@@ -104,21 +104,6 @@ class Test_Nitrate(unittest.TestCase):
 		her_at_50_percent = 50 * 365.25
 		her_at_95_percent = 95 * 365.25
 
-		data = {
-			"time_switcher": timer.make_time_switcher(),
-			"series": {
-				"date" : [date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30), date(2023, 10, 1), date(2023, 10, 2), date(2023, 10, 3)]
-			}, "params": {
-				"node_areas" : {
-					3: 2500
-				}, "nitrate_loading" : {
-					# Node,UNIQUE,X,Y,LOAD0,HER_5_MaxL,HER_50_Max,HER_95_Max,5PercLoadM,50PercLoad,95PercLoad
-					3: [0, 0, 0, max_load_per_year, her_at_5_percent, her_at_50_percent, her_at_95_percent, 0, 0, 0]
-				}
-			},
-		}
-		output = None
-		node = 3
 		her_array_mm_per_day = np.array([60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25])
 
 		max_load_per_cell_per_year = 10000 * 365.25
