@@ -107,7 +107,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.blackboard.m0_array_kg_per_day = self.m0_array_kg_per_day
 		self.blackboard.Psmd = self.Psmd_array
 		self.blackboard.Pherperc = self.Pherperc_array
-		actual = nitrate._calculate_M_soil_in_kg(self.m0_array_kg_per_day, self.Psmd_array, self.Pherperc_array, self.blackboard)
+		actual = nitrate._calculate_M_soil_in_kg(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_Pnon(self):
