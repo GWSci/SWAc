@@ -25,8 +25,8 @@ class NitrateBlackboard:
 		# self.data = None
 		# self.output = None
 		# self.node = None
-		# self.logging = None
-		# self.length = None
+		self.logging = None
+		self.length = None
 		# self.params = None
 		self.a = None
 		self.μ = None
@@ -58,17 +58,18 @@ class NitrateBlackboard:
 		self.nitrate_reaching_water_table_array_tons_per_day = None
 
 def calculate_nitrate(data, output, node, logging = logging):
-	length = output["rainfall_ts"].size
+	blackboard = NitrateBlackboard()
+	blackboard.length = output["rainfall_ts"].size
+	blackboard.logging = logging
 	params = data["params"]
 	if "enabled" == params["nitrate_process"]:
-		blackboard = NitrateBlackboard()
 
 		blackboard.a = params["nitrate_calibration_a"]
 		blackboard.μ = params["nitrate_calibration_mu"]
 		blackboard.σ = params["nitrate_calibration_sigma"]
 		blackboard.mean_hydraulic_conductivity = params["nitrate_calibration_mean_hydraulic_conductivity"]
 		blackboard.mean_velocity_of_unsaturated_transport = params["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
-		blackboard.proportion_0 = np.zeros(length)
+		blackboard.proportion_0 = np.zeros(blackboard.length)
 		blackboard.proportion_100 = data["proportion_100"]
 
 		blackboard.her_array_mm_per_day = _calculate_her_array_mm_per_day(data, output, node)
@@ -89,7 +90,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.mi_array_kg_per_day = _calculate_mi_array_kg_per_day(blackboard.m1a_array_kg_per_day, blackboard.m2_array_kg_per_day)
 		blackboard.total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day)
 		blackboard.mass_balance_error_kg = _calculate_mass_balance_error_kg(blackboard.m0_array_kg_per_day, blackboard.total_NO3_to_receptors_kg)
-		_check_masses_balance(node, blackboard.m0_array_kg_per_day, blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day, blackboard.total_NO3_to_receptors_kg, blackboard.mass_balance_error_kg, logging)
+		_check_masses_balance(node, blackboard.m0_array_kg_per_day, blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day, blackboard.total_NO3_to_receptors_kg, blackboard.mass_balance_error_kg, blackboard.logging)
 		blackboard.proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, blackboard.a, blackboard.μ, blackboard.σ, blackboard.mean_hydraulic_conductivity, blackboard.mean_velocity_of_unsaturated_transport, blackboard.proportion_0, blackboard.proportion_100)
 		blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard.proportion_reaching_water_table_array_per_day, blackboard.mi_array_kg_per_day))
 		blackboard.nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day)
@@ -108,7 +109,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 			"nitrate_reaching_water_table_array_tons_per_day" : blackboard.nitrate_reaching_water_table_array_tons_per_day,
 		}
 	else:
-		empty_array = np.zeros(length)
+		empty_array = np.zeros(blackboard.length)
 		return {
 			"her_array_mm_per_day" : empty_array,
 			"m0_array_kg_per_day" : empty_array,
