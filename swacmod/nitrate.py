@@ -140,7 +140,6 @@ def _calculate_her_array_mm_per_day(blackboard):
 
 def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day, blackboard):
 	params = data["params"]
-	days = data["series"]["date"]
 
 	nitrate_loading = params["nitrate_loading"][blackboard.node]
 	max_load_per_year_kg_per_hectare = nitrate_loading[3]
@@ -156,7 +155,7 @@ def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day, bla
 		her_at_5_percent,
 		her_at_50_percent,
 		her_at_95_percent,
-		days,
+		blackboard.days,
 		blackboard.her_array_mm_per_day,
 		blackboard.time_switcher)
 	return m0_array_kg_per_day
