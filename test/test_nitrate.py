@@ -208,7 +208,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.her_array_mm_per_day = her_array_mm_per_day
 		blackboard.m0_array_kg_per_day = np.array([50.0, 60.0, 60.0])
 		blackboard.p_non = nitrate._calculate_p_non(blackboard)
-		actual = nitrate._calculate_m2_array_kg_per_day(m0_array_kg_per_day, blackboard.p_non, blackboard)
+		actual = nitrate._calculate_m2_array_kg_per_day(blackboard)
 		expected = np.array([500.0, 300.0, 0.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)
