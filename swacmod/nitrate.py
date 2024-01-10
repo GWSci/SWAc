@@ -65,6 +65,8 @@ def calculate_nitrate(data, output, node, logging = logging):
 	blackboard.logging = logging
 	params = data["params"]
 	if "enabled" == params["nitrate_process"]:
+		blackboard.rainfall_ts = output["rainfall_ts"]
+		blackboard.ae = output["ae"]
 
 		blackboard.a = params["nitrate_calibration_a"]
 		blackboard.μ = params["nitrate_calibration_mu"]
