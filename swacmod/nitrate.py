@@ -203,7 +203,7 @@ def _calculate_p_non(blackboard):
 	return p_non
 
 def _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non, blackboard):
-	m2_kg_per_day = m0_array_kg_per_day * p_non
+	m2_kg_per_day = blackboard.m0_array_kg_per_day * blackboard.p_non
 	return m2_kg_per_day
 
 def _calculate_Pro(her_array_mm_per_day, p_non, pherperc, Psmd):
