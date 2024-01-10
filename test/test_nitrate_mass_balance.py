@@ -9,7 +9,7 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		blackboard.her_array_mm_per_day = np.array([1.0, 1.0, 1.0,     1.0, 0.0, -1.0, 1.0])
 		blackboard.p_non = np.array(               [0.0, 0.0, 2.0/3.0, 0.2, 0.2, 0.2, 0.0])
 		blackboard.Psmd = np.array(                [0.0, 0.0, 0.0,     0.0, 0.0, 0.0, 0.8])
-		blackboard.pherperc = np.array(            [0.0, 0.5, 0.0,     0.3, 0.3, 0.3, 0.0])
+		blackboard.Pherperc = np.array(            [0.0, 0.5, 0.0,     0.3, 0.3, 0.3, 0.0])
 		her_array_mm_per_day = np.array([1.0, 1.0, 1.0,     1.0, 0.0, -1.0, 1.0])
 		p_non = np.array(               [0.0, 0.0, 2.0/3.0, 0.2, 0.2, 0.2, 0.0])
 		Psmd = np.array(                [0.0, 0.0, 0.0,     0.0, 0.0, 0.0, 0.8])
