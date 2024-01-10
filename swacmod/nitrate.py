@@ -98,7 +98,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(blackboard)
 		blackboard.Psmd = _calculate_Psmd(blackboard)
 		blackboard.M_soil_in_kg = _calculate_M_soil_in_kg(blackboard)
-		blackboard.M_soil_tot_kg = _calculate_M_soil_tot_kg(blackboard.M_soil_in_kg, blackboard.Psoilperc)
+		blackboard.M_soil_tot_kg = _calculate_M_soil_tot_kg(blackboard.M_soil_in_kg, blackboard.Psoilperc, blackboard)
 		blackboard.m1_array_kg_per_day = _calculate_m1_array_kg_per_day(blackboard.Psoilperc, blackboard.M_soil_tot_kg, blackboard.M_soil_in_kg)
 		blackboard.m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, blackboard.m1_array_kg_per_day)
 		blackboard.p_non = _calculate_p_non(data, output, node, blackboard.her_array_mm_per_day)
@@ -172,7 +172,7 @@ def _calculate_m1_array_kg_per_day(Psoilperc, M_soil_tot_kg, M_soil_in_kg):
 		M_soil_tot_initial_kg[0] = 0.0
 	return Psoilperc * (M_soil_in_kg + M_soil_tot_initial_kg)
 
-def _calculate_M_soil_tot_kg(M_soil_in_kg, Psoilperc):
+def _calculate_M_soil_tot_kg(M_soil_in_kg, Psoilperc, blackboard):
 	result_kg = np.zeros_like(M_soil_in_kg)
 	P = 1 - Psoilperc
 	M_soil_tot_initial_kg = 0.0
