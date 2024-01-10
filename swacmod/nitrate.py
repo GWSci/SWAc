@@ -28,6 +28,8 @@ class NitrateBlackboard:
 		self.logging = None
 		self.length = None
 		# self.params = None
+		self.rainfall_ts = None
+		self.ae = None
 		self.a = None
 		self.μ = None
 		self.σ = None
