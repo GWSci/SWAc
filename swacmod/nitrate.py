@@ -109,7 +109,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, blackboard.m1_array_kg_per_day)
 		blackboard.p_non = _calculate_p_non(blackboard)
 		blackboard.m2_array_kg_per_day = _calculate_m2_array_kg_per_day(blackboard)
-		blackboard.Pro = _calculate_Pro(blackboard.her_array_mm_per_day, blackboard.p_non, blackboard.Pherperc, blackboard.Psmd, blackboard)
+		blackboard.Pro = _calculate_Pro(blackboard)
 		blackboard.m3_array_kg_per_day = _calculate_m3_array_kg_per_day(blackboard.m0_array_kg_per_day, blackboard.Pro)
 		blackboard.m4_array_kg_per_day = _calculate_M4_array_mm_per_day(blackboard.M_soil_in_kg, blackboard.m1_array_kg_per_day)
 		blackboard.mi_array_kg_per_day = _calculate_mi_array_kg_per_day(blackboard.m1a_array_kg_per_day, blackboard.m2_array_kg_per_day)
@@ -206,7 +206,7 @@ def _calculate_m2_array_kg_per_day(blackboard):
 	m2_kg_per_day = blackboard.m0_array_kg_per_day * blackboard.p_non
 	return m2_kg_per_day
 
-def _calculate_Pro(her_array_mm_per_day, p_non, pherperc, Psmd, blackboard):
+def _calculate_Pro(blackboard):
 	Pro = np.where(
 		blackboard.her_array_mm_per_day <= 0,
 		0,

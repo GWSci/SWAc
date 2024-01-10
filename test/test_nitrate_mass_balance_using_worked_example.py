@@ -123,7 +123,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.blackboard.p_non = self.p_non_array
 		self.blackboard.Pherperc = self.Pherperc_array
 		self.blackboard.Psmd = self.Psmd_array
-		actual = nitrate._calculate_Pro(self.her_array_mm_per_day, self.p_non_array, self.Pherperc_array, self.Psmd_array, self.blackboard)
+		actual = nitrate._calculate_Pro(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_M3(self):
