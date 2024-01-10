@@ -31,6 +31,8 @@ class NitrateBlackboard:
 		self.nitrate_loading = None
 		self.perc_through_root_mm_per_day = None
 		self.TAW_array_mm = None
+		self.smd = None
+		self.p_smd = None
 		self.rainfall_ts = None
 		self.ae = None
 		self.a = None
@@ -91,7 +93,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.m0_array_kg_per_day = _calculate_m0_array_kg_per_day(blackboard)
 		blackboard.Psoilperc = _calculate_Psoilperc(blackboard)
 		blackboard.Pherperc = _calculate_Pherperc(blackboard)
-		blackboard.dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(data, output, node)
+		blackboard.dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(data, output, node, blackboard)
 		blackboard.Psmd = _calculate_Psmd(blackboard.her_array_mm_per_day, blackboard.dSMD_array_mm_per_day)
 		blackboard.M_soil_in_kg = _calculate_M_soil_in_kg(blackboard.m0_array_kg_per_day, blackboard.Psmd, blackboard.Pherperc)
 		blackboard.M_soil_tot_kg = _calculate_M_soil_tot_kg(blackboard.M_soil_in_kg, blackboard.Psoilperc)
@@ -212,7 +214,7 @@ def _calculate_m3_array_kg_per_day(m0_array_kg_per_day, Pro):
 def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 	return m1a_array_kg_per_day + m2_array_kg_per_day
 
-def _calculate_dSMD_array_mm_per_day(data, output, node):
+def _calculate_dSMD_array_mm_per_day(data, output, node, blackboard):
 	smd = output["smd"]
 	p_smd = output["p_smd"]
 	return smd - np.maximum(0, p_smd)
