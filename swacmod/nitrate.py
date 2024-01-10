@@ -229,8 +229,8 @@ def _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day):
 def _calculate_Psoilperc(data, output, node, blackboard):
 	perc_through_root_mm_per_day = output["perc_through_root"]
 	TAW_array_mm = output["tawtew"]
-	numerator_mm = np.maximum(0.0, perc_through_root_mm_per_day)
-	denominator_mm = (perc_through_root_mm_per_day + TAW_array_mm)
+	numerator_mm = np.maximum(0.0, blackboard.perc_through_root_mm_per_day)
+	denominator_mm = (blackboard.perc_through_root_mm_per_day + blackboard.TAW_array_mm)
 	return _divide_arrays(numerator_mm, denominator_mm)
 
 def _calculate_Pherperc(data, output, node, her_array_mm_per_day):
