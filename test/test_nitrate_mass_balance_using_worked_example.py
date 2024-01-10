@@ -54,7 +54,6 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 			"p_smd" :np.array([self.Potential_SMD]),
 			"runoff_recharge" : np.array([self.Runoff_recharge]),
 			"smd" : np.array([self.SMD]),
-			"tawtew" : np.array([self.TAW]),
 		}
 		self.node = 0
 

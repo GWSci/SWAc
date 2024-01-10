@@ -74,12 +74,6 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_Psoilperc(expected, input_perc_through_root_mm_per_day, input_TAW_array_mm)
 
 	def assert_Psoilperc(self, expected, input_perc_through_root_mm_per_day, input_TAW_array_mm):
-		data = None
-		output = {
-			"perc_through_root": input_perc_through_root_mm_per_day,
-			"tawtew": input_TAW_array_mm,
-		}
-		node = None
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.perc_through_root_mm_per_day = input_perc_through_root_mm_per_day
 		blackboard.TAW_array_mm = input_TAW_array_mm
