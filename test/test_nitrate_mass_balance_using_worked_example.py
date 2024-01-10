@@ -73,6 +73,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.blackboard.rainfall_ts = np.array([self.Precipitation])
 		self.blackboard.ae = np.array([self.AE])
 		self.blackboard.perc_through_root_mm_per_day = np.array([self.Percolation_through_root_zone])
+		self.blackboard.her_array_mm_per_day = np.array([self.HER_mm_per_d])
 		self.blackboard.TAW_array_mm = np.array([self.TAW])
 
 
