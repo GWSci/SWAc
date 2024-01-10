@@ -132,7 +132,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.her_array_mm_per_day = her_array_mm_per_day
 		# Node,UNIQUE,X,Y,LOAD0,HER_5_MaxL,HER_50_Max,HER_95_Max,5PercLoadM,50PercLoad,95PercLoad
 		blackboard.nitrate_loading = [0, 0, 0, max_load_per_year, her_at_5_percent, her_at_50_percent, her_at_95_percent, 0, 0, 0]
-		actual = nitrate._calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day, blackboard)
+		actual = nitrate._calculate_m0_array_kg_per_day(blackboard)
 
 		np.testing.assert_array_equal(expected, actual)		
 
