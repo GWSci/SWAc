@@ -81,6 +81,8 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		}
 		node = None
 		blackboard = nitrate.NitrateBlackboard()
+		blackboard.perc_through_root_mm_per_day = input_perc_through_root_mm_per_day
+		blackboard.TAW_array_mm = input_TAW_array_mm
 		actual = nitrate._calculate_Psoilperc(data, output, node, blackboard)
 		expected_numpy = np.array(expected)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
