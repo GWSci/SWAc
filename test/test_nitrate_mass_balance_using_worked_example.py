@@ -94,7 +94,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 
 	def test_worked_example_Psoilperc(self):
 		expected = [self.Psoilperc]
-		actual = nitrate._calculate_Psoilperc(self.data, self.output, self.node, self.blackboard)
+		actual = nitrate._calculate_Psoilperc(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_Pherperc(self):
