@@ -40,6 +40,8 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		}
 		node = None
 		blackboard = nitrate.NitrateBlackboard()
+		blackboard.smd = np.array(input_smd)
+		blackboard.p_smd = np.array(input_potential_smd)
 		actual = nitrate._calculate_dSMD_array_mm_per_day(data, output, node, blackboard)
 		expected_numpy = np.array(expected)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)

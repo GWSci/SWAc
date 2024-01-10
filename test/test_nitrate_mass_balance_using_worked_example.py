@@ -74,7 +74,8 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.blackboard.perc_through_root_mm_per_day = np.array([self.Percolation_through_root_zone])
 		self.blackboard.her_array_mm_per_day = np.array([self.HER_mm_per_d])
 		self.blackboard.TAW_array_mm = np.array([self.TAW])
-
+		self.blackboard.smd = np.array([self.SMD])
+		self.blackboard.p_smd = np.array([self.Potential_SMD])
 
 	def test_worked_example_HER(self):
 		expected = self.her_array_mm_per_day
