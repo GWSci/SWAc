@@ -167,10 +167,10 @@ def _calculate_m0_array_kg_per_day(blackboard):
 	return m0_array_kg_per_day
 
 def _calculate_m1_array_kg_per_day(Psoilperc, M_soil_tot_kg, M_soil_in_kg, blackboard):
-	M_soil_tot_initial_kg = np.roll(M_soil_tot_kg, 1)
+	M_soil_tot_initial_kg = np.roll(blackboard.M_soil_tot_kg, 1)
 	if (M_soil_tot_initial_kg.size > 0):
 		M_soil_tot_initial_kg[0] = 0.0
-	return Psoilperc * (M_soil_in_kg + M_soil_tot_initial_kg)
+	return blackboard.Psoilperc * (blackboard.M_soil_in_kg + M_soil_tot_initial_kg)
 
 def _calculate_M_soil_tot_kg(blackboard):
 	result_kg = np.zeros_like(blackboard.M_soil_in_kg)
