@@ -127,6 +127,8 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_M3(self):
+		self.blackboard.m0_array_kg_per_day = self.m0_array_kg_per_day
+		self.blackboard.Pro = self.Pro_array
 		expected = [self.M3_kg]
 		actual = nitrate._calculate_m3_array_kg_per_day(self.m0_array_kg_per_day, self.Pro_array, self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
