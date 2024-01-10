@@ -196,7 +196,8 @@ class Test_Nitrate(unittest.TestCase):
 		}
 		node = None
 		her_array_mm_per_day = np.array([10.0, 20.0, 0.0, -10.0])
-		actual = nitrate._calculate_p_non(data, output, node, her_array_mm_per_day)
+		blackboard = nitrate.NitrateBlackboard()
+		actual = nitrate._calculate_p_non(data, output, node, her_array_mm_per_day, blackboard)
 		expected = np.array([10.0, 5.0, 0.0, 0.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
@@ -211,7 +212,8 @@ class Test_Nitrate(unittest.TestCase):
 		her_array_mm_per_day = np.array([10.0, 20.0, 0.0])
 		m0_array_kg_per_day = np.array([50.0, 60.0, 60.0])
 
-		p_non = nitrate._calculate_p_non(data, output, node, her_array_mm_per_day)
+		blackboard = nitrate.NitrateBlackboard()
+		p_non = nitrate._calculate_p_non(data, output, node, her_array_mm_per_day, blackboard)
 		actual = nitrate._calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non)
 		expected = np.array([500.0, 300.0, 0.0])
 

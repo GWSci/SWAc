@@ -101,7 +101,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.M_soil_tot_kg = _calculate_M_soil_tot_kg(blackboard)
 		blackboard.m1_array_kg_per_day = _calculate_m1_array_kg_per_day(blackboard)
 		blackboard.m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, blackboard.m1_array_kg_per_day)
-		blackboard.p_non = _calculate_p_non(data, output, node, blackboard.her_array_mm_per_day)
+		blackboard.p_non = _calculate_p_non(data, output, node, blackboard.her_array_mm_per_day, blackboard)
 		blackboard.m2_array_kg_per_day = _calculate_m2_array_kg_per_day(blackboard.m0_array_kg_per_day, blackboard.p_non)
 		blackboard.Pro = _calculate_Pro(blackboard.her_array_mm_per_day, blackboard.p_non, blackboard.Pherperc, blackboard.Psmd)
 		blackboard.m3_array_kg_per_day = _calculate_m3_array_kg_per_day(blackboard.m0_array_kg_per_day, blackboard.Pro)
@@ -188,7 +188,7 @@ def _divide_arrays(a, b):
 def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
 	return m._calculate_m1a_array_kg_per_day(output, m1_array_kg_per_day)
 
-def _calculate_p_non(data, output, node, her_array_mm_per_day):
+def _calculate_p_non(data, output, node, her_array_mm_per_day, blackboard):
 	runoff_recharge_mm_per_day = output["runoff_recharge"]
 	macropore_att_mm_per_day = output["macropore_att"]
 	macropore_dir_mm_per_day = output["macropore_dir"]

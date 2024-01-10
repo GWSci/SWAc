@@ -112,7 +112,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 
 	def test_worked_example_Pnon(self):
 		expected = [self.Pnon]
-		actual = nitrate._calculate_p_non(self.data, self.output, self.node, self.her_array_mm_per_day)
+		actual = nitrate._calculate_p_non(self.data, self.output, self.node, self.her_array_mm_per_day, self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_M2(self):
