@@ -208,7 +208,7 @@ def _calculate_m2_array_kg_per_day(blackboard):
 
 def _calculate_Pro(her_array_mm_per_day, p_non, pherperc, Psmd, blackboard):
 	Pro = np.where(
-		her_array_mm_per_day <= 0,
+		blackboard.her_array_mm_per_day <= 0,
 		0,
 		1 - p_non - pherperc - Psmd)
 	return Pro
