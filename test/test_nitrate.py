@@ -36,7 +36,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.rainfall_ts = input_rainfall_ts
 		blackboard.ae = input_ae
-		actual = nitrate._calculate_her_array_mm_per_day(data, output, node, blackboard)
+		actual = nitrate._calculate_her_array_mm_per_day(blackboard)
 
 		np.testing.assert_array_equal(expected, actual)
 
