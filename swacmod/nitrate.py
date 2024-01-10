@@ -235,7 +235,7 @@ def _calculate_Pherperc(data, output, node, her_array_mm_per_day, blackboard):
 	perc_through_root_mm_per_day = output["perc_through_root"]
 	return _divide_arrays(
 		np.maximum(0, blackboard.perc_through_root_mm_per_day),
-		her_array_mm_per_day)
+		blackboard.her_array_mm_per_day)
 
 def _calculate_M_soil_in_kg(m0_array_kg_per_day, Psmd, Pherperc):
 	return m0_array_kg_per_day * (Psmd + Pherperc)
