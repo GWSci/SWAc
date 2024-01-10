@@ -145,12 +145,10 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 
 	def assert_M_soil_tot_kg_for_zero_days(self, expected, input_Msoil_in, input_Psoilperc):
 		expected_numpy = np.array(expected)
-		Msoil_in = np.array(input_Msoil_in)
-		Psoilperc = np.array(input_Psoilperc)
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.M_soil_in_kg = np.array(input_Msoil_in)
 		blackboard.Psoilperc = np.array(input_Psoilperc)
-		actual = nitrate._calculate_M_soil_tot_kg(Msoil_in, Psoilperc, blackboard)
+		actual = nitrate._calculate_M_soil_tot_kg(blackboard)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 
 	def test_calculate_M4_array_mm_per_day_for_zero_days(self):
