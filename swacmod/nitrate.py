@@ -96,7 +96,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.Psoilperc = _calculate_Psoilperc(blackboard)
 		blackboard.Pherperc = _calculate_Pherperc(blackboard)
 		blackboard.dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(blackboard)
-		blackboard.Psmd = _calculate_Psmd(blackboard.her_array_mm_per_day, blackboard.dSMD_array_mm_per_day)
+		blackboard.Psmd = _calculate_Psmd(blackboard.her_array_mm_per_day, blackboard.dSMD_array_mm_per_day, blackboard)
 		blackboard.M_soil_in_kg = _calculate_M_soil_in_kg(blackboard.m0_array_kg_per_day, blackboard.Psmd, blackboard.Pherperc)
 		blackboard.M_soil_tot_kg = _calculate_M_soil_tot_kg(blackboard.M_soil_in_kg, blackboard.Psoilperc)
 		blackboard.m1_array_kg_per_day = _calculate_m1_array_kg_per_day(blackboard.Psoilperc, blackboard.M_soil_tot_kg, blackboard.M_soil_in_kg)
@@ -222,7 +222,7 @@ def _calculate_dSMD_array_mm_per_day(blackboard):
 def _calculate_M4_array_mm_per_day(M_soil_in_kg, m1_array_kg_per_day):
 	return M_soil_in_kg - m1_array_kg_per_day
 
-def _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day):
+def _calculate_Psmd(her_array_mm_per_day, dSMD_array_mm_per_day, blackboard):
 	Psmd = _divide_arrays(
 		np.maximum(0.0, dSMD_array_mm_per_day),
 		her_array_mm_per_day)
