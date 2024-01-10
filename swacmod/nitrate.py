@@ -39,14 +39,14 @@ class NitrateBlackboard:
 		self.m0_array_kg_per_day = None
 		self.Psoilperc = None
 		self.Pherperc = None
-		# self.dSMD_array_mm_per_day = None
-		# self.Psmd = None
-		# self.M_soil_in_kg = None
-		# self.M_soil_tot_kg = None
-		# self.m1_array_kg_per_day = None
-		# self.m1a_array_kg_per_day = None
-		# self.p_non = None
-		# self.m2_array_kg_per_day = None
+		self.dSMD_array_mm_per_day = None
+		self.Psmd = None
+		self.M_soil_in_kg = None
+		self.M_soil_tot_kg = None
+		self.m1_array_kg_per_day = None
+		self.m1a_array_kg_per_day = None
+		self.p_non = None
+		self.m2_array_kg_per_day = None
 		# self.Pro = None
 		# self.m3_array_kg_per_day = None
 		# self.m4_array_kg_per_day = None
@@ -75,21 +75,21 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.m0_array_kg_per_day = _calculate_m0_array_kg_per_day(data, output, node, blackboard.her_array_mm_per_day)
 		blackboard.Psoilperc = _calculate_Psoilperc(data, output, node)
 		blackboard.Pherperc = _calculate_Pherperc(data, output, node, blackboard.her_array_mm_per_day)
-		dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(data, output, node)
-		Psmd = _calculate_Psmd(blackboard.her_array_mm_per_day, dSMD_array_mm_per_day)
-		M_soil_in_kg = _calculate_M_soil_in_kg(blackboard.m0_array_kg_per_day, Psmd, blackboard.Pherperc)
-		M_soil_tot_kg = _calculate_M_soil_tot_kg(M_soil_in_kg, blackboard.Psoilperc)
-		m1_array_kg_per_day = _calculate_m1_array_kg_per_day(blackboard.Psoilperc, M_soil_tot_kg, M_soil_in_kg)
-		m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
-		p_non = _calculate_p_non(data, output, node, blackboard.her_array_mm_per_day)
-		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(blackboard.m0_array_kg_per_day, p_non)
-		Pro = _calculate_Pro(blackboard.her_array_mm_per_day, p_non, blackboard.Pherperc, Psmd)
+		blackboard.dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(data, output, node)
+		blackboard.Psmd = _calculate_Psmd(blackboard.her_array_mm_per_day, blackboard.dSMD_array_mm_per_day)
+		blackboard.M_soil_in_kg = _calculate_M_soil_in_kg(blackboard.m0_array_kg_per_day, blackboard.Psmd, blackboard.Pherperc)
+		blackboard.M_soil_tot_kg = _calculate_M_soil_tot_kg(blackboard.M_soil_in_kg, blackboard.Psoilperc)
+		blackboard.m1_array_kg_per_day = _calculate_m1_array_kg_per_day(blackboard.Psoilperc, blackboard.M_soil_tot_kg, blackboard.M_soil_in_kg)
+		blackboard.m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, blackboard.m1_array_kg_per_day)
+		blackboard.p_non = _calculate_p_non(data, output, node, blackboard.her_array_mm_per_day)
+		blackboard.m2_array_kg_per_day = _calculate_m2_array_kg_per_day(blackboard.m0_array_kg_per_day, blackboard.p_non)
+		Pro = _calculate_Pro(blackboard.her_array_mm_per_day, blackboard.p_non, blackboard.Pherperc, blackboard.Psmd)
 		m3_array_kg_per_day = _calculate_m3_array_kg_per_day(blackboard.m0_array_kg_per_day, Pro)
-		m4_array_kg_per_day = _calculate_M4_array_mm_per_day(M_soil_in_kg, m1_array_kg_per_day)
-		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day)
-		total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day)
+		m4_array_kg_per_day = _calculate_M4_array_mm_per_day(blackboard.M_soil_in_kg, blackboard.m1_array_kg_per_day)
+		mi_array_kg_per_day = _calculate_mi_array_kg_per_day(blackboard.m1a_array_kg_per_day, blackboard.m2_array_kg_per_day)
+		total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day)
 		mass_balance_error_kg = _calculate_mass_balance_error_kg(blackboard.m0_array_kg_per_day, total_NO3_to_receptors_kg)
-		_check_masses_balance(node, blackboard.m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging)
+		_check_masses_balance(node, blackboard.m0_array_kg_per_day, blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging)
 		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, blackboard.a, blackboard.μ, blackboard.σ, blackboard.mean_hydraulic_conductivity, blackboard.mean_velocity_of_unsaturated_transport, blackboard.proportion_0, blackboard.proportion_100)
 		nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day))
 		nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(nitrate_reaching_water_table_array_from_this_run_kg_per_day)
@@ -97,9 +97,9 @@ def calculate_nitrate(data, output, node, logging = logging):
 		return {
 			"her_array_mm_per_day" : blackboard.her_array_mm_per_day,
 			"m0_array_kg_per_day" : blackboard.m0_array_kg_per_day,
-			"m1_array_kg_per_day" : m1_array_kg_per_day,
-			"m1a_array_kg_per_day" : m1a_array_kg_per_day,
-			"m2_array_kg_per_day" : m2_array_kg_per_day,
+			"m1_array_kg_per_day" : blackboard.m1_array_kg_per_day,
+			"m1a_array_kg_per_day" : blackboard.m1a_array_kg_per_day,
+			"m2_array_kg_per_day" : blackboard.m2_array_kg_per_day,
 			"m3_array_kg_per_day" : m3_array_kg_per_day,
 			"m4_array_kg_per_day" : m4_array_kg_per_day,
 			"mi_array_kg_per_day" : mi_array_kg_per_day,
