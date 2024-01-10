@@ -217,8 +217,6 @@ def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 	return m1a_array_kg_per_day + m2_array_kg_per_day
 
 def _calculate_dSMD_array_mm_per_day(data, output, node, blackboard):
-	smd = output["smd"]
-	p_smd = output["p_smd"]
 	return blackboard.smd - np.maximum(0, blackboard.p_smd)
 
 def _calculate_M4_array_mm_per_day(M_soil_in_kg, m1_array_kg_per_day):
