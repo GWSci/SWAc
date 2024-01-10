@@ -124,7 +124,8 @@ class Test_Nitrate(unittest.TestCase):
 		max_load_per_cell_per_year = 10000 * 365.25
 		expected = [0.6 * max_load_per_cell_per_year, 0.4 * max_load_per_cell_per_year, 0, 0.6 * max_load_per_cell_per_year, 0.4 * max_load_per_cell_per_year, 0]
 
-		actual = nitrate._calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day)
+		blackboard = nitrate.NitrateBlackboard()
+		actual = nitrate._calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day, blackboard)
 
 		np.testing.assert_array_equal(expected, actual)		
 
