@@ -112,11 +112,6 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_Pherperc(expected, input_perc_through_root_mm_per_day, input_her_array_mm_per_day)
 
 	def assert_Pherperc(self, expected, input_perc_through_root_mm_per_day, input_her_array_mm_per_day):
-		data = None
-		output = {
-			"perc_through_root": input_perc_through_root_mm_per_day,
-		}
-		node = None
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.perc_through_root_mm_per_day = input_perc_through_root_mm_per_day
 		blackboard.her_array_mm_per_day = input_her_array_mm_per_day
