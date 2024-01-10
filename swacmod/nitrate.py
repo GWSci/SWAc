@@ -154,7 +154,7 @@ def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day, bla
 		her_at_50_percent,
 		her_at_95_percent,
 		days,
-		her_array_mm_per_day,
+		blackboard.her_array_mm_per_day,
 		time_switcher)
 	return m0_array_kg_per_day
 
