@@ -217,7 +217,7 @@ def _calculate_m3_array_kg_per_day(blackboard):
 	return blackboard.m0_array_kg_per_day * blackboard.Pro
 
 def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day, blackboard):
-	return m1a_array_kg_per_day + m2_array_kg_per_day
+	return blackboard.m1a_array_kg_per_day + blackboard.m2_array_kg_per_day
 
 def _calculate_dSMD_array_mm_per_day(blackboard):
 	return blackboard.smd - np.maximum(0, blackboard.p_smd)
