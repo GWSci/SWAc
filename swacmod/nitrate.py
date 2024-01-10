@@ -139,13 +139,10 @@ def _calculate_her_array_mm_per_day(blackboard):
 	return np.maximum(0.0, blackboard.rainfall_ts - blackboard.ae)
 
 def _calculate_m0_array_kg_per_day(data, output, node, her_array_mm_per_day, blackboard):
-	params = data["params"]
-
-	nitrate_loading = params["nitrate_loading"][blackboard.node]
-	max_load_per_year_kg_per_hectare = nitrate_loading[3]
-	her_at_5_percent = nitrate_loading[4]
-	her_at_50_percent = nitrate_loading[5]
-	her_at_95_percent = nitrate_loading[6]
+	max_load_per_year_kg_per_hectare = blackboard.nitrate_loading[3]
+	her_at_5_percent = blackboard.nitrate_loading[4]
+	her_at_50_percent = blackboard.nitrate_loading[5]
+	her_at_95_percent = blackboard.nitrate_loading[6]
 
 	hectare_area_m_sq = 10000
 	max_load_per_year_kg_per_cell = max_load_per_year_kg_per_hectare * blackboard.cell_area_m_sq / hectare_area_m_sq
