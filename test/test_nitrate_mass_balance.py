@@ -172,8 +172,6 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_M4_array_mm_per_day(expected, input_M_soil_tot_kg, input_m1_array_kg_per_day)
 
 	def assert_M4_array_mm_per_day(self, expected, input_M_soil_tot_kg, input_m1_array_kg_per_day):
-		input_M_soil_tot_kg = np.array(input_M_soil_tot_kg)
-		input_m1_array_kg_per_day = np.array(input_m1_array_kg_per_day)
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.M_soil_in_kg = np.array(input_M_soil_tot_kg)
 		blackboard.m1_array_kg_per_day = np.array(input_m1_array_kg_per_day)
