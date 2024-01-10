@@ -47,11 +47,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 
 	def set_input_parameters(self):
 		self.data = {}
-		self.output = {
-			"macropore_att" : np.array([self.Macropore_recharge / 2.0]),
-			"macropore_dir" : np.array([self.Macropore_recharge / 2.0]),
-			"runoff_recharge" : np.array([self.Runoff_recharge]),
-		}
+		self.output = {}
 		self.node = 0
 
 		self.m0_array_kg_per_day = np.array([self.M0_kg_per_cell])
