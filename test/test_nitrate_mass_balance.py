@@ -33,12 +33,6 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_dSMD_array_mm_per_day([7.0, 100.0, 1000.0], [10.0, 100.0, 1000.0], [3.0, 0.0, -20.0])
 
 	def assert_dSMD_array_mm_per_day(self, expected, input_smd, input_potential_smd):
-		data = None
-		output = {
-			"smd" : np.array(input_smd),
-			"p_smd" : np.array(input_potential_smd),
-		}
-		node = None
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.smd = np.array(input_smd)
 		blackboard.p_smd = np.array(input_potential_smd)
