@@ -76,6 +76,8 @@ def calculate_nitrate(data, output, node, logging = logging):
 	blackboard.logging = logging
 	blackboard.perc_through_root_mm_per_day = output["perc_through_root"]
 	blackboard.TAW_array_mm = output["tawtew"]
+	blackboard.smd = output["smd"]
+	blackboard.p_smd = output["p_smd"]
 
 	if "enabled" == params["nitrate_process"]:
 		blackboard.rainfall_ts = output["rainfall_ts"]
@@ -217,7 +219,7 @@ def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 def _calculate_dSMD_array_mm_per_day(data, output, node, blackboard):
 	smd = output["smd"]
 	p_smd = output["p_smd"]
-	return smd - np.maximum(0, p_smd)
+	return blackboard.smd - np.maximum(0, blackboard.p_smd)
 
 def _calculate_M4_array_mm_per_day(M_soil_in_kg, m1_array_kg_per_day):
 	return M_soil_in_kg - m1_array_kg_per_day

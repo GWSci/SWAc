@@ -319,6 +319,7 @@ class Test_Nitrate(unittest.TestCase):
 			"rapid_runoff": np.array([32.0, 32.0]),
 			"combined_recharge": np.array([5, 5]),
 			"smd" : np.array([30.0, 6.0]),
+			"p_smd" : np.array([30.0, 6.0]),
 			"tawtew": np.array([0.0, 6.0]),
 		}
 		node = 7
