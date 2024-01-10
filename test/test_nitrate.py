@@ -27,17 +27,10 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_her(input_rainfall_ts, input_ae, expected)
 
 	def assert_her(self, input_rainfall_ts, input_ae, expected):
-		data = None
-		output = {
-			'rainfall_ts': input_rainfall_ts,
-			'ae': input_ae,
-		}
-		node = None
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.rainfall_ts = input_rainfall_ts
 		blackboard.ae = input_ae
 		actual = nitrate._calculate_her_array_mm_per_day(blackboard)
-
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_cumulative_fraction_leaked_per_year(self):

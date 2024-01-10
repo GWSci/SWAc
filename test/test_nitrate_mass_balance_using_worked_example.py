@@ -48,8 +48,6 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 	def set_input_parameters(self):
 		self.data = {}
 		self.output = {
-			"rainfall_ts" : np.array([self.Precipitation]),
-			"ae" : np.array([self.AE]),
 			"macropore_att" : np.array([self.Macropore_recharge / 2.0]),
 			"macropore_dir" : np.array([self.Macropore_recharge / 2.0]),
 			"perc_through_root" : np.array([self.Percolation_through_root_zone]),
