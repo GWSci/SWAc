@@ -50,9 +50,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.output = {
 			"macropore_att" : np.array([self.Macropore_recharge / 2.0]),
 			"macropore_dir" : np.array([self.Macropore_recharge / 2.0]),
-			"p_smd" :np.array([self.Potential_SMD]),
 			"runoff_recharge" : np.array([self.Runoff_recharge]),
-			"smd" : np.array([self.SMD]),
 		}
 		self.node = 0
 
