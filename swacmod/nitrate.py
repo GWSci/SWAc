@@ -111,7 +111,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.m2_array_kg_per_day = _calculate_m2_array_kg_per_day(blackboard)
 		blackboard.Pro = _calculate_Pro(blackboard)
 		blackboard.m3_array_kg_per_day = _calculate_m3_array_kg_per_day(blackboard)
-		blackboard.m4_array_kg_per_day = _calculate_M4_array_mm_per_day(blackboard.M_soil_in_kg, blackboard.m1_array_kg_per_day)
+		blackboard.m4_array_kg_per_day = _calculate_M4_array_mm_per_day(blackboard.M_soil_in_kg, blackboard.m1_array_kg_per_day, blackboard)
 		blackboard.mi_array_kg_per_day = _calculate_mi_array_kg_per_day(blackboard.m1a_array_kg_per_day, blackboard.m2_array_kg_per_day)
 		blackboard.total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day)
 		blackboard.mass_balance_error_kg = _calculate_mass_balance_error_kg(blackboard.m0_array_kg_per_day, blackboard.total_NO3_to_receptors_kg)
@@ -222,7 +222,7 @@ def _calculate_mi_array_kg_per_day(m1a_array_kg_per_day, m2_array_kg_per_day):
 def _calculate_dSMD_array_mm_per_day(blackboard):
 	return blackboard.smd - np.maximum(0, blackboard.p_smd)
 
-def _calculate_M4_array_mm_per_day(M_soil_in_kg, m1_array_kg_per_day):
+def _calculate_M4_array_mm_per_day(M_soil_in_kg, m1_array_kg_per_day, blackboard):
 	return M_soil_in_kg - m1_array_kg_per_day
 
 def _calculate_Psmd(blackboard):
