@@ -120,7 +120,7 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.perc_through_root_mm_per_day = input_perc_through_root_mm_per_day
 		blackboard.her_array_mm_per_day = input_her_array_mm_per_day
-		actual = nitrate._calculate_Pherperc(data, output, node, input_her_array_mm_per_day, blackboard)
+		actual = nitrate._calculate_Pherperc(blackboard)
 		expected_numpy = np.array(expected)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 

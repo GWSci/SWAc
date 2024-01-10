@@ -90,7 +90,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.her_array_mm_per_day = _calculate_her_array_mm_per_day(blackboard)
 		blackboard.m0_array_kg_per_day = _calculate_m0_array_kg_per_day(blackboard)
 		blackboard.Psoilperc = _calculate_Psoilperc(blackboard)
-		blackboard.Pherperc = _calculate_Pherperc(data, output, node, blackboard.her_array_mm_per_day, blackboard)
+		blackboard.Pherperc = _calculate_Pherperc(blackboard)
 		blackboard.dSMD_array_mm_per_day = _calculate_dSMD_array_mm_per_day(data, output, node)
 		blackboard.Psmd = _calculate_Psmd(blackboard.her_array_mm_per_day, blackboard.dSMD_array_mm_per_day)
 		blackboard.M_soil_in_kg = _calculate_M_soil_in_kg(blackboard.m0_array_kg_per_day, blackboard.Psmd, blackboard.Pherperc)
@@ -231,8 +231,7 @@ def _calculate_Psoilperc(blackboard):
 	denominator_mm = (blackboard.perc_through_root_mm_per_day + blackboard.TAW_array_mm)
 	return _divide_arrays(numerator_mm, denominator_mm)
 
-def _calculate_Pherperc(data, output, node, her_array_mm_per_day, blackboard):
-	perc_through_root_mm_per_day = output["perc_through_root"]
+def _calculate_Pherperc(blackboard):
 	return _divide_arrays(
 		np.maximum(0, blackboard.perc_through_root_mm_per_day),
 		blackboard.her_array_mm_per_day)
