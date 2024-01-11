@@ -109,10 +109,6 @@ def _do_nitrate_calculations(blackboard):
 	blackboard.nitrate_reaching_water_table_array_tons_per_day = _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard)
 	return blackboard
 
-def _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard):
-	return (blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day 
-		 + blackboard.historical_nitrate_reaching_water_table_array_tons_per_day)
-
 def _initialise_blackboard(blackboard, data, output, node, logging):
 	blackboard.length = output["rainfall_ts"].size
 
@@ -307,6 +303,10 @@ def _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydrau
 def _convert_kg_to_tons_array(blackboard):
 	return blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day / 1000.0
 
+def _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard):
+	return (blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day 
+		 + blackboard.historical_nitrate_reaching_water_table_array_tons_per_day)
+
 def make_aggregation_array(data):
 	time_periods = data["params"]["time_periods"]
 	node_areas = data["params"]["node_areas"]
@@ -326,7 +326,6 @@ def aggregate_nitrate(aggregation, data, output, node):
 def _len_time_periods(time_periods):
 	return len(time_periods)
 	
-
 def _calculate_combined_recharge_m_cubed(data, output, node):
 	node_areas = data["params"]["node_areas"]
 	combined_recharge_mm = output["combined_recharge"]
