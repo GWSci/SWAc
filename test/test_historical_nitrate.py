@@ -87,3 +87,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.historical_mi_array_kg_per_day = np.array([10.0, 20.0])
 
 		actual = historical_nitrate._calculate_truncated_historical_mi_array_kg_per_day(blackboard)
+
+		expected = np.array([10.0, 20.0])
+		np.testing.assert_array_equal(expected, actual)

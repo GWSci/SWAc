@@ -117,7 +117,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.nitrate_loading = [0, 0, 0, max_load_per_year, her_at_5_percent, her_at_50_percent, her_at_95_percent, 0, 0, 0]
 		actual = nitrate._calculate_m0_array_kg_per_day(blackboard)
 
-		np.testing.assert_array_equal(expected, actual)		
+		np.testing.assert_array_equal(expected, actual)
 
 	def test_calculate_m1_array_kg_per_day_for_zero_days_new(self):
 		input_Psoilperc = []
