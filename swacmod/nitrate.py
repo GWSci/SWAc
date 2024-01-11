@@ -22,6 +22,7 @@ def get_nitrate(data, output, node):
 
 class NitrateBlackboard:
 	def __init__(self):
+		self.historical_nitrate_reaching_water_table_array_tons_per_day = None
 		self.node = None
 		self.time_switcher = None
 		self.logging = None
@@ -109,7 +110,7 @@ def _do_nitrate_calculations(blackboard):
 	return blackboard
 
 def _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard):
-	return blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day
+	return blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day + blackboard.historical_nitrate_reaching_water_table_array_tons_per_day
 
 def _initialise_blackboard(blackboard, data, output, node, logging):
 	blackboard.length = output["rainfall_ts"].size
@@ -144,6 +145,7 @@ def _initialise_blackboard(blackboard, data, output, node, logging):
 	blackboard.interflow_to_rivers = output["interflow_to_rivers"]
 	blackboard.rainfall_ts = output["rainfall_ts"]
 	blackboard.ae = output["ae"]
+	blackboard.historical_nitrate_reaching_water_table_array_tons_per_day = output["historical_nitrate_reaching_water_table_array_tons_per_day"]
 
 def _calculate_her_array_mm_per_day(blackboard):
 	return np.maximum(0.0, blackboard.rainfall_ts - blackboard.ae)

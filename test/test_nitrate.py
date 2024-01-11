@@ -236,6 +236,11 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.historical_nitrate_reaching_water_table_array_tons_per_day = np.array([10.0, 20.0, 30.0])
 		blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day = np.array([1.0, 2.0, 3.0])
 
+		actual = nitrate._combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard)
+
+		expected = np.array([11.0, 22.0, 33.0])
+		np.testing.assert_array_almost_equal(expected, actual)
+
 	def test_calculate_nitrate(self):
 		max_load_per_year_kg_per_hectare = 1000
 		her_at_5_percent = 10
@@ -274,6 +279,7 @@ class Test_Nitrate(unittest.TestCase):
 			"smd" : np.array([20.0, -4.0]),
 			"p_smd" : np.array([-4.0, 0.0]),
 			"tawtew": np.array([0.0, 6.0]),
+			"historical_nitrate_reaching_water_table_array_tons_per_day": np.array([100.0, 200.0])
 		}
 		node = 7
 		actual = nitrate.calculate_nitrate(data, output, node, logging = DummyLogger())
@@ -287,7 +293,7 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([35.0, 38.89441]), actual["mi_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.6]), actual["proportion_reaching_water_table_array_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 21.0]), actual["nitrate_reaching_water_table_array_from_this_run_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.021]), actual["nitrate_reaching_water_table_array_tons_per_day"])
+		np.testing.assert_array_almost_equal(np.array([100.0, 200.021]), actual["nitrate_reaching_water_table_array_tons_per_day"])
 
 	def test_calculate_nitrate_when_disabled(self):
 		max_load_per_year_kg_per_hectare = 1000
