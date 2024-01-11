@@ -1577,8 +1577,10 @@ def _cumulative_fraction_leaked_per_year(double her_at_5_percent, double her_at_
     y = (m * x) + c
     return max(0, y)
 
-def calculate_mass_reaching_water_table_array_kg_per_day(double[:] proportion_reaching_water_table_array_per_day, double[:] mi_array_kg_per_day):
+def calculate_mass_reaching_water_table_array_kg_per_day(double[:] proportion_reaching_water_table_array_per_dayx, double[:] mi_array_kg_per_dayx, blackboard):
     cdef:
+        double[:] proportion_reaching_water_table_array_per_day = blackboard.proportion_reaching_water_table_array_per_day
+        double[:] mi_array_kg_per_day = blackboard.mi_array_kg_per_day
         size_t length
         size_t day_nitrate_was_leached
         size_t result_end
