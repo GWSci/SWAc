@@ -30,14 +30,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_historical_nitrate_dates_when_both_sets_of_date_are_empty(self):
-		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
-		blackboard.date = []
-		blackboard.historical_nitrate_date = []
-
-		actual = historical_nitrate._calculate_historical_nitrate_dates(blackboard)
-
-		expected = []
-		self.assertEqual(expected, actual)
 		self.assert_calculate_historical_nitrate_dates([], [], [])
 
 	def assert_calculate_historical_nitrate_dates(self, expected, input_historical_nitrate_date, input_date):
