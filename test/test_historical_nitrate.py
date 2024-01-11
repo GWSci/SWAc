@@ -221,7 +221,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		actual = blackboard.initialise_blackboard(data, output, node)
 
 		expected = self.make_sample_blackboard()
-		self.assertEqual(expected, actual)
 		self.assertEqual(expected.a, actual.a)
 		self.assertEqual(expected.days, actual.days)
 		np.testing.assert_allclose(expected.historical_mi_array_kg_per_day, actual.historical_mi_array_kg_per_day)
