@@ -53,37 +53,37 @@ class NitrateBlackboard:
 		self.μ = None
 		self.σ = None
 
-	def initialise_blackboard(blackboard, data, output, node, logging):
-		blackboard.length = output["rainfall_ts"].size
+	def initialise_blackboard(self, data, output, node, logging):
+		self.length = output["rainfall_ts"].size
 
-		blackboard.node = node
-		blackboard.logging = logging
-		blackboard.proportion_0 = np.zeros(blackboard.length)
+		self.node = node
+		self.logging = logging
+		self.proportion_0 = np.zeros(self.length)
 
-		blackboard.time_switcher = data["time_switcher"]
-		blackboard.days = data["series"]["date"]
-		blackboard.proportion_100 = data["proportion_100"]
+		self.time_switcher = data["time_switcher"]
+		self.days = data["series"]["date"]
+		self.proportion_100 = data["proportion_100"]
 
 		params = data["params"]
-		blackboard.nitrate_depth_to_water = params["nitrate_depth_to_water"][blackboard.node]
-		blackboard.cell_area_m_sq = params["node_areas"][blackboard.node]
-		blackboard.nitrate_loading = params["nitrate_loading"][blackboard.node]
-		blackboard.a = params["nitrate_calibration_a"]
-		blackboard.μ = params["nitrate_calibration_mu"]
-		blackboard.σ = params["nitrate_calibration_sigma"]
-		blackboard.mean_hydraulic_conductivity = params["nitrate_calibration_mean_hydraulic_conductivity"]
-		blackboard.mean_velocity_of_unsaturated_transport = params["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
+		self.nitrate_depth_to_water = params["nitrate_depth_to_water"][self.node]
+		self.cell_area_m_sq = params["node_areas"][self.node]
+		self.nitrate_loading = params["nitrate_loading"][self.node]
+		self.a = params["nitrate_calibration_a"]
+		self.μ = params["nitrate_calibration_mu"]
+		self.σ = params["nitrate_calibration_sigma"]
+		self.mean_hydraulic_conductivity = params["nitrate_calibration_mean_hydraulic_conductivity"]
+		self.mean_velocity_of_unsaturated_transport = params["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
 
-		blackboard.perc_through_root_mm_per_day = output["perc_through_root"]
-		blackboard.TAW_array_mm = output["tawtew"]
-		blackboard.smd = output["smd"]
-		blackboard.p_smd = output["p_smd"]
-		blackboard.runoff_recharge_mm_per_day = output["runoff_recharge"]
-		blackboard.macropore_att_mm_per_day = output["macropore_att"]
-		blackboard.macropore_dir_mm_per_day = output["macropore_dir"]
-		blackboard.interflow_volume = output["interflow_volume"]
-		blackboard.infiltration_recharge = output["infiltration_recharge"]
-		blackboard.interflow_to_rivers = output["interflow_to_rivers"]
-		blackboard.rainfall_ts = output["rainfall_ts"]
-		blackboard.ae = output["ae"]
-		blackboard.historical_nitrate_reaching_water_table_array_tons_per_day = output["historical_nitrate_reaching_water_table_array_tons_per_day"]
+		self.perc_through_root_mm_per_day = output["perc_through_root"]
+		self.TAW_array_mm = output["tawtew"]
+		self.smd = output["smd"]
+		self.p_smd = output["p_smd"]
+		self.runoff_recharge_mm_per_day = output["runoff_recharge"]
+		self.macropore_att_mm_per_day = output["macropore_att"]
+		self.macropore_dir_mm_per_day = output["macropore_dir"]
+		self.interflow_volume = output["interflow_volume"]
+		self.infiltration_recharge = output["infiltration_recharge"]
+		self.interflow_to_rivers = output["interflow_to_rivers"]
+		self.rainfall_ts = output["rainfall_ts"]
+		self.ae = output["ae"]
+		self.historical_nitrate_reaching_water_table_array_tons_per_day = output["historical_nitrate_reaching_water_table_array_tons_per_day"]
