@@ -142,11 +142,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assign_common_blackboard_inputs_for_proportion_reaching_water_table(blackboard)
 		blackboard.date = new_days
 		blackboard.historical_nitrate_date = historic_days
-		blackboard.mean_hydraulic_conductivity = 1.0
-		blackboard.mean_velocity_of_unsaturated_transport = 1.0
-		blackboard.a = 10.0
-		blackboard.μ = 0.0
-		blackboard.σ = 1.0
 		actual = historical_nitrate._calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
 
 		cumulative_proportion_for_the_entire_period = self.make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(combined_days)
@@ -155,16 +150,16 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 	def assign_common_blackboard_inputs_for_proportion_reaching_water_table(self, blackboard):
 		blackboard.nitrate_depth_to_water = np.array([10.0])
+		blackboard.mean_hydraulic_conductivity = 1.0
+		blackboard.mean_velocity_of_unsaturated_transport = 1.0
+		blackboard.a = 10.0
+		blackboard.μ = 0.0
+		blackboard.σ = 1.0
 
 	def make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(self, combined_days):
 		nitrate_blackboard = nitrate.NitrateBlackboard()
 		self.assign_common_blackboard_inputs_for_proportion_reaching_water_table(nitrate_blackboard)
 		nitrate_blackboard.days = combined_days
-		nitrate_blackboard.mean_hydraulic_conductivity = 1.0
-		nitrate_blackboard.mean_velocity_of_unsaturated_transport = 1.0
-		nitrate_blackboard.a = 10.0
-		nitrate_blackboard.μ = 0.0
-		nitrate_blackboard.σ = 1.0
 		cumulative_proportion_for_the_entire_period = nitrate._calculate_proportion_reaching_water_table_array_per_day(nitrate_blackboard)
 		np.testing.assert_allclose(
 			np.array([False, True, True, True, True, True, True, True, True, True]),
