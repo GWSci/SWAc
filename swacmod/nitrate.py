@@ -245,7 +245,7 @@ def _calculate_M_soil_in_kg(blackboard):
 	return blackboard.m0_array_kg_per_day * (blackboard.Psmd + blackboard.Pherperc)
 
 def _calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, blackboard):
-	return m1_array_kg_per_day + m2_array_kg_per_day + m3_array_kg_per_day + m4_array_kg_per_day
+	return blackboard.m1_array_kg_per_day + blackboard.m2_array_kg_per_day + blackboard.m3_array_kg_per_day + blackboard.m4_array_kg_per_day
 
 def _calculate_mass_balance_error_kg(m0_array_kg_per_day, total_NO3_to_receptors_kg):
 	return m0_array_kg_per_day - total_NO3_to_receptors_kg
