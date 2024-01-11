@@ -33,3 +33,5 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
 		blackboard.date = [date(2023, 1, 3), date(2023, 1, 4), ]
 		blackboard.historical_nitrate_date = [date(2023, 1, 1), date(2023, 1, 2), ]
+
+		actual = historical_nitrate._calculate_historical_nitrate_dates(blackboard)
