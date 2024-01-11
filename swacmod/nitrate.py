@@ -272,14 +272,14 @@ def _find_unbalanced_day_to_report(mass_balance_error_kg):
 	return np.argmax(np.abs(mass_balance_error_kg))
 
 def _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, i, mass_balance_error_kg, total_NO3_to_receptors_kg, blackboard):
-	m0 = m0_array_kg_per_day[i]
-	m1 = m1_array_kg_per_day[i]
-	m2 = m2_array_kg_per_day[i]
-	m3 = m3_array_kg_per_day[i]
-	m4 = m4_array_kg_per_day[i]
-	mass_balance_error = mass_balance_error_kg[i]
-	total_NO3_to_receptors = total_NO3_to_receptors_kg[i]
-	message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index {i} with a mass balance error of {mass_balance_error} kg. total_NO3_to_receptors = {total_NO3_to_receptors} kg; M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg; M3 = {m3} kg; M4 = {m4} kg."
+	m0 = blackboard.m0_array_kg_per_day[i]
+	m1 = blackboard.m1_array_kg_per_day[i]
+	m2 = blackboard.m2_array_kg_per_day[i]
+	m3 = blackboard.m3_array_kg_per_day[i]
+	m4 = blackboard.m4_array_kg_per_day[i]
+	mass_balance_error = blackboard.mass_balance_error_kg[i]
+	total_NO3_to_receptors = blackboard.total_NO3_to_receptors_kg[i]
+	message = f"Nitrate masses do not balance for node {blackboard.node} using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index {i} with a mass balance error of {mass_balance_error} kg. total_NO3_to_receptors = {total_NO3_to_receptors} kg; M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg; M3 = {m3} kg; M4 = {m4} kg."
 	return message
 
 def _calculate_proportion_reaching_water_table_array_per_day(blackboard):	
