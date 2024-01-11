@@ -30,8 +30,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_historical_nitrate_dates_when_historical_dates_are_contiguous_with_new_dates(self):
-		input_historical_nitrate_date = [date(2023, 1, 1), date(2023, 1, 2), ]
-		input_date = [date(2023, 1, 3), date(2023, 1, 4), ]
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
-		blackboard.date = input_date
-		blackboard.historical_nitrate_date = input_historical_nitrate_date
+		blackboard.date = [date(2023, 1, 3), date(2023, 1, 4), ]
+		blackboard.historical_nitrate_date = [date(2023, 1, 1), date(2023, 1, 2), ]
