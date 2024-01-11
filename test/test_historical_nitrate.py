@@ -208,7 +208,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		data = {
 			"params": {
 				"nitrate_calibration_a": 10.0,
-				"nitrate_depth_to_water": np.array([10.0]),
+				"nitrate_depth_to_water": {7: np.array([10.0])},
 			},
 			"series": {
 				"date": [date(2023, 1, 3), date(2023, 1, 4)],
