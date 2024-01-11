@@ -241,7 +241,17 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		mass_balance_error_kg = np.array([1.0, 2.0, 1.0])
 		total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
 
-		actual = nitrate._make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, i, mass_balance_error_kg, total_NO3_to_receptors_kg)
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.node = 1
+		blackboard.m0_array_kg_per_day = np.array([1.0, 2.0, 3.0])
+		blackboard.m1_array_kg_per_day = np.array([10.0, 20.0, 30.0])
+		blackboard.m2_array_kg_per_day = np.array([100.0, 200.0, 300.0])
+		blackboard.m3_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
+		blackboard.m4_array_kg_per_day = np.array([10000.0, 20000.0, 30000.0])
+		blackboard.total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
+		blackboard.mass_balance_error_kg = np.array([1.0, 2.0, 1.0])
+
+		actual = nitrate._make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, i, mass_balance_error_kg, total_NO3_to_receptors_kg, blackboard)
 
 		expected = "Nitrate masses do not balance for node 1 using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index 1 with a mass balance error of 2.0 kg. total_NO3_to_receptors = 456.0 kg; M0 = 2.0 kg; M1 = 20.0 kg; M2 = 200.0 kg; M3 = 2000.0 kg; M4 = 20000.0 kg."
 		self.assertEqual(expected, actual)
