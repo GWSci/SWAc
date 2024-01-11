@@ -55,10 +55,11 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		}
 		output = None
 		node = 3
+		blackboard = nitrate.NitrateBlackboard()
 		expected = np.array([0.0, 0.793244, 0.120028])
 		proportion_0 = None
 		proportion_100 = None
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
+		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100, blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_cumulative_proportion_reaching_water_table_varies_with_params(self):
@@ -104,7 +105,8 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		node = 3
 		proportion_0 = "xxx"
 		proportion_100 = None
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
+		blackboard = nitrate.NitrateBlackboard()
+		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100, blackboard)
 		self.assertEqual("xxx", actual)
 
 	def test_calculate_daily_proportion_reaching_water_table_arr_when_dtw_is_100(self):
@@ -128,8 +130,9 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		output = None
 		node = 3
 		proportion_0 = None
+		blackboard = nitrate.NitrateBlackboard()
 		proportion_100 = "xxx"
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
+		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100, blackboard)
 		self.assertEqual("xxx", actual)
 	
 	def test_total_mass_leached_on_day_for_zero_days(self):

@@ -116,7 +116,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(blackboard)
 		blackboard.mass_balance_error_kg = _calculate_mass_balance_error_kg(blackboard)
 		_check_masses_balance(node, blackboard.m0_array_kg_per_day, blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day, blackboard.total_NO3_to_receptors_kg, blackboard.mass_balance_error_kg, blackboard.logging, blackboard)
-		blackboard.proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, blackboard.a, blackboard.μ, blackboard.σ, blackboard.mean_hydraulic_conductivity, blackboard.mean_velocity_of_unsaturated_transport, blackboard.proportion_0, blackboard.proportion_100)
+		blackboard.proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, blackboard.a, blackboard.μ, blackboard.σ, blackboard.mean_hydraulic_conductivity, blackboard.mean_velocity_of_unsaturated_transport, blackboard.proportion_0, blackboard.proportion_100, blackboard)
 		blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard.proportion_reaching_water_table_array_per_day, blackboard.mi_array_kg_per_day))
 		blackboard.nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day)
 
@@ -274,7 +274,7 @@ def _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_
 	message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index {i} with a mass balance error of {mass_balance_error} kg. total_NO3_to_receptors = {total_NO3_to_receptors} kg; M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg; M3 = {m3} kg; M4 = {m4} kg."
 	return message
 
-def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100):	
+def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100, blackboard):	
 	time_switcher = data["time_switcher"]
 	length = len(data["series"]["date"])
 	depth_to_water_m = data["params"]["nitrate_depth_to_water"][node][0]
