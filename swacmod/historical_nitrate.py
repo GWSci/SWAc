@@ -12,7 +12,7 @@ def get_historical_nitrate(data, output, node):
 		"historical_nitrate_reaching_water_table_array_tons_per_day": empty_array,
 	}
 
-def _calculate_historical_nitrate_dates(blackboard):
+def _calculate_truncated_historical_nitrate_date(blackboard):
 	historical_nitrate_date = blackboard.historical_nitrate_date
 	new_dates = blackboard.date
 	if len(new_dates) == 0:
