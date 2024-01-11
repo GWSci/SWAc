@@ -176,3 +176,10 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			cumulative_proportion_for_the_entire_period > 0
 		)
 		return cumulative_proportion_for_the_entire_period
+
+	def test_calculate_historical_mass_reaching_water_table_array_kg_per_day(self):
+		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
+		blackboard.historic_proportion_reaching_water_table_array_per_day = np.array([0.1, 0.2, 0.3])
+		blackboard.truncated_historical_mi_array_kg_per_day = np.array([10.0, 100.0, 1000.0])
+
+		actual = historical_nitrate._calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard)

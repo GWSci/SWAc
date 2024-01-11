@@ -1600,6 +1600,29 @@ def calculate_mass_reaching_water_table_array_kg_per_day(blackboard):
 
     return np.array(result_kg)
 
+def calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
+    cdef:
+        double[:] proportion_reaching_water_table_array_per_day = blackboard.historic_proportion_reaching_water_table_array_per_day
+        double[:] mi_array_kg_per_day = blackboard.truncated_historical_mi_array_kg_per_day
+        size_t length
+        size_t day_nitrate_was_leached
+        size_t result_end
+        size_t i
+        double[:] result_kg = np.zeros(length)
+        double mass_leached_on_day_kg
+
+    length = proportion_reaching_water_table_array_per_day.size
+    result_kg = np.zeros(length)
+    for day_nitrate_was_leached in range(length):
+        mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
+        if mass_leached_on_day_kg == 0:
+            continue
+        result_end = length - day_nitrate_was_leached
+        for i in range(result_end):
+            result_kg[day_nitrate_was_leached + i] += proportion_reaching_water_table_array_per_day[i] * mass_leached_on_day_kg
+
+    return np.array(result_kg)
+
 def _calculate_m1a_array_kg_per_day(blackboard):
     cdef:
         size_t length

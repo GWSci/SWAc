@@ -1,4 +1,5 @@
 import numpy as np
+import swacmod.model as m
 import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
 
 class HistoricalNitrateBlackboard():
@@ -45,3 +46,6 @@ def _calculate_truncated_historical_mi_array_kg_per_day(blackboard):
 
 def _calculate_historic_proportion_reaching_water_table_array_per_day(blackboard):	
 	return nitrate_proportion.calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
+
+def _calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
+	return m.calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard)
