@@ -13,4 +13,10 @@ def get_historical_nitrate(data, output, node):
 	}
 
 def _calculate_historical_nitrate_dates(blackboard):
-	return blackboard.historical_nitrate_date
+	historical_nitrate_date = blackboard.historical_nitrate_date
+	new_dates = blackboard.date
+	if len(new_dates) == 0:
+		return historical_nitrate_date
+	first_new_date = new_dates[0]
+	truncated_historical_nitrate_dates = [date for date in historical_nitrate_date if date < first_new_date]
+	return truncated_historical_nitrate_dates
