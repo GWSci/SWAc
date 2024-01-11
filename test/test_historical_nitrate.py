@@ -203,3 +203,11 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 		expected = np.array([1.0, 2.0, 3.0])
 		np.testing.assert_allclose(expected, actual)
+
+	def test_historical_nitrate_initialise_blackboard(self):
+		data = {}
+		output = {}
+		node = None
+		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
+
+		blackboard.initialise_blackboard(data, output, node)

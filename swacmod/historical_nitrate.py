@@ -20,6 +20,9 @@ class HistoricalNitrateBlackboard():
 		self.μ = None
 		self.σ = None
 
+	def initialise_blackboard(self, data, output, node):
+		pass
+
 def get_historical_nitrate(data, output, node):
 	length = len(data["series"]["date"])
 	empty_array = np.zeros(length)
