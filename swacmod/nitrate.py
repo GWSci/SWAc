@@ -6,6 +6,7 @@ import swacmod.feature_flags as ff
 from swacmod.nitrate_blackboard import NitrateBlackboard
 import swacmod.utils as utils
 import swacmod.model as m
+import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
 
 def get_nitrate(data, output, node):
 	nitrate = calculate_nitrate(data, output, node)
@@ -173,16 +174,8 @@ def _make_unbalanced_day_log_message(i, blackboard):
 	message = f"Nitrate masses do not balance for node {blackboard.node} using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index {i} with a mass balance error of {mass_balance_error} kg. total_NO3_to_receptors = {total_NO3_to_receptors} kg; M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg; M3 = {m3} kg; M4 = {m4} kg."
 	return message
 
-def _calculate_proportion_reaching_water_table_array_per_day(blackboard):	
-	time_switcher = blackboard.time_switcher
-	length = len(blackboard.days)
-	depth_to_water_m = blackboard.nitrate_depth_to_water[0]
-	if depth_to_water_m == 0.0:
-		return blackboard.proportion_0
-	elif depth_to_water_m == 100.0:
-		return blackboard.proportion_100
-	else:
-		return __calculate_proportion_reaching_water_table_array_per_day(length, blackboard.a, blackboard.μ, blackboard.σ, blackboard.mean_hydraulic_conductivity, blackboard.mean_velocity_of_unsaturated_transport, depth_to_water_m, time_switcher)
+def _calculate_proportion_reaching_water_table_array_per_day(blackboard):
+	return nitrate_proportion.n_calculate_proportion_reaching_water_table_array_per_day(blackboard)
 
 def __calculate_proportion_reaching_water_table_array_per_day(length, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, time_switcher):
 	result = np.zeros(length)
