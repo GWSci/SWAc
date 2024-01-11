@@ -113,7 +113,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.m3_array_kg_per_day = _calculate_m3_array_kg_per_day(blackboard)
 		blackboard.m4_array_kg_per_day = _calculate_M4_array_mm_per_day(blackboard)
 		blackboard.mi_array_kg_per_day = _calculate_mi_array_kg_per_day(blackboard)
-		blackboard.total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day, blackboard)
+		blackboard.total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(blackboard)
 		blackboard.mass_balance_error_kg = _calculate_mass_balance_error_kg(blackboard.m0_array_kg_per_day, blackboard.total_NO3_to_receptors_kg)
 		_check_masses_balance(node, blackboard.m0_array_kg_per_day, blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day, blackboard.total_NO3_to_receptors_kg, blackboard.mass_balance_error_kg, blackboard.logging)
 		blackboard.proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, blackboard.a, blackboard.μ, blackboard.σ, blackboard.mean_hydraulic_conductivity, blackboard.mean_velocity_of_unsaturated_transport, blackboard.proportion_0, blackboard.proportion_100)
@@ -244,7 +244,7 @@ def _calculate_Pherperc(blackboard):
 def _calculate_M_soil_in_kg(blackboard):
 	return blackboard.m0_array_kg_per_day * (blackboard.Psmd + blackboard.Pherperc)
 
-def _calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, blackboard):
+def _calculate_total_NO3_to_receptors_kg(blackboard):
 	return blackboard.m1_array_kg_per_day + blackboard.m2_array_kg_per_day + blackboard.m3_array_kg_per_day + blackboard.m4_array_kg_per_day
 
 def _calculate_mass_balance_error_kg(m0_array_kg_per_day, total_NO3_to_receptors_kg):
