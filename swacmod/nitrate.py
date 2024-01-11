@@ -105,8 +105,11 @@ def _do_nitrate_calculations(blackboard):
 	blackboard.proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(blackboard)
 	blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard))
 	blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day = _convert_kg_to_tons_array(blackboard)
-	blackboard.nitrate_reaching_water_table_array_tons_per_day = blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day
+	blackboard.nitrate_reaching_water_table_array_tons_per_day = _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard)
 	return blackboard
+
+def _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard):
+	return blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day
 
 def _initialise_blackboard(blackboard, data, output, node, logging):
 	blackboard.length = output["rainfall_ts"].size
