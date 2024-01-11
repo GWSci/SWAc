@@ -66,6 +66,7 @@ class NitrateBlackboard:
 		self.proportion_reaching_water_table_array_per_day = None
 		self.nitrate_reaching_water_table_array_from_this_run_kg_per_day = None
 		self.nitrate_reaching_water_table_array_tons_per_day = None
+		self.nitrate_depth_to_water = None
 
 def calculate_nitrate(data, output, node, logging = logging):
 	params = data["params"]
@@ -84,6 +85,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 	blackboard.runoff_recharge_mm_per_day = output["runoff_recharge"]
 	blackboard.macropore_att_mm_per_day = output["macropore_att"]
 	blackboard.macropore_dir_mm_per_day = output["macropore_dir"]
+	blackboard.nitrate_depth_to_water = params["nitrate_depth_to_water"][blackboard.node]
 
 	if "enabled" == params["nitrate_process"]:
 		blackboard.rainfall_ts = output["rainfall_ts"]

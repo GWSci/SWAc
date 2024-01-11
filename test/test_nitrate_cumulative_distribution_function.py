@@ -55,7 +55,21 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		}
 		output = None
 		node = 3
+
 		blackboard = nitrate.NitrateBlackboard()
+		blackboard.a = 1.38
+		blackboard.μ = 1.58
+		blackboard.σ = 3.96
+		blackboard.mean_hydraulic_conductivity = 1.7
+		blackboard.mean_velocity_of_unsaturated_transport = 0.0029
+		blackboard.node = 3
+		blackboard.proportion_0 = None
+		blackboard.proportion_100 = None
+		blackboard.time_switcher = timer.make_time_switcher()
+		blackboard.days = np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
+		blackboard.cell_area_m_sq = 50
+		blackboard.nitrate_depth_to_water = [0.001]
+
 		expected = np.array([0.0, 0.793244, 0.120028])
 		proportion_0 = None
 		proportion_100 = None
@@ -105,7 +119,22 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		node = 3
 		proportion_0 = "xxx"
 		proportion_100 = None
+
 		blackboard = nitrate.NitrateBlackboard()
+		blackboard.a = 1.38
+		blackboard.μ = 1.58
+		blackboard.σ = 3.96
+		blackboard.mean_hydraulic_conductivity = 1.7
+		blackboard.mean_velocity_of_unsaturated_transport = 0.0029
+		blackboard.time_switcher = timer.make_time_switcher()
+		blackboard.days = np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
+		blackboard.cell_area_m_sq = 2500
+		blackboard.nitrate_depth_to_water = [0.0]
+		blackboard.output = None
+		blackboard.node = 3
+		blackboard.proportion_0 = "xxx"
+		blackboard.proportion_100 = None
+
 		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100, blackboard)
 		self.assertEqual("xxx", actual)
 
@@ -130,8 +159,23 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		output = None
 		node = 3
 		proportion_0 = None
-		blackboard = nitrate.NitrateBlackboard()
 		proportion_100 = "xxx"
+
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.a = 1.38
+		blackboard.μ = 1.58
+		blackboard.σ = 3.96
+		blackboard.mean_hydraulic_conductivity = 1.7
+		blackboard.mean_velocity_of_unsaturated_transport = 0.0029
+		blackboard.time_switcher = timer.make_time_switcher()
+		blackboard.days = np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
+		blackboard.cell_area_m_sq = 2500
+		blackboard.nitrate_depth_to_water = [100.0]
+		blackboard.output = None
+		blackboard.node = 3
+		blackboard.proportion_0 = None
+		blackboard.proportion_100 = "xxx"
+
 		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100, blackboard)
 		self.assertEqual("xxx", actual)
 	
