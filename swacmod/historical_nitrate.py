@@ -13,4 +13,4 @@ def get_historical_nitrate(data, output, node):
 	}
 
 def _calculate_historical_nitrate_dates(blackboard):
-	pass
+	return blackboard.historical_nitrate_date
