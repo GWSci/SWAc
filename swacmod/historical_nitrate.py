@@ -21,10 +21,11 @@ class HistoricalNitrateBlackboard():
 		self.σ = None
 
 	def initialise_blackboard(self, data, output, node):
+		self.a = data["params"]["nitrate_calibration_a"]
 		return self
 
 	def __eq__(self, other):
-		return True
+		return (self.a == other.a)
 
 def get_historical_nitrate(data, output, node):
 	length = len(data["series"]["date"])

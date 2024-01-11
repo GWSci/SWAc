@@ -205,7 +205,11 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		np.testing.assert_allclose(expected, actual)
 
 	def test_historical_nitrate_initialise_blackboard(self):
-		data = {}
+		data = {
+			"params": {
+				"nitrate_calibration_a": 10.0,
+			}
+		}
 		output = {}
 		node = None
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
