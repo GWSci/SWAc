@@ -249,14 +249,6 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assertEqual(expected, actual)
 
 	def test_check_masses_balance_when_they_are_unbalanced(self):
-		node = 1
-		m0_array_kg_per_day = np.array([1.0, 2.0, 3.0])
-		m1_array_kg_per_day = np.array([10.0, 20.0, 30.0])
-		m2_array_kg_per_day = np.array([100.0, 200.0, 300.0])
-		m3_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
-		m4_array_kg_per_day = np.array([10000.0, 20000.0, 30000.0])
-		total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
-		mass_balance_error_kg = np.array([1.0, 2.0, 1.0])
 		logging = SpyLogger()
 		
 		blackboard = nitrate.NitrateBlackboard()
@@ -277,14 +269,6 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assertEqual(expected, actual)
 
 	def test_check_masses_balance_when_they_are_balanced(self):
-		node = 1
-		m0_array_kg_per_day = np.array([1.0, 2.0, 3.0])
-		m1_array_kg_per_day = np.array([10.0, 20.0, 30.0])
-		m2_array_kg_per_day = np.array([100.0, 200.0, 300.0])
-		m3_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
-		m4_array_kg_per_day = np.array([10000.0, 20000.0, 30000.0])
-		total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
-		mass_balance_error_kg = np.array([0.0, 0.0, 0.0])
 		logging = SpyLogger()
 
 		blackboard = nitrate.NitrateBlackboard()
