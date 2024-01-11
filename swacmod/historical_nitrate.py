@@ -1,5 +1,4 @@
 import numpy as np
-import math
 import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
 
 class HistoricalNitrateBlackboard():
