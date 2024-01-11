@@ -285,7 +285,7 @@ def _calculate_proportion_reaching_water_table_array_per_day(data, output, node,
 	elif depth_to_water_m == 100.0:
 		return blackboard.proportion_100
 	else:
-		return __calculate_proportion_reaching_water_table_array_per_day(length, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, time_switcher)
+		return __calculate_proportion_reaching_water_table_array_per_day(length, blackboard.a, blackboard.μ, blackboard.σ, blackboard.mean_hydraulic_conductivity, blackboard.mean_velocity_of_unsaturated_transport, depth_to_water_m, time_switcher)
 
 def __calculate_proportion_reaching_water_table_array_per_day(length, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, time_switcher):
 	result = np.zeros(length)
