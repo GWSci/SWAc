@@ -7,6 +7,7 @@ class HistoricalNitrateBlackboard():
 		self.a = None
 		self.days = None
 		self.historical_mi_array_kg_per_day = None
+		self.historical_mass_reaching_water_table_array_kg_per_day = None
 		self.historical_nitrate_days = None
 		self.historic_proportion_reaching_water_table_array_per_day = None
 		self.mean_hydraulic_conductivity = None
@@ -29,7 +30,7 @@ def _calculate_historical_nitrate(blackboard):
 	blackboard.truncated_historical_nitrate_days = _calculate_truncated_historical_nitrate_days(blackboard)
 	blackboard.truncated_historical_mi_array_kg_per_day = _calculate_truncated_historical_mi_array_kg_per_day(blackboard)
 	blackboard.historic_proportion_reaching_water_table_array_per_day = _calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
-	blackboard.calculate_historical_mass_reaching_water_table_array_kg_per_day = _calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard)
+	blackboard.historical_mass_reaching_water_table_array_kg_per_day = _calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard)
 	return blackboard
 
 def _calculate_truncated_historical_nitrate_days(blackboard):
@@ -52,4 +53,4 @@ def _calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard)
 	return m.calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard)
 
 def _convert_kg_to_tons_array(blackboard):
-	return blackboard.calculate_historical_mass_reaching_water_table_array_kg_per_day / 1000.0
+	return blackboard.historical_mass_reaching_water_table_array_kg_per_day / 1000.0

@@ -86,7 +86,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 	def test_calculate_historical_nitrate_populates_calculate_historical_mass_reaching_water_table_array_kg_per_day(self):
 		actual = historical_nitrate._calculate_historical_nitrate(self.make_sample_blackboard())
-		self.assertIsNotNone(actual.calculate_historical_mass_reaching_water_table_array_kg_per_day)
+		self.assertIsNotNone(actual.historical_mass_reaching_water_table_array_kg_per_day)
 
 	def make_sample_blackboard(self):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
@@ -193,7 +193,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 	def test_convert_kg_to_tons_array(self):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
-		blackboard.calculate_historical_mass_reaching_water_table_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
+		blackboard.historical_mass_reaching_water_table_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
 
 		actual = historical_nitrate._convert_kg_to_tons_array(blackboard)
 
