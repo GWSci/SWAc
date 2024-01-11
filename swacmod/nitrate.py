@@ -114,7 +114,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.M_soil_in_kg = _calculate_M_soil_in_kg(blackboard)
 		blackboard.M_soil_tot_kg = _calculate_M_soil_tot_kg(blackboard)
 		blackboard.m1_array_kg_per_day = _calculate_m1_array_kg_per_day(blackboard)
-		blackboard.m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, blackboard.m1_array_kg_per_day, blackboard)
+		blackboard.m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(blackboard)
 		blackboard.p_non = _calculate_p_non(blackboard)
 		blackboard.m2_array_kg_per_day = _calculate_m2_array_kg_per_day(blackboard)
 		blackboard.Pro = _calculate_Pro(blackboard)
@@ -199,7 +199,7 @@ def _calculate_M_soil_tot_kg(blackboard):
 def _divide_arrays(a, b):
 	return np.divide(a, b, out = np.zeros_like(a), where = b != 0)
 
-def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day, blackboard):
+def _calculate_m1a_array_kg_per_day(blackboard):
 	return m._calculate_m1a_array_kg_per_day(blackboard)
 
 def _calculate_p_non(blackboard):

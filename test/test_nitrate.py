@@ -174,23 +174,13 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_m1a_array(input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected)
 
 	def assert_m1a_array(self, input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected):
-		data = {
-			"time_switcher": timer.make_time_switcher(),
-		}
-		output = {
-			"interflow_volume" : input_interflow_volume,
-			"infiltration_recharge" : input_infiltration_recharge,
-			"interflow_to_rivers" : input_interflow_to_rivers,
-		}
-		node = None
-
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.m1_array_kg_per_day = input_m1_array_kg_per_day
 		blackboard.interflow_volume = input_interflow_volume
 		blackboard.infiltration_recharge = input_infiltration_recharge
 		blackboard.interflow_to_rivers = input_interflow_to_rivers
 
-		actual = nitrate._calculate_m1a_array_kg_per_day(data, output, node, input_m1_array_kg_per_day, blackboard)
+		actual = nitrate._calculate_m1a_array_kg_per_day(blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 	
 	def test_calculate_p_non(self):
