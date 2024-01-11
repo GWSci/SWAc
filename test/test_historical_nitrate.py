@@ -211,6 +211,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 				"nitrate_depth_to_water": {7: np.array([10.0])},
 				"nitrate_calibration_mean_hydraulic_conductivity" : 1.0,
 				"nitrate_calibration_mean_velocity_of_unsaturated_transport" : 1.0,
+				"nitrate_calibration_mu": 0.0
 			},
 			"series": {
 				"date": [date(2023, 1, 3), date(2023, 1, 4)],
@@ -232,7 +233,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		np.testing.assert_allclose(expected.nitrate_depth_to_water, actual.nitrate_depth_to_water)
 		self.assertEqual(expected.mean_hydraulic_conductivity, actual.mean_hydraulic_conductivity)
 		self.assertEqual(expected.mean_velocity_of_unsaturated_transport, actual.mean_velocity_of_unsaturated_transport)
-		# blackboard.a = 10.0
+		self.assertEqual(expected.μ, actual.μ)
 		# blackboard.μ = 0.0
 		# blackboard.σ = 1.0
 		
