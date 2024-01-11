@@ -208,6 +208,9 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		data = {
 			"params": {
 				"nitrate_calibration_a": 10.0,
+			},
+			"series": {
+				"date": [date(2023, 1, 3), date(2023, 1, 4)],
 			}
 		}
 		output = {}
