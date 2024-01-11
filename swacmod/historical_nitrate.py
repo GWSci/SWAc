@@ -29,6 +29,7 @@ class HistoricalNitrateBlackboard():
 		self.mean_hydraulic_conductivity = data["params"]["nitrate_calibration_mean_hydraulic_conductivity"]
 		self.mean_velocity_of_unsaturated_transport = data["params"]["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
 		self.μ = data["params"]["nitrate_calibration_mu"]
+		self.σ = data["params"]["nitrate_calibration_sigma"]
 		return self
 
 def get_historical_nitrate(data, output, node):
