@@ -39,6 +39,7 @@ from swacmod import compile_model
 from swacmod import model as m
 import swacmod.model_numpy as model_numpy
 
+import swacmod.nitrate as historical_nitrate
 import swacmod.nitrate as nitrate
 
 # win fix
@@ -156,7 +157,7 @@ def get_output(data, node, time_switcher):
         m.get_average_out,
         m.get_change,
         m.get_balance,
-        nitrate.get_historical_nitrate,
+        historical_nitrate.get_historical_nitrate,
         nitrate.get_nitrate,
     ]
 

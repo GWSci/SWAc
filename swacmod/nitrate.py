@@ -7,13 +7,6 @@ from swacmod.nitrate_blackboard import NitrateBlackboard
 import swacmod.utils as utils
 import swacmod.model as m
 
-def get_historical_nitrate(data, output, node):
-	length = len(data["series"]["date"])
-	empty_array = np.zeros(length)
-	return {
-		"historical_nitrate_reaching_water_table_array_tons_per_day": empty_array,
-	}
-
 def get_nitrate(data, output, node):
 	nitrate = calculate_nitrate(data, output, node)
 	return {
