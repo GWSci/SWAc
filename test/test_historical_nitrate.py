@@ -240,3 +240,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		output = {}
 		node = 7
 		return data, output, node
+
+	def test_get_historical_nitrate_return_answer_when_enabled(self):
+		data, output, node = self.make_sample_data_output_node()
+		actual = historical_nitrate.get_historical_nitrate(data, output, node)
