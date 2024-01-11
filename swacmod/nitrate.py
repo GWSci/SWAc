@@ -74,26 +74,27 @@ class NitrateBlackboard:
 def calculate_nitrate(data, output, node, logging = logging):
 	params = data["params"]
 	blackboard = NitrateBlackboard()
-	blackboard.node = node
-	blackboard.time_switcher = data["time_switcher"]
-	blackboard.cell_area_m_sq = params["node_areas"][blackboard.node]
-	blackboard.days = data["series"]["date"]
 	blackboard.length = output["rainfall_ts"].size
-	blackboard.nitrate_loading = params["nitrate_loading"][blackboard.node]
-	blackboard.logging = logging
-	blackboard.perc_through_root_mm_per_day = output["perc_through_root"]
-	blackboard.TAW_array_mm = output["tawtew"]
-	blackboard.smd = output["smd"]
-	blackboard.p_smd = output["p_smd"]
-	blackboard.runoff_recharge_mm_per_day = output["runoff_recharge"]
-	blackboard.macropore_att_mm_per_day = output["macropore_att"]
-	blackboard.macropore_dir_mm_per_day = output["macropore_dir"]
-	blackboard.nitrate_depth_to_water = params["nitrate_depth_to_water"][blackboard.node]
-	blackboard.interflow_volume = output["interflow_volume"]
-	blackboard.infiltration_recharge = output["infiltration_recharge"]
-	blackboard.interflow_to_rivers = output["interflow_to_rivers"]
-
+	
 	if "enabled" == params["nitrate_process"]:
+		blackboard.node = node
+		blackboard.time_switcher = data["time_switcher"]
+		blackboard.cell_area_m_sq = params["node_areas"][blackboard.node]
+		blackboard.days = data["series"]["date"]
+		blackboard.nitrate_loading = params["nitrate_loading"][blackboard.node]
+		blackboard.logging = logging
+		blackboard.perc_through_root_mm_per_day = output["perc_through_root"]
+		blackboard.TAW_array_mm = output["tawtew"]
+		blackboard.smd = output["smd"]
+		blackboard.p_smd = output["p_smd"]
+		blackboard.runoff_recharge_mm_per_day = output["runoff_recharge"]
+		blackboard.macropore_att_mm_per_day = output["macropore_att"]
+		blackboard.macropore_dir_mm_per_day = output["macropore_dir"]
+		blackboard.nitrate_depth_to_water = params["nitrate_depth_to_water"][blackboard.node]
+		blackboard.interflow_volume = output["interflow_volume"]
+		blackboard.infiltration_recharge = output["infiltration_recharge"]
+		blackboard.interflow_to_rivers = output["interflow_to_rivers"]
+
 		blackboard.rainfall_ts = output["rainfall_ts"]
 		blackboard.ae = output["ae"]
 
