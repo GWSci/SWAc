@@ -70,3 +70,10 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		input_date = [date(2023, 1, 3), date(2023, 1, 4),  date(2023, 1, 5),  date(2023, 1, 6), ]
 		expected = [date(2023, 1, 1), date(2023, 1, 2), ]
 		self.assert_calculate_truncated_historical_nitrate_dates(expected, input_historical_nitrate_date, input_date)
+
+	def test_calculate_historical_nitrate_populates_truncated_historical_nitrate_dates(self):
+		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
+		blackboard.historical_nitrate_date = [date(2023, 1, 1), date(2023, 1, 2), ]
+		blackboard.date = [date(2023, 1, 3), date(2023, 1, 4), ]
+
+		actual_blackboard = historical_nitrate._calculate_historical_nitrate(blackboard)
