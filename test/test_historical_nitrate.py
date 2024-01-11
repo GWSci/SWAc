@@ -205,23 +205,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		np.testing.assert_allclose(expected, actual)
 
 	def test_historical_nitrate_initialise_blackboard(self):
-		data = {
-			"params": {
-				"nitrate_calibration_a": 10.0,
-				"nitrate_depth_to_water": {7: np.array([10.0])},
-				"nitrate_calibration_mean_hydraulic_conductivity" : 1.0,
-				"nitrate_calibration_mean_velocity_of_unsaturated_transport" : 1.0,
-				"nitrate_calibration_mu": 0.0,
-				"nitrate_calibration_sigma": 1.0,
-			},
-			"series": {
-				"date": [date(2023, 1, 3), date(2023, 1, 4)],
-				"historical_mi_kg_per_day" : {7 : np.array([10.0, 20.0])},
-				"historical_nitrate_days" : [date(2023, 1, 1), date(2023, 1, 2)],
-			}
-		}
-		output = {}
-		node = 7
 		data, output, node = self.make_sample_data_output_node()
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
 
