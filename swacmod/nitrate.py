@@ -120,7 +120,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		_check_masses_balance(node, blackboard.m0_array_kg_per_day, blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day, blackboard.total_NO3_to_receptors_kg, blackboard.mass_balance_error_kg, blackboard.logging, blackboard)
 		blackboard.proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(blackboard)
 		blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard.proportion_reaching_water_table_array_per_day, blackboard.mi_array_kg_per_day))
-		blackboard.nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day, blackboard)
+		blackboard.nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(blackboard)
 
 		return {
 			"her_array_mm_per_day" : blackboard.her_array_mm_per_day,
@@ -308,7 +308,7 @@ def _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydrau
 	result = 0.5 * (1 + math.erf(- numerator / denominator))
 	return result
 
-def _convert_kg_to_tons_array(arr_kg, blackboard):
+def _convert_kg_to_tons_array(blackboard):
 	return blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day / 1000.0
 
 def make_aggregation_array(data):

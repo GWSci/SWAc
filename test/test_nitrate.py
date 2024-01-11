@@ -221,9 +221,9 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 	
 	def test_convert_kg_to_tons_array(self):
-		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(np.array([]), self.make_blackboard_with_kg([])))
-		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(np.array([1000.0]), self.make_blackboard_with_kg([1000.0])))
-		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), nitrate._convert_kg_to_tons_array(np.array([500, 1000.0, 3000.0]), self.make_blackboard_with_kg([500, 1000.0, 3000.0])))
+		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([])))
+		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([1000.0])))
+		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([500, 1000.0, 3000.0])))
 
 	def make_blackboard_with_kg(self, kg):
 		blackboard = nitrate.NitrateBlackboard()
@@ -231,9 +231,9 @@ class Test_Nitrate(unittest.TestCase):
 		return blackboard
 
 	def test_convert_kg_to_tons_array(self):
-		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(np.array([]), self.make_blackboard_with_kg([])))
-		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(np.array([1000.0]), self.make_blackboard_with_kg([1000.0])))
-		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), nitrate._convert_kg_to_tons_array(np.array([500, 1000.0, 3000.0]), self.make_blackboard_with_kg([500, 1000.0, 3000.0])))
+		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([])))
+		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([1000.0])))
+		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([500, 1000.0, 3000.0])))
 
 	def test_calculate_nitrate(self):
 		max_load_per_year_kg_per_hectare = 1000
