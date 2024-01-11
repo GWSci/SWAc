@@ -5,6 +5,7 @@ class HistoricalNitrateBlackboard():
 		self.date = None
 		self.historical_mi_array_kg_per_day = None
 		self.historical_nitrate_date = None
+		self.truncated_historical_mi_array_kg_per_day = None
 		self.truncated_historical_nitrate_dates = None
 
 def get_historical_nitrate(data, output, node):
@@ -16,6 +17,7 @@ def get_historical_nitrate(data, output, node):
 
 def _calculate_historical_nitrate(blackboard):
 	blackboard.truncated_historical_nitrate_dates = _calculate_truncated_historical_nitrate_date(blackboard)
+	blackboard.truncated_historical_mi_array_kg_per_day = _calculate_truncated_historical_mi_array_kg_per_day(blackboard)
 	return blackboard
 
 def _calculate_truncated_historical_nitrate_date(blackboard):

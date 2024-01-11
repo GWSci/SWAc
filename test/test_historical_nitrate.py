@@ -75,10 +75,15 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		actual = historical_nitrate._calculate_historical_nitrate(self.make_sample_blackboard())
 		self.assertIsNotNone(actual.truncated_historical_nitrate_dates)
 
+	def test_calculate_historical_nitrate_populates_truncated_historical_mi_array_kg_per_day(self):
+		actual = historical_nitrate._calculate_historical_nitrate(self.make_sample_blackboard())
+		self.assertIsNotNone(actual.truncated_historical_mi_array_kg_per_day)
+
 	def make_sample_blackboard(self):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
-		blackboard.historical_nitrate_date = [date(2023, 1, 1), date(2023, 1, 2), ]
 		blackboard.date = [date(2023, 1, 3), date(2023, 1, 4), ]
+		blackboard.historical_mi_array_kg_per_day = np.array([10.0, 20.0])
+		blackboard.historical_nitrate_date = [date(2023, 1, 1), date(2023, 1, 2), ]
 		return blackboard
 
 	def test_calculate_truncated_historical_mi_array_kg_per_day_does_not_truncate_when_dates_are_not_truncated(self):
