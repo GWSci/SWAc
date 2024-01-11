@@ -277,13 +277,13 @@ def _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_
 	return message
 
 def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100, blackboard):	
-	time_switcher = data["time_switcher"]
-	length = len(data["series"]["date"])
-	depth_to_water_m = data["params"]["nitrate_depth_to_water"][node][0]
+	time_switcher = blackboard.time_switcher
+	length = len(blackboard.days)
+	depth_to_water_m = blackboard.nitrate_depth_to_water[0]
 	if depth_to_water_m == 0.0:
-		return proportion_0
+		return blackboard.proportion_0
 	elif depth_to_water_m == 100.0:
-		return proportion_100
+		return blackboard.proportion_100
 	else:
 		return __calculate_proportion_reaching_water_table_array_per_day(length, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, time_switcher)
 
