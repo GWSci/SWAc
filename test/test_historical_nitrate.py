@@ -224,6 +224,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 	def make_sample_data_output_node(self):
 		data = {
 			"params": {
+				"historical_nitrate_process": "enabled",
 				"nitrate_calibration_a": 10.0,
 				"nitrate_depth_to_water": {7: np.array([10.0])},
 				"nitrate_calibration_mean_hydraulic_conductivity" : 1.0,
@@ -243,4 +244,9 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 	def test_get_historical_nitrate_return_answer_when_enabled(self):
 		data, output, node = self.make_sample_data_output_node()
-		actual = historical_nitrate.get_historical_nitrate(data, output, node)
+		actual_output = historical_nitrate.get_historical_nitrate(data, output, node)
+		actual = actual_output["historical_nitrate_reaching_water_table_array_tons_per_day"]
+
+		expected_blackboard = historical_nitrate._calculate_historical_nitrate(self.make_sample_blackboard())
+		expected = expected_blackboard.historical_nitrate_reaching_water_table_array_tons_per_day
+		np.testing.assert_allclose(expected, actual)

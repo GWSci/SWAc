@@ -33,11 +33,19 @@ class HistoricalNitrateBlackboard():
 		return self
 
 def get_historical_nitrate(data, output, node):
-	length = len(data["series"]["date"])
-	empty_array = np.zeros(length)
-	return {
-		"historical_nitrate_reaching_water_table_array_tons_per_day": empty_array,
-	}
+	if (data["params"]["historical_nitrate_process"] == "enabled"):
+		blackboard = HistoricalNitrateBlackboard()
+		blackboard = blackboard.initialise_blackboard(data, output, node)
+		blackboard = _calculate_historical_nitrate(blackboard)
+		return {
+			"historical_nitrate_reaching_water_table_array_tons_per_day": blackboard.historical_nitrate_reaching_water_table_array_tons_per_day,
+		}
+	else:
+		length = len(data["series"]["date"])
+		empty_array = np.zeros(length)
+		return {
+			"historical_nitrate_reaching_water_table_array_tons_per_day": empty_array,
+		}
 
 def _calculate_historical_nitrate(blackboard):
 	blackboard.truncated_historical_nitrate_days = _calculate_truncated_historical_nitrate_days(blackboard)
