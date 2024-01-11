@@ -74,10 +74,9 @@ class NitrateBlackboard:
 def calculate_nitrate(data, output, node, logging = logging):
 	length = output["rainfall_ts"].size
 	params = data["params"]
-	blackboard = NitrateBlackboard()
-	blackboard.length = length
-	
+
 	if "enabled" == params["nitrate_process"]:
+		blackboard = NitrateBlackboard()
 		_initialise_blackboard(blackboard, data, output, node, logging)
 		blackboard.her_array_mm_per_day = _calculate_her_array_mm_per_day(blackboard)
 		blackboard.m0_array_kg_per_day = _calculate_m0_array_kg_per_day(blackboard)
@@ -107,6 +106,8 @@ def calculate_nitrate(data, output, node, logging = logging):
 		return _make_empty_result(length)
 
 def _initialise_blackboard(blackboard, data, output, node, logging):
+	blackboard.length = output["rainfall_ts"].size
+
 	blackboard.node = node
 	blackboard.logging = logging
 	blackboard.proportion_0 = np.zeros(blackboard.length)
