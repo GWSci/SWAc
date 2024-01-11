@@ -29,6 +29,16 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		actual = process_result["historical_nitrate_reaching_water_table_array_tons_per_day"]
 		np.testing.assert_array_almost_equal(expected, actual)
 
+	def test_calculate_historical_nitrate_dates_when_both_sets_of_date_are_empty(self):
+		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
+		blackboard.date = []
+		blackboard.historical_nitrate_date = []
+
+		actual = historical_nitrate._calculate_historical_nitrate_dates(blackboard)
+
+		expected = []
+		self.assertEqual(expected, actual)
+
 	def test_calculate_historical_nitrate_dates_when_historical_dates_are_contiguous_with_new_dates(self):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
 		blackboard.date = [date(2023, 1, 3), date(2023, 1, 4), ]
