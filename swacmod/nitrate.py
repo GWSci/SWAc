@@ -67,6 +67,9 @@ class NitrateBlackboard:
 		self.nitrate_reaching_water_table_array_from_this_run_kg_per_day = None
 		self.nitrate_reaching_water_table_array_tons_per_day = None
 		self.nitrate_depth_to_water = None
+		self.interflow_volume = None
+		self.infiltration_recharge = None
+		self.interflow_to_rivers = None
 
 def calculate_nitrate(data, output, node, logging = logging):
 	params = data["params"]
@@ -86,6 +89,9 @@ def calculate_nitrate(data, output, node, logging = logging):
 	blackboard.macropore_att_mm_per_day = output["macropore_att"]
 	blackboard.macropore_dir_mm_per_day = output["macropore_dir"]
 	blackboard.nitrate_depth_to_water = params["nitrate_depth_to_water"][blackboard.node]
+	blackboard.interflow_volume = output["interflow_volume"]
+	blackboard.infiltration_recharge = output["infiltration_recharge"]
+	blackboard.interflow_to_rivers = output["interflow_to_rivers"]
 
 	if "enabled" == params["nitrate_process"]:
 		blackboard.rainfall_ts = output["rainfall_ts"]
@@ -108,7 +114,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.M_soil_in_kg = _calculate_M_soil_in_kg(blackboard)
 		blackboard.M_soil_tot_kg = _calculate_M_soil_tot_kg(blackboard)
 		blackboard.m1_array_kg_per_day = _calculate_m1_array_kg_per_day(blackboard)
-		blackboard.m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, blackboard.m1_array_kg_per_day)
+		blackboard.m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, blackboard.m1_array_kg_per_day, blackboard)
 		blackboard.p_non = _calculate_p_non(blackboard)
 		blackboard.m2_array_kg_per_day = _calculate_m2_array_kg_per_day(blackboard)
 		blackboard.Pro = _calculate_Pro(blackboard)
@@ -193,8 +199,8 @@ def _calculate_M_soil_tot_kg(blackboard):
 def _divide_arrays(a, b):
 	return np.divide(a, b, out = np.zeros_like(a), where = b != 0)
 
-def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
-	return m._calculate_m1a_array_kg_per_day(output, m1_array_kg_per_day)
+def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day, blackboard):
+	return m._calculate_m1a_array_kg_per_day(blackboard)
 
 def _calculate_p_non(blackboard):
 	macropore_mm_per_day = blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day

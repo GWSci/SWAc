@@ -1598,16 +1598,17 @@ def calculate_mass_reaching_water_table_array_kg_per_day(double[:] proportion_re
 
     return np.array(result_kg)
 
-def _calculate_m1a_array_kg_per_day(output, double[:] m1_array_kg_per_day):
+def _calculate_m1a_array_kg_per_day(blackboard):
     cdef:
         size_t length
         size_t i
         double mit_kg
         double m1a_kg_per_day
         double m1b_kg_per_day
-        double[:] end_interflow_store_volume_mm = output["interflow_volume"]
-        double[:] infiltration_recharge_mm_per_day = output["infiltration_recharge"]
-        double[:] interflow_to_rivers_mm_per_day = output["interflow_to_rivers"]
+        double[:] m1_array_kg_per_day = blackboard.m1_array_kg_per_day
+        double[:] end_interflow_store_volume_mm = blackboard.interflow_volume
+        double[:] infiltration_recharge_mm_per_day = blackboard.infiltration_recharge
+        double[:] interflow_to_rivers_mm_per_day = blackboard.interflow_to_rivers
         double[:] interflow_store_components_mm_per_day
         double[:] recharge_proportion
         double[:] interflow_proportion
