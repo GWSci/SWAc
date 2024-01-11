@@ -38,6 +38,17 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 		expected = []
 		self.assertEqual(expected, actual)
+		self.assert_calculate_historical_nitrate_dates([], [], [])
+
+	def assert_calculate_historical_nitrate_dates(self, expected, input_historical_nitrate_date, input_date):
+		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
+		blackboard.historical_nitrate_date = input_historical_nitrate_date
+		blackboard.date = input_date
+
+		actual = historical_nitrate._calculate_historical_nitrate_dates(blackboard)
+
+		self.assertEqual(expected, actual)
+		
 
 	def test_calculate_historical_nitrate_dates_when_historical_dates_are_contiguous_with_new_dates(self):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
