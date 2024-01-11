@@ -36,26 +36,6 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		self.assertEqual(6927, t)
 	
 	def test_calculate_daily_proportion_reaching_water_table_arr(self):
-		a = 1.38
-		μ = 1.58
-		σ = 3.96
-		mean_hydraulic_conductivity = 1.7
-		mean_velocity_of_unsaturated_transport = 0.0029
-		data = {
-			"time_switcher": timer.make_time_switcher(),
-			"series": {
-				"date" : np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
-			}, "params": {
-				"node_areas" : {
-					3: 50
-				}, "nitrate_depth_to_water" : {
-					3: [0.001]
-				}
-			},
-		}
-		output = None
-		node = 3
-
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.a = 1.38
 		blackboard.μ = 1.58
@@ -71,8 +51,6 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		blackboard.nitrate_depth_to_water = [0.001]
 
 		expected = np.array([0.0, 0.793244, 0.120028])
-		proportion_0 = None
-		proportion_100 = None
 		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
