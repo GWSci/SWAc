@@ -262,7 +262,7 @@ def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_arr
 	is_mass_balanced = _is_mass_balanced(mass_balance_error_kg)
 	if not is_mass_balanced:
 		i = _find_unbalanced_day_to_report(mass_balance_error_kg)
-		message = _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, i, mass_balance_error_kg, total_NO3_to_receptors_kg, blackboard)
+		message = _make_unbalanced_day_log_message(i, blackboard)
 		logging.warning(message)
 
 def _is_mass_balanced(mass_balance_error_kg):
@@ -271,7 +271,7 @@ def _is_mass_balanced(mass_balance_error_kg):
 def _find_unbalanced_day_to_report(mass_balance_error_kg):
 	return np.argmax(np.abs(mass_balance_error_kg))
 
-def _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, i, mass_balance_error_kg, total_NO3_to_receptors_kg, blackboard):
+def _make_unbalanced_day_log_message(i, blackboard):
 	m0 = blackboard.m0_array_kg_per_day[i]
 	m1 = blackboard.m1_array_kg_per_day[i]
 	m2 = blackboard.m2_array_kg_per_day[i]
