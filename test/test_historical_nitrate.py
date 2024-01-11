@@ -1,6 +1,7 @@
 from datetime import date
 import numpy as np
 import swacmod.historical_nitrate as historical_nitrate
+import swacmod.nitrate as nitrate
 import unittest
 
 class Test_Historical_Nitrate(unittest.TestCase):
@@ -125,3 +126,32 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 		actual = historical_nitrate._calculate_truncated_historical_mi_array_kg_per_day(blackboard)
 		np.testing.assert_array_equal(np.array(expected), actual)
+
+	def test__calculate_historic_proportion_reaching_water_table_array_per_day(self):
+		historic_days = [
+			date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3)]
+		new_days = [
+			date(2023, 1, 4), date(2023, 1, 5), date(2023, 1, 6),
+			date(2023, 1, 7), date(2023, 1, 8), date(2023, 1, 9), date(2023, 1, 10)]
+		combined_days = [
+			date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3),
+			date(2023, 1, 4), date(2023, 1, 5), date(2023, 1, 6),
+			date(2023, 1, 7), date(2023, 1, 8), date(2023, 1, 9), date(2023, 1, 10)]
+		
+		cumulative_proportion_for_the_entire_period = self.make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(combined_days)
+
+	def make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(self, combined_days):
+		nitrate_blackboard = nitrate.NitrateBlackboard()
+		nitrate_blackboard.days = combined_days
+		nitrate_blackboard.nitrate_depth_to_water = np.array([10.0])
+		nitrate_blackboard.mean_hydraulic_conductivity = 1.0
+		nitrate_blackboard.mean_velocity_of_unsaturated_transport = 1.0
+		nitrate_blackboard.a = 10.0
+		nitrate_blackboard.μ = 0.0
+		nitrate_blackboard.σ = 1.0
+		cumulative_proportion_for_the_entire_period = nitrate._calculate_proportion_reaching_water_table_array_per_day(nitrate_blackboard)
+		np.testing.assert_allclose(
+			np.array([False, True, True, True, True, True, True, True, True, True]),
+			cumulative_proportion_for_the_entire_period > 0
+		)
+		return cumulative_proportion_for_the_entire_period
