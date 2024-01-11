@@ -210,4 +210,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		node = None
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
 
-		blackboard.initialise_blackboard(data, output, node)
+		actual = blackboard.initialise_blackboard(data, output, node)
+
+		expected = self.make_sample_blackboard()
+		self.assertEqual(expected, actual)
