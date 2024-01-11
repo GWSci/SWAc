@@ -98,7 +98,16 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			expected,
 			truncated_historical_nitrate_dates,
 			historical_mi_array_kg_per_day)
-	
+
+	def test_calculate_truncated_historical_mi_array_kg_per_day_does_not_truncate_when_dates_are_shorter_than_mi(self):
+		expected = [10.0, 20.0]
+		truncated_historical_nitrate_dates = [date(2023, 1, 1), date(2023, 1, 2)]
+		historical_mi_array_kg_per_day = [10.0, 20.0, 30.0, 40.0]
+		self.assert_calculate_truncated_historical_mi_array_kg_per_day(
+			expected,
+			truncated_historical_nitrate_dates,
+			historical_mi_array_kg_per_day)
+
 	def assert_calculate_truncated_historical_mi_array_kg_per_day(
 			self,
 			expected,

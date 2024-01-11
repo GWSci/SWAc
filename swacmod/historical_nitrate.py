@@ -28,4 +28,4 @@ def _calculate_truncated_historical_nitrate_date(blackboard):
 	return truncated_historical_nitrate_dates
 
 def _calculate_truncated_historical_mi_array_kg_per_day(blackboard):
-	return blackboard.historical_mi_array_kg_per_day
+	return blackboard.historical_mi_array_kg_per_day[:len(blackboard.truncated_historical_nitrate_dates)]
