@@ -4,6 +4,7 @@ class HistoricalNitrateBlackboard():
 	def __init__(self):
 		self.date = None
 		self.historical_nitrate_date = None
+		self.truncated_historical_nitrate_dates = None
 
 def get_historical_nitrate(data, output, node):
 	length = len(data["series"]["date"])
@@ -13,7 +14,7 @@ def get_historical_nitrate(data, output, node):
 	}
 
 def _calculate_historical_nitrate(blackboard):
-	pass
+	return blackboard
 
 def _calculate_truncated_historical_nitrate_date(blackboard):
 	historical_nitrate_date = blackboard.historical_nitrate_date
