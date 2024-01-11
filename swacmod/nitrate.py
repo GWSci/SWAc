@@ -309,7 +309,7 @@ def _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydrau
 	return result
 
 def _convert_kg_to_tons_array(arr_kg, blackboard):
-	return arr_kg / 1000.0
+	return blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day / 1000.0
 
 def make_aggregation_array(data):
 	time_periods = data["params"]["time_periods"]

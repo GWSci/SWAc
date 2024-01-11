@@ -227,7 +227,7 @@ class Test_Nitrate(unittest.TestCase):
 
 	def make_blackboard_with_kg(self, kg):
 		blackboard = nitrate.NitrateBlackboard()
-		blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = kg
+		blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(kg)
 		return blackboard
 
 	def test_convert_kg_to_tons_array(self):
