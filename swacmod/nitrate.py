@@ -110,7 +110,8 @@ def _do_nitrate_calculations(blackboard):
 	return blackboard
 
 def _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard):
-	return blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day + blackboard.historical_nitrate_reaching_water_table_array_tons_per_day
+	return (blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day 
+		 + blackboard.historical_nitrate_reaching_water_table_array_tons_per_day)
 
 def _initialise_blackboard(blackboard, data, output, node, logging):
 	blackboard.length = output["rainfall_ts"].size
