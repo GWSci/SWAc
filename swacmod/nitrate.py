@@ -72,9 +72,10 @@ class NitrateBlackboard:
 		self.interflow_to_rivers = None
 
 def calculate_nitrate(data, output, node, logging = logging):
+	length = output["rainfall_ts"].size
 	params = data["params"]
 	blackboard = NitrateBlackboard()
-	blackboard.length = output["rainfall_ts"].size
+	blackboard.length = length
 	
 	if "enabled" == params["nitrate_process"]:
 		_initialise_blackboard(blackboard, data, output, node, logging)
@@ -103,7 +104,6 @@ def calculate_nitrate(data, output, node, logging = logging):
 
 		return _convert_blackboard_to_result(blackboard)
 	else:
-		length = blackboard.length
 		return _make_empty_result(length)
 
 def _initialise_blackboard(blackboard, data, output, node, logging):
