@@ -25,6 +25,7 @@ class HistoricalNitrateBlackboard():
 		self.days = data["series"]["date"]
 		self.historical_mi_array_kg_per_day = data["series"]["historical_mi_kg_per_day"][node]
 		self.historical_nitrate_days = data["series"]["historical_nitrate_days"]
+		self.nitrate_depth_to_water = data["params"]["nitrate_depth_to_water"]
 		return self
 
 def get_historical_nitrate(data, output, node):
