@@ -270,7 +270,7 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		blackboard.mass_balance_error_kg = np.array([1.0, 2.0, 1.0])
 		blackboard.logging = logging
 
-		nitrate._check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging, blackboard)
+		nitrate._check_masses_balance(blackboard)
 		actual = logging.log
 
 		expected = ["Nitrate masses do not balance for node 1 using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index 1 with a mass balance error of 2.0 kg. total_NO3_to_receptors = 456.0 kg; M0 = 2.0 kg; M1 = 20.0 kg; M2 = 200.0 kg; M3 = 2000.0 kg; M4 = 20000.0 kg."]
@@ -298,7 +298,7 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		blackboard.mass_balance_error_kg = np.array([0.0, 0.0, 0.0])
 		blackboard.logging = logging
 		
-		nitrate._check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging, blackboard)
+		nitrate._check_masses_balance(blackboard)
 		actual = logging.log
 
 		expected = []
