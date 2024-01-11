@@ -72,9 +72,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assert_calculate_truncated_historical_nitrate_dates(expected, input_historical_nitrate_date, input_date)
 
 	def test_calculate_historical_nitrate_populates_truncated_historical_nitrate_dates(self):
-		blackboard = self.make_sample_blackboard()
-		actual_blackboard = historical_nitrate._calculate_historical_nitrate(blackboard)
-		self.assertIsNotNone(actual_blackboard.truncated_historical_nitrate_dates)
+		actual = historical_nitrate._calculate_historical_nitrate(self.make_sample_blackboard())
+		self.assertIsNotNone(actual.truncated_historical_nitrate_dates)
 
 	def make_sample_blackboard(self):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
