@@ -132,16 +132,9 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected_total_mass_on_day_kg, actual)
 
 	def test_total_mass_leached_on_day_for_two_days(self):
-		proportion_reaching_water_table_array_per_day = np.array([0.3, 0.4])
-		mi_array_kg_per_day = np.array([100.0, 200.0])
-		mass_reaching_water_table_kg = [
-			[30.0,  40.0],
-			[ 0.0,  60.0,  80.0],
-		]
-
 		blackboard = nitrate.NitrateBlackboard()
-		blackboard.proportion_reaching_water_table_array_per_day = proportion_reaching_water_table_array_per_day
-		blackboard.mi_array_kg_per_day = mi_array_kg_per_day
+		blackboard.proportion_reaching_water_table_array_per_day = np.array([0.3, 0.4])
+		blackboard.mi_array_kg_per_day = np.array([100.0, 200.0])
 
 		expected_total_mass_on_day_kg = np.array(
 			[30.0, 100.0])
