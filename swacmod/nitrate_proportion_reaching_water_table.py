@@ -11,6 +11,7 @@ def n_calculate_proportion_reaching_water_table_array_per_day(blackboard):
 		return blackboard.proportion_100
 	else:
 		return n__calculate_proportion_reaching_water_table_array_per_day(
+			0,
 			length,
 			blackboard.a,
 			blackboard.μ,
@@ -21,6 +22,7 @@ def n_calculate_proportion_reaching_water_table_array_per_day(blackboard):
 			time_switcher)
 
 def n__calculate_proportion_reaching_water_table_array_per_day(
+		days_offset,
 		length,
 		a,
 		μ,
@@ -31,14 +33,9 @@ def n__calculate_proportion_reaching_water_table_array_per_day(
 		time_switcher):
 	result = np.zeros(length)
 	for i in range(length):
+		t = days_offset + i
 		result[i] = _calculate_daily_proportion_reaching_water_table(
-			a,
-			μ,
-			σ,
-			mean_hydraulic_conductivity,
-			mean_velocity_of_unsaturated_transport,
-			depth_to_water_m,
-			i)
+			a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, t)
 	return result
 
 def h_calculate_historic_proportion_reaching_water_table_array_per_day(blackboard):	
