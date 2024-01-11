@@ -51,3 +51,4 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 		expected = [date(2023, 1, 1), date(2023, 1, 2), ]
 		self.assertEqual(expected, actual)
+		self.assert_calculate_historical_nitrate_dates(expected, blackboard.historical_nitrate_date, blackboard.date)
