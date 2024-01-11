@@ -27,7 +27,9 @@ class HistoricalNitrateBlackboard():
 		return self
 
 	def __eq__(self, other):
-		return (self.a == other.a) and (self.days == other.days) and (np.allclose(self.historical_mi_array_kg_per_day, other.historical_mi_array_kg_per_day))
+		return (self.a == other.a
+			and self.days == other.days
+			and np.allclose(self.historical_mi_array_kg_per_day, other.historical_mi_array_kg_per_day))
 
 def get_historical_nitrate(data, output, node):
 	length = len(data["series"]["date"])
