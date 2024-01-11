@@ -65,6 +65,7 @@ class NitrateBlackboard:
 		self.mass_balance_error_kg = None
 		self.proportion_reaching_water_table_array_per_day = None
 		self.nitrate_reaching_water_table_array_from_this_run_kg_per_day = None
+		self.nitrate_reaching_water_table_array_from_this_run_tons_per_day = None
 		self.nitrate_reaching_water_table_array_tons_per_day = None
 		self.nitrate_depth_to_water = None
 		self.interflow_volume = None
@@ -103,7 +104,8 @@ def _do_nitrate_calculations(blackboard):
 	_check_masses_balance(blackboard)
 	blackboard.proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(blackboard)
 	blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard))
-	blackboard.nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(blackboard)
+	blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day = _convert_kg_to_tons_array(blackboard)
+	blackboard.nitrate_reaching_water_table_array_tons_per_day = blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day
 	return blackboard
 
 def _initialise_blackboard(blackboard, data, output, node, logging):
