@@ -2,29 +2,16 @@ import math
 import numpy as np
 
 def n_calculate_proportion_reaching_water_table_array_per_day(blackboard):
-	time_switcher = blackboard.time_switcher
-	length = len(blackboard.days)
-	depth_to_water_m = blackboard.nitrate_depth_to_water[0]
-	if depth_to_water_m == 0.0:
-		return blackboard.proportion_0
-	elif depth_to_water_m == 100.0:
-		return blackboard.proportion_100
-	else:
-		return __calculate_proportion_reaching_water_table_array_per_day(
-			0,
-			length,
-			blackboard.a,
-			blackboard.μ,
-			blackboard.σ,
-			blackboard.mean_hydraulic_conductivity,
-			blackboard.mean_velocity_of_unsaturated_transport,
-			depth_to_water_m,
-			time_switcher)
+	days_offset = 0
+	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset)
 
 def h_calculate_historic_proportion_reaching_water_table_array_per_day(blackboard):	
+	days_offset = len(blackboard.historical_nitrate_days)
+	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset)
+
+def _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset):
 	time_switcher = blackboard.time_switcher
 	length = len(blackboard.days)
-	days_offset = len(blackboard.historical_nitrate_days)
 	depth_to_water_m = blackboard.nitrate_depth_to_water[0]
 	if depth_to_water_m == 0.0:
 		return blackboard.proportion_0
@@ -41,7 +28,7 @@ def h_calculate_historic_proportion_reaching_water_table_array_per_day(blackboar
 			blackboard.mean_velocity_of_unsaturated_transport,
 			depth_to_water_m,
 			time_switcher)
-
+	
 def __calculate_proportion_reaching_water_table_array_per_day(
 		days_offset,
 		length,
