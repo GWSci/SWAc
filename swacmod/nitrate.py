@@ -101,19 +101,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard))
 		blackboard.nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(blackboard)
 
-		return {
-			"her_array_mm_per_day" : blackboard.her_array_mm_per_day,
-			"m0_array_kg_per_day" : blackboard.m0_array_kg_per_day,
-			"m1_array_kg_per_day" : blackboard.m1_array_kg_per_day,
-			"m1a_array_kg_per_day" : blackboard.m1a_array_kg_per_day,
-			"m2_array_kg_per_day" : blackboard.m2_array_kg_per_day,
-			"m3_array_kg_per_day" : blackboard.m3_array_kg_per_day,
-			"m4_array_kg_per_day" : blackboard.m4_array_kg_per_day,
-			"mi_array_kg_per_day" : blackboard.mi_array_kg_per_day,
-			"proportion_reaching_water_table_array_per_day" : blackboard.proportion_reaching_water_table_array_per_day,
-			"nitrate_reaching_water_table_array_from_this_run_kg_per_day" : blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day,
-			"nitrate_reaching_water_table_array_tons_per_day" : blackboard.nitrate_reaching_water_table_array_tons_per_day,
-		}
+		return _convert_blackboard_to_result(blackboard)
 	else:
 		empty_array = np.zeros(blackboard.length)
 		return {
@@ -363,4 +351,18 @@ def make_output_filename(data):
 	file = run_name + "_nitrate.csv"
 	folder = utils.CONSTANTS["OUTPUT_DIR"]
 	return os.path.join(folder, file)
- 
+
+def _convert_blackboard_to_result(blackboard):
+	return {
+		"her_array_mm_per_day" : blackboard.her_array_mm_per_day,
+		"m0_array_kg_per_day" : blackboard.m0_array_kg_per_day,
+		"m1_array_kg_per_day" : blackboard.m1_array_kg_per_day,
+		"m1a_array_kg_per_day" : blackboard.m1a_array_kg_per_day,
+		"m2_array_kg_per_day" : blackboard.m2_array_kg_per_day,
+		"m3_array_kg_per_day" : blackboard.m3_array_kg_per_day,
+		"m4_array_kg_per_day" : blackboard.m4_array_kg_per_day,
+		"mi_array_kg_per_day" : blackboard.mi_array_kg_per_day,
+		"proportion_reaching_water_table_array_per_day" : blackboard.proportion_reaching_water_table_array_per_day,
+		"nitrate_reaching_water_table_array_from_this_run_kg_per_day" : blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day,
+		"nitrate_reaching_water_table_array_tons_per_day" : blackboard.nitrate_reaching_water_table_array_tons_per_day,
+	}
