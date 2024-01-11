@@ -41,6 +41,11 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 		self.assertEqual(expected, actual)
 		
+	def test_calculate_historical_nitrate_dates_when_historical_dates_are_empty(self):
+		input_historical_nitrate_date = []
+		input_date = [date(2023, 1, 3), date(2023, 1, 4), ]
+		expected = []
+		self.assert_calculate_historical_nitrate_dates(expected, input_historical_nitrate_date, input_date)
 
 	def test_calculate_historical_nitrate_dates_when_historical_dates_are_contiguous_with_new_dates(self):
 		input_historical_nitrate_date = [date(2023, 1, 1), date(2023, 1, 2), ]
