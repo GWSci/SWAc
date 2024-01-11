@@ -103,7 +103,8 @@ def calculate_nitrate(data, output, node, logging = logging):
 
 		return _convert_blackboard_to_result(blackboard)
 	else:
-		empty_array = np.zeros(blackboard.length)
+		length = blackboard.length
+		empty_array = np.zeros(length)
 		return {
 			"her_array_mm_per_day" : empty_array,
 			"m0_array_kg_per_day" : empty_array,
