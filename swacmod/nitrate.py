@@ -177,21 +177,6 @@ def _make_unbalanced_day_log_message(i, blackboard):
 def _calculate_proportion_reaching_water_table_array_per_day(blackboard):
 	return nitrate_proportion.calculate_proportion_reaching_water_table_array_per_day(blackboard)
 
-def _calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
-	f_t = _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
-	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t - 1)
-	return f_t - f_t_prev
-
-def _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
-	if (t <= 0):
-		return 0
-
-	numerator = math.log((mean_hydraulic_conductivity/mean_velocity_of_unsaturated_transport) * (DTW/t), a) - μ
-	denominator = σ * math.sqrt(2)
-
-	result = 0.5 * (1 + math.erf(- numerator / denominator))
-	return result
-
 def _convert_kg_to_tons_array(blackboard):
 	return blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day / 1000.0
 

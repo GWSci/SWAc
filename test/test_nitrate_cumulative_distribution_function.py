@@ -1,6 +1,7 @@
 from datetime import date
 import swacmod.model as m
 import swacmod.nitrate as nitrate
+import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
 import numpy as np
 import swacmod.timer as timer
 import unittest
@@ -15,7 +16,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		DTW = 100
 		sum = 0
 		for t in range(1, 1000000):
-			sum += nitrate._calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
+			sum += nitrate_proportion._calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
 		self.assertAlmostEqual(1, sum, places=2)
 
 	def test_maximum_of_daily_proportion_should_appear_after_several_years(self):
@@ -28,7 +29,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		t = 0
 		previous_nitrate = 0
 		while True:
-			current_nitrate = nitrate._calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t + 1)
+			current_nitrate = nitrate_proportion._calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t + 1)
 			if current_nitrate < previous_nitrate:
 				break
 			t += 1
@@ -62,12 +63,12 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		mean_velocity_of_unsaturated_transport = 0.0029
 		DTW = 0.001
 		t = 1
-		original = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
-		different_a = nitrate._calculate_cumulative_proportion_reaching_water_table(100, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
-		different_μ = nitrate._calculate_cumulative_proportion_reaching_water_table(a, 0.05, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
-		different_σ = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, 0.01, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
-		different_mean_hydraulic_conductivity = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, 100, mean_velocity_of_unsaturated_transport, DTW, t)
-		different_mean_velocity_of_unsaturated_transport = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, 0.1, DTW, t)
+		original = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
+		different_a = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(100, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
+		different_μ = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, 0.05, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
+		different_σ = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, 0.01, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
+		different_mean_hydraulic_conductivity = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, 100, mean_velocity_of_unsaturated_transport, DTW, t)
+		different_mean_velocity_of_unsaturated_transport = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, 0.1, DTW, t)
 		self.assertEqual(0.793244345253982, original)
 		self.assertEqual(0.6657750500569044, different_a)
 		self.assertEqual(0.6668990408184825, different_μ)
