@@ -43,22 +43,11 @@ def n__calculate_proportion_reaching_water_table_array_per_day(
 
 def n_calculate_daily_proportion_reaching_water_table(
 		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
-	f_t = n_calculate_cumulative_proportion_reaching_water_table(
+	f_t = _calculate_cumulative_proportion_reaching_water_table(
 		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
-	f_t_prev = n_calculate_cumulative_proportion_reaching_water_table(
+	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(
 		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t - 1)
 	return f_t - f_t_prev
-
-def n_calculate_cumulative_proportion_reaching_water_table(
-		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
-	if (t <= 0):
-		return 0
-
-	numerator = math.log((mean_hydraulic_conductivity/mean_velocity_of_unsaturated_transport) * (DTW/t), a) - μ
-	denominator = σ * math.sqrt(2)
-
-	result = 0.5 * (1 + math.erf(- numerator / denominator))
-	return result
 
 def h_calculate_historic_proportion_reaching_water_table_array_per_day(blackboard):	
 	time_switcher = blackboard.time_switcher
@@ -100,13 +89,13 @@ def h__calculate_proportion_reaching_water_table_array_per_day(
 
 def h_calculate_daily_proportion_reaching_water_table(
 		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
-	f_t = h_calculate_cumulative_proportion_reaching_water_table(
+	f_t = _calculate_cumulative_proportion_reaching_water_table(
 		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
-	f_t_prev = h_calculate_cumulative_proportion_reaching_water_table(
+	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(
 		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t - 1)
 	return f_t - f_t_prev
 
-def h_calculate_cumulative_proportion_reaching_water_table(
+def _calculate_cumulative_proportion_reaching_water_table(
 		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
 	if (t <= 0):
 		return 0
