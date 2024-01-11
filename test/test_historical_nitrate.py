@@ -215,7 +215,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			}
 		}
 		output = {}
-		node = None
+		node = 7
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
 
 		actual = blackboard.initialise_blackboard(data, output, node)
