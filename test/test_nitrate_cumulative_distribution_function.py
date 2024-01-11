@@ -114,13 +114,9 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		self.assertEqual("xxx", actual)
 	
 	def test_total_mass_leached_on_day_for_zero_days(self):
-		proportion_reaching_water_table_array_per_day = np.array([])
-		mi_array_kg_per_day = np.array([])
-		mass_reaching_water_table_kg = []
-
 		blackboard = nitrate.NitrateBlackboard()
-		blackboard.proportion_reaching_water_table_array_per_day = proportion_reaching_water_table_array_per_day
-		blackboard.mi_array_kg_per_day = mi_array_kg_per_day
+		blackboard.proportion_reaching_water_table_array_per_day = np.array([])
+		blackboard.mi_array_kg_per_day = np.array([])
 
 		expected_total_mass_on_day_kg = np.array([])
 		actual = m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard)
