@@ -259,11 +259,11 @@ def _calculate_mass_balance_error_kg(blackboard):
 	return blackboard.m0_array_kg_per_day - blackboard.total_NO3_to_receptors_kg
 
 def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging, blackboard):
-	is_mass_balanced = _is_mass_balanced(mass_balance_error_kg)
+	is_mass_balanced = _is_mass_balanced(blackboard.mass_balance_error_kg)
 	if not is_mass_balanced:
-		i = _find_unbalanced_day_to_report(mass_balance_error_kg)
+		i = _find_unbalanced_day_to_report(blackboard.mass_balance_error_kg)
 		message = _make_unbalanced_day_log_message(i, blackboard)
-		logging.warning(message)
+		blackboard.logging.warning(message)
 
 def _is_mass_balanced(mass_balance_error_kg):
 	return np.allclose(mass_balance_error_kg, 0.0)
