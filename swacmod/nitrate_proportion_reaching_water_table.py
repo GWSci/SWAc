@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-def n_calculate_proportion_reaching_water_table_array_per_day(blackboard):
+def calculate_proportion_reaching_water_table_array_per_day(blackboard):
 	days_offset = 0
 	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset)
 
@@ -28,7 +28,7 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_of
 			blackboard.mean_velocity_of_unsaturated_transport,
 			depth_to_water_m,
 			time_switcher)
-	
+
 def __calculate_proportion_reaching_water_table_array_per_day(
 		days_offset,
 		length,
