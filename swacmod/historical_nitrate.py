@@ -3,6 +3,7 @@ import numpy as np
 class HistoricalNitrateBlackboard():
 	def __init__(self):
 		self.date = None
+		self.historical_mi_array_kg_per_day = None
 		self.historical_nitrate_date = None
 		self.truncated_historical_nitrate_dates = None
 
@@ -25,3 +26,6 @@ def _calculate_truncated_historical_nitrate_date(blackboard):
 	first_new_date = date[0]
 	truncated_historical_nitrate_dates = [d for d in historical_nitrate_date if d < first_new_date]
 	return truncated_historical_nitrate_dates
+
+def _calculate_truncated_historical_mi_array_kg_per_day(blackboard):
+	pass
