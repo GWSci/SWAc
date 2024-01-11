@@ -84,6 +84,10 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		actual = historical_nitrate._calculate_historical_nitrate(self.make_sample_blackboard())
 		self.assertIsNotNone(actual.historic_proportion_reaching_water_table_array_per_day)
 
+	def test_calculate_historical_nitrate_populates_calculate_historical_mass_reaching_water_table_array_kg_per_day(self):
+		actual = historical_nitrate._calculate_historical_nitrate(self.make_sample_blackboard())
+		self.assertIsNotNone(actual.calculate_historical_mass_reaching_water_table_array_kg_per_day)
+
 	def make_sample_blackboard(self):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
 		blackboard.days = [date(2023, 1, 3), date(2023, 1, 4), ]
