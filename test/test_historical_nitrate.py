@@ -190,3 +190,9 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 		expected = np.array([1.0, 12.0, 123.0])
 		np.testing.assert_allclose(expected, actual)
+
+	def test_convert_kg_to_tons_array(self):
+		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
+		blackboard.calculate_historical_mass_reaching_water_table_array_kg_per_day = [1000.0, 2000.0, 3000.0]
+
+		actual = historical_nitrate._convert_kg_to_tons_array(blackboard)

@@ -50,3 +50,6 @@ def _calculate_historic_proportion_reaching_water_table_array_per_day(blackboard
 
 def _calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
 	return m.calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard)
+
+def _convert_kg_to_tons_array(blackboard):
+	pass
