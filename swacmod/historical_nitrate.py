@@ -1,5 +1,10 @@
 import numpy as np
 
+class HistoricalNitrateBlackboard():
+	def __init__(self):
+		self.date = None
+		self.historical_nitrate_date = None
+
 def get_historical_nitrate(data, output, node):
 	length = len(data["series"]["date"])
 	empty_array = np.zeros(length)
