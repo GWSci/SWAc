@@ -256,8 +256,18 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
 		mass_balance_error_kg = np.array([1.0, 2.0, 1.0])
 		logging = SpyLogger()
-		blackboard = None
 		
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.node = 1
+		blackboard.m0_array_kg_per_day = np.array([1.0, 2.0, 3.0])
+		blackboard.m1_array_kg_per_day = np.array([10.0, 20.0, 30.0])
+		blackboard.m2_array_kg_per_day = np.array([100.0, 200.0, 300.0])
+		blackboard.m3_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
+		blackboard.m4_array_kg_per_day = np.array([10000.0, 20000.0, 30000.0])
+		blackboard.total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
+		blackboard.mass_balance_error_kg = np.array([1.0, 2.0, 1.0])
+		blackboard.logging = logging
+
 		nitrate._check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging, blackboard)
 		actual = logging.log
 
@@ -274,7 +284,17 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
 		mass_balance_error_kg = np.array([0.0, 0.0, 0.0])
 		logging = SpyLogger()
-		blackboard = None
+
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.node = 1
+		blackboard.m0_array_kg_per_day = np.array([1.0, 2.0, 3.0])
+		blackboard.m1_array_kg_per_day = np.array([10.0, 20.0, 30.0])
+		blackboard.m2_array_kg_per_day = np.array([100.0, 200.0, 300.0])
+		blackboard.m3_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
+		blackboard.m4_array_kg_per_day = np.array([10000.0, 20000.0, 30000.0])
+		blackboard.total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
+		blackboard.mass_balance_error_kg = np.array([0.0, 0.0, 0.0])
+		blackboard.logging = logging
 		
 		nitrate._check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging, blackboard)
 		actual = logging.log
