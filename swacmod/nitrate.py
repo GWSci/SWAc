@@ -115,7 +115,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard.mi_array_kg_per_day = _calculate_mi_array_kg_per_day(blackboard)
 		blackboard.total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(blackboard)
 		blackboard.mass_balance_error_kg = _calculate_mass_balance_error_kg(blackboard)
-		_check_masses_balance(node, blackboard.m0_array_kg_per_day, blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day, blackboard.total_NO3_to_receptors_kg, blackboard.mass_balance_error_kg, blackboard.logging)
+		_check_masses_balance(node, blackboard.m0_array_kg_per_day, blackboard.m1_array_kg_per_day, blackboard.m2_array_kg_per_day, blackboard.m3_array_kg_per_day, blackboard.m4_array_kg_per_day, blackboard.total_NO3_to_receptors_kg, blackboard.mass_balance_error_kg, blackboard.logging, blackboard)
 		blackboard.proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, blackboard.a, blackboard.μ, blackboard.σ, blackboard.mean_hydraulic_conductivity, blackboard.mean_velocity_of_unsaturated_transport, blackboard.proportion_0, blackboard.proportion_100)
 		blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard.proportion_reaching_water_table_array_per_day, blackboard.mi_array_kg_per_day))
 		blackboard.nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day)
@@ -250,12 +250,12 @@ def _calculate_total_NO3_to_receptors_kg(blackboard):
 def _calculate_mass_balance_error_kg(blackboard):
 	return blackboard.m0_array_kg_per_day - blackboard.total_NO3_to_receptors_kg
 
-def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging):
-	is_mass_balanced = _is_mass_balanced(mass_balance_error_kg)
+def _check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging, blackboard):
+	is_mass_balanced = _is_mass_balanced(blackboard.mass_balance_error_kg)
 	if not is_mass_balanced:
-		i = _find_unbalanced_day_to_report(mass_balance_error_kg)
+		i = _find_unbalanced_day_to_report(blackboard.mass_balance_error_kg)
 		message = _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, i, mass_balance_error_kg, total_NO3_to_receptors_kg)
-		logging.warning(message)
+		blackboard.logging.warning(message)
 
 def _is_mass_balanced(mass_balance_error_kg):
 	return np.allclose(mass_balance_error_kg, 0.0)
