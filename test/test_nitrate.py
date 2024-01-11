@@ -331,16 +331,6 @@ class Test_Nitrate(unittest.TestCase):
 		}
 		node = 7
 		actual = nitrate.calculate_nitrate(data, output, node)
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["her_array_mm_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["m0_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["m1_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["m1a_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["m2_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["m3_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["m4_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["mi_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["proportion_reaching_water_table_array_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["nitrate_reaching_water_table_array_from_this_run_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["nitrate_reaching_water_table_array_tons_per_day"])
 
 	def test_output_file_path(self):

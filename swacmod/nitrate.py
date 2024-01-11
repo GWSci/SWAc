@@ -280,15 +280,6 @@ def _convert_blackboard_to_result(blackboard):
 def _make_empty_result(length):
 	empty_array = np.zeros(length)
 	return {
-		"her_array_mm_per_day" : empty_array,
-		"m0_array_kg_per_day" : empty_array,
-		"m1_array_kg_per_day" : empty_array,
-		"m1a_array_kg_per_day" : empty_array,
-		"m2_array_kg_per_day" : empty_array,
-		"m3_array_kg_per_day" : empty_array,
-		"m4_array_kg_per_day" : empty_array,
 		"mi_array_kg_per_day" : empty_array,
-		"proportion_reaching_water_table_array_per_day" : empty_array,
-		"nitrate_reaching_water_table_array_from_this_run_kg_per_day" : empty_array,
 		"nitrate_reaching_water_table_array_tons_per_day" : empty_array,
 	}
