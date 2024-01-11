@@ -43,4 +43,4 @@ def _calculate_truncated_historical_mi_array_kg_per_day(blackboard):
 	return blackboard.historical_mi_array_kg_per_day[:truncated_length]
 
 def _calculate_historic_proportion_reaching_water_table_array_per_day(blackboard):	
-	return nitrate_proportion.h_calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
+	return nitrate_proportion.calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
