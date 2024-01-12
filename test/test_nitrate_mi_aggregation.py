@@ -38,10 +38,11 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 		output_1 = {
 			"mi_array_kg_per_day": np.array([5.0])
 		}
+		output_for_nodes = [output_0, output_1]
 
 		actual = nitrate.make_mi_aggregation_array(data)
-		actual = nitrate.aggregate_mi(actual, data, output_0, 0)
-		actual = nitrate.aggregate_mi(actual, data, output_1, 1)
+		for node, output in enumerate(output_for_nodes):
+			actual = nitrate.aggregate_mi(actual, data, output, node)
 
 		expected = np.array([[3.0], [5.0]])
 		np.testing.assert_allclose(expected, actual)
