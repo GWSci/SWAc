@@ -12,6 +12,10 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 		node = 0
 
 		actual = nitrate.make_mi_aggregation_array(data)
+		actual = nitrate.aggregate_mi(actual, data, output, node)
+
+		expected = np.array([])
+		np.testing.assert_array_almost_equal(expected, actual)
 
 def make_data(time_periods):
 	dates = []

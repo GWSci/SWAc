@@ -191,7 +191,7 @@ def make_aggregation_array(data):
 	return aggregation
 
 def make_mi_aggregation_array(data):
-	pass
+	return np.array([])
 
 def aggregate_nitrate(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
