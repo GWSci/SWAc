@@ -48,13 +48,6 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 
 		self.assert_mi_aggregation2(expected, data, node_count, time_periods, output_for_nodes)
 
-	def assert_mi_aggregation(self, expected, data, output_for_nodes):
-		actual = nitrate.make_mi_aggregation_array(data)
-		for node, output in enumerate(output_for_nodes):
-			actual = nitrate.aggregate_mi(actual, data, output, node)
-
-		np.testing.assert_allclose(expected, actual)
-
 	def assert_mi_aggregation2(self, expected, data, node_count, time_periods, output_for_nodes):
 		actual = nitrate.make_mi_aggregation_array(data)
 		for node, output in enumerate(output_for_nodes):
