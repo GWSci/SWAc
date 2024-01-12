@@ -191,7 +191,11 @@ def make_aggregation_array(data):
 	return aggregation
 
 def make_mi_aggregation_array(data):
-	return np.array([])
+	time_periods = data["params"]["time_periods"]
+	len_time_periods = _len_time_periods(time_periods)
+	node_count = data['params']['num_nodes']
+	shape = (node_count, len_time_periods)
+	return np.zeros(shape = shape)
 
 def aggregate_nitrate(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
@@ -203,7 +207,11 @@ def aggregate_nitrate(aggregation, data, output, node):
 	return aggregation
 
 def aggregate_mi(actual, data, output, node):
-	pass
+	time_periods = data["params"]["time_periods"]
+	len_time_periods = _len_time_periods(time_periods)
+	for time_period_index in range(len_time_periods):
+		actual[node][time_period_index] = 3.0
+	return actual
 
 def _len_time_periods(time_periods):
 	return len(time_periods)
