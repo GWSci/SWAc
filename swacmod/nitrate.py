@@ -210,7 +210,7 @@ def aggregate_mi(actual, data, output, node):
 	time_periods = data["params"]["time_periods"]
 	len_time_periods = _len_time_periods(time_periods)
 	for time_period_index in range(len_time_periods):
-		actual[node][time_period_index] = 3.0
+		actual[node][time_period_index] = output["mi_array_kg_per_day"][0]
 	return actual
 
 def _len_time_periods(time_periods):
