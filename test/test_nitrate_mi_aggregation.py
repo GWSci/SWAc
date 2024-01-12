@@ -48,7 +48,7 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 	def assert_mi_aggregation(self, expected, node_count, time_periods, output_for_nodes, output_per_node):
 		data = make_data(node_count = node_count, time_periods = time_periods)
 		actual = nitrate.make_mi_aggregation_array(data)
-		for node, output in enumerate(output_for_nodes):
+		for node in range(len(output_per_node)):
 			output2 = {
 				"mi_array_kg_per_day": np.array(output_per_node[node])
 			}
