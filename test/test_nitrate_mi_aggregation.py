@@ -10,9 +10,11 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 			"mi_array_kg_per_day": np.array([[]])
 		}
 		node = 0
+		output_for_nodes = [output]
 
 		actual = nitrate.make_mi_aggregation_array(data)
-		actual = nitrate.aggregate_mi(actual, data, output, node)
+		for node, output in enumerate(output_for_nodes):
+			actual = nitrate.aggregate_mi(actual, data, output, node)
 
 		expected = np.zeros(shape = (1, 0))
 		np.testing.assert_allclose(expected, actual)
@@ -23,9 +25,11 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 			"mi_array_kg_per_day": np.array([3.0])
 		}
 		node = 0
+		output_for_nodes = [output]
 
 		actual = nitrate.make_mi_aggregation_array(data)
-		actual = nitrate.aggregate_mi(actual, data, output, node)
+		for node, output in enumerate(output_for_nodes):
+			actual = nitrate.aggregate_mi(actual, data, output, node)
 
 		expected = np.array([[3.0]])
 		np.testing.assert_allclose(expected, actual)
