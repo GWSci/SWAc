@@ -26,7 +26,19 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 		self.assert_mi_aggregation(expected, node_count, time_periods, output_per_node)
 
 	def assert_mi_aggregation(self, expected, node_count, time_periods, output_per_node):
-		data = make_data(node_count = node_count, time_periods = time_periods)
+		dates = []
+		if len(time_periods) > 0:
+			for i in range(1, time_periods[len(time_periods) - 1][1]):
+				dates.append(date(2023, 1, i + 1))
+		data = {
+			"series": {
+				"date" : dates
+			}, "params" : {
+				"time_periods" : time_periods,
+				"num_nodes" : node_count,
+			}
+		}
+		
 		actual = nitrate.make_mi_aggregation_array(data)
 		for node in range(len(output_per_node)):
 			output2 = {
