@@ -39,8 +39,9 @@ from swacmod import compile_model
 from swacmod import model as m
 import swacmod.model_numpy as model_numpy
 
-import swacmod.nitrate as historical_nitrate
+import swacmod.historical_nitrate as historical_nitrate
 import swacmod.nitrate as nitrate
+import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
 
 # win fix
 sys.maxint = 2**63 - 1
@@ -219,7 +220,7 @@ def run_process(
         mean_hydraulic_conductivity = params["nitrate_calibration_mean_hydraulic_conductivity"]
         mean_velocity_of_unsaturated_transport = params["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
 
-        proportion_100 = nitrate.__calculate_proportion_reaching_water_table_array_per_day(len(data["series"]['date']), a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, 100.0, time_switcher)
+        proportion_100 = nitrate_proportion.__calculate_proportion_reaching_water_table_array_per_day(0, len(data["series"]['date']), a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, 100.0, time_switcher)
         data["proportion_100"] = proportion_100
     timer.switch_to(time_switcher, "run_main > run > for")
 
