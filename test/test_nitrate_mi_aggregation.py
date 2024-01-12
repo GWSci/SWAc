@@ -32,6 +32,13 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 		expected = np.array([[321.0]])
 		self.assert_mi_aggregation(expected, node_count, time_periods, output_per_node)
 
+	def test_nitrate_mi_aggregation_for_several_days_each_in_its_own_time_period(self):
+		node_count = 1
+		time_periods = {0: [1, 2], 1: [2, 3], 2: [3, 4]}
+		output_per_node = [[1.0, 20.0, 300.0]]
+		expected = np.array([[1.0, 20.0, 300.0]])
+		self.assert_mi_aggregation(expected, node_count, time_periods, output_per_node)
+
 	def assert_mi_aggregation(self, expected, node_count, time_periods, output_per_node):
 		dates = []
 		if len(time_periods) > 0:
