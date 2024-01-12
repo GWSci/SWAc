@@ -190,6 +190,9 @@ def make_aggregation_array(data):
 	aggregation = np.zeros(shape = shape)
 	return aggregation
 
+def make_mi_aggregation_array(data):
+	pass
+
 def aggregate_nitrate(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
@@ -198,6 +201,9 @@ def aggregate_nitrate(aggregation, data, output, node):
 	len_time_periods = _len_time_periods(time_periods)
 	m._aggregate_nitrate(time_periods, len_time_periods, nitrate_reaching_water_table_array_tons_per_day, combined_recharge_m_cubed, aggregation, node)
 	return aggregation
+
+def aggregate_mi(actual, data, output, node):
+	pass
 
 def _len_time_periods(time_periods):
 	return len(time_periods)
