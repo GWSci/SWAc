@@ -38,7 +38,7 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 				"num_nodes" : node_count,
 			}
 		}
-		
+
 		actual = nitrate.make_mi_aggregation_array(data)
 		for node in range(len(output_per_node)):
 			output2 = {
@@ -47,17 +47,3 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 			actual = nitrate.aggregate_mi(actual, data, output2, node)
 
 		np.testing.assert_allclose(expected, actual)
-
-def make_data(node_count, time_periods):
-	dates = []
-	if len(time_periods) > 0:
-		for i in range(1, time_periods[len(time_periods) - 1][1]):
-			dates.append(date(2023, 1, i + 1))
-	return {
-		"series": {
-			"date" : dates
-		}, "params" : {
-			"time_periods" : time_periods,
-			"num_nodes" : node_count,
-		}
-	}
