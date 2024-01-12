@@ -206,7 +206,7 @@ def aggregate_nitrate(aggregation, data, output, node):
 	m._aggregate_nitrate(time_periods, len_time_periods, nitrate_reaching_water_table_array_tons_per_day, combined_recharge_m_cubed, aggregation, node)
 	return aggregation
 
-def aggregate_mi(actual, data, output, node):
+def aggregate_mi(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
 	len_time_periods = _len_time_periods(time_periods)
 	for time_period_index in range(len_time_periods):
@@ -214,8 +214,8 @@ def aggregate_mi(actual, data, output, node):
 		first_day_index = time_period[0] - 1
 		last_day_index = time_period[1] -1
 		for day_index in range(first_day_index, last_day_index):
-			actual[node][time_period_index] += output["mi_array_kg_per_day"][day_index]
-	return actual
+			aggregation[node][time_period_index] += output["mi_array_kg_per_day"][day_index]
+	return aggregation
 
 def _len_time_periods(time_periods):
 	return len(time_periods)
