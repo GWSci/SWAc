@@ -208,14 +208,9 @@ def aggregate_nitrate(aggregation, data, output, node):
 
 def aggregate_mi(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
+	mi_array_kg_per_day = output["mi_array_kg_per_day"]
 	len_time_periods = _len_time_periods(time_periods)
-	for time_period_index in range(len_time_periods):
-		time_period = time_periods[time_period_index]
-		first_day_index = time_period[0] - 1
-		last_day_index = time_period[1] -1
-		for day_index in range(first_day_index, last_day_index):
-			aggregation[node][time_period_index] += output["mi_array_kg_per_day"][day_index]
-	return aggregation
+	return m.aggregate_mi(aggregation, time_periods, len_time_periods, mi_array_kg_per_day, node)
 
 def _len_time_periods(time_periods):
 	return len(time_periods)

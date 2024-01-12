@@ -1682,6 +1682,23 @@ def _aggregate_nitrate(
 
     return aggregation
 
+def aggregate_mi(
+            double[:,:] aggregation,
+            time_periods,
+            size_t len_time_periods,
+            double[:] mi_array_kg_per_day,
+            size_t node):
+    cdef:
+        size_t time_period_index, first_day_index, last_day_index, day_index
+
+    for time_period_index in range(len_time_periods):
+        time_period = time_periods[time_period_index]
+        first_day_index = time_period[0] - 1
+        last_day_index = time_period[1] - 1
+        for day_index in range(first_day_index, last_day_index):
+            aggregation[node][time_period_index] += mi_array_kg_per_day[day_index]
+    return aggregation
+
 def write_nitrate_csv_bytes(filename, nitrate_aggregation):
     stress_period_count = nitrate_aggregation.shape[0]
     node_count = nitrate_aggregation.shape[1]
