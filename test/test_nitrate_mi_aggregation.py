@@ -15,7 +15,7 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 
 		expected = np.zeros(shape = (1, 0))
 
-		self.assert_mi_aggregation(expected, node_count, time_periods, output_for_nodes, output_per_node)
+		self.assert_mi_aggregation(expected, node_count, time_periods, output_per_node)
 
 	def test_nitrate_mi_aggregation_for_one_day(self):
 		node_count = 1
@@ -28,7 +28,7 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 
 		expected = np.array([[3.0]])
 
-		self.assert_mi_aggregation(expected, node_count, time_periods, output_for_nodes, output_per_node)
+		self.assert_mi_aggregation(expected, node_count, time_periods, output_per_node)
 
 	def test_nitrate_mi_aggregation_for_two_nodes_and_one_day(self):
 		node_count = 2
@@ -43,9 +43,9 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 
 		expected = np.array([[3.0], [5.0]])
 
-		self.assert_mi_aggregation(expected, node_count, time_periods, output_for_nodes, output_per_node)
+		self.assert_mi_aggregation(expected, node_count, time_periods, output_per_node)
 
-	def assert_mi_aggregation(self, expected, node_count, time_periods, output_for_nodes, output_per_node):
+	def assert_mi_aggregation(self, expected, node_count, time_periods, output_per_node):
 		data = make_data(node_count = node_count, time_periods = time_periods)
 		actual = nitrate.make_mi_aggregation_array(data)
 		for node in range(len(output_per_node)):
