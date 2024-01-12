@@ -41,9 +41,9 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 
 		actual = nitrate.make_mi_aggregation_array(data)
 		for node in range(len(output_per_node)):
-			output2 = {
+			output = {
 				"mi_array_kg_per_day": np.array(output_per_node[node])
 			}
-			actual = nitrate.aggregate_mi(actual, data, output2, node)
+			actual = nitrate.aggregate_mi(actual, data, output, node)
 
 		np.testing.assert_allclose(expected, actual)
