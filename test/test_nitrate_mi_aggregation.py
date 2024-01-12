@@ -5,9 +5,13 @@ import unittest
 
 class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 	def test_nitrate_mi_aggregation_for_empty_data(self):
-		data = make_data(node_count = 1, time_periods = {})
+		node_count = 1
+		time_periods = {}
+		output_per_node = [[]]
+
+		data = make_data(node_count, time_periods)
 		output_for_nodes = [{
-			"mi_array_kg_per_day": np.array([[]])
+			"mi_array_kg_per_day": np.array(output_per_node[0])
 		}]
 
 		expected = np.zeros(shape = (1, 0))
@@ -15,9 +19,13 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 		self.assert_mi_aggregation(expected, data, output_for_nodes)
 
 	def test_nitrate_mi_aggregation_for_one_day(self):
-		data = make_data(node_count = 1, time_periods = {0: [1, 2]})
+		node_count = 1
+		time_periods = {0: [1, 2]}
+		output_per_node = [[3.0]]
+
+		data = make_data(node_count = node_count, time_periods = time_periods)
 		output_for_nodes = [{
-			"mi_array_kg_per_day": np.array([3.0])
+			"mi_array_kg_per_day": np.array(output_per_node[0])
 		}]
 
 		expected = np.array([[3.0]])
@@ -25,11 +33,15 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 		self.assert_mi_aggregation(expected, data, output_for_nodes)
 
 	def test_nitrate_mi_aggregation_for_two_nodes_and_one_day(self):
-		data = make_data(node_count = 2, time_periods = {0: [1, 2]})
+		node_count = 2
+		time_periods = {0: [1, 2]}
+		output_per_node = [[3.0], [5.0]]
+
+		data = make_data(node_count = node_count, time_periods = time_periods)
 		output_for_nodes = [{
-			"mi_array_kg_per_day": np.array([3.0])
+			"mi_array_kg_per_day": np.array(output_per_node[0])
 		}, {
-			"mi_array_kg_per_day": np.array([5.0])
+			"mi_array_kg_per_day": np.array(output_per_node[1])
 		}]
 
 		expected = np.array([[3.0], [5.0]])
