@@ -19,6 +19,14 @@ class Test_Read_And_Write_mi_File(unittest.TestCase):
 		pathlib.Path(self.tempdir).rmdir()
 
 	def test_writing_an_mi_file_produces_a_file_with_the_expected_contents(self):
+		filename = self.write_csv_return_filename()
+
+		with open(filename, "r", newline="") as f:
+			actual = f.read()
+		expected = "2.1,3,5\r\n7,11,13\r\n"
+		self.assertEqual(expected, actual)
+
+	def write_csv_return_filename(self):
 		nitrate_mi_aggregation = np.array([
 			[2.1, 3.0, 5.0],
 			[7.0, 11.0, 13.0],
@@ -32,8 +40,4 @@ class Test_Read_And_Write_mi_File(unittest.TestCase):
 
 		filename = nitrate.write_mi_csv(data, nitrate_mi_aggregation)
 		self.files_to_delete.append(filename)
-
-		with open(filename, "r", newline="") as f:
-			actual = f.read()
-		expected = "2.1,3,5\r\n7,11,13\r\n"
-		self.assertEqual(expected, actual)
+		return filename
