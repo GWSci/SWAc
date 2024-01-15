@@ -302,7 +302,7 @@ class Test_Nitrate(unittest.TestCase):
 	def test_get_nitrate(self):
 		data, output, node = self.make_data_output_and_node()
 		actual = nitrate.get_nitrate(data, output, node)
-		# np.testing.assert_array_almost_equal(np.array([35.0, 38.89441]), actual["mi_array_kg_per_day"])
+		np.testing.assert_array_almost_equal(np.array([35.0, 38.89441]), actual["mi_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([100.0, 200.021]), actual["nitrate_reaching_water_table_array_tons_per_day"])
 
 	def test_calculate_nitrate_when_disabled(self):

@@ -10,6 +10,7 @@ import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
 def get_nitrate(data, output, node):
 	nitrate = calculate_nitrate(data, output, node)
 	return {
+		"mi_array_kg_per_day" : nitrate["mi_array_kg_per_day"],
 		"nitrate_reaching_water_table_array_tons_per_day" : nitrate["nitrate_reaching_water_table_array_tons_per_day"],
 	}
 
