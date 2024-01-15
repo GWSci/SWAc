@@ -239,6 +239,12 @@ def make_output_filename(data):
 	folder = utils.CONSTANTS["OUTPUT_DIR"]
 	return os.path.join(folder, file)
 
+def make_mi_output_filename(data):
+	run_name = data["params"]["run_name"]
+	file = run_name + "_mi.csv"
+	folder = utils.CONSTANTS["OUTPUT_DIR"]
+	return os.path.join(folder, file)
+
 def _convert_blackboard_to_result(blackboard):
 	return {
 		"her_array_mm_per_day" : blackboard.her_array_mm_per_day,

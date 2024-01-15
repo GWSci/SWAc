@@ -358,6 +358,20 @@ class Test_Nitrate(unittest.TestCase):
 		message = f"Expected '{actual}' to end with '{expected}'."
 		self.assertTrue(isPassed, message)
 
+	def test_mi_output_file_path(self):
+		data = {
+			"params" : {
+				"run_name" : "aardvark",
+			}
+		}
+		expected = ""
+		actual = nitrate.make_mi_output_filename(data)
+		sep = os.path.sep
+		expected = "output_files" + sep + "aardvark_mi.csv"
+		isPassed = actual.endswith(expected)
+		message = f"Expected '{actual}' to end with '{expected}'."
+		self.assertTrue(isPassed, message)
+
 def calculate_total_mass_leached_for_test(days, her_per_day):
 		max_load_per_year = 10000 * 365.25
 		her_at_5_percent = 5 * 365.25
