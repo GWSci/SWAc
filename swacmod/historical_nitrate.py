@@ -70,6 +70,7 @@ def _calculate_aggregate_mi_unpacking(blackboard):
 	return historical_mi_array_kg_per_day
 
 def _calculate_historical_nitrate(blackboard):
+	blackboard.historical_mi_array_kg_per_day = _calculate_aggregate_mi_unpacking(blackboard)
 	blackboard.truncated_historical_nitrate_days = _calculate_truncated_historical_nitrate_days(blackboard)
 	blackboard.truncated_historical_mi_array_kg_per_day = _calculate_truncated_historical_mi_array_kg_per_day(blackboard)
 	blackboard.historic_proportion_reaching_water_table_array_per_day = _calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
