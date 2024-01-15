@@ -237,6 +237,7 @@ def write_mi_csv(data, nitrate_mi_aggregation):
 	filename = make_mi_output_filename(data)
 	with open(filename, "wb") as f:
 		pass
+	return filename
 
 def make_output_filename(data):
 	return _make_run_filename_with_suffix(data, "nitrate")

@@ -29,7 +29,8 @@ class Test_Read_And_Write_mi_File(unittest.TestCase):
 				"run_name" : "aardvark"
 			}
 		}
-		filename = nitrate.make_mi_output_filename(data)
-		self.files_to_delete.append(filename)
-		nitrate.write_mi_csv(data, nitrate_mi_aggregation)
+
+		filename = nitrate.write_mi_csv(data, nitrate_mi_aggregation)
+		filename = self.files_to_delete.append(filename)
+
 		self.assertEqual(1, 1)
