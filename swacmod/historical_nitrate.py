@@ -7,13 +7,16 @@ class HistoricalNitrateBlackboard():
 		self.a = None
 		self.days = None
 		self.historical_mi_array_kg_per_day = None
+		self.historical_mi_array_kg_per_time_period = None
 		self.historical_mass_reaching_water_table_array_kg_per_day = None
 		self.historical_nitrate_reaching_water_table_array_tons_per_day = None
 		self.historical_nitrate_days = None
+		self.historical_time_periods = None
 		self.historic_proportion_reaching_water_table_array_per_day = None
 		self.mean_hydraulic_conductivity = None
 		self.mean_velocity_of_unsaturated_transport = None
 		self.nitrate_depth_to_water = None
+		self.node = None
 		self.time_switcher = None
 		self.truncated_historical_mi_array_kg_per_day = None
 		self.truncated_historical_nitrate_days = None
@@ -46,6 +49,11 @@ def get_historical_nitrate(data, output, node):
 		return {
 			"historical_nitrate_reaching_water_table_array_tons_per_day": empty_array,
 		}
+
+def _calculate_aggregate_mi_unpacking(blackboard):
+	result = np.array([3.0])
+	blackboard.historical_mi_array_kg_per_day = result
+	return blackboard
 
 def _calculate_historical_nitrate(blackboard):
 	blackboard.truncated_historical_nitrate_days = _calculate_truncated_historical_nitrate_days(blackboard)
