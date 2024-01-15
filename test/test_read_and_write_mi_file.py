@@ -1,7 +1,5 @@
 import unittest
 import numpy as np
-import os
-import swacmod.input_output as input_output
 import swacmod.time_series_data as time_series_data
 import swacmod.nitrate as nitrate
 import swacmod.utils as utils
@@ -35,17 +33,11 @@ class Test_Read_And_Write_mi_File(unittest.TestCase):
 		ext = "csv"
 		file_contents = time_series_data.load_time_series_data(base_path, param, filename, ext)
 
-		expected = np.array([
-			[2.1, 3.0, 5.0],
-			[7.0, 11.0, 13.0],
-		])
+		expected = make_mi_aggregation_as_numpy_array()
 		np.testing.assert_allclose(expected, file_contents)
 
 	def write_csv_return_filename(self):
-		nitrate_mi_aggregation = np.array([
-			[2.1, 3.0, 5.0],
-			[7.0, 11.0, 13.0],
-		])
+		nitrate_mi_aggregation = make_mi_aggregation_as_numpy_array()
 
 		data = {
 			"params" : {
@@ -56,6 +48,12 @@ class Test_Read_And_Write_mi_File(unittest.TestCase):
 		filename = nitrate.write_mi_csv(data, nitrate_mi_aggregation)
 		self.files_to_delete.append(filename)
 		return filename
+
+def make_mi_aggregation_as_numpy_array():
+	return np.array([
+		[2.1, 3.0, 5.0],
+		[7.0, 11.0, 13.0],
+	])
 
 def slurp(filename):
 	with open(filename, "r", newline="") as f:
