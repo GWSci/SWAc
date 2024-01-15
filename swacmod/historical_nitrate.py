@@ -52,7 +52,8 @@ def get_historical_nitrate(data, output, node):
 
 def _calculate_aggregate_mi_unpacking(blackboard):
 	result = np.array(blackboard.historical_mi_array_kg_per_time_period[blackboard.node])
-	blackboard.historical_mi_array_kg_per_day = result
+	time_period = blackboard.historical_time_periods[0]
+	blackboard.historical_mi_array_kg_per_day = np.repeat(result / (time_period[1] - time_period[0]), (time_period[1] - time_period[0]))
 	return blackboard
 
 def _calculate_historical_nitrate(blackboard):
