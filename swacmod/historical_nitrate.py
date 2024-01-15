@@ -55,10 +55,11 @@ def _calculate_aggregate_mi_unpacking(blackboard):
 	total_mi_for_time_period_kg = historical_mi_array_kg_per_time_period_for_node[0]
 	time_period = blackboard.historical_time_periods[0]
 	time_period_start_index = time_period[0] - 1
+	time_period_end_index = time_period[1] - 1
 	days_in_time_period = (time_period[1] - time_period[0])
 	length = len(blackboard.historical_nitrate_days)
 	blackboard.historical_mi_array_kg_per_day = np.zeros(length)
-	for day in range(time_period_start_index, time_period[1] - 1):
+	for day in range(time_period_start_index, time_period_end_index):
 		blackboard.historical_mi_array_kg_per_day[day] = total_mi_for_time_period_kg / days_in_time_period
 	return blackboard
 
