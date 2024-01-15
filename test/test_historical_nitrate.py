@@ -223,9 +223,9 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		np.testing.assert_allclose(expected.nitrate_depth_to_water, actual.nitrate_depth_to_water)
 		self.assertEqual(expected.mean_hydraulic_conductivity, actual.mean_hydraulic_conductivity)
 		self.assertEqual(expected.mean_velocity_of_unsaturated_transport, actual.mean_velocity_of_unsaturated_transport)
+		self.assertEqual(expected.node, actual.node)
 		self.assertEqual(expected.μ, actual.μ)
 		self.assertEqual(expected.σ, actual.σ)
-		self.assertEqual(expected.node, actual.node)
 
 	def make_sample_data_output_node(self):
 		data = {
