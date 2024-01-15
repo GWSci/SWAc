@@ -29,6 +29,7 @@ class HistoricalNitrateBlackboard():
 		self.historical_mi_array_kg_per_day = data["series"]["historical_mi_kg_per_day"][node]
 		self.historical_mi_array_kg_per_time_period = data["series"]["historical_mi_array_kg_per_time_period"][node]
 		self.historical_nitrate_days = data["series"]["historical_nitrate_days"]
+		self.historical_time_periods = data["params"]["historical_time_periods"]
 		self.nitrate_depth_to_water = data["params"]["nitrate_depth_to_water"][node]
 		self.mean_hydraulic_conductivity = data["params"]["nitrate_calibration_mean_hydraulic_conductivity"]
 		self.mean_velocity_of_unsaturated_transport = data["params"]["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
