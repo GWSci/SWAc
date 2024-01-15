@@ -55,7 +55,7 @@ def get_historical_nitrate(data, output, node):
 def _calculate_aggregate_mi_unpacking(blackboard):
 	historical_mi_array_kg_per_time_period_for_node = blackboard.historical_mi_array_kg_per_time_period[blackboard.node]
 	length = len(blackboard.historical_nitrate_days)
-	blackboard.historical_mi_array_kg_per_day = np.zeros(length)
+	historical_mi_array_kg_per_day = np.zeros(length)
 	for time_period_index in range(len(blackboard.historical_time_periods)):
 		time_period = blackboard.historical_time_periods[time_period_index]
 		start_day = time_period[0] - 1
@@ -63,11 +63,11 @@ def _calculate_aggregate_mi_unpacking(blackboard):
 		days_in_time_period = end_day - start_day
 
 		total_mi_for_time_period_kg = historical_mi_array_kg_per_time_period_for_node[time_period_index]
-		historical_mi_array_kg_per_day = total_mi_for_time_period_kg / days_in_time_period
+		historical_mi_kg_per_day = total_mi_for_time_period_kg / days_in_time_period
 
 		for day in range(start_day, end_day):
-			blackboard.historical_mi_array_kg_per_day[day] = historical_mi_array_kg_per_day
-	return blackboard
+			historical_mi_array_kg_per_day[day] = historical_mi_kg_per_day
+	return historical_mi_array_kg_per_day
 
 def _calculate_historical_nitrate(blackboard):
 	blackboard.truncated_historical_nitrate_days = _calculate_truncated_historical_nitrate_days(blackboard)

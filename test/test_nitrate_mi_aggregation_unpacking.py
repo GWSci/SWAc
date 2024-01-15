@@ -63,7 +63,6 @@ class Test_Nitrate_mi_Aggregation_Unpacking(unittest.TestCase):
 		blackboard.historical_mi_array_kg_per_time_period = historical_mi_array_kg_per_time_period
 		blackboard.node = node
 
-		blackboard = historical_nitrate._calculate_aggregate_mi_unpacking(blackboard)
-		actual = blackboard.historical_mi_array_kg_per_day
+		actual = historical_nitrate._calculate_aggregate_mi_unpacking(blackboard)
 
 		np.testing.assert_allclose(expected, actual)
