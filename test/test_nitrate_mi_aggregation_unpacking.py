@@ -25,14 +25,6 @@ class Test_Nitrate_mi_Aggregation_Unpacking(unittest.TestCase):
 		if len(historical_time_periods) > 0:
 			for i in range(1, historical_time_periods[len(historical_time_periods) - 1][1]):
 				historical_nitrate_days.append(date(2023, 1, i + 1))
-		data = {
-			"series": {	
-			}, "params" : {
-				"num_nodes" : node_count,
-				"historical_nitrate_mi_array_kg_per_time_period" : historical_mi_array_kg_per_time_period,
-			}
-		}
-
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
 		blackboard.historical_nitrate_days = historical_nitrate_days
 		blackboard.historical_time_periods = historical_time_periods
