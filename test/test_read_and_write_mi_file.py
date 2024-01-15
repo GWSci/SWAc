@@ -20,9 +20,7 @@ class Test_Read_And_Write_mi_File(unittest.TestCase):
 
 	def test_writing_an_mi_file_produces_a_file_with_the_expected_contents(self):
 		filename = self.write_csv_return_filename()
-
-		with open(filename, "r", newline="") as f:
-			actual = f.read()
+		actual = slurp(filename)
 		expected = "2.1,3,5\r\n7,11,13\r\n"
 		self.assertEqual(expected, actual)
 
@@ -41,3 +39,7 @@ class Test_Read_And_Write_mi_File(unittest.TestCase):
 		filename = nitrate.write_mi_csv(data, nitrate_mi_aggregation)
 		self.files_to_delete.append(filename)
 		return filename
+
+def slurp(filename):
+	with open(filename, "r", newline="") as f:
+		return f.read()
