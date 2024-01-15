@@ -234,9 +234,18 @@ def write_nitrate_csv_bytes_cython(data, nitrate_aggregation):
 	m.write_nitrate_csv_bytes(filename, nitrate_aggregation)
 
 def write_mi_csv(data, nitrate_mi_aggregation):
+	node_count = nitrate_mi_aggregation.shape[0]
+	time_period_count = nitrate_mi_aggregation.shape[1]
+
 	filename = make_mi_output_filename(data)
 	with open(filename, "wb") as f:
-		pass
+		for node in range(node_count):
+			cell = b"%g" % (nitrate_mi_aggregation[node, 0])
+			f.write(cell)
+			for time_period in range(1, time_period_count):
+				cell = b",%g" % (nitrate_mi_aggregation[node, time_period])
+				f.write(cell)
+			f.write(b"\r\n")
 	return filename
 
 def make_output_filename(data):
