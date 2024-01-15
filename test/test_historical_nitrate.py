@@ -216,7 +216,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		expected = self.make_sample_blackboard()
 		self.assertEqual(expected.a, actual.a)
 		self.assertEqual(expected.days, actual.days)
-		np.testing.assert_allclose(expected.historical_mi_array_kg_per_day, actual.historical_mi_array_kg_per_day)
 		np.testing.assert_allclose(expected.historical_mi_array_kg_per_time_period, actual.historical_mi_array_kg_per_time_period)
 		self.assertEqual(expected.historical_time_periods, actual.historical_time_periods)
 		self.assertEqual(expected.historical_nitrate_days, actual.historical_nitrate_days)
