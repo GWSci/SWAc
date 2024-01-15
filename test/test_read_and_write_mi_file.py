@@ -1,5 +1,8 @@
 import unittest
 import numpy as np
+import os
+import swacmod.input_output as input_output
+import swacmod.time_series_data as time_series_data
 import swacmod.nitrate as nitrate
 import swacmod.utils as utils
 import tempfile
@@ -23,6 +26,20 @@ class Test_Read_And_Write_mi_File(unittest.TestCase):
 		actual = slurp(filename)
 		expected = "2.1,3,5\r\n7,11,13\r\n"
 		self.assertEqual(expected, actual)
+
+	def test_reading_an_mi_filename_reproduces_input_data(self):
+		filename = self.write_csv_return_filename()
+
+		base_path = self.tempdir
+		param = None
+		ext = "csv"
+		file_contents = time_series_data.load_time_series_data(base_path, param, filename, ext)
+
+		expected = np.array([
+			[2.1, 3.0, 5.0],
+			[7.0, 11.0, 13.0],
+		])
+		np.testing.assert_allclose(expected, file_contents)
 
 	def write_csv_return_filename(self):
 		nitrate_mi_aggregation = np.array([
