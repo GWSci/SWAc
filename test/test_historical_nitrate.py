@@ -96,6 +96,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
 		blackboard.days = [date(2023, 1, 3), date(2023, 1, 4), ]
 		blackboard.historical_mi_array_kg_per_day = np.array([10.0, 20.0])
+		blackboard.historical_mi_array_kg_per_time_period = np.array([10.0, 20.0])
 		blackboard.historical_nitrate_days = [date(2023, 1, 1), date(2023, 1, 2), ]
 		blackboard.nitrate_depth_to_water = np.array([10.0])
 		blackboard.mean_hydraulic_conductivity = 1.0
@@ -214,6 +215,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assertEqual(expected.a, actual.a)
 		self.assertEqual(expected.days, actual.days)
 		np.testing.assert_allclose(expected.historical_mi_array_kg_per_day, actual.historical_mi_array_kg_per_day)
+		np.testing.assert_allclose(expected.historical_mi_array_kg_per_time_period, actual.historical_mi_array_kg_per_time_period)
 		self.assertEqual(expected.historical_nitrate_days, actual.historical_nitrate_days)
 		np.testing.assert_allclose(expected.nitrate_depth_to_water, actual.nitrate_depth_to_water)
 		self.assertEqual(expected.mean_hydraulic_conductivity, actual.mean_hydraulic_conductivity)
@@ -234,6 +236,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			},
 			"series": {
 				"date": [date(2023, 1, 3), date(2023, 1, 4)],
+				"historical_mi_array_kg_per_time_period" : {7 : np.array([10.0, 20.0])},
 				"historical_mi_kg_per_day" : {7 : np.array([10.0, 20.0])},
 				"historical_nitrate_days" : [date(2023, 1, 1), date(2023, 1, 2)],
 			}
