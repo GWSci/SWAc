@@ -234,14 +234,14 @@ def write_nitrate_csv_bytes_cython(data, nitrate_aggregation):
 	m.write_nitrate_csv_bytes(filename, nitrate_aggregation)
 
 def make_output_filename(data):
-	run_name = data["params"]["run_name"]
-	file = run_name + "_nitrate.csv"
-	folder = utils.CONSTANTS["OUTPUT_DIR"]
-	return os.path.join(folder, file)
+	return _make_run_filename_with_suffix(data, "nitrate")
 
 def make_mi_output_filename(data):
+	return _make_run_filename_with_suffix(data, "mi")
+
+def _make_run_filename_with_suffix(data, suffix):
 	run_name = data["params"]["run_name"]
-	file = run_name + "_mi.csv"
+	file = run_name + "_" + suffix + ".csv"
 	folder = utils.CONSTANTS["OUTPUT_DIR"]
 	return os.path.join(folder, file)
 
