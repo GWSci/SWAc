@@ -57,7 +57,6 @@ def _calculate_aggregate_mi_unpacking(blackboard):
 	for time_period_index in range(len(blackboard.historical_time_periods)):
 		total_mi_for_time_period_kg = historical_mi_array_kg_per_time_period_for_node[time_period_index]
 		time_period = blackboard.historical_time_periods[time_period_index]
-		print(f"time_period_index = {time_period_index}, time_period = {time_period}")
 		time_period_start_index = time_period[0] - 1
 		time_period_end_index = time_period[1] - 1
 		days_in_time_period = time_period_end_index - time_period_start_index
