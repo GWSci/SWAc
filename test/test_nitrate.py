@@ -282,6 +282,7 @@ class Test_Nitrate(unittest.TestCase):
 			"historical_nitrate_reaching_water_table_array_tons_per_day": np.array([100.0, 200.0])
 		}
 		node = 7
+		return data, output, node
 
 	def test_calculate_nitrate(self):
 		max_load_per_year_kg_per_hectare = 1000
@@ -324,6 +325,7 @@ class Test_Nitrate(unittest.TestCase):
 			"historical_nitrate_reaching_water_table_array_tons_per_day": np.array([100.0, 200.0])
 		}
 		node = 7
+		data, output, node = self.make_data_output_and_node()
 		actual = nitrate.calculate_nitrate(data, output, node, logging = DummyLogger())
 		np.testing.assert_array_almost_equal(np.array([80.0, 80.0]), actual["her_array_mm_per_day"])
 		np.testing.assert_array_almost_equal(np.array([100.0, 100.0]), actual["m0_array_kg_per_day"])
