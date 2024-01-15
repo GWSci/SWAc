@@ -23,8 +23,8 @@ class Test_Nitrate_mi_Aggregation_Unpacking(unittest.TestCase):
 	def test_nitrate_mi_aggregation_unpacking_for_several_days_in_same_time_period(self):
 		node_count = 1
 		historical_time_periods = {0: [1, 4]}
-		expected = [3.0, 3.0, 3.0]
-		historical_mi_array_kg_per_time_period = {0: np.array([9.0])}
+		expected = [5.0, 5.0, 5.0]
+		historical_mi_array_kg_per_time_period = {0: np.array([15.0])}
 		node = 0
 		self.assert_mi_aggregation_unpacking(expected, node_count, historical_time_periods, historical_mi_array_kg_per_time_period, node)
 
