@@ -32,7 +32,7 @@ class Test_Nitrate_mi_Aggregation_Unpacking(unittest.TestCase):
 		node = 0
 		self.assert_mi_aggregation_unpacking(expected, historical_time_periods, historical_mi_array_kg_per_time_period, node)
 
-	def test_nitrate_mi_aggregation_unpacking_for_several_time_periods_and_node_1(self):
+	def test_nitrate_mi_aggregation_unpacking_for_several_time_periods_and_node_0(self):
 		historical_time_periods = {0: [1, 3], 1: [3, 6],}
 		expected = [5.0, 5.0, 7.0, 7.0, 7.0]
 		historical_mi_array_kg_per_time_period = {
@@ -40,6 +40,16 @@ class Test_Nitrate_mi_Aggregation_Unpacking(unittest.TestCase):
 			1: np.array([22.0, 39.0]),
 		}
 		node = 0
+		self.assert_mi_aggregation_unpacking(expected, historical_time_periods, historical_mi_array_kg_per_time_period, node)
+
+	def test_nitrate_mi_aggregation_unpacking_for_several_time_periods_and_node_1(self):
+		historical_time_periods = {0: [1, 3], 1: [3, 6],}
+		expected = [11.0, 11.0, 13.0, 13.0, 13.0]
+		historical_mi_array_kg_per_time_period = {
+			0: np.array([10.0, 21.0]),
+			1: np.array([22.0, 39.0]),
+		}
+		node = 1
 		self.assert_mi_aggregation_unpacking(expected, historical_time_periods, historical_mi_array_kg_per_time_period, node)
 
 	def assert_mi_aggregation_unpacking(self, expected, historical_time_periods, historical_mi_array_kg_per_time_period, node):
