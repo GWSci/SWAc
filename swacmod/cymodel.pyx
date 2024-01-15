@@ -1699,6 +1699,26 @@ def aggregate_mi(
             aggregation[node][time_period_index] += mi_array_kg_per_day[day_index]
     return aggregation
 
+def _calculate_aggregate_mi_unpacking(blackboard):
+    cdef:
+        size_t length = len(blackboard.historical_nitrate_days)
+        double[:] historical_mi_array_kg_per_day = np.zeros(length)
+        size_t time_period_index, start_day, end_day, days_in_time_period
+        double total_mi_for_time_period_kg, historical_mi_kg_per_day
+
+    for time_period_index in range(len(blackboard.historical_time_periods)):
+        time_period = blackboard.historical_time_periods[time_period_index]
+        start_day = time_period[0] - 1
+        end_day = time_period[1] - 1
+        days_in_time_period = end_day - start_day
+
+        total_mi_for_time_period_kg = blackboard.historical_mi_array_kg_per_time_period[time_period_index]
+        historical_mi_kg_per_day = total_mi_for_time_period_kg / days_in_time_period
+
+        for day in range(start_day, end_day):
+            historical_mi_array_kg_per_day[day] = historical_mi_kg_per_day
+    return historical_mi_array_kg_per_day
+
 def write_nitrate_csv_bytes(filename, nitrate_aggregation):
     stress_period_count = nitrate_aggregation.shape[0]
     node_count = nitrate_aggregation.shape[1]
