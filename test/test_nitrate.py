@@ -241,6 +241,48 @@ class Test_Nitrate(unittest.TestCase):
 		expected = np.array([11.0, 22.0, 33.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
+	def make_data_output_and_node(self):
+		max_load_per_year_kg_per_hectare = 1000
+		her_at_5_percent = 10
+		her_at_50_percent = 100
+		her_at_95_percent = 190
+
+		data = {
+			"proportion_100" : None,
+			"time_switcher": timer.make_time_switcher(),
+			"params": {
+				"node_areas": {7: 2500.0},
+				"nitrate_calibration_a": 1.38,
+				"nitrate_calibration_mu": 1.58,
+				"nitrate_calibration_sigma": 3.96,
+				"nitrate_calibration_mean_hydraulic_conductivity": 1.7,
+				"nitrate_calibration_mean_velocity_of_unsaturated_transport": 0.0029,
+				"nitrate_depth_to_water": {7: [0.00205411]},
+				"nitrate_loading": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
+				"nitrate_process": "enabled",
+			}, "series" : {
+				"date": [date(2023, 1, 1), date(2023, 1, 2), ]
+			},
+		}
+		output = {
+			"rainfall_ts": np.array([130.0, 130.0]),
+			"ae": np.array([50.0, 50.0]),
+			"perc_through_root": np.array([40.0, 40.0]),
+			"interflow_volume": np.array([2.0, 20.0]),
+			"infiltration_recharge": np.array([1.0, 9.0]),
+			"interflow_to_rivers": np.array([2.0, 6.0]),
+			"runoff_recharge": np.array([8.0, 8.0]),
+			"macropore_att": np.array([4.0, 4.0]),
+			"macropore_dir": np.array([4.0, 4.0]),
+			"rapid_runoff": np.array([32.0, 32.0]),
+			"combined_recharge": np.array([5, 5]),
+			"smd" : np.array([20.0, -4.0]),
+			"p_smd" : np.array([-4.0, 0.0]),
+			"tawtew": np.array([0.0, 6.0]),
+			"historical_nitrate_reaching_water_table_array_tons_per_day": np.array([100.0, 200.0])
+		}
+		node = 7
+
 	def test_calculate_nitrate(self):
 		max_load_per_year_kg_per_hectare = 1000
 		her_at_5_percent = 10
