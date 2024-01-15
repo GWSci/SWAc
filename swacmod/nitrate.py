@@ -233,6 +233,11 @@ def write_nitrate_csv_bytes_cython(data, nitrate_aggregation):
 	filename = make_output_filename(data)
 	m.write_nitrate_csv_bytes(filename, nitrate_aggregation)
 
+def write_mi_csv(data, nitrate_mi_aggregation):
+	filename = make_mi_output_filename(data)
+	with open(filename, "wb") as f:
+		pass
+
 def make_output_filename(data):
 	return _make_run_filename_with_suffix(data, "nitrate")
 
