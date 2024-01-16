@@ -12,6 +12,16 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		# a value required for any finalisation is omitted from
 		# the test dataset.
 
+	def test_finalize_param_converts_start_date_when_valid(self):
+		data = make_minimal_data()
+		data["params"]["start_date"] = "2024-01-16"
+
+		finalization.finalize_params(data)
+
+		actual = data["params"]["start_date"]
+		expected = datetime.datetime(2024, 1, 16)
+		self.assertEqual(expected, actual)
+
 	def test_finalize_param_historical_start_date_is_ignored_when_historical_nitrate_process_is_disabled(self):
 		data = make_minimal_data()
 		data["params"]["historical_nitrate_process"] = "disabled"
