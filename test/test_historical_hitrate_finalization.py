@@ -64,7 +64,7 @@ def make_minimal_data():
 			"output_evt" : None,
 			"output_fac" : None,
 			"output_individual" : "none",
-			"output_recharge" : False,
+			"output_recharge" : None,
 			"output_sfr" : None,
 			"output_sfr" : None,
 			"pe_zone_mapping" : {},
