@@ -55,6 +55,19 @@ def fin_historical_start_date(data, name):
         int(fields[0][0]), int(fields[0][1]), int(fields[0][2])
     )
 
+def _finalize_date(data, name):
+    params = data["params"]
+
+    new_date = str(params["start_date"])
+    fields = re.findall(r"^(\d{4})-(\d{2})-(\d{2})$", new_date)
+    if not fields:
+        msg = ("start_date has to be in the format YYYY-MM-DD "
+               + "(e.g. 1980-12-21)")
+        raise u.ValidationError(msg)
+    params[name] = datetime.datetime(
+        int(fields[0][0]), int(fields[0][1]), int(fields[0][2])
+    )
+
 ###############################################################################
 def fin_run_name(data, name):
     """Finalize the "run_name" parameter.
