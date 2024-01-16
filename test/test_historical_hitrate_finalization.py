@@ -143,6 +143,6 @@ def make_minimal_data():
 			"tmin_c_zone_names" : None,
 			"windsp_zone_mapping" : None,
 			"windsp_zone_names" : None,
-			"zr" : {1 : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+			"zr" : None,
 		}
 	}
