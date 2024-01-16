@@ -6,8 +6,8 @@ import swacmod.utils as utils
 class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 	def test_finalize_param_historical_start_date_is_ignored_when_historical_nitrate_process_is_disabled(self):
 		data = make_minimal_data()
-		data["params"]["historical_start_date"] = "aardvark"
 		data["params"]["historical_nitrate_process"] = "disabled"
+		data["params"]["historical_start_date"] = "aardvark"
 
 		finalization.finalize_params(data)
 
