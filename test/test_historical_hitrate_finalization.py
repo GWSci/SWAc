@@ -4,8 +4,20 @@ import swacmod.finalization as finalization
 import swacmod.utils as utils
 
 class Test_Historical_Nitrate_Finalization(unittest.TestCase):
+	def test_finalize_param_historical_start_date_is_ignored_when_historical_nitrate_process_is_disabled(self):
+		data = make_minimal_data()
+		data["params"]["historical_start_date"] = "aardvark"
+		data["params"]["historical_nitrate_process"] = "disabled"
+
+		finalization.finalize_params(data)
+
+		actual = data["params"]["historical_start_date"]
+		expected = "aardvark"
+		self.assertEqual(expected, actual)
+
 	def test_finalize_param_converts_historical_start_date_when_valid(self):
 		data = make_minimal_data()
+		data["params"]["historical_nitrate_process"] = "enabled"
 		data["params"]["historical_start_date"] = "2024-01-16"
 
 		finalization.finalize_params(data)
@@ -16,6 +28,7 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 
 	def test_finalize_param_raises_Validation_Error_when_historical_start_date_is_invalid(self):
 		data = make_minimal_data()
+		data["params"]["historical_nitrate_process"] = "enabled"
 		data["params"]["historical_start_date"] = "aardvark"
 
 		with self.assertRaises(utils.FinalizationError):
@@ -33,6 +46,7 @@ def make_minimal_data():
 			"fao_process" : "disabled",
 			"free_throughfall" : None,
 			"gwmodel_type" : None,
+			"historical_start_date" : None, 
 			"ievtcb" : None,
 			"infiltration_limit_ts" : None,
 			"infiltration_limit_use_timeseries" : None,
