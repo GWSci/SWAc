@@ -1531,6 +1531,7 @@ def fin_nevtopt(data, name):
 
 FUNC_PARAMS = [
     fin_start_date,
+    fin_historical_start_date,
     fin_run_name,
     fin_num_cores,
     fin_output_recharge,
