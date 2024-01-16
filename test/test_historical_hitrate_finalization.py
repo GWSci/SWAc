@@ -96,7 +96,7 @@ def make_minimal_data():
 			"single_cell_swrecharge_zone_names" : None,
 			"snow_params_complex" : None,
 			"soil_spatial" : {1 : [0]},
-			"soil_static_params" : {"FC" : [0], "WP" : [0], "p" : [0],},
+			"soil_static_params" : None,
 			"soil_zone_names" : None,
 			"soil_zone_names" : None,
 			"spatial_output_date" : None,
