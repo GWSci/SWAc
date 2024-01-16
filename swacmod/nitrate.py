@@ -18,6 +18,7 @@ def get_nitrate(data, output, node):
 	nitrate = calculate_nitrate(data, output, node)
 	return {
 		"nitrate_reaching_water_table_array_tons_per_day" : nitrate["nitrate_reaching_water_table_array_tons_per_day"],
+		"nitrate_to_surface_water_array_tons_per_day" : nitrate["nitrate_to_surface_water_array_tons_per_day"],
 	}
 
 def calculate_nitrate(data, output, node, logging = logging):
@@ -28,8 +29,8 @@ def calculate_nitrate(data, output, node, logging = logging):
 		a = params["nitrate_calibration_a"]
 		μ = params["nitrate_calibration_mu"]
 		σ = params["nitrate_calibration_sigma"]
-		mean_hydraulic_conductivity = params["nitrate_calibration_mean_hydraulic_conductivity"]
-		mean_velocity_of_unsaturated_transport = params["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
+		alpha = params["nitrate_calibration_alpha"]
+		effective_porosity = params["nitrate_calibration_effective_porosity"]
 		proportion_0 = np.zeros(length)
 		proportion_100 = data["proportion_100"]
 
@@ -42,7 +43,9 @@ def calculate_nitrate(data, output, node, logging = logging):
 		M_soil_in_kg = _calculate_M_soil_in_kg(m0_array_kg_per_day, Psmd, Pherperc)
 		M_soil_tot_kg = _calculate_M_soil_tot_kg(M_soil_in_kg, Psoilperc)
 		m1_array_kg_per_day = _calculate_m1_array_kg_per_day(Psoilperc, M_soil_tot_kg, M_soil_in_kg)
-		m1a_array_kg_per_day = _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day)
+		m1a_b_array_kg_per_day = _calculate_m1a_b_array_kg_per_day(data, output, node, m1_array_kg_per_day)
+		m1a_array_kg_per_day = m1a_b_array_kg_per_day[0,:]
+		m1b_array_kg_per_day = m1a_b_array_kg_per_day[1,:]		
 		p_non = _calculate_p_non(data, output, node, her_array_mm_per_day)
 		m2_array_kg_per_day = _calculate_m2_array_kg_per_day(m0_array_kg_per_day, p_non)
 		Pro = _calculate_Pro(her_array_mm_per_day, p_non, Pherperc, Psmd)
@@ -52,15 +55,18 @@ def calculate_nitrate(data, output, node, logging = logging):
 		total_NO3_to_receptors_kg = _calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day)
 		mass_balance_error_kg = _calculate_mass_balance_error_kg(m0_array_kg_per_day, total_NO3_to_receptors_kg)
 		_check_masses_balance(node, m0_array_kg_per_day, m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day, total_NO3_to_receptors_kg, mass_balance_error_kg, logging)
-		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
+		proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, alpha, effective_porosity, proportion_0, proportion_100)
 		nitrate_reaching_water_table_array_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day))
 		nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(nitrate_reaching_water_table_array_kg_per_day)
+		nitrate_to_surface_water_kg_per_day = _calculate_nitrate_to_surface_water_array_kg_per_day(m1b_array_kg_per_day, m3_array_kg_per_day)
+		nitrate_to_surface_water_array_tons_per_day = _convert_kg_to_tons_array(nitrate_to_surface_water_kg_per_day)
 
 		return {
 			"her_array_mm_per_day" : her_array_mm_per_day,
 			"m0_array_kg_per_day" : m0_array_kg_per_day,
 			"m1_array_kg_per_day" : m1_array_kg_per_day,
 			"m1a_array_kg_per_day" : m1a_array_kg_per_day,
+			"m1b_array_kg_per_day" : m1b_array_kg_per_day,
 			"m2_array_kg_per_day" : m2_array_kg_per_day,
 			"m3_array_kg_per_day" : m3_array_kg_per_day,
 			"m4_array_kg_per_day" : m4_array_kg_per_day,
@@ -68,6 +74,8 @@ def calculate_nitrate(data, output, node, logging = logging):
 			"proportion_reaching_water_table_array_per_day" : proportion_reaching_water_table_array_per_day,
 			"nitrate_reaching_water_table_array_kg_per_day" : nitrate_reaching_water_table_array_kg_per_day,
 			"nitrate_reaching_water_table_array_tons_per_day" : nitrate_reaching_water_table_array_tons_per_day,
+			"nitrate_to_surface_water_kg_per_day" : nitrate_to_surface_water_kg_per_day,
+			"nitrate_to_surface_water_array_tons_per_day" : nitrate_to_surface_water_array_tons_per_day,				
 		}
 	else:
 		empty_array = np.zeros(length)
@@ -76,6 +84,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 			"m0_array_kg_per_day" : empty_array,
 			"m1_array_kg_per_day" : empty_array,
 			"m1a_array_kg_per_day" : empty_array,
+			"m1b_array_kg_per_day" : empty_array,		
 			"m2_array_kg_per_day" : empty_array,
 			"m3_array_kg_per_day" : empty_array,
 			"m4_array_kg_per_day" : empty_array,
@@ -83,6 +92,8 @@ def calculate_nitrate(data, output, node, logging = logging):
 			"proportion_reaching_water_table_array_per_day" : empty_array,
 			"nitrate_reaching_water_table_array_kg_per_day" : empty_array,
 			"nitrate_reaching_water_table_array_tons_per_day" : empty_array,
+			"nitrate_to_surface_water_kg_per_day" : empty_array,				
+			"nitrate_to_surface_water_array_tons_per_day" : empty_array,
 		}
 
 
@@ -134,8 +145,8 @@ def _calculate_M_soil_tot_kg(M_soil_in_kg, Psoilperc):
 def _divide_arrays(a, b):
 	return np.divide(a, b, out = np.zeros_like(a), where = b != 0)
 
-def _calculate_m1a_array_kg_per_day(data, output, node, m1_array_kg_per_day):
-	return m._calculate_m1a_array_kg_per_day(output, m1_array_kg_per_day)
+def _calculate_m1a_b_array_kg_per_day(data, output, node, m1_array_kg_per_day):
+	return m._calculate_m1a_b_array_kg_per_day(output, m1_array_kg_per_day)
 
 def _calculate_p_non(data, output, node, her_array_mm_per_day):
 	runoff_recharge_mm_per_day = output["runoff_recharge"]
@@ -225,7 +236,7 @@ def _make_unbalanced_day_log_message(node, m0_array_kg_per_day, m1_array_kg_per_
 	message = f"Nitrate masses do not balance for node {node} using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index {i} with a mass balance error of {mass_balance_error} kg. total_NO3_to_receptors = {total_NO3_to_receptors} kg; M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg; M3 = {m3} kg; M4 = {m4} kg."
 	return message
 
-def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100):	
+def _calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, alpha, effective_porosity, proportion_0, proportion_100):	
 	time_switcher = data["time_switcher"]
 	length = len(data["series"]["date"])
 	depth_to_water_m = data["params"]["nitrate_depth_to_water"][node][0]
@@ -234,28 +245,31 @@ def _calculate_proportion_reaching_water_table_array_per_day(data, output, node,
 	elif depth_to_water_m == 100.0:
 		return proportion_100
 	else:
-		return __calculate_proportion_reaching_water_table_array_per_day(length, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, time_switcher)
+		return __calculate_proportion_reaching_water_table_array_per_day(length, a, μ, σ, alpha, effective_porosity, depth_to_water_m, time_switcher)
 
-def __calculate_proportion_reaching_water_table_array_per_day(length, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, time_switcher):
+def __calculate_proportion_reaching_water_table_array_per_day(length, a, μ, σ, alpha, effective_porosity, depth_to_water_m, time_switcher):
 	result = np.zeros(length)
 	for i in range(length):
-		result[i] = _calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, i)
+		result[i] = _calculate_daily_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, depth_to_water_m, i)
 	return result
 
-def _calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
-	f_t = _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
-	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t - 1)
+def _calculate_daily_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t):
+	f_t = _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t)
+	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t - 1)
 	return f_t - f_t_prev
 
-def _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
+def _calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t):
 	if (t <= 0):
 		return 0
 
-	numerator = math.log((mean_hydraulic_conductivity/mean_velocity_of_unsaturated_transport) * (DTW/t), a) - μ
+	numerator = math.log((alpha*effective_porosity) * (DTW/t), a) - μ
 	denominator = σ * math.sqrt(2)
 
 	result = 0.5 * (1 + math.erf(- numerator / denominator))
 	return result
+
+def _calculate_nitrate_to_surface_water_array_kg_per_day(m1b_array_kg_per_day, m3_array_kg_per_day):
+	return m1b_array_kg_per_day + m3_array_kg_per_day
 
 def _convert_kg_to_tons_array(arr_kg):
 	return arr_kg / 1000.0
@@ -266,6 +280,13 @@ def make_aggregation_array(data):
 	shape = (_len_time_periods(time_periods), len(node_areas))
 	aggregation = np.zeros(shape = shape)
 	return aggregation
+	
+def make_stream_aggregation_array(data):
+	time_periods = data["params"]["time_periods"]
+	node_areas = data["params"]["node_areas"]
+	shape = (_len_time_periods(time_periods), len(node_areas))
+	stream_aggregation = np.zeros(shape = shape)
+	return stream_aggregation
 
 def aggregate_nitrate(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
@@ -275,6 +296,15 @@ def aggregate_nitrate(aggregation, data, output, node):
 	len_time_periods = _len_time_periods(time_periods)
 	m._aggregate_nitrate(time_periods, len_time_periods, nitrate_reaching_water_table_array_tons_per_day, combined_recharge_m_cubed, aggregation, node)
 	return aggregation
+	
+def aggregate_surface_water_nitrate(stream_aggregation, data, output, node):
+	time_periods = data["params"]["time_periods"]
+	nitrate_to_surface_water_array_tons_per_day = output["nitrate_to_surface_water_array_tons_per_day"]
+	combined_surface_water_m_cubed = _calculate_combined_surface_water_m_cubed(data, output, node)
+
+	len_time_periods = _len_time_periods(time_periods)
+	m._aggregate_surface_water_nitrate(time_periods, len_time_periods, nitrate_to_surface_water_array_tons_per_day, combined_surface_water_m_cubed, stream_aggregation, node)
+	return stream_aggregation
 
 def _len_time_periods(time_periods):
 	return len(time_periods)
@@ -286,6 +316,13 @@ def _calculate_combined_recharge_m_cubed(data, output, node):
 	combined_recharge_m = _convert_mm_to_m(combined_recharge_mm)
 	combined_recharge_m_cubed = combined_recharge_m * node_areas[node]
 	return combined_recharge_m_cubed
+	
+def _calculate_combined_surface_water_m_cubed(data, output, node):
+	node_areas = data["params"]["node_areas"]
+	combined_surface_water_mm = output["combined_str"]
+	combined_surface_water_m = _convert_mm_to_m(combined_surface_water_mm)
+	combined_surface_water_m_cubed = combined_surface_water_m * node_areas[node]
+	return combined_surface_water_m_cubed
 
 def _convert_mm_to_m(arr):
 	return arr / 100.0
@@ -296,10 +333,23 @@ def write_nitrate_csv(data, nitrate_aggregation):
 def write_nitrate_csv_bytes_cython(data, nitrate_aggregation):
 	filename = make_output_filename(data)
 	m.write_nitrate_csv_bytes(filename, nitrate_aggregation)
+	
+def write_stream_nitrate_csv(data, stream_nitrate_aggregation):
+	write_stream_nitrate_csv_bytes_cython(data, stream_nitrate_aggregation)
+
+def write_stream_nitrate_csv_bytes_cython(data, stream_nitrate_aggregation):
+	filename = make_nitrate_surface_flow_filename(data)
+	m.write_stream_nitrate_csv_bytes(filename, stream_nitrate_aggregation)
 
 def make_output_filename(data):
 	run_name = data["params"]["run_name"]
 	file = run_name + "_nitrate.csv"
+	folder = utils.CONSTANTS["OUTPUT_DIR"]
+	return os.path.join(folder, file)
+	
+def make_nitrate_surface_flow_filename(data):
+	run_name = data["params"]["run_name"]
+	file = run_name + "stream_nitrate.csv"
 	folder = utils.CONSTANTS["OUTPUT_DIR"]
 	return os.path.join(folder, file)
  
