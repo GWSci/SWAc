@@ -67,7 +67,7 @@ def make_minimal_data():
 			"output_recharge" : None,
 			"output_sfr" : None,
 			"output_sfr" : None,
-			"pe_zone_mapping" : {},
+			"pe_zone_mapping" : None,
 			"pe_zone_mapping" : {},
 			"pe_zone_names" : None,
 			"percolation_rejection_use_timeseries" : None,
