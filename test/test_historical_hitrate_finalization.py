@@ -62,7 +62,7 @@ def make_minimal_data():
 			"num_cores" : None,
 			"num_nodes" : 1,
 			"output_evt" : None,
-			"output_fac" : 1.0,
+			"output_fac" : None,
 			"output_individual" : "none",
 			"output_recharge" : False,
 			"output_sfr" : None,
