@@ -1,6 +1,7 @@
 import datetime
 import unittest
 import swacmod.finalization as finalization
+import swacmod.utils as utils
 
 class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 	def test_finalize_param_converts_historical_start_date_when_valid(self):
@@ -12,6 +13,13 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		actual = data["params"]["historical_start_date"]
 		expected = datetime.datetime(2024, 1, 16)
 		self.assertEqual(expected, actual)
+
+	def test_finalize_param_raises_Validation_Error_when_historical_start_date_is_invalid(self):
+		data = make_minimal_data()
+		data["params"]["historical_start_date"] = "aardvark"
+
+		with self.assertRaises(utils.FinalizationError):
+			finalization.finalize_params(data)
 
 def make_minimal_data():
 	return {
