@@ -40,7 +40,7 @@ def make_minimal_data():
 			"interflow_store_bypass" : None,
 			"interflow_zone_mapping" : None,
 			"interflow_zone_names" : None,
-			"irchcb" : 50,
+			"irchcb" : None,
 			"istcb1" : None,
 			"istcb1" : None,
 			"istcb2" : None,
