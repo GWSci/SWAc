@@ -41,11 +41,10 @@ def fin_start_date(data, name):
     )
 
 def fin_historical_start_date(data, name):
-    params = data["params"]
-
-    if (params["historical_nitrate_process"] != "enabled"):
+    if (data["params"]["historical_nitrate_process"] != "enabled"):
         return
     
+    params = data["params"]
     new_date = str(params["historical_start_date"])
     fields = re.findall(r"^(\d{4})-(\d{2})-(\d{2})$", new_date)
     if not fields:
