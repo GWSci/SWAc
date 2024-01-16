@@ -4,6 +4,14 @@ import swacmod.finalization as finalization
 import swacmod.utils as utils
 
 class Test_Historical_Nitrate_Finalization(unittest.TestCase):
+	def test_finalize_minimal_data_completes_without_error(self):
+		data = make_minimal_data()
+		finalization.finalize_params(data)
+		# This assertion-free test is important to ensure the data
+		# is in a fit state for the other tests. It will fail when
+		# a value required for any finalisation is omitted from
+		# the test dataset.
+
 	def test_finalize_param_historical_start_date_is_ignored_when_historical_nitrate_process_is_disabled(self):
 		data = make_minimal_data()
 		data["params"]["historical_nitrate_process"] = "disabled"
@@ -46,6 +54,7 @@ def make_minimal_data():
 			"fao_process" : "disabled",
 			"free_throughfall" : None,
 			"gwmodel_type" : None,
+			"historical_nitrate_process" : None,
 			"historical_start_date" : None, 
 			"ievtcb" : None,
 			"infiltration_limit_ts" : None,
