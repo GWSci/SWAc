@@ -58,7 +58,7 @@ def make_minimal_data():
 			"macropore_zone_names" : None,
 			"max_canopy_storage" : None,
 			"nevtopt" : None,
-			"nodes_per_line" : 10,
+			"nodes_per_line" : None,
 			"num_cores" : 1,
 			"num_nodes" : 1,
 			"output_evt" : None,
