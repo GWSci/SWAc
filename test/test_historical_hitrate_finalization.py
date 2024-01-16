@@ -22,6 +22,13 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		expected = datetime.datetime(2024, 1, 16)
 		self.assertEqual(expected, actual)
 
+	def test_finalize_param_raises_Validation_Error_when_start_date_is_invalid(self):
+		data = make_minimal_data()
+		data["params"]["start_date"] = "aardvark"
+
+		with self.assertRaises(utils.FinalizationError):
+			finalization.finalize_params(data)
+
 	def test_finalize_param_historical_start_date_is_ignored_when_historical_nitrate_process_is_disabled(self):
 		data = make_minimal_data()
 		data["params"]["historical_nitrate_process"] = "disabled"
