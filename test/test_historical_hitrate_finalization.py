@@ -59,7 +59,7 @@ def make_minimal_data():
 			"max_canopy_storage" : None,
 			"nevtopt" : None,
 			"nodes_per_line" : None,
-			"num_cores" : 1,
+			"num_cores" : None,
 			"num_nodes" : 1,
 			"output_evt" : None,
 			"output_fac" : 1.0,
