@@ -30,7 +30,7 @@ def fin_start_date(data, name):
     """
     params = data["params"]
 
-    new_date = str(params["start_date"])
+    new_date = str(params[name])
     fields = re.findall(r"^(\d{4})-(\d{2})-(\d{2})$", new_date)
     if not fields:
         msg = ("start_date has to be in the format YYYY-MM-DD "
@@ -45,7 +45,7 @@ def fin_historical_start_date(data, name):
         return
     
     params = data["params"]
-    new_date = str(params["historical_start_date"])
+    new_date = str(params[name])
     fields = re.findall(r"^(\d{4})-(\d{2})-(\d{2})$", new_date)
     if not fields:
         msg = ("start_date has to be in the format YYYY-MM-DD "
