@@ -28,17 +28,7 @@ def fin_start_date(data, name):
 
     1) if in the right format, convert it to datetime object.
     """
-    params = data["params"]
-
-    new_date = str(params[name])
-    fields = re.findall(r"^(\d{4})-(\d{2})-(\d{2})$", new_date)
-    if not fields:
-        msg = ("start_date has to be in the format YYYY-MM-DD "
-               + "(e.g. 1980-12-21)")
-        raise u.ValidationError(msg)
-    params[name] = datetime.datetime(
-        int(fields[0][0]), int(fields[0][1]), int(fields[0][2])
-    )
+    return _finalize_date(data, name)
 
 def fin_historical_start_date(data, name):
     if (data["params"]["historical_nitrate_process"] != "enabled"):
