@@ -1321,8 +1321,6 @@ def fin_date(data, name):
     day = datetime.timedelta(1)
     series["date"] = [params["start_date"] + day * num
                       for num in range(max_time)]
-    dates = np.array([np.datetime64(str(i.date())) for i in series["date"]])
-    series["months"] = dates.astype("datetime64[M]").astype(int) % 12
 
 def fin_months(data, name):
     series, params = data["series"], data["params"]
