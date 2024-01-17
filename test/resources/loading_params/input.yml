@@ -7,3 +7,4 @@ nitrate_calibration_mean_hydraulic_conductivity: 1.7
 nitrate_calibration_mean_velocity_of_unsaturated_transport: 0.0029
 nitrate_depth_to_water: nitrate_dtw.csv
 nitrate_loading: nitrate_loading.csv
+time_periods: time_periods.csv
