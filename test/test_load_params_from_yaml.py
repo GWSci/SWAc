@@ -5,6 +5,10 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 	def test_historical_nitrate_process_is_read_from_input_file(self):
 		self.assertEqual("enabled", load_params()["historical_nitrate_process"])
 
+	def test_historical_time_periods_is_read_from_input_file(self):
+		expected = [[1, 4], [4, 8]]
+		self.assertEqual(expected, load_params()["historical_time_periods"])
+
 	def test_nitrate_process_is_read_from_input_file(self):
 		self.assertEqual("enabled", load_params()["nitrate_process"])
 

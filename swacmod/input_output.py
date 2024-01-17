@@ -722,7 +722,7 @@ def load_params_from_yaml(
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
                 try:
-                    if param.endswith("_ts") or param == "time_periods":
+                    if param.endswith("_ts") or param == "time_periods" or param == "historical_time_periods":
                         params[param] = rows
                     else:
                         if param not in no_list:

@@ -1,4 +1,5 @@
 historical_nitrate_process: enabled
+historical_time_periods: historical_time_periods.csv
 nitrate_process: enabled
 nitrate_calibration_a: 1.38
 nitrate_calibration_mu: 1.58
