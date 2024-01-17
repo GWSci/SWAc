@@ -6,7 +6,7 @@ import swacmod.utils as utils
 class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 	def test_finalize_minimal_data_completes_without_error(self):
 		data = make_minimal_data()
-		finalization.finalize_params(data)
+		finalize_params_and_series(data)
 		# This assertion-free test is important to ensure the data
 		# is in a fit state for the other tests. It will fail when
 		# a value required for any finalisation is omitted from
@@ -17,7 +17,7 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		data = make_minimal_data()
 		data["params"]["start_date"] = "2024-01-16"
 
-		finalization.finalize_params(data)
+		finalize_params_and_series(data)
 
 		actual = data["params"]["start_date"]
 		expected = datetime.datetime(2024, 1, 16)
@@ -28,14 +28,14 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		data["params"]["start_date"] = "aardvark"
 
 		with self.assertRaises(utils.FinalizationError):
-			finalization.finalize_params(data)
+			finalize_params_and_series(data)
 
 	def test_finalize_param_historical_start_date_is_ignored_when_historical_nitrate_process_is_disabled(self):
 		data = make_minimal_data()
 		data["params"]["historical_nitrate_process"] = "disabled"
 		data["params"]["historical_start_date"] = "aardvark"
 
-		finalization.finalize_params(data)
+		finalize_params_and_series(data)
 
 		actual = data["params"]["historical_start_date"]
 		expected = "aardvark"
@@ -46,7 +46,7 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		data["params"]["historical_nitrate_process"] = "enabled"
 		data["params"]["historical_start_date"] = "2024-01-16"
 
-		finalization.finalize_params(data)
+		finalize_params_and_series(data)
 
 		actual = data["params"]["historical_start_date"]
 		expected = datetime.datetime(2024, 1, 16)
@@ -58,7 +58,10 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		data["params"]["historical_start_date"] = "aardvark"
 
 		with self.assertRaises(utils.FinalizationError):
-			finalization.finalize_params(data)
+			finalize_params_and_series(data)
+
+def finalize_params_and_series(data):
+	finalization.finalize_params(data)
 
 def make_minimal_data():
 	return {
