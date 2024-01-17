@@ -23,6 +23,7 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		actual = data["params"]["start_date"]
 		expected = datetime.datetime(2024, 1, 16)
 		self.assertEqual(expected, actual)
+		self.assertEqual(type(expected), type(actual))
 
 	def test_finalize_param_raises_Validation_Error_when_start_date_is_invalid(self):
 		data = make_minimal_data()
@@ -52,6 +53,7 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		actual = data["params"]["historical_start_date"]
 		expected = datetime.datetime(2024, 1, 16)
 		self.assertEqual(expected, actual)
+		self.assertEqual(type(expected), type(actual))
 
 	def test_finalize_param_raises_Validation_Error_when_historical_start_date_is_invalid(self):
 		data = make_minimal_data()
@@ -87,6 +89,22 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		expected = np.array([0, 0, 1, 1])
 		np.testing.assert_allclose(expected, actual)
 
+	def test_finalize_series_creates_historical_nitrate_days_series(self):
+			data = make_minimal_data()
+			data["params"]["historical_nitrate_process"] = "enabled"
+			data["params"]["historical_time_periods"] = [[1, 3], [3, 5]]
+			data["params"]["historical_start_date"] = "2024-01-16"
+
+			finalize_params_and_series(data)
+
+			actual = data["series"]["historical_nitrate_days"]
+			expected = [
+				datetime.datetime(2024, 1, 16),
+				datetime.datetime(2024, 1, 17),
+				datetime.datetime(2024, 1, 18),
+				datetime.datetime(2024, 1, 19)]
+			self.assertEqual(expected, actual)
+
 def finalize_params_and_series(data):
 	finalization.finalize_params(data)
 	finalization.finalize_series(data)
@@ -105,7 +123,8 @@ def make_minimal_data():
 			"free_throughfall" : None,
 			"gwmodel_type" : None,
 			"historical_nitrate_process" : None,
-			"historical_start_date" : None, 
+			"historical_start_date" : "2000-01-01",
+			"historical_time_periods" : [[1, 2]],
 			"ievtcb" : None,
 			"infiltration_limit_ts" : None,
 			"infiltration_limit_use_timeseries" : None,
