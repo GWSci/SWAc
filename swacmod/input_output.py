@@ -724,7 +724,7 @@ def load_params_from_yaml(
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
                 try:
-                    if param.endswith("_ts") or param == "time_periods" or param == "historical_time_periods" or param == "historical_mi_array_kg_per_time_period":
+                    if is_use_array_directly(param):
                         params[param] = rows
                     else:
                         if param not in no_list:
@@ -755,6 +755,8 @@ def load_params_from_yaml(
 
     return data
 
+def is_use_array_directly(param):
+    return param.endswith("_ts") or param == "time_periods" or param == "historical_time_periods" or param == "historical_mi_array_kg_per_time_period"
 
 ###############################################################################
 def load_and_validate(specs_file, input_file, input_dir):
