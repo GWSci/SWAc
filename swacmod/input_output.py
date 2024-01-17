@@ -755,6 +755,10 @@ def load_params_from_yaml(
 
     return data
 
+def _use_time_series_data(param, value):
+    param_category = categorise_param(param, value)
+    return param_category == "time_peroiod_param"
+
 def is_use_array_directly(param):
     return (param.endswith("_ts")
             or param == "time_periods"
