@@ -10,7 +10,8 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		# This assertion-free test is important to ensure the data
 		# is in a fit state for the other tests. It will fail when
 		# a value required for any finalisation is omitted from
-		# the test dataset.
+		# the test dataset, for example when a finalisation is
+		# added for a new input parameter.
 
 	def test_finalize_param_converts_start_date_when_valid(self):
 		data = make_minimal_data()
