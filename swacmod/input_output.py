@@ -651,7 +651,7 @@ def load_params_from_yaml(
     return data
 
 def _use_time_series_data(param):
-    time_period_params = [
+    return param in [
         "historical_mi_array_kg_per_time_period",
         "interflow_decay_ts",
         "percolation_rejection_ts",
@@ -662,7 +662,6 @@ def _use_time_series_data(param):
         "pe_ts",
         "windsp_ts",
     ]
-    return param in time_period_params
 
 def is_use_array_directly(param):
     return (param.endswith("_ts")
