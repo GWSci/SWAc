@@ -578,20 +578,6 @@ def convert_one_yaml_to_csv(filein):
 
 ###############################################################################
 
-def categorise_param(param, value):
-    time_period_params = [
-        "historical_mi_array_kg_per_time_period",
-        "interflow_decay_ts",
-        "percolation_rejection_ts",
-        "rainfall_ts",
-        "temperature_ts",
-        "tmax_c_ts",
-        "tmin_c_ts",
-        "pe_ts",
-        "windsp_ts",
-    ]
-    return param in time_period_params
-
 def load_params_from_yaml(
         specs_file=u.CONSTANTS["SPECS_FILE"],
         input_file=u.CONSTANTS["INPUT_FILE"],
