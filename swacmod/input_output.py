@@ -592,7 +592,7 @@ def categorise_param(param, value):
     ]
     if param in time_period_params:
         return "time_peroiod_param"
-    return "non_time_peroiod_param"
+    return False
 
 def load_params_from_yaml(
         specs_file=u.CONSTANTS["SPECS_FILE"],
