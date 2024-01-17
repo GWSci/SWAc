@@ -780,6 +780,7 @@ historical_nitrate_process:
 
 historical_mi_array_kg_per_time_period:
     required: false
+    alt_format: [yml, csv]
     type:
         - !!python/name:float
 

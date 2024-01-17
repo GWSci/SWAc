@@ -1,3 +1,4 @@
+historical_mi_array_kg_per_time_period: historical_mi_array_kg_per_time_period.csv
 historical_nitrate_process: enabled
 historical_start_date: "2024-01-18"
 historical_time_periods: historical_time_periods.csv

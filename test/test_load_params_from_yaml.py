@@ -1,7 +1,18 @@
+import numpy as np
 import unittest
 import swacmod.input_output as input_output
 
 class Test_Load_Params_From_Yaml(unittest.TestCase):
+	def test_historical_mi_array_kg_per_time_period(self):
+		expected = np.array([
+			[2.1, 3.0, 5.0],
+			[7.0, 11.0, 13.0],
+		])
+		actual = load_params()["historical_mi_array_kg_per_time_period"]
+		message = f'Expected: {expected}\nActual  : {actual}'
+		print(message)
+		np.testing.assert_allclose(expected, actual, err_msg=message)
+
 	def test_historical_nitrate_process_is_read_from_input_file(self):
 		self.assertEqual("enabled", load_params()["historical_nitrate_process"])
 
