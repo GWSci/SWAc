@@ -1319,7 +1319,7 @@ def fin_date(data, name):
     series, params = data["series"], data["params"]
     time_periods = params["time_periods"]
     start_date = params["start_date"]
-    _fin_date_series(series, name, time_periods, start_date)
+    series[name] = _fin_date_series(series, name, time_periods, start_date)
 
 def fin_months(data, name):
     series = data["series"]
@@ -1332,13 +1332,14 @@ def fin_historical_nitrate_days(data, name):
     series, params = data["series"], data["params"]
     time_periods = params["historical_time_periods"]
     start_date = params["historical_start_date"]
-    _fin_date_series(series, name, time_periods, start_date)
+    series[name] = _fin_date_series(series, name, time_periods, start_date)
 
 def _fin_date_series(series, name, time_periods, start_date):
     max_time = max([i for j in time_periods for i in j]) - 1
     day = datetime.timedelta(1)
     series[name] = [start_date + day * num
                       for num in range(max_time)]
+    return series[name]
 
 ###############################################################################
 def fin_rainfall_ts(data, name):
