@@ -241,7 +241,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			},
 			"series": {
 				"date": [date(2023, 1, 3), date(2023, 1, 4)],
-				"historical_mi_kg_per_day" : {7 : np.array([10.0, 20.0])},
 				"historical_nitrate_days" : [date(2023, 1, 1), date(2023, 1, 2)],
 			}
 		}
