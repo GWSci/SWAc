@@ -1325,7 +1325,7 @@ def fin_date(data, name):
 def fin_months(data, name):
     series, params = data["series"], data["params"]
     dates = np.array([np.datetime64(str(i.date())) for i in series["date"]])
-    series["months"] = dates.astype("datetime64[M]").astype(int) % 12
+    series[name] = dates.astype("datetime64[M]").astype(int) % 12
 
 def fin_historical_nitrate_days(data, name):
     if (data["params"]["historical_nitrate_process"] != "enabled"):
