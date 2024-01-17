@@ -18,6 +18,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 			sum += nitrate._calculate_daily_proportion_reaching_water_table(a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
 		self.assertAlmostEqual(1, sum, places=2)
 
+	# failing
 	def test_maximum_of_daily_proportion_should_appear_after_several_years(self):
 		a = 1.38
 		μ = 1.58
@@ -35,6 +36,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 			previous_nitrate = current_nitrate
 		self.assertEqual(6927, t)
 	
+	# failing
 	def test_calculate_daily_proportion_reaching_water_table_arr(self):
 		a = 1.38
 		μ = 1.58
@@ -61,6 +63,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
 		np.testing.assert_array_almost_equal(expected, actual)
 
+	# failing
 	def test_calculate_cumulative_proportion_reaching_water_table_varies_with_params(self):
 		a = 1.38
 		μ = 1.58
