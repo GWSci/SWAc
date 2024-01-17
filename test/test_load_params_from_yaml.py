@@ -1,6 +1,7 @@
 import numpy as np
 import unittest
 import swacmod.input_output as input_output
+import swacmod.time_series_data
 
 class Test_Load_Params_From_Yaml(unittest.TestCase):
 	def test_historical_mi_array_kg_per_time_period_is_read_from_input_file(self):
@@ -10,6 +11,11 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 		])
 		actual = load_params()["historical_mi_array_kg_per_time_period"]
 		np.testing.assert_allclose(expected, actual)
+
+	def test_historical_mi_array_kg_per_time_period_is_read_using_time_series_data(self):
+		expected = swacmod.time_series_data.CsvTimeSeriesData
+		actual = type(load_params()["historical_mi_array_kg_per_time_period"])
+		self.assertEqual(expected, actual)
 
 	def test_historical_nitrate_process_is_read_from_input_file(self):
 		self.assertEqual("enabled", load_params()["historical_nitrate_process"])

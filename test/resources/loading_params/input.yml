@@ -11,4 +11,5 @@ nitrate_calibration_mean_velocity_of_unsaturated_transport: 0.0029
 nitrate_depth_to_water: nitrate_dtw.csv
 nitrate_loading: nitrate_loading.csv
 start_date: "2024-01-17"
+temp_file_backed_array_directory: null
 time_periods: time_periods.csv

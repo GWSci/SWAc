@@ -580,6 +580,7 @@ def convert_one_yaml_to_csv(filein):
 
 def categorise_param(param, value):
     time_period_params = [
+        "historical_mi_array_kg_per_time_period",
         "interflow_decay_ts",
         "percolation_rejection_ts",
         "rainfall_ts",
@@ -598,7 +599,6 @@ def categorise_param(param, value):
         "canopy_zone_names",
         "evt_parameters",
         "free_throughfall",
-        "historical_mi_array_kg_per_time_period",
         "historical_time_periods",
         "infiltration_limit",
         "init_interflow_store",
