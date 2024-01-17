@@ -9,9 +9,7 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 			[7.0, 11.0, 13.0],
 		])
 		actual = load_params()["historical_mi_array_kg_per_time_period"]
-		message = f'Expected: {expected}\nActual  : {actual}'
-		print(message)
-		np.testing.assert_allclose(expected, actual, err_msg=message)
+		np.testing.assert_allclose(expected, actual)
 
 	def test_historical_nitrate_process_is_read_from_input_file(self):
 		self.assertEqual("enabled", load_params()["historical_nitrate_process"])
