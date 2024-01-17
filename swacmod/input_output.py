@@ -606,7 +606,7 @@ def load_params_from_yaml(
             ext = params[param].split(".")[-1]
             if ext not in specs[param]["alt_format"] and ext != "numpydumpy":
                 continue
-            if _use_time_series_data(param, params[param]):
+            if _use_time_series_data(param):
                 base_path = params["temp_file_backed_array_directory"]
                 params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
             elif ext == "csv":
@@ -650,7 +650,7 @@ def load_params_from_yaml(
 
     return data
 
-def _use_time_series_data(param, value):
+def _use_time_series_data(param):
     time_period_params = [
         "historical_mi_array_kg_per_time_period",
         "interflow_decay_ts",
