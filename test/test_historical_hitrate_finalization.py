@@ -62,10 +62,12 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 
 def finalize_params_and_series(data):
 	finalization.finalize_params(data)
+	finalization.finalize_series(data)
 
 def make_minimal_data():
 	return {
 		"params" : {
+			"canopy_process" : None,
 			"canopy_zone_mapping" : None,
 			"canopy_zone_names" : None,
 			"disv" : None,
@@ -99,6 +101,7 @@ def make_minimal_data():
 			"istcb2" : None,
 			"kc" : None,
 			"landuse_zone_names" : {},
+			"leakage_process" : None,
 			"lu_spatial" : {1 : []},
 			"macropore_activation_option" : None,
 			"macropore_activation" : None,
@@ -147,6 +150,8 @@ def make_minimal_data():
 			"single_cell_swrecharge_zone_mapping" : None,
 			"single_cell_swrecharge_zone_names" : None,
 			"snow_params_complex" : None,
+			"snow_process_complex" : None,
+			"snow_process_simple" : None,
 			"soil_spatial" : {1 : [0]},
 			"soil_static_params" : None,
 			"soil_zone_names" : None,
@@ -189,6 +194,7 @@ def make_minimal_data():
 			"taw" : {1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: []},
 			"temperature_zone_mapping" : None,
 			"temperature_zone_names" : None,
+			"time_periods" : [[1, 2]],
 			"tmax_c_zone_mapping" : None,
 			"tmax_c_zone_names" : None,
 			"tmin_c_zone_mapping" : None,
@@ -196,5 +202,14 @@ def make_minimal_data():
 			"windsp_zone_mapping" : None,
 			"windsp_zone_names" : None,
 			"zr" : None,
+		}, "series" : {
+			"infiltration_limit_ts" : None,
+			"interflow_decay_ts" : None,
+			"percolation_rejection_ts" : None,
+			"rainfall_ts" : None,
+			"swabs_ts" : None,
+			"swdis_ts" : None,
+		}, "specs" : {
+
 		}
 	}
