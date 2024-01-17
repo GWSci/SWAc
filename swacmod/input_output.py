@@ -677,8 +677,6 @@ def categorise_param(param, value):
     ]
     if param in time_period_params:
         return "time_peroiod_param"
-    if param in non_time_period_params:
-        return "non_time_peroiod_param"
     return "non_time_peroiod_param"
 
 def load_params_from_yaml(
