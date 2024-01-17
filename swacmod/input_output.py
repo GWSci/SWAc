@@ -598,6 +598,7 @@ def categorise_param(param, value):
         "canopy_zone_names",
         "evt_parameters",
         "free_throughfall",
+        "historical_time_periods",
         "infiltration_limit",
         "init_interflow_store",
         "interflow_decay",
