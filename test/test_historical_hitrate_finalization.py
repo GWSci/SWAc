@@ -68,7 +68,11 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		finalize_params_and_series(data)
 
 		actual = data["series"]["date"]
-		expected = [datetime.datetime(2024, 1, 16), datetime.datetime(2024, 1, 17), datetime.datetime(2024, 1, 18), datetime.datetime(2024, 1, 19)]
+		expected = [
+			datetime.datetime(2024, 1, 16),
+			datetime.datetime(2024, 1, 17),
+			datetime.datetime(2024, 1, 18),
+			datetime.datetime(2024, 1, 19)]
 		self.assertEqual(expected, actual)
 
 def finalize_params_and_series(data):
