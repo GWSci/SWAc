@@ -60,6 +60,14 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 		with self.assertRaises(utils.FinalizationError):
 			finalize_params_and_series(data)
 
+	def test_finalize_series_creates_date_series(self):
+		data = make_minimal_data()
+		data["params"]["time_periods"] = [[1, 3], [3, 5]]
+		data["params"]["start_date"] = "2024-01-16"
+
+		finalize_params_and_series(data)
+
+
 def finalize_params_and_series(data):
 	finalization.finalize_params(data)
 	finalization.finalize_series(data)
