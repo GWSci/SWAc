@@ -12,14 +12,14 @@ class Test_Nitrate_mi_Aggregation_Unpacking(unittest.TestCase):
 		self.assert_mi_aggregation_unpacking(expected, historical_time_periods, historical_mi_array_kg_per_time_period, node)
 
 	def test_nitrate_mi_aggregation_unpacking_for_one_day_on_different_node(self):
-		historical_time_periods = {0: [1, 2]}
+		historical_time_periods = [[1, 2]]
 		expected = [5.0]
 		historical_mi_array_kg_per_time_period = {0: np.array([5.0])}
 		node = 1
 		self.assert_mi_aggregation_unpacking(expected, historical_time_periods, historical_mi_array_kg_per_time_period, node)
 
 	def test_nitrate_mi_aggregation_unpacking_for_several_days_in_same_time_period(self):
-		historical_time_periods = {0: [1, 4]}
+		historical_time_periods = [[1, 4]]
 		expected = [5.0, 5.0, 5.0]
 		historical_mi_array_kg_per_time_period = {0: np.array([15.0])}
 		node = 0
