@@ -196,7 +196,7 @@ class Test_Nitrate(unittest.TestCase):
 		}
 		node = None
 
-		actual = nitrate._calculate_m1a_array_kg_per_day(data, output, node, input_m1_array_kg_per_day)
+		actual = nitrate._calculate_m1a_b_array_kg_per_day(data, output, node, input_m1_array_kg_per_day)[0, :]
 		np.testing.assert_array_almost_equal(expected, actual)
 	
 	def test_calculate_p_non(self):
