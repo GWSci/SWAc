@@ -679,8 +679,7 @@ def categorise_param(param, value):
         return "time_peroiod_param"
     if param in non_time_period_params:
         return "non_time_peroiod_param"
-    print(f"Uncategorised param. param = {param}. value = {value}.")
-    return "uncategorised_param"
+    return "non_time_peroiod_param"
 
 def load_params_from_yaml(
         specs_file=u.CONSTANTS["SPECS_FILE"],
@@ -707,7 +706,6 @@ def load_params_from_yaml(
     for param in tqdm(params, desc="SWAcMod load params     "):
         if isinstance(params[param], str) and "alt_format" in specs[param]:
             absolute = os.path.join(input_dir, params[param])
-            param_category = categorise_param(param, params[param])
             ext = params[param].split(".")[-1]
             if ext not in specs[param]["alt_format"] and ext != "numpydumpy":
                 continue
