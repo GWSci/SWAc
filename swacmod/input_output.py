@@ -619,7 +619,7 @@ def load_params_from_yaml(
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
                 try:
-                    if is_use_array_directly(param):
+                    if _use_array_directly(param):
                         params[param] = rows
                     else:
                         if param not in no_list:
@@ -663,7 +663,7 @@ def _use_time_series_data(param):
         "windsp_ts",
     ]
 
-def is_use_array_directly(param):
+def _use_array_directly(param):
     return (param.endswith("_ts")
             or param == "time_periods"
             or param == "historical_time_periods"
