@@ -1,4 +1,5 @@
 historical_nitrate_process: enabled
+historical_start_date: "2024-01-18"
 historical_time_periods: historical_time_periods.csv
 nitrate_process: enabled
 nitrate_calibration_a: 1.38

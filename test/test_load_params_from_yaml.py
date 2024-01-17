@@ -12,6 +12,9 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 	def test_nitrate_process_is_read_from_input_file(self):
 		self.assertEqual("enabled", load_params()["nitrate_process"])
 
+	def test_historical_start_date_is_read_from_input_file(self):
+		self.assertEqual("2024-01-18", load_params()["historical_start_date"])
+
 	def test_nitrate_depth_to_water_is_read_from_input_file(self):
 		expected = {
 			1: [110],
