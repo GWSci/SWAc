@@ -591,7 +591,7 @@ def categorise_param(param, value):
         "windsp_ts",
     ]
     if param in time_period_params:
-        return "time_peroiod_param"
+        return True
     return False
 
 def load_params_from_yaml(
@@ -668,7 +668,7 @@ def load_params_from_yaml(
 
 def _use_time_series_data(param, value):
     param_category = categorise_param(param, value)
-    return param_category == "time_peroiod_param"
+    return param_category
 
 def is_use_array_directly(param):
     return (param.endswith("_ts")
