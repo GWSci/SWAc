@@ -1318,9 +1318,10 @@ def fin_date(data, name):
     """Finalize the "date" series."""
     series, params = data["series"], data["params"]
     time_periods = params["time_periods"]
+    start_date = params["start_date"]
     max_time = max([i for j in time_periods for i in j]) - 1
     day = datetime.timedelta(1)
-    series["date"] = [params["start_date"] + day * num
+    series["date"] = [start_date + day * num
                       for num in range(max_time)]
 
 def fin_months(data, name):
@@ -1333,9 +1334,10 @@ def fin_historical_nitrate_days(data, name):
         return
     series, params = data["series"], data["params"]
     time_periods = params["historical_time_periods"]
+    start_date = params["historical_start_date"]
     max_time = max([i for j in time_periods for i in j]) - 1
     day = datetime.timedelta(1)
-    series[name] = [params["historical_start_date"] + day * num
+    series[name] = [start_date + day * num
                       for num in range(max_time)]
 
 ###############################################################################
