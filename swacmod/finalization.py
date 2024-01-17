@@ -1323,7 +1323,7 @@ def fin_date(data, name):
                       for num in range(max_time)]
 
 def fin_months(data, name):
-    series, params = data["series"], data["params"]
+    series = data["series"]
     dates = np.array([np.datetime64(str(i.date())) for i in series["date"]])
     series[name] = dates.astype("datetime64[M]").astype(int) % 12
 
