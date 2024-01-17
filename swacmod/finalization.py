@@ -1317,7 +1317,8 @@ def fin_swabs_f(data, name):
 def fin_date(data, name):
     """Finalize the "date" series."""
     series, params = data["series"], data["params"]
-    max_time = max([i for j in params["time_periods"] for i in j]) - 1
+    time_periods = params["time_periods"]
+    max_time = max([i for j in time_periods for i in j]) - 1
     day = datetime.timedelta(1)
     series["date"] = [params["start_date"] + day * num
                       for num in range(max_time)]
@@ -1331,7 +1332,8 @@ def fin_historical_nitrate_days(data, name):
     if (data["params"]["historical_nitrate_process"] != "enabled"):
         return
     series, params = data["series"], data["params"]
-    max_time = max([i for j in params["historical_time_periods"] for i in j]) - 1
+    time_periods = params["historical_time_periods"]
+    max_time = max([i for j in time_periods for i in j]) - 1
     day = datetime.timedelta(1)
     series[name] = [params["historical_start_date"] + day * num
                       for num in range(max_time)]
