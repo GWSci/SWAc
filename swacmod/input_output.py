@@ -756,7 +756,10 @@ def load_params_from_yaml(
     return data
 
 def is_use_array_directly(param):
-    return param.endswith("_ts") or param == "time_periods" or param == "historical_time_periods" or param == "historical_mi_array_kg_per_time_period"
+    return (param.endswith("_ts")
+            or param == "time_periods"
+            or param == "historical_time_periods"
+            or param == "historical_mi_array_kg_per_time_period")
 
 ###############################################################################
 def load_and_validate(specs_file, input_file, input_dir):
