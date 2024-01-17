@@ -26,7 +26,7 @@ class HistoricalNitrateBlackboard():
 	def initialise_blackboard(self, data, output, node):
 		self.a = data["params"]["nitrate_calibration_a"]
 		self.days = data["series"]["date"]
-		self.historical_mi_array_kg_per_time_period = data["series"]["historical_mi_array_kg_per_time_period"][node]
+		self.historical_mi_array_kg_per_time_period = data["params"]["historical_mi_array_kg_per_time_period"][node]
 		self.historical_nitrate_days = data["series"]["historical_nitrate_days"]
 		self.historical_time_periods = data["params"]["historical_time_periods"]
 		self.nitrate_depth_to_water = data["params"]["nitrate_depth_to_water"][node]

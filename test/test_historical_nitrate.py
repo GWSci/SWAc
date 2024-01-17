@@ -229,6 +229,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 	def make_sample_data_output_node(self):
 		data = {
 			"params": {
+				"historical_mi_array_kg_per_time_period" : {7 : np.array([10.0, 20.0])},
 				"historical_nitrate_process": "enabled",
 				"historical_time_periods" : [[1, 2], [2, 3]],
 				"nitrate_calibration_a": 10.0,
@@ -240,7 +241,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			},
 			"series": {
 				"date": [date(2023, 1, 3), date(2023, 1, 4)],
-				"historical_mi_array_kg_per_time_period" : {7 : np.array([10.0, 20.0])},
 				"historical_mi_kg_per_day" : {7 : np.array([10.0, 20.0])},
 				"historical_nitrate_days" : [date(2023, 1, 1), date(2023, 1, 2)],
 			}
