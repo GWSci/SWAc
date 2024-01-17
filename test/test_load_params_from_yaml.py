@@ -3,7 +3,7 @@ import unittest
 import swacmod.input_output as input_output
 
 class Test_Load_Params_From_Yaml(unittest.TestCase):
-	def test_historical_mi_array_kg_per_time_period(self):
+	def test_historical_mi_array_kg_per_time_period_is_read_from_input_file(self):
 		expected = np.array([
 			[2.1, 3.0, 5.0],
 			[7.0, 11.0, 13.0],
