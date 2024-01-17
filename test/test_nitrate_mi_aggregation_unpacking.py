@@ -5,7 +5,7 @@ import numpy as np
 
 class Test_Nitrate_mi_Aggregation_Unpacking(unittest.TestCase):
 	def test_nitrate_mi_aggregation_unpacking_for_one_day(self):
-		historical_time_periods = {0: [1, 2]}
+		historical_time_periods = [[1, 2]]
 		expected = [3.0]
 		historical_mi_array_kg_per_time_period = {0: np.array([3.0])}
 		node = 0
