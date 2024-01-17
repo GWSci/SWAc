@@ -43,6 +43,9 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 	def test_nitrate_calibration_mean_velocity_of_unsaturated_transport_is_read_from_input_file(self):
 		self.assertEqual(0.0029, load_params()["nitrate_calibration_mean_velocity_of_unsaturated_transport"])
 
+	def test_start_date_is_read_from_input_file(self):
+		self.assertEqual("2024-01-17", load_params()["start_date"])
+
 	def test_time_period_is_read_from_input_file(self):
 		expected = [[1, 3], [3, 5]]
 		self.assertEqual(expected, load_params()["time_periods"])
