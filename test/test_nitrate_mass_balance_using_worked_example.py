@@ -46,20 +46,6 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.Mass_Balance_Error_kg = 0.0000000
 
 	def set_input_parameters(self):
-		self.data = {}
-		self.output = {
-			"rainfall_ts" : np.array([self.Precipitation]),
-			"ae" : np.array([self.AE]),
-			"macropore_att" : np.array([self.Macropore_recharge / 2.0]),
-			"macropore_dir" : np.array([self.Macropore_recharge / 2.0]),
-			"perc_through_root" : np.array([self.Percolation_through_root_zone]),
-			"p_smd" :np.array([self.Potential_SMD]),
-			"runoff_recharge" : np.array([self.Runoff_recharge]),
-			"smd" : np.array([self.SMD]),
-			"tawtew" : np.array([self.TAW]),
-		}
-		self.node = 0
-
 		self.m0_array_kg_per_day = np.array([self.M0_kg_per_cell])
 		self.m1_array_kg_per_day = np.array([self.M1_kg])
 		self.Msoil_in_kg_array = np.array([self.Msoil_in_kg])
@@ -72,57 +58,84 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.p_non_array = np.array([self.Pnon])
 		self.Pro_array = np.array([self.Pro])
 
+		self.blackboard = nitrate.NitrateBlackboard()
+		self.blackboard.rainfall_ts = np.array([self.Precipitation])
+		self.blackboard.ae = np.array([self.AE])
+		self.blackboard.perc_through_root_mm_per_day = np.array([self.Percolation_through_root_zone])
+		self.blackboard.her_array_mm_per_day = np.array([self.HER_mm_per_d])
+		self.blackboard.TAW_array_mm = np.array([self.TAW])
+		self.blackboard.smd = np.array([self.SMD])
+		self.blackboard.p_smd = np.array([self.Potential_SMD])
+
 	def test_worked_example_HER(self):
 		expected = self.her_array_mm_per_day
-		actual = nitrate._calculate_her_array_mm_per_day(self.data, self.output, self.node)
+		actual = nitrate._calculate_her_array_mm_per_day(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_dSMD(self):
 		expected = self.dSMD_array_mm_per_day
-		actual = nitrate._calculate_dSMD_array_mm_per_day(self.data, self.output, self.node)
+		actual = nitrate._calculate_dSMD_array_mm_per_day(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_Psmd(self):
 		expected = [self.Psmd]
-		actual = nitrate._calculate_Psmd(self.her_array_mm_per_day, self.dSMD_array_mm_per_day)
+		self.blackboard.her_array_mm_per_day = self.her_array_mm_per_day
+		self.blackboard.dSMD_array_mm_per_day = self.dSMD_array_mm_per_day
+		actual = nitrate._calculate_Psmd(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_Psoilperc(self):
 		expected = [self.Psoilperc]
-		actual = nitrate._calculate_Psoilperc(self.data, self.output, self.node)
+		actual = nitrate._calculate_Psoilperc(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_Pherperc(self):
 		expected = [self.Pherperc]
-		actual = nitrate._calculate_Pherperc(self.data, self.output, self.node, self.her_array_mm_per_day)
+		actual = nitrate._calculate_Pherperc(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_Msoil_in_kg(self):
 		expected = [self.Msoil_in_kg]
-		actual = nitrate._calculate_M_soil_in_kg(self.m0_array_kg_per_day, self.Psmd_array, self.Pherperc_array)
+		self.blackboard.m0_array_kg_per_day = self.m0_array_kg_per_day
+		self.blackboard.Psmd = self.Psmd_array
+		self.blackboard.Pherperc = self.Pherperc_array
+		actual = nitrate._calculate_M_soil_in_kg(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_Pnon(self):
 		expected = [self.Pnon]
-		actual = nitrate._calculate_p_non(self.data, self.output, self.node, self.her_array_mm_per_day)
+		self.blackboard.runoff_recharge_mm_per_day = np.array([self.Runoff_recharge])
+		self.blackboard.macropore_att_mm_per_day = np.array([self.Macropore_recharge / 2.0])
+		self.blackboard.macropore_dir_mm_per_day = np.array([self.Macropore_recharge / 2.0])
+		actual = nitrate._calculate_p_non(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_M2(self):
 		expected = [self.M2_kg]
-		actual = nitrate._calculate_m2_array_kg_per_day(self.m0_array_kg_per_day, self.p_non_array)
+		self.blackboard.p_non = self.p_non_array
+		self.blackboard.m0_array_kg_per_day = self.m0_array_kg_per_day
+		actual = nitrate._calculate_m2_array_kg_per_day(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_Pro(self):
 		expected = self.Pro_array
-		actual = nitrate._calculate_Pro(self.her_array_mm_per_day, self.p_non_array, self.Pherperc_array, self.Psmd_array)
+		self.blackboard.her_array_mm_per_day = self.her_array_mm_per_day
+		self.blackboard.p_non = self.p_non_array
+		self.blackboard.Pherperc = self.Pherperc_array
+		self.blackboard.Psmd = self.Psmd_array
+		actual = nitrate._calculate_Pro(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_M3(self):
+		self.blackboard.m0_array_kg_per_day = self.m0_array_kg_per_day
+		self.blackboard.Pro = self.Pro_array
 		expected = [self.M3_kg]
-		actual = nitrate._calculate_m3_array_kg_per_day(self.m0_array_kg_per_day, self.Pro_array)
+		actual = nitrate._calculate_m3_array_kg_per_day(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_worked_example_M4(self):
 		expected = [self.M4_kg]
-		actual = nitrate._calculate_M4_array_mm_per_day(self.Msoil_in_kg_array, self.m1_array_kg_per_day)
+		self.blackboard.m1_array_kg_per_day = self.m1_array_kg_per_day
+		self.blackboard.M_soil_in_kg = self.Msoil_in_kg_array
+		actual = nitrate._calculate_M4_array_mm_per_day(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)

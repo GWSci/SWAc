@@ -28,9 +28,17 @@ def fin_start_date(data, name):
 
     1) if in the right format, convert it to datetime object.
     """
+    return _finalize_date(data, name)
+
+def fin_historical_start_date(data, name):
+    if (data["params"]["historical_nitrate_process"] != "enabled"):
+        return
+    _finalize_date(data, name)
+
+def _finalize_date(data, name):
     params = data["params"]
 
-    new_date = str(params["start_date"])
+    new_date = str(params[name])
     fields = re.findall(r"^(\d{4})-(\d{2})-(\d{2})$", new_date)
     if not fields:
         msg = ("start_date has to be in the format YYYY-MM-DD "
@@ -39,7 +47,6 @@ def fin_start_date(data, name):
     params[name] = datetime.datetime(
         int(fields[0][0]), int(fields[0][1]), int(fields[0][2])
     )
-
 
 ###############################################################################
 def fin_run_name(data, name):
@@ -1310,13 +1317,27 @@ def fin_swabs_f(data, name):
 def fin_date(data, name):
     """Finalize the "date" series."""
     series, params = data["series"], data["params"]
-    max_time = max([i for j in params["time_periods"] for i in j]) - 1
-    day = datetime.timedelta(1)
-    series["date"] = [params["start_date"] + day * num
-                      for num in range(max_time)]
-    dates = np.array([np.datetime64(str(i.date())) for i in series["date"]])
-    series["months"] = dates.astype("datetime64[M]").astype(int) % 12
+    time_periods = params["time_periods"]
+    start_date = params["start_date"]
+    series[name] = _fin_date_series(time_periods, start_date)
 
+def fin_months(data, name):
+    series = data["series"]
+    dates = np.array([np.datetime64(str(i.date())) for i in series["date"]])
+    series[name] = dates.astype("datetime64[M]").astype(int) % 12
+
+def fin_historical_nitrate_days(data, name):
+    if (data["params"]["historical_nitrate_process"] != "enabled"):
+        return
+    series, params = data["series"], data["params"]
+    time_periods = params["historical_time_periods"]
+    start_date = params["historical_start_date"]
+    series[name] = _fin_date_series(time_periods, start_date)
+
+def _fin_date_series(time_periods, start_date):
+    max_time = max([i for j in time_periods for i in j]) - 1
+    day = datetime.timedelta(1)
+    return [start_date + day * num for num in range(max_time)]
 
 ###############################################################################
 def fin_rainfall_ts(data, name):
@@ -1513,9 +1534,9 @@ def fin_nevtopt(data, name):
     if data["params"][name] is None:
         data["params"][name] = 2
 
-
 FUNC_PARAMS = [
     fin_start_date,
+    fin_historical_start_date,
     fin_run_name,
     fin_num_cores,
     fin_output_recharge,
@@ -1614,6 +1635,8 @@ FUNC_PARAMS = [
 
 FUNC_SERIES = [
     fin_date,
+    fin_months,
+    fin_historical_nitrate_days,
     fin_rainfall_ts,
     fin_pe_ts,
     fin_temperature_ts,

@@ -578,108 +578,6 @@ def convert_one_yaml_to_csv(filein):
 
 ###############################################################################
 
-def categorise_param(param, value):
-    time_period_params = [
-        "interflow_decay_ts",
-        "percolation_rejection_ts",
-        "rainfall_ts",
-        "temperature_ts",
-        "tmax_c_ts",
-        "tmin_c_ts",
-        "pe_ts",
-        "windsp_ts",
-    ]
-    non_time_period_params = [
-        "infiltration_limit_ts", # Not used in the large model but there is a file that looks like it could be used for less that 1 MB.
-        "subroot_leakage_ts", # Less than 1 MB in a large real model.
-        "swabs_ts", # Less than 2 MB in a large real model.
-        "swdis_ts", # Less than 1 MB in a large real model.
-        "canopy_zone_mapping",
-        "canopy_zone_names",
-        "evt_parameters",
-        "free_throughfall",
-        "infiltration_limit",
-        "init_interflow_store",
-        "interflow_decay",
-        "interflow_store_bypass",
-        "interflow_zone_mapping",
-        "interflow_zone_names",
-        "kc",
-        "landuse_zone_names",
-        "lu_spatial",
-        "macropore_activation",
-        "macropore_limit",
-        "macropore_proportion",
-        "macropore_recharge",
-        "macropore_zone_mapping",
-        "macropore_zone_names",
-        "max_canopy_storage",
-        "nitrate_depth_to_water",
-        "nitrate_loading",
-        "node_areas",
-        "node_xy",
-        "pe_zone_mapping",
-        "pe_zone_names",
-        "percolation_rejection",
-        "rainfall_zone_mapping",
-        "rainfall_zone_names",
-        "rapid_runoff_params",
-        "rapid_runoff_zone_mapping",
-        "rapid_runoff_zone_names",
-        "raw",
-        "recharge_attenuation_params",
-        "recharge_node_mapping",
-        "reporting_zone_mapping",
-        "reporting_zone_names",
-        "routing_topology",
-        "single_cell_swrecharge_activation",
-        "single_cell_swrecharge_limit",
-        "single_cell_swrecharge_proportion",
-        "single_cell_swrecharge_zone_mapping",
-        "single_cell_swrecharge_zone_names",
-        "snow_params_simple",
-        "soil_static_params",
-        "soil_zone_names",
-        "subroot_zone_names",
-        "subsoilzone_leakage_fraction",
-        "snow_params_complex",
-        "soil_spatial",
-        "subroot_zone_mapping",
-        "smd",
-        "swdis_locs",
-        "sw_params",
-        "swabs_locs",
-        "swrecharge_limit",
-        "swrecharge_proportion",
-        "swrecharge_zone_mapping",
-        "swrecharge_zone_names",
-        "sw_activation",
-        "sw_bed_infiltration",
-        "sw_direct_recharge",
-        "sw_downstream",
-        "sw_pe_to_open_water",
-        "sw_ponding_area",
-        "sw_zone_mapping",
-        "sw_zone_names",
-        "taw",
-        "temperature_zone_mapping",
-        "temperature_zone_names",
-        "time_periods",
-        "tmax_c_zone_mapping",
-        "tmax_c_zone_names",
-        "tmin_c_zone_mapping",
-        "tmin_c_zone_names",
-        "windsp_zone_mapping",
-        "windsp_zone_names",
-        "zr",
-    ]
-    if param in time_period_params:
-        return "time_peroiod_param"
-    if param in non_time_period_params:
-        return "non_time_peroiod_param"
-    print(f"Uncategorised param. param = {param}. value = {value}.")
-    return "uncategorised_param"
-
 def load_params_from_yaml(
         specs_file=u.CONSTANTS["SPECS_FILE"],
         input_file=u.CONSTANTS["INPUT_FILE"],
@@ -705,11 +603,10 @@ def load_params_from_yaml(
     for param in tqdm(params, desc="SWAcMod load params     "):
         if isinstance(params[param], str) and "alt_format" in specs[param]:
             absolute = os.path.join(input_dir, params[param])
-            param_category = categorise_param(param, params[param])
             ext = params[param].split(".")[-1]
             if ext not in specs[param]["alt_format"] and ext != "numpydumpy":
                 continue
-            if param_category == "time_peroiod_param":
+            if _use_time_series_data(param):
                 base_path = params["temp_file_backed_array_directory"]
                 params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
             elif ext == "csv":
@@ -722,7 +619,7 @@ def load_params_from_yaml(
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
                 try:
-                    if param.endswith("_ts") or param == "time_periods":
+                    if _use_array_directly(param):
                         params[param] = rows
                     else:
                         if param not in no_list:
@@ -753,6 +650,24 @@ def load_params_from_yaml(
 
     return data
 
+def _use_time_series_data(param):
+    return param in [
+        "historical_mi_array_kg_per_time_period",
+        "interflow_decay_ts",
+        "percolation_rejection_ts",
+        "rainfall_ts",
+        "temperature_ts",
+        "tmax_c_ts",
+        "tmin_c_ts",
+        "pe_ts",
+        "windsp_ts",
+    ]
+
+def _use_array_directly(param):
+    return (param.endswith("_ts")
+            or param == "time_periods"
+            or param == "historical_time_periods"
+            or param == "historical_mi_array_kg_per_time_period")
 
 ###############################################################################
 def load_and_validate(specs_file, input_file, input_dir):

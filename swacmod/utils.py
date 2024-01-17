@@ -79,6 +79,7 @@ CONSTANTS['AREA_FN']['k_slope'] = full_area
 CONSTANTS['AREA_FN']['historical_nitrate_reaching_water_table_array_tons_per_day'] = full_area
 CONSTANTS['AREA_FN']['nitrate_reaching_water_table_array_tons_per_day'] = full_area
 CONSTANTS['AREA_FN']['nitrate_to_surface_water_array_tons_per_day'] = full_area
+CONSTANTS['AREA_FN']['mi_array_kg_per_day'] = full_area
 CONSTANTS['AREA_FN']['rapid_runoff_c'] = not_ponded_area
 
 for p in ['canopy_storage', 'precip_to_ground', 'rapid_runoff', 'runoff_recharge',
@@ -278,7 +279,7 @@ def build_taw_raw(params):
             var3 = [params['zr'][num + 1][i] * lus[i] for i in range(len(lus))]
             taw[node].append(sum(var1) * sum(var3))
             raw = taw[node][num] * sum(var2)
-            raw[node].append(raw)
+            raw[node].append(raw) # As far as I can tell, this line will always result in an error. I don't think this code has ever been run.
 
     return taw, raw
 

@@ -5,19 +5,21 @@ import swacmod.nitrate as nitrate
 
 class Test_Nitrate_Mass_Balance(unittest.TestCase):
 	def test_calculate_Pro(self):
-		her_array_mm_per_day = np.array([1.0, 1.0, 1.0,     1.0, 0.0, -1.0, 1.0])
-		p_non = np.array(               [0.0, 0.0, 2.0/3.0, 0.2, 0.2, 0.2, 0.0])
-		Psmd = np.array(                [0.0, 0.0, 0.0,     0.0, 0.0, 0.0, 0.8])
-		pherperc = np.array(            [0.0, 0.5, 0.0,     0.3, 0.3, 0.3, 0.0])
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.her_array_mm_per_day = np.array([1.0, 1.0, 1.0,     1.0, 0.0, -1.0, 1.0])
+		blackboard.p_non = np.array(               [0.0, 0.0, 2.0/3.0, 0.2, 0.2, 0.2, 0.0])
+		blackboard.Psmd = np.array(                [0.0, 0.0, 0.0,     0.0, 0.0, 0.0, 0.8])
+		blackboard.Pherperc = np.array(            [0.0, 0.5, 0.0,     0.3, 0.3, 0.3, 0.0])
 		expected = np.array(            [1.0, 0.5, 1.0/3.0, 0.5, 0.0, 0.0, 0.2 ])
-		actual = nitrate._calculate_Pro(her_array_mm_per_day, p_non, pherperc, Psmd)
+		actual = nitrate._calculate_Pro(blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_m3_array_kg_per_day(self):
-		m0_array_kg_per_day = np.array([2.0, 6.0, 15.0, 14.0, 14.0, 14.0, 55.0])
-		Pro = np.array([1.0, 0.5, 1.0/3.0, 0.5, 0.0, 0.0, 0.2 ])
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.m0_array_kg_per_day = np.array([2.0, 6.0, 15.0, 14.0, 14.0, 14.0, 55.0])
+		blackboard.Pro = np.array([1.0, 0.5, 1.0/3.0, 0.5, 0.0, 0.0, 0.2 ])
 		expected = np.array([2.0, 3.0, 5.0, 7.0, 0.0, 0.0, 11.0])
-		actual = nitrate._calculate_m3_array_kg_per_day(m0_array_kg_per_day, Pro)
+		actual = nitrate._calculate_m3_array_kg_per_day(blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 	
 	def test_calculate_dSMD_array_mm_per_day_for_zero_days(self):
@@ -33,13 +35,10 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_dSMD_array_mm_per_day([7.0, 100.0, 1000.0], [10.0, 100.0, 1000.0], [3.0, 0.0, -20.0])
 
 	def assert_dSMD_array_mm_per_day(self, expected, input_smd, input_potential_smd):
-		data = None
-		output = {
-			"smd" : np.array(input_smd),
-			"p_smd" : np.array(input_potential_smd),
-		}
-		node = None
-		actual = nitrate._calculate_dSMD_array_mm_per_day(data, output, node)
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.smd = np.array(input_smd)
+		blackboard.p_smd = np.array(input_potential_smd)
+		actual = nitrate._calculate_dSMD_array_mm_per_day(blackboard)
 		expected_numpy = np.array(expected)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 
@@ -74,13 +73,10 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_Psoilperc(expected, input_perc_through_root_mm_per_day, input_TAW_array_mm)
 
 	def assert_Psoilperc(self, expected, input_perc_through_root_mm_per_day, input_TAW_array_mm):
-		data = None
-		output = {
-			"perc_through_root": input_perc_through_root_mm_per_day,
-			"tawtew": input_TAW_array_mm,
-		}
-		node = None
-		actual = nitrate._calculate_Psoilperc(data, output, node)
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.perc_through_root_mm_per_day = input_perc_through_root_mm_per_day
+		blackboard.TAW_array_mm = input_TAW_array_mm
+		actual = nitrate._calculate_Psoilperc(blackboard)
 		expected_numpy = np.array(expected)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 
@@ -115,21 +111,20 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_Pherperc(expected, input_perc_through_root_mm_per_day, input_her_array_mm_per_day)
 
 	def assert_Pherperc(self, expected, input_perc_through_root_mm_per_day, input_her_array_mm_per_day):
-		data = None
-		output = {
-			"perc_through_root": input_perc_through_root_mm_per_day,
-		}
-		node = None
-		actual = nitrate._calculate_Pherperc(data, output, node, input_her_array_mm_per_day)
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.perc_through_root_mm_per_day = input_perc_through_root_mm_per_day
+		blackboard.her_array_mm_per_day = input_her_array_mm_per_day
+		actual = nitrate._calculate_Pherperc(blackboard)
 		expected_numpy = np.array(expected)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 
 	def test_M_soil_in_kg(self):
-		m0_array_kg_per_day = np.array([0.0, 2.0, 2.0, 2.0, 12.0])
-		Psmd = np.array([0.0, 1.0, 0.5, 0.0, 0.25])
-		Pherperc = np.array([0.0, 0.0, 0.0, 0.5, 0.5])
 		expected = np.array([0.0, 2.0, 1.0, 1.0, 9.0])
-		actual = nitrate._calculate_M_soil_in_kg(m0_array_kg_per_day, Psmd, Pherperc)
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.m0_array_kg_per_day = np.array([0.0, 2.0, 2.0, 2.0, 12.0])
+		blackboard.Psmd = np.array([0.0, 1.0, 0.5, 0.0, 0.25])
+		blackboard.Pherperc = Pherperc = np.array([0.0, 0.0, 0.0, 0.5, 0.5])
+		actual = nitrate._calculate_M_soil_in_kg(blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_M_soil_tot_kg_for_zero_days(self):
@@ -152,9 +147,10 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 
 	def assert_M_soil_tot_kg_for_zero_days(self, expected, input_Msoil_in, input_Psoilperc):
 		expected_numpy = np.array(expected)
-		Msoil_in = np.array(input_Msoil_in)
-		Psoilperc = np.array(input_Psoilperc)
-		actual = nitrate._calculate_M_soil_tot_kg(Msoil_in, Psoilperc)
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.M_soil_in_kg = np.array(input_Msoil_in)
+		blackboard.Psoilperc = np.array(input_Psoilperc)
+		actual = nitrate._calculate_M_soil_tot_kg(blackboard)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 
 	def test_calculate_M4_array_mm_per_day_for_zero_days(self):
@@ -176,10 +172,11 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assert_M4_array_mm_per_day(expected, input_M_soil_tot_kg, input_m1_array_kg_per_day)
 
 	def assert_M4_array_mm_per_day(self, expected, input_M_soil_tot_kg, input_m1_array_kg_per_day):
-		input_M_soil_tot_kg = np.array(input_M_soil_tot_kg)
-		input_m1_array_kg_per_day = np.array(input_m1_array_kg_per_day)
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.M_soil_in_kg = np.array(input_M_soil_tot_kg)
+		blackboard.m1_array_kg_per_day = np.array(input_m1_array_kg_per_day)
 		expected_numpy = np.array(expected)
-		actual = nitrate._calculate_M4_array_mm_per_day(input_M_soil_tot_kg, input_m1_array_kg_per_day)
+		actual = nitrate._calculate_M4_array_mm_per_day(blackboard)
 		np.testing.assert_array_almost_equal(expected_numpy, actual)
 
 	def test_is_mass_balanced_for_empty_arrays(self):
@@ -216,17 +213,84 @@ class Test_Nitrate_Mass_Balance(unittest.TestCase):
 		self.assertEqual(expected, actual)
 
 	def test_total_NO3_to_receptors_kg(self):
-		m1_array_kg_per_day = np.array([1.0, 2.0, 3.0, 4.0])
-		m2_array_kg_per_day = np.array([20.0, 30.0, 40.0, 50.0])
-		m3_array_kg_per_day = np.array([100.0, 300.0, 500.0, 700.0])
-		m4_array_kg_per_day = np.array([9000.0, 8000.0, 7000.0, 6000.0])
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.m1_array_kg_per_day = np.array([1.0, 2.0, 3.0, 4.0])
+		blackboard.m2_array_kg_per_day = np.array([20.0, 30.0, 40.0, 50.0])
+		blackboard.m3_array_kg_per_day = np.array([100.0, 300.0, 500.0, 700.0])
+		blackboard.m4_array_kg_per_day = np.array([9000.0, 8000.0, 7000.0, 6000.0])
 		expected = np.array([9121.0, 8332.0, 7543.0, 6754.0])
-		actual = nitrate._calculate_total_NO3_to_receptors_kg(m1_array_kg_per_day, m2_array_kg_per_day, m3_array_kg_per_day, m4_array_kg_per_day)
+		actual = nitrate._calculate_total_NO3_to_receptors_kg(blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_mass_balance_error_kg(self):
-		m0_array_kg_per_day = np.array([10.0, 20.0, 30.0])
-		total_NO3_to_receptors_kg = np.array([3.0, 20.0, 32.0])
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.m0_array_kg_per_day = np.array([10.0, 20.0, 30.0])
+		blackboard.total_NO3_to_receptors_kg = np.array([3.0, 20.0, 32.0])
 		expected = np.array([7.0, 0.0, -2.0])
-		actual = nitrate._calculate_mass_balance_error_kg(m0_array_kg_per_day, total_NO3_to_receptors_kg)
+		actual = nitrate._calculate_mass_balance_error_kg(blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
+
+	def test_make_unbalanced_day_log_message(self):
+		i = 1
+
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.node = 1
+		blackboard.m0_array_kg_per_day = np.array([1.0, 2.0, 3.0])
+		blackboard.m1_array_kg_per_day = np.array([10.0, 20.0, 30.0])
+		blackboard.m2_array_kg_per_day = np.array([100.0, 200.0, 300.0])
+		blackboard.m3_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
+		blackboard.m4_array_kg_per_day = np.array([10000.0, 20000.0, 30000.0])
+		blackboard.total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
+		blackboard.mass_balance_error_kg = np.array([1.0, 2.0, 1.0])
+
+		actual = nitrate._make_unbalanced_day_log_message(i, blackboard)
+
+		expected = "Nitrate masses do not balance for node 1 using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index 1 with a mass balance error of 2.0 kg. total_NO3_to_receptors = 456.0 kg; M0 = 2.0 kg; M1 = 20.0 kg; M2 = 200.0 kg; M3 = 2000.0 kg; M4 = 20000.0 kg."
+		self.assertEqual(expected, actual)
+
+	def test_check_masses_balance_when_they_are_unbalanced(self):
+		logging = SpyLogger()
+		
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.node = 1
+		blackboard.m0_array_kg_per_day = np.array([1.0, 2.0, 3.0])
+		blackboard.m1_array_kg_per_day = np.array([10.0, 20.0, 30.0])
+		blackboard.m2_array_kg_per_day = np.array([100.0, 200.0, 300.0])
+		blackboard.m3_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
+		blackboard.m4_array_kg_per_day = np.array([10000.0, 20000.0, 30000.0])
+		blackboard.total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
+		blackboard.mass_balance_error_kg = np.array([1.0, 2.0, 1.0])
+		blackboard.logging = logging
+
+		nitrate._check_masses_balance(blackboard)
+		actual = logging.log
+
+		expected = ["Nitrate masses do not balance for node 1 using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index 1 with a mass balance error of 2.0 kg. total_NO3_to_receptors = 456.0 kg; M0 = 2.0 kg; M1 = 20.0 kg; M2 = 200.0 kg; M3 = 2000.0 kg; M4 = 20000.0 kg."]
+		self.assertEqual(expected, actual)
+
+	def test_check_masses_balance_when_they_are_balanced(self):
+		logging = SpyLogger()
+
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.node = 1
+		blackboard.m0_array_kg_per_day = np.array([1.0, 2.0, 3.0])
+		blackboard.m1_array_kg_per_day = np.array([10.0, 20.0, 30.0])
+		blackboard.m2_array_kg_per_day = np.array([100.0, 200.0, 300.0])
+		blackboard.m3_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
+		blackboard.m4_array_kg_per_day = np.array([10000.0, 20000.0, 30000.0])
+		blackboard.total_NO3_to_receptors_kg = np.array([123.0, 456.0, 789.0])
+		blackboard.mass_balance_error_kg = np.array([0.0, 0.0, 0.0])
+		blackboard.logging = logging
+		
+		nitrate._check_masses_balance(blackboard)
+		actual = logging.log
+
+		expected = []
+		self.assertEqual(expected, actual)
+
+class SpyLogger():
+	def __init__(self):
+		self.log = []
+
+	def warning(self, str):
+		self.log.append(str)

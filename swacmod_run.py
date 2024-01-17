@@ -39,7 +39,9 @@ from swacmod import compile_model
 from swacmod import model as m
 import swacmod.model_numpy as model_numpy
 
+import swacmod.historical_nitrate as historical_nitrate
 import swacmod.nitrate as nitrate
+import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
 
 # win fix
 sys.maxint = 2**63 - 1
@@ -156,7 +158,7 @@ def get_output(data, node, time_switcher):
         m.get_average_out,
         m.get_change,
         m.get_balance,
-        nitrate.get_historical_nitrate,
+        historical_nitrate.get_historical_nitrate,
         nitrate.get_nitrate,
     ]
 
@@ -185,6 +187,7 @@ def run_process(
         evtr_agg,
         nitrate_aggregation,
         stream_nitrate_aggregation,
+        nitrate_mi_aggregation,
         recharge,
         runoff,
         log_path,
@@ -219,7 +222,7 @@ def run_process(
         alpha = params["nitrate_calibration_alpha"]
         effective_porosity = params["nitrate_calibration_effective_porosity"]
 
-        proportion_100 = nitrate.__calculate_proportion_reaching_water_table_array_per_day(len(data["series"]['date']), a, μ, σ, alpha, effective_porosity, 100.0, time_switcher)
+        proportion_100 = nitrate_proportion.__calculate_proportion_reaching_water_table_array_per_day(len(data["series"]['date']), a, μ, σ, alpha, effective_porosity, 100.0, time_switcher)
         data["proportion_100"] = proportion_100
     timer.switch_to(time_switcher, "run_main > run > for")
 
@@ -243,7 +246,7 @@ def run_process(
 
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
-                aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, stream_nitrate_aggregation, spatial_index, pond_area)
+                aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, stream_nitrate_aggregation, nitrate_mi_aggregation, spatial_index, pond_area)
 
     logging.info("mp.Process %d ended", num)
 
@@ -280,7 +283,7 @@ def compare_lambdas(name, time_switcher, unoptimised, optimised):
         
     return optimised_result
 
-def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, stream_nitrate_aggregation, spatial_index, pond_area):
+def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, stream_nitrate_aggregation, nitrate_mi_aggregation, spatial_index, pond_area):
     if node in data["params"]["output_individual"]:
         timer.switch_to(time_switcher, "aggregate_output (output_individual)")
         # if this node for individual output then preserve
@@ -345,6 +348,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
     if data["params"]["nitrate_process"] == "enabled":
         nitrate.aggregate_nitrate(nitrate_aggregation, data, output, node)
         nitrate.aggregate_surface_water_nitrate(stream_nitrate_aggregation, data, output, node)
+        nitrate.aggregate_mi(nitrate_mi_aggregation, data, output, node)
 
     timer.switch_to(time_switcher, "aggregate_output > (spatial_output_date)")
     if data["params"]["spatial_output_date"]:
@@ -442,6 +446,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         evtr_agg = mp.Array("f", 1)
         nitrate_aggregation = nitrate.make_aggregation_array(data)
         stream_nitrate_aggregation = nitrate.make_stream_aggregation_array(data)
+        nitrate_mi_aggregation = nitrate.make_mi_aggregation_array(data)
         recharge = mp.Array("f", 1)
         runoff = mp.Array("f", 1)
         if params["swrecharge_process"] == "enabled" or data["params"][
@@ -473,6 +478,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         evtr_agg = np.zeros(1, dtype=np.single)
         nitrate_aggregation = nitrate.make_aggregation_array(data)
         stream_nitrate_aggregation = nitrate.make_stream_aggregation_array(data)    
+        nitrate_mi_aggregation = nitrate.make_mi_aggregation_array(data)
         recharge = np.zeros(1, dtype=np.single)
         runoff = np.zeros(1, dtype=np.single)
         if params["swrecharge_process"] == "enabled" or data["params"][
@@ -532,6 +538,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 evtr_agg,
                 nitrate_aggregation,
                 stream_nitrate_aggregation,
+                nitrate_mi_aggregation,
                 recharge,
                 runoff,
                 log_path,
@@ -571,6 +578,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     evtr_agg,
                     nitrate_aggregation,
                     stream_nitrate_aggregation,
+                    nitrate_mi_aggregation,
                     recharge,
                     runoff,
                     log_path,
@@ -839,9 +847,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
         timer.switch_to(output_timer_token, "output_nitrate")
         if data["params"]["nitrate_process"] == "enabled":
-            nitrate.write_nitrate_csv(data, nitrate_aggregation)            
+            nitrate.write_nitrate_csv(data, nitrate_aggregation)
             nitrate.write_stream_nitrate_csv(data,stream_nitrate_aggregation)
-            
+            nitrate.write_mi_csv(data, nitrate_mi_aggregation)
+
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
 

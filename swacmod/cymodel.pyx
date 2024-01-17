@@ -1577,7 +1577,21 @@ def _cumulative_fraction_leaked_per_year(double her_at_5_percent, double her_at_
     y = (m * x) + c
     return max(0, y)
 
-def calculate_mass_reaching_water_table_array_kg_per_day(double[:] proportion_reaching_water_table_array_per_day, double[:] mi_array_kg_per_day):
+def calculate_mass_reaching_water_table_array_kg_per_day(blackboard):
+    cdef:
+        double[:] proportion_reaching_water_table_array_per_day = blackboard.proportion_reaching_water_table_array_per_day
+        double[:] mi_array_kg_per_day = blackboard.mi_array_kg_per_day
+    return _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
+
+def calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
+    cdef:
+        double[:] proportion_reaching_water_table_array_per_day = blackboard.historic_proportion_reaching_water_table_array_per_day
+        double[:] mi_array_kg_per_day = blackboard.truncated_historical_mi_array_kg_per_day
+    return _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
+
+def _calculate_mass_reaching_water_table_array_kg_per_day(
+        double[:] proportion_reaching_water_table_array_per_day,
+        double[:] mi_array_kg_per_day):
     cdef:
         size_t length
         size_t day_nitrate_was_leached
@@ -1598,16 +1612,17 @@ def calculate_mass_reaching_water_table_array_kg_per_day(double[:] proportion_re
 
     return np.array(result_kg)
 
-def _calculate_m1a_b_array_kg_per_day(output, double[:] m1_array_kg_per_day):
+def _calculate_m1a_b_array_kg_per_day(blackboard):
     cdef:
         size_t length
         size_t i
         double mit_kg
         double m1a_kg_per_day
         double m1b_kg_per_day
-        double[:] end_interflow_store_volume_mm = output["interflow_volume"]
-        double[:] infiltration_recharge_mm_per_day = output["infiltration_recharge"]
-        double[:] interflow_to_rivers_mm_per_day = output["interflow_to_rivers"]
+        double[:] m1_array_kg_per_day = blackboard.m1_array_kg_per_day
+        double[:] end_interflow_store_volume_mm = blackboard.interflow_volume
+        double[:] infiltration_recharge_mm_per_day = blackboard.infiltration_recharge
+        double[:] interflow_to_rivers_mm_per_day = blackboard.interflow_to_rivers
         double[:] interflow_store_components_mm_per_day
         double[:] recharge_proportion
         double[:] interflow_proportion
@@ -1697,6 +1712,43 @@ def _aggregate_surface_water_nitrate(
                 break
 
     return stream_aggregation
+
+def aggregate_mi(
+            double[:,:] aggregation,
+            time_periods,
+            size_t len_time_periods,
+            double[:] mi_array_kg_per_day,
+            size_t node):
+    cdef:
+        size_t time_period_index, first_day_index, last_day_index, day_index
+
+    for time_period_index in range(len_time_periods):
+        time_period = time_periods[time_period_index]
+        first_day_index = time_period[0] - 1
+        last_day_index = time_period[1] - 1
+        for day_index in range(first_day_index, last_day_index):
+            aggregation[node][time_period_index] += mi_array_kg_per_day[day_index]
+    return aggregation
+
+def _calculate_aggregate_mi_unpacking(blackboard):
+    cdef:
+        size_t length = len(blackboard.historical_nitrate_days)
+        double[:] historical_mi_array_kg_per_day = np.zeros(length)
+        size_t time_period_index, start_day, end_day, days_in_time_period
+        double total_mi_for_time_period_kg, historical_mi_kg_per_day
+
+    for time_period_index in range(len(blackboard.historical_time_periods)):
+        time_period = blackboard.historical_time_periods[time_period_index]
+        start_day = time_period[0] - 1
+        end_day = time_period[1] - 1
+        days_in_time_period = end_day - start_day
+
+        total_mi_for_time_period_kg = blackboard.historical_mi_array_kg_per_time_period[time_period_index]
+        historical_mi_kg_per_day = total_mi_for_time_period_kg / days_in_time_period
+
+        for day in range(start_day, end_day):
+            historical_mi_array_kg_per_day[day] = historical_mi_kg_per_day
+    return historical_mi_array_kg_per_day
 
 def write_nitrate_csv_bytes(filename, nitrate_aggregation):
     stress_period_count = nitrate_aggregation.shape[0]
