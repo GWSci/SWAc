@@ -11,11 +11,11 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		μ = 1.58
 		σ = 3.96
 		alpha = 1.7
-		mean_velocity_of_unsaturated_transport = 1.0 / 0.0029
+		effective_porosity = 1.0 / 0.0029
 		DTW = 100
 		sum = 0
 		for t in range(1, 1000000):
-			sum += nitrate._calculate_daily_proportion_reaching_water_table(a, μ, σ, alpha, mean_velocity_of_unsaturated_transport, DTW, t)
+			sum += nitrate._calculate_daily_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t)
 		self.assertAlmostEqual(1, sum, places=2)
 
 	def test_maximum_of_daily_proportion_should_appear_after_several_years(self):
@@ -23,12 +23,12 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		μ = 1.58
 		σ = 3.96
 		alpha = 1.7
-		mean_velocity_of_unsaturated_transport = 1.0 / 0.0029
+		effective_porosity = 1.0 / 0.0029
 		DTW = 100
 		t = 0
 		previous_nitrate = 0
 		while True:
-			current_nitrate = nitrate._calculate_daily_proportion_reaching_water_table(a, μ, σ, alpha, mean_velocity_of_unsaturated_transport, DTW, t + 1)
+			current_nitrate = nitrate._calculate_daily_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t + 1)
 			if current_nitrate < previous_nitrate:
 				break
 			t += 1
@@ -40,7 +40,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		μ = 1.58
 		σ = 3.96
 		alpha = 1.7
-		mean_velocity_of_unsaturated_transport = 1.0 / 0.0029
+		effective_porosity = 1.0 / 0.0029
 		data = {
 			"time_switcher": timer.make_time_switcher(),
 			"series": {
@@ -58,7 +58,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		expected = np.array([0.0, 0.793244, 0.120028])
 		proportion_0 = None
 		proportion_100 = None
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, alpha, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
+		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, alpha, effective_porosity, proportion_0, proportion_100)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_cumulative_proportion_reaching_water_table_varies_with_params(self):
@@ -66,28 +66,28 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		μ = 1.58
 		σ = 3.96
 		alpha = 1.7
-		mean_velocity_of_unsaturated_transport = 1.0 / 0.0029
+		effective_porosity = 1.0 / 0.0029
 		DTW = 0.001
 		t = 1
-		original = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, mean_velocity_of_unsaturated_transport, DTW, t)
-		different_a = nitrate._calculate_cumulative_proportion_reaching_water_table(100, μ, σ, alpha, mean_velocity_of_unsaturated_transport, DTW, t)
-		different_μ = nitrate._calculate_cumulative_proportion_reaching_water_table(a, 0.05, σ, alpha, mean_velocity_of_unsaturated_transport, DTW, t)
-		different_σ = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, 0.01, alpha, mean_velocity_of_unsaturated_transport, DTW, t)
-		different_alpha = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, 100, mean_velocity_of_unsaturated_transport, DTW, t)
-		different_mean_velocity_of_unsaturated_transport = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, 0.1, DTW, t)
+		original = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t)
+		different_a = nitrate._calculate_cumulative_proportion_reaching_water_table(100, μ, σ, alpha, effective_porosity, DTW, t)
+		different_μ = nitrate._calculate_cumulative_proportion_reaching_water_table(a, 0.05, σ, alpha, effective_porosity, DTW, t)
+		different_σ = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, 0.01, alpha, effective_porosity, DTW, t)
+		different_alpha = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, 100, effective_porosity, DTW, t)
+		different_effective_porosity = nitrate._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, 0.1, DTW, t)
 		self.assertEqual(0.793244345253982, original)
 		self.assertEqual(0.6657750500569044, different_a)
 		self.assertEqual(0.6668990408184825, different_μ)
 		self.assertEqual(1.0, different_σ)
 		self.assertEqual(0.00873035927116339, different_alpha)
-		self.assertEqual(0.999999999999708, different_mean_velocity_of_unsaturated_transport)
+		self.assertEqual(0.999999999999708, different_effective_porosity)
 
 	def test_calculate_daily_proportion_reaching_water_table_arr_when_dtw_is_0(self):
 		a = 1.38
 		μ = 1.58
 		σ = 3.96
 		alpha = 1.7
-		mean_velocity_of_unsaturated_transport = 1.0 / 0.0029
+		effective_porosity = 1.0 / 0.0029
 		data = {
 			"time_switcher": timer.make_time_switcher(),
 			"series": {
@@ -104,7 +104,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		node = 3
 		proportion_0 = "xxx"
 		proportion_100 = None
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, alpha, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
+		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, alpha, effective_porosity, proportion_0, proportion_100)
 		self.assertEqual("xxx", actual)
 
 	def test_calculate_daily_proportion_reaching_water_table_arr_when_dtw_is_100(self):
@@ -112,7 +112,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		μ = 1.58
 		σ = 3.96
 		alpha = 1.7
-		mean_velocity_of_unsaturated_transport = 1.0 / 0.0029
+		effective_porosity = 1.0 / 0.0029
 		data = {
 			"time_switcher": timer.make_time_switcher(),
 			"series": {
@@ -129,7 +129,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		node = 3
 		proportion_0 = None
 		proportion_100 = "xxx"
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, alpha, mean_velocity_of_unsaturated_transport, proportion_0, proportion_100)
+		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(data, output, node, a, μ, σ, alpha, effective_porosity, proportion_0, proportion_100)
 		self.assertEqual("xxx", actual)
 	
 	def test_total_mass_leached_on_day_for_zero_days(self):
