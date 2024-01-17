@@ -2,6 +2,7 @@ from datetime import date
 import numpy as np
 import swacmod.historical_nitrate as historical_nitrate
 import swacmod.nitrate as nitrate
+import swacmod.time_series_data
 import unittest
 
 class Test_Historical_Nitrate(unittest.TestCase):
