@@ -1335,10 +1335,7 @@ def fin_historical_nitrate_days(data, name):
     series, params = data["series"], data["params"]
     time_periods = params["historical_time_periods"]
     start_date = params["historical_start_date"]
-    max_time = max([i for j in time_periods for i in j]) - 1
-    day = datetime.timedelta(1)
-    series[name] = [start_date + day * num
-                      for num in range(max_time)]
+    _fin_date_series(series, name, time_periods, start_date)
 
 def _fin_date_series(series, name, time_periods, start_date):
     max_time = max([i for j in time_periods for i in j]) - 1
