@@ -1,4 +1,5 @@
 import datetime
+import numpy as np
 import unittest
 import swacmod.finalization as finalization
 import swacmod.utils as utils
@@ -74,6 +75,17 @@ class Test_Historical_Nitrate_Finalization(unittest.TestCase):
 			datetime.datetime(2024, 1, 18),
 			datetime.datetime(2024, 1, 19)]
 		self.assertEqual(expected, actual)
+
+	def test_finalize_series_creates_months_series(self):
+		data = make_minimal_data()
+		data["params"]["time_periods"] = [[1, 3], [3, 5]]
+		data["params"]["start_date"] = "2024-01-30"
+
+		finalize_params_and_series(data)
+
+		actual = data["series"]["months"]
+		expected = np.array([0, 0, 1, 1])
+		np.testing.assert_allclose(expected, actual)
 
 def finalize_params_and_series(data):
 	finalization.finalize_params(data)
