@@ -33,8 +33,8 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 	def test_nitrate_calibration_alpha_is_read_from_input_file(self):
 		self.assertEqual(1.7, load_params()["nitrate_calibration_alpha"])
 
-	def test_nitrate_calibration_mean_velocity_of_unsaturated_transport_is_read_from_input_file(self):
-		self.assertEqual(0.0029, load_params()["nitrate_calibration_mean_velocity_of_unsaturated_transport"])
+	def test_nitrate_calibration_effective_porosity_is_read_from_input_file(self):
+		self.assertEqual(0.0029, load_params()["nitrate_calibration_effective_porosity"])
 
 def load_params():
 	input = input_output.load_params_from_yaml(
