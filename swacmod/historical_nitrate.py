@@ -26,7 +26,7 @@ class HistoricalNitrateBlackboard():
 		self.σ = None
 
 	def initialise_blackboard(self, data, output, node):
-		length = data["proportion_100"].size
+		total_days_upper_bound = len(data["series"]["date"]) + len(data["series"]["historical_nitrate_days"])
 
 		self.a = data["params"]["nitrate_calibration_a"]
 		self.days = data["series"]["date"]
@@ -37,7 +37,7 @@ class HistoricalNitrateBlackboard():
 		self.mean_hydraulic_conductivity = data["params"]["nitrate_calibration_mean_hydraulic_conductivity"]
 		self.mean_velocity_of_unsaturated_transport = data["params"]["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
 		self.node = node
-		self.proportion_0 = np.zeros(length)
+		self.proportion_0 = np.zeros(total_days_upper_bound)
 		self.proportion_100 = data["proportion_100"]
 		self.μ = data["params"]["nitrate_calibration_mu"]
 		self.σ = data["params"]["nitrate_calibration_sigma"]
