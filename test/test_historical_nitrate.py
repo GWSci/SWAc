@@ -226,7 +226,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assertEqual(expected.mean_velocity_of_unsaturated_transport, actual.mean_velocity_of_unsaturated_transport)
 		self.assertEqual(expected.node, actual.node)
 		np.testing.assert_allclose(expected.proportion_0, actual.proportion_0)
-		# np.testing.assert_allclose(expected.proportion_100, actual.proportion_100)
+		np.testing.assert_allclose(expected.proportion_100, actual.proportion_100)
 		self.assertEqual(expected.μ, actual.μ)
 		self.assertEqual(expected.σ, actual.σ)
 
