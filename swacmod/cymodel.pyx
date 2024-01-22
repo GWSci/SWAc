@@ -1587,7 +1587,12 @@ def calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
     cdef:
         double[:] proportion_reaching_water_table_array_per_day = blackboard.historic_proportion_reaching_water_table_array_per_day
         double[:] mi_array_kg_per_day = blackboard.truncated_historical_mi_array_kg_per_day
-    return _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
+
+    days = blackboard.days
+    return _calculate_historical_mass_reaching_water_table_array_kg_per_day(
+        days,
+        proportion_reaching_water_table_array_per_day,
+        mi_array_kg_per_day)
 
 def _calculate_mass_reaching_water_table_array_kg_per_day(
         double[:] proportion_reaching_water_table_array_per_day,
@@ -1609,6 +1614,32 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(
         result_end = length - day_nitrate_was_leached
         for i in range(result_end):
             result_kg[day_nitrate_was_leached + i] += proportion_reaching_water_table_array_per_day[i] * mass_leached_on_day_kg
+
+    return np.array(result_kg)
+
+def _calculate_historical_mass_reaching_water_table_array_kg_per_day(
+        days,
+        double[:] proportion_reaching_water_table_array_per_day,
+        double[:] mi_array_kg_per_day):
+    cdef:
+        size_t days_count, historic_days_count
+        size_t day_nitrate_was_leached
+        size_t result_end
+        size_t i
+        double[:] result_kg = np.zeros(days_count)
+        double mass_leached_on_day_kg
+
+    days_count = len(days)
+    historic_days_count = mi_array_kg_per_day.size
+
+    result_kg = np.zeros(days_count)
+    for day_nitrate_was_leached in range(historic_days_count):
+        mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
+        if mass_leached_on_day_kg == 0:
+            continue
+        for i in range(days_count):
+            proportion_index = historic_days_count - day_nitrate_was_leached + i
+            result_kg[i] += proportion_reaching_water_table_array_per_day[proportion_index] * mass_leached_on_day_kg
 
     return np.array(result_kg)
 
