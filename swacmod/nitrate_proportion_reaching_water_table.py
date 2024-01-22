@@ -2,8 +2,8 @@ import math
 import numpy as np
 
 def calculate_proportion_reaching_water_table_array_per_day(blackboard):
-	days_offset = 0
-	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset)
+	historical_days_count = 0
+	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, historical_days_count)
 
 def calculate_historic_proportion_reaching_water_table_array_per_day(blackboard):	
 	historical_days_count = len(blackboard.truncated_historical_nitrate_days)
