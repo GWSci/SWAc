@@ -6,7 +6,7 @@ def calculate_proportion_reaching_water_table_array_per_day(blackboard):
 	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset)
 
 def calculate_historic_proportion_reaching_water_table_array_per_day(blackboard):	
-	days_offset = len(blackboard.historical_nitrate_days)
+	days_offset = len(blackboard.truncated_historical_nitrate_days)
 	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset)
 
 def _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset):
