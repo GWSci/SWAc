@@ -19,7 +19,6 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, histori
 		return blackboard.proportion_100
 	else:
 		return __calculate_proportion_reaching_water_table_array_per_day(
-			historical_days_count,
 			length,
 			blackboard.a,
 			blackboard.μ,
@@ -30,7 +29,6 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, histori
 			time_switcher)
 
 def __calculate_proportion_reaching_water_table_array_per_day(
-		historical_days_count,
 		length,
 		a,
 		μ,
