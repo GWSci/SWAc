@@ -222,7 +222,7 @@ def run_process(
         alpha = params["nitrate_calibration_alpha"]
         effective_porosity = params["nitrate_calibration_effective_porosity"]
 
-        proportion_100 = nitrate_proportion.__calculate_proportion_reaching_water_table_array_per_day(0, len(data["series"]['date']), a, μ, σ, alpha, effective_porosity, 100.0, time_switcher)
+        proportion_100 = nitrate_proportion.__calculate_proportion_reaching_water_table_array_per_day(len(data["series"]['date']), a, μ, σ, alpha, effective_porosity, 100.0, time_switcher)
         data["proportion_100"] = proportion_100
     timer.switch_to(time_switcher, "run_main > run > for")
 

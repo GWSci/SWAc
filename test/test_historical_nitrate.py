@@ -164,11 +164,10 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
 		self.assign_common_blackboard_inputs_for_proportion_reaching_water_table(blackboard)
 		blackboard.days = new_days
-		blackboard.historical_nitrate_days = historic_days
+		blackboard.truncated_historical_nitrate_days = historic_days
 		actual = historical_nitrate._calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
 
-		cumulative_proportion_for_the_entire_period = self.make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(combined_days)
-		expected = cumulative_proportion_for_the_entire_period[3:]
+		expected = self.make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(combined_days)
 		np.testing.assert_allclose(expected, actual)
 
 	def assign_common_blackboard_inputs_for_proportion_reaching_water_table(self, blackboard):
@@ -192,12 +191,13 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 	def test_calculate_historical_mass_reaching_water_table_array_kg_per_day(self):
 		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
-		blackboard.historic_proportion_reaching_water_table_array_per_day = np.array([0.1, 0.2, 0.3])
+		blackboard.days = [date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3)]
+		blackboard.historic_proportion_reaching_water_table_array_per_day = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
 		blackboard.truncated_historical_mi_array_kg_per_day = np.array([10.0, 100.0, 1000.0])
 
 		actual = historical_nitrate._calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard)
 
-		expected = np.array([1.0, 12.0, 123.0])
+		expected = np.array([234.0, 345.0, 456.0])
 		np.testing.assert_allclose(expected, actual)
 
 	def test_convert_kg_to_tons_array(self):

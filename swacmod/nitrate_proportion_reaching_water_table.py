@@ -2,16 +2,16 @@ import math
 import numpy as np
 
 def calculate_proportion_reaching_water_table_array_per_day(blackboard):
-	days_offset = 0
-	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset)
+	historical_days_count = 0
+	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, historical_days_count)
 
 def calculate_historic_proportion_reaching_water_table_array_per_day(blackboard):	
-	days_offset = len(blackboard.historical_nitrate_days)
-	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset)
+	historical_days_count = len(blackboard.truncated_historical_nitrate_days)
+	return _calculate_proportion_reaching_water_table_array_per_day(blackboard, historical_days_count)
 
-def _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_offset):
+def _calculate_proportion_reaching_water_table_array_per_day(blackboard, historical_days_count):
 	time_switcher = blackboard.time_switcher
-	length = len(blackboard.days)
+	length = historical_days_count + len(blackboard.days)
 	depth_to_water_m = blackboard.nitrate_depth_to_water[0]
 	if depth_to_water_m == 0.0:
 		return blackboard.proportion_0
@@ -19,7 +19,6 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_of
 		return blackboard.proportion_100
 	else:
 		return __calculate_proportion_reaching_water_table_array_per_day(
-			days_offset,
 			length,
 			blackboard.a,
 			blackboard.μ,
@@ -30,7 +29,6 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, days_of
 			time_switcher)
 
 def __calculate_proportion_reaching_water_table_array_per_day(
-		days_offset,
 		length,
 		a,
 		μ,
@@ -41,7 +39,7 @@ def __calculate_proportion_reaching_water_table_array_per_day(
 		time_switcher):
 	result = np.zeros(length)
 	for i in range(length):
-		t = days_offset + i
+		t = i
 		result[i] = _calculate_daily_proportion_reaching_water_table(
 			a, μ, σ, alpha, effective_porosity, depth_to_water_m, t)
 	return result
