@@ -167,8 +167,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.truncated_historical_nitrate_days = historic_days
 		actual = historical_nitrate._calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
 
-		cumulative_proportion_for_the_entire_period = self.make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(combined_days)
-		expected = cumulative_proportion_for_the_entire_period
+		expected = self.make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(combined_days)
 		np.testing.assert_allclose(expected, actual)
 
 	def assign_common_blackboard_inputs_for_proportion_reaching_water_table(self, blackboard):
