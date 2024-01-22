@@ -103,8 +103,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.mean_hydraulic_conductivity = 1.0
 		blackboard.mean_velocity_of_unsaturated_transport = 1.0
 		blackboard.node = 7
-		blackboard.proportion_0 = 3.0
-		blackboard.proportion_100 = 97.0
+		blackboard.proportion_0 = np.zeros(2)
+		blackboard.proportion_100 = np.array([89.0, 97.0])
 		blackboard.a = 10.0
 		blackboard.μ = 0.0
 		blackboard.σ = 1.0
@@ -225,6 +225,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assertEqual(expected.mean_hydraulic_conductivity, actual.mean_hydraulic_conductivity)
 		self.assertEqual(expected.mean_velocity_of_unsaturated_transport, actual.mean_velocity_of_unsaturated_transport)
 		self.assertEqual(expected.node, actual.node)
+		np.testing.assert_allclose(expected.proportion_0, actual.proportion_0)
+		# np.testing.assert_allclose(expected.proportion_100, actual.proportion_100)
 		self.assertEqual(expected.μ, actual.μ)
 		self.assertEqual(expected.σ, actual.σ)
 
@@ -244,7 +246,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			"series": {
 				"date": [date(2023, 1, 3), date(2023, 1, 4)],
 				"historical_nitrate_days" : [date(2023, 1, 1), date(2023, 1, 2)],
-			}
+			},
+			"proportion_100" : np.array([89.0, 97.0])
 		}
 		output = {}
 		node = 7
