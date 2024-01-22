@@ -221,7 +221,8 @@ def run_process(
         mean_hydraulic_conductivity = params["nitrate_calibration_mean_hydraulic_conductivity"]
         mean_velocity_of_unsaturated_transport = params["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
 
-        proportion_100 = nitrate_proportion.__calculate_proportion_reaching_water_table_array_per_day(len(data["series"]['date']), a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, 100.0, time_switcher)
+        total_days_count_upper_bound = historical_nitrate.calculate_total_days_count_upper_bound(data)
+        proportion_100 = nitrate_proportion.__calculate_proportion_reaching_water_table_array_per_day(total_days_count_upper_bound, a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, 100.0, time_switcher)
         data["proportion_100"] = proportion_100
     timer.switch_to(time_switcher, "run_main > run > for")
 
