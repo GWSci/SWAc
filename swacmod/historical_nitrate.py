@@ -26,7 +26,7 @@ class HistoricalNitrateBlackboard():
 		self.σ = None
 
 	def initialise_blackboard(self, data, output, node):
-		total_days_upper_bound = len(data["series"]["date"]) + len(data["series"]["historical_nitrate_days"])
+		total_days_upper_bound = calculate_total_days_count_upper_bound(data)
 
 		self.a = data["params"]["nitrate_calibration_a"]
 		self.days = data["series"]["date"]
@@ -42,6 +42,9 @@ class HistoricalNitrateBlackboard():
 		self.μ = data["params"]["nitrate_calibration_mu"]
 		self.σ = data["params"]["nitrate_calibration_sigma"]
 		return self
+
+def calculate_total_days_count_upper_bound(data):
+	return len(data["series"]["date"]) + len(data["series"]["historical_nitrate_days"])
 
 def get_historical_nitrate(data, output, node):
 	if (data["params"]["historical_nitrate_process"] == "enabled"):
