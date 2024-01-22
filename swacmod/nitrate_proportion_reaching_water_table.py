@@ -16,7 +16,7 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, histori
 	if depth_to_water_m == 0.0:
 		return blackboard.proportion_0[:length]
 	elif depth_to_water_m == 100.0:
-		return blackboard.proportion_100
+		return blackboard.proportion_100[:length]
 	else:
 		return __calculate_proportion_reaching_water_table_array_per_day(
 			length,
