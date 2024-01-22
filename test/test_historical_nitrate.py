@@ -189,9 +189,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		actual = historical_nitrate._calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
 
 		expected = np.zeros(len(combined_days))
-		print(f"expected = {expected}; actual = {actual}")
 		np.testing.assert_array_almost_equal(expected, actual)
-		# np.testing.assert_allclose(expected, actual)
 
 	def assign_common_blackboard_inputs_for_proportion_reaching_water_table(self, blackboard):
 		blackboard.nitrate_depth_to_water = np.array([10.0])
