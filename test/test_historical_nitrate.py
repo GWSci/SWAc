@@ -103,6 +103,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.mean_hydraulic_conductivity = 1.0
 		blackboard.mean_velocity_of_unsaturated_transport = 1.0
 		blackboard.node = 7
+		blackboard.proportion_0 = 3.0
+		blackboard.proportion_100 = 97.0
 		blackboard.a = 10.0
 		blackboard.μ = 0.0
 		blackboard.σ = 1.0

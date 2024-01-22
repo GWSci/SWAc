@@ -17,7 +17,6 @@ class HistoricalNitrateBlackboard():
 		self.mean_velocity_of_unsaturated_transport = None
 		self.nitrate_depth_to_water = None
 		self.node = None
-		self.proportion_0 = 3.0
 		self.time_switcher = None
 		self.truncated_historical_mi_array_kg_per_day = None
 		self.truncated_historical_nitrate_days = None
