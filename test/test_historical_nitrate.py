@@ -195,7 +195,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.nitrate_depth_to_water = np.array([10.0])
 		blackboard.mean_hydraulic_conductivity = 1.0
 		blackboard.mean_velocity_of_unsaturated_transport = 1.0
-		blackboard.proportion_0 = np.zeros(10)
+		blackboard.proportion_0 = np.zeros(20)
 		blackboard.a = 10.0
 		blackboard.μ = 0.0
 		blackboard.σ = 1.0

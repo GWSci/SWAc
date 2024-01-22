@@ -14,7 +14,7 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, histori
 	length = historical_days_count + len(blackboard.days)
 	depth_to_water_m = blackboard.nitrate_depth_to_water[0]
 	if depth_to_water_m == 0.0:
-		return blackboard.proportion_0
+		return blackboard.proportion_0[:length]
 	elif depth_to_water_m == 100.0:
 		return blackboard.proportion_100
 	else:
