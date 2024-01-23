@@ -822,12 +822,12 @@ nitrate_calibration_sigma:
     type:
         - !!python/name:float
 
-nitrate_calibration_mean_hydraulic_conductivity:
+nitrate_calibration_alpha:
     required: false
     type:
         - !!python/name:float
 
-nitrate_calibration_mean_velocity_of_unsaturated_transport:
+nitrate_calibration_effective_porosity:
     required: false
     type:
         - !!python/name:float

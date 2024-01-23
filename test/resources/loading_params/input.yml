@@ -6,8 +6,8 @@ nitrate_process: enabled
 nitrate_calibration_a: 1.38
 nitrate_calibration_mu: 1.58
 nitrate_calibration_sigma: 3.96
-nitrate_calibration_mean_hydraulic_conductivity: 1.7
-nitrate_calibration_mean_velocity_of_unsaturated_transport: 0.0029
+nitrate_calibration_alpha: 1.7
+nitrate_calibration_effective_porosity: 0.0029
 nitrate_depth_to_water: nitrate_dtw.csv
 nitrate_loading: nitrate_loading.csv
 start_date: "2024-01-17"

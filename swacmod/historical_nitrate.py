@@ -5,7 +5,9 @@ import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
 class HistoricalNitrateBlackboard():
 	def __init__(self):
 		self.a = None
+		self.alpha = None
 		self.days = None
+		self.effective_porosity = None
 		self.historical_mi_array_kg_per_day = None
 		self.historical_mi_array_kg_per_time_period = None
 		self.historical_mass_reaching_water_table_array_kg_per_day = None
@@ -13,8 +15,6 @@ class HistoricalNitrateBlackboard():
 		self.historical_nitrate_days = None
 		self.historical_time_periods = None
 		self.historic_proportion_reaching_water_table_array_per_day = None
-		self.mean_hydraulic_conductivity = None
-		self.mean_velocity_of_unsaturated_transport = None
 		self.nitrate_depth_to_water = None
 		self.node = None
 		self.proportion_0 = None
@@ -29,13 +29,13 @@ class HistoricalNitrateBlackboard():
 		total_days_upper_bound = calculate_total_days_count_upper_bound(data)
 
 		self.a = data["params"]["nitrate_calibration_a"]
+		self.alpha = data["params"]["nitrate_calibration_alpha"]
 		self.days = data["series"]["date"]
+		self.effective_porosity = data["params"]["nitrate_calibration_effective_porosity"]
 		self.historical_mi_array_kg_per_time_period = data["params"]["historical_mi_array_kg_per_time_period"][node]
 		self.historical_nitrate_days = data["series"]["historical_nitrate_days"]
 		self.historical_time_periods = data["params"]["historical_time_periods"]
 		self.nitrate_depth_to_water = data["params"]["nitrate_depth_to_water"][node]
-		self.mean_hydraulic_conductivity = data["params"]["nitrate_calibration_mean_hydraulic_conductivity"]
-		self.mean_velocity_of_unsaturated_transport = data["params"]["nitrate_calibration_mean_velocity_of_unsaturated_transport"]
 		self.node = node
 		self.proportion_0 = np.zeros(total_days_upper_bound)
 		self.proportion_100 = data["proportion_100"]

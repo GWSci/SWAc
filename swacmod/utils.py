@@ -78,6 +78,7 @@ CONSTANTS['AREA_FN'] = {p: full_area for p in CONSTANTS['COL_ORDER']}
 CONSTANTS['AREA_FN']['k_slope'] = full_area
 CONSTANTS['AREA_FN']['historical_nitrate_reaching_water_table_array_tons_per_day'] = full_area
 CONSTANTS['AREA_FN']['nitrate_reaching_water_table_array_tons_per_day'] = full_area
+CONSTANTS['AREA_FN']['nitrate_to_surface_water_array_tons_per_day'] = full_area
 CONSTANTS['AREA_FN']['mi_array_kg_per_day'] = full_area
 CONSTANTS['AREA_FN']['rapid_runoff_c'] = not_ponded_area
 

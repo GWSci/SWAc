@@ -23,8 +23,8 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, histori
 			blackboard.a,
 			blackboard.μ,
 			blackboard.σ,
-			blackboard.mean_hydraulic_conductivity,
-			blackboard.mean_velocity_of_unsaturated_transport,
+			blackboard.alpha,
+			blackboard.effective_porosity,
 			depth_to_water_m,
 			time_switcher)
 
@@ -33,31 +33,31 @@ def __calculate_proportion_reaching_water_table_array_per_day(
 		a,
 		μ,
 		σ,
-		mean_hydraulic_conductivity,
-		mean_velocity_of_unsaturated_transport,
+		alpha,
+		effective_porosity,
 		depth_to_water_m,
 		time_switcher):
 	result = np.zeros(length)
 	for i in range(length):
 		t = i
 		result[i] = _calculate_daily_proportion_reaching_water_table(
-			a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, depth_to_water_m, t)
+			a, μ, σ, alpha, effective_porosity, depth_to_water_m, t)
 	return result
 
 def _calculate_daily_proportion_reaching_water_table(
-		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
+		a, μ, σ, alpha, effective_porosity, DTW, t):
 	f_t = _calculate_cumulative_proportion_reaching_water_table(
-		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t)
+		a, μ, σ, alpha, effective_porosity, DTW, t)
 	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(
-		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t - 1)
+		a, μ, σ, alpha, effective_porosity, DTW, t - 1)
 	return f_t - f_t_prev
 
 def _calculate_cumulative_proportion_reaching_water_table(
-		a, μ, σ, mean_hydraulic_conductivity, mean_velocity_of_unsaturated_transport, DTW, t):
+		a, μ, σ, alpha, effective_porosity, DTW, t):
 	if (t <= 0):
 		return 0
 
-	numerator = math.log((mean_hydraulic_conductivity/mean_velocity_of_unsaturated_transport) * (DTW/t), a) - μ
+	numerator = math.log((alpha * effective_porosity) * (DTW/t), a) - μ
 	denominator = σ * math.sqrt(2)
 
 	result = 0.5 * (1 + math.erf(- numerator / denominator))

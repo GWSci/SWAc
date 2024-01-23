@@ -180,7 +180,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.infiltration_recharge = input_infiltration_recharge
 		blackboard.interflow_to_rivers = input_interflow_to_rivers
 
-		actual = nitrate._calculate_m1a_array_kg_per_day(blackboard)
+		actual = nitrate._calculate_m1a_b_array_kg_per_day(blackboard)[0, :]
 		np.testing.assert_array_almost_equal(expected, actual)
 	
 	def test_calculate_p_non(self):
@@ -255,8 +255,8 @@ class Test_Nitrate(unittest.TestCase):
 				"nitrate_calibration_a": 1.38,
 				"nitrate_calibration_mu": 1.58,
 				"nitrate_calibration_sigma": 3.96,
-				"nitrate_calibration_mean_hydraulic_conductivity": 1.7,
-				"nitrate_calibration_mean_velocity_of_unsaturated_transport": 0.0029,
+				"nitrate_calibration_alpha": 1.7,
+				"nitrate_calibration_effective_porosity": 1.0 / 0.0029,
 				"nitrate_depth_to_water": {7: [0.00205411]},
 				"nitrate_loading": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
 				"nitrate_process": "enabled",
@@ -345,29 +345,30 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["nitrate_reaching_water_table_array_tons_per_day"])
 
 	def test_output_file_path(self):
-		data = {
-			"params" : {
-				"run_name" : "aardvark",
-			}
-		}
-		expected = ""
-		actual = nitrate.make_output_filename(data)
-		sep = os.path.sep
-		expected = "output_files" + sep + "aardvark_nitrate.csv"
-		isPassed = actual.endswith(expected)
-		message = f"Expected '{actual}' to end with '{expected}'."
-		self.assertTrue(isPassed, message)
+		expected_filename = "aardvark_nitrate.csv"
+		make_filename_function = nitrate.make_output_filename
+		self.assert_output_file_path(expected_filename, make_filename_function)
 
 	def test_mi_output_file_path(self):
+		expected_filename = "aardvark_mi.csv"
+		make_filename_function = nitrate.make_mi_output_filename
+		self.assert_output_file_path(expected_filename, make_filename_function)
+
+	def test_nitrate_surface_flow_output_file_path(self):
+		expected_filename = "aardvark_stream_nitrate.csv"
+		make_filename_function = nitrate.make_nitrate_surface_flow_filename
+		self.assert_output_file_path(expected_filename, make_filename_function)
+
+	def assert_output_file_path(self, expected_filename, make_filename_function):
 		data = {
 			"params" : {
 				"run_name" : "aardvark",
 			}
 		}
 		expected = ""
-		actual = nitrate.make_mi_output_filename(data)
+		actual = make_filename_function(data)
 		sep = os.path.sep
-		expected = "output_files" + sep + "aardvark_mi.csv"
+		expected = "output_files" + sep + expected_filename
 		isPassed = actual.endswith(expected)
 		message = f"Expected '{actual}' to end with '{expected}'."
 		self.assertTrue(isPassed, message)

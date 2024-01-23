@@ -100,8 +100,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.historical_nitrate_days = [date(2023, 1, 1), date(2023, 1, 2), ]
 		blackboard.historical_time_periods = [[1, 2], [2, 3]]
 		blackboard.nitrate_depth_to_water = np.array([10.0])
-		blackboard.mean_hydraulic_conductivity = 1.0
-		blackboard.mean_velocity_of_unsaturated_transport = 1.0
+		blackboard.alpha = 1.0
+		blackboard.effective_porosity = 1.0
 		blackboard.node = 7
 		blackboard.proportion_0 = np.zeros(4)
 		blackboard.proportion_100 = np.array([89.0, 97.0])
@@ -214,8 +214,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 	def assign_common_blackboard_inputs_for_proportion_reaching_water_table(self, blackboard):
 		blackboard.nitrate_depth_to_water = np.array([10.0])
-		blackboard.mean_hydraulic_conductivity = 1.0
-		blackboard.mean_velocity_of_unsaturated_transport = 1.0
+		blackboard.alpha = 1.0
+		blackboard.effective_porosity = 1.0
 		blackboard.proportion_100 = np.ones(20)
 		blackboard.proportion_0 = np.zeros(20)
 		blackboard.a = 10.0
@@ -288,8 +288,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assertEqual(expected.historical_time_periods, actual.historical_time_periods)
 		self.assertEqual(expected.historical_nitrate_days, actual.historical_nitrate_days)
 		np.testing.assert_allclose(expected.nitrate_depth_to_water, actual.nitrate_depth_to_water)
-		self.assertEqual(expected.mean_hydraulic_conductivity, actual.mean_hydraulic_conductivity)
-		self.assertEqual(expected.mean_velocity_of_unsaturated_transport, actual.mean_velocity_of_unsaturated_transport)
+		self.assertEqual(expected.alpha, actual.alpha)
+		self.assertEqual(expected.effective_porosity, actual.effective_porosity)
 		self.assertEqual(expected.node, actual.node)
 		np.testing.assert_allclose(expected.proportion_0, actual.proportion_0)
 		np.testing.assert_allclose(expected.proportion_100, actual.proportion_100)
@@ -304,8 +304,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 				"historical_time_periods" : [[1, 2], [2, 3]],
 				"nitrate_calibration_a": 10.0,
 				"nitrate_depth_to_water": {7: np.array([10.0])},
-				"nitrate_calibration_mean_hydraulic_conductivity" : 1.0,
-				"nitrate_calibration_mean_velocity_of_unsaturated_transport" : 1.0,
+				"nitrate_calibration_alpha" : 1.0,
+				"nitrate_calibration_effective_porosity" : 1.0,
 				"nitrate_calibration_mu": 0.0,
 				"nitrate_calibration_sigma": 1.0,
 			},
