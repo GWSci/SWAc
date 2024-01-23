@@ -345,6 +345,7 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["nitrate_reaching_water_table_array_tons_per_day"])
 
 	def test_output_file_path(self):
+		expected_filename = "aardvark_nitrate.csv"
 		data = {
 			"params" : {
 				"run_name" : "aardvark",
@@ -353,12 +354,13 @@ class Test_Nitrate(unittest.TestCase):
 		expected = ""
 		actual = nitrate.make_output_filename(data)
 		sep = os.path.sep
-		expected = "output_files" + sep + "aardvark_nitrate.csv"
+		expected = "output_files" + sep + expected_filename
 		isPassed = actual.endswith(expected)
 		message = f"Expected '{actual}' to end with '{expected}'."
 		self.assertTrue(isPassed, message)
 
 	def test_mi_output_file_path(self):
+		expected_filename = "aardvark_mi.csv"
 		data = {
 			"params" : {
 				"run_name" : "aardvark",
@@ -367,7 +369,7 @@ class Test_Nitrate(unittest.TestCase):
 		expected = ""
 		actual = nitrate.make_mi_output_filename(data)
 		sep = os.path.sep
-		expected = "output_files" + sep + "aardvark_mi.csv"
+		expected = "output_files" + sep + expected_filename
 		isPassed = actual.endswith(expected)
 		message = f"Expected '{actual}' to end with '{expected}'."
 		self.assertTrue(isPassed, message)
