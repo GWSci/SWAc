@@ -295,15 +295,15 @@ def make_output_filename(data):
 def make_mi_output_filename(data):
 	return _make_run_filename_with_suffix(data, "mi")
 
+def make_nitrate_surface_flow_filename(data):
+	return _make_run_filename_with_suffix(data, "stream_nitrate")
+
 def _make_run_filename_with_suffix(data, suffix):
 	run_name = data["params"]["run_name"]
 	file = run_name + "_" + suffix + ".csv"
 	folder = utils.CONSTANTS["OUTPUT_DIR"]
 	return os.path.join(folder, file)
 	
-def make_nitrate_surface_flow_filename(data):
-	return _make_run_filename_with_suffix(data, "stream_nitrate")
-
 def _convert_blackboard_to_result(blackboard):
 	return {
 		"her_array_mm_per_day" : blackboard.her_array_mm_per_day,
