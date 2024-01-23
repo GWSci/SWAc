@@ -302,11 +302,7 @@ def _make_run_filename_with_suffix(data, suffix):
 	return os.path.join(folder, file)
 	
 def make_nitrate_surface_flow_filename(data):
-	run_name = data["params"]["run_name"]
-	file = run_name + "_stream_nitrate.csv"
-	folder = utils.CONSTANTS["OUTPUT_DIR"]
-	return os.path.join(folder, file)
- 
+	return _make_run_filename_with_suffix(data, "stream_nitrate")
 
 def _convert_blackboard_to_result(blackboard):
 	return {
