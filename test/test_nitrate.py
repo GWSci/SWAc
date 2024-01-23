@@ -354,6 +354,11 @@ class Test_Nitrate(unittest.TestCase):
 		make_filename_function = nitrate.make_mi_output_filename
 		self.assert_output_file_path(expected_filename, make_filename_function)
 
+	def test_nitrate_surface_flow_output_file_path(self):
+		expected_filename = "aardvarkstream_nitrate.csv"
+		make_filename_function = nitrate.make_nitrate_surface_flow_filename
+		self.assert_output_file_path(expected_filename, make_filename_function)
+
 	def assert_output_file_path(self, expected_filename, make_filename_function):
 		data = {
 			"params" : {
