@@ -346,13 +346,14 @@ class Test_Nitrate(unittest.TestCase):
 
 	def test_output_file_path(self):
 		expected_filename = "aardvark_nitrate.csv"
+		make_filename_function = nitrate.make_output_filename
 		data = {
 			"params" : {
 				"run_name" : "aardvark",
 			}
 		}
 		expected = ""
-		actual = nitrate.make_output_filename(data)
+		actual = make_filename_function(data)
 		sep = os.path.sep
 		expected = "output_files" + sep + expected_filename
 		isPassed = actual.endswith(expected)
@@ -361,13 +362,14 @@ class Test_Nitrate(unittest.TestCase):
 
 	def test_mi_output_file_path(self):
 		expected_filename = "aardvark_mi.csv"
+		make_filename_function = nitrate.make_mi_output_filename
 		data = {
 			"params" : {
 				"run_name" : "aardvark",
 			}
 		}
 		expected = ""
-		actual = nitrate.make_mi_output_filename(data)
+		actual = make_filename_function(data)
 		sep = os.path.sep
 		expected = "output_files" + sep + expected_filename
 		isPassed = actual.endswith(expected)
