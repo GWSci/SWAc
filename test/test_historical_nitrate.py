@@ -224,6 +224,16 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		expected = 5
 		self.assertEqual(expected, actual)
 
+	def test_calculate_total_days_count_upper_bound_when_both_days_are_missing(self):
+		data = {
+			"series" : {
+			},
+		}
+		actual = historical_nitrate.calculate_total_days_count_upper_bound(data)
+
+		expected = 0
+		self.assertEqual(expected, actual)
+
 	def test_calculate_total_days_count_upper_bound_when_historical_nitrate_days_is_missing(self):
 		data = {
 			"series" : {
