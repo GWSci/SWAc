@@ -44,7 +44,10 @@ class HistoricalNitrateBlackboard():
 		return self
 
 def calculate_total_days_count_upper_bound(data):
-	return len(data["series"]["date"]) + len(data["series"]["historical_nitrate_days"])
+	date_len = 0
+	if "date" in data["series"]:
+		date_len = len(data["series"]["date"])
+	return date_len + len(data["series"]["historical_nitrate_days"])
 
 def get_historical_nitrate(data, output, node):
 	if (data["params"]["historical_nitrate_process"] == "enabled"):
