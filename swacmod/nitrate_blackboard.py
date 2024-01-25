@@ -42,9 +42,11 @@ class NitrateBlackboard:
 		self.proportion_0 = None
 		self.proportion_100 = None
 		self.proportion_reaching_water_table_array_per_day = None
+		self.p_non_her = None
 		self.Psmd = None
 		self.Psoilperc = None
 		self.rainfall_ts = None
+		self.runoff_mm_per_day = None
 		self.runoff_recharge_mm_per_day = None
 		self.smd = None
 		self.TAW_array_mm = None
@@ -78,6 +80,7 @@ class NitrateBlackboard:
 		self.TAW_array_mm = output["tawtew"]
 		self.smd = output["smd"]
 		self.p_smd = output["p_smd"]
+		self.runoff_mm_per_day = output["rapid_runoff"]		
 		self.runoff_recharge_mm_per_day = output["runoff_recharge"]
 		self.macropore_att_mm_per_day = output["macropore_att"]
 		self.macropore_dir_mm_per_day = output["macropore_dir"]

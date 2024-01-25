@@ -38,6 +38,7 @@ def _do_nitrate_calculations(blackboard):
 	m1a_b_array_kg_per_day = _calculate_m1a_b_array_kg_per_day(blackboard)
 	blackboard.m1a_array_kg_per_day = m1a_b_array_kg_per_day[0,:]
 	blackboard.m1b_array_kg_per_day = m1a_b_array_kg_per_day[1,:]		
+	blackboard.p_non_her = _calculate_p_non_her(blackboard)
 	blackboard.p_non = _calculate_p_non(blackboard)
 	blackboard.m2_array_kg_per_day = _calculate_m2_array_kg_per_day(blackboard)
 	blackboard.Pro = _calculate_Pro(blackboard)
@@ -99,12 +100,23 @@ def _divide_arrays(a, b):
 def _calculate_m1a_b_array_kg_per_day(blackboard):
 	return m._calculate_m1a_b_array_kg_per_day(blackboard)
 
+def _calculate_p_non_her(blackboard):
+	non_her_mm_day = blackboard.runoff_mm_per_day + blackboard.Pherperc * blackboard.her_array_mm_per_day + blackboard.Psmd * blackboard.her_array_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day-1
+	p_non_her = np.where(
+		blackboard.her_array_mm_per_day <= 0,
+		blackboard.runoff_mm_per_day,
+		_divide_arrays(non_her_mm_day, blackboard.runoff_mm_per_day))
+	return p_non_her
+
 def _calculate_p_non(blackboard):
 	macropore_mm_per_day = blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day
+	p_her = 1 - p_non_her
+	runoff_recharge_her_mm_per_day = blackboard.runoff_recharge_mm_per_day * p_her
+	macropore_her_mm_per_day = macropore_mm_per_day * p_her
 	p_non = np.where(
 		blackboard.her_array_mm_per_day <= 0,
 		0,
-		_divide_arrays((blackboard.runoff_recharge_mm_per_day + macropore_mm_per_day), blackboard.her_array_mm_per_day))
+		_divide_arrays((runoff_recharge_her_mm_per_day + macropore_her_mm_per_day), blackboard.her_array_mm_per_day))
 	return p_non
 
 def _calculate_m2_array_kg_per_day(blackboard):
@@ -112,10 +124,22 @@ def _calculate_m2_array_kg_per_day(blackboard):
 	return m2_kg_per_day
 
 def _calculate_Pro(blackboard):
-	Pro = np.where(
+	Pro_init = np.where(
 		blackboard.her_array_mm_per_day <= 0,
 		0,
 		1 - blackboard.p_non - blackboard.Pherperc - blackboard.Psmd)
+
+	if np.max(blackboard.p_non + blackboard.Pherperc + blackboard.Psmd) > 1:
+		i = np.argmax(blackboard.p_non + blackboard.Pherperc + blackboard.Psmd)
+		blackboard.logging.warning(f"node = {blackboard.node}; day = {i}; p_non = {blackboard.p_non[i]}; Pherperc = {blackboard.Pherperc[i]}; Psmd = {blackboard.Psmd[i]}")
+		blackboard.logging.warning(f"p_non inputs: macropore_att_mm_per_day = {blackboard.macropore_att_mm_per_day[i]}; macropore_dir_mm_per_day = {blackboard.macropore_dir_mm_per_day[i]}; her_array_mm_per_day = {blackboard.her_array_mm_per_day[i]}; runoff_recharge_mm_per_day = {blackboard.runoff_recharge_mm_per_day[i]}")
+		blackboard.logging.warning(f"Pherperc inputs: perc_through_root_mm_per_day = {blackboard.perc_through_root_mm_per_day[i]}")
+		blackboard.logging.warning(f"Psmd inputs: dSMD_array_mm_per_day = {blackboard.dSMD_array_mm_per_day[i]}")
+
+	Pro = np.where(
+		Pro_init <= 0,
+		0,
+		Pro_init)
 	return Pro
 
 def _calculate_m3_array_kg_per_day(blackboard):
@@ -131,9 +155,10 @@ def _calculate_M4_array_mm_per_day(blackboard):
 	return blackboard.M_soil_in_kg - blackboard.m1_array_kg_per_day
 
 def _calculate_Psmd(blackboard):
-	Psmd = _divide_arrays(
+	Psmd_init = _divide_arrays(
 		np.maximum(0.0, blackboard.dSMD_array_mm_per_day),
 		blackboard.her_array_mm_per_day)
+	Psmd = np.minimum(1.0, Psmd_init)
 	return Psmd
 
 def _calculate_Psoilperc(blackboard):
