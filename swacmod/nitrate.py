@@ -104,7 +104,7 @@ def _calculate_p_non_her(blackboard):
 	non_her_mm_day = blackboard.runoff_mm_per_day + blackboard.Pherperc * blackboard.her_array_mm_per_day + blackboard.Psmd * blackboard.her_array_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day-blackboard.her_array_mm_per_day
 	p_non_her = np.where(
 		blackboard.her_array_mm_per_day <= 0,
-		blackboard.runoff_mm_per_day,
+		blackboard.runoff_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day,
 		_divide_arrays(non_her_mm_day, (blackboard.runoff_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day)))
 	return p_non_her
 
