@@ -110,7 +110,7 @@ def _calculate_p_non_her(blackboard):
 
 def _calculate_p_non(blackboard):
 	macropore_mm_per_day = blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day
-	p_her = 1 - p_non_her
+	p_her = 1 - blackboard.p_non_her
 	runoff_recharge_her_mm_per_day = blackboard.runoff_recharge_mm_per_day * p_her
 	macropore_her_mm_per_day = macropore_mm_per_day * p_her
 	p_non = np.where(
