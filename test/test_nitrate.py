@@ -215,6 +215,26 @@ class Test_Nitrate(unittest.TestCase):
 		expected = np.array([2.0, 30.0, 500.0, 532.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
+	def test_calculate_p_non_her_contains_runoff_and_both_macropore_terms_in_numerator_and_denominator_when_HER_is_positive(self):
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.runoff_mm_per_day = np.array([5.0])
+		blackboard.Pherperc = np.array([0.0])
+		blackboard.her_array_mm_per_day = np.array([0.0])
+		blackboard.Psmd = np.array([0.0])
+		blackboard.her_array_mm_per_day = np.array([0.0])
+		blackboard.macropore_att_mm_per_day = np.array([3.0])
+		blackboard.macropore_dir_mm_per_day = np.array([2.0])
+		blackboard.her_array_mm_per_day = np.array([1.0])
+
+		actual = nitrate._calculate_p_non_her(blackboard)
+
+		numerator = 5.0 + 3.0 + 2.0 - 1.0
+		denominator = 5.0 + 3.0 + 2.0
+		expected_value = numerator / denominator
+		expected = np.array([expected_value])
+
+		np.testing.assert_array_almost_equal(expected, actual)
+
 	def test_calculate_p_non(self):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.runoff_recharge_mm_per_day = np.array([100.0, 0.0, 0.0, 100.0, 100.0, 0.0])
