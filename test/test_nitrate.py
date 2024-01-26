@@ -155,6 +155,24 @@ class Test_Nitrate(unittest.TestCase):
 		expected = np.array([0.0, 0.0])
 		np.testing.assert_allclose(expected, actual, )
 
+	def test_calculate_Pro_is_zero_when_the_other_three_proportions_are_greater_than_one(self):
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.her_array_mm_per_day = np.array([1.0, 1.0])
+		blackboard.p_non = np.array([0.3, 0.6])
+		blackboard.Pherperc = np.array([0.4, 0.7])
+		blackboard.Psmd = np.array([0.5, 0.8])
+		blackboard.runoff_recharge_mm_per_day = np.zeros(2)
+		blackboard.macropore_att_mm_per_day = np.zeros(2)
+		blackboard.macropore_dir_mm_per_day = np.zeros(2)
+		blackboard.perc_through_root_mm_per_day = np.zeros(2)
+		blackboard.dSMD_array_mm_per_day = np.zeros(2)
+		blackboard.logging = DummyLogger()
+
+		actual = nitrate._calculate_Pro(blackboard)
+
+		expected = np.array([0.0, 0.0])
+		np.testing.assert_allclose(expected, actual, )
+
 	def test_calculate_m1_array_kg_per_day_for_zero_days_new(self):
 		input_Psoilperc = []
 		input_M_soil_tot_kg = []
