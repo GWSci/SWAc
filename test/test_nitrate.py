@@ -186,9 +186,9 @@ class Test_Nitrate(unittest.TestCase):
 	def test_calculate_p_non_her_is_sum_of_runoff_att_and_dir_when_her_is_less_than_zero(self):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.runoff_mm_per_day = np.array([2.0, 0.0, 0.0, 2.0])
-		blackboard.Pherperc = np.array([0.0, 0.0, 0.0, 0.0])
+		blackboard.Pherperc = np.array([1.0, 1.0, 1.0, 1.0])
 		blackboard.her_array_mm_per_day = np.array([0.0, 0.0, 0.0, 0.0])
-		blackboard.Psmd = np.array([0.0, 0.0, 0.0, 0.0])
+		blackboard.Psmd = np.array([1.0, 1.0, 1.0, 1.0])
 		blackboard.her_array_mm_per_day = np.array([0.0, 0.0, 0.0, 0.0])
 		blackboard.macropore_att_mm_per_day = np.array([0.0, 30.0, 0.0, 30.0])
 		blackboard.macropore_dir_mm_per_day = np.array([0.0, 0.0, 500.0, 500.0])
