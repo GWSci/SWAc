@@ -160,10 +160,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.dSMD_array_mm_per_day = np.array([0.2, 30.0])
 		blackboard.her_array_mm_per_day = np.array([10.0, 60.0])
 
-		actual = nitrate._calculate_Psmd(blackboard)
-
 		expected = np.array([0.02, 0.5])
-		np.testing.assert_allclose(expected, actual)
 		self.assert_Psmd(expected, blackboard.dSMD_array_mm_per_day, blackboard.her_array_mm_per_day)
 
 	def assert_Psmd(self, expected_Psmd, input_dSMD_array_mm_per_day, input_her_array_mm_per_day):
