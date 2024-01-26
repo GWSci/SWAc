@@ -155,7 +155,7 @@ class Test_Nitrate(unittest.TestCase):
 		expected = np.array([0.0, 0.0])
 		np.testing.assert_allclose(expected, actual)
 
-	def test_calculate_Psmd(self):
+	def test_calculate_Psmd_is_normally_dSMD_divided_by_HER(self):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.dSMD_array_mm_per_day = np.array([0.2, 30.0])
 		blackboard.her_array_mm_per_day = np.array([10.0, 60.0])
