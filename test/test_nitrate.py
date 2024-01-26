@@ -156,12 +156,10 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_allclose(expected, actual)
 
 	def test_calculate_Psmd_is_normally_dSMD_divided_by_HER(self):
-		blackboard = nitrate.NitrateBlackboard()
-		blackboard.dSMD_array_mm_per_day = np.array([0.2, 30.0])
-		blackboard.her_array_mm_per_day = np.array([10.0, 60.0])
-
+		dSMD_array_mm_per_day = np.array([0.2, 30.0])
+		her_array_mm_per_day = np.array([10.0, 60.0])
 		expected = np.array([0.02, 0.5])
-		self.assert_Psmd(expected, blackboard.dSMD_array_mm_per_day, blackboard.her_array_mm_per_day)
+		self.assert_Psmd(expected, dSMD_array_mm_per_day, her_array_mm_per_day)
 
 	def assert_Psmd(self, expected_Psmd, input_dSMD_array_mm_per_day, input_her_array_mm_per_day):
 		blackboard = nitrate.NitrateBlackboard()
