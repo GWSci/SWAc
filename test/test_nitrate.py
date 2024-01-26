@@ -167,6 +167,12 @@ class Test_Nitrate(unittest.TestCase):
 		expected = [0.0, 0.0]
 		self.assert_Psmd(expected, dSMD_array_mm_per_day, her_array_mm_per_day)
 
+	def test_calculate_Psmd_is_zero_when_HER_is_zero(self):
+		dSMD_array_mm_per_day = [0.2, 30.0]
+		her_array_mm_per_day = [0.0, 0.0]
+		expected = [0.0, 0.0]
+		self.assert_Psmd(expected, dSMD_array_mm_per_day, her_array_mm_per_day)
+
 	def assert_Psmd(self, expected_Psmd, input_dSMD_array_mm_per_day, input_her_array_mm_per_day):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.dSMD_array_mm_per_day = np.array(input_dSMD_array_mm_per_day)
