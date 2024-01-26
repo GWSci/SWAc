@@ -153,7 +153,17 @@ class Test_Nitrate(unittest.TestCase):
 		actual = nitrate._calculate_Pro(blackboard)
 
 		expected = np.array([0.0, 0.0])
-		np.testing.assert_allclose(expected, actual, )
+		np.testing.assert_allclose(expected, actual)
+
+	def test_calculate_Psmd(self):
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.dSMD_array_mm_per_day = np.array([0.2, 30.0])
+		blackboard.her_array_mm_per_day = np.array([10.0, 60.0])
+
+		actual = nitrate._calculate_Psmd(blackboard)
+
+		expected = np.array([0.02, 0.5])
+		np.testing.assert_allclose(expected, actual)
 
 	def test_calculate_Pro_is_zero_when_the_other_three_proportions_are_greater_than_one(self):
 		blackboard = nitrate.NitrateBlackboard()
