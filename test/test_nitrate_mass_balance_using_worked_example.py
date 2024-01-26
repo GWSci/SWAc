@@ -107,6 +107,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.blackboard.runoff_recharge_mm_per_day = np.array([self.Runoff_recharge])
 		self.blackboard.macropore_att_mm_per_day = np.array([self.Macropore_recharge / 2.0])
 		self.blackboard.macropore_dir_mm_per_day = np.array([self.Macropore_recharge / 2.0])
+		self.blackboard.p_non_her = np.zeros_like(self.Pnon)
 		actual = nitrate._calculate_p_non(self.blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
