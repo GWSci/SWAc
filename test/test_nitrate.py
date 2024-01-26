@@ -119,6 +119,18 @@ class Test_Nitrate(unittest.TestCase):
 
 		np.testing.assert_array_equal(expected, actual)
 
+	def test_calculate_Pro_is_normally_one_minus_the_other_three_proportions(self):
+		blackboard = nitrate.NitrateBlackboard()
+		blackboard.her_array_mm_per_day = np.array([1.0, 1.0])
+		blackboard.p_non = np.array([0.1, 0.01])
+		blackboard.Pherperc = np.array([0.2, 0.02])
+		blackboard.Psmd = np.array([0.4, 0.04])
+
+		actual = nitrate._calculate_Pro(blackboard)
+
+		expected = np.array([0.3, 0.93])
+		np.testing.assert_allclose(expected, actual, )
+
 	def test_calculate_m1_array_kg_per_day_for_zero_days_new(self):
 		input_Psoilperc = []
 		input_M_soil_tot_kg = []
