@@ -217,13 +217,11 @@ def run_process(
     if "enabled" == data["params"]["nitrate_process"]:
         params = data["params"]
         a = params["nitrate_calibration_a"]
-        μ = params["nitrate_calibration_mu"]
         σ = params["nitrate_calibration_sigma"]
         alpha = params["nitrate_calibration_alpha"]
-        effective_porosity = params["nitrate_calibration_effective_porosity"]
 
         total_days_count_upper_bound = historical_nitrate.calculate_total_days_count_upper_bound(data)
-        proportion_100 = nitrate_proportion.__calculate_proportion_reaching_water_table_array_per_day(total_days_count_upper_bound, a, μ, σ, alpha, effective_porosity, 100.0, time_switcher)
+        proportion_100 = nitrate_proportion.__calculate_proportion_reaching_water_table_array_per_day(total_days_count_upper_bound, a, 1.58, σ, alpha, 0.1, 100.0, time_switcher)
         data["proportion_100"] = proportion_100
     timer.switch_to(time_switcher, "run_main > run > for")
 
@@ -794,6 +792,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         if data["params"]["output_sfr"]:
             print("\t- SFR file")
             if data['params']['gwmodel_type'] == 'mf96':
+                roff_agg = np.copy(np.array(runoff_agg))
                 strm = m.get_str_file(data, np.copy(np.array(runoff_agg)))
                 strm.write_file()
                 # remove header from str file
@@ -848,8 +847,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
         timer.switch_to(output_timer_token, "output_nitrate")
         if data["params"]["nitrate_process"] == "enabled":
+            if data['params']['gwmodel_type'] == 'mf96':
+                stream_conc = m.get_str_nitrate(data, roff_agg, stream_nitrate_aggregation)
             nitrate.write_nitrate_csv(data, nitrate_aggregation)
-            nitrate.write_stream_nitrate_csv(data,stream_nitrate_aggregation)
+            nitrate.write_stream_nitrate_csv(data, stream_conc)
             nitrate.write_mi_csv(data, nitrate_mi_aggregation)
 
         timer.switch_off(output_timer_token)
