@@ -1511,6 +1511,8 @@ def get_balance(data, output, node):
 
     return {'balance': balance}
 
+###############################################################################
+
 def _calculate_total_mass_leached_from_cell_on_days(
         double max_load_per_year_kg_per_cell,
         double her_at_5_percent,
@@ -1548,6 +1550,8 @@ def _calculate_total_mass_leached_from_cell_on_days(
     # timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > result")
     return result
 
+###############################################################################
+
 def _cumulative_fraction_leaked_per_day(double her_at_5_percent, double her_at_50_percent, double her_at_95_percent, double her_per_day):
     cdef:
         double days_in_year = 365.25
@@ -1556,6 +1560,8 @@ def _cumulative_fraction_leaked_per_day(double her_at_5_percent, double her_at_5
     her_per_year = days_in_year * her_per_day
     y = _cumulative_fraction_leaked_per_year(her_at_5_percent, her_at_50_percent, her_at_95_percent, her_per_year)
     return y / days_in_year
+
+###############################################################################
 
 def _cumulative_fraction_leaked_per_year(double her_at_5_percent, double her_at_50_percent, double her_at_95_percent, double her_per_year):
     cdef:
@@ -1577,11 +1583,15 @@ def _cumulative_fraction_leaked_per_year(double her_at_5_percent, double her_at_
     y = (m * x) + c
     return max(0, y)
 
+###############################################################################
+
 def calculate_mass_reaching_water_table_array_kg_per_day(blackboard):
     cdef:
         double[:] proportion_reaching_water_table_array_per_day = blackboard.proportion_reaching_water_table_array_per_day
         double[:] mi_array_kg_per_day = blackboard.mi_array_kg_per_day
     return _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
+
+###############################################################################
 
 def calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
     cdef:
@@ -1593,6 +1603,8 @@ def calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
         days,
         proportion_reaching_water_table_array_per_day,
         mi_array_kg_per_day)
+
+###############################################################################
 
 def _calculate_mass_reaching_water_table_array_kg_per_day(
         double[:] proportion_reaching_water_table_array_per_day,
@@ -1616,6 +1628,8 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(
             result_kg[day_nitrate_was_leached + i] += proportion_reaching_water_table_array_per_day[i] * mass_leached_on_day_kg
 
     return np.array(result_kg)
+
+###############################################################################
 
 def _calculate_historical_mass_reaching_water_table_array_kg_per_day(
         days,
@@ -1642,6 +1656,8 @@ def _calculate_historical_mass_reaching_water_table_array_kg_per_day(
             result_kg[i] += proportion_reaching_water_table_array_per_day[proportion_index] * mass_leached_on_day_kg
 
     return np.array(result_kg)
+
+###############################################################################
 
 def _calculate_m1a_b_array_kg_per_day(blackboard):
     cdef:
@@ -1677,6 +1693,8 @@ def _calculate_m1a_b_array_kg_per_day(blackboard):
         m1a_b_array_kg_per_day[1,i] = m1b_kg_per_day        
     return m1a_b_array_kg_per_day
 
+###############################################################################
+
 def _divide_arrays(double[:] a, double[:] b):
     cdef:
         double[:] result = np.zeros_like(a)
@@ -1686,16 +1704,31 @@ def _divide_arrays(double[:] a, double[:] b):
             result[i] = a[i] / b[i]
     return result
 
+###############################################################################
+
+def _divide_2D_arrays(double[:,:] a, double[:,:] b):
+    cdef:
+        double[:,:] result = np.zeros_like(a)
+    
+    for i in range(a.shape[0]):
+       for j in range(a.shape[1]):
+        if b[i,j] != 0:
+            result[i,j] = a[i,j] / b[i,j]
+    return result
+
+###############################################################################
+
 def _aggregate_nitrate(
             time_periods,
             size_t len_time_periods,
             double[:] nitrate_reaching_water_table_array_tons_per_day,
             double[:] combined_recharge_m_cubed,
             double[:,:] aggregation,
-            size_t node):
+            size_t node,
+            node_areas):
     cdef:
         size_t time_period_index, first_day_index, last_day_index, i
-        double sum_of_nitrate_tons, sum_of_recharge_m_cubed
+        double sum_of_nitrate_tons, sum_of_recharge_m_cubed, sum_of_recharge_mm, stored_mass_tons
 
     for time_period_index in range(len_time_periods):
         time_period = time_periods[time_period_index]
@@ -1706,8 +1739,13 @@ def _aggregate_nitrate(
         for i in range(first_day_index, last_day_index):
             sum_of_nitrate_tons += nitrate_reaching_water_table_array_tons_per_day[i]
             sum_of_recharge_m_cubed += combined_recharge_m_cubed[i]
-        if sum_of_recharge_m_cubed != 0:
-            aggregation[time_period_index, node] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
+        sum_of_recharge_mm = 1000 * sum_of_recharge_m_cubed / node_areas[node]
+        if sum_of_recharge_mm > 1:
+            aggregation[time_period_index, node] += (stored_mass_tons + sum_of_nitrate_tons) / sum_of_recharge_m_cubed
+            stored_mass_tons = 0
+        else:
+            stored_mass_tons += sum_of_nitrate_tons
+            aggregation[time_period_index, node] = 0
 
         if ff.max_node_count_override:
             if last_day_index > ff.max_node_count_override:
@@ -1715,34 +1753,38 @@ def _aggregate_nitrate(
 
     return aggregation
     
+###############################################################################
+
 def _aggregate_surface_water_nitrate(
             time_periods,
             size_t len_time_periods,
             double[:] nitrate_to_surface_water_array_tons_per_day,
             double[:] combined_surface_water_m_cubed,
-            double[:,:] stream_aggregation,
+            double[:,:] stream_nitrate_aggregation,
             size_t node):
     cdef:
         size_t time_period_index, first_day_index, last_day_index, i
-        double sum_of_nitrate_tons, sum_of_surface_water_m_cubed
+
+    stream_nitrate_total_mass = stream_nitrate_aggregation
 
     for time_period_index in range(len_time_periods):
         time_period = time_periods[time_period_index]
         first_day_index = time_period[0] - 1
         last_day_index = time_period[1] - 1
-        sum_of_nitrate_tons = 0.0
+        agg_nitrate_tons = 0.0
         sum_of_surface_water_m_cubed = 0.0
         for i in range(first_day_index, last_day_index):
-            sum_of_nitrate_tons += nitrate_to_surface_water_array_tons_per_day[i]
-            sum_of_surface_water_m_cubed += combined_surface_water_m_cubed[i]
-        if sum_of_surface_water_m_cubed != 0:
-            stream_aggregation[time_period_index, node] += sum_of_nitrate_tons / sum_of_surface_water_m_cubed
+            stream_nitrate_total_mass[time_period_index, node] += nitrate_to_surface_water_array_tons_per_day[i]
+        stream_nitrate_aggregation[time_period_index, node] = stream_nitrate_total_mass[time_period_index, node] / (last_day_index - first_day_index + 1)
 
         if ff.max_node_count_override:
             if last_day_index > ff.max_node_count_override:
                 break
 
-    return stream_aggregation
+    
+    return stream_nitrate_aggregation
+
+###############################################################################
 
 def aggregate_mi(
             double[:,:] aggregation,
@@ -1760,6 +1802,8 @@ def aggregate_mi(
         for day_index in range(first_day_index, last_day_index):
             aggregation[node][time_period_index] += mi_array_kg_per_day[day_index]
     return aggregation
+
+###############################################################################
 
 def _calculate_aggregate_mi_unpacking(blackboard):
     cdef:
@@ -1781,6 +1825,8 @@ def _calculate_aggregate_mi_unpacking(blackboard):
             historical_mi_array_kg_per_day[day] = historical_mi_kg_per_day
     return historical_mi_array_kg_per_day
 
+###############################################################################
+
 def write_nitrate_csv_bytes(filename, nitrate_aggregation):
     stress_period_count = nitrate_aggregation.shape[0]
     node_count = nitrate_aggregation.shape[1]
@@ -1799,21 +1845,23 @@ def write_nitrate_csv_bytes(filename, nitrate_aggregation):
                 line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, recharge_concentration)
                 f.write(line)
                 
-def write_stream_nitrate_csv_bytes(filename, stream_nitrate_aggregation):
-    stress_period_count = stream_nitrate_aggregation.shape[0]
-    node_count = stream_nitrate_aggregation.shape[1]
+###############################################################################
+
+def write_stream_nitrate_csv_bytes(filename, stream_conc):
+    stress_period_count = stream_conc.shape[0]
+    node_count = stream_conc.shape[1]
 
     int_to_bytes = []
     for i in range(1, 1 + max(stress_period_count, node_count)):
         int_to_bytes.append(str(i).encode())
 
     with open(filename, "wb") as f:
-        f.write(b'"Stress Period","Node","Stream Concentration (metric tons/m3)"\r\n')
+        f.write(b'"Stress Period","Reach","Stream Concentration (metric tons/m3)"\r\n')
         for stress_period_index in range(stress_period_count):
             stress_period_bytes = int_to_bytes[stress_period_index]
             for node_index in range(node_count):
                 node = node_index + 1
-                stream_concentration = stream_nitrate_aggregation[stress_period_index, node_index]
+                stream_concentration = stream_conc[stress_period_index, node_index]
                 line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, stream_concentration)
                 f.write(line)
 
@@ -1851,12 +1899,16 @@ def aggregate(output, area, ponded_frac, reporting=None, index=None):
             new_rep[key] += convert(reporting[key])
     return new_rep
 
+###############################################################################
+
 def aggregate_op(output, area):
     """Aggregate reporting over output periods."""
     new_rep = {}
     for key in output:
         new_rep[key] = output[key] * area
     return new_rep
+
+###############################################################################
 
 def aggregate_reporting_op(output, area, reporting):
     """Aggregate reporting over output periods."""
@@ -1920,14 +1972,15 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
 
 
 def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
-                  flow, nodes_per, nitrate_to_surface_water_array_tons_per_day):
+                  flow, nodes_per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, period):
     """get flows and nitrate masses for one period"""
     cdef:
         double[:] nitrate_added_tons_per_day = np.zeros(ro.size)
-        double[:] mass_in_stream = np.zeros(flow.size)
         
     ro[:] = 0.0
     flow[:] = 0.0
+    mass_to_stream[:] = 0.0
+    mass_in_stream[:] = 0.0
 
     for node_swac, line in sorted_by_ca.items():
         downstr, str_flag = line[:2]
@@ -1944,7 +1997,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, 
                 # not not done
                 if done[node_swac - 1] < 1:
                     acc += max(0.0, runoff[nodes_per + node_swac])
-                    acc_mass += max(0.0, nitrate_to_surface_water_array_tons_per_day[nodes_per + node_swac])
+                    acc_mass += max(0.0, stream_nitrate_aggregation[period,node_swac])
                     done[node_swac - 1] = 1
             else:
                 # stream cell
@@ -1954,7 +2007,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, 
                 if done[node_swac - 1] < 1:
                     ro[iseg - 1] = runoff[nodes_per + node_swac]
                     flow[iseg - 1] = acc
-                    nitrate_added_tons_per_day[iseg - 1] = nitrate_to_surface_water_array_tons_per_day[nodes_per + node_swac]
+                    mass_to_stream[iseg - 1] = stream_nitrate_aggregation[period,node_swac]
                     mass_in_stream[iseg - 1] = acc_mass                                 
                     done[node_swac - 1] = 1
                     acc = 0.0
@@ -1963,7 +2016,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, 
                 # stream cell been done
                 else:
                     flow[iseg - 1] += acc
-                    mass_in_stream[iseg - 1] = acc_mass 
+                    mass_in_stream[iseg - 1] += acc_mass 
                     
                     acc = 0.0
                     acc_mass = 0.0
@@ -1974,7 +2027,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, 
             # get new downstr node
             downstr = sorted_by_ca[node_swac][0]
 
-    return ro, flow, mass_in_stream
+    return ro, flow, mass_to_stream, mass_in_stream
 
 ###############################################################################
 
@@ -2406,12 +2459,15 @@ def get_str_file(data, runoff):
 ##############################################################################
 
 
-def get_str_nitrate_all_sp(data, runoff, nitrate_to_surface_water_array_tons_per_day):
-    """get STR object."""
+def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
+    """integrate flows and nitrate mass in stream cells"""
 
     import numpy as np
     import copy
     import os.path
+    
+    cdef:
+        double[:,:] stream_conc
 
     # units oddness - lots of hardcoded 1000s in input_output.py
     fac = 0.001
@@ -2450,6 +2506,10 @@ def get_str_nitrate_all_sp(data, runoff, nitrate_to_surface_water_array_tons_per
 
     flopy.modflow.ModflowBas(m, ifrefm=False)
     rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
+    str_flow_array = np.zeros((nper, nss))
+    str_flow_period = np.zeros(nss)
+    stream_mass_array = np.zeros((nper, nss))
+    stream_mass_period = np.zeros(nss)
     nitrate_reaching_stream_cells_kg_array = {}
     swac_seg_dic = {}
     seg_swac_dic = {}
@@ -2525,21 +2585,26 @@ def get_str_nitrate_all_sp(data, runoff, nitrate_to_surface_water_array_tons_per
             runoff[i] = runoff[i] * areas[node] * fac
 
     ro, flow = np.zeros((nss)), np.zeros((nss))
+    mass_to_stream, mass_in_stream = np.zeros((nss)), np.zeros((nss))
 
     # populate runoff, flow and nitrate mass
     for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
 
-        ro, flow, mass_in_stream = get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas,
-                                 swac_seg_dic, ro, flow, nodes * per, nitrate_to_surface_water_array_tons_per_day)
+        ro, flow, mass_to_stream, mass_in_stream = get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas,
+                                 swac_seg_dic, ro, flow, nodes * per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, per)
 
         for iseg in range(nss):
-            rd[iseg]['flow'] = flow[iseg] + ro[iseg]
+            str_flow_period[iseg] = flow[iseg] + ro[iseg]
+            stream_mass_period[iseg] = mass_in_stream[iseg] + mass_to_stream[iseg]
 
         # add segment data for this period
-        nitrate_reaching_stream_cells_kg_array[per] = copy.deepcopy(mass_in_stream)
+        stream_mass_array[per,:] = copy.deepcopy(stream_mass_period)
+        str_flow_array[per,:] = copy.deepcopy(str_flow_period)
         done[:] = 0
 
-    return nitrate_reaching_stream_cells_kg_array
+    stream_conc = _divide_2D_arrays(stream_mass_array, str_flow_array)
+    
+    return stream_conc
 
 ###############################################################################
 

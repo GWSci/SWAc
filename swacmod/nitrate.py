@@ -101,15 +101,11 @@ def _calculate_m1a_b_array_kg_per_day(blackboard):
 	return m._calculate_m1a_b_array_kg_per_day(blackboard)
 
 def _calculate_p_non_her(blackboard):
-	runoff_and_macropore_mm_per_day = blackboard.runoff_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day
-	non_her_mm_day = (runoff_and_macropore_mm_per_day
-					+ (blackboard.Pherperc * blackboard.her_array_mm_per_day)
-					+ (blackboard.Psmd * blackboard.her_array_mm_per_day)
-					- blackboard.her_array_mm_per_day)
+	non_her_mm_day = blackboard.runoff_mm_per_day + blackboard.Pherperc * blackboard.her_array_mm_per_day + blackboard.Psmd * blackboard.her_array_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day-blackboard.her_array_mm_per_day
 	p_non_her = np.where(
 		blackboard.her_array_mm_per_day <= 0,
-		runoff_and_macropore_mm_per_day,
-		_divide_arrays(non_her_mm_day, runoff_and_macropore_mm_per_day))
+		blackboard.runoff_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day,
+		_divide_arrays(non_her_mm_day, (blackboard.runoff_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day)))
 	return p_non_her
 
 def _calculate_p_non(blackboard):
@@ -133,7 +129,7 @@ def _calculate_Pro(blackboard):
 		0,
 		1 - blackboard.p_non - blackboard.Pherperc - blackboard.Psmd)
 
-	if np.max(blackboard.p_non + blackboard.Pherperc + blackboard.Psmd) > 1:
+	if np.max(blackboard.p_non + blackboard.Pherperc + blackboard.Psmd) > 2:
 		i = np.argmax(blackboard.p_non + blackboard.Pherperc + blackboard.Psmd)
 		blackboard.logging.warning(f"node = {blackboard.node}; day = {i}; p_non = {blackboard.p_non[i]}; Pherperc = {blackboard.Pherperc[i]}; Psmd = {blackboard.Psmd[i]}")
 		blackboard.logging.warning(f"p_non inputs: macropore_att_mm_per_day = {blackboard.macropore_att_mm_per_day[i]}; macropore_dir_mm_per_day = {blackboard.macropore_dir_mm_per_day[i]}; her_array_mm_per_day = {blackboard.her_array_mm_per_day[i]}; runoff_recharge_mm_per_day = {blackboard.runoff_recharge_mm_per_day[i]}")
@@ -250,18 +246,20 @@ def aggregate_nitrate(aggregation, data, output, node):
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
 	combined_recharge_m_cubed = _calculate_combined_recharge_m_cubed(data, output, node)
 
+	node_areas = data["params"]["node_areas"]
 	len_time_periods = _len_time_periods(time_periods)
-	m._aggregate_nitrate(time_periods, len_time_periods, nitrate_reaching_water_table_array_tons_per_day, combined_recharge_m_cubed, aggregation, node)
+	m._aggregate_nitrate(time_periods, len_time_periods, nitrate_reaching_water_table_array_tons_per_day, combined_recharge_m_cubed, aggregation, node, node_areas)
 	return aggregation
 	
-def aggregate_surface_water_nitrate(stream_aggregation, data, output, node):
+def aggregate_surface_water_nitrate(stream_nitrate_aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
 	nitrate_to_surface_water_array_tons_per_day = output["nitrate_to_surface_water_array_tons_per_day"]
 	combined_surface_water_m_cubed = _calculate_combined_surface_water_m_cubed(data, output, node)
 
 	len_time_periods = _len_time_periods(time_periods)
-	m._aggregate_surface_water_nitrate(time_periods, len_time_periods, nitrate_to_surface_water_array_tons_per_day, combined_surface_water_m_cubed, stream_aggregation, node)
-	return stream_aggregation
+	#fills stream_aggregation array with total nitrate mass for all days in a stress period for this node
+	m._aggregate_surface_water_nitrate(time_periods, len_time_periods, nitrate_to_surface_water_array_tons_per_day, combined_surface_water_m_cubed, stream_nitrate_aggregation, node)
+	return stream_nitrate_aggregation
 
 def aggregate_mi(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
@@ -296,12 +294,12 @@ def write_nitrate_csv_bytes_cython(data, nitrate_aggregation):
 	filename = make_output_filename(data)
 	m.write_nitrate_csv_bytes(filename, nitrate_aggregation)
 	
-def write_stream_nitrate_csv(data, stream_nitrate_aggregation):
-	write_stream_nitrate_csv_bytes_cython(data, stream_nitrate_aggregation)
+def write_stream_nitrate_csv(data, stream_conc):
+	write_stream_nitrate_csv_bytes_cython(data, stream_conc)
 
-def write_stream_nitrate_csv_bytes_cython(data, stream_nitrate_aggregation):
+def write_stream_nitrate_csv_bytes_cython(data, stream_conc):
 	filename = make_nitrate_surface_flow_filename(data)
-	m.write_stream_nitrate_csv_bytes(filename, stream_nitrate_aggregation)
+	m.write_stream_nitrate_csv_bytes(filename, stream_conc)
 
 def write_mi_csv(data, nitrate_mi_aggregation):
 	node_count = nitrate_mi_aggregation.shape[0]
