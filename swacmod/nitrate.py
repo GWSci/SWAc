@@ -294,9 +294,6 @@ def write_nitrate_csv(data, nitrate_aggregation):
 	m.write_nitrate_csv_bytes(filename, nitrate_aggregation)
 	
 def write_stream_nitrate_csv(data, stream_nitrate_aggregation):
-	write_stream_nitrate_csv_bytes_cython(data, stream_nitrate_aggregation)
-
-def write_stream_nitrate_csv_bytes_cython(data, stream_nitrate_aggregation):
 	filename = make_nitrate_surface_flow_filename(data)
 	m.write_stream_nitrate_csv_bytes(filename, stream_nitrate_aggregation)
 
