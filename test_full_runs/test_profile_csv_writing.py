@@ -7,7 +7,7 @@ class Test_Profile_Csv_Writing(unittest.TestCase):
 	@unittest.skip("performance test")
 	def test_csv_writing_bytes_cython(self):
 		data, nitrate_aggregation = make_nitrate_aggregation()
-		profile("nitrate.write_nitrate_csv_bytes_cython(data, nitrate_aggregation)", data, nitrate_aggregation)
+		profile("nitrate.write_nitrate_csv(data, nitrate_aggregation)", data, nitrate_aggregation)
 		self.assertEqual(1, 2)
 
 def profile(command, data, nitrate_aggregation):

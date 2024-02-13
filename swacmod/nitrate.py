@@ -290,9 +290,6 @@ def _convert_mm_to_m(arr):
 	return arr / 100.0
 
 def write_nitrate_csv(data, nitrate_aggregation):
-	write_nitrate_csv_bytes_cython(data, nitrate_aggregation)
-
-def write_nitrate_csv_bytes_cython(data, nitrate_aggregation):
 	filename = make_output_filename(data)
 	m.write_nitrate_csv_bytes(filename, nitrate_aggregation)
 	
