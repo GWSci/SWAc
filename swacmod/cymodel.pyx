@@ -1537,12 +1537,12 @@ def _calculate_total_mass_leached_from_cell_on_days(
             remaining_for_year = max_load_per_year_kg_per_cell
 
         if her == 0.0:
-            continue
-
-        fraction_leached = _cumulative_fraction_leaked_per_day(her_at_5_percent,
-            her_at_50_percent,
-            her_at_95_percent,
-            her)
+            fraction_leached = 0.0
+        else:
+            fraction_leached = _cumulative_fraction_leaked_per_day(her_at_5_percent,
+                her_at_50_percent,
+                her_at_95_percent,
+                her)
         mass_leached_for_day = min(remaining_for_year, max_load_per_year_kg_per_cell * fraction_leached)
         remaining_for_year -= mass_leached_for_day
         result[i] = mass_leached_for_day
