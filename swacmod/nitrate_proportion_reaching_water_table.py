@@ -13,8 +13,10 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, histori
 	time_switcher = blackboard.time_switcher
 	length = historical_days_count + len(blackboard.days)
 	depth_to_water_m = blackboard.nitrate_depth_to_water[0]
-	if depth_to_water_m == 0.0 and False:
-		return blackboard.proportion_0[:length]
+	if depth_to_water_m == 0.0:
+		result = np.zeros(length)
+		result[0] = 1.0
+		return result
 	else:
 		return __calculate_proportion_reaching_water_table_array_per_day(
 			length,
