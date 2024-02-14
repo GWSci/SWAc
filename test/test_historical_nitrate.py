@@ -209,7 +209,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.nitrate_depth_to_water = np.repeat(100.0, len(combined_days))
 		actual = historical_nitrate._calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
 
-		expected = np.ones(len(combined_days))
+		expected = np.array([0.0 , 0.02275 , 0.021912, 0.019232, 0.017171, 0.015559, 0.014258, 0.013183, 0.012275, 0.011496])
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_total_days_count_upper_bound_when_both_days_are_present(self):

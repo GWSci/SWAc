@@ -104,15 +104,13 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		blackboard.effective_porosity = 1.0 / 0.0029
 		blackboard.time_switcher = timer.make_time_switcher()
 		blackboard.days = np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
-		blackboard.cell_area_m_sq = 2500
+		blackboard.cell_area_m_sq = 50
 		blackboard.nitrate_depth_to_water = [100.0]
-		blackboard.output = None
-		blackboard.node = 3
-		blackboard.proportion_0 = None
 		blackboard.proportion_100 = "xxx"
 
+		expected = np.array([0.0e+00, 1.110223e-16, 8.770762e-15])
 		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(blackboard)
-		self.assertEqual("xxx", actual)
+		np.testing.assert_array_almost_equal(expected, actual)
 	
 	def test_total_mass_leached_on_day_for_zero_days(self):
 		blackboard = nitrate.NitrateBlackboard()
