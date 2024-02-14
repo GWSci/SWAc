@@ -40,7 +40,6 @@ class NitrateBlackboard:
 		self.Pherperc = None
 		self.Pro = None
 		self.proportion_0 = None
-		self.proportion_100 = None
 		self.proportion_reaching_water_table_array_per_day = None
 		self.p_non_her = None
 		self.Psmd = None
@@ -64,7 +63,6 @@ class NitrateBlackboard:
 
 		self.time_switcher = data["time_switcher"]
 		self.days = data["series"]["date"]
-		self.proportion_100 = data["proportion_100"]
 
 		params = data["params"]
 		self.nitrate_depth_to_water = params["nitrate_depth_to_water"][self.node]

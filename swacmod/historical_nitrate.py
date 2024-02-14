@@ -18,7 +18,6 @@ class HistoricalNitrateBlackboard():
 		self.nitrate_depth_to_water = None
 		self.node = None
 		self.proportion_0 = None
-		self.proportion_100 = None
 		self.time_switcher = None
 		self.truncated_historical_mi_array_kg_per_day = None
 		self.truncated_historical_nitrate_days = None
@@ -38,7 +37,6 @@ class HistoricalNitrateBlackboard():
 		self.nitrate_depth_to_water = data["params"]["nitrate_depth_to_water"][node]
 		self.node = node
 		self.proportion_0 = np.zeros(total_days_upper_bound)
-		self.proportion_100 = data["proportion_100"]
 		self.μ = data["params"]["nitrate_calibration_mu"]
 		self.σ = data["params"]["nitrate_calibration_sigma"]
 		return self
