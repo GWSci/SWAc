@@ -103,7 +103,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.alpha = 1.0
 		blackboard.effective_porosity = 1.0
 		blackboard.node = 7
-		blackboard.proportion_0 = np.zeros(4)
 		blackboard.a = 10.0
 		blackboard.μ = 0.0
 		blackboard.σ = 1.0
@@ -238,7 +237,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.nitrate_depth_to_water = np.array([10.0])
 		blackboard.alpha = 1.0
 		blackboard.effective_porosity = 1.0
-		blackboard.proportion_0 = np.zeros(20)
 		blackboard.a = 10.0
 		blackboard.μ = 0.0
 		blackboard.σ = 1.0
@@ -312,7 +310,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assertEqual(expected.alpha, actual.alpha)
 		self.assertEqual(expected.effective_porosity, actual.effective_porosity)
 		self.assertEqual(expected.node, actual.node)
-		np.testing.assert_allclose(expected.proportion_0, actual.proportion_0)
 		self.assertEqual(expected.μ, actual.μ)
 		self.assertEqual(expected.σ, actual.σ)
 

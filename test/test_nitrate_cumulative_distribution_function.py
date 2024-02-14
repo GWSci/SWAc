@@ -44,7 +44,6 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		blackboard.alpha = 1.7
 		blackboard.effective_porosity = 1.0 / 0.0029
 		blackboard.node = 3
-		blackboard.proportion_0 = None
 		blackboard.time_switcher = timer.make_time_switcher()
 		blackboard.days = np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
 		blackboard.cell_area_m_sq = 50
@@ -88,7 +87,6 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		blackboard.nitrate_depth_to_water = [0.0]
 		blackboard.output = None
 		blackboard.node = 3
-		blackboard.proportion_0 = "xxx"
 
 		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(blackboard)
 		np.testing.assert_array_almost_equal([1.0, 0.0, 0.0], actual)
