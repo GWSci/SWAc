@@ -288,18 +288,12 @@ def _convert_mm_to_m(arr):
 	return arr / 100.0
 
 def write_nitrate_csv(data, nitrate_aggregation):
-	write_nitrate_csv_bytes_cython(data, nitrate_aggregation)
-
-def write_nitrate_csv_bytes_cython(data, nitrate_aggregation):
 	filename = make_output_filename(data)
-	m.write_nitrate_csv_bytes(filename, nitrate_aggregation)
+	m.write_nitrate_csv(filename, nitrate_aggregation)
 	
 def write_stream_nitrate_csv(data, stream_conc):
-	write_stream_nitrate_csv_bytes_cython(data, stream_conc)
-
-def write_stream_nitrate_csv_bytes_cython(data, stream_conc):
 	filename = make_nitrate_surface_flow_filename(data)
-	m.write_stream_nitrate_csv_bytes(filename, stream_conc)
+	m.write_stream_nitrate_csv(filename, stream_conc)
 
 def write_mi_csv(data, nitrate_mi_aggregation):
 	node_count = nitrate_mi_aggregation.shape[0]

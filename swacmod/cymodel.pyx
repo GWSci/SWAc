@@ -1825,9 +1825,7 @@ def _calculate_aggregate_mi_unpacking(blackboard):
             historical_mi_array_kg_per_day[day] = historical_mi_kg_per_day
     return historical_mi_array_kg_per_day
 
-###############################################################################
-
-def write_nitrate_csv_bytes(filename, nitrate_aggregation):
+def write_nitrate_csv(filename, nitrate_aggregation):
     stress_period_count = nitrate_aggregation.shape[0]
     node_count = nitrate_aggregation.shape[1]
 
@@ -1845,9 +1843,7 @@ def write_nitrate_csv_bytes(filename, nitrate_aggregation):
                 line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, recharge_concentration)
                 f.write(line)
                 
-###############################################################################
-
-def write_stream_nitrate_csv_bytes(filename, stream_conc):
+def write_stream_nitrate_csv(filename, stream_conc):
     stress_period_count = stream_conc.shape[0]
     node_count = stream_conc.shape[1]
 

@@ -16,9 +16,9 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, histori
 	mu = blackboard.μ[0]
 	effective_porosity_value = blackboard.effective_porosity[0]
 	if depth_to_water_m == 0.0:
-		return blackboard.proportion_0[:length]
-	elif depth_to_water_m == 100.0:
-		return blackboard.proportion_100[:length]
+		result = np.zeros(length)
+		result[0] = 1.0
+		return result
 	else:
 		return __calculate_proportion_reaching_water_table_array_per_day(
 			length,

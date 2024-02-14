@@ -213,16 +213,6 @@ def run_process(
     logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
 
-    timer.switch_to(time_switcher, "run_main > run > init nitrate")
-    if "enabled" == data["params"]["nitrate_process"]:
-        params = data["params"]
-        a = params["nitrate_calibration_a"]
-        σ = params["nitrate_calibration_sigma"]
-        alpha = params["nitrate_calibration_alpha"]
-
-        total_days_count_upper_bound = historical_nitrate.calculate_total_days_count_upper_bound(data)
-        proportion_100 = nitrate_proportion.__calculate_proportion_reaching_water_table_array_per_day(total_days_count_upper_bound, a, 1.58, σ, alpha, 0.1, 100.0, time_switcher)
-        data["proportion_100"] = proportion_100
     timer.switch_to(time_switcher, "run_main > run > for")
 
     for node in ids:

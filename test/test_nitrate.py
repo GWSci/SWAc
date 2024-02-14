@@ -457,7 +457,6 @@ class Test_Nitrate(unittest.TestCase):
 		her_at_95_percent = 190
 
 		data = {
-			"proportion_100" : None,
 			"time_switcher": timer.make_time_switcher(),
 			"params": {
 				"node_areas": {7: 2500.0},
@@ -521,7 +520,6 @@ class Test_Nitrate(unittest.TestCase):
 		her_at_95_percent = 190
 
 		data = {
-			"proportion_100" : None,
 			"time_switcher": timer.make_time_switcher(),
 			"params": {
 				"node_areas": {7: 2500.0},
