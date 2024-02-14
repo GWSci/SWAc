@@ -74,8 +74,7 @@ def _calculate_m0_array_kg_per_day(blackboard):
 		her_at_50_percent,
 		her_at_95_percent,
 		blackboard.days,
-		blackboard.her_array_mm_per_day,
-		blackboard.time_switcher)
+		blackboard.her_array_mm_per_day)
 	return m0_array_kg_per_day
 
 def _calculate_m1_array_kg_per_day(blackboard):

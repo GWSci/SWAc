@@ -1517,18 +1517,15 @@ def _calculate_total_mass_leached_from_cell_on_days(
         double her_at_50_percent,
         double her_at_95_percent,
         days,
-        double[:] her_per_day,
-        time_switcher = timer.make_time_switcher()):
+        double[:] her_per_day):
     cdef:
         size_t length, i
         double remaining_for_year, her, fraction_leached, mass_leached_for_day
         double[:] result
 
-    # timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > pre")
     length = len(days)
     result = np.zeros(length)
     remaining_for_year = max_load_per_year_kg_per_cell
-    # timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > for")
     for i in range(length):
         day = days[i]
         her = her_per_day[i]
@@ -1546,7 +1543,6 @@ def _calculate_total_mass_leached_from_cell_on_days(
         mass_leached_for_day = min(remaining_for_year, max_load_per_year_kg_per_cell * fraction_leached)
         remaining_for_year -= mass_leached_for_day
         result[i] = mass_leached_for_day
-    # timer.switch_to(time_switcher, "Nitrate: _calculate_total_mass_leached_from_cell_on_days > result")
     return result
 
 def _cumulative_fraction_leaked_per_day(double her_at_5_percent, double her_at_50_percent, double her_at_95_percent, double her_per_day):
