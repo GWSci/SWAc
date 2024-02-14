@@ -91,7 +91,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		blackboard.proportion_0 = "xxx"
 
 		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(blackboard)
-		self.assertEqual("xxx", actual)
+		np.testing.assert_array_almost_equal([1.0, 0.0, 0.0], actual)
 	
 	def test_total_mass_leached_on_day_for_zero_days(self):
 		blackboard = nitrate.NitrateBlackboard()

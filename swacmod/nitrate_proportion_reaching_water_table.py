@@ -13,7 +13,7 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, histori
 	time_switcher = blackboard.time_switcher
 	length = historical_days_count + len(blackboard.days)
 	depth_to_water_m = blackboard.nitrate_depth_to_water[0]
-	if depth_to_water_m == 0.0:
+	if depth_to_water_m == 0.0 and False:
 		return blackboard.proportion_0[:length]
 	else:
 		return __calculate_proportion_reaching_water_table_array_per_day(
@@ -44,6 +44,14 @@ def __calculate_proportion_reaching_water_table_array_per_day(
 
 def _calculate_daily_proportion_reaching_water_table(
 		a, μ, σ, alpha, effective_porosity, DTW, t):
+	
+	first_day = 0
+	if (DTW == 0 and t == first_day):
+		return 1.0
+
+	if (DTW == 0 and t > first_day):
+		return 0.0
+
 	f_t = _calculate_cumulative_proportion_reaching_water_table(
 		a, μ, σ, alpha, effective_porosity, DTW, t)
 	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(
