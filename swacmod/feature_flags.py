@@ -18,3 +18,6 @@ disable_multiprocessing = True
 skip_validation = _skip_validation and _use_experimental_perf_features 
 
 use_natproc = True
+
+use_nitrate_intermediate_results = True
+nitrate_intermediate_results_node_index = 261264

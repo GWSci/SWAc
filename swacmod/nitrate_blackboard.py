@@ -71,11 +71,16 @@ class NitrateBlackboard:
 		self.cell_area_m_sq = params["node_areas"][self.node]
 		self.nitrate_loading = params["nitrate_loading"][self.node]
 		self.a = params["nitrate_calibration_a"]
-		self.μ = params["nitrate_calibration_mu"][self.node]
+		if (isinstance(params["nitrate_calibration_mu"], float)):
+			self.μ = [params["nitrate_calibration_mu"]]
+		else:
+			self.μ = params["nitrate_calibration_mu"][self.node]
 		self.σ = params["nitrate_calibration_sigma"]
 		self.alpha = params["nitrate_calibration_alpha"]
-		self.effective_porosity = params["nitrate_calibration_effective_porosity"][self.node]
-
+		if (isinstance(params["nitrate_calibration_effective_porosity"], float)):
+			self.effective_porosity = [params["nitrate_calibration_effective_porosity"]]
+		else:
+			self.effective_porosity = params["nitrate_calibration_effective_porosity"][self.node]
 		self.perc_through_root_mm_per_day = output["perc_through_root"]
 		self.TAW_array_mm = output["tawtew"]
 		self.smd = output["smd"]

@@ -1730,6 +1730,22 @@ def _aggregate_nitrate(
         size_t time_period_index, first_day_index, last_day_index, i
         double sum_of_nitrate_tons, sum_of_recharge_m_cubed, sum_of_recharge_mm, stored_mass_tons
 
+    is_writing_csv = ff.use_nitrate_intermediate_results and (node == ff.nitrate_intermediate_results_node_index)
+    if (is_writing_csv):
+        faux_data = {"params" : {"run_name" : "intermediate_results"}}
+        filename = _make_run_filename_with_suffix(faux_data, f"_node_{node}_aggregation.csv")
+
+        f = open(filename, "wb")
+        f.write(b',"time_period_index"')
+        f.write(b',"first_day_index"')
+        f.write(b',"last_day_index"')
+        f.write(b',"sum_of_nitrate_tons"')
+        f.write(b',"sum_of_recharge_m_cubed"')
+        f.write(b',"sum_of_recharge_mm"')
+        f.write(b',"aggregation[time_period_index, node]"')
+        f.write(b',"stored_mass_tons"')
+        f.write(b"\r\n")
+
     for time_period_index in range(len_time_periods):
         time_period = time_periods[time_period_index]
         first_day_index = time_period[0] - 1
@@ -1747,12 +1763,32 @@ def _aggregate_nitrate(
             stored_mass_tons += sum_of_nitrate_tons
             aggregation[time_period_index, node] = 0
 
+        if (is_writing_csv):
+            f.write(b"%g" % time_period_index)
+            f.write(b",%g" % first_day_index)
+            f.write(b",%g" % last_day_index)
+            f.write(b",%g" % sum_of_nitrate_tons)
+            f.write(b",%g" % sum_of_recharge_m_cubed)
+            f.write(b",%g" % sum_of_recharge_mm)
+            f.write(b",%g" % aggregation[time_period_index, node])
+            f.write(b",%g" % stored_mass_tons)
+            f.write(b"\r\n")
+
         if ff.max_node_count_override:
             if last_day_index > ff.max_node_count_override:
                 break
 
+    if (is_writing_csv):
+        f.close()
     return aggregation
     
+def _make_run_filename_with_suffix(data, suffix):
+    import swacmod.utils as utils
+    run_name = data["params"]["run_name"]
+    file = run_name + "_" + suffix + ".csv"
+    folder = utils.CONSTANTS["OUTPUT_DIR"]
+    return os.path.join(folder, file)
+
 ###############################################################################
 
 def _aggregate_surface_water_nitrate(
