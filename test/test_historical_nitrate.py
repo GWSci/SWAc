@@ -354,7 +354,6 @@ class Test_Historical_Nitrate(unittest.TestCase):
 				"date": [date(2023, 1, 3), date(2023, 1, 4)],
 				"historical_nitrate_days" : [date(2023, 1, 1), date(2023, 1, 2)],
 			},
-			"proportion_100" : np.array([89.0, 97.0])
 		}
 		output = {}
 		node = 7

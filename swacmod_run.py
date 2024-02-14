@@ -224,7 +224,6 @@ def run_process(
 
         total_days_count_upper_bound = historical_nitrate.calculate_total_days_count_upper_bound(data)
         proportion_100 = nitrate_proportion.__calculate_proportion_reaching_water_table_array_per_day(total_days_count_upper_bound, a, μ, σ, alpha, effective_porosity, 100.0, time_switcher)
-        data["proportion_100"] = proportion_100
     timer.switch_to(time_switcher, "run_main > run > for")
 
     for node in ids:
