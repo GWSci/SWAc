@@ -576,6 +576,11 @@ class Test_Nitrate(unittest.TestCase):
 		expected_filename = "aardvark_stream_nitrate.csv"
 		make_filename_function = nitrate.make_nitrate_surface_flow_filename
 		self.assert_output_file_path(expected_filename, make_filename_function)
+	
+	def test_convert_mm_to_m(self):
+		np.testing.assert_array_almost_equal(
+			np.array([0.0, 1.0, 0.001]),
+			nitrate._convert_mm_to_m_B(np.array([0.0, 1000.0, 1.0])))
 
 	def assert_output_file_path(self, expected_filename, make_filename_function):
 		data = {

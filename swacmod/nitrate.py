@@ -288,6 +288,9 @@ def _calculate_combined_surface_water_m_cubed(data, output, node):
 def _convert_mm_to_m(arr):
 	return arr / 100.0
 
+def _convert_mm_to_m_B(arr):
+	return arr / 1000.0
+
 def write_nitrate_csv(data, nitrate_aggregation):
 	filename = make_output_filename(data)
 	m.write_nitrate_csv(filename, nitrate_aggregation)
