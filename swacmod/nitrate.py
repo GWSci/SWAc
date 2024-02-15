@@ -286,7 +286,7 @@ def _calculate_combined_surface_water_m_cubed(data, output, node):
 	return combined_surface_water_m_cubed
 
 def _convert_mm_to_m(arr):
-	return arr / 100.0
+	return _convert_mm_to_m_B(arr)
 
 def _convert_mm_to_m_B(arr):
 	return arr / 1000.0
