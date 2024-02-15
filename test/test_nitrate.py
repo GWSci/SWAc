@@ -9,26 +9,26 @@ import swacmod.timer as timer
 
 class Test_Nitrate(unittest.TestCase):
 	def test_calculate_daily_HER(self):
-		input_rainfall_ts = np.array([110.0, 220.0, 330.0])
+		input_precip_to_ground = np.array([110.0, 220.0, 330.0])
 		input_ae = np.array([10.0, 20.0, 30.0])
 		expected = np.array([100.0, 200.0, 300.0])
-		self.assert_her(input_rainfall_ts, input_ae, expected)
+		self.assert_her(input_precip_to_ground, input_ae, expected)
 
 	def test_calculate_daily_HER_can_be_zero(self):
-		input_rainfall_ts = np.array([110.0, 0.0, 330.0])
+		input_precip_to_ground = np.array([110.0, 0.0, 330.0])
 		input_ae = np.array([10.0, 0.0, 330.0])
 		expected = np.array([100.0, 0.0, 0.0])
-		self.assert_her(input_rainfall_ts, input_ae, expected)
+		self.assert_her(input_precip_to_ground, input_ae, expected)
 
 	def test_calculate_daily_HER_cannot_be_less_than_zero(self):
-		input_rainfall_ts = np.array([110.0, -2.0, 0.0, 3.0])
+		input_precip_to_ground = np.array([110.0, -2.0, 0.0, 3.0])
 		input_ae = np.array([10.0, 0.0, 1.0, 5.0])
 		expected = np.array([100.0, 0.0, 0.0, 0])
-		self.assert_her(input_rainfall_ts, input_ae, expected)
+		self.assert_her(input_precip_to_ground, input_ae, expected)
 
-	def assert_her(self, input_rainfall_ts, input_ae, expected):
+	def assert_her(self, input_precip_to_ground, input_ae, expected):
 		blackboard = nitrate.NitrateBlackboard()
-		blackboard.rainfall_ts = input_rainfall_ts
+		blackboard.precip_to_ground = input_precip_to_ground
 		blackboard.ae = input_ae
 		actual = nitrate._calculate_her_array_mm_per_day(blackboard)
 		np.testing.assert_array_equal(expected, actual)
@@ -282,7 +282,7 @@ class Test_Nitrate(unittest.TestCase):
 		actual = nitrate._calculate_m1a_b_array_kg_per_day(blackboard)[0, :]
 		np.testing.assert_array_almost_equal(expected, actual)
 
-	def test_calculate_p_non_her_is_sum_of_runoff_att_and_dir_when_her_is_less_than_zero(self):
+	def test_calculate_p_non_her_is_1_when_her_is_less_than_zero(self):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.runoff_mm_per_day = np.array([2.0, 0.0, 0.0, 2.0])
 		blackboard.Pherperc = np.array([1.0, 1.0, 1.0, 1.0])
@@ -295,10 +295,10 @@ class Test_Nitrate(unittest.TestCase):
 
 		actual = nitrate._calculate_p_non_her(blackboard)
 
-		expected = np.array([2.0, 30.0, 500.0, 532.0])
+		expected = np.array([1.0, 1.0, 1.0, 1.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
-	def test_calculate_p_non_her_is_sum_of_runoff_att_and_dir_when_her_is_equal_to_zero(self):
+	def test_calculate_p_non_her_is_1_when_her_is_equal_to_zero(self):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.runoff_mm_per_day = np.array([2.0, 0.0, 0.0, 2.0])
 		blackboard.Pherperc = np.array([1.0, 1.0, 1.0, 1.0])
@@ -311,7 +311,7 @@ class Test_Nitrate(unittest.TestCase):
 
 		actual = nitrate._calculate_p_non_her(blackboard)
 
-		expected = np.array([2.0, 30.0, 500.0, 532.0])
+		expected = np.array([1.0, 1.0, 1.0, 1.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_p_non_her_contains_runoff_and_both_macropore_terms_in_numerator_and_denominator_when_HER_is_positive(self):
@@ -484,7 +484,7 @@ class Test_Nitrate(unittest.TestCase):
 			},
 		}
 		output = {
-			"rainfall_ts": np.array([130.0, 130.0]),
+			"precip_to_ground": np.array([130.0, 130.0]),
 			"ae": np.array([50.0, 50.0]),
 			"perc_through_root": np.array([40.0, 40.0]),
 			"interflow_volume": np.array([2.0, 20.0]),
@@ -542,7 +542,7 @@ class Test_Nitrate(unittest.TestCase):
 			},
 		}
 		output = {
-			"rainfall_ts": np.array([130.0, 130.0]),
+			"precip_to_ground": np.array([130.0, 130.0]),
 			"ae": np.array([50.0, 50.0]),
 			"perc_through_root": np.array([40.0, 40.0]),
 			"interflow_volume": np.array([1.0, 1.0]),

@@ -22,7 +22,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard = _do_nitrate_calculations(blackboard)
 		return _convert_blackboard_to_result(blackboard)
 	else:
-		length = output["rainfall_ts"].size
+		length = output["precip_to_ground"].size
 		return _make_empty_result(length)
 
 def _do_nitrate_calculations(blackboard):

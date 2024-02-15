@@ -6,7 +6,6 @@ class NitrateBlackboard:
 		self.ae = None
 		self.alpha = None
 		self.cell_area_m_sq = None
-		self.combined_ae = None
 		self.days = None
 		self.dSMD_array_mm_per_day = None
 		self.effective_porosity = None
@@ -56,7 +55,7 @@ class NitrateBlackboard:
 		self.σ = None
 
 	def initialise_blackboard(self, data, output, node, logging):
-		self.length = output["rainfall_ts"].size
+		self.length = output["precip_to_ground"].size
 
 		self.node = node
 		self.logging = logging
@@ -85,8 +84,6 @@ class NitrateBlackboard:
 		self.interflow_volume = output["interflow_volume"]
 		self.infiltration_recharge = output["infiltration_recharge"]
 		self.interflow_to_rivers = output["interflow_to_rivers"]
-		self.rainfall_ts = output["rainfall_ts"]
 		self.precip_to_ground = output["precip_to_ground"]
 		self.ae = output["ae"]
-		self.combined_ae = output["combined_ae"]
 		self.historical_nitrate_reaching_water_table_array_tons_per_day = output["historical_nitrate_reaching_water_table_array_tons_per_day"]
