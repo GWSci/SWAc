@@ -27,7 +27,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 
 		actual = nitrate.make_aggregation_array(data)
 		actual = nitrate.aggregate_nitrate(actual, data, output, node)
-		expected = np.array([[2.0]])
+		expected = np.array([[20.0]])
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_nitrate_aggregation_when_sum_of_recharge_is_zero(self):
@@ -59,7 +59,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		actual = nitrate.make_aggregation_array(data)
 		actual = nitrate.aggregate_nitrate(actual, data, output_node_0, node_0)
 		actual = nitrate.aggregate_nitrate(actual, data, output_node_1, node_1)
-		expected = np.array([[2.0, 7.0]])
+		expected = np.array([[20.0, 70.0]])
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_nitrate_aggregation_for_several_days_in_same_time_period(self):
@@ -72,7 +72,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 
 		actual = nitrate.make_aggregation_array(data)
 		actual = nitrate.aggregate_nitrate(actual, data, output, node)
-		expected = np.array([[27.0]])
+		expected = np.array([[270.0]])
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_nitrate_aggregation_for_several_days_each_in_its_own_time_period(self):
@@ -85,7 +85,7 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 
 		actual = nitrate.make_aggregation_array(data)
 		actual = nitrate.aggregate_nitrate(actual, data, output, node)
-		expected = np.array([[29.0], [31.0], [37.0]])
+		expected = np.array([[290.0], [310.0], [370.0]])
 		np.testing.assert_array_equal(expected, actual)
 
 def make_data(node_areas, time_periods):
