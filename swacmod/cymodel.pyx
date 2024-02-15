@@ -1733,6 +1733,8 @@ def _aggregate_nitrate(
 
     is_writing_csv = ff.use_nitrate_intermediate_results and (node == ff.nitrate_intermediate_results_node_index)
     if (is_writing_csv):
+        print(f"node = {node}")
+        print(f"aggregation.shape = {aggregation.shape}")
         faux_data = {"params" : {"run_name" : "intermediate_results"}}
         filename = _make_run_filename_with_suffix(faux_data, f"_node_{node}_aggregation.csv")
 
