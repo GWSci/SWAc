@@ -1747,6 +1747,7 @@ def _aggregate_nitrate(
         f.write(b',"stored_mass_tons"')
         f.write(b"\r\n")
 
+    stored_mass_tons = 0
     for time_period_index in range(len_time_periods):
         time_period = time_periods[time_period_index]
         first_day_index = time_period[0] - 1
