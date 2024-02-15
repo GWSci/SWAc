@@ -6,6 +6,7 @@ class NitrateBlackboard:
 		self.ae = None
 		self.alpha = None
 		self.cell_area_m_sq = None
+		self.combined_ae = None
 		self.days = None
 		self.dSMD_array_mm_per_day = None
 		self.effective_porosity = None
@@ -39,6 +40,7 @@ class NitrateBlackboard:
 		self.perc_through_root_mm_per_day = None
 		self.Pherperc = None
 		self.Pro = None
+		self.precip_to_ground = None
 		self.proportion_reaching_water_table_array_per_day = None
 		self.p_non_her = None
 		self.Psmd = None
@@ -84,5 +86,7 @@ class NitrateBlackboard:
 		self.infiltration_recharge = output["infiltration_recharge"]
 		self.interflow_to_rivers = output["interflow_to_rivers"]
 		self.rainfall_ts = output["rainfall_ts"]
+		self.precip_to_ground = output["precip_to_ground"]
 		self.ae = output["ae"]
+		self.combined_ae = output["combined_ae"]
 		self.historical_nitrate_reaching_water_table_array_tons_per_day = output["historical_nitrate_reaching_water_table_array_tons_per_day"]
