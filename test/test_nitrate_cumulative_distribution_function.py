@@ -39,10 +39,10 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 	def test_calculate_daily_proportion_reaching_water_table_arr(self):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.a = 1.38
-		blackboard.μ = 1.58
+		blackboard.μ = np.array([1.58])
 		blackboard.σ = 3.96
 		blackboard.alpha = 1.7
-		blackboard.effective_porosity = 1.0 / 0.0029
+		blackboard.effective_porosity = np.array([1.0 / 0.0029])
 		blackboard.node = 3
 		blackboard.time_switcher = timer.make_time_switcher()
 		blackboard.days = np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
@@ -55,10 +55,10 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 
 	def test_calculate_cumulative_proportion_reaching_water_table_varies_with_params(self):
 		a = 1.38
-		μ = 1.58
+		μ = np.array([1.58])
 		σ = 3.96
 		alpha = 1.7
-		effective_porosity = 1.0 / 0.0029
+		effective_porosity = np.array([1.0 / 0.0029])
 		DTW = 0.001
 		t = 1
 		original = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t)
@@ -77,10 +77,10 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 	def test_calculate_daily_proportion_reaching_water_table_arr_when_dtw_is_0(self):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.a = 1.38
-		blackboard.μ = 1.58
+		blackboard.μ = np.array([1.58])
 		blackboard.σ = 3.96
 		blackboard.alpha = 1.7
-		blackboard.effective_porosity = 1.0 / 0.0029
+		blackboard.effective_porosity = np.array([1.0 / 0.0029])
 		blackboard.time_switcher = timer.make_time_switcher()
 		blackboard.days = np.array([date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30)])
 		blackboard.cell_area_m_sq = 2500

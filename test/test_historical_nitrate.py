@@ -101,10 +101,10 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.historical_time_periods = [[1, 2], [2, 3]]
 		blackboard.nitrate_depth_to_water = np.array([10.0])
 		blackboard.alpha = 1.0
-		blackboard.effective_porosity = 1.0
+		blackboard.effective_porosity = np.array([1.0])
 		blackboard.node = 7
 		blackboard.a = 10.0
-		blackboard.μ = 0.0
+		blackboard.μ = np.array([0.0])
 		blackboard.σ = 1.0
 		return blackboard
 
@@ -236,9 +236,9 @@ class Test_Historical_Nitrate(unittest.TestCase):
 	def assign_common_blackboard_inputs_for_proportion_reaching_water_table(self, blackboard):
 		blackboard.nitrate_depth_to_water = np.array([10.0])
 		blackboard.alpha = 1.0
-		blackboard.effective_porosity = 1.0
+		blackboard.effective_porosity = np.array([1.0])
 		blackboard.a = 10.0
-		blackboard.μ = 0.0
+		blackboard.μ = np.array([0.0])
 		blackboard.σ = 1.0
 
 	def make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(self, combined_days):
@@ -322,8 +322,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 				"nitrate_calibration_a": 10.0,
 				"nitrate_depth_to_water": {7: np.array([10.0])},
 				"nitrate_calibration_alpha" : 1.0,
-				"nitrate_calibration_effective_porosity" : 1.0,
-				"nitrate_calibration_mu": 0.0,
+				"nitrate_calibration_effective_porosity" : {7: np.array([1.0])},
+				"nitrate_calibration_mu": {7: np.array([0.0])},
 				"nitrate_calibration_sigma": 1.0,
 			},
 			"series": {

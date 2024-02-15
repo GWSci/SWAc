@@ -778,6 +778,24 @@ historical_nitrate_process:
         - !!python/name:str
     constraints: ["enabled", "disabled"]
 
+historical_mi_array_kg_per_time_period:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:float
+
+historical_start_date:
+    required: false
+    type:
+        - !!python/name:datetime.datetime
+
+historical_time_periods:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:int
 
 #######################
 # Process: Nitrate #
