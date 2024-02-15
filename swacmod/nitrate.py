@@ -223,7 +223,7 @@ def _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run
 def make_aggregation_array(data):
 	time_periods = data["params"]["time_periods"]
 	node_areas = data["params"]["node_areas"]
-	shape = (_len_time_periods(time_periods), max(370000, len(node_areas)))
+	shape = (_len_time_periods(time_periods), len(node_areas))
 	aggregation = np.zeros(shape = shape)
 	return aggregation
 	
