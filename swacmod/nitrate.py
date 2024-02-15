@@ -61,7 +61,7 @@ def _do_nitrate_calculations(blackboard):
 	return blackboard
 
 def _calculate_her_array_mm_per_day(blackboard):
-	return np.maximum(0.0, blackboard.rainfall_ts - blackboard.ae)
+	return np.maximum(0.0, blackboard.precip_to_ground - blackboard.ae)
 
 def _calculate_m0_array_kg_per_day(blackboard):
 	max_load_per_year_kg_per_hectare = blackboard.nitrate_loading[3]
@@ -108,7 +108,7 @@ def _calculate_p_non_her(blackboard):
 	non_her_mm_day = blackboard.runoff_mm_per_day + blackboard.Pherperc * blackboard.her_array_mm_per_day + blackboard.Psmd * blackboard.her_array_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day-blackboard.her_array_mm_per_day
 	p_non_her = np.where(
 		blackboard.her_array_mm_per_day <= 0,
-		blackboard.runoff_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day,
+		1,
 		_divide_arrays(non_her_mm_day, (blackboard.runoff_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day)))
 	return p_non_her
 
