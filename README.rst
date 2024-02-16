@@ -42,6 +42,8 @@ https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generati
 
     run.bat -i .\input_files\input.yml -o .\output_files\
 
+After the initial installation, models can be run with a command similar to step 4. Steps 1--3 do not need to be repeated.
+
 Regarding Python environments, the intent is that users do not have to manage environments themselves. The ``setup_windows.bat`` script creates an environment using venv. The ``run.bat`` script will activate and exit the environment automatically.
 
 Installation on Windows systems (tested on Windows 7):
@@ -150,6 +152,8 @@ https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generati
 
 **Troubleshooting:** If there is a cython compilation error complaining that Python.h does not exist then you might need to install ``python-dev``. Run the command ``sudo apt-get install python3-dev`` to install it, and then run ``touch swacmod/cymodel.pyx`` to force a recompilation on the next run. Then try running the test model again.
 
+After the initial installation, models can be run with a command similar to step 3. Steps 1--2 do not need to be repeated.
+
 Regarding Python environments, the intent is that users do not have to manage environments themselves. The ``setup_linux.sh`` script creates an environment using venv. The ``run.sh`` script will activate and exit the environment automatically.
 
 Installation on Mac systems:
@@ -183,5 +187,7 @@ https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generati
 .. code-block:: bash
 
     ./run.sh -i ./input_files/input.yml -o ./output_files/
+
+After the initial installation, models can be run with a command similar to step 3. Steps 1--2 do not need to be repeated.
 
 Regarding Python environments, the intent is that users do not have to manage environments themselves. The ``setup_mac.sh`` script creates an environment using venv. The ``run.sh`` script will activate and exit the environment automatically.
