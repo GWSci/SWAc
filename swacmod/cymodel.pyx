@@ -1758,12 +1758,10 @@ def _aggregate_surface_water_nitrate(
             size_t len_time_periods,
             double[:] nitrate_to_surface_water_array_tons_per_day,
             double[:] combined_surface_water_m_cubed,
-            double[:,:] stream_nitrate_aggregation,
+            double[:,:] aggregation,
             size_t node):
     cdef:
         size_t time_period_index, first_day_index, last_day_index, i
-
-    stream_nitrate_total_mass = stream_nitrate_aggregation
 
     for time_period_index in range(len_time_periods):
         time_period = time_periods[time_period_index]
@@ -1772,15 +1770,15 @@ def _aggregate_surface_water_nitrate(
         agg_nitrate_tons = 0.0
         sum_of_surface_water_m_cubed = 0.0
         for i in range(first_day_index, last_day_index):
-            stream_nitrate_total_mass[time_period_index, node] += nitrate_to_surface_water_array_tons_per_day[i]
-        stream_nitrate_aggregation[time_period_index, node] = stream_nitrate_total_mass[time_period_index, node] / (last_day_index - first_day_index + 1)
+            aggregation[time_period_index, node] += nitrate_to_surface_water_array_tons_per_day[i]
+        aggregation[time_period_index, node] = aggregation[time_period_index, node] / (last_day_index - first_day_index + 1)
 
         if ff.max_node_count_override:
             if last_day_index > ff.max_node_count_override:
                 break
 
     
-    return stream_nitrate_aggregation
+    return aggregation
 
 ###############################################################################
 
