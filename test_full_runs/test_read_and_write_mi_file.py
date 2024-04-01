@@ -20,24 +20,30 @@ class Test_Read_And_Write_mi_File(unittest.TestCase):
 		pathlib.Path(self.tempdir).rmdir()
 
 	def test_writing_an_mi_file_produces_a_file_with_the_expected_contents(self):
-		filename = self.write_csv_return_filename()
+		filename = self.write_mi_csv_return_filename()
 		actual = slurp(filename)
 		expected = "2.1,3,5\r\n7,11,13\r\n"
 		self.assertEqual(expected, actual)
 
 	def test_reading_an_mi_filename_reproduces_input_data(self):
-		filename = self.write_csv_return_filename()
+		filename = self.write_mi_csv_return_filename()
 
 		base_path = self.tempdir
 		param = None
 		ext = "csv"
 		file_contents = time_series_data.load_time_series_data(base_path, param, filename, ext)
 
-		expected = make_mi_aggregation_as_numpy_array()
+		expected = np.array([
+			[2.1, 3.0, 5.0],
+			[7.0, 11.0, 13.0],
+		])
 		np.testing.assert_allclose(expected, file_contents)
 
-	def write_csv_return_filename(self):
-		nitrate_mi_aggregation = make_mi_aggregation_as_numpy_array()
+	def write_mi_csv_return_filename(self):
+		nitrate_mi_aggregation = np.array([
+			[2.1, 3.0, 5.0],
+			[7.0, 11.0, 13.0],
+		])
 
 		data = {
 			"params" : {
@@ -48,12 +54,6 @@ class Test_Read_And_Write_mi_File(unittest.TestCase):
 		filename = nitrate.write_mi_csv(data, nitrate_mi_aggregation)
 		self.files_to_delete.append(filename)
 		return filename
-
-def make_mi_aggregation_as_numpy_array():
-	return np.array([
-		[2.1, 3.0, 5.0],
-		[7.0, 11.0, 13.0],
-	])
 
 def slurp(filename):
 	with open(filename, "r", newline="") as f:
