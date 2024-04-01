@@ -1757,7 +1757,6 @@ def _aggregate_surface_water_nitrate(
             time_periods,
             size_t len_time_periods,
             double[:] nitrate_to_surface_water_array_tons_per_day,
-            double[:] combined_surface_water_m_cubed,
             double[:,:] aggregation,
             size_t node):
     cdef:
@@ -1777,7 +1776,6 @@ def _aggregate_surface_water_nitrate(
             if last_day_index > ff.max_node_count_override:
                 break
 
-    
     return aggregation
 
 ###############################################################################

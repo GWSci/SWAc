@@ -243,15 +243,13 @@ def aggregate_nitrate(aggregation, data, output, node):
 	m._aggregate_nitrate(time_periods, len_time_periods, nitrate_reaching_water_table_array_tons_per_day, combined_recharge_m_cubed, aggregation, node, node_areas)
 	return aggregation
 	
-def aggregate_surface_water_nitrate(stream_nitrate_aggregation, data, output, node):
+def aggregate_surface_water_nitrate(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
 	nitrate_to_surface_water_array_tons_per_day = output["nitrate_to_surface_water_array_tons_per_day"]
-	combined_surface_water_m_cubed = _calculate_combined_surface_water_m_cubed(data, output, node)
 
 	len_time_periods = _len_time_periods(time_periods)
-	#fills stream_aggregation array with total nitrate mass for all days in a stress period for this node
-	m._aggregate_surface_water_nitrate(time_periods, len_time_periods, nitrate_to_surface_water_array_tons_per_day, combined_surface_water_m_cubed, stream_nitrate_aggregation, node)
-	return stream_nitrate_aggregation
+	m._aggregate_surface_water_nitrate(time_periods, len_time_periods, nitrate_to_surface_water_array_tons_per_day, aggregation, node)
+	return aggregation
 
 def aggregate_mi(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
@@ -269,13 +267,6 @@ def _calculate_combined_recharge_m_cubed(data, output, node):
 	combined_recharge_m_cubed = combined_recharge_m * node_areas[node]
 	return combined_recharge_m_cubed
 	
-def _calculate_combined_surface_water_m_cubed(data, output, node):
-	node_areas = data["params"]["node_areas"]
-	combined_surface_water_mm = output["combined_str"]
-	combined_surface_water_m = _convert_mm_to_m(combined_surface_water_mm)
-	combined_surface_water_m_cubed = combined_surface_water_m * node_areas[node]
-	return combined_surface_water_m_cubed
-
 def _convert_mm_to_m(arr):
 	return arr / 1000.0
 
