@@ -1841,24 +1841,6 @@ def write_nitrate_csv(filename, nitrate_aggregation, header_row):
                 line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, concentration)
                 f.write(line)
 
-def write_stream_nitrate_csv(filename, nitrate_aggregation, header_row):
-    stress_period_count = nitrate_aggregation.shape[0]
-    node_count = nitrate_aggregation.shape[1]
-
-    int_to_bytes = []
-    for i in range(1, 1 + max(stress_period_count, node_count)):
-        int_to_bytes.append(str(i).encode())
-
-    with open(filename, "wb") as f:
-        f.write(header_row)
-        for stress_period_index in range(stress_period_count):
-            stress_period_bytes = int_to_bytes[stress_period_index]
-            for node_index in range(node_count):
-                node = node_index + 1
-                concentration = nitrate_aggregation[stress_period_index, node_index]
-                line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, concentration)
-                f.write(line)
-
 ###############################################################################
 
 

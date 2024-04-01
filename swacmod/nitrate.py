@@ -295,7 +295,7 @@ def write_nitrate_csv(data, nitrate_aggregation):
 def write_stream_nitrate_csv(data, stream_conc):
 	filename = make_nitrate_surface_flow_filename(data)
 	header_row = b'"Stress Period","Reach","Stream Concentration (metric tons/m3)"\r\n'
-	m.write_stream_nitrate_csv(filename, stream_conc, header_row)
+	m.write_nitrate_csv(filename, stream_conc, header_row)
 	return filename
 
 def write_mi_csv(data, nitrate_mi_aggregation):
