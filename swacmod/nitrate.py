@@ -294,6 +294,7 @@ def write_nitrate_csv(data, nitrate_aggregation):
 def write_stream_nitrate_csv(data, stream_conc):
 	filename = make_nitrate_surface_flow_filename(data)
 	m.write_stream_nitrate_csv(filename, stream_conc)
+	return filename
 
 def write_mi_csv(data, nitrate_mi_aggregation):
 	node_count = nitrate_mi_aggregation.shape[0]
