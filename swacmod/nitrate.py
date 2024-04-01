@@ -289,6 +289,7 @@ def _convert_mm_to_m(arr):
 def write_nitrate_csv(data, nitrate_aggregation):
 	filename = make_output_filename(data)
 	m.write_nitrate_csv(filename, nitrate_aggregation)
+	return filename
 	
 def write_stream_nitrate_csv(data, stream_conc):
 	filename = make_nitrate_surface_flow_filename(data)
