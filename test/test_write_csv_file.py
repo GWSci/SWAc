@@ -21,9 +21,7 @@ class Test_Write_Csv_File(unittest.TestCase):
 	def test_writing_a_nitrate_csv_file_produces_a_file_with_the_expected_contents(self):
 		filename = self.write_csv_return_filename()
 		actual = slurp(filename)
-		print(actual)
 		expected = '"Stress Period","Node","Recharge Concentration (metric tons/m3)"\r\n1,1,2.1\r\n1,2,3\r\n1,3,5\r\n2,1,7\r\n2,2,11\r\n2,3,13\r\n'
-		print(expected)
 		self.assertEqual(expected, actual)
 
 	def write_csv_return_filename(self):
@@ -45,9 +43,7 @@ class Test_Write_Csv_File(unittest.TestCase):
 	def test_writing_a_stream_nitrate_csv_file_produces_a_file_with_the_expected_contents(self):
 		filename = self.write_stream_nitrate_csv_return_filename()
 		actual = slurp(filename)
-		print(actual)
 		expected = '"Stress Period","Reach","Stream Concentration (metric tons/m3)"\r\n1,1,2.1\r\n1,2,3\r\n1,3,5\r\n2,1,7\r\n2,2,11\r\n2,3,13\r\n'
-		print(expected)
 		self.assertEqual(expected, actual)
 
 	def write_stream_nitrate_csv_return_filename(self):
