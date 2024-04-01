@@ -1,6 +1,7 @@
 source env/bin/activate
 python3 -c "import swacmod.compile_model"
-python3 -m unittest discover -s test
+coverage run -m unittest discover -s test
 exit_status=$?
+coverage report -m
 deactivate
 exit $exit_status
