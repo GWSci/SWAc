@@ -226,13 +226,6 @@ def make_aggregation_array(data):
 	aggregation = np.zeros(shape = shape)
 	return aggregation
 	
-def make_stream_aggregation_array(data):
-	time_periods = data["params"]["time_periods"]
-	node_areas = data["params"]["node_areas"]
-	shape = (_len_time_periods(time_periods), len(node_areas))
-	stream_aggregation = np.zeros(shape = shape)
-	return stream_aggregation
-
 def make_mi_aggregation_array(data):
 	time_periods = data["params"]["time_periods"]
 	len_time_periods = _len_time_periods(time_periods)
