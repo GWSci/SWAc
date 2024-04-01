@@ -1,5 +1,6 @@
 backcall==0.2.0
 Cython==0.29.35
+coverage==7.4.4
 decorator==4.4.1
 flopy==3.3.2
 h5py==3.8.0
