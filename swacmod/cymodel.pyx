@@ -1823,7 +1823,7 @@ def _calculate_aggregate_mi_unpacking(blackboard):
             historical_mi_array_kg_per_day[day] = historical_mi_kg_per_day
     return historical_mi_array_kg_per_day
 
-def write_nitrate_csv(filename, nitrate_aggregation):
+def write_nitrate_csv(filename, nitrate_aggregation, header_row):
     stress_period_count = nitrate_aggregation.shape[0]
     node_count = nitrate_aggregation.shape[1]
 
@@ -1832,31 +1832,31 @@ def write_nitrate_csv(filename, nitrate_aggregation):
         int_to_bytes.append(str(i).encode())
 
     with open(filename, "wb") as f:
-        f.write(b'"Stress Period","Node","Recharge Concentration (metric tons/m3)"\r\n')
+        f.write(header_row)
         for stress_period_index in range(stress_period_count):
             stress_period_bytes = int_to_bytes[stress_period_index]
             for node_index in range(node_count):
                 node = node_index + 1
-                recharge_concentration = nitrate_aggregation[stress_period_index, node_index]
-                line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, recharge_concentration)
+                concentration = nitrate_aggregation[stress_period_index, node_index]
+                line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, concentration)
                 f.write(line)
-                
-def write_stream_nitrate_csv(filename, stream_conc):
-    stress_period_count = stream_conc.shape[0]
-    node_count = stream_conc.shape[1]
+
+def write_stream_nitrate_csv(filename, nitrate_aggregation, header_row):
+    stress_period_count = nitrate_aggregation.shape[0]
+    node_count = nitrate_aggregation.shape[1]
 
     int_to_bytes = []
     for i in range(1, 1 + max(stress_period_count, node_count)):
         int_to_bytes.append(str(i).encode())
 
     with open(filename, "wb") as f:
-        f.write(b'"Stress Period","Reach","Stream Concentration (metric tons/m3)"\r\n')
+        f.write(header_row)
         for stress_period_index in range(stress_period_count):
             stress_period_bytes = int_to_bytes[stress_period_index]
             for node_index in range(node_count):
                 node = node_index + 1
-                stream_concentration = stream_conc[stress_period_index, node_index]
-                line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, stream_concentration)
+                concentration = nitrate_aggregation[stress_period_index, node_index]
+                line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, concentration)
                 f.write(line)
 
 ###############################################################################
