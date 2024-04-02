@@ -1897,8 +1897,8 @@ def aggregate_reporting_op(output, area, reporting):
 def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
     """get flows for one period"""
 
-    ro = np.zeros((nss))
-    flow = np.zeros((nss))
+    result_A = np.zeros((nss))
+    result_B = np.zeros((nss))
 
     done = np.zeros((nodes), dtype=int)
 
@@ -1923,14 +1923,14 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
 
                 # not done
                 if done[node_swac - 1] < 1:
-                    ro[iseg - 1] = runoff[nodes_per + node_swac]
-                    flow[iseg - 1] = acc
+                    result_A[iseg - 1] = runoff[nodes_per + node_swac]
+                    result_B[iseg - 1] = acc
                     done[node_swac - 1] = 1
                     acc = 0.0
 
                 # stream cell been done
                 else:
-                    flow[iseg - 1] += acc
+                    result_B[iseg - 1] += acc
                     acc = 0.0
                     break
 
@@ -1939,7 +1939,7 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
             # get new downstr node
             downstr = sorted_by_ca[node_swac][0]
 
-    return ro, flow
+    return result_A, result_B
 
 ###############################################################################
 
@@ -1947,8 +1947,8 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
 def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, period, nodes, nss):
     """get flows and nitrate masses for one period"""
 
-    mass_to_stream = np.zeros((nss))
-    mass_in_stream = np.zeros((nss))
+    result_A = np.zeros((nss))
+    result_B = np.zeros((nss))
 
     done = np.zeros((nodes), dtype=int)
 
@@ -1973,14 +1973,14 @@ def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation
 
                 # not done
                 if done[node_swac - 1] < 1:
-                    mass_to_stream[iseg - 1] = stream_nitrate_aggregation[period,node_swac - 1]
-                    mass_in_stream[iseg - 1] = acc                                 
+                    result_A[iseg - 1] = stream_nitrate_aggregation[period,node_swac - 1]
+                    result_B[iseg - 1] = acc
                     done[node_swac - 1] = 1
                     acc = 0.0
 
                 # stream cell been done
                 else:
-                    mass_in_stream[iseg - 1] += acc                     
+                    result_B[iseg - 1] += acc
                     acc = 0.0
                     break
 
@@ -1989,7 +1989,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation
             # get new downstr node
             downstr = sorted_by_ca[node_swac][0]
 
-    return mass_to_stream, mass_in_stream
+    return result_A, result_B
 
 ###############################################################################
 
