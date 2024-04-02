@@ -3,8 +3,7 @@ import swacmod.model as m
 import numpy as np
 
 class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
-	def test_x(self):
-		expected = 1
+	def test_get_str_file_for_1_node_and_1_sp(self):
 		data = {
 			"params": {
 				"node_areas" : {1: 100.0},
@@ -18,7 +17,9 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 			}
 		}
 		runoff = np.array([100.0, 200.0])
+
 		str = m.get_str_file(data, runoff)
+
 		self.assertEqual(1, str.mxacts)
 		self.assertEqual(1, str.nss)
 		self.assertEqual(8, str.ntrib)
