@@ -37,7 +37,7 @@ def _do_nitrate_calculations(blackboard):
 	blackboard.m1_array_kg_per_day = _calculate_m1_array_kg_per_day(blackboard)
 	m1a_b_array_kg_per_day = _calculate_m1a_b_array_kg_per_day(blackboard)
 	blackboard.m1a_array_kg_per_day = m1a_b_array_kg_per_day[0,:]
-	blackboard.m1b_array_kg_per_day = m1a_b_array_kg_per_day[1,:]		
+	blackboard.m1b_array_kg_per_day = m1a_b_array_kg_per_day[1,:]
 	blackboard.p_non_her = _calculate_p_non_her(blackboard)
 	blackboard.p_non = _calculate_p_non(blackboard)
 	blackboard.m2_array_kg_per_day = _calculate_m2_array_kg_per_day(blackboard)
