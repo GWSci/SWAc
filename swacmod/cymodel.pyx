@@ -1969,7 +1969,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, 
                 # not not done
                 if done[node_swac - 1] < 1:
                     acc += max(0.0, runoff[nodes_per + node_swac])
-                    acc_mass += max(0.0, stream_nitrate_aggregation[period,node_swac])
+                    acc_mass += max(0.0, stream_nitrate_aggregation[period,node_swac - 1])
                     done[node_swac - 1] = 1
             else:
                 # stream cell
@@ -1979,7 +1979,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, 
                 if done[node_swac - 1] < 1:
                     ro[iseg - 1] = runoff[nodes_per + node_swac]
                     flow[iseg - 1] = acc
-                    mass_to_stream[iseg - 1] = stream_nitrate_aggregation[period,node_swac]
+                    mass_to_stream[iseg - 1] = stream_nitrate_aggregation[period,node_swac - 1]
                     mass_in_stream[iseg - 1] = acc_mass                                 
                     done[node_swac - 1] = 1
                     acc = 0.0
