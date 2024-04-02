@@ -1897,6 +1897,8 @@ def aggregate_reporting_op(output, area, reporting):
 def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
     """get flows for one period"""
 
+    source = runoff[nodes_per:]
+
     result_A = np.zeros((nss))
     result_B = np.zeros((nss))
 
@@ -1915,7 +1917,7 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
             if str_flag < 1:  # or node_mf < 1:
                 # not not done
                 if done[node_swac - 1] < 1:
-                    acc += max(0.0, runoff[nodes_per + node_swac])
+                    acc += max(0.0, source[node_swac])
                     done[node_swac - 1] = 1
             else:
                 # stream cell
@@ -1923,7 +1925,7 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
 
                 # not done
                 if done[node_swac - 1] < 1:
-                    result_A[iseg - 1] = runoff[nodes_per + node_swac]
+                    result_A[iseg - 1] = source[node_swac]
                     result_B[iseg - 1] = acc
                     done[node_swac - 1] = 1
                     acc = 0.0
