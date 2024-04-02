@@ -2252,9 +2252,8 @@ def get_str_file(data, runoff):
     swac_seg_dic = {}
     seg_swac_dic = {}
     # for mf6 only
-    str_flg = np.zeros((nodes), dtype=int)
 
-    initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
+    str_flg = initialise_reach(data, sorted_by_ca, swac_seg_dic, seg_swac_dic, rd, dis)
     cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
     combine_runoff_with_area(data, runoff)
 
@@ -2302,7 +2301,9 @@ def make_modflow_dis(m, data):
                                    nper=nper)
     return result
 
-def initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis):
+def initialise_reach(data, sorted_by_ca, swac_seg_dic, seg_swac_dic, rd, dis):
+    nodes = data['params']['num_nodes']
+    str_flg = np.zeros((nodes), dtype=int)
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
@@ -2330,6 +2331,7 @@ def initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
             rd[str_count]['rough'] = 222.222
             # inc stream counter
             str_count += 1
+    return str_flg
 
 def initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss):
     Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
@@ -2407,9 +2409,8 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     swac_seg_dic = {}
     seg_swac_dic = {}
     # for mf6 only
-    str_flg = np.zeros((nodes), dtype=int)
 
-    initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
+    str_flg = initialise_reach(data, sorted_by_ca, swac_seg_dic, seg_swac_dic, rd, dis)
     combine_runoff_with_area(data, runoff)
 
     # populate runoff, flow and nitrate mass
