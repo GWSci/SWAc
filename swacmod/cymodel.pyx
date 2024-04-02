@@ -2327,27 +2327,8 @@ def get_str_file(data, runoff):
     # for mf6 only
     str_flg = np.zeros((nodes), dtype=int)
 
-    # initialise reach & segment data
     initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
-    Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
-    cd = []
-    for iseg in range(nss):
-        conn = []
-        node_swac = seg_swac_dic[iseg + 1]
-        downstr = sorted_by_ca[node_swac][idx['downstr']]
-        for n in Gs.neighbors(node_swac):
-            if n in swac_seg_dic:
-                if n == downstr:
-                    # do nothing I only want the +ve numbers here
-                    pass
-                else:
-                    if ff.use_natproc:
-                        conn.append((swac_seg_dic[n]))
-                    else:
-                        conn.append((swac_seg_dic[n] - 1))
-
-        # update num connections
-        cd.append(conn + [0] * (11 - len(conn)))
+    cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
 
     for per in range(nper):
         for node in range(1, nodes + 1):
@@ -2414,6 +2395,28 @@ def initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
             # inc stream counter
             str_count += 1
 
+def initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss):
+    Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
+    cd = []
+    for iseg in range(nss):
+        conn = []
+        node_swac = seg_swac_dic[iseg + 1]
+        downstr = sorted_by_ca[node_swac][idx['downstr']]
+        for n in Gs.neighbors(node_swac):
+            if n in swac_seg_dic:
+                if n == downstr:
+                    # do nothing I only want the +ve numbers here
+                    pass
+                else:
+                    if ff.use_natproc:
+                        conn.append((swac_seg_dic[n]))
+                    else:
+                        conn.append((swac_seg_dic[n] - 1))
+
+        # update num connections
+        cd.append(conn + [0] * (11 - len(conn)))
+    return cd
+
 ##############################################################################
 
 
@@ -2475,27 +2478,8 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     # for mf6 only
     str_flg = np.zeros((nodes), dtype=int)
 
-    # initialise reach & segment data
     initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
-    Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
-    cd = []
-    for iseg in range(nss):
-        conn = []
-        node_swac = seg_swac_dic[iseg + 1]
-        downstr = sorted_by_ca[node_swac][idx['downstr']]
-        for n in Gs.neighbors(node_swac):
-            if n in swac_seg_dic:
-                if n == downstr:
-                    # do nothing I only want the +ve numbers here
-                    pass
-                else:
-                    if ff.use_natproc:
-                        conn.append((swac_seg_dic[n]))
-                    else:
-                        conn.append((swac_seg_dic[n] - 1))
-
-        # update num connections
-        cd.append(conn + [0] * (11 - len(conn)))
+    cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
 
     for per in range(nper):
         for node in range(1, nodes + 1):
