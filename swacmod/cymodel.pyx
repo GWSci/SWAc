@@ -1949,6 +1949,8 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
 def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, period, nodes, nss):
     """get flows and nitrate masses for one period"""
 
+    source = stream_nitrate_aggregation[period,:]
+
     result_A = np.zeros((nss))
     result_B = np.zeros((nss))
 
@@ -1967,7 +1969,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation
             if str_flag < 1:  # or node_mf < 1:
                 # not not done
                 if done[node_swac - 1] < 1:
-                    acc += max(0.0, stream_nitrate_aggregation[period,node_swac - 1])
+                    acc += max(0.0, source[node_swac - 1])
                     done[node_swac - 1] = 1
             else:
                 # stream cell
@@ -1975,7 +1977,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation
 
                 # not done
                 if done[node_swac - 1] < 1:
-                    result_A[iseg - 1] = stream_nitrate_aggregation[period,node_swac - 1]
+                    result_A[iseg - 1] = source[node_swac - 1]
                     result_B[iseg - 1] = acc
                     done[node_swac - 1] = 1
                     acc = 0.0
