@@ -1,6 +1,7 @@
 import unittest
 import swacmod.model as m
 import numpy as np
+import warnings
 
 class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 	def test_get_str_file_for_1_node_and_1_sp(self):
@@ -18,7 +19,9 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 		}
 		runoff = np.array([100.0, 200.0])
 
-		str = m.get_str_file(data, runoff)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			str = m.get_str_file(data, runoff)
 
 		self.assertEqual(1, str.mxacts)
 		self.assertEqual(1, str.nss)
