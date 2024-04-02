@@ -1895,11 +1895,13 @@ def aggregate_reporting_op(output, area, reporting):
 
 
 def get_sfr_flows(sorted_by_ca, runoff, done, areas, swac_seg_dic, ro,
-                  flow, nodes_per):
+                  flow, nodes_per, nodes):
     """get flows for one period"""
 
     ro[:] = 0.0
     flow[:] = 0.0
+
+    done = np.zeros((nodes), dtype=int)
 
     for node_swac, line in sorted_by_ca.items():
         downstr, str_flag = line[:2]
@@ -1944,16 +1946,16 @@ def get_sfr_flows(sorted_by_ca, runoff, done, areas, swac_seg_dic, ro,
 
 
 def get_sfr_flows_nitrate(sorted_by_ca, runoff, done, areas, swac_seg_dic, ro,
-                  flow, nodes_per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, period):
+                  flow, nodes_per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, period, nodes):
     """get flows and nitrate masses for one period"""
-    cdef:
-        double[:] nitrate_added_tons_per_day = np.zeros(ro.size)
         
     ro[:] = 0.0
     flow[:] = 0.0
 
     mass_to_stream[:] = 0.0
     mass_in_stream[:] = 0.0
+
+    done = np.zeros((nodes), dtype=int)
 
     for node_swac, line in sorted_by_ca.items():
         downstr, str_flag = line[:2]
@@ -2197,7 +2199,7 @@ def get_sfr_file(data, runoff):
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
         ro, flow = get_sfr_flows(sorted_by_ca, runoff, done, areas,
-                                 swac_seg_dic, ro, flow, nodes * per)
+                                 swac_seg_dic, ro, flow, nodes * per, nodes)
 
         if data['params']['gwmodel_type'] == 'mfusg':
             for iseg in range(nss):
@@ -2339,7 +2341,7 @@ def get_str_file(data, runoff):
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
         ro, flow = get_sfr_flows(sorted_by_ca, runoff, done, areas,
-                                 swac_seg_dic, ro, flow, nodes * per)
+                                 swac_seg_dic, ro, flow, nodes * per, nodes)
 
         for iseg in range(nss):
             rd[iseg]['flow'] = flow[iseg] + ro[iseg]
@@ -2490,7 +2492,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
 
         ro, flow, mass_to_stream, mass_in_stream = get_sfr_flows_nitrate(sorted_by_ca, runoff, done, areas,
-                                 swac_seg_dic, ro, flow, nodes * per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, per)
+                                 swac_seg_dic, ro, flow, nodes * per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, per, nodes)
 
         for iseg in range(nss):
             str_flow_period[iseg] = flow[iseg] + ro[iseg]
