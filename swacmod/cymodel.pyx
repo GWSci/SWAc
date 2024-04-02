@@ -1899,7 +1899,9 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
 
     source = runoff
     offset = nodes_per
+    return get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, offset)
 
+def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, offset):
     result_A = np.zeros((nss))
     result_B = np.zeros((nss))
 
@@ -1952,50 +1954,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation
 
     source = stream_nitrate_aggregation[period,:]
     offset = -1
-
-    result_A = np.zeros((nss))
-    result_B = np.zeros((nss))
-
-    done = np.zeros((nodes), dtype=int)
-
-    for node_swac, line in sorted_by_ca.items():
-        downstr, str_flag = line[:2]
-        acc = 0.0
-
-        # accumulate pre-stream flows into network
-        while downstr > 1:
-
-            str_flag = sorted_by_ca[node_swac][1]
-
-            # not str
-            if str_flag < 1:  # or node_mf < 1:
-                # not not done
-                if done[node_swac - 1] < 1:
-                    acc += max(0.0, source[node_swac + offset])
-                    done[node_swac - 1] = 1
-            else:
-                # stream cell
-                iseg = swac_seg_dic[node_swac]
-
-                # not done
-                if done[node_swac - 1] < 1:
-                    result_A[iseg - 1] = source[node_swac + offset]
-                    result_B[iseg - 1] = acc
-                    done[node_swac - 1] = 1
-                    acc = 0.0
-
-                # stream cell been done
-                else:
-                    result_B[iseg - 1] += acc
-                    acc = 0.0
-                    break
-
-            # new node
-            node_swac = downstr
-            # get new downstr node
-            downstr = sorted_by_ca[node_swac][0]
-
-    return result_A, result_B
+    return get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, offset)
 
 ###############################################################################
 
