@@ -2319,9 +2319,6 @@ def get_str_file(data, runoff):
                                    nper=nper)
 
     flopy.modflow.ModflowBas(m, ifrefm=False)
-        # sd = flopy.modflow.ModflowSfr2.get_empty_segment_data(nss)
-        # rd = flopy.modflow.ModflowSfr2.get_empty_reach_data(nstrm,
-        #                                                     structured=False)
     rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
     reach_data = {}
     swac_seg_dic = {}
@@ -2381,16 +2378,6 @@ def get_str_file(data, runoff):
 
         # update num connections
         cd.append(conn + [0] * (11 - len(conn)))
-    #rd[iseg][9] = len(cd[iseg]) - 1
-
-
-    # for iseg in range(nss):
-    #     node_swac = seg_swac_dic[iseg + 1]
-    #     downstr = sorted_by_ca[node_swac][idx['downstr']]
-    #     if downstr in swac_seg_dic:
-    #         sd[iseg]['outseg'] = swac_seg_dic[downstr]
-    #     else:
-    #         sd[iseg]['outseg'] = 0
 
     for per in range(nper):
         for node in range(1, nodes + 1):
