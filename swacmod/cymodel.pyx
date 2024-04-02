@@ -1944,7 +1944,7 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
 ###############################################################################
 
 
-def get_sfr_flows_nitrate(sorted_by_ca, runoff, swac_seg_dic, nodes_per, stream_nitrate_aggregation, period, nodes, nss):
+def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, period, nodes, nss):
     """get flows and nitrate masses for one period"""
 
     mass_to_stream = np.zeros((nss))
@@ -2461,8 +2461,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
 
         ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
-        mass_to_stream, mass_in_stream = get_sfr_flows_nitrate(
-            sorted_by_ca, runoff, swac_seg_dic, nodes * per, stream_nitrate_aggregation, per, nodes, nss)
+        mass_to_stream, mass_in_stream = get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, per, nodes, nss)
 
         for iseg in range(nss):
             str_flow_period[iseg] = flow[iseg] + ro[iseg]
