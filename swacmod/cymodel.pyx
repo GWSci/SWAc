@@ -2224,7 +2224,6 @@ def get_str_file(data, runoff):
 
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
-    nlay, nrow, ncol = data['params']['mf96_lrc']
     rte_topo = data['params']['routing_topology']
     m = None
 
@@ -2245,12 +2244,7 @@ def get_str_file(data, runoff):
     rd = []
 
     m = make_modflow_model(data)
-
-    dis = flopy.modflow.ModflowDis(m,
-                                   nlay=nlay,
-                                   nrow=nrow,
-                                   ncol=ncol,
-                                   nper=nper)
+    dis = make_modflow_dis(m, data)
 
     flopy.modflow.ModflowBas(m, ifrefm=False)
     rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
@@ -2296,6 +2290,16 @@ def make_modflow_model(data):
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
     result = flopy.modflow.Modflow(modelname=path)
+    return result
+
+def make_modflow_dis(m, data):
+    nper = len(data['params']['time_periods'])
+    nlay, nrow, ncol = data['params']['mf96_lrc']
+    result = flopy.modflow.ModflowDis(m,
+                                   nlay=nlay,
+                                   nrow=nrow,
+                                   ncol=ncol,
+                                   nper=nper)
     return result
 
 def initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis):
@@ -2372,7 +2376,6 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
 
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
-    nlay, nrow, ncol = data['params']['mf96_lrc']
     rte_topo = data['params']['routing_topology']
     m = None
 
@@ -2392,12 +2395,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     rd = []
 
     m = make_modflow_model(data)
-
-    dis = flopy.modflow.ModflowDis(m,
-                                   nlay=nlay,
-                                   nrow=nrow,
-                                   ncol=ncol,
-                                   nper=nper)
+    dis = make_modflow_dis(m, data)
 
     flopy.modflow.ModflowBas(m, ifrefm=False)
     rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
