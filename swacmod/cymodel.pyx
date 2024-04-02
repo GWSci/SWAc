@@ -2224,11 +2224,7 @@ def get_str_file(data, runoff):
 
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
-    rte_topo = data['params']['routing_topology']
-    m = None
-
-    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
-                                      key=lambda x: x[1][4]))
+    sorted_by_ca = make_sorted_by_ca(data)
 
     names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
              'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
@@ -2283,6 +2279,11 @@ def get_str_file(data, runoff):
     strm.heading = "# DELETE ME"
 
     return strm
+
+def make_sorted_by_ca(data):
+    rte_topo = data['params']['routing_topology']
+    result = OrderedDict(sorted(rte_topo.items(), key=lambda x: x[1][4]))
+    return result
 
 def make_modflow_model(data):
     import os.path
@@ -2378,11 +2379,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
 
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
-    rte_topo = data['params']['routing_topology']
-    m = None
-
-    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
-                                      key=lambda x: x[1][4]))
+    sorted_by_ca = make_sorted_by_ca(data)
 
     names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
              'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
