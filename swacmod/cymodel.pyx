@@ -1951,12 +1951,14 @@ def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, 
         
     ro[:] = 0.0
     flow[:] = 0.0
+
     mass_to_stream[:] = 0.0
     mass_in_stream[:] = 0.0
 
     for node_swac, line in sorted_by_ca.items():
         downstr, str_flag = line[:2]
         acc = 0.0
+
         acc_mass = 0.0
 
         # accumulate pre-stream flows into network
@@ -1969,8 +1971,9 @@ def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, 
                 # not not done
                 if done[node_swac - 1] < 1:
                     acc += max(0.0, runoff[nodes_per + node_swac])
-                    acc_mass += max(0.0, stream_nitrate_aggregation[period,node_swac - 1])
                     done[node_swac - 1] = 1
+
+                    acc_mass += max(0.0, stream_nitrate_aggregation[period,node_swac - 1])
             else:
                 # stream cell
                 iseg = swac_seg_dic[node_swac]
@@ -1979,19 +1982,21 @@ def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, 
                 if done[node_swac - 1] < 1:
                     ro[iseg - 1] = runoff[nodes_per + node_swac]
                     flow[iseg - 1] = acc
-                    mass_to_stream[iseg - 1] = stream_nitrate_aggregation[period,node_swac - 1]
-                    mass_in_stream[iseg - 1] = acc_mass                                 
                     done[node_swac - 1] = 1
                     acc = 0.0
+
+                    mass_to_stream[iseg - 1] = stream_nitrate_aggregation[period,node_swac - 1]
+                    mass_in_stream[iseg - 1] = acc_mass                                 
                     acc_mass = 0.0
 
                 # stream cell been done
                 else:
                     flow[iseg - 1] += acc
-                    mass_in_stream[iseg - 1] += acc_mass 
-                    
                     acc = 0.0
+
+                    mass_in_stream[iseg - 1] += acc_mass                     
                     acc_mass = 0.0
+
                     break
 
             # new node
@@ -2275,7 +2280,6 @@ def get_sfr_file(data, runoff):
 
 ##############################################################################
 
-
 def get_str_file(data, runoff):
     """get STR object."""
 
@@ -2420,7 +2424,6 @@ def combine_runoff_with_area(runoff, areas, nper, nodes):
             runoff[i] = runoff[i] * areas[node] * fac
 
 ##############################################################################
-
 
 def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     """integrate flows and nitrate mass in stream cells"""
