@@ -1917,15 +1917,14 @@ def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, offset):
             if is_str:
                 stream_cell = swac_seg_dic[node_swac]
 
-                # not done
-                if done[node_swac - 1] < 1:
+                is_done = done[node_swac - 1] == 1
+                if not is_done:
                     result_A[stream_cell - 1] = source[node_swac + offset]
                     result_B[stream_cell - 1] = acc
                     done[node_swac - 1] = 1
                     acc = 0.0
 
-                # stream cell been done
-                else:
+                if is_done:
                     result_B[stream_cell - 1] += acc
                     acc = 0.0
                     break
