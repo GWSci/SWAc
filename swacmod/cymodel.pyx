@@ -2221,11 +2221,7 @@ def get_str_file(data, runoff):
     """get STR object."""
 
     import copy
-    import os.path
 
-    areas = data['params']['node_areas']
-    fileout = data['params']['run_name']
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
     nlay, nrow, ncol = data['params']['mf96_lrc']
@@ -2248,7 +2244,7 @@ def get_str_file(data, runoff):
     cd = []
     rd = []
 
-    m = flopy.modflow.Modflow(modelname=path)
+    m = make_modflow_model(data)
 
     dis = flopy.modflow.ModflowDis(m,
                                    nlay=nlay,
@@ -2266,7 +2262,7 @@ def get_str_file(data, runoff):
 
     initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
     cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
-    combine_runoff_with_area(runoff, areas, nper, nodes)
+    combine_runoff_with_area(data, runoff)
 
     # populate runoff and flow
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
@@ -2294,6 +2290,13 @@ def get_str_file(data, runoff):
     strm.heading = "# DELETE ME"
 
     return strm
+
+def make_modflow_model(data):
+    import os.path
+    fileout = data['params']['run_name']
+    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    result = flopy.modflow.Modflow(modelname=path)
+    return result
 
 def initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis):
     str_count = 0
@@ -2346,7 +2349,10 @@ def initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg
         cd.append(conn + [0] * (11 - len(conn)))
     return cd
 
-def combine_runoff_with_area(runoff, areas, nper, nodes):
+def combine_runoff_with_area(data, runoff):
+    areas = data['params']['node_areas']
+    nper = len(data['params']['time_periods'])
+    nodes = data['params']['num_nodes']
     # units oddness - lots of hardcoded 1000s in input_output.py
     fac = 0.001
     for per in range(nper):
@@ -2360,14 +2366,10 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     """integrate flows and nitrate mass in stream cells"""
 
     import copy
-    import os.path
-    
+
     cdef:
         double[:,:] stream_conc
 
-    areas = data['params']['node_areas']
-    fileout = data['params']['run_name']
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
     nlay, nrow, ncol = data['params']['mf96_lrc']
@@ -2389,7 +2391,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
 
     rd = []
 
-    m = flopy.modflow.Modflow(modelname=path)
+    m = make_modflow_model(data)
 
     dis = flopy.modflow.ModflowDis(m,
                                    nlay=nlay,
@@ -2410,7 +2412,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     str_flg = np.zeros((nodes), dtype=int)
 
     initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
-    combine_runoff_with_area(runoff, areas, nper, nodes)
+    combine_runoff_with_area(data, runoff)
 
     # populate runoff, flow and nitrate mass
     for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
