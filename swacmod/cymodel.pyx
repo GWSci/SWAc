@@ -2454,7 +2454,6 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
 
     istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
 
-    cd = []
     rd = []
 
     m = flopy.modflow.Modflow(modelname=path)
@@ -2479,7 +2478,6 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     str_flg = np.zeros((nodes), dtype=int)
 
     initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
-    cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
 
     for per in range(nper):
         for node in range(1, nodes + 1):
