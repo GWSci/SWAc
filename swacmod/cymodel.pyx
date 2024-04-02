@@ -1906,37 +1906,37 @@ def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, offset):
     result_B = np.zeros((nss))
     done = np.zeros((nodes), dtype=int)
 
-    for node_swac, line in sorted_by_ca.items():
+    for node_number, line in sorted_by_ca.items():
+        node_index = node_number - 1
         downstr, str_flag = line[:2]
         acc = 0.0
 
         while downstr > 1:
-            str_flag = sorted_by_ca[node_swac][1]
+            str_flag = sorted_by_ca[node_number][1]
             is_str = str_flag >= 1
-            is_done = done[node_swac - 1] == 1
+            is_done = done[node_index] == 1
 
             if is_str:
-                stream_cell_index = swac_seg_dic[node_swac] - 1
+                stream_cell_index = swac_seg_dic[node_number] - 1
 
                 if is_done:
                     result_B[stream_cell_index] += acc
                     acc = 0.0
                     break
                 else:
-                    result_A[stream_cell_index] = source[node_swac + offset]
+                    result_A[stream_cell_index] = source[node_number + offset]
                     result_B[stream_cell_index] = acc
-                    done[node_swac - 1] = 1
+                    done[node_index] = 1
                     acc = 0.0
 
             else:
                 if not is_done:
-                    acc += max(0.0, source[node_swac + offset])
-                    done[node_swac - 1] = 1
+                    acc += max(0.0, source[node_number + offset])
+                    done[node_index] = 1
 
-            # new node
-            node_swac = downstr
-            # get new downstr node
-            downstr = sorted_by_ca[node_swac][0]
+            node_number = downstr
+            node_index = node_number - 1
+            downstr = sorted_by_ca[node_number][0]
 
     return result_A, result_B
 
