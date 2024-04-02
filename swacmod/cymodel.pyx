@@ -1954,7 +1954,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, runoff, swac_seg_dic, nodes_per, stream_
 
     for node_swac, line in sorted_by_ca.items():
         downstr, str_flag = line[:2]
-        acc_mass = 0.0
+        acc = 0.0
 
         # accumulate pre-stream flows into network
         while downstr > 1:
@@ -1966,7 +1966,7 @@ def get_sfr_flows_nitrate(sorted_by_ca, runoff, swac_seg_dic, nodes_per, stream_
                 # not not done
                 if done[node_swac - 1] < 1:
                     done[node_swac - 1] = 1
-                    acc_mass += max(0.0, stream_nitrate_aggregation[period,node_swac - 1])
+                    acc += max(0.0, stream_nitrate_aggregation[period,node_swac - 1])
             else:
                 # stream cell
                 iseg = swac_seg_dic[node_swac]
@@ -1975,13 +1975,13 @@ def get_sfr_flows_nitrate(sorted_by_ca, runoff, swac_seg_dic, nodes_per, stream_
                 if done[node_swac - 1] < 1:
                     done[node_swac - 1] = 1
                     mass_to_stream[iseg - 1] = stream_nitrate_aggregation[period,node_swac - 1]
-                    mass_in_stream[iseg - 1] = acc_mass                                 
-                    acc_mass = 0.0
+                    mass_in_stream[iseg - 1] = acc                                 
+                    acc = 0.0
 
                 # stream cell been done
                 else:
-                    mass_in_stream[iseg - 1] += acc_mass                     
-                    acc_mass = 0.0
+                    mass_in_stream[iseg - 1] += acc                     
+                    acc = 0.0
                     break
 
             # new node
