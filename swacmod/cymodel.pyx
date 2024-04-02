@@ -1896,7 +1896,6 @@ def aggregate_reporting_op(output, area, reporting):
 
 def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
     """get flows for one period"""
-    import numpy as np
 
     ro = np.zeros((nss))
     flow = np.zeros((nss))
@@ -1947,13 +1946,9 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
 
 def get_sfr_flows_nitrate(sorted_by_ca, runoff, swac_seg_dic, nodes_per, stream_nitrate_aggregation, period, nodes, nss):
     """get flows and nitrate masses for one period"""
-    import numpy as np
 
     ro = np.zeros((nss))
     flow = np.zeros((nss))
-
-    mass_to_stream = np.zeros((nss))
-    mass_in_stream = np.zeros((nss))
 
     done = np.zeros((nodes), dtype=int)
 
@@ -1987,8 +1982,6 @@ def get_sfr_flows_nitrate(sorted_by_ca, runoff, swac_seg_dic, nodes_per, stream_
                     done[node_swac - 1] = 1
                     acc = 0.0
 
-                    mass_to_stream[iseg - 1] = stream_nitrate_aggregation[period,node_swac - 1]
-                    mass_in_stream[iseg - 1] = acc_mass                                 
                     acc_mass = 0.0
 
                 # stream cell been done
@@ -1996,7 +1989,6 @@ def get_sfr_flows_nitrate(sorted_by_ca, runoff, swac_seg_dic, nodes_per, stream_
                     flow[iseg - 1] += acc
                     acc = 0.0
 
-                    mass_in_stream[iseg - 1] += acc_mass                     
                     acc_mass = 0.0
 
                     break
