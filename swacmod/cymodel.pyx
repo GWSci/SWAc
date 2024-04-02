@@ -2283,8 +2283,6 @@ def get_str_file(data, runoff):
     import copy
     import os.path
 
-    # units oddness - lots of hardcoded 1000s in input_output.py
-    fac = 0.001
     areas = data['params']['node_areas']
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
@@ -2329,11 +2327,7 @@ def get_str_file(data, runoff):
 
     initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
     cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
-
-    for per in range(nper):
-        for node in range(1, nodes + 1):
-            i = (nodes * per) + node
-            runoff[i] = runoff[i] * areas[node] * fac
+    combine_runoff_with_area(runoff, areas, nper, nodes)
 
     ro, flow = np.zeros((nss)), np.zeros((nss))
 
@@ -2417,6 +2411,14 @@ def initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg
         cd.append(conn + [0] * (11 - len(conn)))
     return cd
 
+def combine_runoff_with_area(runoff, areas, nper, nodes):
+    # units oddness - lots of hardcoded 1000s in input_output.py
+    fac = 0.001
+    for per in range(nper):
+        for node in range(1, nodes + 1):
+            i = (nodes * per) + node
+            runoff[i] = runoff[i] * areas[node] * fac
+
 ##############################################################################
 
 
@@ -2430,8 +2432,6 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     cdef:
         double[:,:] stream_conc
 
-    # units oddness - lots of hardcoded 1000s in input_output.py
-    fac = 0.001
     areas = data['params']['node_areas']
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
@@ -2478,11 +2478,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     str_flg = np.zeros((nodes), dtype=int)
 
     initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
-
-    for per in range(nper):
-        for node in range(1, nodes + 1):
-            i = (nodes * per) + node
-            runoff[i] = runoff[i] * areas[node] * fac
+    combine_runoff_with_area(runoff, areas, nper, nodes)
 
     ro, flow = np.zeros((nss)), np.zeros((nss))
     mass_to_stream, mass_in_stream = np.zeros((nss)), np.zeros((nss))
