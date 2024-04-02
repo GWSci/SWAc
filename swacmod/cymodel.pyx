@@ -1898,10 +1898,10 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
     """get flows for one period"""
 
     source = runoff
-    offset = nodes_per
-    return get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, offset)
+    index_offset = nodes_per + 1
+    return get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
 
-def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, offset):
+def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset):
     result_A = np.zeros((nss))
     result_B = np.zeros((nss))
     done = np.zeros((nodes), dtype=int)
@@ -1924,14 +1924,14 @@ def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, offset):
                     acc = 0.0
                     break
                 else:
-                    result_A[stream_cell_index] = source[node_number + offset]
+                    result_A[stream_cell_index] = source[node_index + index_offset]
                     result_B[stream_cell_index] = acc
                     done[node_index] = 1
                     acc = 0.0
 
             else:
                 if not is_done:
-                    acc += max(0.0, source[node_number + offset])
+                    acc += max(0.0, source[node_index + index_offset])
                     done[node_index] = 1
 
             node_number = downstr
@@ -1947,8 +1947,8 @@ def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation
     """get flows and nitrate masses for one period"""
 
     source = stream_nitrate_aggregation[period,:]
-    offset = -1
-    return get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, offset)
+    index_offset = 0
+    return get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
 
 ###############################################################################
 
