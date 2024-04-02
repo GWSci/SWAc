@@ -2328,33 +2328,7 @@ def get_str_file(data, runoff):
     str_flg = np.zeros((nodes), dtype=int)
 
     # initialise reach & segment data
-    str_count = 0
-    for node_swac, line in sorted_by_ca.items():
-        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
-         depth, width) = line
-        # for mf6 only
-        str_flg[node_swac-1] = str_flag
-        ca = ca
-        if str_flag > 0:
-            swac_seg_dic[node_swac] = str_count + 1
-            seg_swac_dic[str_count + 1] = node_swac
-            # NB docs say node number should be zero based (node_mf -1)
-            #  but doesn't seem to be
-            l, r, c = dis.get_lrc(node_mf)[0]
-            rd[str_count]['k'] = l - 1
-            rd[str_count]['i'] = r - 1
-            rd[str_count]['j'] = c - 1
-            rd[str_count]['segment'] = str_count + 1
-            rd[str_count]['reach'] = 1
-            rd[str_count]['stage'] = z + depth
-            rd[str_count]['cond'] = (length * width * str_k) / bed_thk
-            rd[str_count]['sbot'] = z - bed_thk
-            rd[str_count]['stop'] = z
-            rd[str_count]['width'] = width
-            rd[str_count]['slope'] = 111.111
-            rd[str_count]['rough'] = 222.222
-            # inc stream counter
-            str_count += 1
+    initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
     Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
     cd = []
     for iseg in range(nss):
@@ -2410,6 +2384,35 @@ def get_str_file(data, runoff):
     strm.heading = "# DELETE ME"
 
     return strm
+
+def initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis):
+    str_count = 0
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
+         depth, width) = line
+        # for mf6 only
+        str_flg[node_swac-1] = str_flag
+        ca = ca
+        if str_flag > 0:
+            swac_seg_dic[node_swac] = str_count + 1
+            seg_swac_dic[str_count + 1] = node_swac
+            # NB docs say node number should be zero based (node_mf -1)
+            #  but doesn't seem to be
+            l, r, c = dis.get_lrc(node_mf)[0]
+            rd[str_count]['k'] = l - 1
+            rd[str_count]['i'] = r - 1
+            rd[str_count]['j'] = c - 1
+            rd[str_count]['segment'] = str_count + 1
+            rd[str_count]['reach'] = 1
+            rd[str_count]['stage'] = z + depth
+            rd[str_count]['cond'] = (length * width * str_k) / bed_thk
+            rd[str_count]['sbot'] = z - bed_thk
+            rd[str_count]['stop'] = z
+            rd[str_count]['width'] = width
+            rd[str_count]['slope'] = 111.111
+            rd[str_count]['rough'] = 222.222
+            # inc stream counter
+            str_count += 1
 
 ##############################################################################
 
@@ -2473,33 +2476,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     str_flg = np.zeros((nodes), dtype=int)
 
     # initialise reach & segment data
-    str_count = 0
-    for node_swac, line in sorted_by_ca.items():
-        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
-         depth, width) = line
-        # for mf6 only
-        str_flg[node_swac-1] = str_flag
-        ca = ca
-        if str_flag > 0:
-            swac_seg_dic[node_swac] = str_count + 1
-            seg_swac_dic[str_count + 1] = node_swac
-            # NB docs say node number should be zero based (node_mf -1)
-            #  but doesn't seem to be
-            l, r, c = dis.get_lrc(node_mf)[0]
-            rd[str_count]['k'] = l - 1
-            rd[str_count]['i'] = r - 1
-            rd[str_count]['j'] = c - 1
-            rd[str_count]['segment'] = str_count + 1
-            rd[str_count]['reach'] = 1
-            rd[str_count]['stage'] = z + depth
-            rd[str_count]['cond'] = (length * width * str_k) / bed_thk
-            rd[str_count]['sbot'] = z - bed_thk
-            rd[str_count]['stop'] = z
-            rd[str_count]['width'] = width
-            rd[str_count]['slope'] = 111.111
-            rd[str_count]['rough'] = 222.222
-            # inc stream counter
-            str_count += 1
+    initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
     Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
     cd = []
     for iseg in range(nss):
