@@ -1894,12 +1894,12 @@ def aggregate_reporting_op(output, area, reporting):
 ###############################################################################
 
 
-def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, ro,
-                  flow, nodes_per, nodes):
+def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
     """get flows for one period"""
+    import numpy as np
 
-    ro[:] = 0.0
-    flow[:] = 0.0
+    ro = np.zeros((nss))
+    flow = np.zeros((nss))
 
     done = np.zeros((nodes), dtype=int)
 
@@ -1945,12 +1945,12 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, ro,
 ###############################################################################
 
 
-def get_sfr_flows_nitrate(sorted_by_ca, runoff, swac_seg_dic, ro,
-                  flow, nodes_per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, period, nodes):
+def get_sfr_flows_nitrate(sorted_by_ca, runoff, swac_seg_dic, nodes_per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, period, nodes, nss):
     """get flows and nitrate masses for one period"""
-        
-    ro[:] = 0.0
-    flow[:] = 0.0
+    import numpy as np
+
+    ro = np.zeros((nss))
+    flow = np.zeros((nss))
 
     mass_to_stream[:] = 0.0
     mass_in_stream[:] = 0.0
@@ -2192,12 +2192,10 @@ def get_sfr_file(data, runoff):
             i = (nodes * per) + node
             runoff[i] = runoff[i] * areas[node] * fac
 
-    ro, flow = np.zeros((nss)), np.zeros((nss))
-
     # populate runoff and flow
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
-        ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, ro, flow, nodes * per, nodes)
+        ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
 
         if data['params']['gwmodel_type'] == 'mfusg':
             for iseg in range(nss):
@@ -2331,12 +2329,10 @@ def get_str_file(data, runoff):
     cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
     combine_runoff_with_area(runoff, areas, nper, nodes)
 
-    ro, flow = np.zeros((nss)), np.zeros((nss))
-
     # populate runoff and flow
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
-        ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, ro, flow, nodes * per, nodes)
+        ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
 
         for iseg in range(nss):
             rd[iseg]['flow'] = flow[iseg] + ro[iseg]
@@ -2478,14 +2474,13 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     initialise_reach(sorted_by_ca, str_flg, swac_seg_dic, seg_swac_dic, rd, dis)
     combine_runoff_with_area(runoff, areas, nper, nodes)
 
-    ro, flow = np.zeros((nss)), np.zeros((nss))
     mass_to_stream, mass_in_stream = np.zeros((nss)), np.zeros((nss))
 
     # populate runoff, flow and nitrate mass
     for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
 
-        ro, flow, mass_to_stream, mass_in_stream = get_sfr_flows_nitrate(sorted_by_ca, runoff,
-                                 swac_seg_dic, ro, flow, nodes * per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, per, nodes)
+        ro, flow, mass_to_stream, mass_in_stream = get_sfr_flows_nitrate(
+            sorted_by_ca, runoff, swac_seg_dic, nodes * per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, per, nodes, nss)
 
         for iseg in range(nss):
             str_flow_period[iseg] = flow[iseg] + ro[iseg]
