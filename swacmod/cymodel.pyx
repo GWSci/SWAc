@@ -2503,14 +2503,12 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
             # NB docs say node number should be zero based (node_mf -1)
             #  but doesn't seem to be
             l, r, c = dis.get_lrc(node_mf)[0]
-            # print(str_count + 1, l, r, c)
             rd[str_count]['k'] = l - 1
             rd[str_count]['i'] = r - 1
             rd[str_count]['j'] = c - 1
             rd[str_count]['segment'] = str_count + 1
             rd[str_count]['reach'] = 1
             rd[str_count]['stage'] = z + depth
-            # print(length, width, str_k, bed_thk, z)
             rd[str_count]['cond'] = (length * width * str_k) / bed_thk
             rd[str_count]['sbot'] = z - bed_thk
             rd[str_count]['stop'] = z
@@ -2523,14 +2521,12 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     cd = []
     for iseg in range(nss):
         conn = []
-        # print("SEg_SWAC", seg_swac_dic)
         node_swac = seg_swac_dic[iseg + 1]
         downstr = sorted_by_ca[node_swac][idx['downstr']]
         for n in Gs.neighbors(node_swac):
             if n in swac_seg_dic:
                 if n == downstr:
                     # do nothing I only want the +ve numbers here
-                    # conn.append(-float(swac_seg_dic[n] - 1))
                     pass
                 else:
                     if ff.use_natproc:
@@ -2540,16 +2536,6 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
 
         # update num connections
         cd.append(conn + [0] * (11 - len(conn)))
-    #rd[iseg][9] = len(cd[iseg]) - 1
-
-
-    # for iseg in range(nss):
-    #     node_swac = seg_swac_dic[iseg + 1]
-    #     downstr = sorted_by_ca[node_swac][idx['downstr']]
-    #     if downstr in swac_seg_dic:
-    #         sd[iseg]['outseg'] = swac_seg_dic[downstr]
-    #     else:
-    #         sd[iseg]['outseg'] = 0
 
     for per in range(nper):
         for node in range(1, nodes + 1):
