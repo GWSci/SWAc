@@ -1086,7 +1086,6 @@ def get_recharge(data, output, node):
 def get_mf6rch_file(data, rchrate):
     """get mf6 RCH object."""
 
-    import numpy as np
     import os.path
 
     cdef int i, per
@@ -1956,7 +1955,6 @@ def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation
 def get_sfr_file(data, runoff):
     """get SFR object."""
 
-    import numpy as np
     import copy
     import os.path
 
@@ -2222,7 +2220,6 @@ def get_sfr_file(data, runoff):
 def get_str_file(data, runoff):
     """get STR object."""
 
-    import numpy as np
     import copy
     import os.path
 
@@ -2362,7 +2359,6 @@ def combine_runoff_with_area(runoff, areas, nper, nodes):
 def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     """integrate flows and nitrate mass in stream cells"""
 
-    import numpy as np
     import copy
     import os.path
     
@@ -2627,7 +2623,6 @@ def get_swabs(data, output, node):
 def get_evt_file(data, evtrate):
     """get EVT object."""
 
-    import numpy as np
     import os.path
 
     cdef int i, per, nper, nodes
