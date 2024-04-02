@@ -1904,20 +1904,18 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
 def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, offset):
     result_A = np.zeros((nss))
     result_B = np.zeros((nss))
-
     done = np.zeros((nodes), dtype=int)
 
     for node_swac, line in sorted_by_ca.items():
         downstr, str_flag = line[:2]
         acc = 0.0
 
-        # accumulate pre-stream flows into network
         while downstr > 1:
-
             str_flag = sorted_by_ca[node_swac][1]
 
             # not str
-            if str_flag < 1:  # or node_mf < 1:
+            is_str = str_flag >= 1
+            if not is_str:
                 # not not done
                 if done[node_swac - 1] < 1:
                     acc += max(0.0, source[node_swac + offset])
