@@ -2251,20 +2251,18 @@ def get_str_file(data, runoff):
 
     str_flg = initialise_reach(data, sorted_by_ca, swac_seg_dic, seg_swac_dic, rd, dis)
     cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
-    combine_runoff_with_area(data, runoff)
+    runoff_with_area = combine_runoff_with_area(data, runoff)
 
     # populate runoff and flow
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
-        ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
+        ro, flow = get_sfr_flows(sorted_by_ca, runoff_with_area, swac_seg_dic, nodes * per, nodes, nss)
 
         for iseg in range(nss):
             rd[iseg]['flow'] = flow[iseg] + ro[iseg]
 
         # add segment data for this period
         reach_data[per] = copy.deepcopy(rd)
-
-    isfropt = 1
 
     strm = flopy.modflow.ModflowStr(m,
                                     mxacts=nstrm,
@@ -2366,6 +2364,7 @@ def combine_runoff_with_area(data, runoff):
         for node in range(1, nodes + 1):
             i = (nodes * per) + node
             runoff[i] = runoff[i] * areas[node] * fac
+    return runoff
 
 ##############################################################################
 
@@ -2408,12 +2407,12 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     # for mf6 only
 
     str_flg = initialise_reach(data, sorted_by_ca, swac_seg_dic, seg_swac_dic, rd, dis)
-    combine_runoff_with_area(data, runoff)
+    runoff_with_area = combine_runoff_with_area(data, runoff)
 
     # populate runoff, flow and nitrate mass
     for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
 
-        ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
+        ro, flow = get_sfr_flows(sorted_by_ca, runoff_with_area, swac_seg_dic, nodes * per, nodes, nss)
         mass_to_stream, mass_in_stream = get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, per, nodes, nss)
 
         for iseg in range(nss):
