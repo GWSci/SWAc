@@ -1896,20 +1896,16 @@ def get_aggregated_sfr_flows(nper, nss, sorted_by_ca, runoff_with_area, swac_seg
     result = np.zeros((nper, nss))
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
         result_A, result_B = get_sfr_flows(sorted_by_ca, runoff_with_area, swac_seg_dic, nodes * per, nodes, nss)
-        str_flow_period = np.zeros(nss)
         for iseg in range(nss):
-            str_flow_period[iseg] = result_A[iseg] + result_B[iseg]
-        result[per,:] = str_flow_period
+            result[per, iseg] = result_A[iseg] + result_B[iseg]
     return result
 
 def get_aggregated_stream_mass(nper, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic, nodes):
     result = np.zeros((nper, nss))
     for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
         result_A, result_B = get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, per, nodes, nss)
-        stream_mass_period = np.zeros(nss)
         for iseg in range(nss):
-            stream_mass_period[iseg] = result_A[iseg] + result_B[iseg]
-        result[per,:] = stream_mass_period
+            result[per, iseg] = result_A[iseg] + result_B[iseg]
     return result
 
 def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
