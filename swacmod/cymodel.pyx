@@ -2237,8 +2237,9 @@ def get_str_file(data, runoff):
     m, dis, rd = make_modflow_str(data, nstrm, nss)
     # for mf6 only
 
-    str_flg, seg_swac_dic = initialise_reach(data, sorted_by_ca)
+    str_flg = make_str_flg(data, sorted_by_ca)
     swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
+    seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
     update_rd(sorted_by_ca, rd, dis)
     cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
     runoff_with_area = combine_runoff_with_area(data, runoff)
@@ -2287,19 +2288,16 @@ def make_modflow_dis(m, data):
                                    nper=nper)
     return result
 
-def initialise_reach(data, sorted_by_ca):
+def make_str_flg(data, sorted_by_ca):
     nodes = data['params']['num_nodes']
     str_flg = np.zeros((nodes), dtype=int)
     str_count = 0
-    seg_swac_dic = {}
     for node_swac, line in sorted_by_ca.items():
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
         str_flg[node_swac-1] = str_flag
-        ca = ca
         if str_flag > 0:
-            seg_swac_dic[str_count + 1] = node_swac
             str_count += 1
-    return str_flg, seg_swac_dic
+    return str_flg
 
 def make_swac_seg_dic(data, sorted_by_ca):
     str_count = 0
@@ -2310,6 +2308,17 @@ def make_swac_seg_dic(data, sorted_by_ca):
             swac_seg_dic[node_swac] = str_count + 1
             str_count += 1
     return swac_seg_dic
+
+def make_seg_swac_dic(data, sorted_by_ca):
+    nodes = data['params']['num_nodes']
+    str_count = 0
+    seg_swac_dic = {}
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
+        if str_flag > 0:
+            seg_swac_dic[str_count + 1] = node_swac
+            str_count += 1
+    return seg_swac_dic
 
 def update_rd(sorted_by_ca, rd, dis):
     str_count = 0
