@@ -1892,7 +1892,9 @@ def aggregate_reporting_op(output, area, reporting):
 
 ###############################################################################
 
-def get_aggregated_sfr_flows(nper, nss, sorted_by_ca, runoff_with_area, swac_seg_dic, nodes):
+def get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic):
+    nper = len(data['params']['time_periods'])
+    nodes = data['params']['num_nodes']
     description = "Accumulating SFR flows  "
     result = np.zeros((nper, nss))
     for per in tqdm(range(nper), desc=description):
@@ -1901,7 +1903,9 @@ def get_aggregated_sfr_flows(nper, nss, sorted_by_ca, runoff_with_area, swac_seg
             result[per, iseg] = result_A[iseg] + result_B[iseg]
     return result
 
-def get_aggregated_stream_mass(nper, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic, nodes):
+def get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic):
+    nper = len(data['params']['time_periods'])
+    nodes = data['params']['num_nodes']
     description = "Accumulating nitrate mass to surface water  "
     result = np.zeros((nper, nss))
     for per in tqdm(range(nper), desc=description):
@@ -2252,13 +2256,10 @@ def get_str_file(data, runoff):
     cd = initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
     runoff_with_area = combine_runoff_with_area(data, runoff)
 
-    # populate runoff and flow
+    str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
+
     reach_data = {}
     nper = len(data['params']['time_periods'])
-    nodes = data['params']['num_nodes']
-
-    str_flow_array = get_aggregated_sfr_flows(nper, nss, sorted_by_ca, runoff_with_area, swac_seg_dic, nodes)
-
     for per in range(nper):
         for iseg in range(nss):
             rd[iseg]['flow'] = str_flow_array[per,iseg]
@@ -2420,19 +2421,13 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     sorted_by_ca = make_sorted_by_ca(data)
     idx = make_idx()
 
-    nstrm = nss = sum([value[idx['str_flag']] > 0
-                       for value in sorted_by_ca.values()])
+    nss = sum([value[idx['str_flag']] > 0
+                     for value in sorted_by_ca.values()])
 
     swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
     runoff_with_area = combine_runoff_with_area(data, runoff)
-
-    # populate runoff, flow and nitrate mass
-    nper = len(data['params']['time_periods'])
-    nodes = data['params']['num_nodes']
-
-    str_flow_array = get_aggregated_sfr_flows(nper, nss, sorted_by_ca, runoff_with_area, swac_seg_dic, nodes)
-    stream_mass_array = get_aggregated_stream_mass(nper, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic, nodes)
-
+    str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
+    stream_mass_array = get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic)
     stream_conc = _divide_2D_arrays(stream_mass_array, str_flow_array)
     return stream_conc
 
