@@ -2411,11 +2411,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     nstrm = nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
 
-    _, dis, rd = make_modflow_str(data, nstrm, nss)
-    # for mf6 only
-
     swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
-    update_rd(sorted_by_ca, rd, dis)
     runoff_with_area = combine_runoff_with_area(data, runoff)
 
     # populate runoff, flow and nitrate mass
