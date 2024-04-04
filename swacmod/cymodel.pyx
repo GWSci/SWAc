@@ -2242,12 +2242,18 @@ def get_str_file(data, runoff):
     reach_data = {}
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
+
+    str_flow_array = np.zeros((nper, nss))
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
-
         ro, flow = get_sfr_flows(sorted_by_ca, runoff_with_area, swac_seg_dic, nodes * per, nodes, nss)
-
+        str_flow_period = np.zeros(nss)
         for iseg in range(nss):
-            rd[iseg]['flow'] = flow[iseg] + ro[iseg]
+            str_flow_period[iseg] = flow[iseg] + ro[iseg]
+        str_flow_array[per,:] = str_flow_period
+
+    for per in range(nper):
+        for iseg in range(nss):
+            rd[iseg]['flow'] = str_flow_array[per,iseg]
 
         # add segment data for this period
         reach_data[per] = copy.deepcopy(rd)
