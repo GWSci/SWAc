@@ -2415,25 +2415,24 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     # populate runoff, flow and nitrate mass
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
+
     str_flow_array = np.zeros((nper, nss))
-    stream_mass_array = np.zeros((nper, nss))
-    for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
-
+    for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
         ro, flow = get_sfr_flows(sorted_by_ca, runoff_with_area, swac_seg_dic, nodes * per, nodes, nss)
-        mass_to_stream, mass_in_stream = get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, per, nodes, nss)
-
         str_flow_period = np.zeros(nss)
-        stream_mass_period = np.zeros(nss)
         for iseg in range(nss):
             str_flow_period[iseg] = flow[iseg] + ro[iseg]
-            stream_mass_period[iseg] = mass_in_stream[iseg] + mass_to_stream[iseg]
-
-        # add segment data for this period
-        stream_mass_array[per,:] = stream_mass_period
         str_flow_array[per,:] = str_flow_period
 
+    stream_mass_array = np.zeros((nper, nss))
+    for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
+        mass_to_stream, mass_in_stream = get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, per, nodes, nss)
+        stream_mass_period = np.zeros(nss)
+        for iseg in range(nss):
+            stream_mass_period[iseg] = mass_in_stream[iseg] + mass_to_stream[iseg]
+        stream_mass_array[per,:] = stream_mass_period
+
     stream_conc = _divide_2D_arrays(stream_mass_array, str_flow_array)
-    
     return stream_conc
 
 ###############################################################################
