@@ -2223,11 +2223,7 @@ def get_str_file(data, runoff):
     import copy
 
     sorted_by_ca = make_sorted_by_ca(data)
-
-    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
-             'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
-
-    idx = {y: x for (x, y) in enumerate(names)}
+    idx = make_idx()
 
     nstrm = nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
@@ -2263,6 +2259,11 @@ def make_sorted_by_ca(data):
     rte_topo = data['params']['routing_topology']
     result = OrderedDict(sorted(rte_topo.items(), key=lambda x: x[1][4]))
     return result
+
+def make_idx():
+    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z', 'bed_thk', 'str_k', 'depth', 'width']
+    idx = {y: x for (x, y) in enumerate(names)}
+    return idx
 
 def make_modflow_str(data, nstrm, nss):
     m = make_modflow_model(data)
@@ -2405,11 +2406,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
         double[:,:] stream_conc
 
     sorted_by_ca = make_sorted_by_ca(data)
-
-    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
-             'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
-
-    idx = {y: x for (x, y) in enumerate(names)}
+    idx = make_idx()
 
     nstrm = nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
