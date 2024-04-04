@@ -2319,6 +2319,36 @@ def initialise_reach(data, sorted_by_ca, rd, dis):
             str_count += 1
     return str_flg, swac_seg_dic, seg_swac_dic
 
+def make_swac_seg_dic(data, sorted_by_ca, rd, dis):
+    nodes = data['params']['num_nodes']
+    str_count = 0
+    swac_seg_dic = {}
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
+         depth, width) = line
+        # for mf6 only
+        ca = ca
+        if str_flag > 0:
+            swac_seg_dic[node_swac] = str_count + 1
+            # NB docs say node number should be zero based (node_mf -1)
+            #  but doesn't seem to be
+            l, r, c = dis.get_lrc(node_mf)[0]
+            rd[str_count]['k'] = l - 1
+            rd[str_count]['i'] = r - 1
+            rd[str_count]['j'] = c - 1
+            rd[str_count]['segment'] = str_count + 1
+            rd[str_count]['reach'] = 1
+            rd[str_count]['stage'] = z + depth
+            rd[str_count]['cond'] = (length * width * str_k) / bed_thk
+            rd[str_count]['sbot'] = z - bed_thk
+            rd[str_count]['stop'] = z
+            rd[str_count]['width'] = width
+            rd[str_count]['slope'] = 111.111
+            rd[str_count]['rough'] = 222.222
+            # inc stream counter
+            str_count += 1
+    return swac_seg_dic
+
 def initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss):
     Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
     cd = []
@@ -2393,7 +2423,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     _, dis, rd = make_modflow_str(data, nstrm, nss)
     # for mf6 only
 
-    str_flg, swac_seg_dic, _ = initialise_reach(data, sorted_by_ca, rd, dis)
+    swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca, rd, dis)
     runoff_with_area = combine_runoff_with_area(data, runoff)
 
     # populate runoff, flow and nitrate mass
