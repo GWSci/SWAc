@@ -1893,16 +1893,18 @@ def aggregate_reporting_op(output, area, reporting):
 ###############################################################################
 
 def get_aggregated_sfr_flows(nper, nss, sorted_by_ca, runoff_with_area, swac_seg_dic, nodes):
+    description = "Accumulating SFR flows  "
     result = np.zeros((nper, nss))
-    for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
+    for per in tqdm(range(nper), desc=description):
         result_A, result_B = get_sfr_flows(sorted_by_ca, runoff_with_area, swac_seg_dic, nodes * per, nodes, nss)
         for iseg in range(nss):
             result[per, iseg] = result_A[iseg] + result_B[iseg]
     return result
 
 def get_aggregated_stream_mass(nper, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic, nodes):
+    description = "Accumulating nitrate mass to surface water  "
     result = np.zeros((nper, nss))
-    for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
+    for per in tqdm(range(nper), desc=description):
         result_A, result_B = get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, per, nodes, nss)
         for iseg in range(nss):
             result[per, iseg] = result_A[iseg] + result_B[iseg]
