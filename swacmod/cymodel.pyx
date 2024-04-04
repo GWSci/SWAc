@@ -2247,15 +2247,9 @@ def get_str_file(data, runoff):
                        for value in sorted_by_ca.values()])
 
     m, dis, rd = make_modflow_str(data, nstrm, nss)
-    # for mf6 only
-
-    str_flg = make_str_flg(data, sorted_by_ca)
     swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
-    seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
     update_rd(sorted_by_ca, rd, dis)
-    cd = initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
     runoff_with_area = combine_runoff_with_area(data, runoff)
-
     str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
 
     reach_data = {}
@@ -2267,6 +2261,9 @@ def get_str_file(data, runoff):
         # add segment data for this period
         reach_data[per] = copy.deepcopy(rd)
 
+    str_flg = make_str_flg(data, sorted_by_ca)
+    seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
+    cd = initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
     strm = make_strm(data, m, nstrm, reach_data, nper, cd)
     return strm
 
