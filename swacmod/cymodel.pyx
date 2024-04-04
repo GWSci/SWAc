@@ -2234,11 +2234,7 @@ def get_str_file(data, runoff):
     nstrm = nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
 
-    m = make_modflow_model(data)
-    dis = make_modflow_dis(m, data)
-
-    flopy.modflow.ModflowBas(m, ifrefm=False)
-    rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
+    m, dis, rd = make_modflow_str(data, nstrm, nss)
     # for mf6 only
 
     str_flg, swac_seg_dic, seg_swac_dic = initialise_reach(data, sorted_by_ca, rd, dis)
@@ -2277,6 +2273,13 @@ def make_sorted_by_ca(data):
     rte_topo = data['params']['routing_topology']
     result = OrderedDict(sorted(rte_topo.items(), key=lambda x: x[1][4]))
     return result
+
+def make_modflow_str(data, nstrm, nss):
+    m = make_modflow_model(data)
+    dis = make_modflow_dis(m, data)
+    flopy.modflow.ModflowBas(m, ifrefm=False)
+    rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
+    return m, dis, rd
 
 def make_modflow_model(data):
     import os.path
@@ -2385,11 +2388,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     nstrm = nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
 
-    m = make_modflow_model(data)
-    dis = make_modflow_dis(m, data)
-
-    flopy.modflow.ModflowBas(m, ifrefm=False)
-    rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
+    m, dis, rd = make_modflow_str(data, nstrm, nss)
     # for mf6 only
 
     str_flg, swac_seg_dic, seg_swac_dic = initialise_reach(data, sorted_by_ca, rd, dis)
