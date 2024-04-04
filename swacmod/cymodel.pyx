@@ -2255,11 +2255,9 @@ def get_str_file(data, runoff):
     reach_data = {}
     nper = len(data['params']['time_periods'])
     for per in range(nper):
-        for iseg in range(nss):
-            rd[iseg]['flow'] = str_flow_array[per,iseg]
-
-        # add segment data for this period
         reach_data[per] = copy.deepcopy(rd)
+        for iseg in range(nss):
+            reach_data[per][iseg]['flow'] = str_flow_array[per,iseg]
 
     str_flg = make_str_flg(data, sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
