@@ -2234,11 +2234,6 @@ def get_str_file(data, runoff):
     nstrm = nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
 
-    istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
-
-    cd = []
-    rd = []
-
     m = make_modflow_model(data)
     dis = make_modflow_dis(m, data)
 
@@ -2264,6 +2259,8 @@ def get_str_file(data, runoff):
         # add segment data for this period
         reach_data[per] = copy.deepcopy(rd)
 
+    istcb1 = data['params']['istcb1']
+    istcb2 = data['params']['istcb2']
     strm = flopy.modflow.ModflowStr(m,
                                     mxacts=nstrm,
                                     nss=nstrm,
@@ -2387,10 +2384,6 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
 
     nstrm = nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
-
-    istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
-
-    rd = []
 
     m = make_modflow_model(data)
     dis = make_modflow_dis(m, data)
