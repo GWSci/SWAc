@@ -2320,14 +2320,12 @@ def initialise_reach(data, sorted_by_ca, rd, dis):
     return str_flg, swac_seg_dic, seg_swac_dic
 
 def make_swac_seg_dic(data, sorted_by_ca, rd, dis):
-    nodes = data['params']['num_nodes']
     str_count = 0
     swac_seg_dic = {}
     for node_swac, line in sorted_by_ca.items():
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
          depth, width) = line
         # for mf6 only
-        ca = ca
         if str_flag > 0:
             swac_seg_dic[node_swac] = str_count + 1
             # NB docs say node number should be zero based (node_mf -1)
