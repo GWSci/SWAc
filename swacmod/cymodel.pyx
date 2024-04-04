@@ -2222,8 +2222,6 @@ def get_str_file(data, runoff):
 
     import copy
 
-    nper = len(data['params']['time_periods'])
-    nodes = data['params']['num_nodes']
     sorted_by_ca = make_sorted_by_ca(data)
 
     names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
@@ -2241,11 +2239,13 @@ def get_str_file(data, runoff):
     swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
     update_rd(sorted_by_ca, rd, dis)
-    cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
+    cd = initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
     runoff_with_area = combine_runoff_with_area(data, runoff)
 
     # populate runoff and flow
     reach_data = {}
+    nper = len(data['params']['time_periods'])
+    nodes = data['params']['num_nodes']
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
         ro, flow = get_sfr_flows(sorted_by_ca, runoff_with_area, swac_seg_dic, nodes * per, nodes, nss)
@@ -2344,7 +2344,8 @@ def update_rd(sorted_by_ca, rd, dis):
             # inc stream counter
             str_count += 1
 
-def initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss):
+def initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss):
+    nodes = data['params']['num_nodes']
     Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
     cd = []
     for iseg in range(nss):
@@ -2403,8 +2404,6 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     cdef:
         double[:,:] stream_conc
 
-    nper = len(data['params']['time_periods'])
-    nodes = data['params']['num_nodes']
     sorted_by_ca = make_sorted_by_ca(data)
 
     names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
@@ -2423,6 +2422,8 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     runoff_with_area = combine_runoff_with_area(data, runoff)
 
     # populate runoff, flow and nitrate mass
+    nper = len(data['params']['time_periods'])
+    nodes = data['params']['num_nodes']
     str_flow_array = np.zeros((nper, nss))
     str_flow_period = np.zeros(nss)
     stream_mass_array = np.zeros((nper, nss))
