@@ -2240,11 +2240,9 @@ def get_str_file(data, runoff):
     flopy.modflow.ModflowBas(m, ifrefm=False)
     rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
     reach_data = {}
-    swac_seg_dic = {}
-    seg_swac_dic = {}
     # for mf6 only
 
-    str_flg = initialise_reach(data, sorted_by_ca, swac_seg_dic, seg_swac_dic, rd, dis)
+    str_flg, swac_seg_dic, seg_swac_dic = initialise_reach(data, sorted_by_ca, rd, dis)
     cd = initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
     runoff_with_area = combine_runoff_with_area(data, runoff)
 
@@ -2297,10 +2295,12 @@ def make_modflow_dis(m, data):
                                    nper=nper)
     return result
 
-def initialise_reach(data, sorted_by_ca, swac_seg_dic, seg_swac_dic, rd, dis):
+def initialise_reach(data, sorted_by_ca, rd, dis):
     nodes = data['params']['num_nodes']
     str_flg = np.zeros((nodes), dtype=int)
     str_count = 0
+    swac_seg_dic = {}
+    seg_swac_dic = {}
     for node_swac, line in sorted_by_ca.items():
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
          depth, width) = line
@@ -2327,7 +2327,7 @@ def initialise_reach(data, sorted_by_ca, swac_seg_dic, seg_swac_dic, rd, dis):
             rd[str_count]['rough'] = 222.222
             # inc stream counter
             str_count += 1
-    return str_flg
+    return str_flg, swac_seg_dic, seg_swac_dic
 
 def initialise_segment(nodes, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss):
     Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
@@ -2395,11 +2395,9 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     stream_mass_array = np.zeros((nper, nss))
     stream_mass_period = np.zeros(nss)
     nitrate_reaching_stream_cells_kg_array = {}
-    swac_seg_dic = {}
-    seg_swac_dic = {}
     # for mf6 only
 
-    str_flg = initialise_reach(data, sorted_by_ca, swac_seg_dic, seg_swac_dic, rd, dis)
+    str_flg, swac_seg_dic, seg_swac_dic = initialise_reach(data, sorted_by_ca, rd, dis)
     runoff_with_area = combine_runoff_with_area(data, runoff)
 
     # populate runoff, flow and nitrate mass
