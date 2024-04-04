@@ -2239,7 +2239,6 @@ def get_str_file(data, runoff):
 
     flopy.modflow.ModflowBas(m, ifrefm=False)
     rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
-    reach_data = {}
     # for mf6 only
 
     str_flg, swac_seg_dic, seg_swac_dic = initialise_reach(data, sorted_by_ca, rd, dis)
@@ -2247,6 +2246,7 @@ def get_str_file(data, runoff):
     runoff_with_area = combine_runoff_with_area(data, runoff)
 
     # populate runoff and flow
+    reach_data = {}
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
         ro, flow = get_sfr_flows(sorted_by_ca, runoff_with_area, swac_seg_dic, nodes * per, nodes, nss)
@@ -2390,17 +2390,16 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
 
     flopy.modflow.ModflowBas(m, ifrefm=False)
     rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
-    str_flow_array = np.zeros((nper, nss))
-    str_flow_period = np.zeros(nss)
-    stream_mass_array = np.zeros((nper, nss))
-    stream_mass_period = np.zeros(nss)
-    nitrate_reaching_stream_cells_kg_array = {}
     # for mf6 only
 
     str_flg, swac_seg_dic, seg_swac_dic = initialise_reach(data, sorted_by_ca, rd, dis)
     runoff_with_area = combine_runoff_with_area(data, runoff)
 
     # populate runoff, flow and nitrate mass
+    str_flow_array = np.zeros((nper, nss))
+    str_flow_period = np.zeros(nss)
+    stream_mass_array = np.zeros((nper, nss))
+    stream_mass_period = np.zeros(nss)
     for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
 
         ro, flow = get_sfr_flows(sorted_by_ca, runoff_with_area, swac_seg_dic, nodes * per, nodes, nss)
