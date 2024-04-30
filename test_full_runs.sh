@@ -1,5 +1,6 @@
 source env/bin/activate
-python3 -m unittest discover -s test_full_runs
+python3 -c "import swacmod.compile_model"
+python3 -m unittest discover -s .
 exit_status=$?
 deactivate
 exit $exit_status

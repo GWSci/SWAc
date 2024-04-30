@@ -107,6 +107,8 @@ recharge_node_mapping: recharge_node_mapping.csv
 # This parameter is optional. If not specified, it will be set to "none".
 spatial_output_date:
 
+temp_file_backed_array_directory: temp_file_backed_array
+
 ##############################################
 # Model parameters: Zones names and mappings #
 ##############################################
