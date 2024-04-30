@@ -19,6 +19,7 @@ import swacmod_run as swacmod
 from swacmod import utils as u
 from swacmod import validation as v
 from swacmod import input_output as io
+import swacmod.timer as timer
 
 ##############################################################################
 def generate_test_file(name, num_nodes):
@@ -135,8 +136,9 @@ class EndToEndTests(unittest.TestCase):
     @unittest.skip
     def test_get_output(self):
         """Test for get_output() function."""
+        time_switcher = timer.make_time_switcher()
         for node in self.ids:
-            output = swacmod.get_output(self.data, node)
+            output = swacmod.get_output(self.data, node, time_switcher)
             results = io.load_results()
             for key in u.CONSTANTS['COL_ORDER']:
                 if key in ['', 'date']:
