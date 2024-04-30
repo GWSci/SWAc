@@ -102,10 +102,10 @@ class EndToEndTests(unittest.TestCase):
         for key in all_keys:
             if key in ['date', 'months', 'kc_list',
                        'macro_prop', 'macro_limit',
-                       'macro_act', 'macro_rec']:
+                       'macro_act', 'macro_rec', 'ror_prop', 'ror_limit']:
                 continue
 
-            # self.assertTrue(key in self.data['specs'])
+            self.assertTrue(key in self.data['specs'])
 
     def test_val_num_nodes(self):
         """Test for val_num_nodes() function."""
