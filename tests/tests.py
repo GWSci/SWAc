@@ -98,11 +98,11 @@ class EndToEndTests(unittest.TestCase):
     def test_keys(self):
         """Test for validate_all() function."""
 
-        all_keys = list(self.data['series'].keys()) + list(self.data['params'].keys())
+        actual_keys = list(self.data['series'].keys()) + list(self.data['params'].keys())
         generated_keys = [
             'date', 'months', 'kc_list', 'macro_prop', 'macro_limit',
             'macro_act', 'macro_rec', 'ror_prop', 'ror_limit']
-        for key in all_keys:
+        for key in actual_keys:
             if key in generated_keys:
                 continue
 
