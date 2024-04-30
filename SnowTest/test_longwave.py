@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import swacmod.snow_melt as snow_melt
+import SnowTest.snow_melt as snow_melt
 
 class LongwaveTest(unittest.TestCase):
 	def test_Longwave(self):
