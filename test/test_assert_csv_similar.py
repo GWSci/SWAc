@@ -65,7 +65,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 
 	def get_assertion_result(self, expected, actual):
 		try:
-			assert_csv_equal(expected, actual)
+			assert_csv_similar(expected, actual)
 			return AssertionResult(True, "")
 		except AssertionError as e:
 			return AssertionResult(False, e.args[0])
@@ -75,7 +75,7 @@ class AssertionResult:
 		self.is_pass = is_pass
 		self.message = message
 
-def assert_csv_equal(expected, actual):
+def assert_csv_similar(expected, actual):
 	expected_grid = _read_csv(expected)
 	actual_grid = _read_csv(actual)
 	error_messages = []
