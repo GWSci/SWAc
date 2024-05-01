@@ -4,6 +4,7 @@ import swacmod_run
 from swacmod import utils as u
 import os
 import swacmod.feature_flags as ff
+import test.csv_assertions
 
 class TestFixture():
 	def __init__(self, test_instance, reference_output_folder, output_folder, input_file):
@@ -48,7 +49,8 @@ class TestFixture():
 	def assert_file_is_identical(self, filename):
 		expected, actual = self.read_reference_and_actual(filename)
 		self.test_instance.assertEqual(expected, actual)
-	
+		test.csv_assertions.assert_csv_similar(expected, actual)
+
 	def read_reference_and_actual(self, filename):
 		expected_contents = self.read_file(self.reference_output_folder, filename)
 		actual_contents = self.read_file(self.output_folder, filename)
