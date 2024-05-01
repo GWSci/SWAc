@@ -18,6 +18,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 
 	def test_csv_files_reports_the_row_number(self):
 		self.assert_failure_message("Difference in row=0, col=0. Expected: a Actual: x", self.get_assertion_result("a\nb\nc\n", "x\nb\nc\n"))
+		self.assert_failure_message("Difference in row=1, col=0. Expected: b Actual: x", self.get_assertion_result("a\nb\nc\n", "a\nx\nc\n"))
 
 	def assert_passes(self, actual_assertion_result):
 		self.assertTrue(actual_assertion_result.is_pass)
@@ -42,12 +43,12 @@ def assert_csv_equal(expected, actual):
 	expected_grid = _read_csv(expected)
 	actual_grid = _read_csv(actual)
 	error_messages = []
-	if (len(expected_grid) > 0):
+	for row_index in range(len(expected_grid)):
 		for col_index in range(len(expected_grid[0])):
-			expected_cell = expected_grid[0][col_index]
-			actual_cell = actual_grid[0][col_index]
+			expected_cell = expected_grid[row_index][col_index]
+			actual_cell = actual_grid[row_index][col_index]
 			if (expected_cell != actual_cell):
-				message = f"Difference in row=0, col={col_index}. Expected: {expected_cell} Actual: {actual_cell}"
+				message = f"Difference in row={row_index}, col={col_index}. Expected: {expected_cell} Actual: {actual_cell}"
 				error_messages.append(message)
 	if (len(error_messages) > 0):
 		raise AssertionError(error_messages)
