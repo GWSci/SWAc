@@ -41,7 +41,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 		self.assert_failure_message("Difference in row=0, col=0. Expected: 1.234 Actual: 1.235", self.get_assertion_result("1.234\n", "1.235\n"))
 
 	def test_csv_floats_that_are_very_close_are_equal(self):
-		self.assert_passes(self.get_assertion_result("1.0000001", "1.0000001"))
+		self.assert_passes(self.get_assertion_result("1.0000001", "1.0000002"))
 
 	def test_identical_csv_files_are_equal(self):
 		self.assert_passes(self.get_assertion_result("a", "a"))
@@ -49,7 +49,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 		self.assert_passes(self.get_assertion_result("a\nb\nc\n", "a\nb\nc\n"))
 
 	def assert_passes(self, actual_assertion_result):
-		self.assertTrue(actual_assertion_result.is_pass)
+		self.assertTrue(actual_assertion_result.is_pass, actual_assertion_result.message)
 
 	def assert_failure_message(self, expected_message, actual_assertion_result):
 		self.assertFalse(actual_assertion_result.is_pass)
@@ -87,12 +87,25 @@ def assert_csv_equal(expected, actual):
 		for col_index in range(min(expected_column_count, actual_column_count)):
 			expected_cell = expected_grid[row_index][col_index]
 			actual_cell = actual_grid[row_index][col_index]
-			if (expected_cell != actual_cell):
+			if (not _are_cells_close(expected_cell, actual_cell)):
 				message = f"Difference in row={row_index}, col={col_index}. Expected: {expected_cell} Actual: {actual_cell}"
 				error_messages.append(message)
 
 	if (len(error_messages) > 0):
 		raise AssertionError(error_messages)
+
+def _are_cells_close(a, b):
+	if (_is_float(a) and _is_float(b)):
+		return (float(b) - float(a)) < 0.00001
+	else:
+		return a == b
+
+def _is_float(x):
+	try:
+		float(x)
+		return True
+	except ValueError:
+		return False
 
 def _read_csv(file_contents):
 	file = io.StringIO(file_contents)
