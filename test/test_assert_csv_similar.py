@@ -48,6 +48,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 	def test_csv_dates_are_treated_like_strings(self):
 		self.assert_passes(self.get_assertion_result("30/09/2014", "30/09/2014"))
 		self.assert_failure_message("Difference in row=0, col=0. Expected: 30/09/2014 Actual: 20/09/2014", self.get_assertion_result("30/09/2014", "20/09/2014"))
+		self.assert_failure_message("Difference in row=0, col=0. Expected: 30/09/2014 Actual: 30/08/2014", self.get_assertion_result("30/09/2014", "30/08/2014"))
 
 	def test_identical_csv_files_are_equal(self):
 		self.assert_passes(self.get_assertion_result("a", "a"))
