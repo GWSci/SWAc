@@ -2,11 +2,11 @@ import unittest
 
 class Test_Assert_Csv_Similar(unittest.TestCase):
 	def test_empty_csv_files_are_equal(self):
-		actual = self.assert_testee_fails("", "")
+		actual = self.get_assertion_result("", "")
 		self.assert_passes(actual)
 
 	def test_csv_files_with_different_text_are_not_equal(self):
-		actual = self.assert_testee_fails("a", "b")
+		actual = self.get_assertion_result("a", "b")
 		self.assert_failure_message("Difference in row=0, col=0. Expected: a Actual: b", actual)
 
 	def assert_passes(self, actual_assertion_result):
@@ -16,10 +16,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 		self.assertFalse(actual_assertion_result.is_pass)
 		self.assertIn(expected_message, actual_assertion_result.message)
 
-	def assert_testee_passes(self, expected, actual):
-		assert_csv_equal(self, expected, actual)
-
-	def assert_testee_fails(self, expected, actual):
+	def get_assertion_result(self, expected, actual):
 		try:
 			assert_csv_equal(self, expected, actual)
 			return AssertionResult(True, "")
