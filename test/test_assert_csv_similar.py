@@ -45,7 +45,8 @@ def assert_csv_equal(test_case, expected, actual):
 			if (expected_cell != actual_cell):
 				message = f"Difference in row=0, col={col_index}. Expected: {expected_cell} Actual: {actual_cell}"
 				error_messages.append(message)
-				test_case.assertEqual(expected_cell, actual_cell, message)
+	if (len(error_messages) > 0):
+		raise AssertionError(error_messages)
 
 def _read_csv(file_contents):
 	file = io.StringIO(file_contents)
