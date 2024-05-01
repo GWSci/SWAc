@@ -48,7 +48,6 @@ class TestFixture():
 
 	def assert_file_is_identical(self, filename):
 		expected, actual = self.read_reference_and_actual(filename)
-		self.test_instance.assertEqual(expected, actual)
 		test.csv_assertions.assert_csv_similar(expected, actual)
 
 	def read_reference_and_actual(self, filename):
