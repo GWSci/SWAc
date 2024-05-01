@@ -42,6 +42,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 
 	def test_csv_floats_that_are_very_close_are_equal(self):
 		self.assert_passes(self.get_assertion_result("1.0000001", "1.0000002"))
+		self.assert_passes(self.get_assertion_result("1.0000002", "1.0000001"))
 
 	def test_identical_csv_files_are_equal(self):
 		self.assert_passes(self.get_assertion_result("a", "a"))
