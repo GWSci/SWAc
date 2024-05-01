@@ -6,12 +6,10 @@ from __future__ import print_function
 """SWAcMod tests."""
 
 # Standard Library
-import os
 import sys
 import unittest
 
 # Third Party Libraries
-import yaml
 import numpy as np
 
 # Internal modules
@@ -20,66 +18,6 @@ from swacmod import utils as u
 from swacmod import validation as v
 from swacmod import input_output as io
 import swacmod.timer as timer
-
-##############################################################################
-def generate_test_file(name, num_nodes):
-    """Generate input files for tests."""
-    if num_nodes < 1:
-        print('Parameter "num_nodes" has to be >= 1.')
-        return
-
-    path = os.path.join(u.CONSTANTS['TEST_INPUT_DIR'], name + '.yml')
-    obj = io.load_yaml(path)
-    comments = [i for i in open(path, 'r').readlines() if i.startswith('#')]
-
-    fileout = open(path, 'w')
-    for comment in comments:
-        fileout.write('%s' % comment)
-
-    fileout.write('%s:\n' % name)
-    for node in range(1, num_nodes+1):
-        fileout.write('    %d: %s\n' % (node, obj[name][1]))
-
-    fileout.close()
-
-
-###############################################################################
-def generate_test_files(num_nodes=10):
-    """Generate input files for tests."""
-    if not isinstance(num_nodes, int) or not num_nodes >= 1:
-        print('Parameter "num_nodes" has to be >= 1.')
-        return
-
-    for name in ['node_areas', 'reporting_zone_mapping',
-                 'rainfall_zone_mapping', 'pe_zone_mapping',
-                 'temperature_zone_mapping', 'subroot_zone_mapping',
-                 'rapid_runoff_zone_mapping', 'swrecharge_zone_mapping',
-                 'macropore_zone_mapping', 'free_throughfall',
-                 'max_canopy_storage', 'snow_params', 'interflow_params',
-                 'subsoilzone_leakage_fraction', 'soil_spatial', 'lu_spatial',
-                 'recharge_attenuation_params', 'sw_params']:
-        generate_test_file(name, num_nodes)
-
-    filein = open(u.CONSTANTS['TEST_INPUT_FILE'], 'r').readlines()
-    fileout = open(u.CONSTANTS['TEST_INPUT_FILE'], 'w')
-    for line in filein:
-        if line.lower().startswith('num_nodes:'):
-            new_line = 'num_nodes: %d\n' % num_nodes
-        else:
-            new_line = line
-        fileout.write(new_line)
-    fileout.close()
-
-
-###############################################################################
-def benchmark():
-    """Run SWAcMod on a log scale of nodes."""
-    print()
-    for num_nodes in [1, 10, 100, 1000, 10000]:
-        print('Running benchmark: %d nodes' % num_nodes)
-        generate_test_files(num_nodes=num_nodes)
-        os.system('python -m swacmod.swacmod test')
-    print()
 
 ###############################################################################
 class EndToEndTests(unittest.TestCase):
