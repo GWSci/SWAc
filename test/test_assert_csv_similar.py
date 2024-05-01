@@ -29,4 +29,5 @@ class AssertionResult:
 		self.message = message
 
 def assert_csv_equal(test_case, expected, actual):
-	test_case.assertEqual(expected, actual, f"Difference in row=0, col=0. Expected: {expected} Actual: {actual}")
+	message = f"Difference in row=0, col=0. Expected: {expected} Actual: {actual}"
+	test_case.assertEqual(expected, actual, message)
