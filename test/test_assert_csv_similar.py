@@ -17,7 +17,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 		self.assert_failure_message("Difference in row=0, col=2. Expected: c Actual: z", self.get_assertion_result("a,b,c\n", "a,b,z\n"))
 
 	def test_csv_files_reports_the_row_number(self):
-		self.assert_failure_message("Difference in row=0, col=0. Expected: a Actual: x", self.get_assertion_result("a,b,c\nd,e,f\n", "x,b,c\nd,e,f\n"))
+		self.assert_failure_message("Difference in row=0, col=0. Expected: a Actual: x", self.get_assertion_result("a\nb\nc\n", "x\nb\nc\n"))
 
 	def assert_passes(self, actual_assertion_result):
 		self.assertTrue(actual_assertion_result.is_pass)
