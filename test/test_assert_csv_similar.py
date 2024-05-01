@@ -89,9 +89,6 @@ def _read_csv(file_contents):
 	file = io.StringIO(file_contents)
 	csv_reader = csv.reader(file)
 	result = []
-	for csv_row in csv_reader:
-		result_row = []
-		for cell in csv_row:
-			result_row.append(cell)
-		result.append(result_row)
+	for row in csv_reader:
+		result.append(row)
 	return result
