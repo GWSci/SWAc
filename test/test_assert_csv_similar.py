@@ -45,6 +45,9 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 		self.assert_passes(self.get_assertion_result("1.0000001", "1.0000002"))
 		self.assert_passes(self.get_assertion_result("1.0000002", "1.0000001"))
 
+	def test_csv_dates_are_treated_like_strings(self):
+		self.assert_passes(self.get_assertion_result("30/09/2014", "30/09/2014"))
+
 	def test_identical_csv_files_are_equal(self):
 		self.assert_passes(self.get_assertion_result("a", "a"))
 		self.assert_passes(self.get_assertion_result("a,b,c\n", "a,b,c\n"))
