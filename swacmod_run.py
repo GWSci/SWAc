@@ -839,8 +839,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         if data["params"]["nitrate_process"] == "enabled":
             if data['params']['gwmodel_type'] == 'mf96':
                 stream_conc = m.get_str_nitrate(data, roff_agg, stream_nitrate_aggregation)
+                nitrate.write_stream_nitrate_csv(data, stream_conc)
             nitrate.write_nitrate_csv(data, nitrate_aggregation)
-            nitrate.write_stream_nitrate_csv(data, stream_conc)
             nitrate.write_mi_csv(data, nitrate_mi_aggregation)
 
         timer.switch_off(output_timer_token)
