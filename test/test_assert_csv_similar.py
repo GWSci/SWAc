@@ -37,12 +37,14 @@ class AssertionResult:
 def assert_csv_equal(test_case, expected, actual):
 	expected_grid = _read_csv(expected)
 	actual_grid = _read_csv(actual)
+	error_messages = []
 	if (len(expected_grid) > 0):
 		for col_index in range(len(expected_grid[0])):
 			expected_cell = expected_grid[0][col_index]
 			actual_cell = actual_grid[0][col_index]
 			if (expected_cell != actual_cell):
 				message = f"Difference in row=0, col={col_index}. Expected: {expected_cell} Actual: {actual_cell}"
+				error_messages.append(message)
 				test_case.assertEqual(expected_cell, actual_cell, message)
 
 def _read_csv(file_contents):
