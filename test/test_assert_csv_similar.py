@@ -31,6 +31,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 		self.assert_failure_message("Difference in column count for row=0. Expected: 2 Actual: 3", self.get_assertion_result("a,b\n", "a,b,c\n"))
 		self.assert_failure_message("Difference in column count for row=0. Expected: 1 Actual: 3", self.get_assertion_result("a\n", "a,b,c\n"))
 		self.assert_failure_message("Difference in column count for row=0. Expected: 1 Actual: 2", self.get_assertion_result("a\n", "a,b\n"))
+		self.assert_failure_message("Difference in column count for row=0. Expected: 2 Actual: 1", self.get_assertion_result("a,b\n", "a\n"))
 
 	def test_identical_csv_files_are_equal(self):
 		self.assert_passes(self.get_assertion_result("a", "a"))
@@ -73,7 +74,7 @@ def assert_csv_equal(expected, actual):
 		if (expected_column_count != actual_column_count):
 			error_messages.append(f"Difference in column count for row=0. Expected: {expected_column_count} Actual: {actual_column_count}")
 
-		for col_index in range(len(expected_grid[0])):
+		for col_index in range(min(expected_column_count, actual_column_count)):
 			expected_cell = expected_grid[row_index][col_index]
 			actual_cell = actual_grid[row_index][col_index]
 			if (expected_cell != actual_cell):
