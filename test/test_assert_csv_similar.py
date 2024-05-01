@@ -40,6 +40,9 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 	def test_csv_floats_that_are_very_different_are_different(self):
 		self.assert_failure_message("Difference in row=0, col=0. Expected: 1.234 Actual: 1.235", self.get_assertion_result("1.234\n", "1.235\n"))
 
+	def test_csv_floats_that_are_very_close_are_equal(self):
+		self.assert_passes(self.get_assertion_result("1.0000001", "1.0000001"))
+
 	def test_identical_csv_files_are_equal(self):
 		self.assert_passes(self.get_assertion_result("a", "a"))
 		self.assert_passes(self.get_assertion_result("a,b,c\n", "a,b,c\n"))
