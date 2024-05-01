@@ -6,6 +6,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 
 	def test_csv_files_with_different_text_are_not_equal(self):
 		self.assert_failure_message("Difference in row=0, col=0. Expected: a Actual: b", self.get_assertion_result("a", "b"))
+		self.assert_failure_message("Difference in row=0, col=0. Expected: a Actual: c", self.get_assertion_result("a", "c"))
 
 	def assert_passes(self, actual_assertion_result):
 		self.assertTrue(actual_assertion_result.is_pass)
@@ -27,4 +28,4 @@ class AssertionResult:
 		self.message = message
 
 def assert_csv_equal(test_case, expected, actual):
-	test_case.assertEqual(expected, actual, "Difference in row=0, col=0. Expected: a Actual: b")
+	test_case.assertEqual(expected, actual, f"Difference in row=0, col=0. Expected: a Actual: {actual}")
