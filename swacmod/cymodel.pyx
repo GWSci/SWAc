@@ -1766,8 +1766,6 @@ def _aggregate_surface_water_nitrate(
         time_period = time_periods[time_period_index]
         first_day_index = time_period[0] - 1
         last_day_index = time_period[1] - 1
-        agg_nitrate_tons = 0.0
-        sum_of_surface_water_m_cubed = 0.0
         for i in range(first_day_index, last_day_index):
             aggregation[time_period_index, node] += nitrate_to_surface_water_array_tons_per_day[i]
         aggregation[time_period_index, node] = aggregation[time_period_index, node] / (last_day_index - first_day_index + 1)
