@@ -34,6 +34,9 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 		self.assert_failure_message("Difference in column count for row=0. Expected: 2 Actual: 1", self.get_assertion_result("a,b\n", "a\n"))
 		self.assert_failure_message("Difference in column count for row=1. Expected: 2 Actual: 1", self.get_assertion_result("a\nb,c\n", "a\nb\n"))
 
+	def test_csv_floats_that_have_the_same_text_are_equal(self):
+		self.assert_passes(self.get_assertion_result("1.234", "1.234"))
+
 	def test_identical_csv_files_are_equal(self):
 		self.assert_passes(self.get_assertion_result("a", "a"))
 		self.assert_passes(self.get_assertion_result("a,b,c\n", "a,b,c\n"))
