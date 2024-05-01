@@ -10,6 +10,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 
 	def assert_failure_message(self, expected_message, actual_assertion_result):
 		self.assertFalse(actual_assertion_result.is_pass)
+		self.assertIn(expected_message, actual_assertion_result.message)
 
 	def assert_testee_passes(self, expected, actual):
 		assert_csv_equal(self, expected, actual)
@@ -18,7 +19,7 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 		try:
 			assert_csv_equal(self, expected, actual)
 		except AssertionError as e:
-			return AssertionResult(False, "")
+			return AssertionResult(False, e.args[0])
 		self.fail()
 
 class AssertionResult:
@@ -27,4 +28,4 @@ class AssertionResult:
 		self.message = message
 
 def assert_csv_equal(test_case, expected, actual):
-	test_case.assertEqual(expected, actual)
+	test_case.assertEqual(expected, actual, "Difference in row=0, col=0. Expected: a Actual: b")
