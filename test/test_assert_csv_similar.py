@@ -23,6 +23,8 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 
 	def test_identical_csv_files_are_equal(self):
 		self.assert_passes(self.get_assertion_result("a", "a"))
+		self.assert_passes(self.get_assertion_result("a,b,c\n", "a,b,c\n"))
+		self.assert_passes(self.get_assertion_result("a\nb\nc\n", "a\nb\nc\n"))
 
 	def assert_passes(self, actual_assertion_result):
 		self.assertTrue(actual_assertion_result.is_pass)
