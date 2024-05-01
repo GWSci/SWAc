@@ -21,6 +21,9 @@ class Test_Assert_Csv_Similar(unittest.TestCase):
 		self.assert_failure_message("Difference in row=1, col=0. Expected: b Actual: x", self.get_assertion_result("a\nb\nc\n", "a\nx\nc\n"))
 		self.assert_failure_message("Difference in row=2, col=0. Expected: c Actual: x", self.get_assertion_result("a\nb\nc\n", "a\nb\nx\n"))
 
+	def test_csv_files_with_different_row_counts_report_the_difference(self):
+		self.assert_failure_message("Difference in row counts. Expected: 2 Actual: 3", self.get_assertion_result("a\nb\n", "a\nb\nc\n"))
+
 	def test_identical_csv_files_are_equal(self):
 		self.assert_passes(self.get_assertion_result("a", "a"))
 		self.assert_passes(self.get_assertion_result("a,b,c\n", "a,b,c\n"))
@@ -49,6 +52,12 @@ def assert_csv_equal(expected, actual):
 	expected_grid = _read_csv(expected)
 	actual_grid = _read_csv(actual)
 	error_messages = []
+
+	expected_row_count = len(expected_grid)
+	actual_row_count = len(actual_grid)
+	if (expected_row_count != actual_row_count):
+		error_messages.append(f"Difference in row counts. Expected: 2 Actual: 3")
+
 	for row_index in range(len(expected_grid)):
 		for col_index in range(len(expected_grid[0])):
 			expected_cell = expected_grid[row_index][col_index]
