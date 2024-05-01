@@ -19,7 +19,6 @@ from swacmod import validation as v
 from swacmod import input_output as io
 import swacmod.timer as timer
 
-###############################################################################
 class EndToEndTests(unittest.TestCase):
     """Test suite for the SWAcMod project."""
 
@@ -111,9 +110,3 @@ class EndToEndTests(unittest.TestCase):
                                                        results[col][num]))
                         print('\n---> Failed at "%s", row %d\n' % (key, num))
                         raise AssertionError(err)
-
-
-###############################################################################
-if __name__ == '__main__':
-
-    unittest.main()
