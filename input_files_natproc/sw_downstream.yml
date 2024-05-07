@@ -1,0 +1,15 @@
+# SW Release downstream proportion
+# Columns are zones
+sw_downstream:
+     1: [0.75, 0.75]   # January
+     2: [0.75, 0.75]   # February
+     3: [0.75, 0.75]   # March
+     4: [0.75, 0.75]   # April
+     5: [0.75, 0.75]   # May
+     6: [0.75, 0.75]   # June
+     7: [0.75, 0.75]   # July
+     8: [0.75, 0.75]   # August
+     9: [0.75, 0.75]   # September
+     10: [0.75, 0.75]  # October
+     11: [0.75, 0.75]  # November
+     12: [0.75, 0.75]  # December
