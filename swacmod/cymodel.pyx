@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# cython: language_level=3, boundscheck=False, wraparound=True
+# cython: language_level=3, boundscheck=True, wraparound=True
 
 
 # Third Party Libraries
@@ -22,6 +22,7 @@ import sys
 import os.path
 sys.path.append(os.path.join(os.path.dirname(u.__file__), ".."))
 from SnowTest.snow_melt import SnowMelt
+import swacmod.timer as timer
 
 
 ###############################################################################
@@ -109,6 +110,9 @@ def get_canopy_storage(data, output, node):
         canopy_storage[canopy_storage > mcs] = mcs
         canopy_storage = np.where(canopy_storage > output['pefac'],
                                   output['pefac'], canopy_storage)
+        if ff.use_natproc:
+            canopy_storage = np.where(output['pefac'] < 0.0,
+                                    0.0, canopy_storage)
     else:
         canopy_storage = np.zeros(len(series['date']))
 
@@ -347,6 +351,7 @@ def get_ae(data, output, node):
         double[:] col_k_slope = np.zeros(len(series['date']))
         double[:] col_ae = np.zeros(len(series['date']))
         size_t zone_mac = params['macropore_zone_mapping'][node] - 1
+        size_t zone_ror = params['single_cell_swrecharge_zone_mapping'][node] - 1
         size_t zone_rro = params['rapid_runoff_zone_mapping'][node] - 1
         double ssmd = u.weighted_sum(params['soil_spatial'][node],
                                      s_smd['starting_SMD'])
@@ -354,6 +359,9 @@ def get_ae(data, output, node):
                                           dtype=np.int64)
         long long[:] class_ri = np.array(rrp[zone_rro]['class_ri'],
                                          dtype=np.int64)
+        double [:, :] ror_prop = params['ror_prop']
+        double [:, :] ror_limit = params['ror_limit']
+        double [:, :] ror_act = params['ror_act']
         double[:, :] macro_prop = params['macro_prop']
         double[:, :] macro_limit = params['macro_limit']
         double[:, :] macro_act = params['macro_act']
@@ -377,13 +385,25 @@ def get_ae(data, output, node):
         double[:] rawrew_a = output['rawrew']
         long long[:] months = np.array(series['months'], dtype=np.int64)
         double ma = 0.0
+        size_t zone_sw
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_area, not_ponded
 
-    if params['swrecharge_process'] == 'enabled':
+    if params['sw_process_natproc'] == 'enabled':
+        zone_sw = params['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    not_ponded = 1.0 - pond_area
+
+    if (params['swrecharge_process'] == 'enabled' or
+        params['single_cell_swrecharge_process'] == 'enabled'):
         col_runoff_recharge[:] = 0.0
 
     for num in range(length):
         var2 = net_rainfall[num]
-
+        var6 = months[num]
         if params['rapid_runoff_process'] == 'enabled':
             if smd > last_smd or var2 > last_ri:
                 rapid_runoff_c = value
@@ -402,7 +422,14 @@ def get_ae(data, output, node):
             rapid_runoff = (0.0 if var2 < 0.0 else var5)
             col_rapid_runoff[num] = rapid_runoff
 
-        var6 = months[num]
+            if params['single_cell_swrecharge_process'] == 'enabled':
+                var6a = rapid_runoff - ror_act[var6][zone_ror]
+                if var6a > 0:
+                    var7 = ror_prop[var6][zone_ror] * var6a
+                    var8 = ror_limit[var6][zone_ror]
+                    col_runoff_recharge[num] = (var8 if var7 > var8 else var7)
+                else:
+                    col_runoff_recharge[num] = 0.0
 
         if params['macropore_process'] == 'enabled':
             if mac_opt == 'SMD':
@@ -460,6 +487,7 @@ def get_ae(data, output, node):
                 var13 = var11 * (net_pefac - percol_in_root)
             else:
                 var13 = 0.0
+            var13 *= not_ponded
             col_ae[num] = var13
             p_smd = smd + var13 - percol_in_root
             col_p_smd[num] = p_smd
