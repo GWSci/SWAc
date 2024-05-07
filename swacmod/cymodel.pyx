@@ -1086,7 +1086,6 @@ def get_recharge(data, output, node):
 def get_mf6rch_file(data, rchrate):
     """get mf6 RCH object."""
 
-    import numpy as np
     import os.path
 
     cdef int i, per
@@ -1891,113 +1890,80 @@ def aggregate_reporting_op(output, area, reporting):
 
 ###############################################################################
 
+def get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic):
+    nper = len(data['params']['time_periods'])
+    nodes = data['params']['num_nodes']
+    description = "Accumulating SFR flows  "
+    result = np.zeros((nper, nss))
+    for per in tqdm(range(nper), desc=description):
+        result_A, result_B = get_sfr_flows(sorted_by_ca, runoff_with_area, swac_seg_dic, nodes * per, nodes, nss)
+        for iseg in range(nss):
+            result[per, iseg] = result_A[iseg] + result_B[iseg]
+    return result
 
-def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
-                  flow, nodes_per):
+def get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic):
+    nper = len(data['params']['time_periods'])
+    nodes = data['params']['num_nodes']
+    description = "Accumulating nitrate mass to surface water  "
+    result = np.zeros((nper, nss))
+    for per in tqdm(range(nper), desc=description):
+        result_A, result_B = get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, per, nodes, nss)
+        for iseg in range(nss):
+            result[per, iseg] = result_A[iseg] + result_B[iseg]
+    return result
+
+def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
     """get flows for one period"""
 
-    ro[:] = 0.0
-    flow[:] = 0.0
+    source = runoff
+    index_offset = nodes_per + 1
+    return get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
 
-    for node_swac, line in sorted_by_ca.items():
-        downstr, str_flag = line[:2]
-        acc = 0.0
-
-        # accumulate pre-stream flows into network
-        while downstr > 1:
-
-            str_flag = sorted_by_ca[node_swac][1]  # [idx['str_flag']]
-
-            # not str
-            if str_flag < 1:  # or node_mf < 1:
-                # not not done
-                if done[node_swac - 1] < 1:
-                    acc += max(0.0, runoff[nodes_per + node_swac])
-                    done[node_swac - 1] = 1
-            else:
-                # stream cell
-                iseg = swac_seg_dic[node_swac]
-
-                # not done
-                if done[node_swac - 1] < 1:
-                    ro[iseg - 1] = runoff[nodes_per + node_swac]
-                    flow[iseg - 1] = acc
-                    done[node_swac - 1] = 1
-                    acc = 0.0
-
-                # stream cell been done
-                else:
-                    flow[iseg - 1] += acc
-                    acc = 0.0
-                    break
-
-            # new node
-            node_swac = downstr
-            # get new downstr node
-            downstr = sorted_by_ca[node_swac][0]
-
-    return ro, flow
-
-###############################################################################
-
-
-def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
-                  flow, nodes_per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, period):
+def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, period, nodes, nss):
     """get flows and nitrate masses for one period"""
-    cdef:
-        double[:] nitrate_added_tons_per_day = np.zeros(ro.size)
-        
-    ro[:] = 0.0
-    flow[:] = 0.0
-    mass_to_stream[:] = 0.0
-    mass_in_stream[:] = 0.0
 
-    for node_swac, line in sorted_by_ca.items():
+    source = stream_nitrate_aggregation[period,:]
+    index_offset = 0
+    return get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
+
+def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset):
+    result_A = np.zeros((nss))
+    result_B = np.zeros((nss))
+    done = np.zeros((nodes), dtype=int)
+
+    for node_number, line in sorted_by_ca.items():
+        node_index = node_number - 1
         downstr, str_flag = line[:2]
         acc = 0.0
-        acc_mass = 0.0
 
-        # accumulate pre-stream flows into network
         while downstr > 1:
+            str_flag = sorted_by_ca[node_number][1]
+            is_str = str_flag >= 1
+            is_done = done[node_index] == 1
 
-            str_flag = sorted_by_ca[node_swac][1]  # [idx['str_flag']]
+            if is_str:
+                stream_cell_index = swac_seg_dic[node_number] - 1
 
-            # not str
-            if str_flag < 1:  # or node_mf < 1:
-                # not not done
-                if done[node_swac - 1] < 1:
-                    acc += max(0.0, runoff[nodes_per + node_swac])
-                    acc_mass += max(0.0, stream_nitrate_aggregation[period,node_swac - 1])
-                    done[node_swac - 1] = 1
-            else:
-                # stream cell
-                iseg = swac_seg_dic[node_swac]
-
-                # not done
-                if done[node_swac - 1] < 1:
-                    ro[iseg - 1] = runoff[nodes_per + node_swac]
-                    flow[iseg - 1] = acc
-                    mass_to_stream[iseg - 1] = stream_nitrate_aggregation[period,node_swac - 1]
-                    mass_in_stream[iseg - 1] = acc_mass                                 
-                    done[node_swac - 1] = 1
+                if is_done:
+                    result_B[stream_cell_index] += acc
                     acc = 0.0
-                    acc_mass = 0.0
-
-                # stream cell been done
-                else:
-                    flow[iseg - 1] += acc
-                    mass_in_stream[iseg - 1] += acc_mass 
-                    
-                    acc = 0.0
-                    acc_mass = 0.0
                     break
+                else:
+                    result_A[stream_cell_index] = source[node_index + index_offset]
+                    result_B[stream_cell_index] = acc
+                    done[node_index] = 1
+                    acc = 0.0
 
-            # new node
-            node_swac = downstr
-            # get new downstr node
-            downstr = sorted_by_ca[node_swac][0]
+            else:
+                if not is_done:
+                    acc += max(0.0, source[node_index + index_offset])
+                    done[node_index] = 1
 
-    return ro, flow, mass_to_stream, mass_in_stream
+            node_number = downstr
+            node_index = node_number - 1
+            downstr = sorted_by_ca[node_number][0]
+
+    return result_A, result_B
 
 ###############################################################################
 
@@ -2005,7 +1971,6 @@ def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, 
 def get_sfr_file(data, runoff):
     """get SFR object."""
 
-    import numpy as np
     import copy
     import os.path
 
@@ -2091,7 +2056,6 @@ def get_sfr_file(data, runoff):
     seg_data = {}
     swac_seg_dic = {}
     seg_swac_dic = {}
-    done = np.zeros((nodes), dtype=int)
     # for mf6 only
     str_flg = np.zeros((nodes), dtype=int)
 
@@ -2184,13 +2148,10 @@ def get_sfr_file(data, runoff):
             i = (nodes * per) + node
             runoff[i] = runoff[i] * areas[node] * fac
 
-    ro, flow = np.zeros((nss)), np.zeros((nss))
-
     # populate runoff and flow
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
-        ro, flow = get_sfr_flows(sorted_by_ca, idx, runoff, done, areas,
-                                 swac_seg_dic, ro, flow, nodes * per)
+        ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
 
         if data['params']['gwmodel_type'] == 'mfusg':
             for iseg in range(nss):
@@ -2207,7 +2168,6 @@ def get_sfr_file(data, runoff):
         # add segment data for this period
         if data['params']['gwmodel_type'] == 'mfusg':
             seg_data[per] = copy.deepcopy(sd)
-        done[:] = 0
 
     isfropt = 1
     if data['params']['gwmodel_type'] == 'mfusg':
@@ -2273,83 +2233,117 @@ def get_sfr_file(data, runoff):
 
 ##############################################################################
 
-
 def get_str_file(data, runoff):
     """get STR object."""
 
-    import numpy as np
     import copy
-    import os.path
 
-    # units oddness - lots of hardcoded 1000s in input_output.py
-    fac = 0.001
-    areas = data['params']['node_areas']
-    fileout = data['params']['run_name']
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
-    nper = len(data['params']['time_periods'])
-    nodes = data['params']['num_nodes']
-    nlay, nrow, ncol = data['params']['mf96_lrc']
-    rte_topo = data['params']['routing_topology']
-    m = None
-
-    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
-                                      key=lambda x: x[1][4]))
-
-    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
-             'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
-
-    idx = {y: x for (x, y) in enumerate(names)}
+    sorted_by_ca = make_sorted_by_ca(data)
+    idx = make_idx()
 
     nstrm = nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
 
-    istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
+    m, dis, rd = make_modflow_str(data, nstrm, nss)
+    swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
+    update_rd(sorted_by_ca, rd, dis)
+    runoff_with_area = combine_runoff_with_area(data, runoff)
+    str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
 
-    cd = []
-    rd = []
+    reach_data = {}
+    nper = len(data['params']['time_periods'])
+    for per in range(nper):
+        reach_data[per] = copy.deepcopy(rd)
+        for iseg in range(nss):
+            reach_data[per][iseg]['flow'] = str_flow_array[per,iseg]
 
-    m = flopy.modflow.Modflow(modelname=path)
+    str_flg = make_str_flg(data, sorted_by_ca)
+    seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
+    cd = initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
+    strm = make_strm(data, m, nstrm, reach_data, nper, cd)
+    return strm
 
-    dis = flopy.modflow.ModflowDis(m,
+def make_sorted_by_ca(data):
+    rte_topo = data['params']['routing_topology']
+    result = OrderedDict(sorted(rte_topo.items(), key=lambda x: x[1][4]))
+    return result
+
+def make_idx():
+    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z', 'bed_thk', 'str_k', 'depth', 'width']
+    idx = {y: x for (x, y) in enumerate(names)}
+    return idx
+
+def make_modflow_str(data, nstrm, nss):
+    m = make_modflow_model(data)
+    dis = make_modflow_dis(m, data)
+    flopy.modflow.ModflowBas(m, ifrefm=False)
+    rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
+    return m, dis, rd
+
+def make_modflow_model(data):
+    import os.path
+    fileout = data['params']['run_name']
+    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    result = flopy.modflow.Modflow(modelname=path)
+    return result
+
+def make_modflow_dis(m, data):
+    nper = len(data['params']['time_periods'])
+    nlay, nrow, ncol = data['params']['mf96_lrc']
+    result = flopy.modflow.ModflowDis(m,
                                    nlay=nlay,
                                    nrow=nrow,
                                    ncol=ncol,
                                    nper=nper)
+    return result
 
-    flopy.modflow.ModflowBas(m, ifrefm=False)
-        # sd = flopy.modflow.ModflowSfr2.get_empty_segment_data(nss)
-        # rd = flopy.modflow.ModflowSfr2.get_empty_reach_data(nstrm,
-        #                                                     structured=False)
-    rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
-    reach_data = {}
-    swac_seg_dic = {}
-    seg_swac_dic = {}
-    done = np.zeros((nodes), dtype=int)
-    # for mf6 only
+def make_str_flg(data, sorted_by_ca):
+    nodes = data['params']['num_nodes']
     str_flg = np.zeros((nodes), dtype=int)
-
-    # initialise reach & segment data
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
-        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
-         depth, width) = line
-        # for mf6 only
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
         str_flg[node_swac-1] = str_flag
-        ca = ca
+        if str_flag > 0:
+            str_count += 1
+    return str_flg
+
+def make_swac_seg_dic(data, sorted_by_ca):
+    str_count = 0
+    swac_seg_dic = {}
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
         if str_flag > 0:
             swac_seg_dic[node_swac] = str_count + 1
+            str_count += 1
+    return swac_seg_dic
+
+def make_seg_swac_dic(data, sorted_by_ca):
+    nodes = data['params']['num_nodes']
+    str_count = 0
+    seg_swac_dic = {}
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
+        if str_flag > 0:
             seg_swac_dic[str_count + 1] = node_swac
+            str_count += 1
+    return seg_swac_dic
+
+def update_rd(sorted_by_ca, rd, dis):
+    str_count = 0
+    for _, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
+        # for mf6 only
+        if str_flag > 0:
             # NB docs say node number should be zero based (node_mf -1)
             #  but doesn't seem to be
             l, r, c = dis.get_lrc(node_mf)[0]
-            # print(str_count + 1, l, r, c)
             rd[str_count]['k'] = l - 1
             rd[str_count]['i'] = r - 1
             rd[str_count]['j'] = c - 1
             rd[str_count]['segment'] = str_count + 1
             rd[str_count]['reach'] = 1
             rd[str_count]['stage'] = z + depth
-            # print(length, width, str_k, bed_thk, z)
             rd[str_count]['cond'] = (length * width * str_k) / bed_thk
             rd[str_count]['sbot'] = z - bed_thk
             rd[str_count]['stop'] = z
@@ -2358,18 +2352,19 @@ def get_str_file(data, runoff):
             rd[str_count]['rough'] = 222.222
             # inc stream counter
             str_count += 1
+
+def initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss):
+    nodes = data['params']['num_nodes']
     Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
     cd = []
     for iseg in range(nss):
         conn = []
-        # print("SEg_SWAC", seg_swac_dic)
         node_swac = seg_swac_dic[iseg + 1]
         downstr = sorted_by_ca[node_swac][idx['downstr']]
         for n in Gs.neighbors(node_swac):
             if n in swac_seg_dic:
                 if n == downstr:
                     # do nothing I only want the +ve numbers here
-                    # conn.append(-float(swac_seg_dic[n] - 1))
                     pass
                 else:
                     if ff.use_natproc:
@@ -2379,39 +2374,23 @@ def get_str_file(data, runoff):
 
         # update num connections
         cd.append(conn + [0] * (11 - len(conn)))
-    #rd[iseg][9] = len(cd[iseg]) - 1
+    return cd
 
-
-    # for iseg in range(nss):
-    #     node_swac = seg_swac_dic[iseg + 1]
-    #     downstr = sorted_by_ca[node_swac][idx['downstr']]
-    #     if downstr in swac_seg_dic:
-    #         sd[iseg]['outseg'] = swac_seg_dic[downstr]
-    #     else:
-    #         sd[iseg]['outseg'] = 0
-
+def combine_runoff_with_area(data, runoff):
+    areas = data['params']['node_areas']
+    nper = len(data['params']['time_periods'])
+    nodes = data['params']['num_nodes']
+    # units oddness - lots of hardcoded 1000s in input_output.py
+    fac = 0.001
     for per in range(nper):
         for node in range(1, nodes + 1):
             i = (nodes * per) + node
             runoff[i] = runoff[i] * areas[node] * fac
+    return runoff
 
-    ro, flow = np.zeros((nss)), np.zeros((nss))
-
-    # populate runoff and flow
-    for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
-
-        ro, flow = get_sfr_flows(sorted_by_ca, idx, runoff, done, areas,
-                                 swac_seg_dic, ro, flow, nodes * per)
-
-        for iseg in range(nss):
-            rd[iseg]['flow'] = flow[iseg] + ro[iseg]
-
-        # add segment data for this period
-        reach_data[per] = copy.deepcopy(rd)
-        done[:] = 0
-
-    isfropt = 1
-
+def make_strm(data, m, nstrm, reach_data, nper, cd):
+    istcb1 = data['params']['istcb1']
+    istcb2 = data['params']['istcb2']
     strm = flopy.modflow.ModflowStr(m,
                                     mxacts=nstrm,
                                     nss=nstrm,
@@ -2421,159 +2400,28 @@ def get_str_file(data, runoff):
                                     stress_period_data=reach_data,
                                     segment_data={iper: cd for iper in range(nper)},
                                     irdflg={0:2, 1:2})
-
     strm.heading = "# DELETE ME"
-
     return strm
 
 ##############################################################################
 
-
 def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     """integrate flows and nitrate mass in stream cells"""
 
-    import numpy as np
-    import copy
-    import os.path
-    
     cdef:
         double[:,:] stream_conc
 
-    # units oddness - lots of hardcoded 1000s in input_output.py
-    fac = 0.001
-    areas = data['params']['node_areas']
-    fileout = data['params']['run_name']
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
-    nper = len(data['params']['time_periods'])
-    nodes = data['params']['num_nodes']
-    nlay, nrow, ncol = data['params']['mf96_lrc']
-    rte_topo = data['params']['routing_topology']
-    m = None
+    sorted_by_ca = make_sorted_by_ca(data)
+    idx = make_idx()
 
-    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
-                                      key=lambda x: x[1][4]))
+    nss = sum([value[idx['str_flag']] > 0
+                     for value in sorted_by_ca.values()])
 
-    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
-             'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
-
-    idx = {y: x for (x, y) in enumerate(names)}
-
-    nstrm = nss = sum([value[idx['str_flag']] > 0
-                       for value in sorted_by_ca.values()])
-
-    istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
-
-    cd = []
-    rd = []
-
-    m = flopy.modflow.Modflow(modelname=path)
-
-    dis = flopy.modflow.ModflowDis(m,
-                                   nlay=nlay,
-                                   nrow=nrow,
-                                   ncol=ncol,
-                                   nper=nper)
-
-    flopy.modflow.ModflowBas(m, ifrefm=False)
-    rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
-    str_flow_array = np.zeros((nper, nss))
-    str_flow_period = np.zeros(nss)
-    stream_mass_array = np.zeros((nper, nss))
-    stream_mass_period = np.zeros(nss)
-    nitrate_reaching_stream_cells_kg_array = {}
-    swac_seg_dic = {}
-    seg_swac_dic = {}
-    done = np.zeros((nodes), dtype=int)
-    # for mf6 only
-    str_flg = np.zeros((nodes), dtype=int)
-
-    # initialise reach & segment data
-    str_count = 0
-    for node_swac, line in sorted_by_ca.items():
-        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
-         depth, width) = line
-        # for mf6 only
-        str_flg[node_swac-1] = str_flag
-        ca = ca
-        if str_flag > 0:
-            swac_seg_dic[node_swac] = str_count + 1
-            seg_swac_dic[str_count + 1] = node_swac
-            # NB docs say node number should be zero based (node_mf -1)
-            #  but doesn't seem to be
-            l, r, c = dis.get_lrc(node_mf)[0]
-            # print(str_count + 1, l, r, c)
-            rd[str_count]['k'] = l - 1
-            rd[str_count]['i'] = r - 1
-            rd[str_count]['j'] = c - 1
-            rd[str_count]['segment'] = str_count + 1
-            rd[str_count]['reach'] = 1
-            rd[str_count]['stage'] = z + depth
-            # print(length, width, str_k, bed_thk, z)
-            rd[str_count]['cond'] = (length * width * str_k) / bed_thk
-            rd[str_count]['sbot'] = z - bed_thk
-            rd[str_count]['stop'] = z
-            rd[str_count]['width'] = width
-            rd[str_count]['slope'] = 111.111
-            rd[str_count]['rough'] = 222.222
-            # inc stream counter
-            str_count += 1
-    Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
-    cd = []
-    for iseg in range(nss):
-        conn = []
-        # print("SEg_SWAC", seg_swac_dic)
-        node_swac = seg_swac_dic[iseg + 1]
-        downstr = sorted_by_ca[node_swac][idx['downstr']]
-        for n in Gs.neighbors(node_swac):
-            if n in swac_seg_dic:
-                if n == downstr:
-                    # do nothing I only want the +ve numbers here
-                    # conn.append(-float(swac_seg_dic[n] - 1))
-                    pass
-                else:
-                    if ff.use_natproc:
-                        conn.append((swac_seg_dic[n]))
-                    else:
-                        conn.append((swac_seg_dic[n] - 1))
-
-        # update num connections
-        cd.append(conn + [0] * (11 - len(conn)))
-    #rd[iseg][9] = len(cd[iseg]) - 1
-
-
-    # for iseg in range(nss):
-    #     node_swac = seg_swac_dic[iseg + 1]
-    #     downstr = sorted_by_ca[node_swac][idx['downstr']]
-    #     if downstr in swac_seg_dic:
-    #         sd[iseg]['outseg'] = swac_seg_dic[downstr]
-    #     else:
-    #         sd[iseg]['outseg'] = 0
-
-    for per in range(nper):
-        for node in range(1, nodes + 1):
-            i = (nodes * per) + node
-            runoff[i] = runoff[i] * areas[node] * fac
-
-    ro, flow = np.zeros((nss)), np.zeros((nss))
-    mass_to_stream, mass_in_stream = np.zeros((nss)), np.zeros((nss))
-
-    # populate runoff, flow and nitrate mass
-    for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
-
-        ro, flow, mass_to_stream, mass_in_stream = get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas,
-                                 swac_seg_dic, ro, flow, nodes * per, stream_nitrate_aggregation, mass_to_stream, mass_in_stream, per)
-
-        for iseg in range(nss):
-            str_flow_period[iseg] = flow[iseg] + ro[iseg]
-            stream_mass_period[iseg] = mass_in_stream[iseg] + mass_to_stream[iseg]
-
-        # add segment data for this period
-        stream_mass_array[per,:] = copy.deepcopy(stream_mass_period)
-        str_flow_array[per,:] = copy.deepcopy(str_flow_period)
-        done[:] = 0
-
+    swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
+    runoff_with_area = combine_runoff_with_area(data, runoff)
+    str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
+    stream_mass_array = get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic)
     stream_conc = _divide_2D_arrays(stream_mass_array, str_flow_array)
-    
     return stream_conc
 
 ###############################################################################
@@ -2769,7 +2617,6 @@ def get_swabs(data, output, node):
 def get_evt_file(data, evtrate):
     """get EVT object."""
 
-    import numpy as np
     import os.path
 
     cdef int i, per, nper, nodes
