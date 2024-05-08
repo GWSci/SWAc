@@ -302,6 +302,20 @@ swrecharge_zone_mapping:
         - !!python/name:dict
         - !!python/name:int
 
+sw_zone_names:
+    required: false
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:str
+
+sw_zone_mapping:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
 macropore_zone_names:
     required: false
     alt_format: [yml]
@@ -447,6 +461,54 @@ swrecharge_limit:
         - !!python/name:list
         - !!python/name:float
 
+
+########################################
+# Process: Single Cell Runoff Recharge #
+#######################################
+
+single_cell_swrecharge_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+single_cell_swrecharge_zone_names:
+    required: false
+    alt_format: [yml]
+    type:
+        - !!python/name:dict
+        - !!python/name:str
+
+single_cell_swrecharge_zone_mapping:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:int
+
+single_cell_swrecharge_proportion:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+single_cell_swrecharge_limit:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+single_cell_swrecharge_activation:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
 
 ######################
 # Process: Macropore #
@@ -699,20 +761,6 @@ recharge_attenuation_params:
         - !!python/name:list
         - !!python/name:float
 
-recharge_attenuation_zone_names:
-    required: false
-    alt_format: [yml]
-    type:
-        - !!python/name:dict
-        - !!python/name:str
-
-recharge_attenuation_zone_mapping:
-    required: false
-    alt_format: [yml, csv]
-    type:
-        - !!python/name:dict
-        - !!python/name:int
-
 recharge_node_mapping:
     required: false
     alt_format: [yml, csv]
@@ -720,6 +768,84 @@ recharge_node_mapping:
         - !!python/name:dict
         - !!python/name:int
 
+###############################
+# Process: Historical Nitrate #
+###############################
+
+historical_nitrate_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+historical_mi_array_kg_per_time_period:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:float
+
+historical_start_date:
+    required: false
+    type:
+        - !!python/name:datetime.datetime
+
+historical_time_periods:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:list
+        - !!python/name:list
+        - !!python/name:int
+
+#######################
+# Process: Nitrate #
+#######################
+
+nitrate_process:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+nitrate_calibration_a:
+    required: false
+    type:
+        - !!python/name:float
+
+nitrate_calibration_mu:
+    required: false
+    type:
+        - !!python/name:float
+
+nitrate_calibration_sigma:
+    required: false
+    type:
+        - !!python/name:float
+
+nitrate_calibration_alpha:
+    required: false
+    type:
+        - !!python/name:float
+
+nitrate_calibration_effective_porosity:
+    required: false
+    type:
+        - !!python/name:float
+
+nitrate_depth_to_water:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+nitrate_loading:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
 
 #######################
 # Process: SW Release #
@@ -732,6 +858,73 @@ sw_process:
     constraints: ["enabled", "disabled"]
 
 sw_params:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+###############################
+# Process: SW Release Natproc #
+###############################
+
+sw_process_natproc:
+    required: true
+    type:
+        - !!python/name:str
+    constraints: ["enabled", "disabled"]
+
+sw_init_ponding:
+    required: false
+    type:
+        - !!python/name:float
+
+sw_max_ponding:
+    required: false
+    type:
+        - !!python/name:float
+
+sw_ponding_area:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:float
+
+sw_downstream:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_activation:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_bed_infiltration:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_direct_recharge:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+        - !!python/name:float
+
+sw_pe_to_open_water:
     required: false
     alt_format: [yml, csv]
     type:
@@ -874,3 +1067,8 @@ node_xy:
         - !!python/name:dict
         - !!python/name:list
         - !!python/name:float
+
+disv:
+    required: false
+    type:
+        - !!python/name:bool

@@ -39,8 +39,22 @@ class EndToEndTests(unittest.TestCase):
         actual_keys = set(self.data['series'].keys()) | set(self.data['params'].keys())
 
         generated_keys = set([
-            'date', 'months', 'kc_list', 'macro_prop', 'macro_limit',
-            'macro_act', 'macro_rec', 'ror_prop', 'ror_limit'])
+            'date',
+            'months',
+            'kc_list',
+            'macro_prop',
+            'macro_limit',
+            'macro_act',
+            'macro_rec',
+            'ror_prop',
+            'ror_limit',
+            'sw_direct_rech',
+            'sw_bed_infiltn',
+            'sw_pe_to_open_wat',
+            'sw_activ',
+            'ror_act',
+            'sw_pond_area',
+            'sw_downstr'])
         expected_keys = set(self.data['specs']) | generated_keys
 
         self.assertEqual(expected_keys, actual_keys)
