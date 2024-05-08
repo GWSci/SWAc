@@ -932,27 +932,62 @@ def get_recharge(data, output, node):
         double[:] recharge = np.zeros(length)
         double[:] recharge_store_input = output['recharge_store_input']
         double[:] macropore_dir = output['macropore_dir']
-        size_t num
+        size_t num, zone_sw
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_area
+
+    if params['sw_process_natproc'] == 'enabled':
+        zone_sw = params['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
 
     if params['recharge_attenuation_process'] == 'enabled':
         recharge[0] = irs
         col_recharge_store[0] = irs
         col_combined_recharge[0] = (min((irs * rlp), rll) +
-                                    output['macropore_dir'][0])
+                                    ((1.0 - pond_area) *
+                                     output['macropore_dir'][0]) +
+                                    (pond_area *
+                                     output['pond_direct'][0]) +
+                                    (pond_area *
+                                     output['pond_atten'][0]))
         for num in range(1, length):
-            recharge[num] = (recharge_store_input[num-1] +
-                             col_recharge_store[num-1] -
-                             col_combined_recharge[num-1] +
-                             macropore_dir[num-1])
+            if ff.use_natproc:
+                recharge[num] = (recharge_store_input[num-1] +
+                                col_recharge_store[num-1] -
+                                (col_combined_recharge[num-1] -
+                                ((1.0 - pond_area) *
+                                macropore_dir[num-1])
+                                - (pond_area * (output['pond_direct'][num-1] +
+                                                output['pond_atten'][num-1]))))
+            else:
+                recharge[num] = (recharge_store_input[num-1]
+                                + col_recharge_store[num-1]
+                                - col_combined_recharge[num-1]
+                                + ((1.0 - pond_area) * macropore_dir[num-1])
+                                + (pond_area * (output['pond_direct'][num-1] + output['pond_atten'][num-1])))
 
             col_recharge_store[num] = recharge[num]
             col_combined_recharge[num] = (min((recharge[num] * rlp), rll) +
-                                          output['macropore_dir'][num])
+                                          ((1.0 - pond_area) *
+                                           output['macropore_dir'][num]) +
+                                          (pond_area *
+                                           (output['pond_direct'][num] +
+                                            output['pond_atten'][num])))
     else:
-        col_recharge_store[0] = irs
+        if ff.use_natproc:
+            # This branch does not modify or set the whole array here, so I think that setting index zero to irs here is a bug.
+            pass
+        else:
+            col_recharge_store[0] = irs
         for num in range(1, length):
             col_combined_recharge[num] = (recharge_store_input[num] +
-                                          output['macropore_dir'][num])
+                                          ((1.0 - pond_area) *
+                                           output['macropore_dir'][num]) +
+                                           (pond_area *
+                                           (output['pond_direct'][num] +
+                                            output['pond_atten'][num])))
 
     col = {}
     col['recharge_store'] = col_recharge_store.base
