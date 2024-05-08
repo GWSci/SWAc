@@ -1,3 +1,3 @@
 source env/bin/activate
-python3 swacmod_run.py "$@"
+python3.11 swacmod_run.py "$@"
 deactivate
