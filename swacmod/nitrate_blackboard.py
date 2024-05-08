@@ -39,6 +39,7 @@ class NitrateBlackboard:
 		self.perc_through_root_mm_per_day = None
 		self.Pherperc = None
 		self.Pro = None
+		self.precip_to_ground = None
 		self.proportion_reaching_water_table_array_per_day = None
 		self.p_non_her = None
 		self.Psmd = None
@@ -54,7 +55,7 @@ class NitrateBlackboard:
 		self.σ = None
 
 	def initialise_blackboard(self, data, output, node, logging):
-		self.length = output["rainfall_ts"].size
+		self.length = output["precip_to_ground"].size
 
 		self.node = node
 		self.logging = logging
@@ -67,10 +68,10 @@ class NitrateBlackboard:
 		self.cell_area_m_sq = params["node_areas"][self.node]
 		self.nitrate_loading = params["nitrate_loading"][self.node]
 		self.a = params["nitrate_calibration_a"]
-		self.μ = params["nitrate_calibration_mu"]
+		self.μ = params["nitrate_calibration_mu"][self.node]
 		self.σ = params["nitrate_calibration_sigma"]
 		self.alpha = params["nitrate_calibration_alpha"]
-		self.effective_porosity = params["nitrate_calibration_effective_porosity"]
+		self.effective_porosity = params["nitrate_calibration_effective_porosity"][self.node]
 
 		self.perc_through_root_mm_per_day = output["perc_through_root"]
 		self.TAW_array_mm = output["tawtew"]
@@ -83,6 +84,6 @@ class NitrateBlackboard:
 		self.interflow_volume = output["interflow_volume"]
 		self.infiltration_recharge = output["infiltration_recharge"]
 		self.interflow_to_rivers = output["interflow_to_rivers"]
-		self.rainfall_ts = output["rainfall_ts"]
+		self.precip_to_ground = output["precip_to_ground"]
 		self.ae = output["ae"]
 		self.historical_nitrate_reaching_water_table_array_tons_per_day = output["historical_nitrate_reaching_water_table_array_tons_per_day"]

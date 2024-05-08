@@ -13,6 +13,8 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, histori
 	time_switcher = blackboard.time_switcher
 	length = historical_days_count + len(blackboard.days)
 	depth_to_water_m = blackboard.nitrate_depth_to_water[0]
+	mu = blackboard.μ[0]
+	effective_porosity_value = blackboard.effective_porosity[0]
 	if depth_to_water_m == 0.0:
 		result = np.zeros(length)
 		result[0] = 1.0
@@ -21,44 +23,43 @@ def _calculate_proportion_reaching_water_table_array_per_day(blackboard, histori
 		return __calculate_proportion_reaching_water_table_array_per_day(
 			length,
 			blackboard.a,
-			blackboard.μ,
+			mu,
 			blackboard.σ,
 			blackboard.alpha,
-			blackboard.effective_porosity,
+			effective_porosity_value,
 			depth_to_water_m,
 			time_switcher)
 
 def __calculate_proportion_reaching_water_table_array_per_day(
 		length,
 		a,
-		μ,
+		mu,
 		σ,
 		alpha,
-		effective_porosity,
+		effective_porosity_value,
 		depth_to_water_m,
 		time_switcher):
 	result = np.zeros(length)
 	for i in range(length):
 		t = i
 		result[i] = _calculate_daily_proportion_reaching_water_table(
-			a, μ, σ, alpha, effective_porosity, depth_to_water_m, t)
+			a, mu, σ, alpha, effective_porosity_value, depth_to_water_m, t)
 	return result
 
 def _calculate_daily_proportion_reaching_water_table(
-		a, μ, σ, alpha, effective_porosity, DTW, t):
-
+		a, mu_val, σ, alpha, effective_porosity_ne, DTW, t):
 	f_t = _calculate_cumulative_proportion_reaching_water_table(
-		a, μ, σ, alpha, effective_porosity, DTW, t)
+		a, mu_val, σ, alpha, effective_porosity_ne, DTW, t)
 	f_t_prev = _calculate_cumulative_proportion_reaching_water_table(
-		a, μ, σ, alpha, effective_porosity, DTW, t - 1)
+		a, mu_val, σ, alpha, effective_porosity_ne, DTW, t - 1)
 	return f_t - f_t_prev
 
 def _calculate_cumulative_proportion_reaching_water_table(
-		a, μ, σ, alpha, effective_porosity, DTW, t):
+		a, mu_val, σ, alpha, effective_porosity_ne, DTW, t):
 	if (t <= 0):
 		return 0
 
-	numerator = math.log((alpha * effective_porosity) * (DTW/t), a) - μ
+	numerator = math.log((alpha * effective_porosity_ne) * (DTW/t), a) - mu_val
 	denominator = σ * math.sqrt(2)
 
 	result = 0.5 * (1 + math.erf(- numerator / denominator))

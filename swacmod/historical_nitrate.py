@@ -29,13 +29,13 @@ class HistoricalNitrateBlackboard():
 		self.a = data["params"]["nitrate_calibration_a"]
 		self.alpha = data["params"]["nitrate_calibration_alpha"]
 		self.days = data["series"]["date"]
-		self.effective_porosity = data["params"]["nitrate_calibration_effective_porosity"]
+		self.effective_porosity = data["params"]["nitrate_calibration_effective_porosity"][node]
 		self.historical_mi_array_kg_per_time_period = data["params"]["historical_mi_array_kg_per_time_period"][node]
 		self.historical_nitrate_days = data["series"]["historical_nitrate_days"]
 		self.historical_time_periods = data["params"]["historical_time_periods"]
 		self.nitrate_depth_to_water = data["params"]["nitrate_depth_to_water"][node]
 		self.node = node
-		self.μ = data["params"]["nitrate_calibration_mu"]
+		self.μ = data["params"]["nitrate_calibration_mu"][node]
 		self.σ = data["params"]["nitrate_calibration_sigma"]
 		return self
 

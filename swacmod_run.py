@@ -515,7 +515,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = mp.Array("f", 1)
         nitrate_aggregation = nitrate.make_aggregation_array(data)
-        stream_nitrate_aggregation = nitrate.make_stream_aggregation_array(data)
+        stream_nitrate_aggregation = nitrate.make_aggregation_array(data)
         nitrate_mi_aggregation = nitrate.make_mi_aggregation_array(data)
         recharge = mp.Array("f", 1)
         runoff = mp.Array("f", 1)
@@ -546,7 +546,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = np.zeros(1, dtype=np.single)
         nitrate_aggregation = nitrate.make_aggregation_array(data)
-        stream_nitrate_aggregation = nitrate.make_stream_aggregation_array(data)    
+        stream_nitrate_aggregation = nitrate.make_aggregation_array(data)    
         nitrate_mi_aggregation = nitrate.make_mi_aggregation_array(data)
         recharge = np.zeros(1, dtype=np.single)
         runoff = np.zeros(1, dtype=np.single)
@@ -861,6 +861,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         if data["params"]["output_sfr"]:
             print("\t- SFR file")
             if data['params']['gwmodel_type'] == 'mf96':
+                roff_agg = np.copy(np.array(runoff_agg))
                 strm = m.get_str_file(data, np.copy(np.array(runoff_agg)))
                 strm.write_file()
                 # remove header from str file
@@ -918,8 +919,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
         timer.switch_to(output_timer_token, "output_nitrate")
         if data["params"]["nitrate_process"] == "enabled":
+            if data['params']['gwmodel_type'] == 'mf96':
+                stream_conc = m.get_str_nitrate(data, roff_agg, stream_nitrate_aggregation)
+                nitrate.write_stream_nitrate_csv(data, stream_conc)
             nitrate.write_nitrate_csv(data, nitrate_aggregation)
-            nitrate.write_stream_nitrate_csv(data,stream_nitrate_aggregation)
             nitrate.write_mi_csv(data, nitrate_mi_aggregation)
 
         timer.switch_off(output_timer_token)

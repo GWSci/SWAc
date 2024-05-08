@@ -814,7 +814,9 @@ nitrate_calibration_a:
 
 nitrate_calibration_mu:
     required: false
+    alt_format: [yml, csv]
     type:
+        - !!python/name:dict
         - !!python/name:float
 
 nitrate_calibration_sigma:
@@ -829,7 +831,9 @@ nitrate_calibration_alpha:
 
 nitrate_calibration_effective_porosity:
     required: false
+    alt_format: [yml, csv]
     type:
+        - !!python/name:dict
         - !!python/name:float
 
 nitrate_depth_to_water:

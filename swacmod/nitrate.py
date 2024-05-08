@@ -22,7 +22,7 @@ def calculate_nitrate(data, output, node, logging = logging):
 		blackboard = _do_nitrate_calculations(blackboard)
 		return _convert_blackboard_to_result(blackboard)
 	else:
-		length = output["rainfall_ts"].size
+		length = output["precip_to_ground"].size
 		return _make_empty_result(length)
 
 def _do_nitrate_calculations(blackboard):
@@ -37,7 +37,7 @@ def _do_nitrate_calculations(blackboard):
 	blackboard.m1_array_kg_per_day = _calculate_m1_array_kg_per_day(blackboard)
 	m1a_b_array_kg_per_day = _calculate_m1a_b_array_kg_per_day(blackboard)
 	blackboard.m1a_array_kg_per_day = m1a_b_array_kg_per_day[0,:]
-	blackboard.m1b_array_kg_per_day = m1a_b_array_kg_per_day[1,:]		
+	blackboard.m1b_array_kg_per_day = m1a_b_array_kg_per_day[1,:]
 	blackboard.p_non_her = _calculate_p_non_her(blackboard)
 	blackboard.p_non = _calculate_p_non(blackboard)
 	blackboard.m2_array_kg_per_day = _calculate_m2_array_kg_per_day(blackboard)
@@ -57,7 +57,7 @@ def _do_nitrate_calculations(blackboard):
 	return blackboard
 
 def _calculate_her_array_mm_per_day(blackboard):
-	return np.maximum(0.0, blackboard.rainfall_ts - blackboard.ae)
+	return np.maximum(0.0, blackboard.precip_to_ground - blackboard.ae)
 
 def _calculate_m0_array_kg_per_day(blackboard):
 	max_load_per_year_kg_per_hectare = blackboard.nitrate_loading[3]
@@ -100,15 +100,11 @@ def _calculate_m1a_b_array_kg_per_day(blackboard):
 	return m._calculate_m1a_b_array_kg_per_day(blackboard)
 
 def _calculate_p_non_her(blackboard):
-	runoff_and_macropore_mm_per_day = blackboard.runoff_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day
-	non_her_mm_day = (runoff_and_macropore_mm_per_day
-					+ (blackboard.Pherperc * blackboard.her_array_mm_per_day)
-					+ (blackboard.Psmd * blackboard.her_array_mm_per_day)
-					- blackboard.her_array_mm_per_day)
+	non_her_mm_day = blackboard.runoff_mm_per_day + blackboard.Pherperc * blackboard.her_array_mm_per_day + blackboard.Psmd * blackboard.her_array_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day-blackboard.her_array_mm_per_day
 	p_non_her = np.where(
 		blackboard.her_array_mm_per_day <= 0,
-		runoff_and_macropore_mm_per_day,
-		_divide_arrays(non_her_mm_day, runoff_and_macropore_mm_per_day))
+		1,
+		_divide_arrays(non_her_mm_day, (blackboard.runoff_mm_per_day + blackboard.macropore_att_mm_per_day + blackboard.macropore_dir_mm_per_day)))
 	return p_non_her
 
 def _calculate_p_non(blackboard):
@@ -230,13 +226,6 @@ def make_aggregation_array(data):
 	aggregation = np.zeros(shape = shape)
 	return aggregation
 	
-def make_stream_aggregation_array(data):
-	time_periods = data["params"]["time_periods"]
-	node_areas = data["params"]["node_areas"]
-	shape = (_len_time_periods(time_periods), len(node_areas))
-	stream_aggregation = np.zeros(shape = shape)
-	return stream_aggregation
-
 def make_mi_aggregation_array(data):
 	time_periods = data["params"]["time_periods"]
 	len_time_periods = _len_time_periods(time_periods)
@@ -249,18 +238,18 @@ def aggregate_nitrate(aggregation, data, output, node):
 	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
 	combined_recharge_m_cubed = _calculate_combined_recharge_m_cubed(data, output, node)
 
+	node_areas = data["params"]["node_areas"]
 	len_time_periods = _len_time_periods(time_periods)
-	m._aggregate_nitrate(time_periods, len_time_periods, nitrate_reaching_water_table_array_tons_per_day, combined_recharge_m_cubed, aggregation, node)
+	m._aggregate_nitrate(time_periods, len_time_periods, nitrate_reaching_water_table_array_tons_per_day, combined_recharge_m_cubed, aggregation, node, node_areas)
 	return aggregation
 	
-def aggregate_surface_water_nitrate(stream_aggregation, data, output, node):
+def aggregate_surface_water_nitrate(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
 	nitrate_to_surface_water_array_tons_per_day = output["nitrate_to_surface_water_array_tons_per_day"]
-	combined_surface_water_m_cubed = _calculate_combined_surface_water_m_cubed(data, output, node)
 
 	len_time_periods = _len_time_periods(time_periods)
-	m._aggregate_surface_water_nitrate(time_periods, len_time_periods, nitrate_to_surface_water_array_tons_per_day, combined_surface_water_m_cubed, stream_aggregation, node)
-	return stream_aggregation
+	m._aggregate_surface_water_nitrate(time_periods, len_time_periods, nitrate_to_surface_water_array_tons_per_day, aggregation, node)
+	return aggregation
 
 def aggregate_mi(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
@@ -278,23 +267,20 @@ def _calculate_combined_recharge_m_cubed(data, output, node):
 	combined_recharge_m_cubed = combined_recharge_m * node_areas[node]
 	return combined_recharge_m_cubed
 	
-def _calculate_combined_surface_water_m_cubed(data, output, node):
-	node_areas = data["params"]["node_areas"]
-	combined_surface_water_mm = output["combined_str"]
-	combined_surface_water_m = _convert_mm_to_m(combined_surface_water_mm)
-	combined_surface_water_m_cubed = combined_surface_water_m * node_areas[node]
-	return combined_surface_water_m_cubed
-
 def _convert_mm_to_m(arr):
 	return arr / 1000.0
 
 def write_nitrate_csv(data, nitrate_aggregation):
 	filename = make_output_filename(data)
-	m.write_nitrate_csv(filename, nitrate_aggregation)
+	header_row = b'"Stress Period","Node","Recharge Concentration (metric tons/m3)"\r\n'
+	m.write_nitrate_csv(filename, nitrate_aggregation, header_row)
+	return filename
 	
-def write_stream_nitrate_csv(data, stream_nitrate_aggregation):
+def write_stream_nitrate_csv(data, stream_conc):
 	filename = make_nitrate_surface_flow_filename(data)
-	m.write_stream_nitrate_csv(filename, stream_nitrate_aggregation)
+	header_row = b'"Stress Period","Reach","Stream Concentration (metric tons/m3)"\r\n'
+	m.write_nitrate_csv(filename, stream_conc, header_row)
+	return filename
 
 def write_mi_csv(data, nitrate_mi_aggregation):
 	node_count = nitrate_mi_aggregation.shape[0]
