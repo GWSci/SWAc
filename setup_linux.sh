@@ -5,5 +5,5 @@ set -e
 python3.11 -m venv env
 
 source env/bin/activate
-pip install -r requirements3.txt
+pip install -r requirements.txt
 deactivate

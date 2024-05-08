@@ -9,5 +9,5 @@ if %errorlevel% neq 0 (
 python -m venv env || exit /b
 
 call env/Scripts/activate.bat || exit /b
-pip install -r requirements3.txt || exit /b
+pip install -r requirements.txt || exit /b
 deactivate || exit /b

@@ -26,7 +26,7 @@ setup(
     license=swacmod.__license__,
     test_suite="tests",
     keywords=['water management', 'water accounting'],
-    install_requires=['Cython', 'numpy', 'psutil', 'python-dateutil', 'pytz',
+    install_requires=['Cython', 'numpy', 'psutil', 'python-dateutil',
                       'PyYAML', 'setuptools', 'networkx',
                       'tqdm'],
     classifiers=['Intended Audience :: Developers',
