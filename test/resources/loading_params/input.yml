@@ -1,0 +1,15 @@
+historical_mi_array_kg_per_time_period: historical_mi_array_kg_per_time_period.csv
+historical_nitrate_process: enabled
+historical_start_date: "2024-01-18"
+historical_time_periods: historical_time_periods.csv
+nitrate_process: enabled
+nitrate_calibration_a: 1.38
+nitrate_calibration_mu: 1.58
+nitrate_calibration_sigma: 3.96
+nitrate_calibration_alpha: 1.7
+nitrate_calibration_effective_porosity: 0.0029
+nitrate_depth_to_water: nitrate_dtw.csv
+nitrate_loading: nitrate_loading.csv
+start_date: "2024-01-17"
+temp_file_backed_array_directory: null
+time_periods: time_periods.csv

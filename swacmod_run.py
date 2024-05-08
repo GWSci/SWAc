@@ -39,6 +39,10 @@ from swacmod import compile_model
 from swacmod import model as m
 import swacmod.model_numpy as model_numpy
 
+import swacmod.historical_nitrate as historical_nitrate
+import swacmod.nitrate as nitrate
+import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
+
 # win fix
 sys.maxint = 2**63 - 1
 
@@ -135,7 +139,7 @@ def get_output(data, node, time_switcher):
         m.get_net_rainfall,
         m.get_rawrew,
         m.get_tawtew,
-        m.get_ae_op,
+        m.get_ae,
         m.get_unutilised_pe,
         m.get_rejected_recharge,
         m.get_perc_through_root,
@@ -152,10 +156,12 @@ def get_output(data, node, time_switcher):
         m.get_evt,
         m.get_average_in,
         m.get_average_out,
-        model_numpy.get_change,
+        m.get_change,
         m.get_balance,
+        historical_nitrate.get_historical_nitrate,
+        nitrate.get_nitrate,
     ]
-        
+
     for function in methods:
 
         timer.switch_to(time_switcher, function.__name__)
@@ -179,6 +185,9 @@ def run_process(
         recharge_agg,
         runoff_agg,
         evtr_agg,
+        nitrate_aggregation,
+        stream_nitrate_aggregation,
+        nitrate_mi_aggregation,
         recharge,
         runoff,
         log_path,
@@ -204,11 +213,19 @@ def run_process(
     logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
 
+    timer.switch_to(time_switcher, "run_main > run > for")
+
     for node in ids:
 
         q.put(SENTINEL)
         if pbar is not None:
             pbar.update()
+
+        if data["params"]['sw_process_natproc'] == 'enabled':
+            zone_sw = data["params"]['sw_zone_mapping'][node]
+            pond_area = data["params"]['sw_ponding_area'][zone_sw]
+        else:
+            pond_area = 0.0
 
         rep_zone = data["params"]["reporting_zone_mapping"][node]
         if rep_zone != 0:
@@ -218,7 +235,7 @@ def run_process(
 
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
-                aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, spatial_index)
+                aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, stream_nitrate_aggregation, nitrate_mi_aggregation, spatial_index, pond_area)
 
     logging.info("mp.Process %d ended", num)
 
@@ -324,6 +341,94 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
                                     index=spatial_index)
     logging.info("mp.Process %d ended", num)
 
+def compare_lambdas(name, time_switcher, unoptimised, optimised):
+
+    timer.switch_to(time_switcher, f"{name} (unoptimised)")
+    unoptimised_result = unoptimised()
+
+    timer.switch_to(time_switcher, f"{name} (optimised)")
+    optimised_result = optimised()
+
+    timer.switch_to(time_switcher, f"{name} (comparison)")
+    np.testing.assert_equal(unoptimised_result, optimised_result)
+        
+    return optimised_result
+
+def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, stream_nitrate_aggregation, nitrate_mi_aggregation, spatial_index, pond_area):
+    if node in data["params"]["output_individual"]:
+        timer.switch_to(time_switcher, "aggregate_output (output_individual)")
+        # if this node for individual output then preserve
+        single_node_output[node] = output.copy()
+    timer.switch_to(time_switcher, "aggregate_output > (call m.aggregate)")
+    key = (num, rep_zone)
+    area = data["params"]["node_areas"][node]
+    if key not in reporting_agg:
+        reporting_agg[key] = m.aggregate(output, area, pond_area)
+    else:
+        reporting_agg[key] = m.aggregate(
+            output, area, pond_area, reporting=reporting_agg[key])
+
+    timer.switch_to(time_switcher, "aggregate_output > (output_recharge)")
+    if data["params"]["output_recharge"]:
+        rech = {"recharge": output["combined_recharge"].copy()}
+        for i, p in enumerate(
+                u.aggregate_output_col(data,
+                                        rech,
+                                        "recharge",
+                                        method="average")):
+            recharge_agg[(nnodes * i) + int(node)] = p
+        rech = None
+
+    timer.switch_to(time_switcher, "aggregate_output > (swrecharge_process)")
+    if data["params"]["swrecharge_process"] == "enabled":
+
+        rech = output["combined_recharge"].copy()
+        for i, p in enumerate(rech):
+            recharge[(nnodes * i) + int(node)] = p
+        rech = None
+
+        ro = output["combined_str"].copy()
+        for i, p in enumerate(ro):
+            runoff[(nnodes * i) + int(node)] = p
+        ro = None
+
+    timer.switch_to(time_switcher, "aggregate_output > (output_sfr)")
+    if (data["params"]["output_sfr"]
+            or data["params"]["excess_sw_process"] != "disabled"):
+        ro = {"runoff": output["combined_str"].copy()}
+        for i, p in enumerate(
+                u.aggregate_output_col(data,
+                                        ro,
+                                        "runoff",
+                                        method="average")):
+            runoff_agg[(nnodes * i) + int(node)] = p
+        ro = None
+
+    timer.switch_to(time_switcher, "aggregate_output > (output_evt)")
+    if data["params"]["output_evt"]:
+        evt = {"evtr": output["unutilised_pe"].copy()}
+        for i, p in enumerate(
+                u.aggregate_output_col(data,
+                                        evt,
+                                        "evtr",
+                                        method="average")):
+            evtr_agg[(nnodes * i) + int(node)] = p
+        evt = None
+
+    timer.switch_to(time_switcher, "aggregate_output > (nitrate)")
+    if data["params"]["nitrate_process"] == "enabled":
+        nitrate.aggregate_nitrate(nitrate_aggregation, data, output, node)
+        nitrate.aggregate_surface_water_nitrate(stream_nitrate_aggregation, data, output, node)
+        nitrate.aggregate_mi(nitrate_mi_aggregation, data, output, node)
+
+    timer.switch_to(time_switcher, "aggregate_output > (spatial_output_date)")
+    if data["params"]["spatial_output_date"]:
+        spatial[node] = m.aggregate(output,
+                                    area,
+                                    pond_area,
+                                    index=spatial_index)
+    logging.info("mp.Process %d ended", num)
+
 ###############################################################################
 
 # this stuff stranded here for windows - multiprocessing cannot handle
@@ -409,6 +514,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         runoff_agg = mp.Array("f", 1)
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = mp.Array("f", 1)
+        nitrate_aggregation = nitrate.make_aggregation_array(data)
+        stream_nitrate_aggregation = nitrate.make_stream_aggregation_array(data)
+        nitrate_mi_aggregation = nitrate.make_mi_aggregation_array(data)
         recharge = mp.Array("f", 1)
         runoff = mp.Array("f", 1)
         if params["swrecharge_process"] == "enabled" or data["params"][
@@ -437,6 +545,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         runoff_agg = np.zeros(1, dtype=np.single)
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = np.zeros(1, dtype=np.single)
+        nitrate_aggregation = nitrate.make_aggregation_array(data)
+        stream_nitrate_aggregation = nitrate.make_stream_aggregation_array(data)    
+        nitrate_mi_aggregation = nitrate.make_mi_aggregation_array(data)
         recharge = np.zeros(1, dtype=np.single)
         runoff = np.zeros(1, dtype=np.single)
         if params["swrecharge_process"] == "enabled" or data["params"][
@@ -494,6 +605,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 recharge_agg,
                 runoff_agg,
                 evtr_agg,
+                nitrate_aggregation,
+                stream_nitrate_aggregation,
+                nitrate_mi_aggregation,
                 recharge,
                 runoff,
                 log_path,
@@ -531,6 +645,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     recharge_agg,
                     runoff_agg,
                     evtr_agg,
+                    nitrate_aggregation,
+                    stream_nitrate_aggregation,
+                    nitrate_mi_aggregation,
                     recharge,
                     runoff,
                     log_path,
@@ -567,7 +684,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         # aggregate over processes
         timer.switch_to(output_timer_token, "reporting_agg")
         reporting_agg = aggregate_reporting(reporting_agg)
-        
         timer.switch_to(output_timer_token, "swrecharge_process")
         if params["swrecharge_process"] == "enabled":
 
@@ -576,19 +692,33 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
             # ended up needing this for catchment output - bit silly
             if ff.disable_multiprocessing:
-                runoff_recharge = runoff.copy()
+                if ff.use_natproc:
+                    runoff_recharge = recharge.copy()
+                else:
+                    runoff_recharge = runoff.copy()
             else:
-                runoff_recharge = np.frombuffer(runoff.get_obj(),
-                                                dtype=np.float32).copy()
+                if ff.use_natproc:
+                    runoff_recharge = np.frombuffer(recharge.get_obj(),
+                                                    dtype=np.float32).copy()
+                else:
+                    runoff_recharge = np.frombuffer(runoff.get_obj(),
+                                                    dtype=np.float32).copy()
 
             # do RoR
             runoff, recharge = m.do_swrecharge_mask(data, runoff, recharge)
             # get RoR for cat output purposes
-            if ff.disable_multiprocessing:
-                runoff_recharge -= runoff
+            if ff.use_natproc:
+                if ff.disable_multiprocessing:
+                    runoff_recharge = recharge
+                else:
+                    runoff_recharge = np.frombuffer(recharge.get_obj(),
+                                                    dtype=np.float32) - runoff_recharge
             else:
-                runoff_recharge -= np.frombuffer(runoff.get_obj(),
-                                                dtype=np.float32)
+                if ff.disable_multiprocessing:
+                    runoff_recharge -= runoff
+                else:
+                    runoff_recharge -= np.frombuffer(runoff.get_obj(),
+                                                    dtype=np.float32)
             # aggregate amended recharge & runoff arrays by output periods
             for node in tqdm(list(m.all_days_mask(data).nodes),
                              desc="Aggregating Fluxes      "):
@@ -599,18 +729,21 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
 
+                if params['sw_process_natproc'] == 'enabled':
+                    zone_sw = data['params']['sw_zone_mapping'][node]
+                    pond_area = data['params']['sw_ponding_area'][zone_sw]
+                else:
+                    pond_area = 0.0
+
                 if ff.disable_multiprocessing:
                     tmp = recharge
                 else:
                     tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32)
-                
                 rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-                
                 if ff.disable_multiprocessing:
                     tmp = runoff
                 else:
                     tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
-                    
                 ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
                 ror_array = np.array(runoff_recharge[idx],
                                      dtype=np.float64,
@@ -632,17 +765,23 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
                 # amend catchment output values
                 rep_zone = data["params"]["reporting_zone_mapping"][node]
-                area = data["params"]["node_areas"][node]
-                ror = {"runoff_recharge": ror_array}
-
-                if "runoff_recharge" not in reporting_agg2[rep_zone]:
-                    reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                        ror, area)
+                if ff.use_natproc:
+                    do_this_bit = rep_zone > 0
                 else:
-                    reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                        ror,
-                        area,
-                        reporting=reporting_agg2[rep_zone]["runoff_recharge"])
+                    do_this_bit = True
+                if do_this_bit:
+                    area = data["params"]["node_areas"][node]
+                    ror = {"runoff_recharge": ror_array}
+
+                    if "runoff_recharge" not in reporting_agg2[rep_zone]:
+                        reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+                            ror, area, pond_area)
+                    else:
+                        reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+                            ror,
+                            area,
+                            pond_area,
+                            reporting=reporting_agg2[rep_zone]["runoff_recharge"])
 
                 # check for single node
                 if node in data["params"]["output_individual"]:
@@ -777,6 +916,15 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
 
+        timer.switch_to(output_timer_token, "output_nitrate")
+        if data["params"]["nitrate_process"] == "enabled":
+            nitrate.write_nitrate_csv(data, nitrate_aggregation)
+            nitrate.write_stream_nitrate_csv(data,stream_nitrate_aggregation)
+            nitrate.write_mi_csv(data, nitrate_mi_aggregation)
+
+        timer.switch_off(output_timer_token)
+        timer.print_time_switcher_report(output_timer_token)
+
     times["end_of_run"] = time.time()
 
     diff = times["end_of_run"] - times["start_of_run"]
@@ -806,7 +954,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
-    # return
 
 
 ###############################################################################

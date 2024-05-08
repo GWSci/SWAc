@@ -12,7 +12,6 @@ import numpy as np
 # Internal modules
 from . import utils as u
 from . import time_series_data
-from . import feature_flags as ff
 
 
 try:

@@ -1817,24 +1817,49 @@ def write_stream_nitrate_csv(filename, stream_nitrate_aggregation):
 ###############################################################################
 
 
-def aggregate(output, area, reporting=None, index=None):
+def aggregate(output, area, ponded_frac, reporting=None, index=None):
     """Aggregate reporting over output periods."""
     new_rep = {}
 
     if index is not None:
         not_scalar = (type(index[0]) is range or type(index[0]) is list)
+        convert = np.float64
     else:
         not_scalar = False
+        convert = lambda x: x
 
     for key in output:
+
+        # lookup key in utils constants to see which area to use
+        if ff.use_natproc:
+            area_fn = u.CONSTANTS['AREA_FN'][key]
+        else:
+            area_fn = lambda area, ponded_fraction: area
         new_rep[key] = []
         if not_scalar:
             new_rep[key] = [output[key][i].mean(dtype=np.float64)
-                            * area for i in index]
+                            * area_fn(area, ponded_frac) for i in index]
         elif index is not None:
-            new_rep[key] = [output[key][index[0]] * area]
+            new_rep[key] = [convert(output[key][index[0]]) *
+                            area_fn(area, ponded_frac)]
         else:
-            new_rep[key] = output[key] * area
+            new_rep[key] = convert(output[key]) * area_fn(area, ponded_frac)
+        if reporting:
+            new_rep[key] += convert(reporting[key])
+    return new_rep
+
+def aggregate_op(output, area):
+    """Aggregate reporting over output periods."""
+    new_rep = {}
+    for key in output:
+        new_rep[key] = output[key] * area
+    return new_rep
+
+def aggregate_reporting_op(output, area, reporting):
+    """Aggregate reporting over output periods."""
+    new_rep = {}
+    for key in output:
+        new_rep[key] = output[key] * area
         if reporting:
             new_rep[key] += reporting[key]
     return new_rep
