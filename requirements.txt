@@ -1,4 +1,4 @@
-Cython==0.29.35
+Cython==3.0.10
 coverage==7.5.1
 flopy==3.3.2
 h5py==3.8.0
