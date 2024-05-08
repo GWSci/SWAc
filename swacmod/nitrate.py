@@ -128,7 +128,7 @@ def _calculate_Pro(blackboard):
 		0,
 		1 - blackboard.p_non - blackboard.Pherperc - blackboard.Psmd)
 
-	if np.max(blackboard.p_non + blackboard.Pherperc + blackboard.Psmd) > 2:
+	if np.max(blackboard.p_non + blackboard.Pherperc + blackboard.Psmd) > 1:
 		i = np.argmax(blackboard.p_non + blackboard.Pherperc + blackboard.Psmd)
 		blackboard.logging.warning(f"node = {blackboard.node}; day = {i}; p_non = {blackboard.p_non[i]}; Pherperc = {blackboard.Pherperc[i]}; Psmd = {blackboard.Psmd[i]}")
 		blackboard.logging.warning(f"p_non inputs: macropore_att_mm_per_day = {blackboard.macropore_att_mm_per_day[i]}; macropore_dir_mm_per_day = {blackboard.macropore_dir_mm_per_day[i]}; her_array_mm_per_day = {blackboard.her_array_mm_per_day[i]}; runoff_recharge_mm_per_day = {blackboard.runoff_recharge_mm_per_day[i]}")
