@@ -1104,12 +1104,15 @@ def get_mf6rch_file(data, rchrate):
     m = flopy.mf6.mfmodel.MFModel(sim,
                                   modelname=path)
     njag = nodes + 2
-    flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
-                                               nodes=nodes,
-                                               ja=np.zeros((njag),
-                                                           dtype=int),
-                                               nja=njag, area=1.0, iac=[1],
-                                               ihc=[1])
+    if data['params']['disv']:
+        flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(m)
+    else:
+        flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
+                                                nodes=nodes,
+                                                ja=np.zeros((njag),
+                                                            dtype=int),
+                                                nja=njag, area=1.0, iac=[1],
+                                                ihc=[1])
 
     flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                          loading_package=False,
@@ -1122,9 +1125,6 @@ def get_mf6rch_file(data, rchrate):
     irch = np.zeros((nodes, 1), dtype=int)
     if rch_params is not None:
         for inode, vals in rch_params.iteritems():
-            if ff.use_node_count_override:
-                    if inode > nodes:
-                        continue
             irch[inode - 1, 0] = vals[0]
     else:
         for i in range(nodes):
@@ -1136,8 +1136,12 @@ def get_mf6rch_file(data, rchrate):
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
         for i in range(nodes):
             if irch[i, 0] > 0:
-                spd[per][i] = ((irch[i, 0] - 1,),
-                               rchrate[(nodes * per) + i + 1] * fac)
+                if data['params']['disv']:
+                    spd[per][i] = ((0, irch[i, 0] - 1),
+                                   rchrate[(nodes * per) + i + 1] * fac)
+                else:
+                    spd[per][i] = ((irch[i, 0] - 1,),
+                                   rchrate[(nodes * per) + i + 1] * fac)
 
     rch_out = flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(m,
                                                        fixed_cell=False,
@@ -1363,7 +1367,22 @@ def get_combined_str(data, output, node):
 
 def get_combined_ae(data, output, node):
     """AN) AE: Combined AE [mm/d]."""
-    combined_ae = output['canopy_storage'] + output['ae']
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+    if data['params']['sw_process_natproc'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    combined_ae = (((1.0 - pond_area) * output['canopy_storage']) +
+                   ((1.0 - pond_area) * output['ae']) +
+                   output['open_water_ae'])
+
     return {'combined_ae': combined_ae}
 
 ###############################################################################
@@ -1371,7 +1390,19 @@ def get_combined_ae(data, output, node):
 
 def get_evt(data, output, node):
     """AO) EVT: Unitilised PE [mm/d]."""
-    return {'evt': output['unutilised_pe']}
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+    if data['params']['sw_process_natproc'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    return {'evt': (1.0 - pond_area) * output['unutilised_pe']}
 
 ###############################################################################
 
@@ -1388,11 +1419,36 @@ def get_average_in(data, output, node):
 
 def get_average_out(data, output, node):
     """AQ) AVERAGE OUT [mm]."""
-    average_out = (output['combined_str'] +
-                   output['combined_recharge'] +
-                   output['ae'] +
-                   output['canopy_storage'] +
-                   output['swabs_ts'])
+
+    cdef:
+        double[:] sw_ponding_area = data['params']['sw_pond_area']
+        double pond_area
+        size_t zone_sw
+
+    if data['params']['sw_process_natproc'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    if ff.use_natproc:
+        # The natproc branch replaced the terms 'ae', 'canopy_storage' and 'swabs_ts'
+        # with a term for 'combined_ae'.
+        #
+        # 'combined_ae' includes terms for:
+        #     * 'ae'
+        #     * 'canopy_storage'
+        #     * 'open_water_ae'
+        # but it does not include a term for 'swabs_ts'.
+        average_out = (output['combined_str'] +
+                    output['combined_recharge'] +
+                    output['combined_ae'])
+    else:
+        average_out = (output['combined_str'] +
+                    output['combined_recharge'] +
+                    output['ae'] +
+                    output['canopy_storage'] +
+                    output['swabs_ts'])
 
     return {'average_out': average_out}
 
@@ -1402,27 +1458,45 @@ def get_average_out(data, output, node):
 def get_change(data, output, node):
     """AR) TOTAL STORAGE CHANGE [mm]."""
     series = data['series']
+    params = data['params']
 
     cdef:
         size_t length = len(series['date'])
         double[:] col_change = np.zeros(length)
         double[:] tmp0 = np.zeros(length)
-        size_t num
+        size_t num, zone_sw
+        double[:] sw_ponding_area = params['sw_pond_area']
+        double pond_area, not_ponded
+
+    if params['sw_process_natproc'] == 'enabled':
+        zone_sw = params['sw_zone_mapping'][node] - 1
+        pond_area = sw_ponding_area[zone_sw]
+    else:
+        pond_area = 0.0
+
+    not_ponded = 1.0 - pond_area
 
     tmp0 = (output['recharge_store_input'] -
-            (output['combined_recharge'] - output['macropore_dir']) +
-            (output['interflow_store_input'] - output['interflow_to_rivers']) -
+            (output['combined_recharge'] -
+             not_ponded * output['macropore_dir'] - pond_area * output['pond_direct']) +
+            not_ponded * (output['interflow_store_input'] - output['interflow_to_rivers']) -
             output['infiltration_recharge'] +
-            (output['percol_in_root'] - output['ae']))
+            pond_area * output['subroot_leak'] +
+            not_ponded * (output['percol_in_root'] - output['ae']))
 
     col_change = tmp0
 
     for num in range(1, length):
         if output['p_smd'][num] < 0.0:
-            col_change[num] += output['p_smd'][num]
+            col_change[num] += (not_ponded * output['p_smd'][num])
 
-        col_change[num] += (output['sw_attenuation'][num]
-                            - output['sw_attenuation'][num-1])
+        if ff.use_natproc:
+            # Not sure about this. Introducing the pond_area factor here means that this term will be zero if there is no ponding. This may have been a mistake.
+            col_change[num] += (pond_area * (output['sw_attenuation'][num]
+                                - output['sw_attenuation'][num-1]))
+        else:
+            col_change[num] += (output['sw_attenuation'][num]
+                                - output['sw_attenuation'][num-1])
 
     return {'total_storage_change': col_change.base}
 
@@ -1436,6 +1510,309 @@ def get_balance(data, output, node):
                output['total_storage_change'])
 
     return {'balance': balance}
+
+def _calculate_total_mass_leached_from_cell_on_days(
+        double max_load_per_year_kg_per_cell,
+        double her_at_5_percent,
+        double her_at_50_percent,
+        double her_at_95_percent,
+        days,
+        double[:] her_per_day):
+    cdef:
+        size_t length, i
+        double remaining_for_year, her, fraction_leached, mass_leached_for_day
+        double[:] result
+
+    length = len(days)
+    result = np.zeros(length)
+    remaining_for_year = max_load_per_year_kg_per_cell
+    for i in range(length):
+        day = days[i]
+        her = her_per_day[i]
+
+        if (day.month == 10) and (day.day == 1):
+            remaining_for_year = max_load_per_year_kg_per_cell
+
+        if her == 0.0:
+            fraction_leached = 0.0
+        else:
+            fraction_leached = _cumulative_fraction_leaked_per_day(her_at_5_percent,
+                her_at_50_percent,
+                her_at_95_percent,
+                her)
+        mass_leached_for_day = min(remaining_for_year, max_load_per_year_kg_per_cell * fraction_leached)
+        remaining_for_year -= mass_leached_for_day
+        result[i] = mass_leached_for_day
+    return result
+
+def _cumulative_fraction_leaked_per_day(double her_at_5_percent, double her_at_50_percent, double her_at_95_percent, double her_per_day):
+    cdef:
+        double days_in_year = 365.25
+        double her_per_year, y
+
+    her_per_year = days_in_year * her_per_day
+    y = _cumulative_fraction_leaked_per_year(her_at_5_percent, her_at_50_percent, her_at_95_percent, her_per_year)
+    return y / days_in_year
+
+def _cumulative_fraction_leaked_per_year(double her_at_5_percent, double her_at_50_percent, double her_at_95_percent, double her_per_year):
+    cdef:
+        double x, upper, lower, m, c, y
+
+    x = her_per_year
+    if her_per_year < her_at_50_percent:
+        upper = her_at_50_percent
+        lower = her_at_5_percent
+    else:
+        upper = her_at_95_percent
+        lower = her_at_50_percent
+    # y = mx + c
+    if upper == lower:
+        m = 0
+    else:
+        m = 0.45 / (upper - lower)
+    c = 0.5 - (her_at_50_percent * m)
+    y = (m * x) + c
+    return max(0, y)
+
+def calculate_mass_reaching_water_table_array_kg_per_day(blackboard):
+    cdef:
+        double[:] proportion_reaching_water_table_array_per_day = blackboard.proportion_reaching_water_table_array_per_day
+        double[:] mi_array_kg_per_day = blackboard.mi_array_kg_per_day
+    return _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
+
+def calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
+    cdef:
+        double[:] proportion_reaching_water_table_array_per_day = blackboard.historic_proportion_reaching_water_table_array_per_day
+        double[:] mi_array_kg_per_day = blackboard.truncated_historical_mi_array_kg_per_day
+
+    days = blackboard.days
+    return _calculate_historical_mass_reaching_water_table_array_kg_per_day(
+        days,
+        proportion_reaching_water_table_array_per_day,
+        mi_array_kg_per_day)
+
+def _calculate_mass_reaching_water_table_array_kg_per_day(
+        double[:] proportion_reaching_water_table_array_per_day,
+        double[:] mi_array_kg_per_day):
+    cdef:
+        size_t length
+        size_t day_nitrate_was_leached
+        size_t result_end
+        size_t i
+        double[:] result_kg
+        double mass_leached_on_day_kg
+
+    length = proportion_reaching_water_table_array_per_day.size
+    result_kg = np.zeros(length)
+    for day_nitrate_was_leached in range(length):
+        mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
+        if mass_leached_on_day_kg == 0:
+            continue
+        result_end = length - day_nitrate_was_leached
+        for i in range(result_end):
+            result_kg[day_nitrate_was_leached + i] += proportion_reaching_water_table_array_per_day[i] * mass_leached_on_day_kg
+
+    return np.array(result_kg)
+
+def _calculate_historical_mass_reaching_water_table_array_kg_per_day(
+        days,
+        double[:] proportion_reaching_water_table_array_per_day,
+        double[:] mi_array_kg_per_day):
+    cdef:
+        size_t days_count, historic_days_count
+        size_t day_nitrate_was_leached
+        size_t result_end
+        size_t i
+        double[:] result_kg = np.zeros(days_count)
+        double mass_leached_on_day_kg
+
+    days_count = len(days)
+    historic_days_count = mi_array_kg_per_day.size
+
+    result_kg = np.zeros(days_count)
+    for day_nitrate_was_leached in range(historic_days_count):
+        mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
+        if mass_leached_on_day_kg == 0:
+            continue
+        for i in range(days_count):
+            proportion_index = historic_days_count - day_nitrate_was_leached + i
+            result_kg[i] += proportion_reaching_water_table_array_per_day[proportion_index] * mass_leached_on_day_kg
+
+    return np.array(result_kg)
+
+def _calculate_m1a_b_array_kg_per_day(blackboard):
+    cdef:
+        size_t length
+        size_t i
+        double mit_kg
+        double m1a_kg_per_day
+        double m1b_kg_per_day
+        double[:] m1_array_kg_per_day = blackboard.m1_array_kg_per_day
+        double[:] end_interflow_store_volume_mm = blackboard.interflow_volume
+        double[:] infiltration_recharge_mm_per_day = blackboard.infiltration_recharge
+        double[:] interflow_to_rivers_mm_per_day = blackboard.interflow_to_rivers
+        double[:] interflow_store_components_mm_per_day
+        double[:] recharge_proportion
+        double[:] interflow_proportion
+        double[:,:] m1a_b_array_kg_per_day
+        
+
+    interflow_store_components_mm_per_day = np.add(np.add(end_interflow_store_volume_mm, infiltration_recharge_mm_per_day), interflow_to_rivers_mm_per_day)
+    recharge_proportion = _divide_arrays(infiltration_recharge_mm_per_day, interflow_store_components_mm_per_day)
+    interflow_proportion = _divide_arrays(interflow_to_rivers_mm_per_day, interflow_store_components_mm_per_day)
+
+    length = m1_array_kg_per_day.size
+    m1a_b_array_kg_per_day = np.zeros(shape=(2,length))
+    mit_kg = 0
+
+    for i in range(length):
+        mit_kg += m1_array_kg_per_day[i]
+        m1a_kg_per_day = mit_kg * recharge_proportion[i]
+        m1b_kg_per_day = mit_kg * interflow_proportion[i]
+        mit_kg = mit_kg - m1a_kg_per_day - m1b_kg_per_day
+        m1a_b_array_kg_per_day[0,i] = m1a_kg_per_day 
+        m1a_b_array_kg_per_day[1,i] = m1b_kg_per_day        
+    return m1a_b_array_kg_per_day
+
+def _divide_arrays(double[:] a, double[:] b):
+    cdef:
+        double[:] result = np.zeros_like(a)
+    
+    for i in range(len(a)):
+        if b[i] != 0:
+            result[i] = a[i] / b[i]
+    return result
+
+def _aggregate_nitrate(
+            time_periods,
+            size_t len_time_periods,
+            double[:] nitrate_reaching_water_table_array_tons_per_day,
+            double[:] combined_recharge_m_cubed,
+            double[:,:] aggregation,
+            size_t node):
+    cdef:
+        size_t time_period_index, first_day_index, last_day_index, i
+        double sum_of_nitrate_tons, sum_of_recharge_m_cubed
+
+    for time_period_index in range(len_time_periods):
+        time_period = time_periods[time_period_index]
+        first_day_index = time_period[0] - 1
+        last_day_index = time_period[1] - 1
+        sum_of_nitrate_tons = 0.0
+        sum_of_recharge_m_cubed = 0.0
+        for i in range(first_day_index, last_day_index):
+            sum_of_nitrate_tons += nitrate_reaching_water_table_array_tons_per_day[i]
+            sum_of_recharge_m_cubed += combined_recharge_m_cubed[i]
+        if sum_of_recharge_m_cubed != 0:
+            aggregation[time_period_index, node] += sum_of_nitrate_tons / sum_of_recharge_m_cubed
+
+        if ff.max_node_count_override:
+            if last_day_index > ff.max_node_count_override:
+                break
+
+    return aggregation
+    
+def _aggregate_surface_water_nitrate(
+            time_periods,
+            size_t len_time_periods,
+            double[:] nitrate_to_surface_water_array_tons_per_day,
+            double[:] combined_surface_water_m_cubed,
+            double[:,:] stream_aggregation,
+            size_t node):
+    cdef:
+        size_t time_period_index, first_day_index, last_day_index, i
+        double sum_of_nitrate_tons, sum_of_surface_water_m_cubed
+
+    for time_period_index in range(len_time_periods):
+        time_period = time_periods[time_period_index]
+        first_day_index = time_period[0] - 1
+        last_day_index = time_period[1] - 1
+        sum_of_nitrate_tons = 0.0
+        sum_of_surface_water_m_cubed = 0.0
+        for i in range(first_day_index, last_day_index):
+            sum_of_nitrate_tons += nitrate_to_surface_water_array_tons_per_day[i]
+            sum_of_surface_water_m_cubed += combined_surface_water_m_cubed[i]
+        if sum_of_surface_water_m_cubed != 0:
+            stream_aggregation[time_period_index, node] += sum_of_nitrate_tons / sum_of_surface_water_m_cubed
+
+        if ff.max_node_count_override:
+            if last_day_index > ff.max_node_count_override:
+                break
+
+    return stream_aggregation
+
+def aggregate_mi(
+            double[:,:] aggregation,
+            time_periods,
+            size_t len_time_periods,
+            double[:] mi_array_kg_per_day,
+            size_t node):
+    cdef:
+        size_t time_period_index, first_day_index, last_day_index, day_index
+
+    for time_period_index in range(len_time_periods):
+        time_period = time_periods[time_period_index]
+        first_day_index = time_period[0] - 1
+        last_day_index = time_period[1] - 1
+        for day_index in range(first_day_index, last_day_index):
+            aggregation[node][time_period_index] += mi_array_kg_per_day[day_index]
+    return aggregation
+
+def _calculate_aggregate_mi_unpacking(blackboard):
+    cdef:
+        size_t length = len(blackboard.historical_nitrate_days)
+        double[:] historical_mi_array_kg_per_day = np.zeros(length)
+        size_t time_period_index, start_day, end_day, days_in_time_period
+        double total_mi_for_time_period_kg, historical_mi_kg_per_day
+
+    for time_period_index in range(len(blackboard.historical_time_periods)):
+        time_period = blackboard.historical_time_periods[time_period_index]
+        start_day = time_period[0] - 1
+        end_day = time_period[1] - 1
+        days_in_time_period = end_day - start_day
+
+        total_mi_for_time_period_kg = blackboard.historical_mi_array_kg_per_time_period[time_period_index]
+        historical_mi_kg_per_day = total_mi_for_time_period_kg / days_in_time_period
+
+        for day in range(start_day, end_day):
+            historical_mi_array_kg_per_day[day] = historical_mi_kg_per_day
+    return historical_mi_array_kg_per_day
+
+def write_nitrate_csv(filename, nitrate_aggregation):
+    stress_period_count = nitrate_aggregation.shape[0]
+    node_count = nitrate_aggregation.shape[1]
+
+    int_to_bytes = []
+    for i in range(1, 1 + max(stress_period_count, node_count)):
+        int_to_bytes.append(str(i).encode())
+
+    with open(filename, "wb") as f:
+        f.write(b'"Stress Period","Node","Recharge Concentration (metric tons/m3)"\r\n')
+        for stress_period_index in range(stress_period_count):
+            stress_period_bytes = int_to_bytes[stress_period_index]
+            for node_index in range(node_count):
+                node = node_index + 1
+                recharge_concentration = nitrate_aggregation[stress_period_index, node_index]
+                line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, recharge_concentration)
+                f.write(line)
+                
+def write_stream_nitrate_csv(filename, stream_nitrate_aggregation):
+    stress_period_count = stream_nitrate_aggregation.shape[0]
+    node_count = stream_nitrate_aggregation.shape[1]
+
+    int_to_bytes = []
+    for i in range(1, 1 + max(stress_period_count, node_count)):
+        int_to_bytes.append(str(i).encode())
+
+    with open(filename, "wb") as f:
+        f.write(b'"Stress Period","Node","Stream Concentration (metric tons/m3)"\r\n')
+        for stress_period_index in range(stress_period_count):
+            stress_period_bytes = int_to_bytes[stress_period_index]
+            for node_index in range(node_count):
+                node = node_index + 1
+                stream_concentration = stream_nitrate_aggregation[stress_period_index, node_index]
+                line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, stream_concentration)
+                f.write(line)
 
 ###############################################################################
 
@@ -1489,9 +1866,6 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
     flow[:] = 0.0
 
     for node_swac, line in sorted_by_ca.items():
-        if ff.use_node_count_override:
-            if node_swac >= num_nodes:
-                continue
         downstr, str_flag = line[:2]
         acc = 0.0
 
@@ -1529,6 +1903,66 @@ def get_sfr_flows(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
             downstr = sorted_by_ca[node_swac][0]
 
     return ro, flow
+
+###############################################################################
+
+
+def get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas, swac_seg_dic, ro,
+                  flow, nodes_per, nitrate_to_surface_water_array_tons_per_day):
+    """get flows and nitrate masses for one period"""
+    cdef:
+        double[:] nitrate_added_tons_per_day = np.zeros(ro.size)
+        double[:] mass_in_stream = np.zeros(flow.size)
+        
+    ro[:] = 0.0
+    flow[:] = 0.0
+
+    for node_swac, line in sorted_by_ca.items():
+        downstr, str_flag = line[:2]
+        acc = 0.0
+        acc_mass = 0.0
+
+        # accumulate pre-stream flows into network
+        while downstr > 1:
+
+            str_flag = sorted_by_ca[node_swac][1]  # [idx['str_flag']]
+
+            # not str
+            if str_flag < 1:  # or node_mf < 1:
+                # not not done
+                if done[node_swac - 1] < 1:
+                    acc += max(0.0, runoff[nodes_per + node_swac])
+                    acc_mass += max(0.0, nitrate_to_surface_water_array_tons_per_day[nodes_per + node_swac])
+                    done[node_swac - 1] = 1
+            else:
+                # stream cell
+                iseg = swac_seg_dic[node_swac]
+
+                # not done
+                if done[node_swac - 1] < 1:
+                    ro[iseg - 1] = runoff[nodes_per + node_swac]
+                    flow[iseg - 1] = acc
+                    nitrate_added_tons_per_day[iseg - 1] = nitrate_to_surface_water_array_tons_per_day[nodes_per + node_swac]
+                    mass_in_stream[iseg - 1] = acc_mass                                 
+                    done[node_swac - 1] = 1
+                    acc = 0.0
+                    acc_mass = 0.0
+
+                # stream cell been done
+                else:
+                    flow[iseg - 1] += acc
+                    mass_in_stream[iseg - 1] = acc_mass 
+                    
+                    acc = 0.0
+                    acc_mass = 0.0
+                    break
+
+            # new node
+            node_swac = downstr
+            # get new downstr node
+            downstr = sorted_by_ca[node_swac][0]
+
+    return ro, flow, mass_in_stream
 
 ###############################################################################
 
@@ -1599,12 +2033,15 @@ def get_sfr_file(data, runoff):
                                       modelname=path)
         njag = nodes + 2
         lenx = int((njag/2) - (nodes/2))
-        flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
-                                                   nodes=nodes,
-                                                   ja=np.zeros((njag),
-                                                               dtype=int),
-                                                   nja=njag, ihc=[1],
-                                                   iac=[1])
+        if data['params']['disv']:
+            flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(m)
+        else:
+            flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
+                                                       nodes=nodes,
+                                                       ja=np.zeros((njag),
+                                                                   dtype=int),
+                                                       nja=njag, ihc=[1],
+                                                       iac=[1])
 
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
@@ -1626,9 +2063,6 @@ def get_sfr_file(data, runoff):
     # initialise reach & segment data
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
-        if ff.use_node_count_override:
-            if node_swac > nodes:
-                continue
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
          depth, width) = line
         # for mf6 only
@@ -1666,9 +2100,15 @@ def get_sfr_file(data, runoff):
 
             elif data['params']['gwmodel_type'] == 'mf6':
                 if node_mf > 0:
-                    n = (node_mf - 1,)
+                    if data['params']['disv']:
+                        n = (0, node_mf - 1)
+                    else:
+                        n = (node_mf - 1,)
                 else:
-                    n = (-100000000, )
+                    if data['params']['disv']:
+                        n = (-100000000, 0)
+                    else:
+                        n = (-100000000, )
 
                 rd.append([str_count, n, length, width,
                            0.0001, z, bed_thk, str_k, 0.0001, 1, 1.0, 0])
@@ -1691,9 +2131,6 @@ def get_sfr_file(data, runoff):
         Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
         for iseg in range(nss):
             conn = [iseg]
-            if ff.use_node_count_override:
-                if not (iseg + 1) in seg_swac_dic:
-                    continue
             node_swac = seg_swac_dic[iseg + 1]
             downstr = sorted_by_ca[node_swac][idx['downstr']]
             for n in Gs.neighbors(node_swac):
@@ -1900,7 +2337,10 @@ def get_str_file(data, runoff):
                     # conn.append(-float(swac_seg_dic[n] - 1))
                     pass
                 else:
-                    conn.append((swac_seg_dic[n] - 1))
+                    if ff.use_natproc:
+                        conn.append((swac_seg_dic[n]))
+                    else:
+                        conn.append((swac_seg_dic[n] - 1))
 
         # update num connections
         cd.append(conn + [0] * (11 - len(conn)))
@@ -1950,6 +2390,144 @@ def get_str_file(data, runoff):
     strm.heading = "# DELETE ME"
 
     return strm
+
+##############################################################################
+
+
+def get_str_nitrate_all_sp(data, runoff, nitrate_to_surface_water_array_tons_per_day):
+    """get STR object."""
+
+    import numpy as np
+    import copy
+    import os.path
+
+    # units oddness - lots of hardcoded 1000s in input_output.py
+    fac = 0.001
+    areas = data['params']['node_areas']
+    fileout = data['params']['run_name']
+    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    nper = len(data['params']['time_periods'])
+    nodes = data['params']['num_nodes']
+    nlay, nrow, ncol = data['params']['mf96_lrc']
+    rte_topo = data['params']['routing_topology']
+    m = None
+
+    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
+                                      key=lambda x: x[1][4]))
+
+    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
+             'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
+
+    idx = {y: x for (x, y) in enumerate(names)}
+
+    nstrm = nss = sum([value[idx['str_flag']] > 0
+                       for value in sorted_by_ca.values()])
+
+    istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
+
+    cd = []
+    rd = []
+
+    m = flopy.modflow.Modflow(modelname=path)
+
+    dis = flopy.modflow.ModflowDis(m,
+                                   nlay=nlay,
+                                   nrow=nrow,
+                                   ncol=ncol,
+                                   nper=nper)
+
+    flopy.modflow.ModflowBas(m, ifrefm=False)
+    rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
+    nitrate_reaching_stream_cells_kg_array = {}
+    swac_seg_dic = {}
+    seg_swac_dic = {}
+    done = np.zeros((nodes), dtype=int)
+    # for mf6 only
+    str_flg = np.zeros((nodes), dtype=int)
+
+    # initialise reach & segment data
+    str_count = 0
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
+         depth, width) = line
+        # for mf6 only
+        str_flg[node_swac-1] = str_flag
+        ca = ca
+        if str_flag > 0:
+            swac_seg_dic[node_swac] = str_count + 1
+            seg_swac_dic[str_count + 1] = node_swac
+            # NB docs say node number should be zero based (node_mf -1)
+            #  but doesn't seem to be
+            l, r, c = dis.get_lrc(node_mf)[0]
+            # print(str_count + 1, l, r, c)
+            rd[str_count]['k'] = l - 1
+            rd[str_count]['i'] = r - 1
+            rd[str_count]['j'] = c - 1
+            rd[str_count]['segment'] = str_count + 1
+            rd[str_count]['reach'] = 1
+            rd[str_count]['stage'] = z + depth
+            # print(length, width, str_k, bed_thk, z)
+            rd[str_count]['cond'] = (length * width * str_k) / bed_thk
+            rd[str_count]['sbot'] = z - bed_thk
+            rd[str_count]['stop'] = z
+            rd[str_count]['width'] = width
+            rd[str_count]['slope'] = 111.111
+            rd[str_count]['rough'] = 222.222
+            # inc stream counter
+            str_count += 1
+    Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
+    cd = []
+    for iseg in range(nss):
+        conn = []
+        # print("SEg_SWAC", seg_swac_dic)
+        node_swac = seg_swac_dic[iseg + 1]
+        downstr = sorted_by_ca[node_swac][idx['downstr']]
+        for n in Gs.neighbors(node_swac):
+            if n in swac_seg_dic:
+                if n == downstr:
+                    # do nothing I only want the +ve numbers here
+                    # conn.append(-float(swac_seg_dic[n] - 1))
+                    pass
+                else:
+                    if ff.use_natproc:
+                        conn.append((swac_seg_dic[n]))
+                    else:
+                        conn.append((swac_seg_dic[n] - 1))
+
+        # update num connections
+        cd.append(conn + [0] * (11 - len(conn)))
+    #rd[iseg][9] = len(cd[iseg]) - 1
+
+
+    # for iseg in range(nss):
+    #     node_swac = seg_swac_dic[iseg + 1]
+    #     downstr = sorted_by_ca[node_swac][idx['downstr']]
+    #     if downstr in swac_seg_dic:
+    #         sd[iseg]['outseg'] = swac_seg_dic[downstr]
+    #     else:
+    #         sd[iseg]['outseg'] = 0
+
+    for per in range(nper):
+        for node in range(1, nodes + 1):
+            i = (nodes * per) + node
+            runoff[i] = runoff[i] * areas[node] * fac
+
+    ro, flow = np.zeros((nss)), np.zeros((nss))
+
+    # populate runoff, flow and nitrate mass
+    for per in tqdm(range(nper), desc="Accumulating nitrate mass to surface water  "):
+
+        ro, flow, mass_in_stream = get_sfr_flows_nitrate(sorted_by_ca, idx, runoff, done, areas,
+                                 swac_seg_dic, ro, flow, nodes * per, nitrate_to_surface_water_array_tons_per_day)
+
+        for iseg in range(nss):
+            rd[iseg]['flow'] = flow[iseg] + ro[iseg]
+
+        # add segment data for this period
+        nitrate_reaching_stream_cells_kg_array[per] = copy.deepcopy(mass_in_stream)
+        done[:] = 0
+
+    return nitrate_reaching_stream_cells_kg_array
 
 ###############################################################################
 
@@ -2196,9 +2774,6 @@ def get_evt_file(data, evtrate):
     mt = flopy.mf6.ModflowGwfevt.stress_period_data.empty
 
     for inode, vals in evt_params.iteritems():
-        if ff.use_node_count_override:
-            if inode >= nodes:
-                continue
         ievt[inode - 1, 0] = vals[0]
         surf[inode - 1, 0] = vals[1]
         exdp[inode - 1, 0] = vals[2]
@@ -2250,6 +2825,15 @@ def get_evt_file(data, evtrate):
 
 
 def do_swrecharge_mask(data, runoff, recharge):
+    if ff.use_natproc:
+        return do_swrecharge_mask_natproc(data, runoff, recharge)
+    else:
+        return do_swrecharge_mask_original(data, runoff, recharge)
+
+###############################################################################
+
+
+def do_swrecharge_mask_original(data, runoff, recharge):
     """do ror with monthly mask"""
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
@@ -2320,6 +2904,110 @@ def do_swrecharge_mask(data, runoff, recharge):
 ###############################################################################
 
 
+def do_swrecharge_mask_natproc(data, runoff, recharge):
+    """do ror with monthly mask"""
+    series, params = data['series'], data['params']
+    nnodes = data['params']['num_nodes']
+    rte_topo = data['params']['routing_topology']
+    areas = data['params']['node_areas']
+    catchment = data['params']["reporting_zone_mapping"]
+    #  try here
+    # cdef double[:] ror = np.zeros(nodes)
+
+    cdef:
+        size_t length = len(series['date'])
+        double[:, :] ror_prop = params['ror_prop']
+        double[:, :] ror_limit = params['ror_limit']
+        long long[:] months = np.array(series['months'], dtype=np.int64)
+        #double[:] area_array = np.array(areas, dtype=np.float64)
+        size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
+        int day, month, node
+        double fac = 0.001
+        double qty_mmd, qty_m3d
+
+    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
+                                      key=lambda x: x[1][4]))
+
+    # 'downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
+    #         'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
+
+    for day in tqdm(range(length), desc="Accumulating SW recharge"):
+        month = months[day]
+
+        # accumulate flows for today
+        acc_flow = get_ror_flows_sfr(sorted_by_ca, runoff, nnodes, day, areas) #, catchment)
+
+        for node, line in sorted_by_ca.items():
+            ro = acc_flow[node - 1]
+            cat = params["reporting_zone_mapping"][node]
+            if ro > 0.0 and cat > 0:
+                downstr = line[0]
+                zone_ror = params['swrecharge_zone_mapping'][node]
+                fac_ro = ror_prop[month][zone_ror - 1] * ro
+                lim = ror_limit[month][zone_ror - 1]
+                qty_m3d = min(fac_ro, lim)
+
+                if qty_m3d > 0.0:
+
+                    qty_mmd = (qty_m3d / areas[node] / fac)
+                    recharge[(nnodes * day) + node] += qty_mmd
+                    acc_flow[node - 1] -= qty_m3d
+
+                    # remove qty from accumulated ro at nodes downstream
+                    while downstr > 1:
+                        acc_flow[downstr - 1] = max(0.0, acc_flow[downstr - 1] - qty_m3d)
+                        node_swac = downstr
+
+                        # get new downstr node
+                        downstr = sorted_by_ca[node_swac][0]
+                        cat = params["reporting_zone_mapping"][node_swac]
+                        if cat < 1:
+                            break
+
+    return runoff, recharge
+
+
+###############################################################################
+
+def get_ror_flows_sfr(sorted_by_ca, runoff, nodes, day, areas): #, cat):
+    """get flows for one period"""
+
+    cdef int[:] done = np.zeros((nodes), dtype=np.intc)
+    cdef double[:] flow = np.zeros(nodes)
+    cdef long long node_swac, downstr
+    cdef long long c = nodes * day
+    cdef double acc
+    cdef double fac = 0.001
+
+
+    for node_swac, line in sorted_by_ca.items():
+        # rep_zone = cat[node_swac]
+        # if rep_zone > 0:
+        downstr = line[0] #, str_flag = line[:2]
+        acc = 0.0
+
+        # accumulate pre-stream flows into network
+        while downstr > 0: # and rep_zone > 0:
+
+            # not str
+            if done[node_swac - 1] < 1:
+                acc += max(0.0, runoff[c + node_swac]) * float(areas[node_swac]) * fac
+                flow[node_swac - 1] += acc
+                done[node_swac - 1] = 1
+
+            else:
+                flow[node_swac - 1] += acc
+                # acc = 0.0
+                # break
+            # new node
+            node_swac = downstr
+            # get new downstr node
+            downstr = sorted_by_ca[node_swac][0]
+            # rep_zone = cat[node_swac]
+
+    return flow
+
+
 def get_ror_flows_tree(G, runoff, nodes, day):
 
     """get total flows for RoR one day with mask"""
@@ -2353,14 +3041,25 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True):
     else:
         G = nx.Graph()
     for node in range(1, nnodes + 1):
-        if mask[node-1] == 1:
-            G.add_node(node)
+        if ff.use_natproc:
+            if mask[node-1] == 1: #  and sorted_by_ca[node][4] > 0.0:
+                G.add_node(node, ca=sorted_by_ca[node][4])
+        else:
+            if mask[node-1] == 1:
+                G.add_node(node)
     for node_swac, line in sorted_by_ca.items():
-        if ff.use_node_count_override:
-            if node_swac > nnodes:
-                continue
-        if mask[node_swac-1] == 1 and line[0] > 0:
-            G.add_edge(node_swac, line[0])
+        if ff.use_natproc:
+            downstr = int(line[0])
+        else:
+            downstr = line[0]
+        if downstr > 0:
+            if ff.use_natproc:
+                if downstr not in G.nodes:
+                    G.add_node(downstr, ca=sorted_by_ca[downstr][4])
+            else:
+                pass
+            if mask[node_swac-1] == 1:
+                G.add_edge(node_swac, downstr)
     return G
 
 
@@ -2404,9 +3103,6 @@ def all_days_mask(data):
                                                          source=node).items()]
             #  for n in nx.descendants(Gc, node):
             for n in lst:
-                if ff.use_node_count_override:
-                    if n > nnodes:
-                        continue
                 mask[n-1] = 1
 
     return build_graph(nnodes, sorted_by_ca, mask)
