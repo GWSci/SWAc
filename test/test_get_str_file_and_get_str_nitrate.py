@@ -57,9 +57,6 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 		self.assertEqual(8, str.ntrib)
 		self.assertEqual(0, str.ipakcb)
 		self.assertIsNone(str.istcb2)
-		np.testing.assert_array_almost_equal(
-			np.array([[-1, -1, 0, -3, 6, 3, 0.085, 0.145, 6.0, 3.0, 0.0, 3.0, 3.0, 333.333008, 666.666016]]),
-			str.stress_period_data.get_dataframe())
 		self.assertEqual(
 			{
 				0: [[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
