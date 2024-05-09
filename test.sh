@@ -1,5 +1,6 @@
 discovery_root="test"
 use_coverage=false
+show_outdated_dependencies=false
 
 for arg in "$@"
 do
@@ -7,6 +8,8 @@ do
 		discovery_root="."
 	elif [[ "$arg" == "--coverage" ]]; then
 		use_coverage=true
+	elif [[ "$arg" == "--dependencies" ]]; then
+		show_outdated_dependencies=true
 	else
 		echo "Arg not recognised: $arg"
 		exit 1
@@ -26,6 +29,10 @@ exit_status=$?
 
 if [ "$use_coverage" = true ]; then
 	coverage report -m
+fi
+
+if [ "$show_outdated_dependencies" = true ]; then
+	pip list --outdated
 fi
 deactivate
 exit $exit_status
