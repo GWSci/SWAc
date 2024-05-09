@@ -10,6 +10,10 @@ do
 		use_coverage=true
 	elif [[ "$arg" == "--dependencies" ]]; then
 		show_outdated_dependencies=true
+	elif [[ "$arg" == "--full" ]]; then
+		discovery_root="."
+		use_coverage=true
+		show_outdated_dependencies=true
 	else
 		echo "Arg not recognised: $arg"
 		exit 1
