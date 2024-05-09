@@ -21,7 +21,7 @@ from swacmod.feature_flags import max_node_count_override as num_nodes
 import sys
 import os.path
 sys.path.append(os.path.join(os.path.dirname(u.__file__), ".."))
-from SnowTest.snow_melt import SnowMelt
+from swacmod.snow_melt import SnowMelt
 import swacmod.timer as timer
 
 

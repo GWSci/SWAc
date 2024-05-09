@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import SnowTest.snow_melt as snow_melt
+import swacmod.snow_melt as snow_melt
 
 class TransmissivityTest(unittest.TestCase):
 	def test_transmissivity_for_zero(self):

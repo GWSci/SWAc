@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import SnowTest.snow_melt as snow_melt
+import swacmod.snow_melt as snow_melt
 
 class SolarTest(unittest.TestCase):
 	def test_declination(self):
