@@ -178,6 +178,7 @@ def get_output(data, node, time_switcher):
 
 ###############################################################################
 def run_process(
+        env,
         num,
         ids,
         data,
@@ -210,7 +211,7 @@ def run_process(
 
     timer.switch_to(time_switcher, "run_main > run > run_process (preamble)")
 
-    io.start_logging(path=log_path, level=level)
+    io.start_logging(env, path=log_path, level=level)
     logging.info("mp.Process %d started (%d nodes)", num, len(ids))
     nnodes = data["params"]["num_nodes"]
 
@@ -486,7 +487,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         params = io.load_yaml(input_file)
     else:
         params = data['params']
-    log_path = io.start_logging(level=level, run_name=params["run_name"])
+    log_path = io.start_logging(env, level=level, run_name=params["run_name"])
 
     env.print('\nStart "%s"' % params["run_name"])
     logging.info("Start SWAcMod run")
@@ -598,6 +599,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                 continue
 
             run_process(
+                env,
                 process,
                 chunk,
                 data,
@@ -638,6 +640,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             proc = mp.Process(
                 target=run_process,
                 args=(
+                    env,
                     process,
                     chunk,
                     data,

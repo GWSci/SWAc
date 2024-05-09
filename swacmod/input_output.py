@@ -44,7 +44,7 @@ if sys.version_info > (3,):
 
 
 ###############################################################################
-def start_logging(level=logging.INFO, path=None, run_name=None):
+def start_logging(env, level=logging.INFO, path=None, run_name=None):
     """Start logging output.
 
     If path is None, run_name has to be provided.
@@ -69,14 +69,14 @@ def start_logging(level=logging.INFO, path=None, run_name=None):
         now = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
         name = "%s_%s.log" % (run_name, now)
         path = os.path.join(u.CONSTANTS["OUTPUT_DIR"], name)
-        logging.basicConfig(filename=path, format="%(message)s", level=level)
+        env.set_up_logging(path, "%(message)s", level)
         logging.info("Version " + __version__)
         logging.info(disc)
 
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
 
-    logging.basicConfig(filename=path, format=log_format, level=level)
+    env.set_up_logging(path, log_format, level)
 
     return path
 
