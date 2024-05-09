@@ -856,7 +856,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         timer.switch_to(output_timer_token, "spatial_output_date")
         if data["params"]["spatial_output_date"]:
             env.print("\t- Spatial file")
-            io.dump_spatial_output(data,
+            io.dump_spatial_output(env,
+                                   data,
                                    spatial,
                                    u.CONSTANTS["OUTPUT_DIR"],
                                    reduced=reduced)

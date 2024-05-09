@@ -317,7 +317,7 @@ def get_spatial_path(data, output_dir):
 
 
 ###############################################################################
-def dump_spatial_output(data, spatials, output_dir, reduced=False):
+def dump_spatial_output(env, data, spatials, output_dir, reduced=False):
     """Write spatial output to file."""
 
     areas = data["params"]["node_areas"]
@@ -329,7 +329,7 @@ def dump_spatial_output(data, spatials, output_dir, reduced=False):
 
         string = os.path.split(path)[1]
         logging.info("\tDumping spatial output for %s", string)
-        print("\t-" + str(1 + isp) + ' of ' + str(len(paths)))
+        env.print("\t-" + str(1 + isp) + ' of ' + str(len(paths)))
         with open(path, "w") as outfile:
             header = ["Node"]
             header += [
