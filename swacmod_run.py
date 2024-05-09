@@ -42,6 +42,7 @@ import swacmod.model_numpy as model_numpy
 import swacmod.historical_nitrate as historical_nitrate
 import swacmod.nitrate as nitrate
 import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
+from swacmod.environment import Environment
 
 # win fix
 sys.maxint = 2**63 - 1
@@ -447,7 +448,7 @@ def listener(q, total):
 
 
 def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
-        data=None):
+        data=None, env=Environment()):
     """Run model for all nodes."""
     total_timer_switcher_for_run = timer.make_time_switcher()
     timer.switch_to(total_timer_switcher_for_run, "run_main > run")
@@ -487,7 +488,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         params = data['params']
     log_path = io.start_logging(level=level, run_name=params["run_name"])
 
-    print('\nStart "%s"' % params["run_name"])
+    env.print('\nStart "%s"' % params["run_name"])
     logging.info("Start SWAcMod run")
     logging.info(compile_model.get_status())
 
@@ -804,7 +805,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     reporting_agg[cat]["runoff_recharge"] = reporting_agg2[
                         cat][term][term]
 
-        print("\nWriting output files:")
+        env.print("\nWriting output files:")
         timer.switch_to(output_timer_token, "checking open files")
         if not skip:
             io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
@@ -812,7 +813,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         timer.switch_to(output_timer_token, "reporting agg loop")
         if not ff.use_node_count_override:
             for num, key in enumerate(reporting_agg.keys()):
-                print("\t- Report file (%d of %d)" %
+                env.print("\t- Report file (%d of %d)" %
                     (num + 1, len(reporting_agg.keys())))
                 io.dump_water_balance(
                     data,
@@ -825,7 +826,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
         timer.switch_to(output_timer_token, "output_individual")
         for node in list(data["params"]["output_individual"]):
-            print("\t- Node output file")
+            env.print("\t- Node output file")
             io.dump_water_balance(
                 data,
                 single_node_output[node],
@@ -841,7 +842,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             gc.collect()
         timer.switch_to(output_timer_token, "output_recharge")
         if data["params"]["output_recharge"]:
-            print("\t- Recharge file")
+            env.print("\t- Recharge file")
             if data['params']['gwmodel_type'] == 'mfusg':
                 io.dump_recharge_file(data, recharge_agg)
             elif data['params']['gwmodel_type'] == 'mf6':
@@ -851,7 +852,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
         timer.switch_to(output_timer_token, "spatial_output_date")
         if data["params"]["spatial_output_date"]:
-            print("\t- Spatial file")
+            env.print("\t- Spatial file")
             io.dump_spatial_output(data,
                                    spatial,
                                    u.CONSTANTS["OUTPUT_DIR"],
@@ -859,7 +860,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
         timer.switch_to(output_timer_token, "output_sfr")
         if data["params"]["output_sfr"]:
-            print("\t- SFR file")
+            env.print("\t- SFR file")
             if data['params']['gwmodel_type'] == 'mf96':
                 roff_agg = np.copy(np.array(runoff_agg))
                 strm = m.get_str_file(data, np.copy(np.array(runoff_agg)))
@@ -884,7 +885,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
         timer.switch_to(output_timer_token, "output_evt")
         if data["params"]["output_evt"]:
-            print("\t- EVT file")
+            env.print("\t- EVT file")
 
             if data["params"]["excess_sw_process"] != "disabled":
                 timer.switch_to(output_timer_token, "output_evt (copying arrays)")
@@ -937,15 +938,15 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     cores = ("%d cores" % data["params"]["num_cores"]
              if data["params"]["num_cores"] != 1 else "1 core")
 
-    print("\nPerformance (%s)" % cores)
-    print("Input time:  %s" %
+    env.print("\nPerformance (%s)" % cores)
+    env.print("Input time:  %s" %
           io.format_time(times["end_of_input"] - times["start_of_run"]))
-    print("Run time:    %s" %
+    env.print("Run time:    %s" %
           io.format_time(times["end_of_model"] - times["end_of_input"]))
-    print("Output time: %s" %
+    env.print("Output time: %s" %
           io.format_time(times["end_of_run"] - times["end_of_model"]))
-    print("Total time:  %s (%d msec/node)" % (total, per_node))
-    print("")
+    env.print("Total time:  %s (%d msec/node)" % (total, per_node))
+    env.print("")
 
     logging.info("End SWAcMod run")
 

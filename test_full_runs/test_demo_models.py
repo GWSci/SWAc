@@ -5,6 +5,7 @@ from swacmod import utils as u
 import os
 import swacmod.feature_flags as ff
 import test.csv_assertions
+from test.dummy_environment import Dummy_Environment
 
 class TestFixture():
 	def __init__(self, test_instance, reference_output_folder, output_folder, input_file):
@@ -26,7 +27,7 @@ class TestFixture():
 			u.CONSTANTS["INPUT_FILE"] = self.input_file
 			u.CONSTANTS["INPUT_DIR"] = os.path.dirname(self.input_file)
 			u.CONSTANTS["OUTPUT_DIR"] = self.output_folder
-			swacmod_run.run(file_format="csv")
+			swacmod_run.run(file_format="csv", env=Dummy_Environment())
 		finally:
 			u.CONSTANTS["INPUT_FILE"] = default_input_file
 			u.CONSTANTS["INPUT_DIR"] = default_input_dir
