@@ -22,6 +22,7 @@ import os.path
 sys.path.append(os.path.join(os.path.dirname(u.__file__), ".."))
 from swacmod.snow_melt import SnowMelt
 import swacmod.timer as timer
+import swacmod.flopy_adaptor as flopy_adaptor
 
 
 ###############################################################################
@@ -831,7 +832,7 @@ def get_mf6rch_file(data, rchrate):
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
 
-    sim = flopy.mf6.MFSimulation(verbosity_level=0)
+    sim = flopy_adaptor.mf_simulation()
     m = flopy.mf6.mfmodel.MFModel(sim,
                                   modelname=path)
     njag = nodes + 2
@@ -1768,7 +1769,7 @@ def get_sfr_file(data, runoff):
         # fileout = data['params']['run_name']
         # path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
 
-        sim = flopy.mf6.MFSimulation(verbosity_level=0)
+        sim = flopy_adaptor.mf_simulation()
         m = flopy.mf6.mfmodel.MFModel(sim,
                                       modelname=path)
         njag = nodes + 2
@@ -2294,7 +2295,7 @@ def get_evt_file(data, evtrate):
                                   structured=True)
         flopy.modflow.ModflowDis(m, nrow=nodes, ncol=1, nper=nper)
     elif data['params']['gwmodel_type'] == 'mf6':
-        sim = flopy.mf6.MFSimulation(verbosity_level=0)
+        sim = flopy_adaptor.mf_simulation()
         m = flopy.mf6.mfmodel.MFModel(sim,
                                       modelname=path)
         njag = nodes + 2
