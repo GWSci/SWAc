@@ -331,7 +331,7 @@ def compile_model():
 ###############################################################################
 
 
-def monthdelta(d1, d2):
+def monthdelta_old(d1, d2):
     " difference in months between two dates"
 
     from calendar import monthrange
@@ -346,7 +346,7 @@ def monthdelta(d1, d2):
             break
     return delta
 
-def monthdelta2(d1, d2):
+def monthdelta(d1, d2):
     " difference in months between two dates"
     year_diff = d2.year - d1.year
     month_diff = d2.month - d1.month

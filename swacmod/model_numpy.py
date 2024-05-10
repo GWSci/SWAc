@@ -1,5 +1,5 @@
 import numpy as np
-from swacmod.utils import monthdelta2, weekdelta
+from swacmod.utils import monthdelta, weekdelta
 
 def get_swabs(data, output, node):
 	"""Surface water abstractions"""
@@ -42,7 +42,7 @@ def _get_swdis_and_swabs_helper(data, node, applicable_nodes, flag_name, ts_name
 			# if months convert to days
 			months = np.zeros(len(dates), dtype=np.int64)
 			for iday, day in enumerate(dates):
-				months[iday] = monthdelta2(start_date, day)
+				months[iday] = monthdelta(start_date, day)
 			result = (series_ts[months, zone] / area * fac)
 
 	return {ts_name: result}
