@@ -2,6 +2,7 @@ import unittest
 import swacmod.model as m
 import numpy as np
 import warnings
+import swacmod.feature_flags as ff
 
 class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 	def test_get_str_file_for_1_node_and_1_sp(self):
@@ -57,12 +58,19 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 		self.assertEqual(8, str.ntrib)
 		self.assertEqual(0, str.ipakcb)
 		self.assertIsNone(str.istcb2)
-		self.assertEqual(
-			{
+
+		if (ff.use_natproc):
+			expected_segment_data = {
 				0: [[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
 				1: [[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
-			},
-			str.segment_data)
+			}
+		else:
+			expected_segment_data = {
+				0: [[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+				1: [[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+			}
+
+		self.assertEqual(expected_segment_data, str.segment_data)
 
 	def test_get_str_nitrate_for_3_nodes_and_2_sp(self):
 		data = {
