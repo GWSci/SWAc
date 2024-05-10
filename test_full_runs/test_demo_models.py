@@ -75,8 +75,8 @@ class Test_Demo_Models(unittest.TestCase):
 		fixture.assert_all_but_first_line_identical("my_run.rch")
 		fixture.assert_all_but_first_line_identical("my_run.sfr")
 		fixture.assert_file_is_identical("my_runSpatial1980-01-01.csv")
-		# fixture.assert_file_is_identical("my_run_z_1.csv")
-		# fixture.assert_file_is_identical("my_run_z_2.csv")
+		fixture.assert_file_is_identical("my_run_z_1.csv")
+		fixture.assert_file_is_identical("my_run_z_2.csv")
 
 	def test_demo_natproc_model(self):
 		if not ff.use_natproc:
