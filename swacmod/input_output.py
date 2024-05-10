@@ -333,13 +333,13 @@ def dump_spatial_output(env, data, spatials, output_dir, reduced=False):
         with open(path, "w") as outfile:
             header = ["Node"]
             header += [
-                i[0] for i in u.CONSTANTS["BALANCE_CONVERSIONS"]
+                i[0] for i in u.balance_conversions()
                 if i[0] not in ["DATE", "nDays"]
             ]
             if reduced:
                 header += [
                     i for i in header
-                    if u.CONSTANTS["BALANCE_CONVERSIONS"][i][2]
+                    if u.balance_conversions()[i][2]
                 ]
             writer = csv.writer(outfile,
                                 delimiter=",",
@@ -442,10 +442,10 @@ def dump_water_balance(data,
         with open(path, "w") as outfile:
             if reduced:
                 header = [
-                    i[0] for i in u.CONSTANTS["BALANCE_CONVERSIONS"] if i[2]
+                    i[0] for i in u.balance_conversions() if i[2]
                 ]
             else:
-                header = [i[0] for i in u.CONSTANTS["BALANCE_CONVERSIONS"]]
+                header = [i[0] for i in u.balance_conversions()]
             writer = csv.writer(outfile,
                                 delimiter=",",
                                 quoting=csv.QUOTE_MINIMAL,
