@@ -13,7 +13,6 @@ import subprocess as sp
 # Third Party Libraries
 import psutil
 import numpy as np
-from calendar import monthrange
 
 import swacmod.feature_flags as ff
 
