@@ -79,9 +79,6 @@ class Test_Demo_Models(unittest.TestCase):
 		fixture.assert_file_is_identical("my_run_z_2.csv")
 
 	def test_demo_natproc_model(self):
-		if not ff.use_natproc:
-			self.skipTest("Requires ff.use_natproc to be set to True.")
-
 		fixture = TestFixture(self, "test/reference_output_natproc/", "output_files_natproc/", "input_files_natproc/input.yml")
 		fixture.clear_output_directory()
 

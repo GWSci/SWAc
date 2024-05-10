@@ -1576,7 +1576,7 @@ def aggregate(output, area, ponded_frac, reporting=None, index=None):
 
         # lookup key in utils constants to see which area to use
         if ff.use_natproc:
-            area_fn = u.CONSTANTS['AREA_FN'][key]
+            area_fn = u.area_fn()[key]
         else:
             area_fn = lambda area, ponded_fraction: area
         new_rep[key] = []

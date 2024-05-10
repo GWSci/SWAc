@@ -104,6 +104,29 @@ def ponded_area(area, ponded_fraction):
 def not_ponded_area(area, ponded_fraction):
     return np.float64(area * (1.0 - ponded_fraction))
 
+def area_fn():
+    # populate area_fn with default area
+    result = {p: full_area for p in col_order()}
+
+    # not in list above
+    result['k_slope'] = full_area
+    result['historical_nitrate_reaching_water_table_array_tons_per_day'] = full_area
+    result['nitrate_reaching_water_table_array_tons_per_day'] = full_area
+    result['nitrate_to_surface_water_array_tons_per_day'] = full_area
+    result['mi_array_kg_per_day'] = full_area
+    result['rapid_runoff_c'] = not_ponded_area
+
+    for p in ['canopy_storage', 'precip_to_ground', 'rapid_runoff', 'runoff_recharge',
+            'macropore_att', 'macropore_dir', 'percol_in_root', 'p_smd', 'smd', 'ae',
+            'rejected_recharge', 'perc_through_root', 'interflow_bypass',
+            'interflow_store_input', 'interflow_volume', 'infiltration_recharge',
+            'interflow_to_rivers', 'unutilised_pe']:
+        result[p] = not_ponded_area
+
+    for p in ['sw_attenuation', 'pond_direct', 'pond_atten', 'pond_over', 'sw_other']:
+        result[p] = ponded_area
+    return result
+
 # populate area_fn with default area
 CONSTANTS['AREA_FN'] = {p: full_area for p in CONSTANTS['COL_ORDER']}
 
@@ -242,7 +265,7 @@ def weighted_sum(to_sum, weights):
 def aggregate_output(data, output, method='sum'):
     """Aggregate all columns according to user-defined time periods."""
     final = {}
-    for col in CONSTANTS['COL_ORDER']:
+    for col in col_order():
         new_col = aggregate_output_col(data, output, col, method=method)
         final[col] = new_col
     return final
