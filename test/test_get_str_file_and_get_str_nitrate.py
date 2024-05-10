@@ -61,22 +61,22 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 			self.assertEqual(8, str.ntrib)
 			self.assertEqual(0, str.ipakcb)
 			self.assertIsNone(str.istcb2)
+
+			# The code that builds the str file does different things based on the natproc flag.
+			if (ff.use_natproc):
+				expected_segment_data = {
+					0: [[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+					1: [[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+				}
+			else:
+				expected_segment_data = {
+					0: [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+					1: [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+				}
+
+			self.assertEqual(expected_segment_data, str.segment_data)
 		finally:
 			ff.use_natproc = original_use_natproc
-
-		# The code that builds the str file does different things based on the natproc flag.
-		if (ff.use_natproc):
-			expected_segment_data = {
-				0: [[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
-				1: [[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
-			}
-		else:
-			expected_segment_data = {
-				0: [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
-				1: [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
-			}
-
-		self.assertEqual(expected_segment_data, str.segment_data)
 
 	def test_get_str_file_for_3_nodes_and_2_sp_when_use_natproc_is_false(self):
 		data = {
