@@ -87,23 +87,6 @@ def format_time(diff):
     secs = int(round(diff))
     return str(datetime.timedelta(0, secs))
 
-
-###############################################################################
-def print_progress(progress, total, prefix):
-    """Print progress bar."""
-    perc = progress * 1.0 / total
-    perc_big = perc * 100
-    spaces = int(perc_big / 2)
-    progress_bar = "=" * spaces + ">" + " " * (50 - spaces)
-
-    sys.stdout.write("\b" * 100 + "%s: [%s] %d%%\r" %
-                     (prefix, progress_bar, perc_big))
-    sys.stdout.flush()
-
-    if progress == total:
-        print()
-
-
 ###############################################################################
 def load_yaml(filein):
     """Load a YAML file, lowercase its keys."""
@@ -520,61 +503,6 @@ def get_row_balance(aggregated, num, reduced, mult):
 
     row = numpy.array(row) * mult
     return row
-
-
-###############################################################################
-def convert_all_yaml_to_csv(specs_file, input_dir):
-    """Convert all YAML files to CSV for parameters that accept this option."""
-    specs = load_yaml(specs_file)
-    to_csv = [
-        i for i in specs
-        if "alt_format" in specs[i] and "csv" in specs[i]["alt_format"]
-    ]
-    for filein in os.listdir(input_dir):
-        if filein.endswith(".yml"):
-            path = os.path.join(input_dir, filein)
-            loaded = load_yaml(path)
-            param = loaded.items()[0][0]
-            if len(loaded.items()) == 1 and param in to_csv:
-                print(path)
-                convert_one_yaml_to_csv(path)
-
-
-###############################################################################
-def convert_one_yaml_to_csv(filein):
-    """Convert a YAML file to a CSV file.
-
-    The opposite function is tricky, as CSV reader does not understand types.
-    """
-    fileout = filein.replace(".yml", ".csv")
-    readin = load_yaml(filein).items()[0][1]
-
-    with open(fileout, "wb") as csvfile:
-        writer = csv.writer(csvfile,
-                            delimiter=",",
-                            quoting=csv.QUOTE_MINIMAL,
-                            lineterminator='\n')
-        if isinstance(readin, dict):
-            for item in readin.items():
-                row = [item[0]]
-                if isinstance(item[1], list):
-                    row += item[1]
-                elif isinstance(item[1], (float, int, long, str)):
-                    row += [item[1]]
-                else:
-                    print("Could not recognize object: %s" % type(item[1]))
-                writer.writerow(row)
-        elif isinstance(readin, list):
-            for item in readin:
-                row = []
-                if isinstance(item, list):
-                    row += item
-                elif isinstance(item, (float, int, long, str)):
-                    row += [item]
-                else:
-                    print("Could not recognize object: %s" % type(item))
-                writer.writerow(row)
-
 
 ###############################################################################
 
