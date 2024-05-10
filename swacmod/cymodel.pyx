@@ -833,8 +833,7 @@ def get_mf6rch_file(data, rchrate):
     nodes = data['params']['num_nodes']
 
     sim = flopy_adaptor.mf_simulation()
-    m = flopy.mf6.mfmodel.MFModel(sim,
-                                  modelname=path)
+    m = flopy_adaptor.mf_model(sim, path)
     njag = nodes + 2
     if data['params']['disv']:
         flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(m)
@@ -1770,8 +1769,7 @@ def get_sfr_file(data, runoff):
         # path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
 
         sim = flopy_adaptor.mf_simulation()
-        m = flopy.mf6.mfmodel.MFModel(sim,
-                                      modelname=path)
+        m = flopy_adaptor.mf_model(sim, path)
         njag = nodes + 2
         lenx = int((njag/2) - (nodes/2))
         if data['params']['disv']:
@@ -2296,8 +2294,7 @@ def get_evt_file(data, evtrate):
         flopy.modflow.ModflowDis(m, nrow=nodes, ncol=1, nper=nper)
     elif data['params']['gwmodel_type'] == 'mf6':
         sim = flopy_adaptor.mf_simulation()
-        m = flopy.mf6.mfmodel.MFModel(sim,
-                                      modelname=path)
+        m = flopy_adaptor.mf_model(sim, path)
         njag = nodes + 2
         flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
                                                    nodes=nodes,
