@@ -2,6 +2,7 @@ import unittest
 import swacmod.utils as utils
 from datetime import date, timedelta
 import datetime
+from calendar import monthrange
 
 class test_month_delta(unittest.TestCase):
 	def test_characterise_monthdelta(self):
@@ -28,8 +29,6 @@ class test_month_delta(unittest.TestCase):
 
 def monthdelta_old(d1, d2):
     " difference in months between two dates"
-
-    from calendar import monthrange
 
     delta = 0
     while True:
