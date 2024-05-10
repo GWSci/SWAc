@@ -46,22 +46,3 @@ def _get_swdis_and_swabs_helper(data, node, applicable_nodes, flag_name, ts_name
 			result = (series_ts[months, zone] / area * fac)
 
 	return {ts_name: result}
-
-def get_change(data, output, node):
-	"""AR) TOTAL STORAGE CHANGE [mm]."""
-	p_smd = output['p_smd']
-	sw_attenuation = output['sw_attenuation']
-	sw_attenuation_rolled = np.roll(sw_attenuation, 1)
-	sw_attenuation_difference = sw_attenuation - sw_attenuation_rolled
-	sw_attenuation_difference[0] = 0
-	p_smd_clipped = np.clip(p_smd, a_min=None, a_max=0)
-	p_smd_clipped[0] = 0
-
-	col_change = (output['recharge_store_input'] -
-			(output['combined_recharge'] - output['macropore_dir']) +
-			(output['interflow_store_input'] - output['interflow_to_rivers']) -
-			output['infiltration_recharge'] +
-			(output['percol_in_root'] - output['ae'])
-			+ p_smd_clipped + sw_attenuation_difference)
-
-	return {'total_storage_change': col_change}
