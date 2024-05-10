@@ -16,7 +16,6 @@ import cython
 cimport cython
 cimport numpy as np
 import swacmod.feature_flags as ff
-from swacmod.feature_flags import max_node_count_override as num_nodes
 
 import sys
 import os.path
@@ -1744,10 +1743,6 @@ def _aggregate_nitrate(
             stored_mass_tons += sum_of_nitrate_tons
             aggregation[time_period_index, node] = 0
 
-        if ff.max_node_count_override:
-            if last_day_index > ff.max_node_count_override:
-                break
-
     return aggregation
     
 ###############################################################################
@@ -1768,10 +1763,6 @@ def _aggregate_surface_water_nitrate(
         for i in range(first_day_index, last_day_index):
             aggregation[time_period_index, node] += nitrate_to_surface_water_array_tons_per_day[i]
         aggregation[time_period_index, node] = aggregation[time_period_index, node] / (last_day_index - first_day_index + 1)
-
-        if ff.max_node_count_override:
-            if last_day_index > ff.max_node_count_override:
-                break
 
     return aggregation
 

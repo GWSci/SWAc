@@ -496,13 +496,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     if data is None:
         data = io.load_and_validate(specs_file, input_file, input_dir)
 
-    if ff.use_node_count_override:
-        num_nodes_initial = data["params"]["num_nodes"]
-        num_nodes_new = min(num_nodes_initial, ff.max_node_count_override)
-        percentage = round((100 * num_nodes_new) / num_nodes_initial)
-        performance_logging.log_performance(f"Reduced num_nodes from {num_nodes_initial} to {num_nodes_new}. ({percentage} %)")
-        data["params"]["num_nodes"] = num_nodes_new
-    
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
@@ -726,9 +719,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             # aggregate amended recharge & runoff arrays by output periods
             for node in tqdm(list(m.all_days_mask(data).nodes),
                              desc="Aggregating Fluxes      "):
-                if ff.use_node_count_override:
-                    if int(node) > nnodes:
-                        continue
 
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
@@ -800,7 +790,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             # copy new bits into cat output
             term = "runoff_recharge"
             for cat in reporting_agg2:
-                if "runoff_recharge" in reporting_agg2[cat] and not ff.use_node_count_override:
+                if "runoff_recharge" in reporting_agg2[cat]:
                     reporting_agg[cat]["combined_recharge"] += reporting_agg2[
                         cat][term][term]
                     reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][
@@ -814,18 +804,17 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
         timer.switch_to(output_timer_token, "reporting agg loop")
-        if not ff.use_node_count_override:
-            for num, key in enumerate(reporting_agg.keys()):
-                env.print("\t- Report file (%d of %d)" %
-                    (num + 1, len(reporting_agg.keys())))
-                io.dump_water_balance(
-                    data,
-                    reporting_agg[key],
-                    file_format,
-                    u.CONSTANTS["OUTPUT_DIR"],
-                    zone=key,
-                    reduced=reduced,
-                )
+        for num, key in enumerate(reporting_agg.keys()):
+            env.print("\t- Report file (%d of %d)" %
+                (num + 1, len(reporting_agg.keys())))
+            io.dump_water_balance(
+                data,
+                reporting_agg[key],
+                file_format,
+                u.CONSTANTS["OUTPUT_DIR"],
+                zone=key,
+                reduced=reduced,
+            )
 
         timer.switch_to(output_timer_token, "output_individual")
         for node in list(data["params"]["output_individual"]):
@@ -878,14 +867,13 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     fout.writelines(lst_strm[2:])
                 del strm
             else:
-                if not ff.use_node_count_override:
-                    sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
-                    if data['params']['gwmodel_type'] == 'mfusg':
-                        io.dump_sfr_output(sfr)
-                    elif data['params']['gwmodel_type'] == 'mf6':
-                        sfr.write()
-                    del sfr
-                    gc.collect()
+                sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
+                if data['params']['gwmodel_type'] == 'mfusg':
+                    io.dump_sfr_output(sfr)
+                elif data['params']['gwmodel_type'] == 'mf6':
+                    sfr.write()
+                del sfr
+                gc.collect()
 
         timer.switch_to(output_timer_token, "output_evt")
         if data["params"]["output_evt"]:
