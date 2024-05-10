@@ -84,7 +84,7 @@ class EndToEndTests(unittest.TestCase):
         for node in self.ids:
             output = swacmod.get_output(self.data, node, time_switcher)
             results = io.load_results()
-            for key in u.CONSTANTS['COL_ORDER']:
+            for key in u.col_order():
                 if key in ['', 'date']:
                     continue
                 self.assertTrue(key in results)
@@ -106,7 +106,7 @@ class EndToEndTests(unittest.TestCase):
 
                 self.assertEqual(len(new_list), len(results[key]))
             for num in range(len(self.data['series']['date'])):
-                for key in u.CONSTANTS['COL_ORDER']:
+                for key in u.col_order():
                     if key in ['', 'date']:
                         continue
                     try:
@@ -115,7 +115,7 @@ class EndToEndTests(unittest.TestCase):
                                                places=5)
                     except AssertionError as err:
                         print('\n')
-                        for col in u.CONSTANTS['COL_ORDER']:
+                        for col in u.col_order():
                             if col in ['', 'date']:
                                 continue
                             if round(output[col][num] * 1e5) != \

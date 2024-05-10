@@ -33,6 +33,38 @@ CONSTANTS['TEST_INPUT_FILE'] = os.path.join(CONSTANTS['TEST_INPUT_DIR'],
                                             'input.yml')
 CONSTANTS['TEST_RESULTS_FILE'] = os.path.join(CONSTANTS['TEST_DIR'],
                                               'results.csv')
+
+def col_order():
+    if ff.use_natproc:
+        return [
+            'date', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage', 'net_pefac',
+            'precip_to_ground', 'snowfall_o', 'rainfall_o', 'snowpack', 'snowmelt',
+            'net_rainfall', 'rapid_runoff', 'runoff_recharge', 'macropore_att',
+            'macropore_dir', 'percol_in_root', 'rawrew', 'tawtew', 'p_smd', 'smd',
+            'ae', 'rejected_recharge', 'perc_through_root', 'subroot_leak',
+            'interflow_bypass', 'interflow_store_input', 'interflow_volume',
+            'infiltration_recharge', 'interflow_to_rivers', 'recharge_store_input',
+            'recharge_store', 'combined_recharge', 'atten_input',
+            'sw_attenuation', 'pond_direct', 'pond_atten', 'open_water_ae',
+            'atten_input_actual',
+            'pond_over', 'sw_other', 'open_water_evap', 'swabs_ts',
+            'swdis_ts', 'combined_str', 'combined_ae', 'evt', 'average_in',
+            'average_out', 'total_storage_change', 'balance'
+        ]
+    else:
+        return [
+            'date', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage', 'net_pefac',
+            'precip_to_ground', 'snowfall_o', 'rainfall_o', 'snowpack', 'snowmelt',
+            'net_rainfall', 'rapid_runoff', 'runoff_recharge', 'macropore_att',
+            'macropore_dir', 'percol_in_root', 'rawrew', 'tawtew', 'p_smd', 'smd',
+            'ae', 'rejected_recharge', 'perc_through_root', 'subroot_leak',
+            'interflow_bypass', 'interflow_store_input', 'interflow_volume',
+            'infiltration_recharge', 'interflow_to_rivers', 'recharge_store_input',
+            'recharge_store', 'combined_recharge', 'sw_attenuation', 'swabs_ts',
+            'swdis_ts', 'combined_str', 'combined_ae', 'evt', 'average_in',
+            'average_out', 'total_storage_change', 'balance'
+        ]
+
 if ff.use_natproc:
     CONSTANTS['COL_ORDER'] = [
         'date', 'rainfall_ts', 'pe_ts', 'pefac', 'canopy_storage', 'net_pefac',

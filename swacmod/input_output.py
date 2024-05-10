@@ -484,7 +484,7 @@ def get_row_spatial(vector, mult):
     """Get a row of data for output."""
 
     row = [
-        vector[key] * mult for key in u.CONSTANTS["COL_ORDER"]
+        vector[key] * mult for key in u.col_order()
         if key not in
         ["date", "unutilised_pe", "k_slope", "rapid_runoff_c"]
     ]
@@ -514,7 +514,7 @@ def get_row_balance(aggregated, num, reduced, mult):
         row = [aggregated[key][num] for key in keys]
     else:
         row = [
-            aggregated[key][num] for key in u.CONSTANTS["COL_ORDER"] if key
+            aggregated[key][num] for key in u.col_order() if key
             not in ["date", "unutilised_pe", "k_slope", "rapid_runoff_c"]
         ]
 
@@ -687,7 +687,7 @@ def load_and_validate(specs_file, input_file, input_dir):
 ###############################################################################
 def load_results():
     """Load 'Calculations' sheet."""
-    check = dict((k, []) for k in u.CONSTANTS["COL_ORDER"])
+    check = dict((k, []) for k in u.col_order())
 
     with open(u.CONSTANTS["TEST_RESULTS_FILE"], "r") as csvfile:
         reader = csv.reader(csvfile, delimiter=",", quoting=csv.QUOTE_MINIMAL)
@@ -699,6 +699,6 @@ def load_results():
                 else:
                     values.append(float(cell))
             for num, value in enumerate(values):
-                check[u.CONSTANTS["COL_ORDER"][num]].append(value)
+                check[u.col_order()[num]].append(value)
 
     return check
