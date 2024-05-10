@@ -5,3 +5,6 @@ def mf_simulation():
 
 def mf_model(sim, path):
 	return flopy.mf6.mfmodel.MFModel(sim, modelname=path)
+
+def mf_gwf_disv(model):
+	return flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(model)

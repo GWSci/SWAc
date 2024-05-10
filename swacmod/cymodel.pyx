@@ -836,7 +836,7 @@ def get_mf6rch_file(data, rchrate):
     m = flopy_adaptor.mf_model(sim, path)
     njag = nodes + 2
     if data['params']['disv']:
-        flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(m)
+        flopy_adaptor.disv(m)
     else:
         flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
                                                 nodes=nodes,
@@ -1773,7 +1773,7 @@ def get_sfr_file(data, runoff):
         njag = nodes + 2
         lenx = int((njag/2) - (nodes/2))
         if data['params']['disv']:
-            flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(m)
+            flopy_adaptor.mf_gwf_disv(m)
         else:
             flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
                                                        nodes=nodes,
