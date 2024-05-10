@@ -3,7 +3,6 @@
 """SWAcMod check functions."""
 
 # Standard Library
-import os
 import datetime
 
 # Third Party Libraries
@@ -12,7 +11,6 @@ import numpy as np
 # Internal modules
 from . import utils as u
 from . import time_series_data
-
 
 try:
     basestring
@@ -31,8 +29,6 @@ MAPPING = {
     np.ndarray: ["a numpy array", "numpy arrays"],
 }
 
-
-###############################################################################
 def expand_t_type(t_type):
     """Expand t_type to all allowed types."""
     if t_type == float:
@@ -43,8 +39,6 @@ def expand_t_type(t_type):
         t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
     return t_type
 
-
-###############################################################################
 def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     """Check the parameter is of type t_type."""
     types = [i for i in t_types]
@@ -102,8 +96,6 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             types = []
             len_list = []
 
-
-###############################################################################
 def check_values_limits(
     values=None,
     name=None,
@@ -135,17 +127,6 @@ def check_values_limits(
             msg = 'Parameter "%s" requires to be one in %s'
             raise u.ValidationError(msg % (name, constraints))
 
-
-###############################################################################
-def check_path(path):
-    """Convert path to absolute if it isn't."""
-    new_path = path
-    if not os.path.isabs(path):
-        new_path = os.path.join(u.CONSTANTS["INPUT_DIR"], path)
-    return new_path
-
-
-###############################################################################
 def check_required(data):
     """Check that all required parameters have been provided."""
     for param in data["specs"]:
