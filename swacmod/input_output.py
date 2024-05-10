@@ -678,11 +678,8 @@ def load_and_validate(specs_file, input_file, input_dir):
     f.finalize_params(data)
     f.finalize_series(data)
     c.check_required(data)
-    if ff.skip_validation:
-        pass
-    else:
-        v.validate_params(data)
-        v.validate_series(data)
+    v.validate_params(data)
+    v.validate_series(data)
 
     return data
 
