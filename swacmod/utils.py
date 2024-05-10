@@ -127,27 +127,6 @@ def area_fn():
         result[p] = ponded_area
     return result
 
-# populate area_fn with default area
-CONSTANTS['AREA_FN'] = {p: full_area for p in CONSTANTS['COL_ORDER']}
-
-# not in list above
-CONSTANTS['AREA_FN']['k_slope'] = full_area
-CONSTANTS['AREA_FN']['historical_nitrate_reaching_water_table_array_tons_per_day'] = full_area
-CONSTANTS['AREA_FN']['nitrate_reaching_water_table_array_tons_per_day'] = full_area
-CONSTANTS['AREA_FN']['nitrate_to_surface_water_array_tons_per_day'] = full_area
-CONSTANTS['AREA_FN']['mi_array_kg_per_day'] = full_area
-CONSTANTS['AREA_FN']['rapid_runoff_c'] = not_ponded_area
-
-for p in ['canopy_storage', 'precip_to_ground', 'rapid_runoff', 'runoff_recharge',
-          'macropore_att', 'macropore_dir', 'percol_in_root', 'p_smd', 'smd', 'ae',
-          'rejected_recharge', 'perc_through_root', 'interflow_bypass',
-          'interflow_store_input', 'interflow_volume', 'infiltration_recharge',
-          'interflow_to_rivers', 'unutilised_pe']:
-    CONSTANTS['AREA_FN'][p] = not_ponded_area
-
-for p in ['sw_attenuation', 'pond_direct', 'pond_atten', 'pond_over', 'sw_other']:
-    CONSTANTS['AREA_FN'][p] = ponded_area
-
 # Header
 # Column needs conversion
 # Column included in reduced output
