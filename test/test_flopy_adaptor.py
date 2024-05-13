@@ -78,6 +78,13 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 
 		self.assertEqual("", disu.area.get_file_entry())
 
+	def test_mf_gwf_disu_does_sets_area_when_provided(self):
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, "aardvark")
+		disu = flopy_adaptor.mf_gwf_disu(model, 3, 5, 7.0)
+
+		self.assertEqual("  area\n    CONSTANT       7.00000000\n", disu.area.get_file_entry())
+
 	def test_mf_gwf_disu_with_area(self):
 		sim = flopy_adaptor.mf_simulation()
 		model = flopy_adaptor.mf_model(sim, "aardvark")
