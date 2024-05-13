@@ -2,6 +2,7 @@ import unittest
 import swacmod.flopy_adaptor as flopy_adaptor
 import numpy as np
 import warnings
+import math
 
 class Test_Flopy_Adaptor(unittest.TestCase):
 	def test_mf_simulation(self):
@@ -145,3 +146,26 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 			disu = flopy_adaptor.modflow_disu(model, 3, 5, 7, 2)
 
 		self.assertEqual(disu, model.get_package("disu"))
+
+	def test_make_empty_modflow_gwf_rch_stress_period_data(self):
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, "aardvark")
+		flopy_adaptor.mf_gwf_disv(model)
+		actual = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(model, 3, 5)
+
+		expected_node_count = 3
+		expected_stress_period_count = 5
+		expected_field_count = 2
+		self.assertEqual(expected_stress_period_count, len(actual))
+
+		for per in range(expected_stress_period_count):
+			self.assertEqual(expected_node_count, len(actual[per]))
+
+		for per in range(expected_stress_period_count):
+			for node in range(expected_node_count):
+				self.assertEqual(expected_field_count, len(actual[per][node]))
+
+		for per in range(expected_stress_period_count):
+			for node in range(expected_node_count):
+				self.assertIsNone(None, actual[per][node][0])
+				self.assertTrue(math.isnan(actual[per][node][1]))

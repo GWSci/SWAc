@@ -46,3 +46,8 @@ def modflow_disu(model, nodes, nper, njag, lenx):
 		cl1=np.zeros((lenx)),
 		cl2=np.zeros((lenx)),
 		fahl=np.zeros((lenx)))
+
+def make_empty_modflow_gwf_rch_stress_period_data(model, nodes, nper):
+	mt = flopy.mf6.ModflowGwfrch.stress_period_data.empty
+	spd = mt(model, maxbound=nodes, nseg=1, stress_periods=range(nper))
+	return spd

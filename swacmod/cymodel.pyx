@@ -836,7 +836,7 @@ def get_mf6rch_file(data, rchrate):
     m = flopy_adaptor.mf_model(sim, path)
     njag = nodes + 2
     if data['params']['disv']:
-        flopy_adaptor.disv(m)
+        flopy_adaptor.mf_gwf_disv(m)
     else:
         flopy_adaptor.mf_gwf_disu(m, nodes, njag, area=1.0)
 
@@ -849,8 +849,7 @@ def get_mf6rch_file(data, rchrate):
         for i in range(nodes):
             irch[i - 1, 0] = i
 
-    mt = flopy.mf6.ModflowGwfrch.stress_period_data.empty
-    spd = mt(m, maxbound=nodes, nseg=1, stress_periods=range(nper))
+    spd = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
 
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
         for i in range(nodes):
