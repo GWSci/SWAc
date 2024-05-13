@@ -1997,7 +1997,7 @@ def make_modflow_model(data):
     import os.path
     fileout = data['params']['run_name']
     path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
-    result = flopy.modflow.Modflow(modelname=path)
+    result = flopy_adaptor.modflow_model(path, "mf2005", True)
     return result
 
 def make_modflow_dis(m, data):
