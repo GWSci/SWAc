@@ -203,3 +203,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		for i in range(expected_row_count):
 			for j in range(expected_column_count):
 				self.assertEqual(0.0, actual[i][j])
+
+	def test_modflow_sfr2_get_empty_reach_data(self):
+		actual = flopy_adaptor.modflow_sfr2_get_empty_reach_data(3)
+		print(actual)

@@ -70,3 +70,6 @@ def mf_gwf_rch(model, nodes, spd):
 
 def modflow_sfr2_get_empty_segment_data(nss):
 	return flopy.modflow.ModflowSfr2.get_empty_segment_data(nss)
+
+def modflow_sfr2_get_empty_reach_data(nstrm):
+	return flopy.modflow.ModflowSfr2.get_empty_reach_data(nstrm, structured=False)
