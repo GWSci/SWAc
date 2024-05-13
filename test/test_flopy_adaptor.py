@@ -1,6 +1,7 @@
 import unittest
 import swacmod.flopy_adaptor as flopy_adaptor
 import numpy as np
+import warnings
 
 class Test_Flopy_Adaptor(unittest.TestCase):
 	def test_mf_simulation(self):
@@ -123,3 +124,24 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 
 	def test_modflow_disu(self):
 		model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			disu = flopy_adaptor.modflow_disu(model, 3, 5, 7, 2)
+
+		self.assertEqual(3, disu.nodes)
+		self.assertEqual(5, disu.nper)
+		np.testing.assert_almost_equal([7, 0, 0], disu.iac.array)
+		np.testing.assert_almost_equal([0, 0, 0, 0, 0, 0, 0], disu.ja.array)
+		self.assertEqual(7, disu.njag)
+		self.assertEqual(1, disu.idsymrd)
+		np.testing.assert_almost_equal([0, 0], disu.cl1.array)
+		np.testing.assert_almost_equal([0, 0], disu.cl2.array)
+		np.testing.assert_almost_equal([0, 0], disu.fahl.array)
+
+	def test_modflow_disu_adds_disu_to_model(self):
+		model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			disu = flopy_adaptor.modflow_disu(model, 3, 5, 7, 2)
+
+		self.assertEqual(disu, model.get_package("disu"))

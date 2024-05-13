@@ -1735,16 +1735,7 @@ def get_sfr_file(data, runoff):
     if data['params']['gwmodel_type'] == 'mfusg':
         m = flopy_adaptor.modflow_model(path, "mfusg", False)
 
-        flopy.modflow.ModflowDisU(
-            m,
-            nodes=nodes,
-            nper=nper, iac=[njag] + (nodes - 1) * [0],
-            ja=np.zeros((njag), dtype=int),
-            njag=njag,
-            idsymrd=1,
-            cl1=np.zeros((lenx)),
-            cl2=np.zeros((lenx)),
-            fahl=np.zeros((lenx)))
+        flopy_adaptor.modflow_disu(m, nodes, nper, njag, lenx)
 
         m.dis = m.disu
         sd = flopy.modflow.ModflowSfr2.get_empty_segment_data(nss)
