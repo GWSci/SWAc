@@ -1727,8 +1727,7 @@ def get_sfr_file(data, runoff):
 
         m.dis = m.disu
         sd = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
-        rd = flopy.modflow.ModflowSfr2.get_empty_reach_data(nstrm,
-                                                            structured=False)
+        rd = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
 
     elif data['params']['gwmodel_type'] == 'mf6':
         # fileout = data['params']['run_name']

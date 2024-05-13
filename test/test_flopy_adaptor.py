@@ -205,5 +205,14 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 				self.assertEqual(0.0, actual[i][j])
 
 	def test_modflow_sfr2_get_empty_reach_data(self):
-		actual = flopy_adaptor.modflow_sfr2_get_empty_reach_data(3)
-		print(actual.tolist())
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			actual = flopy_adaptor.modflow_sfr2_get_empty_reach_data(3)
+		actual_list = actual.tolist()
+		expected = [
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0],
+		]
+
+		np.testing.assert_array_almost_equal(expected, actual_list)
