@@ -84,3 +84,21 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		disu = flopy_adaptor.mf_gwf_disu(model, 3, 5, 7.0)
 
 		self.assertEqual("  area\n    CONSTANT       7.00000000\n", disu.area.get_file_entry())
+
+	def test_mf_tdis(self):
+		sim = flopy_adaptor.mf_simulation()
+		tdis = flopy_adaptor.mf_tdis(sim, 3)
+
+		self.assertEqual(sim, tdis.model_or_sim)
+		self.assertEqual("  NPER  3\n", tdis.nper.get_file_entry())
+		self.assertFalse(tdis.loading_package)
+		self.assertEqual("", tdis.start_date_time.get_file_entry())
+		self.assertEqual("sim.tdis", tdis.filename)
+		# self.assertEqual("", tdis.pname.get_file_entry())
+		self.assertIsNone(tdis.parent_file)
+
+	def test_mf_tdis_adds_disu_to_simulation(self):
+		sim = flopy_adaptor.mf_simulation()
+		tdis = flopy_adaptor.mf_tdis(sim, 3)
+
+		self.assertEqual(tdis, sim.get_package("tdis"))

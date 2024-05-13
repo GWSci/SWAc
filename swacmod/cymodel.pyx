@@ -840,14 +840,7 @@ def get_mf6rch_file(data, rchrate):
     else:
         flopy_adaptor.mf_gwf_disu(m, nodes, njag, area=1.0)
 
-    flopy.mf6.modflow.mftdis.ModflowTdis(sim,
-                                         loading_package=False,
-                                         time_units=None,
-                                         start_date_time=None,
-                                         nper=nper,
-                                         filename=None,
-                                         pname=None,
-                                         parent_file=None)
+    flopy_adaptor.mf_tdis(sim, nper)
     irch = np.zeros((nodes, 1), dtype=int)
     if rch_params is not None:
         for inode, vals in rch_params.iteritems():
@@ -1771,14 +1764,7 @@ def get_sfr_file(data, runoff):
             flopy_adaptor.mf_gwf_disv(m)
         else:
             flopy_adaptor.mf_gwf_disu(m, nodes, njag)
-        flopy.mf6.modflow.mftdis.ModflowTdis(sim,
-                                             loading_package=False,
-                                             time_units=None,
-                                             start_date_time=None,
-                                             nper=nper,
-                                             filename=None,
-                                             pname=None,
-                                             parent_file=None)
+        flopy_adaptor.mf_tdis(sim, nper)
 
         sd[0] = []
     seg_data = {}
@@ -2287,14 +2273,7 @@ def get_evt_file(data, evtrate):
         njag = nodes + 2
         flopy_adaptor.mf_gwf_disu(m, nodes, njag)
 
-        flopy.mf6.modflow.mftdis.ModflowTdis(sim,
-                                             loading_package=False,
-                                             time_units=None,
-                                             start_date_time=None,
-                                             nper=nper,
-                                             filename=None,
-                                             pname=None,
-                                             parent_file=None)
+        flopy_adaptor.mf_tdis(sim, nper)
 
     ievtcb = data['params']['ievtcb']
     nevtopt = data['params']['nevtopt']

@@ -19,3 +19,14 @@ def mf_gwf_disu(model, nodes, njag, area=None):
 		ihc=[1],
 		iac=[1],
 		area=area)
+
+def mf_tdis(sim, nper):
+	return flopy.mf6.modflow.mftdis.ModflowTdis(
+		sim,
+		loading_package=False,
+		time_units=None,
+		start_date_time=None,
+		nper=nper,
+		filename=None,
+		pname=None,
+		parent_file=None)
