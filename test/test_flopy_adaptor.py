@@ -373,3 +373,22 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 
 		self.assertEqual(segment_data, str.segment_data)
 		self.assertEqual({0:2}, str.irdflg)
+
+	def test_make_empty_modflow_gwf_evt_stress_period_data(self):
+		nodes = 2
+		nper = 3
+		njag = 5
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, "aardvark")
+		flopy_adaptor.mf_gwf_disu(model, nodes, njag)
+		flopy_adaptor.mf_tdis(sim, nper)
+
+		spd = flopy_adaptor.make_empty_modflow_gwf_evt_stress_period_data(model, nodes, nper)
+
+		actual_spd = {k: v.tolist() for k, v in spd.items()}
+		expected = {
+			0: [(None, np.nan, np.nan, np.nan, np.nan, None), (None, np.nan, np.nan, np.nan, np.nan, None)],
+			1: [(None, np.nan, np.nan, np.nan, np.nan, None), (None, np.nan, np.nan, np.nan, np.nan, None)],
+			2: [(None, np.nan, np.nan, np.nan, np.nan, None), (None, np.nan, np.nan, np.nan, np.nan, None)],
+		}
+		self.assertEqual(str(expected), str(actual_spd))

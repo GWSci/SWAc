@@ -159,3 +159,11 @@ def modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
 		stress_period_data=reach_data,
 		segment_data=segment_data,
 		irdflg={0:2, 1:2})
+
+def make_empty_modflow_gwf_evt_stress_period_data(model, nodes, nper):
+	return flopy.mf6.ModflowGwfevt.stress_period_data.empty(
+		model,
+		maxbound=nodes,
+		nseg=1,
+		stress_periods=range(nper),
+		aux_vars=['dummy'])

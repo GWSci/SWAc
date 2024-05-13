@@ -2226,7 +2226,7 @@ def get_evt_file(data, evtrate):
                                            ievt={0: ievt})
 
     elif data['params']['gwmodel_type'] == 'mf6':
-        spd = mt(m, maxbound=nodes, nseg=1, stress_periods=range(nper), aux_vars=['dummy'])
+        spd = flopy_adaptor.make_empty_modflow_gwf_evt_stress_period_data(m, nodes, nper)
 
         for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
             for i in range(nodes):
