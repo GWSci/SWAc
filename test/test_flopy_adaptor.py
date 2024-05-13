@@ -187,3 +187,19 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 			for node in range(expected_node_count):
 				self.assertIsNone(None, actual[per][node][0])
 				self.assertTrue(math.isnan(actual[per][node][1]))
+
+	def test_modflow_sfr2_get_empty_segment_data(self):
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			actual = flopy_adaptor.modflow_sfr2_get_empty_segment_data(3)
+
+		self.assert_zeros(3, 34, actual)
+
+	def assert_zeros(self, expected_row_count, expected_column_count, actual):
+		self.assertEqual(expected_row_count, len(actual))
+		for i in range(expected_row_count):
+			self.assertEqual(expected_column_count, len(actual[i]))
+
+		for i in range(expected_row_count):
+			for j in range(expected_column_count):
+				self.assertEqual(0.0, actual[i][j])

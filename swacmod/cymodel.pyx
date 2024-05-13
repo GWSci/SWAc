@@ -1726,7 +1726,7 @@ def get_sfr_file(data, runoff):
         flopy_adaptor.modflow_disu(m, nodes, nper, njag, lenx)
 
         m.dis = m.disu
-        sd = flopy.modflow.ModflowSfr2.get_empty_segment_data(nss)
+        sd = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
         rd = flopy.modflow.ModflowSfr2.get_empty_reach_data(nstrm,
                                                             structured=False)
 
