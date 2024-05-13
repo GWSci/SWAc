@@ -1733,7 +1733,7 @@ def get_sfr_file(data, runoff):
     sfr = None
 
     if data['params']['gwmodel_type'] == 'mfusg':
-        m = flopy_adaptor.modflow_model(path, False)
+        m = flopy_adaptor.modflow_model(path, "mfusg", False)
 
         flopy.modflow.ModflowDisU(
             m,
@@ -2262,7 +2262,7 @@ def get_evt_file(data, evtrate):
     m = None
 
     if data['params']['gwmodel_type'] == 'mfusg':
-        m = flopy_adaptor(path, True)
+        m = flopy_adaptor.modflow_model(path, "mfusg", True)
         flopy.modflow.ModflowDis(m, nrow=nodes, ncol=1, nper=nper)
     elif data['params']['gwmodel_type'] == 'mf6':
         sim = flopy_adaptor.mf_simulation()

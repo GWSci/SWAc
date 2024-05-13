@@ -104,13 +104,13 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertEqual(tdis, sim.get_package("tdis"))
 
 	def test_modflow_model(self):
-		model = flopy_adaptor.modflow_model("aardvark", False)
+		model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
 		self.assertEqual("aardvark", model.name)
 		self.assertEqual("mfusg", model.version)
 		self.assertFalse(model.structured)
 
 	def test_modflow_model_with_structured_true(self):
-		model = flopy_adaptor.modflow_model("aardvark", True)
+		model = flopy_adaptor.modflow_model("aardvark", "mfusg", True)
 		self.assertEqual("aardvark", model.name)
 		self.assertEqual("mfusg", model.version)
 		self.assertTrue(model.structured)
