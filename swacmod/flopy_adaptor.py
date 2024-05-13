@@ -147,3 +147,15 @@ def modflow_dis(model, nlay, nrow, ncol, nper):
 		nrow=nrow,
 		ncol=ncol,
 		nper=nper)
+
+def modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
+    return flopy.modflow.ModflowStr(
+		model,
+		mxacts=nstrm,
+		nss=nstrm,
+		ntrib=8,
+		ipakcb=istcb1,
+		istcb2=istcb2,
+		stress_period_data=reach_data,
+		segment_data=segment_data,
+		irdflg={0:2, 1:2})

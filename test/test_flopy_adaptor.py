@@ -340,3 +340,36 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertEqual(nrow, model.nrow)
 		self.assertEqual(ncol, model.ncol)
 		self.assertEqual(nper, model.nper)
+
+	def test_modflow_str(self):
+		nlay = 1
+		nrow = 1
+		ncol = 1
+		nper = 1
+		nstrm = 1
+		istcb1 = 13
+		istcb2 = 17
+		reach_data = {
+			0: [
+				(1, 1, 1, 1, 1, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+			],
+		}
+		segment_data = {}
+		model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
+			str = flopy_adaptor.modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data)
+
+		self.assertEqual(str, model.get_package("str"))
+		self.assertEqual(nstrm, str.mxacts)
+		self.assertEqual(nstrm, str.nss)
+		self.assertEqual(8, str.ntrib)
+		self.assertEqual(istcb1, str.ipakcb)
+		self.assertEqual(istcb2, str.istcb2)
+
+		actual_reach_data = {k: v.tolist() for k, v in str.stress_period_data.data.items()}
+		self.assertEqual(reach_data, actual_reach_data)
+
+		self.assertEqual(segment_data, str.segment_data)
+		self.assertEqual({0:2}, str.irdflg)

@@ -2034,15 +2034,8 @@ def combine_runoff_with_area(data, runoff):
 def make_strm(data, m, nstrm, reach_data, nper, cd):
     istcb1 = data['params']['istcb1']
     istcb2 = data['params']['istcb2']
-    strm = flopy.modflow.ModflowStr(m,
-                                    mxacts=nstrm,
-                                    nss=nstrm,
-                                    ntrib=8,
-                                    ipakcb=istcb1,
-                                    istcb2=istcb2,
-                                    stress_period_data=reach_data,
-                                    segment_data={iper: cd for iper in range(nper)},
-                                    irdflg={0:2, 1:2})
+    segment_data={iper: cd for iper in range(nper)}
+    strm = flopy_adaptor.modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
     strm.heading = "# DELETE ME"
     return strm
 
