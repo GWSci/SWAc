@@ -1937,11 +1937,7 @@ def make_modflow_model(data):
 def make_modflow_dis(m, data):
     nper = len(data['params']['time_periods'])
     nlay, nrow, ncol = data['params']['mf96_lrc']
-    result = flopy.modflow.ModflowDis(m,
-                                   nlay=nlay,
-                                   nrow=nrow,
-                                   ncol=ncol,
-                                   nper=nper)
+    result = flopy_adaptor.modflow_dis(m, nlay, nrow, ncol, nper)
     return result
 
 def make_str_flg(data, sorted_by_ca):

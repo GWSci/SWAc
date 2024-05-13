@@ -139,3 +139,11 @@ def modflow_bas(model):
 
 def modflow_str_get_empty(ncells, nss):
 	return flopy.modflow.ModflowStr.get_empty(ncells=ncells, nss=nss)
+
+def modflow_dis(model, nlay, nrow, ncol, nper):
+	return flopy.modflow.ModflowDis(
+		model,
+		nlay=nlay,
+		nrow=nrow,
+		ncol=ncol,
+		nper=nper)

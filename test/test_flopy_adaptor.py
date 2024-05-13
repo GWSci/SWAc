@@ -323,3 +323,20 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 			[0,0,0,0,0,0,0,0,0,0,0],
 		]
 		np.testing.assert_array_almost_equal(expected_sd, sd.tolist())
+
+	def test_modflow_dis(self):
+		nlay = 2
+		nrow = 3
+		ncol = 5
+		nper = 7
+
+		model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			dis = flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
+
+		self.assertEqual(dis, model.get_package("dis"))
+		self.assertEqual(nlay, model.nlay)
+		self.assertEqual(nrow, model.nrow)
+		self.assertEqual(ncol, model.ncol)
+		self.assertEqual(nper, model.nper)
