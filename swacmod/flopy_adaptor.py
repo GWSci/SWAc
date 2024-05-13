@@ -53,3 +53,18 @@ def make_empty_modflow_gwf_rch_stress_period_data(model, nodes, nper):
 		maxbound=nodes,
 		nseg=1,
 		stress_periods=range(nper))
+
+def mf_gwf_rch(model, nodes, spd):
+	return flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(model,
+                                                       fixed_cell=False,
+                                                       print_input=None,
+                                                       print_flows=None,
+                                                       save_flows=None,
+                                                       timeseries=None,
+                                                       observations=None,
+                                                       maxbound=nodes,
+                                                       stress_period_data=spd,
+                                                       filename=None,
+                                                       pname=None,
+                                                       parent_file=None)
+

@@ -169,3 +169,35 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 			for node in range(expected_node_count):
 				self.assertIsNone(None, actual[per][node][0])
 				self.assertTrue(math.isnan(actual[per][node][1]))
+
+	def test_mf_gwf_rch(self):
+		node_count = 3
+		stress_period_count = 5
+		njag = node_count + 2
+
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, "aardvark")
+		flopy_adaptor.mf_gwf_disu(model, node_count, njag, area=1.0)
+		flopy_adaptor.mf_tdis(sim, stress_period_count)
+		spd = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(model, node_count, stress_period_count)
+
+		rch = flopy_adaptor.mf_gwf_rch(model, node_count, spd)
+
+		self.assertEqual(model, rch.model_or_sim)
+		self.assertEqual('  MAXBOUND  3\n', rch.maxbound.get_file_entry())
+
+		actual_spd = rch.stress_period_data.get_data()
+
+		self.assertEqual(stress_period_count, len(actual_spd))
+
+		for per in range(stress_period_count):
+			self.assertEqual(node_count, len(actual_spd[per]))
+
+		for per in range(stress_period_count):
+			for node in range(node_count):
+				self.assertEqual(2, len(actual_spd[per][node]))
+
+		for per in range(stress_period_count):
+			for node in range(node_count):
+				self.assertIsNone(None, actual_spd[per][node][0])
+				self.assertTrue(math.isnan(actual_spd[per][node][1]))

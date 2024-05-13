@@ -861,18 +861,7 @@ def get_mf6rch_file(data, rchrate):
                     spd[per][i] = ((irch[i, 0] - 1,),
                                    rchrate[(nodes * per) + i + 1] * fac)
 
-    rch_out = flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(m,
-                                                       fixed_cell=False,
-                                                       print_input=None,
-                                                       print_flows=None,
-                                                       save_flows=None,
-                                                       timeseries=None,
-                                                       observations=None,
-                                                       maxbound=nodes,
-                                                       stress_period_data=spd,
-                                                       filename=None,
-                                                       pname=None,
-                                                       parent_file=None)
+    rch_out = flopy_adaptor.mf_gwf_rch(m, nodes, spd)
     spd = None
 
     return rch_out
