@@ -32,4 +32,17 @@ def mf_tdis(sim, nper):
 		parent_file=None)
 
 def modflow_model(path, version, structured):
-	return flopy.modflow.Modflow(modelname=path, version='mfusg', structured=structured)
+	return flopy.modflow.Modflow(modelname=path, version=version, structured=structured)
+
+def modflow_disu(model, nodes, nper, njag, lenx):
+	return flopy.modflow.ModflowDisU(
+		model,
+		nodes=nodes,
+		nper=nper,
+		iac=[njag] + (nodes - 1) * [0],
+		ja=np.zeros((njag), dtype=int),
+		njag=njag,
+		idsymrd=1,
+		cl1=np.zeros((lenx)),
+		cl2=np.zeros((lenx)),
+		fahl=np.zeros((lenx)))

@@ -110,7 +110,16 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertFalse(model.structured)
 
 	def test_modflow_model_with_structured_true(self):
-		model = flopy_adaptor.modflow_model("aardvark", "mfusg", True)
+		model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
+		self.assertEqual("aardvark", model.name)
+		self.assertEqual("mf2005", model.version)
+		self.assertTrue(model.structured)
+
+	def test_modflow_model_with_version(self):
+		model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
 		self.assertEqual("aardvark", model.name)
 		self.assertEqual("mfusg", model.version)
-		self.assertTrue(model.structured)
+		self.assertFalse(model.structured)
+
+	def test_modflow_disu(self):
+		model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
