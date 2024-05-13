@@ -1368,7 +1368,7 @@ def _calculate_historical_mass_reaching_water_table_array_kg_per_day(
         size_t day_nitrate_was_leached
         size_t result_end
         size_t i
-        double[:] result_kg = np.zeros(days_count)
+        double[:] result_kg
         double mass_leached_on_day_kg
 
     days_count = len(days)
@@ -1775,13 +1775,7 @@ def get_sfr_file(data, runoff):
         if data['params']['disv']:
             flopy_adaptor.mf_gwf_disv(m)
         else:
-            flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
-                                                       nodes=nodes,
-                                                       ja=np.zeros((njag),
-                                                                   dtype=int),
-                                                       nja=njag, ihc=[1],
-                                                       iac=[1])
-
+            flopy_adaptor.mf_gwf_disu(m, nodes, njag)
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,
                                              time_units=None,
@@ -2296,12 +2290,7 @@ def get_evt_file(data, evtrate):
         sim = flopy_adaptor.mf_simulation()
         m = flopy_adaptor.mf_model(sim, path)
         njag = nodes + 2
-        flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(m,
-                                                   nodes=nodes,
-                                                   ja=np.zeros((njag),
-                                                               dtype=int),
-                                                   nja=njag, iac=[1],
-                                                   ihc=[1])
+        flopy_adaptor.mf_gwf_disu(m, nodes, njag)
 
         flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                              loading_package=False,

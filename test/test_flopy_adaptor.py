@@ -1,5 +1,6 @@
 import unittest
 import swacmod.flopy_adaptor as flopy_adaptor
+import numpy as np
 
 class Test_Flopy_Adaptor(unittest.TestCase):
 	def test_mf_simulation(self):
@@ -47,3 +48,25 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		disv = flopy_adaptor.mf_gwf_disv(model)
 
 		self.assertEqual(disv, model.get_package("disv"))
+
+	def test_mf_gwf_disu(self):
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, "aardvark")
+		disu = flopy_adaptor.mf_gwf_disu(model, 3, 5)
+
+		self.assertEqual(["disu"], disu.name)
+		self.assertEqual(model, disu.model_or_sim)
+		self.assertEqual(model, disu.parent)
+
+		self.assertEqual("  NODES  3\n", disu.nodes.get_file_entry())
+		self.assertEqual("  NJA  5\n", disu.nja.get_file_entry())
+		np.testing.assert_almost_equal(np.zeros(5), disu.ja.get_data())
+		self.assertEqual("  ihc\n    CONSTANT  1\n", disu.ihc.get_file_entry())
+		self.assertEqual("  iac\n    CONSTANT  1\n", disu.iac.get_file_entry())
+
+	def test_mf_gwf_disu_adds_disu_to_model(self):
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, "aardvark")
+		disu = flopy_adaptor.mf_gwf_disu(model, 3, 5)
+
+		self.assertEqual(disu, model.get_package("disu"))
