@@ -153,22 +153,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		flopy_adaptor.mf_gwf_disv(model)
 		actual = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(model, 3, 5)
 
-		expected_node_count = 3
-		expected_stress_period_count = 5
-		expected_field_count = 2
-		self.assertEqual(expected_stress_period_count, len(actual))
-
-		for per in range(expected_stress_period_count):
-			self.assertEqual(expected_node_count, len(actual[per]))
-
-		for per in range(expected_stress_period_count):
-			for node in range(expected_node_count):
-				self.assertEqual(expected_field_count, len(actual[per][node]))
-
-		for per in range(expected_stress_period_count):
-			for node in range(expected_node_count):
-				self.assertIsNone(None, actual[per][node][0])
-				self.assertTrue(math.isnan(actual[per][node][1]))
+		self.assert_empty_stress_period_data(5, 3, actual)
 
 	def test_mf_gwf_rch(self):
 		node_count = 3
@@ -185,19 +170,20 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 
 		self.assertEqual(model, rch.model_or_sim)
 		self.assertEqual('  MAXBOUND  3\n', rch.maxbound.get_file_entry())
+		self.assert_empty_stress_period_data(5, 3, rch.stress_period_data.get_data())
 
-		actual_spd = rch.stress_period_data.get_data()
+	def assert_empty_stress_period_data(self, expected_stress_period_count, expected_node_count, actual):
+		self.assertEqual(expected_stress_period_count, len(actual))
 
-		self.assertEqual(stress_period_count, len(actual_spd))
+		for per in range(expected_stress_period_count):
+			self.assertEqual(expected_node_count, len(actual[per]))
 
-		for per in range(stress_period_count):
-			self.assertEqual(node_count, len(actual_spd[per]))
+		expected_field_count = 2
+		for per in range(expected_stress_period_count):
+			for node in range(expected_node_count):
+				self.assertEqual(expected_field_count, len(actual[per][node]))
 
-		for per in range(stress_period_count):
-			for node in range(node_count):
-				self.assertEqual(2, len(actual_spd[per][node]))
-
-		for per in range(stress_period_count):
-			for node in range(node_count):
-				self.assertIsNone(None, actual_spd[per][node][0])
-				self.assertTrue(math.isnan(actual_spd[per][node][1]))
+		for per in range(expected_stress_period_count):
+			for node in range(expected_node_count):
+				self.assertIsNone(None, actual[per][node][0])
+				self.assertTrue(math.isnan(actual[per][node][1]))
