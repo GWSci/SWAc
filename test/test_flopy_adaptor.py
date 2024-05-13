@@ -303,3 +303,23 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 
 		self.assertEqual(bas, model.get_package("bas6"))
 		self.assertFalse(bas.ifrefm)
+
+	def test_modflow_str_get_empty(self):
+		ncells = 2,
+		nss = 3
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			rd, sd = flopy_adaptor.modflow_str_get_empty(ncells, nss)
+		
+		expected_rd = [
+			[0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0],
+		]
+		np.testing.assert_array_almost_equal(expected_rd, rd.tolist())
+
+		expected_sd = [
+			[0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0,0],
+		]
+		np.testing.assert_array_almost_equal(expected_sd, sd.tolist())

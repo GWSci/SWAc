@@ -136,3 +136,6 @@ def mf_gwf_sfr(model, nss, rd, cd, sd):
 
 def modflow_bas(model):
 	return flopy.modflow.ModflowBas(model, ifrefm=False)
+
+def modflow_str_get_empty(ncells, nss):
+	return flopy.modflow.ModflowStr.get_empty(ncells=ncells, nss=nss)

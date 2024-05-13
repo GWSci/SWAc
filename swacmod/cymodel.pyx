@@ -1924,7 +1924,7 @@ def make_modflow_str(data, nstrm, nss):
     m = make_modflow_model(data)
     dis = make_modflow_dis(m, data)
     flopy_adaptor.modflow_bas(m)
-    rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
+    rd, sd = flopy_adaptor.modflow_str_get_empty(nstrm, nss)
     return m, dis, rd
 
 def make_modflow_model(data):
