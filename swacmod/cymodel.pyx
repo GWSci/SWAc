@@ -2193,7 +2193,7 @@ def get_evt_file(data, evtrate):
 
     if data['params']['gwmodel_type'] == 'mfusg':
         m = flopy_adaptor.modflow_model(path, "mfusg", True)
-        flopy.modflow.ModflowDis(m, nrow=nodes, ncol=1, nper=nper)
+        flopy_adaptor.modflow_dis(m, 1, nodes, 1, nper)
     elif data['params']['gwmodel_type'] == 'mf6':
         sim = flopy_adaptor.mf_simulation()
         m = flopy_adaptor.mf_model(sim, path)
