@@ -1865,29 +1865,7 @@ def get_sfr_file(data, runoff):
         sfr = flopy_adaptor.mf_str2(m, nstrm, nss, istcb1, istcb2, rd, seg_data)
 
     elif data['params']['gwmodel_type'] == 'mf6':
-        sfr = flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr(m,
-                                                       loading_package=False,
-                                                       auxiliary=None,
-                                                       boundnames=None,
-                                                       print_input=None,
-                                                       print_stage=None,
-                                                       print_flows=None,
-                                                       save_flows=None,
-                                                       stage_filerecord=None,
-                                                       budget_filerecord=None,
-                                                       timeseries=None,
-                                                       observations=None,
-                                                       mover=None,
-                                                       maximum_iterations=None,
-                                                       unit_conversion=86400.0,
-                                                       nreaches=nss,
-                                                       packagedata=rd,
-                                                       connectiondata=cd,
-                                                       diversions=None,
-                                                       perioddata=sd,
-                                                       filename=None,
-                                                       pname=None,
-                                                       parent_file=None)
+        sfr = flopy_adaptor.mf_gwf_sfr(m, nss, rd, cd, sd)
 
         if len(data['params']['sfr_obs']) > 0:
             sfr.obs.initialize(filename=data['params']['sfr_obs'])

@@ -107,3 +107,29 @@ def mf_str2(model, nstrm, nss, istcb1, istcb2, rd, seg_data):
 		extension='sfr',
 		unit_number=None,
 		filenames=None)
+
+def mf_gwf_sfr(model, nss, rd, cd, sd):
+	return flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr(
+		model,
+		loading_package=False,
+		auxiliary=None,
+		boundnames=None,
+		print_input=None,
+		print_stage=None,
+		print_flows=None,
+		save_flows=None,
+		stage_filerecord=None,
+		budget_filerecord=None,
+		timeseries=None,
+		observations=None,
+		mover=None,
+		maximum_iterations=None,
+		unit_conversion=86400.0,
+		nreaches=nss,
+		packagedata=rd,
+		connectiondata=cd,
+		diversions=None,
+		perioddata=sd,
+		filename=None,
+		pname=None,
+		parent_file=None)

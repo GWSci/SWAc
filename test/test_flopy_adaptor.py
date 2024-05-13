@@ -264,3 +264,35 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertEqual(False, sfr.transroute)
 		self.assertEqual(False, sfr.tabfiles)
 		self.assertEqual(['sfr'], sfr.extension)
+
+	def test_mf_gwf_sfr(self):
+		path = "aardvark"
+		nss = 2
+		nper = 3
+		rd = [
+			[2, 0, 3, 5, 0.0001, 7, 11, 13, 0.0001, 1, 1.0, 0],
+			[2, 1, 3, 5, 0.0001, 7, 11, 13, 0.0001, 1, 1.0, 0],
+		]
+		cd = [1, 1]
+		sd = {0: [(0, "STAGE", 7)]}
+
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, path)
+		flopy_adaptor.mf_gwf_disv(model)
+		flopy_adaptor.mf_tdis(sim, nper)
+		sfr = flopy_adaptor.mf_gwf_sfr(model, nss, rd, cd, sd)
+
+		self.assertEqual(model, sfr.model_or_sim)
+		self.assertEqual(False, sfr.loading_package)
+		self.assertEqual('  UNIT_CONVERSION   86400.00000000\n', sfr.unit_conversion.get_file_entry())
+		self.assertEqual(nss, sfr.nreaches.get_data((0, 'STAGE', 7)))
+
+		expected_rd = [
+			(2, (0, 3), 5., 0.0001, 7., 11., 13., 0.0001, 1, 1.0, 0., None),
+			(2, (1, 3), 5., 0.0001, 7., 11., 13., 0.0001, 1, 1.0, 0., None)]
+		self.assertTrue(expected_rd == sfr.packagedata.get_data().tolist())
+
+		self.assertTrue([(1, 1.0)] == sfr.connectiondata.get_data().tolist())
+
+		actual_period_data = {k: v.tolist() for k, v in sfr.perioddata.get_data().items()}
+		self.assertEqual(sd, actual_period_data)
