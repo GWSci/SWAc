@@ -11,19 +11,20 @@ def mf_gwf_disv(model):
 	return flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(model)
 
 def mf_gwf_disu(model, nodes, njag):
-	return flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(model,
-                                                       nodes=nodes,
-                                                       ja=np.zeros((njag),
-                                                                   dtype=int),
-                                                       nja=njag, ihc=[1],
-                                                       iac=[1])
+	return flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(
+		model,
+		nodes=nodes,
+		ja=np.zeros((njag), dtype=int),
+		nja=njag,
+		ihc=[1],
+		iac=[1])
 
 def mf_gwf_disu_with_area(model, nodes, njag, area):
-	return flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(model,
-                                                       nodes=nodes,
-                                                       ja=np.zeros((njag),
-                                                                   dtype=int),
-                                                       nja=njag, 
-                                                       ihc=[1],
-                                                       iac=[1],
-                                                       area=area)
+	return flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(
+		model,
+		nodes=nodes,
+		ja=np.zeros((njag), dtype=int),
+		nja=njag, 
+		ihc=[1],
+		iac=[1],
+		area=area)
