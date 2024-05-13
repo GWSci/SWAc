@@ -30,3 +30,6 @@ def mf_tdis(sim, nper):
 		filename=None,
 		pname=None,
 		parent_file=None)
+
+def modflow_model(path):
+	return flopy.modflow.Modflow(modelname=path, version='mfusg', structured=False)

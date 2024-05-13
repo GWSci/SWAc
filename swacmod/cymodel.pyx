@@ -1733,8 +1733,7 @@ def get_sfr_file(data, runoff):
     sfr = None
 
     if data['params']['gwmodel_type'] == 'mfusg':
-        m = flopy.modflow.Modflow(modelname=path,
-                                  version='mfusg', structured=False)
+        m = flopy_adaptor.modflow_model(path)
 
         flopy.modflow.ModflowDisU(
             m,
