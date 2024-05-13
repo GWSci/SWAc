@@ -838,7 +838,7 @@ def get_mf6rch_file(data, rchrate):
     if data['params']['disv']:
         flopy_adaptor.disv(m)
     else:
-        flopy_adaptor.mf_gwf_disu_with_area(m, nodes, njag, 1.0)
+        flopy_adaptor.mf_gwf_disu(m, nodes, njag, area=1.0)
 
     flopy.mf6.modflow.mftdis.ModflowTdis(sim,
                                          loading_package=False,
