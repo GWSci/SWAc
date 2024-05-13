@@ -70,3 +70,39 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		disu = flopy_adaptor.mf_gwf_disu(model, 3, 5)
 
 		self.assertEqual(disu, model.get_package("disu"))
+
+	def test_mf_gwf_disu_does_not_set_area(self):
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, "aardvark")
+		disu = flopy_adaptor.mf_gwf_disu(model, 3, 5)
+
+		self.assertEqual("", disu.area.get_file_entry())
+
+	def test_mf_gwf_disu_with_area(self):
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, "aardvark")
+		disu = flopy_adaptor.mf_gwf_disu_with_area(model, 3, 5, 7.0)
+
+		self.assertEqual(["disu"], disu.name)
+		self.assertEqual(model, disu.model_or_sim)
+		self.assertEqual(model, disu.parent)
+
+		self.assertEqual("  NODES  3\n", disu.nodes.get_file_entry())
+		self.assertEqual("  NJA  5\n", disu.nja.get_file_entry())
+		np.testing.assert_almost_equal(np.zeros(5), disu.ja.get_data())
+		self.assertEqual("  ihc\n    CONSTANT  1\n", disu.ihc.get_file_entry())
+		self.assertEqual("  iac\n    CONSTANT  1\n", disu.iac.get_file_entry())
+
+	def test_mf_gwf_disu_with_area_adds_disu_to_model(self):
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, "aardvark")
+		disu = flopy_adaptor.mf_gwf_disu_with_area(model, 3, 5, 7)
+
+		self.assertEqual(disu, model.get_package("disu"))
+
+	def test_mf_gwf_disu_with_area_sets_area(self):
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, "aardvark")
+		disu = flopy_adaptor.mf_gwf_disu_with_area(model, 3, 5, 7.0)
+
+		self.assertEqual("  area\n    CONSTANT       7.00000000\n", disu.area.get_file_entry())
