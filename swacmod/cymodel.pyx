@@ -2204,7 +2204,6 @@ def get_evt_file(data, evtrate):
     surf = np.zeros((nodes, 1))
     exdp = np.zeros((nodes, 1))
     evtr = np.zeros((nodes, 1))
-    mt = flopy.mf6.ModflowGwfevt.stress_period_data.empty
 
     for inode, vals in evt_params.iteritems():
         ievt[inode - 1, 0] = vals[0]
