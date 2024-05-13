@@ -216,3 +216,51 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		]
 
 		np.testing.assert_array_almost_equal(expected, actual_list)
+
+	def test_mf_str2(self):
+		path = "aardvark"
+		nstrm = 2
+		nss = 2
+		istcb1 = 0
+		istcb2 = 0
+
+		model = flopy_adaptor.modflow_model(path, "mfusg", False)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			rd = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
+			seg_data = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
+			sfr = flopy_adaptor.mf_str2(model, nstrm, nss, istcb1, istcb2, rd, seg_data)
+
+		self.assertEqual(nstrm, sfr.nstrm)
+		self.assertEqual(1, sfr.nss) # The constructor overrides the supplied value.
+		self.assertEqual(0, sfr.nsfrpar)
+		self.assertEqual(0, sfr.nparseg)
+		self.assertEqual(0.0001, sfr.dleak)
+		self.assertEqual(istcb1, sfr.ipakcb)
+		self.assertEqual(istcb2, sfr.istcb2)
+		self.assertEqual(1, sfr.isfropt)
+		self.assertEqual(10, sfr.nstrail)
+		self.assertEqual(1, sfr.isuzn)
+		self.assertEqual(30, sfr.nsfrsets)
+		self.assertEqual(0, sfr.irtflg)
+		self.assertEqual(2, sfr.numtim)
+		self.assertEqual(0.75, sfr.weight)
+		self.assertEqual(0.0001, sfr.flwtol)
+
+		expected_reach_data = [
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
+		]
+
+		actual_reach_data = sfr.reach_data.tolist()
+		np.testing.assert_array_almost_equal(expected_reach_data, actual_reach_data)
+
+		self.assertEqual(1, len(sfr.segment_data))
+		self.assert_zeros(2, 34, sfr.segment_data[0])
+
+		self.assertEqual(0, sfr.irdflag)
+		self.assertEqual(0, sfr.iptflag)
+		self.assertEqual(True, sfr.reachinput)
+		self.assertEqual(False, sfr.transroute)
+		self.assertEqual(False, sfr.tabfiles)
+		self.assertEqual(['sfr'], sfr.extension)

@@ -1862,29 +1862,7 @@ def get_sfr_file(data, runoff):
 
     isfropt = 1
     if data['params']['gwmodel_type'] == 'mfusg':
-        sfr = flopy.modflow.mfsfr2.ModflowSfr2(m, nstrm=nstrm, nss=nss,
-                                               nsfrpar=0, nparseg=0,
-                                               const=None,
-                                               dleak=0.0001, ipakcb=istcb1,
-                                               istcb2=istcb2, isfropt=isfropt,
-                                               nstrail=10, isuzn=1,
-                                               nsfrsets=30,
-                                               irtflg=0,
-                                               numtim=2, weight=0.75,
-                                               flwtol=0.0001,
-                                               reach_data=rd,
-                                               segment_data=seg_data,
-                                               channel_geometry_data=None,
-                                               channel_flow_data=None,
-                                               dataset_5=None,
-                                               irdflag=0, iptflag=0,
-                                               reachinput=True,
-                                               transroute=False,
-                                               tabfiles=False,
-                                               tabfiles_dict=None,
-                                               extension='sfr',
-                                               unit_number=None,
-                                               filenames=None)
+        sfr = flopy_adaptor.mf_str2(m, nstrm, nss, istcb1, istcb2, rd, seg_data)
 
     elif data['params']['gwmodel_type'] == 'mf6':
         sfr = flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr(m,
