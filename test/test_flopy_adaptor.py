@@ -206,4 +206,4 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 
 	def test_modflow_sfr2_get_empty_reach_data(self):
 		actual = flopy_adaptor.modflow_sfr2_get_empty_reach_data(3)
-		print(actual)
+		print(actual.tolist())
