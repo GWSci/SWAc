@@ -19,13 +19,3 @@ def mf_gwf_disu(model, nodes, njag, area=None):
 		ihc=[1],
 		iac=[1],
 		area=area)
-
-def mf_gwf_disu_with_area(model, nodes, njag, area):
-	return flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(
-		model,
-		nodes=nodes,
-		ja=np.zeros((njag), dtype=int),
-		nja=njag, 
-		ihc=[1],
-		iac=[1],
-		area=area)
