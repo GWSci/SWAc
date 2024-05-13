@@ -1923,7 +1923,7 @@ def make_idx():
 def make_modflow_str(data, nstrm, nss):
     m = make_modflow_model(data)
     dis = make_modflow_dis(m, data)
-    flopy.modflow.ModflowBas(m, ifrefm=False)
+    flopy_adaptor.modflow_bas(m)
     rd, sd = flopy.modflow.ModflowStr.get_empty(ncells=nstrm, nss=nss)
     return m, dis, rd
 

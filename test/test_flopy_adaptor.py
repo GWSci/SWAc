@@ -296,3 +296,10 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 
 		actual_period_data = {k: v.tolist() for k, v in sfr.perioddata.get_data().items()}
 		self.assertEqual(sd, actual_period_data)
+
+	def test_modflow_bas(self):
+		model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
+		bas = flopy_adaptor.modflow_bas(model)
+
+		self.assertEqual(bas, model.get_package("bas6"))
+		self.assertFalse(bas.ifrefm)

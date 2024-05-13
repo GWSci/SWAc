@@ -133,3 +133,6 @@ def mf_gwf_sfr(model, nss, rd, cd, sd):
 		filename=None,
 		pname=None,
 		parent_file=None)
+
+def modflow_bas(model):
+	return flopy.modflow.ModflowBas(model, ifrefm=False)
