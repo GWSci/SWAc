@@ -392,3 +392,20 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 			2: [(None, np.nan, np.nan, np.nan, np.nan, None), (None, np.nan, np.nan, np.nan, np.nan, None)],
 		}
 		self.assertEqual(str(expected), str(actual_spd))
+
+	def test_modflow_evt(self):
+		nevtopt = 2
+		ievtcb = 1
+		evt_dic = 3
+		surf = 5
+		exdp = 7
+		ievt = 11
+		model = flopy_adaptor.modflow_model("aardvark", "mfusg", True)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			flopy_adaptor.modflow_dis(model, 1, 3, 1, 5)
+			evt = flopy_adaptor.modflow_evt(model, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
+		
+		self.assertEqual(evt, model.get_package("evt"))
+		self.assertEqual(nevtopt, evt.nevtop)
+		self.assertEqual(ievtcb, evt.ipakcb)

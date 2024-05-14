@@ -2217,12 +2217,7 @@ def get_evt_file(data, evtrate):
         evt_dic[per] = evtr.copy()
 
     if data['params']['gwmodel_type'] == 'mfusg':
-        evt_out = flopy.modflow.ModflowEvt(m, nevtop=nevtopt,
-                                           ipakcb=ievtcb,
-                                           evtr=evt_dic,
-                                           surf={0: surf},
-                                           exdp={0: exdp},
-                                           ievt={0: ievt})
+        evt_out = flopy_adaptor.modflow_evt(m, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
 
     elif data['params']['gwmodel_type'] == 'mf6':
         spd = flopy_adaptor.make_empty_modflow_gwf_evt_stress_period_data(m, nodes, nper)

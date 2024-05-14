@@ -167,3 +167,13 @@ def make_empty_modflow_gwf_evt_stress_period_data(model, nodes, nper):
 		nseg=1,
 		stress_periods=range(nper),
 		aux_vars=['dummy'])
+
+def modflow_evt(model, nevtopt, ievtcb, evt_dic, surf, exdp, ievt):
+	return flopy.modflow.ModflowEvt(
+		model,
+		nevtop=nevtopt,
+		ipakcb=ievtcb,
+		evtr=evt_dic,
+		surf={0: surf},
+		exdp={0: exdp},
+		ievt={0: ievt})
