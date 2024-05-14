@@ -3,7 +3,6 @@
 
 
 # Third Party Libraries
-import flopy
 import numpy as np
 from collections import OrderedDict
 
