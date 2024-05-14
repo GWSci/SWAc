@@ -3,6 +3,7 @@ import swacmod.flopy_adaptor as flopy_adaptor
 import numpy as np
 import warnings
 import math
+import tempfile
 
 class Test_Flopy_Adaptor(unittest.TestCase):
 	def test_mf_simulation(self):
@@ -171,6 +172,73 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertEqual(model, rch.model_or_sim)
 		self.assertEqual('  MAXBOUND  3\n', rch.maxbound.get_file_entry())
 		self.assert_empty_stress_period_data(5, 3, rch.stress_period_data.get_data())
+
+	def test_write_mf_gwf_rch(self):
+		with tempfile.TemporaryDirectory() as temp_directory:
+			path = temp_directory + "/some_temp_file"
+			node_count = 3
+			stress_period_count = 5
+			njag = node_count + 2
+
+			sim = flopy_adaptor.mf_simulation()
+			model = flopy_adaptor.mf_model(sim, path)
+			flopy_adaptor.mf_gwf_disu(model, node_count, njag, area=1.0)
+			flopy_adaptor.mf_tdis(sim, stress_period_count)
+			spd = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(model, node_count, stress_period_count)
+
+			value = 10
+			for sp in range(stress_period_count):
+				for n in range(node_count):
+					spd[sp][n] = value
+					value = value + 1
+				value = value + 100
+
+			rch = flopy_adaptor.mf_gwf_rch(model, node_count, spd)
+
+			flopy_adaptor.write_mf_gwf_rch(rch)
+			with open(path + ".rch") as file:
+				contents = file.read()
+			
+			contents_without_first_line = contents.split("\n", 1)[1]
+			expected = """BEGIN options
+END options
+
+BEGIN dimensions
+  MAXBOUND  3
+END dimensions
+
+BEGIN period  1
+  11      10.00000000
+  12      11.00000000
+  13      12.00000000
+END period  1
+
+BEGIN period  2
+  114     113.00000000
+  115     114.00000000
+  116     115.00000000
+END period  2
+
+BEGIN period  3
+  217     216.00000000
+  218     217.00000000
+  219     218.00000000
+END period  3
+
+BEGIN period  4
+  320     319.00000000
+  321     320.00000000
+  322     321.00000000
+END period  4
+
+BEGIN period  5
+  423     422.00000000
+  424     423.00000000
+  425     424.00000000
+END period  5
+
+"""
+			self.assertEqual(expected, contents_without_first_line)
 
 	def assert_empty_stress_period_data(self, expected_stress_period_count, expected_node_count, actual):
 		self.assertEqual(expected_stress_period_count, len(actual))
