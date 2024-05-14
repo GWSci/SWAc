@@ -33,6 +33,7 @@ from tqdm import tqdm
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
+import swacmod.flopy_adaptor as flopy_adaptor
 
 # Compile and import model
 from swacmod import compile_model
@@ -838,7 +839,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             if data['params']['gwmodel_type'] == 'mfusg':
                 io.dump_recharge_file(data, recharge_agg)
             elif data['params']['gwmodel_type'] == 'mf6':
-                m.get_mf6rch_file(data, recharge_agg).write()
+                flopy_adaptor.write_mf_gwf_rch(m.get_mf6rch_file(data, recharge_agg))
             elif data['params']['gwmodel_type'] == 'mf96':
                 io.dump_mf96_recharge_file(data, recharge_agg)
 
