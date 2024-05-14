@@ -177,3 +177,20 @@ def modflow_evt(model, nevtopt, ievtcb, evt_dic, surf, exdp, ievt):
 		surf={0: surf},
 		exdp={0: exdp},
 		ievt={0: ievt})
+
+def modflow_gwf_evt(model, nodes, spd):
+	return flopy.mf6.ModflowGwfevt(
+		model,
+		fixed_cell=False,
+		print_input=None,
+		print_flows=None,
+		save_flows=None,
+		timeseries=None,
+		observations=None,
+		maxbound=nodes,
+		nseg=1,
+		stress_period_data=spd,
+		surf_rate_specified=False,
+		filename=None,
+		pname=None,
+		parent_file=None)

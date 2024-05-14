@@ -2231,20 +2231,7 @@ def get_evt_file(data, evtrate):
                                    exdp[i, 0],
                                    -999.0, -999.0)
 
-        evt_out = flopy.mf6.ModflowGwfevt(m,
-                                          fixed_cell=False,
-                                          print_input=None,
-                                          print_flows=None,
-                                          save_flows=None,
-                                          timeseries=None,
-                                          observations=None,
-                                          maxbound=nodes,
-                                          nseg=1,
-                                          stress_period_data=spd,
-                                          surf_rate_specified=False,
-                                          filename=None,
-                                          pname=None,
-                                          parent_file=None)
+        evt_out = flopy_adaptor.modflow_gwf_evt(m, nodes, spd)
 
     return evt_out
 

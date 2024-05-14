@@ -409,3 +409,22 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertEqual(evt, model.get_package("evt"))
 		self.assertEqual(nevtopt, evt.nevtop)
 		self.assertEqual(ievtcb, evt.ipakcb)
+
+	def test_modflow_gwf_evt(self):
+		path = "aardvark"
+		nodes = 3
+		nper = 7
+		njag = nodes + 2
+		sim = flopy_adaptor.mf_simulation()
+		model = flopy_adaptor.mf_model(sim, path)
+		flopy_adaptor.mf_gwf_disu(model, nodes, njag)
+		flopy_adaptor.mf_tdis(sim, nper)
+		spd = flopy_adaptor.make_empty_modflow_gwf_evt_stress_period_data(model, nodes, nper)
+		evt = flopy_adaptor.modflow_gwf_evt(model, nodes, spd)
+
+		self.assertEqual(evt, model.get_package("evt"))
+		self.assertEqual(False, evt.fixed_cell.get_data())
+		self.assertEqual('  MAXBOUND  3\n', evt.maxbound.get_file_entry())
+		self.assertEqual('  NSEG  1\n', evt.nseg.get_file_entry())
+		self.assertEqual(spd, evt.stress_period_data.get_data())
+		self.assertEqual(False, evt.surf_rate_specified.get_data())
