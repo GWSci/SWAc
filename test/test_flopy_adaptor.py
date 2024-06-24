@@ -23,10 +23,10 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertEqual("mf6", model.version)
 		self.assertEqual("mf6.exe", model.exe_name)
 
-	def test_mf_gwf_disv(self):
+	def test__mf_gwf_disv(self):
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, "aardvark")
-		disv = flopy_adaptor.mf_gwf_disv(model)
+		disv = flopy_adaptor._mf_gwf_disv(model)
 
 		self.assertEqual(model, disv.model_or_sim)
 		self.assertEqual(model, disv.parent)
@@ -46,17 +46,17 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertEqual("", disv.vertices.get_file_entry())
 		self.assertEqual("", disv.cell2d.get_file_entry())
 
-	def test_mf_gwf_disv_adds_disv_to_model(self):
+	def test__mf_gwf_disv_adds_disv_to_model(self):
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, "aardvark")
-		disv = flopy_adaptor.mf_gwf_disv(model)
+		disv = flopy_adaptor._mf_gwf_disv(model)
 
 		self.assertEqual(disv, model.get_package("disv"))
 
-	def test_mf_gwf_disu(self):
+	def test__mf_gwf_disu(self):
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, "aardvark")
-		disu = flopy_adaptor.mf_gwf_disu(model, 3, 5)
+		disu = flopy_adaptor._mf_gwf_disu(model, 3, 5)
 
 		self.assertEqual(["disu"], disu.name)
 		self.assertEqual(model, disu.model_or_sim)
@@ -68,30 +68,30 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertEqual("  ihc\n    CONSTANT  1\n", disu.ihc.get_file_entry())
 		self.assertEqual("  iac\n    CONSTANT  1\n", disu.iac.get_file_entry())
 
-	def test_mf_gwf_disu_adds_disu_to_model(self):
+	def test__mf_gwf_disu_adds_disu_to_model(self):
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, "aardvark")
-		disu = flopy_adaptor.mf_gwf_disu(model, 3, 5)
+		disu = flopy_adaptor._mf_gwf_disu(model, 3, 5)
 
 		self.assertEqual(disu, model.get_package("disu"))
 
-	def test_mf_gwf_disu_does_not_set_area(self):
+	def test__mf_gwf_disu_does_not_set_area(self):
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, "aardvark")
-		disu = flopy_adaptor.mf_gwf_disu(model, 3, 5)
+		disu = flopy_adaptor._mf_gwf_disu(model, 3, 5)
 
 		self.assertEqual("", disu.area.get_file_entry())
 
-	def test_mf_gwf_disu_does_sets_area_when_provided(self):
+	def test__mf_gwf_disu_does_sets_area_when_provided(self):
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, "aardvark")
-		disu = flopy_adaptor.mf_gwf_disu(model, 3, 5, 7.0)
+		disu = flopy_adaptor._mf_gwf_disu(model, 3, 5, 7.0)
 
 		self.assertEqual("  area\n    CONSTANT       7.00000000\n", disu.area.get_file_entry())
 
-	def test_mf_tdis(self):
+	def test__mf_tdis(self):
 		sim = flopy_adaptor._mf_simulation()
-		tdis = flopy_adaptor.mf_tdis(sim, 3)
+		tdis = flopy_adaptor._mf_tdis(sim, 3)
 
 		self.assertEqual(sim, tdis.model_or_sim)
 		self.assertEqual("  NPER  3\n", tdis.nper.get_file_entry())
@@ -101,9 +101,9 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		# self.assertEqual("", tdis.pname.get_file_entry())
 		self.assertIsNone(tdis.parent_file)
 
-	def test_mf_tdis_adds_disu_to_simulation(self):
+	def test__mf_tdis_adds_disu_to_simulation(self):
 		sim = flopy_adaptor._mf_simulation()
-		tdis = flopy_adaptor.mf_tdis(sim, 3)
+		tdis = flopy_adaptor._mf_tdis(sim, 3)
 
 		self.assertEqual(tdis, sim.get_package("tdis"))
 
@@ -152,7 +152,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 	def test_make_empty_modflow_gwf_rch_stress_period_data(self):
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, "aardvark")
-		flopy_adaptor.mf_gwf_disv(model)
+		flopy_adaptor._mf_gwf_disv(model)
 		actual = flopy_adaptor._make_empty_modflow_gwf_rch_stress_period_data(model, 3, 5)
 
 		self.assert_empty_stress_period_data(5, 3, actual)
@@ -164,8 +164,8 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, "aardvark")
-		flopy_adaptor.mf_gwf_disu(model, node_count, njag, area=1.0)
-		flopy_adaptor.mf_tdis(sim, stress_period_count)
+		flopy_adaptor._mf_gwf_disu(model, node_count, njag, area=1.0)
+		flopy_adaptor._mf_tdis(sim, stress_period_count)
 		spd = flopy_adaptor._make_empty_modflow_gwf_rch_stress_period_data(model, node_count, stress_period_count)
 
 		rch = flopy_adaptor.mf_gwf_rch(model, node_count, spd)
@@ -183,8 +183,8 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 
 			sim = flopy_adaptor._mf_simulation()
 			model = flopy_adaptor._mf_model(sim, path)
-			flopy_adaptor.mf_gwf_disu(model, node_count, njag, area=1.0)
-			flopy_adaptor.mf_tdis(sim, stress_period_count)
+			flopy_adaptor._mf_gwf_disu(model, node_count, njag, area=1.0)
+			flopy_adaptor._mf_tdis(sim, stress_period_count)
 			spd = flopy_adaptor._make_empty_modflow_gwf_rch_stress_period_data(model, node_count, stress_period_count)
 
 			value = 10
@@ -344,8 +344,8 @@ END period  5
 
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, path)
-		flopy_adaptor.mf_gwf_disv(model)
-		flopy_adaptor.mf_tdis(sim, nper)
+		flopy_adaptor._mf_gwf_disv(model)
+		flopy_adaptor._mf_tdis(sim, nper)
 		sfr = flopy_adaptor.mf_gwf_sfr(model, nss, rd, cd, sd)
 
 		self.assertEqual(model, sfr.model_or_sim)
@@ -446,8 +446,8 @@ END period  5
 		njag = 5
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, "aardvark")
-		flopy_adaptor.mf_gwf_disu(model, nodes, njag)
-		flopy_adaptor.mf_tdis(sim, nper)
+		flopy_adaptor._mf_gwf_disu(model, nodes, njag)
+		flopy_adaptor._mf_tdis(sim, nper)
 
 		spd = flopy_adaptor.make_empty_modflow_gwf_evt_stress_period_data(model, nodes, nper)
 
@@ -483,8 +483,8 @@ END period  5
 		njag = nodes + 2
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, path)
-		flopy_adaptor.mf_gwf_disu(model, nodes, njag)
-		flopy_adaptor.mf_tdis(sim, nper)
+		flopy_adaptor._mf_gwf_disu(model, nodes, njag)
+		flopy_adaptor._mf_tdis(sim, nper)
 		spd = flopy_adaptor.make_empty_modflow_gwf_evt_stress_period_data(model, nodes, nper)
 		evt = flopy_adaptor.modflow_gwf_evt(model, nodes, spd)
 

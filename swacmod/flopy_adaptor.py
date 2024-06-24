@@ -11,9 +11,9 @@ def make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes):
 	sim = _mf_simulation()
 	m = _mf_model(sim, path)
 	njag = nodes + 2
-	mf_gwf_disu(m, nodes, njag)
+	_mf_gwf_disu(m, nodes, njag)
 
-	mf_tdis(sim, nper)
+	_mf_tdis(sim, nper)
 
 	spd = make_empty_modflow_gwf_evt_stress_period_data(m, nodes, nper)
 	return m, spd
@@ -21,9 +21,9 @@ def make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes):
 def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes):
 	sim = _mf_simulation()
 	m = _mf_model(sim, path)
-	mf_gwf_disv(m)
+	_mf_gwf_disv(m)
 
-	mf_tdis(sim, nper)
+	_mf_tdis(sim, nper)
 
 	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
 	return m, spd
@@ -32,9 +32,9 @@ def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes):
 	sim = _mf_simulation()
 	m = _mf_model(sim, path)
 	njag = nodes + 2
-	mf_gwf_disu(m, nodes, njag, area=1.0)
+	_mf_gwf_disu(m, nodes, njag, area=1.0)
 
-	mf_tdis(sim, nper)
+	_mf_tdis(sim, nper)
 
 	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
 	return m, spd
@@ -52,16 +52,16 @@ def make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx, nss, nstrm):
 def make_model_for_sfr_mf6_disv(path, nper):
 	sim = _mf_simulation()
 	m = _mf_model(sim, path)
-	mf_gwf_disv(m)
-	mf_tdis(sim, nper)
+	_mf_gwf_disv(m)
+	_mf_tdis(sim, nper)
 	return m
 
 def make_model_for_sfr_mf6_disu(path, nodes, nper):
 	sim = _mf_simulation()
 	m = _mf_model(sim, path)
 	njag = nodes + 2
-	mf_gwf_disu(m, nodes, njag)
-	mf_tdis(sim, nper)
+	_mf_gwf_disu(m, nodes, njag)
+	_mf_tdis(sim, nper)
 	return m
 
 def _mf_simulation():
@@ -70,10 +70,10 @@ def _mf_simulation():
 def _mf_model(sim, path):
 	return flopy.mf6.mfmodel.MFModel(sim, modelname=path)
 
-def mf_gwf_disv(model):
+def _mf_gwf_disv(model):
 	return flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(model)
 
-def mf_gwf_disu(model, nodes, njag, area=None):
+def _mf_gwf_disu(model, nodes, njag, area=None):
 	return flopy.mf6.modflow.mfgwfdisu.ModflowGwfdisu(
 		model,
 		nodes=nodes,
@@ -83,7 +83,7 @@ def mf_gwf_disu(model, nodes, njag, area=None):
 		iac=[1],
 		area=area)
 
-def mf_tdis(sim, nper):
+def _mf_tdis(sim, nper):
 	return flopy.mf6.modflow.mftdis.ModflowTdis(
 		sim,
 		loading_package=False,
