@@ -2215,14 +2215,6 @@ def get_evt_file(data, evtrate):
         evt_out = flopy_adaptor.make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
     elif data['params']['gwmodel_type'] == 'mf6':
         m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes)
-        sim = flopy_adaptor.mf_simulation()
-        m = flopy_adaptor.mf_model(sim, path)
-        njag = nodes + 2
-        flopy_adaptor.mf_gwf_disu(m, nodes, njag)
-
-        flopy_adaptor.mf_tdis(sim, nper)
-
-        spd = flopy_adaptor.make_empty_modflow_gwf_evt_stress_period_data(m, nodes, nper)
 
         for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
             for i in range(nodes):
