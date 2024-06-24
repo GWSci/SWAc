@@ -39,6 +39,18 @@ class Test_Get_Sfr_File(unittest.TestCase):
 		actual = file_test_helpers.slurp_without_first_line(filename)
 		self.assertEqual(expected_sfr_mf6_disu_aardvark, actual)
 
+	def test_get_sfr_file_mf6_obs(self):
+		run_name = "sfr-mf6-obs-aardvark"
+		gwmodel_type = "mf6"
+		filename = "output_files/sfr-mf6-obs-aardvark.sfr"
+		disv = True
+		sfr_obs = "some-obs-filename"
+
+		sfr = get_sfr_adaptor(run_name, gwmodel_type, disv, sfr_obs)
+		sfr.write()
+		actual = file_test_helpers.slurp_without_first_line(filename)
+		self.assertEqual(expected_sfr_mf6_obs_aardvark, actual)
+
 def get_sfr_adaptor(run_name, gwmodel_type, disv, sfr_obs):
 		data = {
 			"params" : {
@@ -150,6 +162,53 @@ BEGIN packagedata
   1  30      40.00000000     100.00000000  1.00000000E-04      60.00000000      70.00000000      80.00000000  0.0001  1       1.00000000  0
   2  30      40.00000000     100.00000000  1.00000000E-04      60.00000000      70.00000000      80.00000000  0.0001  1       1.00000000  0
   3  30      40.00000000     100.00000000  1.00000000E-04      60.00000000      70.00000000      80.00000000  0.0001  1       1.00000000  0
+END packagedata
+
+BEGIN connectiondata
+  1  -1
+  2  -2
+  3  -3
+END connectiondata
+
+BEGIN period  1
+  1  STAGE  150
+  1  STATUS  SIMPLE
+  2  STAGE  150
+  2  STATUS  SIMPLE
+  3  STAGE  150
+  3  STATUS  SIMPLE
+  1  RUNOFF  0.0
+  1  INFLOW  0.0
+  2  RUNOFF  1.4000000000000001
+  2  INFLOW  0.0
+  3  RUNOFF  3.3000000000000003
+  3  INFLOW  0.0
+END period  1
+
+BEGIN period  2
+  1  RUNOFF  0.0
+  1  INFLOW  0.0
+  2  RUNOFF  3.4
+  2  INFLOW  0.0
+  3  RUNOFF  5.7
+  3  INFLOW  0.0
+END period  2
+
+"""
+
+expected_sfr_mf6_obs_aardvark = """BEGIN options
+  OBS6  FILEIN  some-obs-filename
+  UNIT_CONVERSION   86400.00000000
+END options
+
+BEGIN dimensions
+  NREACHES  3
+END dimensions
+
+BEGIN packagedata
+  1  1 30      40.00000000     100.00000000  1.00000000E-04      60.00000000      70.00000000      80.00000000  0.0001  1       1.00000000  0
+  2  1 30      40.00000000     100.00000000  1.00000000E-04      60.00000000      70.00000000      80.00000000  0.0001  1       1.00000000  0
+  3  1 30      40.00000000     100.00000000  1.00000000E-04      60.00000000      70.00000000      80.00000000  0.0001  1       1.00000000  0
 END packagedata
 
 BEGIN connectiondata
