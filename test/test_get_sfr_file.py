@@ -60,3 +60,81 @@ reachinput
 		input_output.dump_sfr_output(sfr)
 		actual = file_test_helpers.slurp(filename)
 		self.assertEqual(expected, actual)
+
+	def test_get_sfr_file_mf6(self):
+		run_name = "sfr-mf6-aardvark"
+		gwmodel_type = "mf6"
+		filename = "output_files/sfr-mf6-aardvark.sfr"
+		disv = True
+		sfr_obs = []
+		expected = """BEGIN options
+  UNIT_CONVERSION   86400.00000000
+END options
+
+BEGIN dimensions
+  NREACHES  3
+END dimensions
+
+BEGIN packagedata
+  1  1 30      40.00000000     100.00000000  1.00000000E-04      60.00000000      70.00000000      80.00000000  0.0001  1       1.00000000  0
+  2  1 30      40.00000000     100.00000000  1.00000000E-04      60.00000000      70.00000000      80.00000000  0.0001  1       1.00000000  0
+  3  1 30      40.00000000     100.00000000  1.00000000E-04      60.00000000      70.00000000      80.00000000  0.0001  1       1.00000000  0
+END packagedata
+
+BEGIN connectiondata
+  1  -1
+  2  -2
+  3  -3
+END connectiondata
+
+BEGIN period  1
+  1  STAGE  150
+  1  STATUS  SIMPLE
+  2  STAGE  150
+  2  STATUS  SIMPLE
+  3  STAGE  150
+  3  STATUS  SIMPLE
+  1  RUNOFF  0.0
+  1  INFLOW  0.0
+  2  RUNOFF  1.4000000000000001
+  2  INFLOW  0.0
+  3  RUNOFF  3.3000000000000003
+  3  INFLOW  0.0
+END period  1
+
+BEGIN period  2
+  1  RUNOFF  0.0
+  1  INFLOW  0.0
+  2  RUNOFF  3.4
+  2  INFLOW  0.0
+  3  RUNOFF  5.7
+  3  INFLOW  0.0
+END period  2
+
+"""
+
+		data = {
+			"params" : {
+				"node_areas" : [-1, 100, 200, 300],
+				"run_name" : run_name,
+				"time_periods" : [1, 2],
+				"num_nodes" : 3,
+				"routing_topology" : {
+					1 : [1, 1, 30, 40, 50, 60, 70, 80, 90, 100],
+					2 : [2, 1, 30, 40, 50, 60, 70, 80, 90, 100],
+					3 : [3, 1, 30, 40, 50, 60, 70, 80, 90, 100],
+				},
+				"istcb1" : None,
+				"istcb2" : None,
+				"gwmodel_type" : gwmodel_type,
+				"disv" : disv,
+				"sfr_obs" : sfr_obs,
+			}
+		}
+		runoff = [-1, 5, 7, 11, 13, 17, 19]
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			sfr = m.get_sfr_file(data, runoff)
+		sfr.write()
+		actual = file_test_helpers.slurp_without_first_line(filename)
+		self.assertEqual(expected, actual)
