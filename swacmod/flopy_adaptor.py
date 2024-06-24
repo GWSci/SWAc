@@ -8,7 +8,7 @@ def make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt
 	return evt_out
 
 def make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes):
-	sim = mf_simulation()
+	sim = _mf_simulation()
 	m = mf_model(sim, path)
 	njag = nodes + 2
 	mf_gwf_disu(m, nodes, njag)
@@ -19,7 +19,7 @@ def make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes):
 	return m, spd
 
 def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes):
-	sim = mf_simulation()
+	sim = _mf_simulation()
 	m = mf_model(sim, path)
 	mf_gwf_disv(m)
 
@@ -29,7 +29,7 @@ def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes):
 	return m, spd
 
 def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes):
-	sim = mf_simulation()
+	sim = _mf_simulation()
 	m = mf_model(sim, path)
 	njag = nodes + 2
 	mf_gwf_disu(m, nodes, njag, area=1.0)
@@ -50,21 +50,21 @@ def make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx, nss, nstrm):
 	return m, sd, rd
 
 def make_model_for_sfr_mf6_disv(path, nper):
-	sim = mf_simulation()
+	sim = _mf_simulation()
 	m = mf_model(sim, path)
 	mf_gwf_disv(m)
 	mf_tdis(sim, nper)
 	return m
 
 def make_model_for_sfr_mf6_disu(path, nodes, nper):
-	sim = mf_simulation()
+	sim = _mf_simulation()
 	m = mf_model(sim, path)
 	njag = nodes + 2
 	mf_gwf_disu(m, nodes, njag)
 	mf_tdis(sim, nper)
 	return m
 
-def mf_simulation():
+def _mf_simulation():
 	return flopy.mf6.MFSimulation(verbosity_level=0)
 
 def mf_model(sim, path):
