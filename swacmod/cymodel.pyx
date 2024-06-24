@@ -1729,18 +1729,20 @@ def get_sfr_file(data, runoff):
     if data['params']['gwmodel_type'] == 'mfusg':
         m, sd, rd = flopy_adaptor.make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx, nss, nstrm)
     elif data['params']['gwmodel_type'] == 'mf6':
-        # fileout = data['params']['run_name']
-        # path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
-
-        sim = flopy_adaptor.mf_simulation()
-        m = flopy_adaptor.mf_model(sim, path)
-        njag = nodes + 2
-        lenx = int((njag/2) - (nodes/2))
         if data['params']['disv']:
+            sim = flopy_adaptor.mf_simulation()
+            m = flopy_adaptor.mf_model(sim, path)
+            njag = nodes + 2
+            lenx = int((njag/2) - (nodes/2))
             flopy_adaptor.mf_gwf_disv(m)
+            flopy_adaptor.mf_tdis(sim, nper)
         else:
+            sim = flopy_adaptor.mf_simulation()
+            m = flopy_adaptor.mf_model(sim, path)
+            njag = nodes + 2
+            lenx = int((njag/2) - (nodes/2))
             flopy_adaptor.mf_gwf_disu(m, nodes, njag)
-        flopy_adaptor.mf_tdis(sim, nper)
+            flopy_adaptor.mf_tdis(sim, nper)
 
         sd[0] = []
     seg_data = {}
