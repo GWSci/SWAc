@@ -5,7 +5,7 @@ import swacmod.input_output as input_output
 import test.file_test_helpers as file_test_helpers
 
 class Test_Get_Sfr_File(unittest.TestCase):
-	def test_x(self):
+	def test_get_sfr_file_mfusg(self):
 		run_name = "sfr-mfusg-aardvark"
 		gwmodel_type = "mfusg"
 		filename = "output_files/sfr-mfusg-aardvark.sfr"
