@@ -2190,17 +2190,6 @@ def get_evt_file(data, evtrate):
     nodes = data['params']['num_nodes']
     m = None
 
-    if data['params']['gwmodel_type'] == 'mfusg':
-        m = flopy_adaptor.modflow_model(path, "mfusg", True)
-        flopy_adaptor.modflow_dis(m, 1, nodes, 1, nper)
-    elif data['params']['gwmodel_type'] == 'mf6':
-        sim = flopy_adaptor.mf_simulation()
-        m = flopy_adaptor.mf_model(sim, path)
-        njag = nodes + 2
-        flopy_adaptor.mf_gwf_disu(m, nodes, njag)
-
-        flopy_adaptor.mf_tdis(sim, nper)
-
     ievtcb = data['params']['ievtcb']
     nevtopt = data['params']['nevtopt']
     evt_params = data['params']['evt_parameters']
@@ -2221,6 +2210,17 @@ def get_evt_file(data, evtrate):
         for inode in range(1, nodes + 1):
             evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
         evt_dic[per] = evtr.copy()
+
+    if data['params']['gwmodel_type'] == 'mfusg':
+        m = flopy_adaptor.modflow_model(path, "mfusg", True)
+        flopy_adaptor.modflow_dis(m, 1, nodes, 1, nper)
+    elif data['params']['gwmodel_type'] == 'mf6':
+        sim = flopy_adaptor.mf_simulation()
+        m = flopy_adaptor.mf_model(sim, path)
+        njag = nodes + 2
+        flopy_adaptor.mf_gwf_disu(m, nodes, njag)
+
+        flopy_adaptor.mf_tdis(sim, nper)
 
     if data['params']['gwmodel_type'] == 'mfusg':
         evt_out = flopy_adaptor.modflow_evt(m, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
