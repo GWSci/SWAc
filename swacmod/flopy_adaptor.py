@@ -1,6 +1,12 @@
 import flopy
 import numpy as np
 
+def make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt):
+	m = modflow_model(path, "mfusg", True)
+	modflow_dis(m, 1, nodes, 1, nper)
+	evt_out = modflow_evt(m, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
+	return evt_out
+
 def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes):
     sim = mf_simulation()
     m = mf_model(sim, path)
