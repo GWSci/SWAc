@@ -7,6 +7,17 @@ def make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt
 	evt_out = modflow_evt(m, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
 	return evt_out
 
+def make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes):
+	sim = mf_simulation()
+	m = mf_model(sim, path)
+	njag = nodes + 2
+	mf_gwf_disu(m, nodes, njag)
+
+	mf_tdis(sim, nper)
+
+	spd = make_empty_modflow_gwf_evt_stress_period_data(m, nodes, nper)
+	return m, spd
+
 def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes):
     sim = mf_simulation()
     m = mf_model(sim, path)

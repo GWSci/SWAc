@@ -2214,6 +2214,7 @@ def get_evt_file(data, evtrate):
     if data['params']['gwmodel_type'] == 'mfusg':
         evt_out = flopy_adaptor.make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
     elif data['params']['gwmodel_type'] == 'mf6':
+        m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes)
         sim = flopy_adaptor.mf_simulation()
         m = flopy_adaptor.mf_model(sim, path)
         njag = nodes + 2
