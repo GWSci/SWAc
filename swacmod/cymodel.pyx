@@ -1727,14 +1727,7 @@ def get_sfr_file(data, runoff):
     sfr = None
 
     if data['params']['gwmodel_type'] == 'mfusg':
-        m = flopy_adaptor.modflow_model(path, "mfusg", False)
-
-        flopy_adaptor.modflow_disu(m, nodes, nper, njag, lenx)
-
-        m.dis = m.disu
-        sd = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
-        rd = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
-
+        m, sd, rd = flopy_adaptor.make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx, nss, nstrm)
     elif data['params']['gwmodel_type'] == 'mf6':
         # fileout = data['params']['run_name']
         # path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)

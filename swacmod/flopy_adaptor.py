@@ -39,6 +39,16 @@ def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes):
 	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
 	return m, spd
 
+def make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx, nss, nstrm):
+	m = modflow_model(path, "mfusg", False)
+
+	modflow_disu(m, nodes, nper, njag, lenx)
+
+	m.dis = m.disu
+	sd = modflow_sfr2_get_empty_segment_data(nss)
+	rd = modflow_sfr2_get_empty_reach_data(nstrm)
+	return m, sd, rd
+
 def mf_simulation():
 	return flopy.mf6.MFSimulation(verbosity_level=0)
 
