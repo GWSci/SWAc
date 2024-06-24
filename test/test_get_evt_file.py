@@ -60,3 +60,54 @@ INTERNAL               1   (1E15.6) -1 #evtr2
 		input_output.dump_evt_output(evt_out)
 		actual = file_test_helpers.slurp(filename)
 		self.assertEqual(expected, actual)
+
+	def test_get_evt_file_mf6_nevopt_2(self):
+		run_name = "run-evt-mf6-aardvark"
+		gwmodel_type = "mf6"
+		ievtcb = 0
+		nevtopt = 2
+		filename = "output_files/run-evt-mf6-aardvark.evt"
+		expected = """BEGIN options
+END options
+
+BEGIN dimensions
+  MAXBOUND  3
+  NSEG  1
+END dimensions
+
+BEGIN period  1
+  5       7.00000000       0.03700000      11.00000000    -999.00000000
+  13      17.00000000       0.04100000      19.00000000    -999.00000000
+  23      29.00000000       0.04300000      31.00000000    -999.00000000
+END period  1
+
+BEGIN period  2
+  5       7.00000000       0.04700000      11.00000000    -999.00000000
+  13      17.00000000       0.05300000      19.00000000    -999.00000000
+  23      29.00000000       0.05900000      31.00000000    -999.00000000
+END period  2
+
+"""
+		data = {
+			"params" : {
+				"run_name" : run_name,
+				"time_periods" : [1, 2], # Only used for nper
+				"num_nodes" : 3,
+				"gwmodel_type" : gwmodel_type,
+				"ievtcb" : ievtcb,
+				"nevtopt" : nevtopt,
+				"evt_parameters" : {
+					1 : [5, 7, 11],
+					2 : [13, 17, 19],
+					3 : [23, 29, 31],
+				},
+			}
+		}
+		evtrate = [-1, 37, 41, 43, 47, 53, 59]
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+			evt_out = m.get_evt_file(data, evtrate)
+		evt_out.write()
+		actual = file_test_helpers.slurp_without_first_line(filename)
+		self.assertEqual(expected, actual)
