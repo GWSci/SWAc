@@ -153,7 +153,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		sim = flopy_adaptor.mf_simulation()
 		model = flopy_adaptor.mf_model(sim, "aardvark")
 		flopy_adaptor.mf_gwf_disv(model)
-		actual = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(model, 3, 5)
+		actual = flopy_adaptor._make_empty_modflow_gwf_rch_stress_period_data(model, 3, 5)
 
 		self.assert_empty_stress_period_data(5, 3, actual)
 
@@ -166,7 +166,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		model = flopy_adaptor.mf_model(sim, "aardvark")
 		flopy_adaptor.mf_gwf_disu(model, node_count, njag, area=1.0)
 		flopy_adaptor.mf_tdis(sim, stress_period_count)
-		spd = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(model, node_count, stress_period_count)
+		spd = flopy_adaptor._make_empty_modflow_gwf_rch_stress_period_data(model, node_count, stress_period_count)
 
 		rch = flopy_adaptor.mf_gwf_rch(model, node_count, spd)
 
@@ -185,7 +185,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 			model = flopy_adaptor.mf_model(sim, path)
 			flopy_adaptor.mf_gwf_disu(model, node_count, njag, area=1.0)
 			flopy_adaptor.mf_tdis(sim, stress_period_count)
-			spd = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(model, node_count, stress_period_count)
+			spd = flopy_adaptor._make_empty_modflow_gwf_rch_stress_period_data(model, node_count, stress_period_count)
 
 			value = 10
 			for sp in range(stress_period_count):

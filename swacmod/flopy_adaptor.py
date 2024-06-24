@@ -8,7 +8,7 @@ def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes):
 
     mf_tdis(sim, nper)
 
-    spd = make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
+    spd = _make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
     return m, spd
 
 def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes):
@@ -19,7 +19,7 @@ def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes):
 
     mf_tdis(sim, nper)
 
-    spd = make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
+    spd = _make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
     return m, spd
 
 def mf_simulation():
@@ -68,7 +68,7 @@ def modflow_disu(model, nodes, nper, njag, lenx):
 		cl2=np.zeros((lenx)),
 		fahl=np.zeros((lenx)))
 
-def make_empty_modflow_gwf_rch_stress_period_data(model, nodes, nper):
+def _make_empty_modflow_gwf_rch_stress_period_data(model, nodes, nper):
 	return flopy.mf6.ModflowGwfrch.stress_period_data.empty(
 		model,
 		maxbound=nodes,
