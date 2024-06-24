@@ -831,15 +831,6 @@ def get_mf6rch_file(data, rchrate):
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
 
-    sim = flopy_adaptor.mf_simulation()
-    m = flopy_adaptor.mf_model(sim, path)
-    njag = nodes + 2
-    if data['params']['disv']:
-        flopy_adaptor.mf_gwf_disv(m)
-    else:
-        flopy_adaptor.mf_gwf_disu(m, nodes, njag, area=1.0)
-
-    flopy_adaptor.mf_tdis(sim, nper)
     irch = np.zeros((nodes, 1), dtype=int)
     if rch_params is not None:
         for inode, vals in rch_params.iteritems():
@@ -847,6 +838,16 @@ def get_mf6rch_file(data, rchrate):
     else:
         for i in range(nodes):
             irch[i - 1, 0] = i
+
+    sim = flopy_adaptor.mf_simulation()
+    m = flopy_adaptor.mf_model(sim, path)
+    if data['params']['disv']:
+        flopy_adaptor.mf_gwf_disv(m)
+    else:
+        njag = nodes + 2
+        flopy_adaptor.mf_gwf_disu(m, nodes, njag, area=1.0)
+
+    flopy_adaptor.mf_tdis(sim, nper)
 
     spd = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
 
