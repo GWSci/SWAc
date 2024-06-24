@@ -49,7 +49,7 @@ def make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx, nss, nstrm):
 	rd = modflow_sfr2_get_empty_reach_data(nstrm)
 	return m, sd, rd
 
-def make_model_for_sfr_mf6_disv(path, nodes, nper):
+def make_model_for_sfr_mf6_disv(path, nper):
 	sim = mf_simulation()
 	m = mf_model(sim, path)
 	mf_gwf_disv(m)
