@@ -847,7 +847,7 @@ def get_mf6rch_file(data, rchrate):
     return rch_out
 
 def make_mf6_rch_file_with_disv(path, nodes, nper, irch, rchrate, fac):
-    m, spd = make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes)
+    m, spd = flopy_adaptor.make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes)
 
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
         for i in range(nodes):
@@ -860,7 +860,7 @@ def make_mf6_rch_file_with_disv(path, nodes, nper, irch, rchrate, fac):
     return rch_out
 
 def make_mf6_rch_file_with_disu(path, nodes, nper, irch, rchrate, fac):
-    m, spd = make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes)
+    m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes)
 
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
         for i in range(nodes):
@@ -871,27 +871,6 @@ def make_mf6_rch_file_with_disu(path, nodes, nper, irch, rchrate, fac):
     rch_out = flopy_adaptor.mf_gwf_rch(m, nodes, spd)
     spd = None
     return rch_out
-
-def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes):
-    sim = flopy_adaptor.mf_simulation()
-    m = flopy_adaptor.mf_model(sim, path)
-    flopy_adaptor.mf_gwf_disv(m)
-
-    flopy_adaptor.mf_tdis(sim, nper)
-
-    spd = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
-    return m, spd
-
-def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes):
-    sim = flopy_adaptor.mf_simulation()
-    m = flopy_adaptor.mf_model(sim, path)
-    njag = nodes + 2
-    flopy_adaptor.mf_gwf_disu(m, nodes, njag, area=1.0)
-
-    flopy_adaptor.mf_tdis(sim, nper)
-
-    spd = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
-    return m, spd
 
 ###############################################################################
 
