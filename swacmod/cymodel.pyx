@@ -840,25 +840,29 @@ def get_mf6rch_file(data, rchrate):
             irch[i - 1, 0] = i
 
     if data['params']['disv']:
-        sim = flopy_adaptor.mf_simulation()
-        m = flopy_adaptor.mf_model(sim, path)
-        flopy_adaptor.mf_gwf_disv(m)
-
-        flopy_adaptor.mf_tdis(sim, nper)
-
-        spd = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
-
-        for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
-            for i in range(nodes):
-                if irch[i, 0] > 0:
-                    spd[per][i] = ((0, irch[i, 0] - 1),
-                                rchrate[(nodes * per) + i + 1] * fac)
-
-        rch_out = flopy_adaptor.mf_gwf_rch(m, nodes, spd)
-        spd = None
+        rch_out = make_mf6_rch_file_with_disv(path, nodes, nper, irch, rchrate, fac)
     else:
         rch_out = make_mf6_rch_file_with_disu(path, nodes, nper, irch, rchrate, fac)
 
+    return rch_out
+
+def make_mf6_rch_file_with_disv(path, nodes, nper, irch, rchrate, fac):
+    sim = flopy_adaptor.mf_simulation()
+    m = flopy_adaptor.mf_model(sim, path)
+    flopy_adaptor.mf_gwf_disv(m)
+
+    flopy_adaptor.mf_tdis(sim, nper)
+
+    spd = flopy_adaptor.make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
+
+    for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
+        for i in range(nodes):
+            if irch[i, 0] > 0:
+                spd[per][i] = ((0, irch[i, 0] - 1),
+                            rchrate[(nodes * per) + i + 1] * fac)
+
+    rch_out = flopy_adaptor.mf_gwf_rch(m, nodes, spd)
+    spd = None
     return rch_out
 
 def make_mf6_rch_file_with_disu(path, nodes, nper, irch, rchrate, fac):
