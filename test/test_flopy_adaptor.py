@@ -4,6 +4,7 @@ import numpy as np
 import warnings
 import math
 import tempfile
+import test.file_test_helpers as file_test_helpers
 
 class Test_Flopy_Adaptor(unittest.TestCase):
 	def test_mf_simulation(self):
@@ -196,10 +197,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 			rch = flopy_adaptor.mf_gwf_rch(model, node_count, spd)
 
 			flopy_adaptor.write_mf_gwf_rch(rch)
-			with open(path + ".rch") as file:
-				contents = file.read()
-			
-			contents_without_first_line = contents.split("\n", 1)[1]
+			actual = file_test_helpers.slurp_without_first_line(path + ".rch")
 			expected = """BEGIN options
 END options
 
@@ -238,7 +236,7 @@ BEGIN period  5
 END period  5
 
 """
-			self.assertEqual(expected, contents_without_first_line)
+			self.assertEqual(expected, actual)
 
 	def assert_empty_stress_period_data(self, expected_stress_period_count, expected_node_count, actual):
 		self.assertEqual(expected_stress_period_count, len(actual))

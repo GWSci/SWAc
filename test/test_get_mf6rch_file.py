@@ -1,6 +1,7 @@
 import unittest
 import swacmod.model as m
 import swacmod.flopy_adaptor as flopy_adaptor
+import test.file_test_helpers as file_test_helpers
 
 class Test_Get_Mf6Rch_File(unittest.TestCase):
 	def test_write_rch_with_disv_and_no_node_mapping(self):
@@ -18,10 +19,7 @@ class Test_Get_Mf6Rch_File(unittest.TestCase):
 		rch_out = m.get_mf6rch_file(data, rchrate)
 		flopy_adaptor.write_mf_gwf_rch(rch_out)
 
-		with open("output_files/run-aardvark.rch") as file:
-			contents = file.read()
-		
-		contents_without_first_line = contents.split("\n", 1)[1]
+		actual = file_test_helpers.slurp_without_first_line("output_files/run-aardvark.rch")
 		expected = """BEGIN options
 END options
 
@@ -42,4 +40,4 @@ BEGIN period  2
 END period  2
 
 """
-		self.assertEqual(expected, contents_without_first_line)
+		self.assertEqual(expected, actual)
