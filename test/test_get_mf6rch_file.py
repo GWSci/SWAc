@@ -88,6 +88,36 @@ END period  2
 """
 		self.assert_rch_file(run_name, is_disv, recharge_node_mapping, filename, expected)
 
+	def test_write_rch_with_disu_and_node_mapping(self):
+		run_name = "run-dog"
+		is_disv = False
+		recharge_node_mapping = {
+			1: [0],
+			2: [23],
+		}
+		filename = "output_files/run-dog.rch"
+		expected = """BEGIN options
+END options
+
+BEGIN dimensions
+  MAXBOUND  3
+END dimensions
+
+BEGIN period  1
+  
+  23       0.00700000
+  
+END period  1
+
+BEGIN period  2
+  
+  23       0.01700000
+  
+END period  2
+
+"""
+		self.assert_rch_file(run_name, is_disv, recharge_node_mapping, filename, expected)
+
 	def assert_rch_file(self, run_name, is_disv, recharge_node_mapping, filename, expected):
 		data = {
 			"params" : {
