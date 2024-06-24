@@ -2214,6 +2214,7 @@ def get_evt_file(data, evtrate):
     if data['params']['gwmodel_type'] == 'mfusg':
         m = flopy_adaptor.modflow_model(path, "mfusg", True)
         flopy_adaptor.modflow_dis(m, 1, nodes, 1, nper)
+        evt_out = flopy_adaptor.modflow_evt(m, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
     elif data['params']['gwmodel_type'] == 'mf6':
         sim = flopy_adaptor.mf_simulation()
         m = flopy_adaptor.mf_model(sim, path)
@@ -2222,10 +2223,6 @@ def get_evt_file(data, evtrate):
 
         flopy_adaptor.mf_tdis(sim, nper)
 
-    if data['params']['gwmodel_type'] == 'mfusg':
-        evt_out = flopy_adaptor.modflow_evt(m, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
-
-    elif data['params']['gwmodel_type'] == 'mf6':
         spd = flopy_adaptor.make_empty_modflow_gwf_evt_stress_period_data(m, nodes, nper)
 
         for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
