@@ -842,11 +842,7 @@ def get_mf6rch_file(data, rchrate):
     if data['params']['disv']:
         sim = flopy_adaptor.mf_simulation()
         m = flopy_adaptor.mf_model(sim, path)
-        if data['params']['disv']:
-            flopy_adaptor.mf_gwf_disv(m)
-        else:
-            njag = nodes + 2
-            flopy_adaptor.mf_gwf_disu(m, nodes, njag, area=1.0)
+        flopy_adaptor.mf_gwf_disv(m)
 
         flopy_adaptor.mf_tdis(sim, nper)
 
@@ -855,23 +851,16 @@ def get_mf6rch_file(data, rchrate):
         for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
             for i in range(nodes):
                 if irch[i, 0] > 0:
-                    if data['params']['disv']:
-                        spd[per][i] = ((0, irch[i, 0] - 1),
-                                    rchrate[(nodes * per) + i + 1] * fac)
-                    else:
-                        spd[per][i] = ((irch[i, 0] - 1,),
-                                    rchrate[(nodes * per) + i + 1] * fac)
+                    spd[per][i] = ((0, irch[i, 0] - 1),
+                                rchrate[(nodes * per) + i + 1] * fac)
 
         rch_out = flopy_adaptor.mf_gwf_rch(m, nodes, spd)
         spd = None
     else:
         sim = flopy_adaptor.mf_simulation()
         m = flopy_adaptor.mf_model(sim, path)
-        if data['params']['disv']:
-            flopy_adaptor.mf_gwf_disv(m)
-        else:
-            njag = nodes + 2
-            flopy_adaptor.mf_gwf_disu(m, nodes, njag, area=1.0)
+        njag = nodes + 2
+        flopy_adaptor.mf_gwf_disu(m, nodes, njag, area=1.0)
 
         flopy_adaptor.mf_tdis(sim, nper)
 
@@ -880,12 +869,8 @@ def get_mf6rch_file(data, rchrate):
         for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
             for i in range(nodes):
                 if irch[i, 0] > 0:
-                    if data['params']['disv']:
-                        spd[per][i] = ((0, irch[i, 0] - 1),
-                                    rchrate[(nodes * per) + i + 1] * fac)
-                    else:
-                        spd[per][i] = ((irch[i, 0] - 1,),
-                                    rchrate[(nodes * per) + i + 1] * fac)
+                    spd[per][i] = ((irch[i, 0] - 1,),
+                                rchrate[(nodes * per) + i + 1] * fac)
 
         rch_out = flopy_adaptor.mf_gwf_rch(m, nodes, spd)
         spd = None
