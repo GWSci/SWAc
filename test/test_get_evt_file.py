@@ -5,16 +5,20 @@ import warnings
 import test.file_test_helpers as file_test_helpers
 
 class Test_Get_Evt_File(unittest.TestCase):
-	def test_get_evt_file_mfusg_eivtcb_2(self):
+	def test_get_evt_file_mfusg_nevopt_2(self):
+		run_name = "run-evt-aardvark"
+		gwmodel_type = "mfusg"
+		ievtcb = 0
+		nevtopt = 2
 		filename = "output_files/run-evt-aardvark.evt"
 		data = {
 			"params" : {
-				"run_name" : "run-evt-aardvark",
+				"run_name" : run_name,
 				"time_periods" : [1, 2], # Only used for nper
 				"num_nodes" : 3,
-				"gwmodel_type" : "mfusg",
-				"ievtcb" : 0,
-				"nevtopt" : 2,
+				"gwmodel_type" : gwmodel_type,
+				"ievtcb" : ievtcb,
+				"nevtopt" : nevtopt,
 				"evt_parameters" : {
 					1 : [5, 7, 11],
 					2 : [13, 17, 19],
