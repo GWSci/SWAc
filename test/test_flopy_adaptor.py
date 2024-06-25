@@ -407,6 +407,37 @@ END period  5
 		self.assertEqual(ncol, model.ncol)
 		self.assertEqual(nper, model.nper)
 
+	def test_modflow_dis_get_lrc(self):
+		nlay = 2
+		nrow = 3
+		ncol = 5
+		nper = 7
+
+		model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			dis = flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
+
+		self.assertEqual([(-1, 2, 5)], dis.get_lrc(0))
+
+		# Numbers 1-5. Layer 0, Row 0, Columns 1-5.
+		self.assertEqual([(0, 0, 1), (0, 0, 2), (0, 0, 3), (0, 0, 4), (0, 0, 5)], dis.get_lrc([1, 2, 3, 4, 5]))
+
+		# Numbers 6-10. Layer 0, Row 1, Columns 1-5.
+		self.assertEqual([(0, 1, 1), (0, 1, 2), (0, 1, 3), (0, 1, 4), (0, 1, 5)], dis.get_lrc([6, 7, 8, 9, 10]))
+
+		# Numbers 11-15. Layer 0, Row 2, Columns 1-5.
+		self.assertEqual([(0, 2, 1), (0, 2, 2), (0, 2, 3), (0, 2, 4), (0, 2, 5)], dis.get_lrc([11, 12, 13, 14, 15]))
+
+		# Numbers 16-20. Layer 1, Row 0, Columns 1-5
+		self.assertEqual([(1, 0, 1), (1, 0, 2), (1, 0, 3), (1, 0, 4), (1, 0, 5)], dis.get_lrc([16, 17, 18, 19, 20]))
+
+		# Numbers 21-25. Layer 1, Row 1, Columns 1-5
+		self.assertEqual([(1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 1, 4), (1, 1, 5)], dis.get_lrc([21, 22, 23, 24, 25]))
+
+		# Numbers 26-30. Layer 1, Row 2, Columns 1-5
+		self.assertEqual([(1, 2, 1), (1, 2, 2), (1, 2, 3), (1, 2, 4), (1, 2, 5)], dis.get_lrc([26, 27, 28, 29, 30]))
+
 	def test_modflow_str(self):
 		nlay = 1
 		nrow = 1
