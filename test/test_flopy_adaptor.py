@@ -442,6 +442,19 @@ END period  5
 		# Numbers 26-30. Layer 1, Row 2, Columns 1-5
 		self.assertEqual([(1, 2, 1), (1, 2, 2), (1, 2, 3), (1, 2, 4), (1, 2, 5)], dis.get_lrc([26, 27, 28, 29, 30]))
 
+	def test_modflow_dis_get_lrc_when_the_input_is_beyond_the_model_bounds(self):
+		# The pattern above continues when numbers are out of bounds for the model.
+		_, dis = self.make_modflow_dis()
+
+		# Numbers 31-35. Layer 2, Row 0, Columns 1-5.
+		self.assertEqual([(2, 0, 1), (2, 0, 2), (2, 0, 3), (2, 0, 4), (2, 0, 5)], dis.get_lrc([31, 32, 33, 34, 35]))
+
+		# Numbers 36-30. Layer 2, Row 1, Columns 1-5.
+		self.assertEqual([(2, 1, 1), (2, 1, 2), (2, 1, 3), (2, 1, 4), (2, 1, 5)], dis.get_lrc([36, 37, 38, 39, 40]))
+
+		# Numbers 41-45. Layer 1, Row 1, Columns 1-5
+		self.assertEqual([(3, 1, 1), (3, 1, 2), (3, 1, 3), (3, 1, 4), (3, 1, 5)], dis.get_lrc([51, 52, 53, 54, 55]))
+
 	def test_modflow_str(self):
 		nlay = 1
 		nrow = 1
