@@ -412,10 +412,16 @@ END period  5
 		return model, dis
 
 	def test_modflow_dis_get_lrc_when_node_number_is_zero(self):
+		# The documetation says that the input node number should be zero-based but the output makes no sense.
 		_, dis = self.make_modflow_dis()
 		self.assertEqual([(-1, 2, 5)], dis.get_lrc([0]))
 
-	def test_modflow_dis_get_lrc(self):
+	def test_modflow_dis_get_lrc_when_the_input_is_within_the_model_bounds(self):
+		# The documentation says that the input node number should be zero-based but the above test indicates
+		# this is not the case. Assuming that the input node number is 1-based:
+		#  - The output layer is zero-based.
+		#  - The output row is zero-based.
+		#  - The output column is one-based.
 		_, dis = self.make_modflow_dis()
 
 		# Numbers 1-5. Layer 0, Row 0, Columns 1-5.
