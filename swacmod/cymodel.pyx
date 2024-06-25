@@ -1971,7 +1971,7 @@ def update_rd(sorted_by_ca, rd, dis):
         if str_flag > 0:
             # NB docs say node number should be zero based (node_mf -1)
             #  but doesn't seem to be
-            l, r, c = dis.get_lrc(node_mf)[0]
+            l, r, c = flopy_adaptor.dis_get_lrc(dis, node_mf)[0]
             rd[str_count]['k'] = l - 1
             rd[str_count]['i'] = r - 1
             rd[str_count]['j'] = c - 1

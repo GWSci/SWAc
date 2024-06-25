@@ -214,6 +214,9 @@ def modflow_dis(model, nlay, nrow, ncol, nper):
 		ncol=ncol,
 		nper=nper)
 
+def dis_get_lrc(dis, node_numbers):
+	return dis.get_lrc(node_numbers)
+
 def modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
     return flopy.modflow.ModflowStr(
 		model,

@@ -416,7 +416,7 @@ END period  5
 	def test_modflow_dis_get_lrc_when_node_number_is_zero(self):
 		# The documetation says that the input node number should be zero-based but the output makes no sense.
 		_, dis = self.make_modflow_dis()
-		self.assertEqual([(-1, 2, 5)], dis.get_lrc([0]))
+		self.assertEqual([(-1, 2, 5)], flopy_adaptor.dis_get_lrc(dis, [0]))
 
 	def test_modflow_dis_get_lrc_when_the_input_is_within_the_model_bounds(self):
 		# The documentation says that the input node number should be zero-based but the above test indicates
@@ -427,35 +427,35 @@ END period  5
 		_, dis = self.make_modflow_dis()
 
 		# Numbers 1-5. Layer 0, Row 0, Columns 1-5.
-		self.assertEqual([(0, 0, 1), (0, 0, 2), (0, 0, 3), (0, 0, 4), (0, 0, 5)], dis.get_lrc([1, 2, 3, 4, 5]))
+		self.assertEqual([(0, 0, 1), (0, 0, 2), (0, 0, 3), (0, 0, 4), (0, 0, 5)], flopy_adaptor.dis_get_lrc(dis, [1, 2, 3, 4, 5]))
 
 		# Numbers 6-10. Layer 0, Row 1, Columns 1-5.
-		self.assertEqual([(0, 1, 1), (0, 1, 2), (0, 1, 3), (0, 1, 4), (0, 1, 5)], dis.get_lrc([6, 7, 8, 9, 10]))
+		self.assertEqual([(0, 1, 1), (0, 1, 2), (0, 1, 3), (0, 1, 4), (0, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [6, 7, 8, 9, 10]))
 
 		# Numbers 11-15. Layer 0, Row 2, Columns 1-5.
-		self.assertEqual([(0, 2, 1), (0, 2, 2), (0, 2, 3), (0, 2, 4), (0, 2, 5)], dis.get_lrc([11, 12, 13, 14, 15]))
+		self.assertEqual([(0, 2, 1), (0, 2, 2), (0, 2, 3), (0, 2, 4), (0, 2, 5)], flopy_adaptor.dis_get_lrc(dis, [11, 12, 13, 14, 15]))
 
 		# Numbers 16-20. Layer 1, Row 0, Columns 1-5
-		self.assertEqual([(1, 0, 1), (1, 0, 2), (1, 0, 3), (1, 0, 4), (1, 0, 5)], dis.get_lrc([16, 17, 18, 19, 20]))
+		self.assertEqual([(1, 0, 1), (1, 0, 2), (1, 0, 3), (1, 0, 4), (1, 0, 5)], flopy_adaptor.dis_get_lrc(dis, [16, 17, 18, 19, 20]))
 
 		# Numbers 21-25. Layer 1, Row 1, Columns 1-5
-		self.assertEqual([(1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 1, 4), (1, 1, 5)], dis.get_lrc([21, 22, 23, 24, 25]))
+		self.assertEqual([(1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 1, 4), (1, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [21, 22, 23, 24, 25]))
 
 		# Numbers 26-30. Layer 1, Row 2, Columns 1-5
-		self.assertEqual([(1, 2, 1), (1, 2, 2), (1, 2, 3), (1, 2, 4), (1, 2, 5)], dis.get_lrc([26, 27, 28, 29, 30]))
+		self.assertEqual([(1, 2, 1), (1, 2, 2), (1, 2, 3), (1, 2, 4), (1, 2, 5)], flopy_adaptor.dis_get_lrc(dis, [26, 27, 28, 29, 30]))
 
 	def test_modflow_dis_get_lrc_when_the_input_is_beyond_the_model_bounds(self):
 		# The pattern above continues when numbers are out of bounds for the model.
 		_, dis = self.make_modflow_dis()
 
 		# Numbers 31-35. Layer 2, Row 0, Columns 1-5.
-		self.assertEqual([(2, 0, 1), (2, 0, 2), (2, 0, 3), (2, 0, 4), (2, 0, 5)], dis.get_lrc([31, 32, 33, 34, 35]))
+		self.assertEqual([(2, 0, 1), (2, 0, 2), (2, 0, 3), (2, 0, 4), (2, 0, 5)], flopy_adaptor.dis_get_lrc(dis, [31, 32, 33, 34, 35]))
 
 		# Numbers 36-30. Layer 2, Row 1, Columns 1-5.
-		self.assertEqual([(2, 1, 1), (2, 1, 2), (2, 1, 3), (2, 1, 4), (2, 1, 5)], dis.get_lrc([36, 37, 38, 39, 40]))
+		self.assertEqual([(2, 1, 1), (2, 1, 2), (2, 1, 3), (2, 1, 4), (2, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [36, 37, 38, 39, 40]))
 
 		# Numbers 41-45. Layer 1, Row 1, Columns 1-5
-		self.assertEqual([(3, 1, 1), (3, 1, 2), (3, 1, 3), (3, 1, 4), (3, 1, 5)], dis.get_lrc([51, 52, 53, 54, 55]))
+		self.assertEqual([(3, 1, 1), (3, 1, 2), (3, 1, 3), (3, 1, 4), (3, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [51, 52, 53, 54, 55]))
 
 	def test_modflow_dis_get_lrc_when_the_input_is_below_zero(self):
 		# Going negative:
@@ -465,20 +465,20 @@ END period  5
 		_, dis = self.make_modflow_dis()
 
 		# Numbers -4 to 0. Layer -1, Row 2, Columns 1-5.
-		self.assertEqual([(-1, 2, 1), (-1, 2, 2), (-1, 2, 3), (-1, 2, 4), (-1, 2, 5)], dis.get_lrc([-4, -3, -2, -1, 0]))
+		self.assertEqual([(-1, 2, 1), (-1, 2, 2), (-1, 2, 3), (-1, 2, 4), (-1, 2, 5)], flopy_adaptor.dis_get_lrc(dis, [-4, -3, -2, -1, 0]))
 
 		# Numbers -9 to -5. Layer -1, Row 2, Columns 1-5.
-		self.assertEqual([(-1, 1, 1), (-1, 1, 2), (-1, 1, 3), (-1, 1, 4), (-1, 1, 5)], dis.get_lrc([-9, -8, -7, -6, -5]))
+		self.assertEqual([(-1, 1, 1), (-1, 1, 2), (-1, 1, 3), (-1, 1, 4), (-1, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-9, -8, -7, -6, -5]))
 
-		self.assertEqual([(-1, 1, 5)], dis.get_lrc([-5]))
-		self.assertEqual([(-2, 1, 5)], dis.get_lrc([-20]))
-		self.assertEqual([(-3, 1, 5)], dis.get_lrc([-35]))
-		self.assertEqual([(-4, 1, 5)], dis.get_lrc([-50]))
+		self.assertEqual([(-1, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-5]))
+		self.assertEqual([(-2, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-20]))
+		self.assertEqual([(-3, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-35]))
+		self.assertEqual([(-4, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-50]))
 
-		self.assertEqual([(-1, 2, 5)], dis.get_lrc([0]))
-		self.assertEqual([(-1, 1, 5)], dis.get_lrc([-5]))
-		self.assertEqual([(-1, 0, 5)], dis.get_lrc([-10]))
-		self.assertEqual([(-1, -1, 5)], dis.get_lrc([-15]))
+		self.assertEqual([(-1, 2, 5)], flopy_adaptor.dis_get_lrc(dis, [0]))
+		self.assertEqual([(-1, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-5]))
+		self.assertEqual([(-1, 0, 5)], flopy_adaptor.dis_get_lrc(dis, [-10]))
+		self.assertEqual([(-1, -1, 5)], flopy_adaptor.dis_get_lrc(dis, [-15]))
 
 # End Section for flopy 3.3.3
 
@@ -487,26 +487,26 @@ END period  5
 	# def test_modflow_dis_get_lrc_when_node_number_is_zero(self):
 	# 	# This is consistent with zero-based input and output.
 	# 	_, dis = self.make_modflow_dis()
-	# 	self.assertEqual([(0, 0, 0)], dis.get_lrc([0]))
+	# 	self.assertEqual([(0, 0, 0)], flopy_adaptor.dis_get_lrc(dis, [0]))
 
 	# def test_modflow_dis_get_lrc_when_the_input_is_within_the_model_bounds(self):
 	# 	# This is consistent with zero-based input and output.
 	# 	_, dis = self.make_modflow_dis()
 
-	# 	self.assertEqual([(0, 0, 0), (0, 0, 1), (0, 0, 2), (0, 0, 3), (0, 0, 4)], dis.get_lrc([0, 1, 2, 3, 4]))
-	# 	self.assertEqual([(0, 1, 0), (0, 1, 1), (0, 1, 2), (0, 1, 3), (0, 1, 4)], dis.get_lrc([5, 6, 7, 8, 9]))
-	# 	self.assertEqual([(0, 2, 0), (0, 2, 1), (0, 2, 2), (0, 2, 3), (0, 2, 4)], dis.get_lrc([10, 11, 12, 13, 14]))
-	# 	self.assertEqual([(1, 0, 0), (1, 0, 1), (1, 0, 2), (1, 0, 3), (1, 0, 4)], dis.get_lrc([15, 16, 17, 18, 19]))
-	# 	self.assertEqual([(1, 1, 0), (1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 1, 4)], dis.get_lrc([20, 21, 22, 23, 24]))
-	# 	self.assertEqual([(1, 2, 0), (1, 2, 1), (1, 2, 2), (1, 2, 3), (1, 2, 4)], dis.get_lrc([25, 26, 27, 28, 29]))
+	# 	self.assertEqual([(0, 0, 0), (0, 0, 1), (0, 0, 2), (0, 0, 3), (0, 0, 4)], flopy_adaptor.dis_get_lrc(dis, [0, 1, 2, 3, 4]))
+	# 	self.assertEqual([(0, 1, 0), (0, 1, 1), (0, 1, 2), (0, 1, 3), (0, 1, 4)], flopy_adaptor.dis_get_lrc(dis, [5, 6, 7, 8, 9]))
+	# 	self.assertEqual([(0, 2, 0), (0, 2, 1), (0, 2, 2), (0, 2, 3), (0, 2, 4)], flopy_adaptor.dis_get_lrc(dis, [10, 11, 12, 13, 14]))
+	# 	self.assertEqual([(1, 0, 0), (1, 0, 1), (1, 0, 2), (1, 0, 3), (1, 0, 4)], flopy_adaptor.dis_get_lrc(dis, [15, 16, 17, 18, 19]))
+	# 	self.assertEqual([(1, 1, 0), (1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 1, 4)], flopy_adaptor.dis_get_lrc(dis, [20, 21, 22, 23, 24]))
+	# 	self.assertEqual([(1, 2, 0), (1, 2, 1), (1, 2, 2), (1, 2, 3), (1, 2, 4)], flopy_adaptor.dis_get_lrc(dis, [25, 26, 27, 28, 29]))
 
 	# def test_modflow_dis_get_lrc_when_the_input_is_beyond_the_model_bounds(self):
 	# 	# The pattern above continues when numbers are out of bounds for the model.
 	# 	_, dis = self.make_modflow_dis()
 
-	# 	self.assertEqual([(2, 0, 0), (2, 0, 1), (2, 0, 2), (2, 0, 3), (2, 0, 4)], dis.get_lrc([30, 31, 32, 33, 34]))
-	# 	self.assertEqual([(2, 1, 0), (2, 1, 1), (2, 1, 2), (2, 1, 3), (2, 1, 4)], dis.get_lrc([35, 36, 37, 38, 39]))
-	# 	self.assertEqual([(3, 1, 0), (3, 1, 1), (3, 1, 2), (3, 1, 3), (3, 1, 4)], dis.get_lrc([50, 51, 52, 53, 54]))
+	# 	self.assertEqual([(2, 0, 0), (2, 0, 1), (2, 0, 2), (2, 0, 3), (2, 0, 4)], flopy_adaptor.dis_get_lrc(dis, [30, 31, 32, 33, 34]))
+	# 	self.assertEqual([(2, 1, 0), (2, 1, 1), (2, 1, 2), (2, 1, 3), (2, 1, 4)], flopy_adaptor.dis_get_lrc(dis, [35, 36, 37, 38, 39]))
+	# 	self.assertEqual([(3, 1, 0), (3, 1, 1), (3, 1, 2), (3, 1, 3), (3, 1, 4)], flopy_adaptor.dis_get_lrc(dis, [50, 51, 52, 53, 54]))
 
 	# def test_modflow_dis_get_lrc_when_the_input_is_below_zero(self):
 	# 	# Going negative follows the same pattern as positive:
@@ -515,19 +515,19 @@ END period  5
 	# 	#  - The output column continues in the dame looping cycle of 1-5
 	# 	_, dis = self.make_modflow_dis()
 
-	# 	self.assertEqual([(0, 0, -4), (0, 0, -3), (0, 0, -2), (0, 0, -1), (0, 0, 0)], dis.get_lrc([-4, -3, -2, -1, 0]))
-	# 	self.assertEqual([(0, -1, -4), (0, -1, -3), (0, -1, -2), (0, -1, -1), (0, -1, 0)], dis.get_lrc([-9, -8, -7, -6, -5]))
+	# 	self.assertEqual([(0, 0, -4), (0, 0, -3), (0, 0, -2), (0, 0, -1), (0, 0, 0)], flopy_adaptor.dis_get_lrc(dis, [-4, -3, -2, -1, 0]))
+	# 	self.assertEqual([(0, -1, -4), (0, -1, -3), (0, -1, -2), (0, -1, -1), (0, -1, 0)], flopy_adaptor.dis_get_lrc(dis, [-9, -8, -7, -6, -5]))
 
-	# 	self.assertEqual([(0, 0, 0)], dis.get_lrc([0]))
-	# 	self.assertEqual([(-1, 0, 0)], dis.get_lrc([-15]))
-	# 	self.assertEqual([(-2, 0, 0)], dis.get_lrc([-30]))
-	# 	self.assertEqual([(-3, 0, 0)], dis.get_lrc([-45]))
-	# 	self.assertEqual([(-4, 0, 0)], dis.get_lrc([-60]))
+	# 	self.assertEqual([(0, 0, 0)], flopy_adaptor.dis_get_lrc(dis, [0]))
+	# 	self.assertEqual([(-1, 0, 0)], flopy_adaptor.dis_get_lrc(dis, [-15]))
+	# 	self.assertEqual([(-2, 0, 0)], flopy_adaptor.dis_get_lrc(dis, [-30]))
+	# 	self.assertEqual([(-3, 0, 0)], flopy_adaptor.dis_get_lrc(dis, [-45]))
+	# 	self.assertEqual([(-4, 0, 0)], flopy_adaptor.dis_get_lrc(dis, [-60]))
 
-	# 	self.assertEqual([(0, 0, 0)], dis.get_lrc([0]))
-	# 	self.assertEqual([(0, -1, 0)], dis.get_lrc([-5]))
-	# 	self.assertEqual([(0, -2, 0)], dis.get_lrc([-10]))
-	# 	self.assertEqual([(-1, 0, 0)], dis.get_lrc([-15]))
+	# 	self.assertEqual([(0, 0, 0)], flopy_adaptor.dis_get_lrc(dis, [0]))
+	# 	self.assertEqual([(0, -1, 0)], flopy_adaptor.dis_get_lrc(dis, [-5]))
+	# 	self.assertEqual([(0, -2, 0)], flopy_adaptor.dis_get_lrc(dis, [-10]))
+	# 	self.assertEqual([(-1, 0, 0)], flopy_adaptor.dis_get_lrc(dis, [-15]))
 
 # End Section for flopy 3.3.3
 
