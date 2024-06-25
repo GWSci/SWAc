@@ -391,23 +391,15 @@ END period  5
 		np.testing.assert_array_almost_equal(expected_sd, sd.tolist())
 
 	def test_modflow_dis(self):
-		nlay = 2
-		nrow = 3
-		ncol = 5
-		nper = 7
-
-		model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			dis = flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
+		model, dis = self.make_modflow_dis()
 
 		self.assertEqual(dis, model.get_package("dis"))
-		self.assertEqual(nlay, model.nlay)
-		self.assertEqual(nrow, model.nrow)
-		self.assertEqual(ncol, model.ncol)
-		self.assertEqual(nper, model.nper)
+		self.assertEqual(2, model.nlay)
+		self.assertEqual(3, model.nrow)
+		self.assertEqual(5, model.ncol)
+		self.assertEqual(7, model.nper)
 
-	def test_modflow_dis_get_lrc(self):
+	def make_modflow_dis(self):
 		nlay = 2
 		nrow = 3
 		ncol = 5
@@ -417,6 +409,10 @@ END period  5
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			dis = flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
+		return model, dis
+
+	def test_modflow_dis_get_lrc(self):
+		_, dis = self.make_modflow_dis()
 
 		self.assertEqual([(-1, 2, 5)], dis.get_lrc(0))
 
