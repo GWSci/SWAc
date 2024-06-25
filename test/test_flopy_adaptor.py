@@ -411,10 +411,12 @@ END period  5
 			dis = flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
 		return model, dis
 
+	def test_modflow_dis_get_lrc_when_node_number_is_zero(self):
+		_, dis = self.make_modflow_dis()
+		self.assertEqual([(-1, 2, 5)], dis.get_lrc([0]))
+
 	def test_modflow_dis_get_lrc(self):
 		_, dis = self.make_modflow_dis()
-
-		self.assertEqual([(-1, 2, 5)], dis.get_lrc(0))
 
 		# Numbers 1-5. Layer 0, Row 0, Columns 1-5.
 		self.assertEqual([(0, 0, 1), (0, 0, 2), (0, 0, 3), (0, 0, 4), (0, 0, 5)], dis.get_lrc([1, 2, 3, 4, 5]))
