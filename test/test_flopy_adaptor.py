@@ -455,6 +455,29 @@ END period  5
 		# Numbers 41-45. Layer 1, Row 1, Columns 1-5
 		self.assertEqual([(3, 1, 1), (3, 1, 2), (3, 1, 3), (3, 1, 4), (3, 1, 5)], dis.get_lrc([51, 52, 53, 54, 55]))
 
+	def test_modflow_dis_get_lrc_when_the_input_is_below_zero(self):
+		# Going negative:
+		#  - The output layer starts at -1 and decreases seemingly indefinitely.
+		#  - The output row starts at 2 and decreases seemingly indefinitely.
+		#  - The output column continues in the dame looping cycle of 1-5
+		_, dis = self.make_modflow_dis()
+
+		# Numbers -4 to 0. Layer -1, Row 2, Columns 1-5.
+		self.assertEqual([(-1, 2, 1), (-1, 2, 2), (-1, 2, 3), (-1, 2, 4), (-1, 2, 5)], dis.get_lrc([-4, -3, -2, -1, 0]))
+
+		# Numbers -9 to -5. Layer -1, Row 2, Columns 1-5.
+		self.assertEqual([(-1, 1, 1), (-1, 1, 2), (-1, 1, 3), (-1, 1, 4), (-1, 1, 5)], dis.get_lrc([-9, -8, -7, -6, -5]))
+
+		self.assertEqual([(-1, 1, 5)], dis.get_lrc([-5]))
+		self.assertEqual([(-2, 1, 5)], dis.get_lrc([-20]))
+		self.assertEqual([(-3, 1, 5)], dis.get_lrc([-35]))
+		self.assertEqual([(-4, 1, 5)], dis.get_lrc([-50]))
+
+		self.assertEqual([(-1, 2, 5)], dis.get_lrc([0]))
+		self.assertEqual([(-1, 1, 5)], dis.get_lrc([-5]))
+		self.assertEqual([(-1, 0, 5)], dis.get_lrc([-10]))
+		self.assertEqual([(-1, -1, 5)], dis.get_lrc([-15]))
+
 	def test_modflow_str(self):
 		nlay = 1
 		nrow = 1
