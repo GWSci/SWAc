@@ -44,6 +44,14 @@ class Test_Get_Flows(unittest.TestCase):
 		}
 		self.assert_get_flows(sorted_by_ca, [2, 3, 0], [0, 0, 0])
 
+	def test_get_flows_for_a_model_size_3_and_3_stream_cells_and_downstream_connections_in_reverse_order_accumulates_flow(self):
+		sorted_by_ca = {
+			3 : make_routing_parameters(downstr = 0, str_flag = 1),
+			2 : make_routing_parameters(downstr = 3, str_flag = 1),
+			1 : make_routing_parameters(downstr = 2, str_flag = 1),
+		}
+		self.assert_get_flows(sorted_by_ca, [0, 3, 2], [0, 0, 0])
+
 	def assert_get_flows(self, sorted_by_ca, expected_A, expected_B):
 		actual_A, actual_B = get_flows_adaptor(sorted_by_ca)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
