@@ -5,49 +5,36 @@ import numpy as np
 
 class Test_Get_Flows(unittest.TestCase):
 	def test_get_flows_for_an_empty_model_is_empty(self):
-		sorted_by_ca = {}
-		expected_A = []
-		expected_B = []
-		self.assert_get_flows(sorted_by_ca, expected_A, expected_B)
+		self.assert_get_flows({}, [], [])
 
 	def test_get_flows_for_a_model_size_1_and_no_stream_cells_is_empty(self):
 		sorted_by_ca = {1 : make_routing_parameters(downstr = 0)}
-		expected_A = []
-		expected_B = []
-		self.assert_get_flows(sorted_by_ca, expected_A, expected_B)
+		self.assert_get_flows(sorted_by_ca, [], [])
 
 	def test_get_flows_for_a_model_size_1_and_1_stream_cell_has_zero_results(self):
 		sorted_by_ca = {1 : make_routing_parameters(downstr = 0, str_flag = 1)}
-		expected_A = [0]
-		expected_B = [0]
-		self.assert_get_flows(sorted_by_ca, expected_A, expected_B)
+		self.assert_get_flows(sorted_by_ca, [0], [0])
 
 	def test_get_flows_for_a_model_size_2_and_no_stream_cells_is_empty(self):
 		sorted_by_ca = {
 			1 : make_routing_parameters(downstr = 0),
 			2 : make_routing_parameters(downstr = 0),
 		}
-		expected_A = []
-		expected_B = []
-		self.assert_get_flows(sorted_by_ca, expected_A, expected_B)
+		self.assert_get_flows(sorted_by_ca, [], [])
 
 	def test_get_flows_for_a_model_size_2_and_no_stream_cells_and_downstream_connections_is_empty(self):
 		sorted_by_ca = {
 			1 : make_routing_parameters(downstr = 2),
 			2 : make_routing_parameters(downstr = 0),
 		}
-		expected_A = []
-		expected_B = []
-		self.assert_get_flows(sorted_by_ca, expected_A, expected_B)
+		self.assert_get_flows(sorted_by_ca, [], [])
 
 	def test_get_flows_for_a_model_size_2_and_2_stream_cells_and_downstream_connections_is_empty(self):
 		sorted_by_ca = {
 			1 : make_routing_parameters(downstr = 2, str_flag = 1),
 			2 : make_routing_parameters(downstr = 1, str_flag = 1),
 		}
-		expected_A = [0, 2]
-		expected_B = [0, 0]
-		self.assert_get_flows(sorted_by_ca, expected_A, expected_B)
+		self.assert_get_flows(sorted_by_ca, [0, 2], [0, 0])
 
 	def assert_get_flows(self, sorted_by_ca, expected_A, expected_B):
 		actual_A, actual_B = get_flows_adaptor(sorted_by_ca)
