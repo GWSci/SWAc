@@ -7,33 +7,21 @@ class Test_Get_Flows(unittest.TestCase):
 	def test_get_flows_for_an_empty_model_is_empty(self):
 		sorted_by_ca = {}
 		swac_seg_dic = None
-		nodes = 0
-		nss = 0
-		source = None
-		index_offset = None
-		actual_A, actual_B = m.get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
+		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, swac_seg_dic)
 		np.testing.assert_array_almost_equal([], actual_A)
 		np.testing.assert_array_almost_equal([], actual_B)
 
 	def test_get_flows_for_a_model_size_1_and_no_stream_cells_is_empty(self):
 		sorted_by_ca = {1 : make_routing_parameters(downstr = 0)}
 		swac_seg_dic = None
-		nodes = 1
-		nss = 0
-		source = None
-		index_offset = None
-		actual_A, actual_B = m.get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
+		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, swac_seg_dic)
 		np.testing.assert_array_almost_equal([], actual_A)
 		np.testing.assert_array_almost_equal([], actual_B)
 
 	def test_get_flows_for_a_model_size_1_and_1_stream_cell_has_zero_results(self):
 		sorted_by_ca = {1 : make_routing_parameters(downstr = 0, str_flag = 1)}
 		swac_seg_dic = None
-		nodes = 1
-		nss = 1
-		source = None
-		index_offset = None
-		actual_A, actual_B = m.get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
+		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, swac_seg_dic)
 		np.testing.assert_array_almost_equal([0], actual_A)
 		np.testing.assert_array_almost_equal([0], actual_B)
 
@@ -43,11 +31,7 @@ class Test_Get_Flows(unittest.TestCase):
 			2 : make_routing_parameters(downstr = 0),
 		}
 		swac_seg_dic = None
-		nodes = 2
-		nss = 0
-		source = None
-		index_offset = None
-		actual_A, actual_B = m.get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
+		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, swac_seg_dic)
 		np.testing.assert_array_almost_equal([], actual_A)
 		np.testing.assert_array_almost_equal([], actual_B)
 
@@ -57,13 +41,18 @@ class Test_Get_Flows(unittest.TestCase):
 			2 : make_routing_parameters(downstr = 0),
 		}
 		swac_seg_dic = None
-		nodes = 2
-		nss = 0
-		source = [2, 3]
-		index_offset = 0
-		actual_A, actual_B = m.get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
+		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, swac_seg_dic)
 		np.testing.assert_array_almost_equal([], actual_A)
 		np.testing.assert_array_almost_equal([], actual_B)
+
+def get_flows_adaptor(sorted_by_ca, swac_seg_dic):
+	nodes = len(sorted_by_ca)
+	nss = len(list(filter(lambda x : x[1] == 1, sorted_by_ca.values())))
+	long_list_for_source = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199]
+	source = [-1000, -2000, -3000] + long_list_for_source[:nodes]
+	index_offset = 3
+	actual_A, actual_B = m.get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
+	return actual_A, actual_B
 
 def make_routing_parameters(
 	downstr = -1, # swac node downstream of this one
