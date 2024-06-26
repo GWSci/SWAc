@@ -51,16 +51,18 @@ class Test_Get_Flows(unittest.TestCase):
 			2 : make_routing_parameters(downstr = 1, str_flag = 1),
 		}
 		swac_seg_dic = {}
-		stream_index = 0
-		for node_number, params in sorted_by_ca.items():
-			if (params[1] == 1):
-				swac_seg_dic[node_number] = stream_index
-				stream_index += 1
 		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, swac_seg_dic)
 		np.testing.assert_array_almost_equal([0, 2], actual_A)
 		np.testing.assert_array_almost_equal([0, 0], actual_B)
 
 def get_flows_adaptor(sorted_by_ca, swac_seg_dic):
+	swac_seg_dic = {}
+	stream_index = 0
+	for node_number, params in sorted_by_ca.items():
+		if (params[1] == 1):
+			swac_seg_dic[node_number] = stream_index
+			stream_index += 1
+
 	nodes = len(sorted_by_ca)
 	nss = len(list(filter(lambda x : x[1] == 1, sorted_by_ca.values())))
 	long_list_for_source = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199]
