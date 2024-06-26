@@ -45,6 +45,21 @@ class Test_Get_Flows(unittest.TestCase):
 		np.testing.assert_array_almost_equal([], actual_A)
 		np.testing.assert_array_almost_equal([], actual_B)
 
+	def test_get_flows_for_a_model_size_2_and_2_stream_cells_and_downstream_connections_is_empty(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 2, str_flag = 1),
+			2 : make_routing_parameters(downstr = 1, str_flag = 1),
+		}
+		swac_seg_dic = {}
+		stream_index = 0
+		for node_number, params in sorted_by_ca.items():
+			if (params[1] == 1):
+				swac_seg_dic[node_number] = stream_index
+				stream_index += 1
+		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, swac_seg_dic)
+		np.testing.assert_array_almost_equal([0, 2], actual_A)
+		np.testing.assert_array_almost_equal([0, 0], actual_B)
+
 def get_flows_adaptor(sorted_by_ca, swac_seg_dic):
 	nodes = len(sorted_by_ca)
 	nss = len(list(filter(lambda x : x[1] == 1, sorted_by_ca.values())))
