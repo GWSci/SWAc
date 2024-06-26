@@ -26,6 +26,17 @@ class Test_Get_Flows(unittest.TestCase):
 		np.testing.assert_array_almost_equal([], actual_A)
 		np.testing.assert_array_almost_equal([], actual_B)
 
+	def test_get_flows_for_a_model_size_1_and_1_stream_cell_is_empty(self):
+		sorted_by_ca = {1 : make_routing_parameters(downstr = 0, str_flag = 1)}
+		swac_seg_dic = None
+		nodes = 1
+		nss = 0
+		source = None
+		index_offset = None
+		actual_A, actual_B = m.get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
+		np.testing.assert_array_almost_equal([], actual_A)
+		np.testing.assert_array_almost_equal([], actual_B)
+
 def make_routing_parameters(
 	downstr = -1, # swac node downstream of this one
 	str_flag = 0, # 1 = stream cell, 0 = *not* stream cell
