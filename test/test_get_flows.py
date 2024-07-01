@@ -28,6 +28,14 @@ class Test_Get_Flows(unittest.TestCase):
 		}
 		self.assert_get_flows(sorted_by_ca, [0], [0])
 
+	def test_get_flows_for_a_model_size_2_and_1_stream_cells_and_downstream_connections_is_non_zero(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 2),
+			2 : make_routing_parameters(downstr = 0, str_flag = 1),
+		}
+		self.assert_get_flows(sorted_by_ca, [0], [0], explain = True)
+		# TODO I think that one of the results should have the value 2.
+
 	def test_get_flows_for_a_model_size_2_and_1_stream_cells_and_no_downstream_connections_is_empty(self):
 		sorted_by_ca = {
 			1 : make_routing_parameters(downstr = 2),
@@ -58,12 +66,12 @@ class Test_Get_Flows(unittest.TestCase):
 		}
 		self.assert_get_flows(sorted_by_ca, [0, 3, 2], [0, 0, 0])
 
-	def assert_get_flows(self, sorted_by_ca, expected_A, expected_B):
-		actual_A, actual_B = get_flows_adaptor(sorted_by_ca)
+	def assert_get_flows(self, sorted_by_ca, expected_A, expected_B, explain = False):
+		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, explain)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
 		np.testing.assert_array_almost_equal(expected_B, actual_B)
 
-def get_flows_adaptor(sorted_by_ca):
+def get_flows_adaptor(sorted_by_ca, explain = False):
 	swac_seg_dic = {}
 	stream_index = 1
 	for node_number, params in sorted_by_ca.items():
@@ -76,7 +84,7 @@ def get_flows_adaptor(sorted_by_ca):
 	long_list_for_source = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199]
 	source = [-1000, -2000, -3000] + long_list_for_source[:nodes]
 	index_offset = 3
-	actual_A, actual_B = get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
+	actual_A, actual_B = get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, explain)
 	return actual_A, actual_B
 
 def make_routing_parameters(
@@ -93,26 +101,54 @@ def make_routing_parameters(
 ):
 	return [downstr, str_flag, node_mf, RCHLEN, ca, STRTOP, STRTHICK, STRHC1, DEPTH2, WIDTH2]
 
-def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset):
+def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, explain = False):
     result_A = np.zeros((nss))
     result_B = np.zeros((nss))
     done = np.zeros((nodes), dtype=int)
+
+    if explain:
+        print()
+        print(f"sorted_by_ca = {sorted_by_ca}")
+        print(f"swac_seg_dic = {swac_seg_dic}")
+        print(f"nodes = {nodes}")
+        print(f"nss = {nss}")
+        print(f"source = {source}")
+        print(f"index_offset = {index_offset}")
+        print()
 
     for node_number, line in sorted_by_ca.items():
         node_index = node_number - 1
         downstr, str_flag = line[:2]
         acc = 0.0
-
+        if explain:
+            print(f"node_number = {node_number}")
+            print(f"node_index = {node_index}")
+            print(f"downstr = {downstr}")
+            print(f"str_flag = {str_flag}")
+            print(f"line = {line}")
+            iteration_number = 0
         while downstr > 1:
             str_flag = sorted_by_ca[node_number][1]
             is_str = str_flag >= 1
             is_done = done[node_index] == 1
+            if explain:
+                print(f"  iteration_number = {iteration_number}")
+                print(f"  node_number = {node_number}")
+                print(f"  node_index = {node_index}")
+                print(f"  downstr = {downstr}")
+                print(f"  str_flag = {str_flag}")
+                print(f"  is_str = {is_str}")
+                print(f"  is_done = {is_done}")
 
             if is_str:
                 stream_cell_index = swac_seg_dic[node_number] - 1
+                if explain:
+                    print(f"    stream_cell_index = {stream_cell_index}")
 
                 if is_done:
                     result_B[stream_cell_index] += acc
+                    if explain:
+                        print(f"    is_done: result_B[stream_cell_index] = {result_B[stream_cell_index]}")
                     acc = 0.0
                     break
                 else:
@@ -120,14 +156,24 @@ def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset):
                     result_B[stream_cell_index] = acc
                     done[node_index] = 1
                     acc = 0.0
+                    if explain:
+                        print(f"    not is_done: result_A[stream_cell_index] = {result_A[stream_cell_index]}")
+                        print(f"    not is_done: result_B[stream_cell_index] = {result_B[stream_cell_index]}")
+                        print(f"    not is_done: done[node_index] = {done[node_index]}")
+
 
             else:
                 if not is_done:
                     acc += max(0.0, source[node_index + index_offset])
                     done[node_index] = 1
+                    if explain:
+                        print(f"    not is_str and not is_done: acc = {acc}")
+                        print(f"    not is_str and not is_done: done[node_index] = {done[node_index]}")
 
             node_number = downstr
             node_index = node_number - 1
             downstr = sorted_by_ca[node_number][0]
+            if explain:
+                iteration_number += 1
 
     return result_A, result_B
