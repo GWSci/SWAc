@@ -83,7 +83,8 @@ class Test_Get_Flows(unittest.TestCase):
 			2 : make_routing_parameters(downstr = 3, str_flag = 1),
 			1 : make_routing_parameters(downstr = 2, str_flag = 1),
 		}
-		self.assert_get_flows(sorted_by_ca, [0, 3, 2], [0, 0, 0], explain = True)
+		self.assert_get_flows(sorted_by_ca, [0, 3, 2], [0, 0, 0])
+		# TODO I think the result should be [5, 3, 2] and that there should be no accumulation because the nodes are in the wrong order.
 
 	def assert_get_flows(self, sorted_by_ca, expected_A, expected_B, explain = False):
 		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, explain)
