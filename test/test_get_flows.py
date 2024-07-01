@@ -51,6 +51,15 @@ class Test_Get_Flows(unittest.TestCase):
 		self.assert_get_flows(sorted_by_ca, [2, 0], [0, 0])
 		# TODO I think the result should be [2, 3]
 
+	def test_get_flows_for_node_count_3_str_count_3_connections_off(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 2, str_flag = 1),
+			2 : make_routing_parameters(downstr = 3, str_flag = 1),
+			3 : make_routing_parameters(downstr = 0, str_flag = 1),
+		}
+		self.assert_get_flows(sorted_by_ca, [2, 3, 0], [0, 0, 0])
+		# TODO I think the result should be [2, 3, 5]
+
 	def test_get_flows_for_node_count_2_str_count_2_connections_on(self):
 		sorted_by_ca = {
 			1 : make_routing_parameters(downstr = 2, str_flag = 1),
