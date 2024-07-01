@@ -120,60 +120,50 @@ def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, expl
         node_index = node_number - 1
         downstr, str_flag = line[:2]
         acc = 0.0
-        if explain:
-            print(f"node_number = {node_number}")
-            print(f"node_index = {node_index}")
-            print(f"downstr = {downstr}")
-            print(f"str_flag = {str_flag}")
-            print(f"line = {line}")
-            iteration_number = 0
+        iteration_number = 0
+        do_explain_for(explain, node_number, node_index, downstr, str_flag, acc)
         while downstr > 1:
             str_flag = sorted_by_ca[node_number][1]
             is_str = str_flag >= 1
             is_done = done[node_index] == 1
-            if explain:
-                print(f"  iteration_number = {iteration_number}")
-                print(f"  node_number = {node_number}")
-                print(f"  node_index = {node_index}")
-                print(f"  downstr = {downstr}")
-                print(f"  str_flag = {str_flag}")
-                print(f"  is_str = {is_str}")
-                print(f"  is_done = {is_done}")
+            stream_cell_index = None
 
             if is_str:
                 stream_cell_index = swac_seg_dic[node_number] - 1
-                if explain:
-                    print(f"    stream_cell_index = {stream_cell_index}")
 
                 if is_done:
                     result_B[stream_cell_index] += acc
-                    if explain:
-                        print(f"    is_done: result_B[stream_cell_index] = {result_B[stream_cell_index]}")
                     acc = 0.0
+                    do_explain(explain, iteration_number, node_number, node_index, downstr, str_flag, is_str, is_done, acc, stream_cell_index, result_A, result_B)
                     break
                 else:
                     result_A[stream_cell_index] = source[node_index + index_offset]
                     result_B[stream_cell_index] = acc
                     done[node_index] = 1
                     acc = 0.0
-                    if explain:
-                        print(f"    not is_done: result_A[stream_cell_index] = {result_A[stream_cell_index]}")
-                        print(f"    not is_done: result_B[stream_cell_index] = {result_B[stream_cell_index]}")
-                        print(f"    not is_done: done[node_index] = {done[node_index]}")
-
 
             else:
                 if not is_done:
                     acc += max(0.0, source[node_index + index_offset])
                     done[node_index] = 1
-                    if explain:
-                        print(f"    not is_str and not is_done: acc = {acc}")
-                        print(f"    not is_str and not is_done: done[node_index] = {done[node_index]}")
 
+            do_explain(explain, iteration_number, node_number, node_index, downstr, str_flag, is_str, is_done, acc, stream_cell_index, result_A, result_B)
             node_number = downstr
             node_index = node_number - 1
             downstr = sorted_by_ca[node_number][0]
-            if explain:
-                iteration_number += 1
-
+            iteration_number += 1
+    if explain:
+        print(f"acc = {acc}; result_A = {result_A}; result_B = {result_B}")
     return result_A, result_B
+
+def do_explain_for(explain, node_number, node_index, downstr, str_flag, acc):
+	if explain:
+		print(f"  node_number = {node_number}; node_index = {node_index}; downstr = {downstr}; str_flag = {str_flag}; acc = {acc}")
+
+def do_explain(explain, iteration_number, node_number, node_index, downstr, str_flag, is_str, is_done, acc, stream_cell_index, result_A, result_B):
+	if explain:
+		if (stream_cell_index is not None):
+			suffix = f"; result_A = {result_A[stream_cell_index]}; result_B = {result_B[stream_cell_index]}"
+		else:
+			suffix = ""
+		print(f"  iteration_number = {iteration_number}; node_number = {node_number}; node_index = {node_index}; downstr = {downstr}; str_flag = {str_flag}; is_str = {is_str}; is_done = {is_done}; acc = {acc}" + suffix)
