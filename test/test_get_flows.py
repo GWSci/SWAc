@@ -91,6 +91,18 @@ class Test_Get_Flows(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
 		np.testing.assert_array_almost_equal(expected_B, actual_B)
 
+	def test_get_flows_for_a_model_size_6_and_3_stream_cells_with_one_cell_contributing_to_each_stream(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 4),
+			2 : make_routing_parameters(downstr = 5),
+			3 : make_routing_parameters(downstr = 6),
+			4 : make_routing_parameters(downstr = 5, str_flag = 1),
+			5 : make_routing_parameters(downstr = 6, str_flag = 1),
+			6 : make_routing_parameters(downstr = 0, str_flag = 1),
+		}
+		self.assert_get_flows(sorted_by_ca, [7, 11, 0], [2, 3, 0])
+		# TODO I think the result should be [7, 11, 13], [2, 3, 5].
+
 def get_flows_adaptor(sorted_by_ca, explain = False):
 	swac_seg_dic = {}
 	stream_index = 1
