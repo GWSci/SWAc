@@ -6,29 +6,29 @@ class Test_Get_Flows(unittest.TestCase):
 	def test_get_flows_for_an_empty_model_is_empty(self):
 		self.assert_get_flows({}, [], [])
 
-	def test_get_flows_for_a_model_size_1_and_no_stream_cells_is_empty(self):
+	def test_get_flows_for_node_count_1_str_count_0(self):
 		sorted_by_ca = {1 : make_routing_parameters(downstr = 0)}
 		self.assert_get_flows(sorted_by_ca, [], [])
 
-	def test_get_flows_for_a_model_size_1_and_1_stream_cell_has_zero_results(self):
+	def test_get_flows_for_a_node_count_1_str_count_1(self):
 		sorted_by_ca = {1 : make_routing_parameters(downstr = 0, str_flag = 1)}
 		self.assert_get_flows(sorted_by_ca, [0], [0])
 
-	def test_get_flows_for_a_model_size_2_and_no_stream_cells_is_empty(self):
+	def test_get_flows_for_node_count_2_str_count_0(self):
 		sorted_by_ca = {
 			1 : make_routing_parameters(downstr = 0),
 			2 : make_routing_parameters(downstr = 0),
 		}
 		self.assert_get_flows(sorted_by_ca, [], [])
 
-	def test_get_flows_for_a_model_size_2_and_no_stream_cells_and_downstream_connections_is_zero(self):
+	def test_get_flows_for_node_count_2_str_count_1_connections_off(self):
 		sorted_by_ca = {
 			1 : make_routing_parameters(downstr = 0),
 			2 : make_routing_parameters(downstr = 0, str_flag = 1),
 		}
 		self.assert_get_flows(sorted_by_ca, [0], [0])
 
-	def test_get_flows_for_a_model_size_2_and_1_stream_cells_and_downstream_connections_is_non_zero(self):
+	def test_get_flows_for_node_count_2_str_count_1_connections_on(self):
 		sorted_by_ca = {
 			1 : make_routing_parameters(downstr = 2),
 			2 : make_routing_parameters(downstr = 0, str_flag = 1),
