@@ -75,6 +75,7 @@ class Test_Get_Flows(unittest.TestCase):
 			3 : make_routing_parameters(downstr = 0, str_flag = 1),
 		}
 		self.assert_get_flows(sorted_by_ca, [2, 3, 0], [0, 0, 0])
+		# TODO I think the result should be [2, 5, 10]
 
 	def test_get_flows_for_a_model_size_3_and_3_stream_cells_and_downstream_connections_in_reverse_order_accumulates_flow(self):
 		sorted_by_ca = {
