@@ -56,6 +56,7 @@ def get_flows_adaptor(sorted_by_ca):
 	return actual_A, actual_B
 
 def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, explain = False):
-	runoff_result = np.zeros(nss)
-	flows_result = np.zeros(nss)
+	stream_cell_count = len(swac_seg_dic)
+	runoff_result = np.zeros(stream_cell_count)
+	flows_result = np.zeros(stream_cell_count)
 	return runoff_result, flows_result
