@@ -125,6 +125,18 @@ def get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion):
 	return actual_A, actual_B, sfr_store
 
 def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_offset, sfr_store_init, release_proportion):
+	nodes_ca_order, stream_ca_order = organise_nodes_and_stream_data(sorted_by_ca, swac_seg_dic)
+	coalesced_runoff = calculate_coalesced_runoff(nodes_ca_order, source, index_offset, nodes)
+	stream_count = len(swac_seg_dic)
+	coalesced_stream_runoff = calculate_coalesced_stream_runoff(stream_ca_order, coalesced_runoff, stream_count)
+	sfr_store_total = sfr_store_init + coalesced_stream_runoff
+	sfr_released = accumulate_stream_and_calculate_sfr_store_total(stream_ca_order, sfr_store_total, release_proportion, stream_count)
+	sfr_store_total = sfr_store_total - sfr_released
+	de_accumulated_flows = calculate_de_accumulated_flows(stream_ca_order, sfr_released)
+	runoff_result = np.zeros(stream_count)
+	return runoff_result, de_accumulated_flows, sfr_store_total
+
+def organise_nodes_and_stream_data(sorted_by_ca, swac_seg_dic):
 	nodes_ca_order = []
 	stream_ca_order = []
 	for node_number, line in sorted_by_ca.items():
@@ -141,33 +153,34 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 			else:
 				downstream_stream_index = -1
 			stream_ca_order.append((node_index, stream_index, downstream_stream_index))
+	return nodes_ca_order, stream_ca_order
 
+def calculate_coalesced_runoff(nodes_ca_order, source, index_offset, nodes):
 	coalesced_runoff = np.zeros(nodes)
 	for node_index, downstream_node_index, str_flag in nodes_ca_order:
 		if str_flag >= 1:
 			coalesced_runoff[node_index] += source[node_index + index_offset]
 		elif downstream_node_index >= 0:
 			coalesced_runoff[downstream_node_index] += source[node_index + index_offset] + coalesced_runoff[node_index]
+	return coalesced_runoff
 
-	stream_count = len(swac_seg_dic)
+def calculate_coalesced_stream_runoff(stream_ca_order, coalesced_runoff, stream_count):
 	coalesced_stream_runoff = np.zeros(stream_count)
 	for node_index, stream_index, _ in stream_ca_order:
 		coalesced_stream_runoff[stream_index] = coalesced_runoff[node_index]
+	return coalesced_stream_runoff
 
-	sfr_store_total = sfr_store_init + coalesced_stream_runoff
-
+def accumulate_stream_and_calculate_sfr_store_total(stream_ca_order, sfr_store_total, release_proportion, stream_count):
 	sfr_released = np.zeros(stream_count)
 	for _, index, downstream_index in stream_ca_order:
 		sfr_released[index] = sfr_store_total[index] * release_proportion[index]
 		if downstream_index >= 0:
 			sfr_store_total[downstream_index] += sfr_released[index]
+	return sfr_released
 
-	sfr_store_total = sfr_store_total - sfr_released
-
+def calculate_de_accumulated_flows(stream_ca_order, sfr_released):
 	de_accumulated_flows = np.copy(sfr_released)
 	for _, index, downstream_index in stream_ca_order:
 		if downstream_index >= 0:
 			de_accumulated_flows[downstream_index] -= sfr_released[index]
-
-	runoff_result = np.zeros(stream_count)
-	return runoff_result, de_accumulated_flows, sfr_store_total
+	return de_accumulated_flows
