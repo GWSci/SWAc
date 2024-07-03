@@ -46,6 +46,19 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		release_proportion = [1]
 		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0], [3], [0])
 
+	def test_get_flows_for_a_node_count_6_str_count_1_with_downstream_connections(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 4),
+			2 : make_routing_parameters(downstr = 3),
+			3 : make_routing_parameters(downstr = 4),
+			4 : make_routing_parameters(downstr = 6),
+			5 : make_routing_parameters(downstr = 6),
+			6 : make_routing_parameters(downstr = 0, str_flag = 1),
+		}
+		sfr_store_init = [0]
+		release_proportion = [1]
+		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0], [63], [0])
+
 	def assert_get_flows(self, sorted_by_ca, sfr_store_init, release_proportion, expected_A, expected_B, expected_sfr_store_total):
 		actual_A, actual_B, actual_sfr_total = get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
@@ -92,7 +105,7 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 		if is_str:
 			coalesced_runoff[node_index] += source[node_index + index_offset]
 		elif has_downstream:
-			coalesced_runoff[downstream_node_index] += source[node_index + index_offset]
+			coalesced_runoff[downstream_node_index] += source[node_index + index_offset] + coalesced_runoff[node_index]
 
 	stream_cell_count = len(swac_seg_dic)
 	coalesced_stream_runoff = np.zeros(stream_cell_count)
