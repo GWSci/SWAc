@@ -157,17 +157,17 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 	sfr_store_total = sfr_store_init + coalesced_stream_runoff
 
 	sfr_released = np.zeros(stream_cell_count)
-	for _, stream_index, downstream_stream_cell_index in stream_cells_ca_order:
-		sfr_released[stream_index] = sfr_store_total[stream_index] * release_proportion[stream_index]
-		if downstream_stream_cell_index >= 0:
-			sfr_store_total[downstream_stream_cell_index] += sfr_released[stream_index]
+	for _, index, downstream_index in stream_cells_ca_order:
+		sfr_released[index] = sfr_store_total[index] * release_proportion[index]
+		if downstream_index >= 0:
+			sfr_store_total[downstream_index] += sfr_released[index]
 
 	sfr_store_total = sfr_store_total - sfr_released
 
 	de_accumulated_flows = np.copy(sfr_released)
-	for _, stream_index, downstream_stream_cell_index in stream_cells_ca_order:
-		if downstream_stream_cell_index >= 0:
-			de_accumulated_flows[downstream_stream_cell_index] -= sfr_released[stream_index]
+	for _, index, downstream_index in stream_cells_ca_order:
+		if downstream_index >= 0:
+			de_accumulated_flows[downstream_index] -= sfr_released[index]
 
 	runoff_result = np.zeros(stream_cell_count)
 	return runoff_result, de_accumulated_flows, sfr_store_total
