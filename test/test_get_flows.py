@@ -86,8 +86,8 @@ class Test_Get_Flows(unittest.TestCase):
 		self.assert_get_flows(sorted_by_ca, [0, 3, 2], [0, 0, 0])
 		# TODO I think the result should be [5, 3, 2] and that there should be no accumulation because the nodes are in the wrong order.
 
-	def assert_get_flows(self, sorted_by_ca, expected_A, expected_B, explain = False):
-		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, explain)
+	def assert_get_flows(self, sorted_by_ca, expected_A, expected_B, explain = False, use_ones = False):
+		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, explain, use_ones)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
 		np.testing.assert_array_almost_equal(expected_B, actual_B)
 
@@ -139,7 +139,29 @@ class Test_Get_Flows(unittest.TestCase):
 		self.assert_get_flows(sorted_by_ca, [29, 31, 0], [(2 + 3 + 5), (7 + 13 + 19), 0])
 		# TODO I think the result should be [29, 31, 37], [(2 + 3 + 5), (7 + 13 + 19), (11 + 17 + 23)].
 
-def get_flows_adaptor(sorted_by_ca, explain = False):
+	def test_get_flows_for_a_model_with_a_fork_in_the_stream_and_multiple_non_stream_cells(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 3),
+			2 : make_routing_parameters(downstr = 3),
+			3 : make_routing_parameters(downstr = 4),
+			4 : make_routing_parameters(downstr = 12, str_flag = 1),
+			5 : make_routing_parameters(downstr = 6),
+			6 : make_routing_parameters(downstr = 7),
+			7 : make_routing_parameters(downstr = 8),
+			8 : make_routing_parameters(downstr = 12, str_flag = 1),
+			9 : make_routing_parameters(downstr = 12),
+			10 : make_routing_parameters(downstr = 12),
+			11 : make_routing_parameters(downstr = 12),
+			12 : make_routing_parameters(downstr = 16, str_flag = 1),
+			13 : make_routing_parameters(downstr = 16),
+			14 : make_routing_parameters(downstr = 15),
+			15 : make_routing_parameters(downstr = 16),
+			16 : make_routing_parameters(downstr = 0, str_flag = 1),
+		}
+		self.assert_get_flows(sorted_by_ca, [1, 1, 1, 0], [3, 3, 3, 0], use_ones = True)
+		# TODO I think the result should be [1, 1, 1, 1], [3, 3, 11, 15].
+
+def get_flows_adaptor(sorted_by_ca, explain = False, use_ones = False):
 	swac_seg_dic = {}
 	stream_index = 1
 	for node_number, params in sorted_by_ca.items():
@@ -149,7 +171,10 @@ def get_flows_adaptor(sorted_by_ca, explain = False):
 
 	nodes = len(sorted_by_ca)
 	nss = len(list(filter(lambda x : x[1] == 1, sorted_by_ca.values())))
-	long_list_for_source = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199]
+	if use_ones:
+		long_list_for_source = [1] * 100
+	else:
+		long_list_for_source = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199]
 	source = [-1000, -2000, -3000] + long_list_for_source[:nodes]
 	index_offset = 3
 	actual_A, actual_B = get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, explain)
