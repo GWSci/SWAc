@@ -136,11 +136,11 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 			stream_number = swac_seg_dic[node_number]
 			stream_index = stream_number - 1
 			if downstream_node_index >= 0:
-				downstream_stream_cell_number = swac_seg_dic[downstr_node_number]
-				downstream_stream_cell_index = downstream_stream_cell_number - 1
+				downstream_stream_number = swac_seg_dic[downstr_node_number]
+				downstream_stream_index = downstream_stream_number - 1
 			else:
-				downstream_stream_cell_index = -1
-			stream_ca_order.append((node_index, stream_index, downstream_stream_cell_index))
+				downstream_stream_index = -1
+			stream_ca_order.append((node_index, stream_index, downstream_stream_index))
 
 	coalesced_runoff = np.zeros(nodes)
 	for node_index, downstream_node_index, str_flag in nodes_ca_order:
@@ -149,14 +149,14 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 		elif downstream_node_index >= 0:
 			coalesced_runoff[downstream_node_index] += source[node_index + index_offset] + coalesced_runoff[node_index]
 
-	stream_cell_count = len(swac_seg_dic)
-	coalesced_stream_runoff = np.zeros(stream_cell_count)
+	stream_count = len(swac_seg_dic)
+	coalesced_stream_runoff = np.zeros(stream_count)
 	for node_index, stream_index, _ in stream_ca_order:
 		coalesced_stream_runoff[stream_index] = coalesced_runoff[node_index]
 
 	sfr_store_total = sfr_store_init + coalesced_stream_runoff
 
-	sfr_released = np.zeros(stream_cell_count)
+	sfr_released = np.zeros(stream_count)
 	for _, index, downstream_index in stream_ca_order:
 		sfr_released[index] = sfr_store_total[index] * release_proportion[index]
 		if downstream_index >= 0:
@@ -169,5 +169,5 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 		if downstream_index >= 0:
 			de_accumulated_flows[downstream_index] -= sfr_released[index]
 
-	runoff_result = np.zeros(stream_cell_count)
+	runoff_result = np.zeros(stream_count)
 	return runoff_result, de_accumulated_flows, sfr_store_total
