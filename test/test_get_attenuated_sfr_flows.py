@@ -78,6 +78,17 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		release_proportion = [0.8]
 		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0], [0.8], [0.2])
 
+	def test_get_flows_for_a_node_count_3_str_count_3_release_proportion_splits_between_flow_and_store(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 2, str_flag = 1),
+			2 : make_routing_parameters(downstr = 3, str_flag = 1),
+			3 : make_routing_parameters(downstr = 0, str_flag = 1),
+		}
+		sfr_store_init = [0, 0, 0]
+		release_proportion = [0.8, 0.5, 0.25]
+		# Accumulated flow should be [0.8, 1.4, 1.35], so un-accumulated flow should be [0.8, 0.6, -0.05]
+		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0, 0, 0], [0.8, 0.6, -0.05], [0.2, 1.4, 4.05])
+
 	def assert_get_flows(self, sorted_by_ca, sfr_store_init, release_proportion, expected_A, expected_B, expected_sfr_store_total):
 		actual_A, actual_B, actual_sfr_total = get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
@@ -125,7 +136,12 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 		if str_flag >= 1:
 			stream_cell_number = swac_seg_dic[node_number]
 			stream_cell_index = stream_cell_number - 1
-			stream_cells_ca_order.append((node_index, stream_cell_index))
+			if downstream_node_index >= 0:
+				downstream_stream_cell_number = swac_seg_dic[downstr_node_number]
+				downstream_stream_cell_index = downstream_stream_cell_number - 1
+			else:
+				downstream_stream_cell_index = -1
+			stream_cells_ca_order.append((node_index, stream_cell_index, downstream_stream_cell_index))
 
 	coalesced_runoff = np.zeros(nodes)
 	for node_index, downstream_node_index, str_flag, source_runoff in all_cells_ca_order:
@@ -136,17 +152,23 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 
 	stream_cell_count = len(swac_seg_dic)
 	coalesced_stream_runoff = np.zeros(stream_cell_count)
-	for node_index, stream_cell_index in stream_cells_ca_order:
+	for node_index, stream_cell_index, _ in stream_cells_ca_order:
 		coalesced_stream_runoff[stream_cell_index] = coalesced_runoff[node_index]
 
 	sfr_store_total = sfr_store_init + coalesced_stream_runoff
 
 	sfr_released = np.zeros(stream_cell_count)
-	for node_index, stream_cell_index in stream_cells_ca_order:
+	for _, stream_cell_index, downstream_stream_cell_index in stream_cells_ca_order:
 		sfr_released[stream_cell_index] = sfr_store_total[stream_cell_index] * release_proportion[stream_cell_index]
+		if downstream_stream_cell_index >= 0:
+			sfr_store_total[downstream_stream_cell_index] += sfr_released[stream_cell_index]
 
 	sfr_store_total = sfr_store_total - sfr_released
 
+	de_accumulated_flows = np.copy(sfr_released)
+	for _, stream_cell_index, downstream_stream_cell_index in stream_cells_ca_order:
+		if downstream_stream_cell_index >= 0:
+			de_accumulated_flows[downstream_stream_cell_index] -= sfr_released[stream_cell_index]
+
 	runoff_result = np.zeros(stream_cell_count)
-	flows_result = sfr_released
-	return runoff_result, flows_result, sfr_store_total
+	return runoff_result, de_accumulated_flows, sfr_store_total
