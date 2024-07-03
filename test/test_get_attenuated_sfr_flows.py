@@ -14,6 +14,13 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
 		np.testing.assert_array_almost_equal(expected_B, actual_B)
 
+	def test_get_flows_for_node_count_2_str_count_0(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 0),
+			2 : make_routing_parameters(downstr = 0),
+		}
+		self.assert_get_flows(sorted_by_ca, [], [])
+
 def make_routing_parameters(
 	downstr = -1, # swac node downstream of this one
 	str_flag = 0, # 1 = stream cell, 0 = *not* stream cell
