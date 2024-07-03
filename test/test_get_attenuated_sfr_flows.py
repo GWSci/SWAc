@@ -89,6 +89,17 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		# Accumulated flow should be [0.8, 1.4, 1.35], so un-accumulated flow should be [0.8, 0.6, -0.05]
 		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0, 0, 0], [0.8, 0.6, -0.05], [0.2, 1.4, 4.05])
 
+	def test_get_flows_with_different_sfr_store_init(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 2, str_flag = 1),
+			2 : make_routing_parameters(downstr = 3, str_flag = 1),
+			3 : make_routing_parameters(downstr = 0, str_flag = 1),
+		}
+		sfr_store_init = [10, 20, 30]
+		release_proportion = [0.8, 0.5, 0.25]
+		# Accumulated flow should be [5.5, 13.75, 11.9375], so un-accumulated flow should be [8.8, 6.6, -3.05]
+		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0, 0, 0], [8.8, 6.6, -3.05], [2.2, 15.4, 37.05])
+
 	def assert_get_flows(self, sorted_by_ca, sfr_store_init, release_proportion, expected_A, expected_B, expected_sfr_store_total):
 		actual_A, actual_B, actual_sfr_total = get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
