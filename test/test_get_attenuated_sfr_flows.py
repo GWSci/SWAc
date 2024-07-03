@@ -21,6 +21,10 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		}
 		self.assert_get_flows(sorted_by_ca, [], [])
 
+	def test_get_flows_for_a_node_count_1_str_count_1(self):
+		sorted_by_ca = {1 : make_routing_parameters(downstr = 0, str_flag = 1)}
+		self.assert_get_flows(sorted_by_ca, [0], [0])
+
 def make_routing_parameters(
 	downstr = -1, # swac node downstream of this one
 	str_flag = 0, # 1 = stream cell, 0 = *not* stream cell
@@ -52,4 +56,4 @@ def get_flows_adaptor(sorted_by_ca):
 	return actual_A, actual_B
 
 def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, explain = False):
-	return [], []
+	return np.zeros(nss), np.zeros(nss)
