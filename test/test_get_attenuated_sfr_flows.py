@@ -17,6 +17,7 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		actual_A, actual_B, actual_sfr_total = get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
 		np.testing.assert_array_almost_equal(expected_B, actual_B)
+		np.testing.assert_array_almost_equal(expected_sfr_store_total, actual_sfr_total)
 
 	def test_get_flows_for_node_count_2_str_count_0(self):
 		sorted_by_ca = {
@@ -66,4 +67,5 @@ def get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion):
 def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, sfr_store_init, release_proportion):
 	runoff_result = np.zeros(nss)
 	flows_result = np.zeros(nss)
-	return runoff_result, flows_result, []
+	actual_sfr_store_total = np.zeros(nss)
+	return runoff_result, flows_result, actual_sfr_store_total
