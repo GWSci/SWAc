@@ -57,14 +57,13 @@ def get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion):
 			stream_index += 1
 
 	nodes = len(sorted_by_ca)
-	nss = len(list(filter(lambda x : x[1] == 1, sorted_by_ca.values())))
 	long_list_for_source = [pow(2, x) for x in range(nodes)]
 	source = [-1000, -2000, -3000] + long_list_for_source[:nodes]
 	index_offset = 3
-	actual_A, actual_B, sfr_store = get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, sfr_store_init, release_proportion)
+	actual_A, actual_B, sfr_store = get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_offset, sfr_store_init, release_proportion)
 	return actual_A, actual_B, sfr_store
 
-def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, sfr_store_init, release_proportion):
+def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_offset, sfr_store_init, release_proportion):
 	stream_cell_count = len(swac_seg_dic)
 	runoff_result = np.zeros(stream_cell_count)
 	flows_result = np.zeros(stream_cell_count)
