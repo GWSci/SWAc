@@ -28,6 +28,15 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		release_proportion = [1]
 		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0], [1], [0])
 
+	def test_get_flows_for_a_node_count_2_str_count_1_with_no_downstream_connections(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 0),
+			2 : make_routing_parameters(downstr = 0, str_flag = 1),
+		}
+		sfr_store_init = [0]
+		release_proportion = [1]
+		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0], [2], [0])
+
 	def assert_get_flows(self, sorted_by_ca, sfr_store_init, release_proportion, expected_A, expected_B, expected_sfr_store_total):
 		actual_A, actual_B, actual_sfr_total = get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
