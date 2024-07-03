@@ -67,7 +67,7 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 	coalesced_runoff = np.zeros(nodes)
 	for node_number, line in sorted_by_ca.items():
 		node_index = node_number - 1
-		downstr, str_flag = line[:2]
+		downstr_node_number, str_flag = line[:2]
 		is_str = str_flag >= 1
 		if (is_str):
 			coalesced_runoff[node_index] = source[node_index + index_offset]
@@ -78,8 +78,6 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 		node_index = node_number - 1
 		stream_cell_index = stream_cell_number - 1
 		coalesced_stream_runoff[stream_cell_index] = coalesced_runoff[node_index]
-
-
 
 	runoff_result = np.zeros(stream_cell_count)
 	flows_result = coalesced_stream_runoff
