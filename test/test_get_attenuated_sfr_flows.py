@@ -13,12 +13,6 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		release_proportion = []
 		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [], [], [])
 
-	def assert_get_flows(self, sorted_by_ca, sfr_store_init, release_proportion, expected_A, expected_B, expected_sfr_store_total):
-		actual_A, actual_B, actual_sfr_total = get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion)
-		np.testing.assert_array_almost_equal(expected_A, actual_A)
-		np.testing.assert_array_almost_equal(expected_B, actual_B)
-		np.testing.assert_array_almost_equal(expected_sfr_store_total, actual_sfr_total)
-
 	def test_get_flows_for_node_count_2_str_count_0(self):
 		sorted_by_ca = {
 			1 : make_routing_parameters(downstr = 0),
@@ -33,6 +27,12 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		sfr_store_init = [0]
 		release_proportion = [1]
 		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0], [1], [0])
+
+	def assert_get_flows(self, sorted_by_ca, sfr_store_init, release_proportion, expected_A, expected_B, expected_sfr_store_total):
+		actual_A, actual_B, actual_sfr_total = get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion)
+		np.testing.assert_array_almost_equal(expected_A, actual_A)
+		np.testing.assert_array_almost_equal(expected_B, actual_B)
+		np.testing.assert_array_almost_equal(expected_sfr_store_total, actual_sfr_total)
 
 def make_routing_parameters(
 	downstr = -1, # swac node downstream of this one
