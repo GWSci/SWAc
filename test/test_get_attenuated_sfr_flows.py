@@ -100,6 +100,36 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		# Accumulated flow should be [5.5, 13.75, 11.9375], so un-accumulated flow should be [8.8, 6.6, -3.05]
 		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0, 0, 0], [8.8, 6.6, -3.05], [2.2, 15.4, 37.05])
 
+	def test_get_flows_for_branching_stream_and_dry_cells(self):
+		sorted_by_ca = {
+			1 : make_routing_parameters(downstr = 3),
+			2 : make_routing_parameters(downstr = 3),
+			3 : make_routing_parameters(downstr = 4),
+			4 : make_routing_parameters(downstr = 12, str_flag = 1),
+			5 : make_routing_parameters(downstr = 6),
+			6 : make_routing_parameters(downstr = 7),
+			7 : make_routing_parameters(downstr = 8),
+			8 : make_routing_parameters(downstr = 12, str_flag = 1),
+			9 : make_routing_parameters(downstr = 12),
+			10 : make_routing_parameters(downstr = 12),
+			11 : make_routing_parameters(downstr = 12),
+			12 : make_routing_parameters(downstr = 16, str_flag = 1),
+			13 : make_routing_parameters(downstr = 16),
+			14 : make_routing_parameters(downstr = 15),
+			15 : make_routing_parameters(downstr = 16),
+			16 : make_routing_parameters(downstr = 0, str_flag = 1),
+		}
+		sfr_store_init = [0, 0, 0, 0]
+		release_proportion = [0.2, 0.4, 0.6, 0.8]
+		# Accumulated flow should be [3, 96, 2363.4, 51042.72], so un-accumulated flow should be [3, 93, 2264.4, 48679.32]
+		self.assert_get_flows(
+			sorted_by_ca,
+			sfr_store_init,
+			release_proportion,
+			[0, 0, 0, 0],
+			[3, 96, 2264.4, 48679.32],
+			[12, 144, 1575.6, 12760.68])
+
 	def assert_get_flows(self, sorted_by_ca, sfr_store_init, release_proportion, expected_A, expected_B, expected_sfr_store_total):
 		actual_A, actual_B, actual_sfr_total = get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
