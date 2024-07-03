@@ -108,15 +108,20 @@ def get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion):
 	return actual_A, actual_B, sfr_store
 
 def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_offset, sfr_store_init, release_proportion):
-	coalesced_runoff = np.zeros(nodes)
+	all_cells_ca_order = []
 	for node_number, line in sorted_by_ca.items():
 		node_index = node_number - 1
 		downstr_node_number, str_flag = line[:2]
 		downstream_node_index = downstr_node_number - 1
+		source_runoff = source[node_index + index_offset]
+		all_cells_ca_order.append((node_index, downstream_node_index, str_flag, source_runoff))
+
+	coalesced_runoff = np.zeros(nodes)
+	for node_index, downstream_node_index, str_flag, source_runoff in all_cells_ca_order:
 		if str_flag >= 1:
-			coalesced_runoff[node_index] += source[node_index + index_offset]
-		elif downstr_node_number > 0:
-			coalesced_runoff[downstream_node_index] += source[node_index + index_offset] + coalesced_runoff[node_index]
+			coalesced_runoff[node_index] += source_runoff
+		elif downstream_node_index >= 0:
+			coalesced_runoff[downstream_node_index] += source_runoff + coalesced_runoff[node_index]
 
 	stream_cell_count = len(swac_seg_dic)
 	coalesced_stream_runoff = np.zeros(stream_cell_count)
