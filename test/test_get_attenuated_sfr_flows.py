@@ -72,6 +72,12 @@ class Test_Get_Attenuated_Sfr_Flows(unittest.TestCase):
 		release_proportion = [1, 1]
 		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0, 0], [21, 42], [0, 0])
 
+	def test_get_flows_for_a_node_count_1_str_count_1_release_proportion_splits_between_flow_and_store(self):
+		sorted_by_ca = {1 : make_routing_parameters(downstr = 0, str_flag = 1)}
+		sfr_store_init = [0]
+		release_proportion = [0.8]
+		self.assert_get_flows(sorted_by_ca, sfr_store_init, release_proportion, [0], [0.8], [0])
+
 	def assert_get_flows(self, sorted_by_ca, sfr_store_init, release_proportion, expected_A, expected_B, expected_sfr_store_total):
 		actual_A, actual_B, actual_sfr_total = get_flows_adaptor(sorted_by_ca, sfr_store_init, release_proportion)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
@@ -133,7 +139,13 @@ def get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, source, index_of
 	for node_index, stream_cell_index in stream_cells_ca_order:
 		coalesced_stream_runoff[stream_cell_index] = coalesced_runoff[node_index]
 
+	sfr_store_total = sfr_store_init + coalesced_stream_runoff
+
+	sfr_released = np.zeros(stream_cell_count)
+	for node_index, stream_cell_index in stream_cells_ca_order:
+		sfr_released[stream_cell_index] = sfr_store_total[stream_cell_index] * release_proportion[stream_cell_index]
+
 	runoff_result = np.zeros(stream_cell_count)
-	flows_result = coalesced_stream_runoff
+	flows_result = sfr_released
 	actual_sfr_store_total = np.zeros(stream_cell_count)
 	return runoff_result, flows_result, actual_sfr_store_total
