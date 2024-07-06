@@ -68,6 +68,14 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 		expected = [[1, 3], [3, 5]]
 		self.assertEqual(expected, load_params()["time_periods"])
 
+	def test_output_sfr_is_read_from_input_file(self):
+		expected = True
+		self.assertEqual(expected, load_params()["output_sfr"])
+
+	def test_attenuate_sfr_flows_is_read_from_input_file(self):
+		expected = True
+		self.assertEqual(expected, load_params()["attenuate_sfr_flows"])
+
 def load_params():
 	input = input_output.load_params_from_yaml(
 		input_file="./test/resources/loading_params/input.yml", 

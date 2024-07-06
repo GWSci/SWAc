@@ -567,6 +567,13 @@ routing_topology: routing_parameters.csv
 # This parameter is optional. If not specified, it will be set to "false".
 output_sfr: true
 
+# Attenuate sfr flows
+# Can be either true or false
+# This parameter only applies when:
+#   - output_sfr is true
+# This parameter is optional.
+attenuate_sfr_flows: true
+
 # Modflow 6 sfr obs input file
 # This parameter is optional.
 sfr_obs: gauges_sfr.obs
