@@ -574,6 +574,13 @@ output_sfr: true
 # This parameter is optional.
 attenuate_sfr_flows: true
 
+# Zones for each cell in the model.
+# Column 1 is the node number (not the stream cell number)
+# Column 2 is the zone number
+# Rows only need to be supplied for nodes that are part of a stream. There is no need to cover the whole model.
+# This parameter is optional.
+# sfr_flow_zones: sfr_flow_zones.csv
+
 # Modflow 6 sfr obs input file
 # This parameter is optional.
 sfr_obs: gauges_sfr.obs
