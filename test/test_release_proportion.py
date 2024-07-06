@@ -51,10 +51,7 @@ class Test_Release_Proportion(unittest.TestCase):
 			},
 		}
 		stream_ca_order = [(0, 0, 0)]
-		time_period = [1, 2]
-		actual = extract_release_proportion(data, stream_ca_order, time_period)
-		expected = [0.01]
-		self.assertEqual(expected, actual)
+		self.assertEqual([0.01], extract_release_proportion(data, stream_ca_order, [1, 2]))
 
 def extract_release_proportion(data, stream_ca_order, time_period):
 	result = []
