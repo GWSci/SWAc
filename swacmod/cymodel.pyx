@@ -1687,6 +1687,18 @@ def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset):
 
     return result_A, result_B
 
+def extract_release_proportion(data, stream_ca_order, time_period):
+    result = []
+    month_key = data["series"]["date"][time_period[0]].month
+    zone_index_to_proportion = data["params"]["sfr_flow_monthly_proportions"][month_key]
+    sfr_flow_zones = data["params"]["sfr_flow_zones"]
+    for node_index, _, _ in stream_ca_order:
+        node_number = node_index + 1
+        zone_number = sfr_flow_zones[node_number][0]
+        zone_index = zone_number - 1
+        result.append(zone_index_to_proportion[zone_index])
+    return result
+
 ###############################################################################
 
 
