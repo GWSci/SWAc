@@ -21,6 +21,9 @@ class Test_Release_Proportion(unittest.TestCase):
 					12: [],
 				},
 			},
+			"series": {
+				"date" : make_date_series()
+			},
 		}
 		stream_ca_order = []
 		time_period = [1, 2]
@@ -49,16 +52,24 @@ class Test_Release_Proportion(unittest.TestCase):
 					12: [0.12],
 				},
 			},
+			"series": {
+				"date" : make_date_series()
+			},
 		}
 		stream_ca_order = [(0, 0, 0)]
 		self.assertEqual([0.01], extract_release_proportion(data, stream_ca_order, [1, 2]))
 		self.assertEqual([0.02], extract_release_proportion(data, stream_ca_order, [32, 2]))
+		self.assertEqual([0.03], extract_release_proportion(data, stream_ca_order, [60, 2]))
+
+def make_date_series():
+	max_time = 365 * 10
+	start_date = datetime.datetime(1980, 1, 1)
+	day = datetime.timedelta(1)
+	return [start_date + day * num for num in range(max_time)]
 
 def extract_release_proportion(data, stream_ca_order, time_period):
 	result = []
-	month_key = 1
-	if (time_period[0] == 32):
-		month_key = 2
+	month_key = data["series"]["date"][time_period[0]].month
 	zone_index_to_proportion = data["params"]["sfr_flow_monthly_proportions"][month_key]
 	for node_index, stream_index, downstream_stream_index in stream_ca_order:
 		zone = 0
