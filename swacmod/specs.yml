@@ -101,6 +101,13 @@ attenuate_sfr_flows:
     type:
         - !!python/name:bool
 
+sfr_flow_zones:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+
 sfr_obs:
     required: false
     type:
