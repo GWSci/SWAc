@@ -32,6 +32,34 @@ class Test_Release_Proportion(unittest.TestCase):
 		expected = []
 		self.assertEqual(expected, actual)
 
+	def test_release_proportion_with_one_zone_and_one_node_and_one_date(self):
+		data = {
+			"params": {
+				"sfr_flow_zones" : {
+					1: [1]
+				},
+				"sfr_flow_monthly_proportions" : {
+					1: [0.01],
+					2: [0.02],
+					3: [0.03],
+					4: [0.04],
+					5: [0.05],
+					6: [0.06],
+					7: [0.07],
+					8: [0.08],
+					9: [0.09],
+					10: [0.1],
+					11: [0.11],
+					12: [0.12],
+				},
+			},
+			"series": {
+				"date" : [datetime.datetime(1980, 1, 1)]
+			},
+		}
+		stream_ca_order = [(0, 0, 0)]
+		self.assertEqual([0.01], m.extract_release_proportion(data, stream_ca_order, [1, 2]))
+
 	def test_release_proportion_with_one_zone_and_one_node(self):
 		data = {
 			"params": {
@@ -60,7 +88,7 @@ class Test_Release_Proportion(unittest.TestCase):
 		stream_ca_order = [(0, 0, 0)]
 		self.assertEqual([0.01], m.extract_release_proportion(data, stream_ca_order, [1, 2]))
 		self.assertEqual([0.02], m.extract_release_proportion(data, stream_ca_order, [32, 2]))
-		self.assertEqual([0.03], m.extract_release_proportion(data, stream_ca_order, [60, 2]))
+		self.assertEqual([0.03], m.extract_release_proportion(data, stream_ca_order, [61, 2]))
 
 	def test_release_proportion_with_several_zones_and_nodes(self):
 		data = {

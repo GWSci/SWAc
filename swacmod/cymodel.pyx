@@ -1689,7 +1689,7 @@ def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset):
 
 def extract_release_proportion(data, stream_ca_order, time_period):
     result = []
-    month_key = data["series"]["date"][time_period[0]].month
+    month_key = data["series"]["date"][time_period[0] - 1].month
     zone_index_to_proportion = data["params"]["sfr_flow_monthly_proportions"][month_key]
     sfr_flow_zones = data["params"]["sfr_flow_zones"]
     for node_index, _, _ in stream_ca_order:
@@ -1904,9 +1904,18 @@ def get_sfr_file(data, runoff):
             runoff[i] = runoff[i] * areas[node] * fac
 
     # populate runoff and flow
+    if data['params']['attenuate_sfr_flows']:
+        _, stream_ca_order = organise_nodes_and_stream_data(sorted_by_ca, swac_seg_dic)
+        sfr_store = np.zeros(nss)
+
     for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
 
-        ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
+        if data['params']['attenuate_sfr_flows']:
+            time_period = data['params']['time_periods'][per]
+            release_proportion = extract_release_proportion(data, stream_ca_order, time_period)
+            ro, flow, sfr_store = get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, runoff, (nodes * per) + 1, sfr_store, release_proportion)
+        else:
+            ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
 
         if data['params']['gwmodel_type'] == 'mfusg':
             for iseg in range(nss):
