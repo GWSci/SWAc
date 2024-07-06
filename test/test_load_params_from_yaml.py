@@ -84,6 +84,23 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 		}
 		self.assertEqual(expected, load_params()["sfr_flow_zones"])
 
+	def test_sfr_flow_monthly_proportions_is_read_from_input_file(self):
+		expected = {
+			1: [0.01, 0.02, 0.03],
+			2: [0.04, 0.05, 0.06],
+			3: [0.07, 0.08, 0.09],
+			4: [0.10, 0.11, 0.12],
+			5: [0.13, 0.14, 0.15],
+			6: [0.16, 0.17, 0.18],
+			7: [0.19, 0.20, 0.21],
+			8: [0.22, 0.23, 0.24],
+			9: [0.25, 0.26, 0.27],
+			10: [0.28, 0.29, 0.30],
+			11: [0.31, 0.32, 0.33],
+			12: [0.34, 0.35, 0.36],
+		}
+		self.assertEqual(expected, load_params()["sfr_flow_monthly_proportions"])
+
 def load_params():
 	input = input_output.load_params_from_yaml(
 		input_file="./test/resources/loading_params/input.yml", 

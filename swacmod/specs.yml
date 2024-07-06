@@ -108,6 +108,13 @@ sfr_flow_zones:
         - !!python/name:dict
         - !!python/name:list
 
+sfr_flow_monthly_proportions:
+    required: false
+    alt_format: [yml, csv]
+    type:
+        - !!python/name:dict
+        - !!python/name:list
+
 sfr_obs:
     required: false
     type:
