@@ -109,8 +109,9 @@ def extract_release_proportion(data, stream_ca_order, time_period):
 	result = []
 	month_key = data["series"]["date"][time_period[0]].month
 	zone_index_to_proportion = data["params"]["sfr_flow_monthly_proportions"][month_key]
+	sfr_flow_zones = data["params"]["sfr_flow_zones"]
 	for node_index, stream_index, downstream_stream_index in stream_ca_order:
 		node_number = node_index + 1
-		zone = data["params"]["sfr_flow_zones"][node_number][0] - 1
+		zone = sfr_flow_zones[node_number][0] - 1
 		result.append(zone_index_to_proportion[zone])
 	return result
