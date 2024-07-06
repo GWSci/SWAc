@@ -1206,6 +1206,9 @@ def fin_output_sfr(data, name):
         params["output_sfr"] = False
         logging.info('\t\tSwitched "output_sfr" to "false"')
 
+def fin_attenuate_sfr_flows(data, name):
+    if name not in data["params"]:
+        data["params"][name] = False
 
 ###############################################################################
 def fin_sfr_obs(data, name):
@@ -1614,6 +1617,7 @@ FUNC_PARAMS = [
     fin_sw_init_ponding,
     fin_sw_ponding_area,
     fin_output_sfr,
+    fin_attenuate_sfr_flows,
     fin_sfr_obs,
     fin_istcb1,
     fin_istcb2,
