@@ -59,7 +59,8 @@ def extract_release_proportion(data, stream_ca_order, time_period):
 	month_key = 1
 	if (time_period[0] == 32):
 		month_key = 2
+	zone_index_to_proportion = data["params"]["sfr_flow_monthly_proportions"][month_key]
 	for node_index, stream_index, downstream_stream_index in stream_ca_order:
 		zone = 0
-		result.append(data["params"]["sfr_flow_monthly_proportions"][month_key][zone])
+		result.append(zone_index_to_proportion[zone])
 	return result
