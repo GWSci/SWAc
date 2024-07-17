@@ -413,7 +413,7 @@ END period  5
 
 # Section for flopy 3.3.2
 
-	def test_modflow_dis_get_lrc_when_node_number_is_zero(self):
+	def test_modflow_dis_get_lrc_when_node_number_is_out_of_range(self):
 		# The documetation says that the input node number should be zero-based but the output makes no sense.
 		_, dis = self.make_modflow_dis()
 
