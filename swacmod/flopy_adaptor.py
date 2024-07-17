@@ -220,7 +220,8 @@ def dis_get_lrc(dis, node_numbers):
 	# 0-based in flopy 3.3.3
 	if not isinstance(node_numbers, list):
 		if node_numbers <= 0:
-			raise Exception(f"The node number {node_numbers} is out of bounds.")
+			max_node_number = (dis.nlay * dis.nrow * dis.ncol)
+			raise Exception(f"The node number {node_numbers} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {dis.nlay}, {dis.nrow}, {dis.ncol} respectively.")
 	return dis.get_lrc(node_numbers)
 
 def modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
