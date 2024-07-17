@@ -221,7 +221,7 @@ def dis_get_lrc(dis, node_numbers):
 	if isinstance(node_numbers, list):
 		_validate_node_numbers(dis, node_numbers)
 	else:
-		_validate_node_numbers(dis, node_numbers)
+		_validate_node_numbers(dis, [node_numbers])
 	return dis.get_lrc(node_numbers)
 
 def _validate_node_numbers(dis, node_numbers):
