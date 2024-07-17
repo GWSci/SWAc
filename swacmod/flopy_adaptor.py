@@ -219,8 +219,8 @@ def dis_get_lrc(dis, node_numbers):
 	# 1-based in flopy 3.3.2
 	# 0-based in flopy 3.3.3
 	if not isinstance(node_numbers, list):
+		max_node_number = (dis.nlay * dis.nrow * dis.ncol)
 		if node_numbers <= 0 or node_numbers == 31:
-			max_node_number = (dis.nlay * dis.nrow * dis.ncol)
 			raise Exception(f"The node number {node_numbers} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {dis.nlay}, {dis.nrow}, {dis.ncol} respectively.")
 	return dis.get_lrc(node_numbers)
 
