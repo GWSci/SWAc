@@ -228,7 +228,8 @@ def _validate_node_numbers(dis, node_numbers):
 	max_node_number = (dis.nlay * dis.nrow * dis.ncol)
 	for node_number in node_numbers:
 		if node_number <= 0 or node_number > max_node_number:
-			raise Exception(f"The node number {node_number} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {dis.nlay}, {dis.nrow}, {dis.ncol} respectively.")
+			message = f"The node number {node_number} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {dis.nlay}, {dis.nrow}, {dis.ncol} respectively."
+			raise Exception(message)
 
 def modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
     return flopy.modflow.ModflowStr(
