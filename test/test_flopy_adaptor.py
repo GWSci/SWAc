@@ -416,13 +416,14 @@ END period  5
 	def test_modflow_dis_get_lrc_when_node_number_is_zero(self):
 		# The documetation says that the input node number should be zero-based but the output makes no sense.
 		_, dis = self.make_modflow_dis()
-		with self.assertRaises(Exception) as ex:
-			flopy_adaptor.dis_get_lrc(dis, 0)
-		self.assertTrue("The node number 0 is out of bounds." in str(ex.exception))
 
+		self.assert_dis_get_lrc_exception_with_message("The node number 0 is out of bounds.", dis, 0)
+		self.assert_dis_get_lrc_exception_with_message("The node number -1 is out of bounds.", dis, -1)
+
+	def assert_dis_get_lrc_exception_with_message(self, expected_message, input_dis, input_node_numbers):
 		with self.assertRaises(Exception) as ex:
-			flopy_adaptor.dis_get_lrc(dis, -1)
-		self.assertTrue("The node number -1 is out of bounds." in str(ex.exception))
+			flopy_adaptor.dis_get_lrc(input_dis, input_node_numbers)
+		self.assertTrue(expected_message in str(ex.exception))
 
 	def test_modflow_dis_get_lrc_when_the_input_is_within_the_model_bounds(self):
 		# The documentation says that the input node number should be zero-based but the above test indicates
