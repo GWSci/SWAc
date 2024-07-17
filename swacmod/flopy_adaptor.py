@@ -218,7 +218,7 @@ def dis_get_lrc(dis, node_numbers):
 	# The input node numbers appear to be:
 	# 1-based in flopy 3.3.2
 	# 0-based in flopy 3.3.3
-	if not isinstance(node_numbers, list):
+	if isinstance(node_numbers, list):
 		_validate_node_numbers(dis, node_numbers)
 	else:
 		_validate_node_numbers(dis, node_numbers)
