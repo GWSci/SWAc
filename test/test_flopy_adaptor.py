@@ -422,6 +422,8 @@ END period  5
 		self.assert_dis_get_lrc_exception_with_message("The node number 31 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", dis, 31)
 		self.assert_dis_get_lrc_exception_with_message("The node number 32 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", dis, 32)
 
+		self.assert_dis_get_lrc_exception_with_message("The node number 0 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", dis, [0])
+
 	def assert_dis_get_lrc_exception_with_message(self, expected_message, input_dis, input_node_numbers):
 		with self.assertRaises(Exception) as ex:
 			flopy_adaptor.dis_get_lrc(input_dis, input_node_numbers)
@@ -452,42 +454,6 @@ END period  5
 
 		# Numbers 26-30. Layer 1, Row 2, Columns 1-5
 		self.assertEqual([(1, 2, 1), (1, 2, 2), (1, 2, 3), (1, 2, 4), (1, 2, 5)], flopy_adaptor.dis_get_lrc(dis, [26, 27, 28, 29, 30]))
-
-	def test_modflow_dis_get_lrc_when_the_input_is_beyond_the_model_bounds(self):
-		# The pattern above continues when numbers are out of bounds for the model.
-		_, dis = self.make_modflow_dis()
-
-		# Numbers 31-35. Layer 2, Row 0, Columns 1-5.
-		self.assertEqual([(2, 0, 1), (2, 0, 2), (2, 0, 3), (2, 0, 4), (2, 0, 5)], flopy_adaptor.dis_get_lrc(dis, [31, 32, 33, 34, 35]))
-
-		# Numbers 36-30. Layer 2, Row 1, Columns 1-5.
-		self.assertEqual([(2, 1, 1), (2, 1, 2), (2, 1, 3), (2, 1, 4), (2, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [36, 37, 38, 39, 40]))
-
-		# Numbers 41-45. Layer 1, Row 1, Columns 1-5
-		self.assertEqual([(3, 1, 1), (3, 1, 2), (3, 1, 3), (3, 1, 4), (3, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [51, 52, 53, 54, 55]))
-
-	def test_modflow_dis_get_lrc_when_the_input_is_below_zero(self):
-		# Going negative:
-		#  - The output layer starts at -1 and decreases seemingly indefinitely.
-		#  - The output row starts at 2 and decreases seemingly indefinitely.
-		#  - The output column continues in the dame looping cycle of 1-5
-		_, dis = self.make_modflow_dis()
-
-		# Numbers -4 to 0. Layer -1, Row 2, Columns 1-5.
-		self.assertEqual([(-1, 2, 1), (-1, 2, 2), (-1, 2, 3), (-1, 2, 4), (-1, 2, 5)], flopy_adaptor.dis_get_lrc(dis, [-4, -3, -2, -1, 0]))
-
-		# Numbers -9 to -5. Layer -1, Row 2, Columns 1-5.
-		self.assertEqual([(-1, 1, 1), (-1, 1, 2), (-1, 1, 3), (-1, 1, 4), (-1, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-9, -8, -7, -6, -5]))
-
-		self.assertEqual([(-1, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-5]))
-		self.assertEqual([(-2, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-20]))
-		self.assertEqual([(-3, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-35]))
-		self.assertEqual([(-4, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-50]))
-
-		self.assertEqual([(-1, 2, 5)], flopy_adaptor.dis_get_lrc(dis, [0]))
-		self.assertEqual([(-1, 1, 5)], flopy_adaptor.dis_get_lrc(dis, [-5]))
-		self.assertEqual([(-1, 0, 5)], flopy_adaptor.dis_get_lrc(dis, [-10]))
-		self.assertEqual([(-1, -1, 5)], flopy_adaptor.dis_get_lrc(dis, [-15]))
 
 # End Section for flopy 3.3.3
 

@@ -222,6 +222,11 @@ def dis_get_lrc(dis, node_numbers):
 		max_node_number = (dis.nlay * dis.nrow * dis.ncol)
 		if node_numbers <= 0 or node_numbers > max_node_number:
 			raise Exception(f"The node number {node_numbers} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {dis.nlay}, {dis.nrow}, {dis.ncol} respectively.")
+	else:
+		max_node_number = (dis.nlay * dis.nrow * dis.ncol)
+		node_number = node_numbers[0]
+		if node_number <= 0 or node_number > max_node_number:
+			raise Exception(f"The node number {node_number} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {dis.nlay}, {dis.nrow}, {dis.ncol} respectively.")
 	return dis.get_lrc(node_numbers)
 
 def modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
