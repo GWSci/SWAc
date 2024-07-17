@@ -219,8 +219,8 @@ def dis_get_lrc(dis, node_numbers):
 	# 1-based in flopy 3.3.2
 	# 0-based in flopy 3.3.3
 	if not isinstance(node_numbers, list):
-		if node_numbers == 0:
-			raise Exception("The node number 0 is out of bounds.")
+		if node_numbers <= 0:
+			raise Exception(f"The node number {node_numbers} is out of bounds.")
 	return dis.get_lrc(node_numbers)
 
 def modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):

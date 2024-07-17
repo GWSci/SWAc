@@ -420,6 +420,10 @@ END period  5
 			flopy_adaptor.dis_get_lrc(dis, 0)
 		self.assertTrue("The node number 0 is out of bounds." in str(ex.exception))
 
+		with self.assertRaises(Exception) as ex:
+			flopy_adaptor.dis_get_lrc(dis, -1)
+		self.assertTrue("The node number -1 is out of bounds." in str(ex.exception))
+
 	def test_modflow_dis_get_lrc_when_the_input_is_within_the_model_bounds(self):
 		# The documentation says that the input node number should be zero-based but the above test indicates
 		# this is not the case. Assuming that the input node number is 1-based:
