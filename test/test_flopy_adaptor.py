@@ -423,6 +423,7 @@ END period  5
 		self.assert_dis_get_lrc_exception_with_message("The node number 32 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", dis, 32)
 
 		self.assert_dis_get_lrc_exception_with_message("The node number 0 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", dis, [0])
+		self.assert_dis_get_lrc_exception_with_message("The node number 0 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", dis, [1, 0])
 
 	def assert_dis_get_lrc_exception_with_message(self, expected_message, input_dis, input_node_numbers):
 		with self.assertRaises(Exception) as ex:
