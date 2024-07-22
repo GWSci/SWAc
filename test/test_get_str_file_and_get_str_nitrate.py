@@ -120,6 +120,21 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 		self.assertAlmostEqual(111.111, actual_sp_data.at[1, "slope0"], places = 4)
 		self.assertAlmostEqual(222.222, actual_sp_data.at[1, "rough0"], places = 4)
 
+		self.assertEqual(-1, actual_sp_data.at[2, "k"])
+		self.assertEqual(-1, actual_sp_data.at[2, "i"])
+		self.assertEqual(2, actual_sp_data.at[2, "j"])
+		self.assertEqual(-1, actual_sp_data.at[2, "node"])
+		self.assertEqual(3, actual_sp_data.at[2, "segment0"])
+		self.assertEqual(1, actual_sp_data.at[2, "reach0"])
+		self.assertAlmostEqual(3.3, actual_sp_data.at[2, "flow0"], places = 4)
+		self.assertEqual(150.0, actual_sp_data.at[2, "stage0"])
+		self.assertAlmostEqual(4571.4287, actual_sp_data.at[2, "cond0"], places = 4)
+		self.assertEqual(-10.0, actual_sp_data.at[2, "sbot0"])
+		self.assertEqual(60.0, actual_sp_data.at[2, "stop0"])
+		self.assertEqual(100.0, actual_sp_data.at[2, "width0"])
+		self.assertAlmostEqual(111.111, actual_sp_data.at[2, "slope0"], places = 4)
+		self.assertAlmostEqual(222.222, actual_sp_data.at[2, "rough0"], places = 4)
+
 		self.assertEqual({
 			0: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
 			1: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
