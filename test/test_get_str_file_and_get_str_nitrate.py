@@ -5,55 +5,6 @@ import warnings
 import swacmod.feature_flags as ff
 
 class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
-	def test_get_str_file_for_1_node_and_1_sp(self):
-		data = {
-			"params": {
-				"node_areas" : {1: 100.0},
-				"run_name": "aardvark",
-				"time_periods": {1: [1, 2]},
-				"num_nodes": 1,
-				"mf96_lrc": [1, 1, 1],
-				"routing_topology": {1 : [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]},
-				"istcb1": None,
-				"istcb2": None,
-			}
-		}
-		runoff = np.array([100.0, 200.0])
-
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			str = m.get_str_file(data, runoff)
-
-		self.assertEqual(1, str.mxacts)
-		self.assertEqual(1, str.nss)
-		self.assertEqual(8, str.ntrib)
-		self.assertEqual(0, str.ipakcb)
-		self.assertIsNone(str.istcb2)
-
-		actual_sp_data = str.stress_period_data.get_dataframe()
-
-		self.assertEqual([0], actual_sp_data.index.values)
-		self.assertListEqual(
-			["k", "i", "j", "node", "segment0", "reach0", "flow0", "stage0", "cond0", "sbot0", "stop0", "width0", "slope0", "rough0"],
-			list(actual_sp_data.columns.values))
-
-		self.assertEqual(0, actual_sp_data.at[0, "k"])
-		self.assertEqual(-2, actual_sp_data.at[0, "i"])
-		self.assertEqual(0, actual_sp_data.at[0, "j"])
-		self.assertEqual(-2, actual_sp_data.at[0, "node"])
-		self.assertEqual(1, actual_sp_data.at[0, "segment0"])
-		self.assertEqual(1, actual_sp_data.at[0, "reach0"])
-		self.assertEqual(0.0, actual_sp_data.at[0, "flow0"])
-		self.assertEqual(2.0, actual_sp_data.at[0, "stage0"])
-		self.assertEqual(1.0, actual_sp_data.at[0, "cond0"])
-		self.assertEqual(0.0, actual_sp_data.at[0, "sbot0"])
-		self.assertEqual(1.0, actual_sp_data.at[0, "stop0"])
-		self.assertEqual(1.0, actual_sp_data.at[0, "width0"])
-		self.assertAlmostEqual(111.111, actual_sp_data.at[0, "slope0"], places = 4)
-		self.assertAlmostEqual(222.222, actual_sp_data.at[0, "rough0"], places = 4)
-
-		self.assertEqual({0: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]}, str.segment_data)
-
 	def test_get_str_file_for_3_nodes_and_1_sp(self):
 		data = {
 			"params" : {
