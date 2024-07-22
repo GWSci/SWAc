@@ -25,6 +25,7 @@ class Test_Get_Str_File(unittest.TestCase):
 		runoff = [-1, 5, 7, 11, 13, 17, 19]
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			warnings.filterwarnings("ignore", category=UserWarning)
 			str = m.get_str_file(data, runoff)
 			str.write_file()
 		actual = file_test_helpers.slurp("output_files/str-aardvark.str")

@@ -108,25 +108,33 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertEqual(tdis, sim.get_package("tdis"))
 
 	def test_modflow_model(self):
-		model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=UserWarning)
+			model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
 		self.assertEqual("aardvark", model.name)
 		self.assertEqual("mfusg", model.version)
 		self.assertFalse(model.structured)
 
 	def test_modflow_model_with_structured_true(self):
-		model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=UserWarning)
+			model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
 		self.assertEqual("aardvark", model.name)
 		self.assertEqual("mf2005", model.version)
 		self.assertTrue(model.structured)
 
 	def test_modflow_model_with_version(self):
-		model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=UserWarning)
+			model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
 		self.assertEqual("aardvark", model.name)
 		self.assertEqual("mfusg", model.version)
 		self.assertFalse(model.structured)
 
 	def test_modflow_disu(self):
-		model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=UserWarning)
+			model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			disu = flopy_adaptor.modflow_disu(model, 3, 5, 7, 2)
@@ -142,7 +150,9 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		np.testing.assert_almost_equal([0, 0], disu.fahl.array)
 
 	def test_modflow_disu_adds_disu_to_model(self):
-		model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=UserWarning)
+			model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			disu = flopy_adaptor.modflow_disu(model, 3, 5, 7, 2)
@@ -290,7 +300,9 @@ END period  5
 		istcb1 = 0
 		istcb2 = 0
 
-		model = flopy_adaptor.modflow_model(path, "mfusg", False)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=UserWarning)
+			model = flopy_adaptor.modflow_model(path, "mfusg", False)
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			rd = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
@@ -364,7 +376,9 @@ END period  5
 		self.assertEqual(sd, actual_period_data)
 
 	def test_modflow_bas(self):
-		model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=UserWarning)
+			model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
 		bas = flopy_adaptor.modflow_bas(model)
 
 		self.assertEqual(bas, model.get_package("bas6"))
@@ -405,7 +419,9 @@ END period  5
 		ncol = 5
 		nper = 7
 
-		model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=UserWarning)
+			model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			dis = flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
@@ -521,7 +537,9 @@ END period  5
 			],
 		}
 		segment_data = {}
-		model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=UserWarning)
+			model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
@@ -566,7 +584,9 @@ END period  5
 		surf = 5
 		exdp = 7
 		ievt = 11
-		model = flopy_adaptor.modflow_model("aardvark", "mfusg", True)
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=UserWarning)
+			model = flopy_adaptor.modflow_model("aardvark", "mfusg", True)
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			flopy_adaptor.modflow_dis(model, 1, 3, 1, 5)

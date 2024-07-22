@@ -26,6 +26,7 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			warnings.filterwarnings("ignore", category=UserWarning)
 			str = m.get_str_file(data, runoff)
 
 		self.assertEqual(3, str.mxacts)
@@ -165,6 +166,7 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 
 			with warnings.catch_warnings():
 				warnings.filterwarnings("ignore", category=DeprecationWarning)
+				warnings.filterwarnings("ignore", category=UserWarning)
 				str = m.get_str_file(data, runoff)
 
 			self.assertEqual(3, str.mxacts)
@@ -201,6 +203,7 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 
 			with warnings.catch_warnings():
 				warnings.filterwarnings("ignore", category=DeprecationWarning)
+				warnings.filterwarnings("ignore", category=UserWarning)
 				str = m.get_str_file(data, runoff)
 
 			self.assertEqual(3, str.mxacts)

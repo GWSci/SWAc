@@ -88,6 +88,7 @@ def get_sfr_adaptor(run_name, gwmodel_type, disv, sfr_obs):
 		runoff = [-1, 5, 7, 11, 13, 17, 19]
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			warnings.filterwarnings("ignore", category=UserWarning)
 			sfr = m.get_sfr_file(data, runoff)
 		return sfr
 
@@ -144,6 +145,7 @@ def get_sfr_with_release_proportion(run_name, gwmodel_type, disv, sfr_obs):
 		runoff = [-1000, -2000, -3000] + long_list_for_source[:runoff_count]
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			warnings.filterwarnings("ignore", category=UserWarning)
 			sfr = m.get_sfr_file(data, runoff)
 		return sfr
 
