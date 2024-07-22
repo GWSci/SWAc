@@ -95,10 +95,13 @@ def _mf_tdis(sim, nper):
 		parent_file=None)
 
 def modflow_model(path, version, structured):
-	return flopy.modflow.Modflow(modelname=path, version=version, structured=structured)
+	if structured:
+		return flopy.modflow.Modflow(modelname=path, version=version, structured=structured)
+	else:
+		return flopy.mfusg.MfUsg(modelname=path, version=version, structured=structured)
 
 def modflow_disu(model, nodes, nper, njag, lenx):
-	return flopy.modflow.ModflowDisU(
+	return flopy.mfusg.MfUsgDisU(
 		model,
 		nodes=nodes,
 		nper=nper,
