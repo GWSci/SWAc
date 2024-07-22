@@ -54,6 +54,62 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 
 		self.assertEqual({0: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]}, str.segment_data)
 
+	def test_get_str_file_for_3_nodes_and_1_sp(self):
+		data = {
+			"params" : {
+				"node_areas" : [-1, 100, 200, 300],
+				"run_name" : "str-aardvark",
+				"time_periods" : [1, 2],
+				"num_nodes" : 3,
+				"mf96_lrc" : [1, 1, 3],
+				"routing_topology" : {
+					1 : [1, 1, 1, 40, 50, 60, 70, 80, 90, 100],
+					2 : [2, 1, 2, 40, 50, 60, 70, 80, 90, 100],
+					3 : [3, 1, 3, 40, 50, 60, 70, 80, 90, 100],
+				},
+				"istcb1" : 0,
+				"istcb2" : 0,
+			}
+		}
+		runoff = [-1, 5, 7, 11, 13, 17, 19]
+
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", category=DeprecationWarning)
+			str = m.get_str_file(data, runoff)
+
+		self.assertEqual(3, str.mxacts)
+		self.assertEqual(3, str.nss)
+		self.assertEqual(8, str.ntrib)
+		self.assertEqual(0, str.ipakcb)
+		self.assertEqual(0, str.istcb2)
+
+		actual_sp_data = str.stress_period_data.get_dataframe()
+
+		np.testing.assert_array_equal([0, 1, 2], actual_sp_data.index.values)
+		self.assertListEqual(
+			["k", "i", "j", "node", "segment0", "reach0", "flow0", "flow1", "stage0", "cond0", "sbot0", "stop0", "width0", "slope0", "rough0"],
+			list(actual_sp_data.columns.values))
+
+		self.assertEqual(-1, actual_sp_data.at[0, "k"])
+		self.assertEqual(-1, actual_sp_data.at[0, "i"])
+		self.assertEqual(0, actual_sp_data.at[0, "j"])
+		self.assertEqual(-3, actual_sp_data.at[0, "node"])
+		self.assertEqual(1, actual_sp_data.at[0, "segment0"])
+		self.assertEqual(1, actual_sp_data.at[0, "reach0"])
+		self.assertEqual(0.0, actual_sp_data.at[0, "flow0"])
+		self.assertEqual(150.0, actual_sp_data.at[0, "stage0"])
+		self.assertAlmostEqual(4571.4287, actual_sp_data.at[0, "cond0"], places = 4)
+		self.assertEqual(-10.0, actual_sp_data.at[0, "sbot0"])
+		self.assertEqual(60.0, actual_sp_data.at[0, "stop0"])
+		self.assertEqual(100.0, actual_sp_data.at[0, "width0"])
+		self.assertAlmostEqual(111.111, actual_sp_data.at[0, "slope0"], places = 4)
+		self.assertAlmostEqual(222.222, actual_sp_data.at[0, "rough0"], places = 4)
+
+		self.assertEqual({
+			0: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+			1: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+		}, str.segment_data)
+
 	def test_get_str_file_for_3_nodes_and_2_sp_when_use_natproc_is_true(self):
 		original_use_natproc = ff.use_natproc
 		ff.use_natproc = True
