@@ -572,7 +572,7 @@ output_sfr: true
 # This parameter only applies when:
 #   - output_sfr is true
 # This parameter is optional.
-attenuate_sfr_flows: true
+attenuate_sfr_flows: false
 
 # Zones for each cell in the model.
 # Column 1 is the node number (not the stream cell number)
