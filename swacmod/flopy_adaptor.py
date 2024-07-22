@@ -215,7 +215,21 @@ def modflow_dis(model, nlay, nrow, ncol, nper):
 		nper=nper)
 
 def dis_get_lrc(dis, node_numbers):
+	# The input node numbers appear to be:
+	# 1-based in flopy 3.3.2
+	# 0-based in flopy 3.3.3
+	if isinstance(node_numbers, list):
+		_validate_node_numbers(dis, node_numbers)
+	else:
+		_validate_node_numbers(dis, [node_numbers])
 	return dis.get_lrc(node_numbers)
+
+def _validate_node_numbers(dis, node_numbers):
+	max_node_number = (dis.nlay * dis.nrow * dis.ncol)
+	for node_number in node_numbers:
+		if node_number <= 0 or node_number > max_node_number:
+			message = f"The node number {node_number} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {dis.nlay}, {dis.nrow}, {dis.ncol} respectively."
+			raise Exception(message)
 
 def modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
     return flopy.modflow.ModflowStr(

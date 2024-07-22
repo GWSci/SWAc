@@ -29,9 +29,29 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 		self.assertEqual(8, str.ntrib)
 		self.assertEqual(0, str.ipakcb)
 		self.assertIsNone(str.istcb2)
-		np.testing.assert_array_almost_equal(
-			np.array([[0.0, -2.0, 0.0, -2.0, 1.0, 1.0, 0.0, 2.0, 1.0, 0.0, 1.0, 1.0, 111.111, 222.222]]),
-			str.stress_period_data.get_dataframe())
+
+		actual_sp_data = str.stress_period_data.get_dataframe()
+
+		self.assertEqual([0], actual_sp_data.index.values)
+		self.assertListEqual(
+			["k", "i", "j", "node", "segment0", "reach0", "flow0", "stage0", "cond0", "sbot0", "stop0", "width0", "slope0", "rough0"],
+			list(actual_sp_data.columns.values))
+
+		self.assertEqual(0, actual_sp_data.at[0, "k"])
+		self.assertEqual(-2, actual_sp_data.at[0, "i"])
+		self.assertEqual(0, actual_sp_data.at[0, "j"])
+		self.assertEqual(-2, actual_sp_data.at[0, "node"])
+		self.assertEqual(1, actual_sp_data.at[0, "segment0"])
+		self.assertEqual(1, actual_sp_data.at[0, "reach0"])
+		self.assertEqual(0.0, actual_sp_data.at[0, "flow0"])
+		self.assertEqual(2.0, actual_sp_data.at[0, "stage0"])
+		self.assertEqual(1.0, actual_sp_data.at[0, "cond0"])
+		self.assertEqual(0.0, actual_sp_data.at[0, "sbot0"])
+		self.assertEqual(1.0, actual_sp_data.at[0, "stop0"])
+		self.assertEqual(1.0, actual_sp_data.at[0, "width0"])
+		self.assertAlmostEqual(111.111, actual_sp_data.at[0, "slope0"], places = 4)
+		self.assertAlmostEqual(222.222, actual_sp_data.at[0, "rough0"], places = 4)
+
 		self.assertEqual({0: [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]}, str.segment_data)
 
 	def test_get_str_file_for_3_nodes_and_2_sp_when_use_natproc_is_true(self):
