@@ -134,7 +134,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		self.assertEqual(3, disu.nodes)
 		self.assertEqual(5, disu.nper)
 		np.testing.assert_almost_equal([7, 0, 0], disu.iac.array)
-		np.testing.assert_almost_equal([0, 0, 0, 0, 0, 0, 0], disu.ja.array)
+		np.testing.assert_almost_equal([1, 1, 1, 1, 1, 1, 1], disu.ja.array)
 		self.assertEqual(7, disu.njag)
 		self.assertEqual(1, disu.idsymrd)
 		np.testing.assert_almost_equal([0, 0], disu.cl1.array)
