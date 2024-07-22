@@ -90,8 +90,6 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 			["k", "i", "j", "node", "segment0", "reach0", "flow0", "flow1", "stage0", "cond0", "sbot0", "stop0", "width0", "slope0", "rough0"],
 			list(actual_sp_data.columns.values))
 
-		print(f"actual_sp_data = {actual_sp_data}")
-
 		self.assertEqual(-1, actual_sp_data.at[0, "k"])
 		self.assertEqual(-1, actual_sp_data.at[0, "i"])
 		self.assertEqual(0, actual_sp_data.at[0, "j"])
