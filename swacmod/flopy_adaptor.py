@@ -65,10 +65,10 @@ def make_model_for_sfr_mf6_disu(path, nodes, nper):
 	return m
 
 def _mf_simulation():
-	return flopy.mf6.MFSimulation(verbosity_level=0)
+	return flopy.mf6.MFSimulation(verbosity_level=0, exe_name="mf6.exe")
 
 def _mf_model(sim, path):
-	return flopy.mf6.mfmodel.MFModel(sim, modelname=path)
+	return flopy.mf6.mfmodel.MFModel(sim, modelname=path, exe_name="mf6.exe")
 
 def _mf_gwf_disv(model):
 	return flopy.mf6.modflow.mfgwfdisv.ModflowGwfdisv(model)
