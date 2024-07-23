@@ -1846,7 +1846,7 @@ def _get_sfr_file_mfusg(data, runoff):
 
     segment_data = {}
     ro_and_flow_accumulator = lambda per, ro, flow: append_runoff_and_flow_to_sd(segment_data, sd, nss, per, ro, flow)
-    append_ro_and_flow(data, nper, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
+    append_ro_and_flow(data, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
 
     path = make_path(data)
     njag = nodes + 2
@@ -1862,7 +1862,8 @@ def count_nss(idx, sorted_by_ca):
     return sum([value[str_flag_index] > 0
                 for value in sorted_by_ca.values()])
 
-def append_ro_and_flow(data, nper, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator):
+def append_ro_and_flow(data, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator):
+    nper = extract_nper(data)
     areas = data['params']['node_areas']
     # units oddness - lots of hardcoded 1000s in input_output.py
     fac = 0.001
@@ -1966,7 +1967,7 @@ def _get_sfr_file_mf6(data, runoff):
 
     ro_and_flow_accumulator = lambda per, ro, flow: apppend_runoff_and_flow_to_perioddata(perioddata, nss, per, ro, flow)
 
-    append_ro_and_flow(data, nper, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
+    append_ro_and_flow(data, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
 
     if len(data['params']['sfr_obs']) > 0:
         optional_obs_filename = data['params']['sfr_obs']
