@@ -1864,8 +1864,7 @@ def make_segment_data(data, nss, sorted_by_ca, runoff):
 
     segment_data = {}
     ro_and_flow_accumulator = lambda per, ro, flow: append_runoff_and_flow_to_sd(segment_data, sd, nss, per, ro, flow)
-    nodes = extract_node_count(data)
-    append_ro_and_flow(data, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
+    append_ro_and_flow(data, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
     return segment_data
 
 def count_nss(sorted_by_ca):
@@ -1874,18 +1873,20 @@ def count_nss(sorted_by_ca):
     return sum([value[str_flag_index] > 0
                 for value in sorted_by_ca.values()])
 
-def append_ro_and_flow(data, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator):
+def append_ro_and_flow(data, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator):
     nper = extract_nper(data)
     areas = data['params']['node_areas']
     # units oddness - lots of hardcoded 1000s in input_output.py
     fac = 0.001
 
+    nodes = extract_node_count(data)
     for per in range(nper):
         for node in range(1, nodes + 1):
             i = (nodes * per) + node
             runoff[i] = runoff[i] * areas[node] * fac
 
     # populate runoff and flow
+    nss = count_nss(sorted_by_ca)
     if data['params']['attenuate_sfr_flows']:
         _, stream_ca_order = organise_nodes_and_stream_data(sorted_by_ca, swac_seg_dic)
         sfr_store = np.zeros(nss)
@@ -1939,12 +1940,10 @@ def make_perioddata(data, sorted_by_ca, runoff, swac_seg_dic):
             perioddata[0].append((str_count, 'STATUS', "SIMPLE"))
             str_count += 1
 
-
+    nss = count_nss(sorted_by_ca)
     ro_and_flow_accumulator = lambda per, ro, flow: apppend_runoff_and_flow_to_perioddata(perioddata, nss, per, ro, flow)
 
-    nodes = extract_node_count(data)
-    nss = count_nss(sorted_by_ca)
-    append_ro_and_flow(data, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
+    append_ro_and_flow(data, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
     return perioddata
 
 def make_connectiondata(data, sorted_by_ca, seg_swac_dic, swac_seg_dic):
