@@ -58,9 +58,9 @@ END period  2
 """
 		self.assert_rch_file(run_name, is_disv, recharge_node_mapping, filename, expected)
 
-	def test_write_rch_with_disv_and_node_mapping_for_all_nodes(self):
+	def test_write_rch_with_disu_and_node_mapping_for_all_nodes(self):
 		run_name = "run-cat"
-		is_disv = True
+		is_disv = False
 		recharge_node_mapping = {
 			1: [7],
 			2: [23],
@@ -75,26 +75,28 @@ BEGIN dimensions
 END dimensions
 
 BEGIN period  1
-  1 7       0.00500000
-  1 23       0.00700000
-  1 29       0.01100000
+  7       0.00500000
+  23       0.00700000
+  29       0.01100000
 END period  1
 
 BEGIN period  2
-  1 23       0.01700000
+  7       0.01300000
+  23       0.01700000
+  29       0.01900000
 END period  2
 
 """
 		self.assert_rch_file(run_name, is_disv, recharge_node_mapping, filename, expected)
 
 	def test_write_rch_with_disv_and_node_mapping_for_only_some_nodes(self):
-		run_name = "run-cat"
+		run_name = "run-dog"
 		is_disv = True
 		recharge_node_mapping = {
 			1: [0],
 			2: [23],
 		}
-		filename = "output_files/run-cat.rch"
+		filename = "output_files/run-dog.rch"
 		expected = """BEGIN options
 END options
 
@@ -118,14 +120,14 @@ END period  2
 		self.assert_rch_file(run_name, is_disv, recharge_node_mapping, filename, expected)
 
 	def test_write_rch_with_disv_and_node_mapping_for_all_nodes(self):
-		run_name = "run-cat"
+		run_name = "run-elephant"
 		is_disv = True
 		recharge_node_mapping = {
 			1: [7],
 			2: [23],
 			3: [29],
 		}
-		filename = "output_files/run-cat.rch"
+		filename = "output_files/run-elephant.rch"
 		expected = """BEGIN options
 END options
 
@@ -149,13 +151,13 @@ END period  2
 		self.assert_rch_file(run_name, is_disv, recharge_node_mapping, filename, expected)
 
 	def test_write_rch_with_disu_and_node_mapping_for_only_some_nodes(self):
-		run_name = "run-dog"
+		run_name = "run-goat"
 		is_disv = False
 		recharge_node_mapping = {
 			1: [0],
 			2: [23],
 		}
-		filename = "output_files/run-dog.rch"
+		filename = "output_files/run-goat.rch"
 		expected = """BEGIN options
 END options
 
