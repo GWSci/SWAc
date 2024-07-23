@@ -19,13 +19,13 @@ END dimensions
 BEGIN period  1
   1 1       0.00500000
   1 2       0.00700000
-  
+  1 3       0.01100000
 END period  1
 
 BEGIN period  2
   1 1       0.01300000
   1 2       0.01700000
-  
+  1 3       0.01900000
 END period  2
 
 """
@@ -46,13 +46,13 @@ END dimensions
 BEGIN period  1
   1       0.00500000
   2       0.00700000
-  
+  3       0.01100000
 END period  1
 
 BEGIN period  2
   1       0.01300000
   2       0.01700000
-  
+  3       0.01900000
 END period  2
 
 """

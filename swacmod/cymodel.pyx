@@ -837,7 +837,7 @@ def get_mf6rch_file(data, rchrate):
             irch[inode - 1, 0] = vals[0]
     else:
         for i in range(nodes):
-            irch[i - 1, 0] = i
+            irch[i, 0] = i + 1
 
     if data['params']['disv']:
         rch_out = make_mf6_rch_file_with_disv(path, nodes, nper, irch, rchrate, fac)
