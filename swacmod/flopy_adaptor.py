@@ -278,17 +278,14 @@ def modflow_gwf_evt(model, nodes, spd):
 		parent_file=None)
 
 def make_sfr_file_mf6(is_disv, path, nper, nodes, nss, rd, cd, sd, optional_obs_filename, sfr_heading):
+	sim = _mf_simulation()
+	m = _mf_model(sim, path)
 	if is_disv:
-		sim = _mf_simulation()
-		m = _mf_model(sim, path)
 		_mf_gwf_disv(m)
-		_mf_tdis(sim, nper)
 	else:
-		sim = _mf_simulation()
-		m = _mf_model(sim, path)
 		njag = nodes + 2
 		_mf_gwf_disu(m, nodes, njag)
-		_mf_tdis(sim, nper)
+	_mf_tdis(sim, nper)
 	sfr = mf_gwf_sfr(m, nss, rd, cd, sd)
 
 	if optional_obs_filename is not None:
