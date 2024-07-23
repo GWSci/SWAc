@@ -1797,8 +1797,8 @@ def _get_sfr_file_mfusg(data, runoff):
     nstrm = nss = count_nss(idx, sorted_by_ca)
     sd = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
     reach_data = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
-    swac_seg_dic = {}
-    seg_swac_dic = {}
+    swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
+    seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
 
     # initialise reach & segment data
     str_count = 0
@@ -1806,9 +1806,6 @@ def _get_sfr_file_mfusg(data, runoff):
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
          depth, width) = line
         if str_flag > 0:
-            swac_seg_dic[node_swac] = str_count + 1
-            seg_swac_dic[str_count + 1] = node_swac
-
             reach_data[str_count]['node'] = node_mf - 1  # external
             reach_data[str_count]['iseg'] = str_count + 1  # serial
             reach_data[str_count]['ireach'] = 1  # str_count + 1 # serial
@@ -1918,8 +1915,8 @@ def _get_sfr_file_mf6(data, runoff):
     sfr = None
     perioddata[0] = []
     seg_data = {}
-    swac_seg_dic = {}
-    seg_swac_dic = {}
+    swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
+    seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
     # for mf6 only
     str_flg = np.zeros((nodes), dtype=int)
 
@@ -1932,9 +1929,6 @@ def _get_sfr_file_mf6(data, runoff):
         str_flg[node_swac-1] = str_flag
         ca = ca
         if str_flag > 0:
-            swac_seg_dic[node_swac] = str_count + 1
-            seg_swac_dic[str_count + 1] = node_swac
-
             if node_mf > 0:
                 if data['params']['disv']:
                     n = (0, node_mf - 1)
@@ -2073,7 +2067,6 @@ def make_swac_seg_dic(data, sorted_by_ca):
     return swac_seg_dic
 
 def make_seg_swac_dic(data, sorted_by_ca):
-    nodes = extract_node_count(data)
     str_count = 0
     seg_swac_dic = {}
     for node_swac, line in sorted_by_ca.items():
