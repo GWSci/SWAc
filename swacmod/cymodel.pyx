@@ -1948,10 +1948,16 @@ def _get_sfr_file_mf6(data, runoff):
 
             packagedata.append([str_count, n, length, width,
                         0.0001, z, bed_thk, str_k, 0.0001, 1, 1.0, 0])
-            perioddata[0].append((str_count, 'STAGE', z + depth))
-            perioddata[0].append((str_count, 'STATUS', "SIMPLE"))
 
             # inc stream counter
+            str_count += 1
+
+    str_count = 0
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
+        if str_flag > 0:
+            perioddata[0].append((str_count, 'STAGE', z + depth))
+            perioddata[0].append((str_count, 'STATUS', "SIMPLE"))
             str_count += 1
 
     Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
