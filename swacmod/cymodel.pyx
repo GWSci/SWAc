@@ -846,13 +846,13 @@ def get_mf6rch_file(data, rchrate):
     maxbound = (irch > 0).sum()
 
     if data['params']['disv']:
-        rch_out = make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, irch, node_index_to_rch_index, rchrate, fac)
+        rch_out = make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac)
     else:
-        rch_out = make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, irch, node_index_to_rch_index, rchrate, fac)
+        rch_out = make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac)
 
     return rch_out
 
-def make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, irch, node_index_to_rch_index, rchrate, fac):
+def make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac):
     m, spd = flopy_adaptor.make_model_with_disv_and_empty_spd_for_rch_out(path, nper, maxbound)
 
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
@@ -868,7 +868,7 @@ def make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, irch, node_index_to
     spd = None
     return rch_out
 
-def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, irch, node_index_to_rch_index, rchrate, fac):
+def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac):
     m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes, maxbound)
 
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
