@@ -831,16 +831,13 @@ def get_mf6rch_file(data, rchrate):
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
 
-    irch = np.zeros(nodes, dtype=int)
     node_index_to_rch_index = np.full(nodes, -1, dtype=int)
     if rch_params is not None:
         for node_number, vals in rch_params.iteritems():
             node_index = node_number - 1
-            irch[node_index] = vals[0]
             node_index_to_rch_index[node_index] = vals[0] - 1
     else:
         for node_index in range(nodes):
-            irch[node_index] = node_index + 1
             node_index_to_rch_index[node_index] = node_index
 
     maxbound = (node_index_to_rch_index >= 0).sum()
