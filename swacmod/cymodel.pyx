@@ -1911,26 +1911,13 @@ def append_runoff_and_flow_to_sd(segment_data, sd, nss, per, ro, flow):
     segment_data[per] = copy.deepcopy(sd)
 
 def _get_sfr_file_mf6(data, runoff):
-    nodes = extract_node_count(data)
     sorted_by_ca = make_sorted_by_ca(data)
-    idx = make_idx()
     nss = count_nss(sorted_by_ca)
     connectiondata = []
-    packagedata = []
-    perioddata = {}
-    sfr = None
-    perioddata[0] = []
-    seg_data = {}
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
-    # for mf6 only
-    str_flg = np.zeros((nodes), dtype=int)
 
-    # initialise reach & segment data
-    for node_swac, line in sorted_by_ca.items():
-        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
-        str_flg[node_swac-1] = str_flag
-
+    packagedata = []
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
@@ -1949,9 +1936,10 @@ def _get_sfr_file_mf6(data, runoff):
             packagedata.append([str_count, n, length, width,
                         0.0001, z, bed_thk, str_k, 0.0001, 1, 1.0, 0])
 
-            # inc stream counter
             str_count += 1
 
+    perioddata = {}
+    perioddata[0] = []
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
@@ -1960,6 +1948,14 @@ def _get_sfr_file_mf6(data, runoff):
             perioddata[0].append((str_count, 'STATUS', "SIMPLE"))
             str_count += 1
 
+    nodes = extract_node_count(data)
+    str_flg = np.zeros((nodes), dtype=int)
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
+        str_flg[node_swac-1] = str_flag
+
+    nodes = extract_node_count(data)
+    idx = make_idx()
     Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
     for iseg in range(nss):
         conn = [iseg]
