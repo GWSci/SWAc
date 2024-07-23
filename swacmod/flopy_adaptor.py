@@ -296,3 +296,14 @@ def _mf_gwf_sfr(model, nreaches, packagedata, connectiondata, perioddata):
 		filename=None,
 		pname=None,
 		parent_file=None)
+
+def make_sfr_file_mfusg(path, nper, nodes, nstrm, nss, njag, lenx, istcb1, istcb2, seg_data, rd, sfr_heading):
+	m = make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx)
+	sfr = mf_str2(m, nstrm, nss, istcb1, istcb2, rd, seg_data)
+
+	sfr.heading = sfr_heading
+
+	# compute the slopes
+	m.sfr.get_slopes()
+
+	return sfr
