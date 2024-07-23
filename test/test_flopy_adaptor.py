@@ -307,7 +307,7 @@ END period  5
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			rd = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
 			seg_data = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
-			sfr = flopy_adaptor.mf_str2(model, nstrm, nss, istcb1, istcb2, rd, seg_data)
+			sfr = flopy_adaptor._make_sfr2(model, nstrm, nss, istcb1, istcb2, rd, seg_data)
 
 		self.assertEqual(nstrm, sfr.nstrm)
 		self.assertEqual(1, sfr.nss) # The constructor overrides the supplied value.

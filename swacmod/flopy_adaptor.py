@@ -105,40 +105,6 @@ def modflow_sfr2_get_empty_segment_data(nss):
 def modflow_sfr2_get_empty_reach_data(nstrm):
 	return flopy.modflow.ModflowSfr2.get_empty_reach_data(nstrm, structured=False)
 
-def mf_str2(model, nstrm, nss, istcb1, istcb2, rd, seg_data):
-	return flopy.modflow.mfsfr2.ModflowSfr2(
-		model,
-		nstrm=nstrm,
-		nss=nss,
-		nsfrpar=0,
-		nparseg=0,
-		const=None,
-		dleak=0.0001,
-		ipakcb=istcb1,
-		istcb2=istcb2,
-		isfropt=1,
-		nstrail=10,
-		isuzn=1,
-		nsfrsets=30,
-		irtflg=0,
-		numtim=2,
-		weight=0.75,
-		flwtol=0.0001,
-		reach_data=rd,
-		segment_data=seg_data,
-		channel_geometry_data=None,
-		channel_flow_data=None,
-		dataset_5=None,
-		irdflag=0,
-		iptflag=0,
-		reachinput=True,
-		transroute=False,
-		tabfiles=False,
-		tabfiles_dict=None,
-		extension='sfr',
-		unit_number=None,
-		filenames=None)
-
 def modflow_bas(model):
 	return flopy.modflow.ModflowBas(model, ifrefm=False)
 
@@ -282,7 +248,10 @@ def make_sfr_file_mfusg(path, nper, nodes, nstrm, nss, njag, lenx, istcb1, istcb
 	m = modflow_model(path, "mfusg", False)
 	_make_mfusg_disu(m, nodes, nper, njag, lenx)
 	m.dis = m.disu
-	sfr = mf_str2(m, nstrm, nss, istcb1, istcb2, rd, seg_data)
+
+	reach_data = rd
+	segment_data = seg_data
+	sfr = _make_sfr2(m, nstrm, nss, istcb1, istcb2, reach_data, segment_data)
 
 	sfr.heading = sfr_heading
 
@@ -303,3 +272,37 @@ def _make_mfusg_disu(model, nodes, nper, njag, lenx):
 		cl1=np.zeros((lenx)),
 		cl2=np.zeros((lenx)),
 		fahl=np.zeros((lenx)))
+
+def _make_sfr2(model, nstrm, nss, istcb1, istcb2, reach_data, segment_data):
+	return flopy.modflow.mfsfr2.ModflowSfr2(
+		model,
+		nstrm=nstrm,
+		nss=nss,
+		nsfrpar=0,
+		nparseg=0,
+		const=None,
+		dleak=0.0001,
+		ipakcb=istcb1,
+		istcb2=istcb2,
+		isfropt=1,
+		nstrail=10,
+		isuzn=1,
+		nsfrsets=30,
+		irtflg=0,
+		numtim=2,
+		weight=0.75,
+		flwtol=0.0001,
+		reach_data=reach_data,
+		segment_data=segment_data,
+		channel_geometry_data=None,
+		channel_flow_data=None,
+		dataset_5=None,
+		irdflag=0,
+		iptflag=0,
+		reachinput=True,
+		transroute=False,
+		tabfiles=False,
+		tabfiles_dict=None,
+		extension='sfr',
+		unit_number=None,
+		filenames=None)
