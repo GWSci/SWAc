@@ -113,14 +113,14 @@ def modflow_disu(model, nodes, nper, njag, lenx):
 		cl2=np.zeros((lenx)),
 		fahl=np.zeros((lenx)))
 
-def _make_empty_modflow_gwf_rch_stress_period_data(model, nodes, nper):
+def _make_empty_modflow_gwf_rch_stress_period_data(model, maxbound, nper):
 	return flopy.mf6.ModflowGwfrch.stress_period_data.empty(
 		model,
-		maxbound=nodes,
+		maxbound=maxbound,
 		nseg=1,
 		stress_periods=range(nper))
 
-def mf_gwf_rch(model, nodes, spd):
+def mf_gwf_rch(model, maxbound, spd):
 	return flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(model,
                                                        fixed_cell=False,
                                                        print_input=None,
@@ -128,7 +128,7 @@ def mf_gwf_rch(model, nodes, spd):
                                                        save_flows=None,
                                                        timeseries=None,
                                                        observations=None,
-                                                       maxbound=nodes,
+                                                       maxbound=maxbound,
                                                        stress_period_data=spd,
                                                        filename=None,
                                                        pname=None,
