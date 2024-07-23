@@ -2010,26 +2010,7 @@ def _get_sfr_file_mf6(data, runoff):
 
     ro_and_flow_accumulator = lambda per, ro, flow: apppend_runoff_and_flow_to_perioddata(perioddata, nss, per, ro, flow)
 
-    for per in range(nper):
-        for node in range(1, nodes + 1):
-            i = (nodes * per) + node
-            runoff[i] = runoff[i] * areas[node] * fac
-
-    # populate runoff and flow
-    if data['params']['attenuate_sfr_flows']:
-        _, stream_ca_order = organise_nodes_and_stream_data(sorted_by_ca, swac_seg_dic)
-        sfr_store = np.zeros(nss)
-
-    for per in tqdm(range(nper), desc="Accumulating SFR flows  "):
-
-        if data['params']['attenuate_sfr_flows']:
-            time_period = data['params']['time_periods'][per]
-            release_proportion = extract_release_proportion(data, stream_ca_order, time_period)
-            ro, flow, sfr_store = get_attenuated_sfr_flows(sorted_by_ca, swac_seg_dic, nodes, runoff, (nodes * per) + 1, sfr_store, release_proportion)
-        else:
-            ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
-
-        ro_and_flow_accumulator(per, ro, flow)
+    append_ro_and_flow(data, nper, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
 
     isfropt = 1
     if len(data['params']['sfr_obs']) > 0:
