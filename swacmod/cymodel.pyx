@@ -825,8 +825,7 @@ def get_mf6rch_file(data, rchrate):
     # this is equivalent of strange hardcoded 1000 in format_recharge_row
     #  which is called in the mf6 output function
     fac = 0.001
-    fileout = data['params']['run_name']
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    path = make_path(data)
     rch_params = data['params']['recharge_node_mapping']
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
@@ -848,6 +847,10 @@ def get_mf6rch_file(data, rchrate):
         rch_out = make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac)
 
     return rch_out
+
+def make_path(data):
+    fileout = data['params']['run_name']
+    return os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
 
 def make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac):
     m, spd = flopy_adaptor.make_model_with_disv_and_empty_spd_for_rch_out(path, nper, maxbound)
@@ -1783,8 +1786,7 @@ def get_sfr_file(data, runoff):
 def _get_sfr_file_mfusg(data, runoff):
     """get SFR object."""
 
-    fileout = data['params']['run_name']
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    path = make_path(data)
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
     njag = nodes + 2
@@ -1908,8 +1910,7 @@ def append_runoff_and_flow_to_sd(segment_data, sd, nss, per, ro, flow):
 def _get_sfr_file_mf6(data, runoff):
     """get SFR object."""
 
-    fileout = data['params']['run_name']
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    path = make_path(data)
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
     njag = nodes + 2
@@ -1919,10 +1920,8 @@ def _get_sfr_file_mf6(data, runoff):
 
     idx = make_idx()
 
-    nstrm = nss = sum([value[idx['str_flag']] > 0
+    nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
-
-    istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
 
     connectiondata = []
     packagedata = []
@@ -2057,8 +2056,7 @@ def make_modflow_str(data, nstrm, nss):
 
 def make_modflow_model(data):
     import os.path
-    fileout = data['params']['run_name']
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    path = make_path(data)
     result = flopy_adaptor.modflow_model(path, "mf2005", True)
     return result
 
@@ -2305,8 +2303,7 @@ def get_evt_file(data, evtrate):
 
     # units oddness - lots of hardcoded 1000s in input_output.py
     cdef float fac = 0.001
-    fileout = data['params']['run_name']
-    path = os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+    path = make_path(data)
 
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
