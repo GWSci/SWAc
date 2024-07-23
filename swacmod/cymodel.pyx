@@ -1796,7 +1796,7 @@ def _get_sfr_file_mfusg(data, runoff):
     path = make_path(data)
     nper = extract_nper(data)
     nodes = extract_node_count(data)
-    nstrm = nss = count_nss(idx, sorted_by_ca)
+    nstrm = nss = count_nss(sorted_by_ca)
     njag = nodes + 2
     lenx = int((njag/2) - (nodes/2))
     istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
@@ -1867,7 +1867,8 @@ def make_segment_data(data, nss, sorted_by_ca, idx, runoff):
     append_ro_and_flow(data, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
     return segment_data
 
-def count_nss(idx, sorted_by_ca):
+def count_nss(sorted_by_ca):
+    idx = make_idx()
     str_flag_index = idx['str_flag']
     return sum([value[str_flag_index] > 0
                 for value in sorted_by_ca.values()])
@@ -1916,7 +1917,7 @@ def _get_sfr_file_mf6(data, runoff):
     nodes = extract_node_count(data)
     sorted_by_ca = make_sorted_by_ca(data)
     idx = make_idx()
-    nss = count_nss(idx, sorted_by_ca)
+    nss = count_nss(sorted_by_ca)
     connectiondata = []
     packagedata = []
     perioddata = {}
@@ -2004,7 +2005,7 @@ def get_str_file(data, runoff):
 
     sorted_by_ca = make_sorted_by_ca(data)
     idx = make_idx()
-    nstrm = nss = count_nss(idx, sorted_by_ca)
+    nstrm = nss = count_nss(sorted_by_ca)
     m, dis, rd = make_modflow_str(data, nstrm, nss)
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     update_rd(sorted_by_ca, rd, dis)
@@ -2161,7 +2162,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
 
     sorted_by_ca = make_sorted_by_ca(data)
     idx = make_idx()
-    nss = count_nss(idx, sorted_by_ca)
+    nss = count_nss(sorted_by_ca)
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     runoff_with_area = combine_runoff_with_area(data, runoff)
     str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
