@@ -245,18 +245,18 @@ def _mf_gwf_sfr(model, nreaches, packagedata, connectiondata, perioddata):
 		parent_file=None)
 
 def make_sfr_file_mfusg(path, nper, nodes, nstrm, nss, njag, lenx, istcb1, istcb2, seg_data, rd, sfr_heading):
-	m = modflow_model(path, "mfusg", False)
-	_make_mfusg_disu(m, nodes, nper, njag, lenx)
-	m.dis = m.disu
+	model = modflow_model(path, "mfusg", False)
+	_make_mfusg_disu(model, nodes, nper, njag, lenx)
+	model.dis = model.disu
 
 	reach_data = rd
 	segment_data = seg_data
-	sfr = _make_sfr2(m, nstrm, nss, istcb1, istcb2, reach_data, segment_data)
+	sfr = _make_sfr2(model, nstrm, nss, istcb1, istcb2, reach_data, segment_data)
 
 	sfr.heading = sfr_heading
 
 	# compute the slopes
-	m.sfr.get_slopes()
+	model.sfr.get_slopes()
 
 	return sfr
 
