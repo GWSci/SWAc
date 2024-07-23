@@ -1797,8 +1797,8 @@ def _get_sfr_file_mfusg(data, runoff):
     nstrm = nss = count_nss(idx, sorted_by_ca)
     sd = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
     reach_data = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
-    swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
-    seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
+    swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
+    seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
 
     # initialise reach & segment data
     str_count = 0
@@ -1915,8 +1915,8 @@ def _get_sfr_file_mf6(data, runoff):
     sfr = None
     perioddata[0] = []
     seg_data = {}
-    swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
-    seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
+    swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
+    seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
     # for mf6 only
     str_flg = np.zeros((nodes), dtype=int)
 
@@ -1998,7 +1998,7 @@ def get_str_file(data, runoff):
     idx = make_idx()
     nstrm = nss = count_nss(idx, sorted_by_ca)
     m, dis, rd = make_modflow_str(data, nstrm, nss)
-    swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
+    swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     update_rd(sorted_by_ca, rd, dis)
     runoff_with_area = combine_runoff_with_area(data, runoff)
     str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
@@ -2011,7 +2011,7 @@ def get_str_file(data, runoff):
             reach_data[per][iseg]['flow'] = str_flow_array[per,iseg]
 
     str_flg = make_str_flg(data, sorted_by_ca)
-    seg_swac_dic = make_seg_swac_dic(data, sorted_by_ca)
+    seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
     cd = initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
     strm = make_strm(data, m, nstrm, reach_data, nper, cd)
     return strm
@@ -2056,7 +2056,7 @@ def make_str_flg(data, sorted_by_ca):
             str_count += 1
     return str_flg
 
-def make_swac_seg_dic(data, sorted_by_ca):
+def make_swac_seg_dic(sorted_by_ca):
     str_count = 0
     swac_seg_dic = {}
     for node_swac, line in sorted_by_ca.items():
@@ -2066,7 +2066,7 @@ def make_swac_seg_dic(data, sorted_by_ca):
             str_count += 1
     return swac_seg_dic
 
-def make_seg_swac_dic(data, sorted_by_ca):
+def make_seg_swac_dic(sorted_by_ca):
     str_count = 0
     seg_swac_dic = {}
     for node_swac, line in sorted_by_ca.items():
@@ -2154,7 +2154,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     sorted_by_ca = make_sorted_by_ca(data)
     idx = make_idx()
     nss = count_nss(idx, sorted_by_ca)
-    swac_seg_dic = make_swac_seg_dic(data, sorted_by_ca)
+    swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     runoff_with_area = combine_runoff_with_area(data, runoff)
     str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
     stream_mass_array = get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic)
