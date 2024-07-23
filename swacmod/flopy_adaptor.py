@@ -291,3 +291,16 @@ def modflow_gwf_evt(model, nodes, spd):
 		filename=None,
 		pname=None,
 		parent_file=None)
+
+def make_sfr_file_mf6(is_disv, path, nper, nodes, nss, rd, cd, sd, optional_obs_filename, sfr_heading):
+	if is_disv:
+		m = make_model_for_sfr_mf6_disv(path, nper)
+	else:
+		m = make_model_for_sfr_mf6_disu(path, nodes, nper)
+	sfr = mf_gwf_sfr(m, nss, rd, cd, sd)
+
+	if optional_obs_filename is not None:
+		sfr.obs.initialize(filename=optional_obs_filename)
+
+	sfr.heading = sfr_heading
+	return sfr
