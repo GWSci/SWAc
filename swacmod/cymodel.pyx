@@ -831,14 +831,14 @@ def get_mf6rch_file(data, rchrate):
     nper = len(data['params']['time_periods'])
     nodes = data['params']['num_nodes']
 
-    irch = np.zeros((nodes, 1), dtype=int)
+    irch = np.zeros(nodes, dtype=int)
     if rch_params is not None:
         for node_number, vals in rch_params.iteritems():
             node_index = node_number - 1
-            irch[node_index, 0] = vals[0]
+            irch[node_index] = vals[0]
     else:
         for node_index in range(nodes):
-            irch[node_index, 0] = node_index + 1
+            irch[node_index] = node_index + 1
 
     if data['params']['disv']:
         rch_out = make_mf6_rch_file_with_disv(path, nodes, nper, irch, rchrate, fac)
@@ -852,8 +852,8 @@ def make_mf6_rch_file_with_disv(path, nodes, nper, irch, rchrate, fac):
 
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
         for i in range(nodes):
-            if irch[i, 0] > 0:
-                spd[per][i] = ((0, irch[i, 0] - 1),
+            if irch[i] > 0:
+                spd[per][i] = ((0, irch[i] - 1),
                             rchrate[(nodes * per) + i + 1] * fac)
 
     rch_out = flopy_adaptor.mf_gwf_rch(m, nodes, spd)
@@ -865,8 +865,8 @@ def make_mf6_rch_file_with_disu(path, nodes, nper, irch, rchrate, fac):
 
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
         for i in range(nodes):
-            if irch[i, 0] > 0:
-                spd[per][i] = ((irch[i, 0] - 1,),
+            if irch[i] > 0:
+                spd[per][i] = ((irch[i] - 1,),
                             rchrate[(nodes * per) + i + 1] * fac)
 
     rch_out = flopy_adaptor.mf_gwf_rch(m, nodes, spd)
