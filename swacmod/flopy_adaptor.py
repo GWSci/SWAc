@@ -194,7 +194,7 @@ def modflow_gwf_evt(model, nodes, spd):
 		pname=None,
 		parent_file=None)
 
-def make_sfr_file_mf6(is_disv, path, nper, nodes, nss, rd, cd, sd, optional_obs_filename, sfr_heading):
+def make_sfr_file_mf6(is_disv, path, nper, nodes, nss, packagedata, connectiondata, perioddata, optional_obs_filename, sfr_heading):
 	sim = _mf_simulation()
 	model = _mf_model(sim, path)
 
@@ -206,9 +206,6 @@ def make_sfr_file_mf6(is_disv, path, nper, nodes, nss, rd, cd, sd, optional_obs_
 	_mf_tdis(sim, nper)
 
 	nreaches = nss
-	packagedata = rd
-	connectiondata = cd
-	perioddata = sd
 	sfr = _mf_gwf_sfr(model, nreaches, packagedata, connectiondata, perioddata)
 
 	sfr.heading = sfr_heading
