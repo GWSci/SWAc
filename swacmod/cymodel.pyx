@@ -1792,10 +1792,7 @@ def _get_sfr_file_mfusg(data, runoff):
 
     sorted_by_ca = make_sorted_by_ca_for_sfr(data)
 
-    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
-             'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
-
-    idx = {y: x for (x, y) in enumerate(names)}
+    idx = make_idx()
 
     nstrm = nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
@@ -1926,10 +1923,7 @@ def _get_sfr_file_mf6(data, runoff):
 
     sorted_by_ca = make_sorted_by_ca_for_sfr(data)
 
-    names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
-             'bed_thk', 'str_k', 'depth', 'width']  # removed hcond1
-
-    idx = {y: x for (x, y) in enumerate(names)}
+    idx = make_idx()
 
     nstrm = nss = sum([value[idx['str_flag']] > 0
                        for value in sorted_by_ca.values()])
