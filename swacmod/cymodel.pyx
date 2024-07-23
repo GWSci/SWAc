@@ -1968,8 +1968,9 @@ def _get_sfr_file_mf6(data, runoff):
                 else:
                     conn.append(float((swac_seg_dic[n] - 1)))
 
-        # update num connections
         connectiondata.append(conn)
+
+    for iseg in range(nss):
         packagedata[iseg][9] = len(connectiondata[iseg]) - 1
 
     ro_and_flow_accumulator = lambda per, ro, flow: apppend_runoff_and_flow_to_perioddata(perioddata, nss, per, ro, flow)
