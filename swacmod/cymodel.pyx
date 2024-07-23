@@ -1927,13 +1927,13 @@ def _get_sfr_file_mf6(data, runoff):
     str_flg = np.zeros((nodes), dtype=int)
 
     # initialise reach & segment data
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
+        str_flg[node_swac-1] = str_flag
+
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
-        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
-         depth, width) = line
-        # for mf6 only
-        str_flg[node_swac-1] = str_flag
-        ca = ca
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
         if str_flag > 0:
             if node_mf > 0:
                 if data['params']['disv']:
