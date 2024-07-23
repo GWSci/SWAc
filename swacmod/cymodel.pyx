@@ -1775,13 +1775,16 @@ def calculate_de_accumulated_flows(stream_ca_order, sfr_released):
 def get_sfr_file(data, runoff):
     """get SFR object."""
 
-    import copy
-    import os.path
-
     if data['params']['gwmodel_type'] == 'mfusg':
-        pass
+        return _get_sfr_file_mfusg(data, runoff)
     elif data['params']['gwmodel_type'] == 'mf6':
         return _get_sfr_file_mf6(data, runoff)
+
+def _get_sfr_file_mfusg(data, runoff):
+    """get SFR object."""
+
+    import copy
+    import os.path
 
     # units oddness - lots of hardcoded 1000s in input_output.py
     fac = 0.001
