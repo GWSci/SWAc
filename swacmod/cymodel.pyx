@@ -1856,7 +1856,8 @@ def _get_sfr_file_mfusg(data, runoff):
     return sfr
 
 def count_nss(idx, sorted_by_ca):
-    return sum([value[idx['str_flag']] > 0
+    str_flag_index = idx['str_flag']
+    return sum([value[str_flag_index] > 0
                 for value in sorted_by_ca.values()])
 
 def append_ro_and_flow(data, nper, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator):
