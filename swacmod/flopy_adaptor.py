@@ -75,19 +75,6 @@ def modflow_model(path, version, structured):
 	else:
 		return flopy.mfusg.MfUsg(modelname=path, version=version, structured=structured)
 
-def modflow_disu(model, nodes, nper, njag, lenx):
-	return flopy.mfusg.MfUsgDisU(
-		model,
-		nodes=nodes,
-		nper=nper,
-		iac=[njag] + (nodes - 1) * [0],
-		ja=np.zeros((njag), dtype=int),
-		njag=njag,
-		idsymrd=1,
-		cl1=np.zeros((lenx)),
-		cl2=np.zeros((lenx)),
-		fahl=np.zeros((lenx)))
-
 def _make_empty_modflow_gwf_rch_stress_period_data(model, maxbound, nper):
 	return flopy.mf6.ModflowGwfrch.stress_period_data.empty(
 		model,
@@ -293,7 +280,7 @@ def _mf_gwf_sfr(model, nreaches, packagedata, connectiondata, perioddata):
 
 def make_sfr_file_mfusg(path, nper, nodes, nstrm, nss, njag, lenx, istcb1, istcb2, seg_data, rd, sfr_heading):
 	m = modflow_model(path, "mfusg", False)
-	modflow_disu(m, nodes, nper, njag, lenx)
+	_make_mfusg_disu(m, nodes, nper, njag, lenx)
 	m.dis = m.disu
 	sfr = mf_str2(m, nstrm, nss, istcb1, istcb2, rd, seg_data)
 
@@ -303,3 +290,16 @@ def make_sfr_file_mfusg(path, nper, nodes, nstrm, nss, njag, lenx, istcb1, istcb
 	m.sfr.get_slopes()
 
 	return sfr
+
+def _make_mfusg_disu(model, nodes, nper, njag, lenx):
+	return flopy.mfusg.MfUsgDisU(
+		model,
+		nodes=nodes,
+		nper=nper,
+		iac=[njag] + (nodes - 1) * [0],
+		ja=np.zeros((njag), dtype=int),
+		njag=njag,
+		idsymrd=1,
+		cl1=np.zeros((lenx)),
+		cl2=np.zeros((lenx)),
+		fahl=np.zeros((lenx)))

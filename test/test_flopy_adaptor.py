@@ -137,7 +137,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 			model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			disu = flopy_adaptor.modflow_disu(model, 3, 5, 7, 2)
+			disu = flopy_adaptor._make_mfusg_disu(model, 3, 5, 7, 2)
 
 		self.assertEqual(3, disu.nodes)
 		self.assertEqual(5, disu.nper)
@@ -155,7 +155,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 			model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			disu = flopy_adaptor.modflow_disu(model, 3, 5, 7, 2)
+			disu = flopy_adaptor._make_mfusg_disu(model, 3, 5, 7, 2)
 
 		self.assertEqual(disu, model.get_package("disu"))
 
