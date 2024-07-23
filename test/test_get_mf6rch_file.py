@@ -166,14 +166,14 @@ BEGIN dimensions
 END dimensions
 
 BEGIN period  1
-  
   23       0.00700000
+  
   
 END period  1
 
 BEGIN period  2
-  
   23       0.01700000
+  
   
 END period  2
 
