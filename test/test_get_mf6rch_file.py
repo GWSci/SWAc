@@ -88,7 +88,38 @@ END period  2
 """
 		self.assert_rch_file(run_name, is_disv, recharge_node_mapping, filename, expected)
 
-	def test_write_rch_with_disu_and_node_mapping(self):
+	def test_write_rch_with_disv_and_node_mapping_for_all_nodes(self):
+		run_name = "run-cat"
+		is_disv = True
+		recharge_node_mapping = {
+			1: [7],
+			2: [23],
+			3: [29],
+		}
+		filename = "output_files/run-cat.rch"
+		expected = """BEGIN options
+END options
+
+BEGIN dimensions
+  MAXBOUND  3
+END dimensions
+
+BEGIN period  1
+  1 7       0.00500000
+  1 23       0.00700000
+  1 29       0.01100000
+END period  1
+
+BEGIN period  2
+  1 7       0.01300000
+  1 23       0.01700000
+  1 29       0.01900000
+END period  2
+
+"""
+		self.assert_rch_file(run_name, is_disv, recharge_node_mapping, filename, expected)
+
+	def test_write_rch_with_disu_and_node_mapping_for_only_some_nodes(self):
 		run_name = "run-dog"
 		is_disv = False
 		recharge_node_mapping = {
