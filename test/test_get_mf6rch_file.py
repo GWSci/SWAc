@@ -17,15 +17,15 @@ BEGIN dimensions
 END dimensions
 
 BEGIN period  1
-  1 1       0.00500000
-  1 2       0.00700000
-  1 3       0.01100000
+  1 1 5.00000000E-03
+  1 2 7.00000000E-03
+  1 3 1.10000000E-02
 END period  1
 
 BEGIN period  2
-  1 1       0.01300000
-  1 2       0.01700000
-  1 3       0.01900000
+  1 1 1.30000000E-02
+  1 2 1.70000000E-02
+  1 3 1.90000000E-02
 END period  2
 
 """
@@ -44,15 +44,15 @@ BEGIN dimensions
 END dimensions
 
 BEGIN period  1
-  1       0.00500000
-  2       0.00700000
-  3       0.01100000
+  1 5.00000000E-03
+  2 7.00000000E-03
+  3 1.10000000E-02
 END period  1
 
 BEGIN period  2
-  1       0.01300000
-  2       0.01700000
-  3       0.01900000
+  1 1.30000000E-02
+  2 1.70000000E-02
+  3 1.90000000E-02
 END period  2
 
 """
@@ -75,15 +75,15 @@ BEGIN dimensions
 END dimensions
 
 BEGIN period  1
-  7       0.00500000
-  23       0.00700000
-  29       0.01100000
+  7 5.00000000E-03
+  23 7.00000000E-03
+  29 1.10000000E-02
 END period  1
 
 BEGIN period  2
-  7       0.01300000
-  23       0.01700000
-  29       0.01900000
+  7 1.30000000E-02
+  23 1.70000000E-02
+  29 1.90000000E-02
 END period  2
 
 """
@@ -105,11 +105,11 @@ BEGIN dimensions
 END dimensions
 
 BEGIN period  1
-  1 23       0.00700000
+  1 23 7.00000000E-03
 END period  1
 
 BEGIN period  2
-  1 23       0.01700000
+  1 23 1.70000000E-02
 END period  2
 
 """
@@ -132,15 +132,15 @@ BEGIN dimensions
 END dimensions
 
 BEGIN period  1
-  1 7       0.00500000
-  1 23       0.00700000
-  1 29       0.01100000
+  1 7 5.00000000E-03
+  1 23 7.00000000E-03
+  1 29 1.10000000E-02
 END period  1
 
 BEGIN period  2
-  1 7       0.01300000
-  1 23       0.01700000
-  1 29       0.01900000
+  1 7 1.30000000E-02
+  1 23 1.70000000E-02
+  1 29 1.90000000E-02
 END period  2
 
 """
@@ -162,11 +162,11 @@ BEGIN dimensions
 END dimensions
 
 BEGIN period  1
-  23       0.00700000
+  23 7.00000000E-03
 END period  1
 
 BEGIN period  2
-  23       0.01700000
+  23 1.70000000E-02
 END period  2
 
 """
