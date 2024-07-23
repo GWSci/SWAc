@@ -28,7 +28,7 @@ def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes):
 	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
 	return m, spd
 
-def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes):
+def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes, maxbound):
 	sim = _mf_simulation()
 	m = _mf_model(sim, path)
 	njag = nodes + 2
@@ -36,7 +36,7 @@ def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes):
 
 	_mf_tdis(sim, nper)
 
-	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
+	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, maxbound, nper)
 	return m, spd
 
 def make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx, nss, nstrm):
