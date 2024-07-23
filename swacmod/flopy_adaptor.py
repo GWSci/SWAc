@@ -279,9 +279,16 @@ def modflow_gwf_evt(model, nodes, spd):
 
 def make_sfr_file_mf6(is_disv, path, nper, nodes, nss, rd, cd, sd, optional_obs_filename, sfr_heading):
 	if is_disv:
-		m = make_model_for_sfr_mf6_disv(path, nper)
+		sim = _mf_simulation()
+		m = _mf_model(sim, path)
+		_mf_gwf_disv(m)
+		_mf_tdis(sim, nper)
 	else:
-		m = make_model_for_sfr_mf6_disu(path, nodes, nper)
+		sim = _mf_simulation()
+		m = _mf_model(sim, path)
+		njag = nodes + 2
+		_mf_gwf_disu(m, nodes, njag)
+		_mf_tdis(sim, nper)
 	sfr = mf_gwf_sfr(m, nss, rd, cd, sd)
 
 	if optional_obs_filename is not None:
@@ -289,21 +296,6 @@ def make_sfr_file_mf6(is_disv, path, nper, nodes, nss, rd, cd, sd, optional_obs_
 
 	sfr.heading = sfr_heading
 	return sfr
-
-def make_model_for_sfr_mf6_disv(path, nper):
-	sim = _mf_simulation()
-	m = _mf_model(sim, path)
-	_mf_gwf_disv(m)
-	_mf_tdis(sim, nper)
-	return m
-
-def make_model_for_sfr_mf6_disu(path, nodes, nper):
-	sim = _mf_simulation()
-	m = _mf_model(sim, path)
-	njag = nodes + 2
-	_mf_gwf_disu(m, nodes, njag)
-	_mf_tdis(sim, nper)
-	return m
 
 def mf_gwf_sfr(model, nss, rd, cd, sd):
 	return flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr(
