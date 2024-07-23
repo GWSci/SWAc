@@ -253,16 +253,21 @@ def modflow_gwf_evt(model, nodes, spd):
 
 def make_sfr_file_mf6(is_disv, path, nper, nodes, nss, rd, cd, sd, optional_obs_filename, sfr_heading):
 	sim = _mf_simulation()
-	m = _mf_model(sim, path)
+	model = _mf_model(sim, path)
 
 	if is_disv:
-		_mf_gwf_disv(m)
+		_mf_gwf_disv(model)
 	else:
 		njag = nodes + 2
-		_mf_gwf_disu(m, nodes, njag)
+		_mf_gwf_disu(model, nodes, njag)
 	_mf_tdis(sim, nper)
 
-	sfr = mf_gwf_sfr(m, nss, rd, cd, sd)
+	nreaches = nss
+	packagedata = rd
+	connectiondata = cd
+	perioddata = sd
+	sfr = _mf_gwf_sfr(model, nreaches, packagedata, connectiondata, perioddata)
+
 	sfr.heading = sfr_heading
 
 	if optional_obs_filename is not None:
@@ -270,7 +275,7 @@ def make_sfr_file_mf6(is_disv, path, nper, nodes, nss, rd, cd, sd, optional_obs_
 
 	return sfr
 
-def mf_gwf_sfr(model, nss, rd, cd, sd):
+def _mf_gwf_sfr(model, nreaches, packagedata, connectiondata, perioddata):
 	return flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr(
 		model,
 		loading_package=False,
@@ -287,11 +292,11 @@ def mf_gwf_sfr(model, nss, rd, cd, sd):
 		mover=None,
 		maximum_iterations=None,
 		unit_conversion=86400.0,
-		nreaches=nss,
-		packagedata=rd,
-		connectiondata=cd,
+		nreaches=nreaches,
+		packagedata=packagedata,
+		connectiondata=connectiondata,
 		diversions=None,
-		perioddata=sd,
+		perioddata=perioddata,
 		filename=None,
 		pname=None,
 		parent_file=None)
