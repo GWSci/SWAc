@@ -2001,15 +2001,12 @@ def _get_sfr_file_mf6(data, runoff):
     sd = {}
     sfr = None
 
-    if data['params']['gwmodel_type'] == 'mfusg':
-        m, sd, rd = flopy_adaptor.make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx, nss, nstrm)
-    elif data['params']['gwmodel_type'] == 'mf6':
-        if data['params']['disv']:
-            m = flopy_adaptor.make_model_for_sfr_mf6_disv(path, nper)
-        else:
-            m = flopy_adaptor.make_model_for_sfr_mf6_disu(path, nodes, nper)
+    if data['params']['disv']:
+        m = flopy_adaptor.make_model_for_sfr_mf6_disv(path, nper)
+    else:
+        m = flopy_adaptor.make_model_for_sfr_mf6_disu(path, nodes, nper)
 
-        sd[0] = []
+    sd[0] = []
     seg_data = {}
     swac_seg_dic = {}
     seg_swac_dic = {}
@@ -2028,77 +2025,40 @@ def _get_sfr_file_mf6(data, runoff):
             swac_seg_dic[node_swac] = str_count + 1
             seg_swac_dic[str_count + 1] = node_swac
 
-            if data['params']['gwmodel_type'] == 'mfusg':
-                rd[str_count]['node'] = node_mf - 1  # external
-                rd[str_count]['iseg'] = str_count + 1  # serial
-                rd[str_count]['ireach'] = 1  # str_count + 1 # serial
-                rd[str_count]['rchlen'] = length  # external
-                rd[str_count]['strtop'] = z  # external
-                rd[str_count]['strthick'] = bed_thk  # constant (for now)
-                rd[str_count]['strhc1'] = str_k  # constant (for now)
-
-                # segment data
-                sd[str_count]['nseg'] = str_count + 1  # serial
-                sd[str_count]['icalc'] = 0  # constant
-                sd[str_count]['outseg'] = 0
-                sd[str_count]['iupseg'] = 0  # constant (0)
-                sd[str_count]['flow'] = 0.0  # constant (for now - swac)
-                sd[str_count]['runoff'] = 0.0  # constant (for now - swac)
-                sd[str_count]['etsw'] = 0.0  # # cotnstant (0)
-                sd[str_count]['pptsw'] = 0.0  # constant (0)
-                # sd[str_count]['hcond1'] = hcond1 # get from lpf
-                sd[str_count]['thickm1'] = bed_thk  # constant
-                sd[str_count]['elevup'] = z  # get from mf
-                sd[str_count]['width1'] = width  # constant
-                sd[str_count]['depth1'] = depth  # constant
-                sd[str_count]['width2'] = width  # constant
-                sd[str_count]['depth2'] = depth  # constant
-
-            elif data['params']['gwmodel_type'] == 'mf6':
-                if node_mf > 0:
-                    if data['params']['disv']:
-                        n = (0, node_mf - 1)
-                    else:
-                        n = (node_mf - 1,)
+            if node_mf > 0:
+                if data['params']['disv']:
+                    n = (0, node_mf - 1)
                 else:
-                    if data['params']['disv']:
-                        n = (-100000000, 0)
-                    else:
-                        n = (-100000000, )
+                    n = (node_mf - 1,)
+            else:
+                if data['params']['disv']:
+                    n = (-100000000, 0)
+                else:
+                    n = (-100000000, )
 
-                rd.append([str_count, n, length, width,
-                           0.0001, z, bed_thk, str_k, 0.0001, 1, 1.0, 0])
-                sd[0].append((str_count, 'STAGE', z + depth))
-                sd[0].append((str_count, 'STATUS', "SIMPLE"))
+            rd.append([str_count, n, length, width,
+                        0.0001, z, bed_thk, str_k, 0.0001, 1, 1.0, 0])
+            sd[0].append((str_count, 'STAGE', z + depth))
+            sd[0].append((str_count, 'STATUS', "SIMPLE"))
 
             # inc stream counter
             str_count += 1
 
-    if data['params']['gwmodel_type'] == 'mfusg':
-        for iseg in range(nss):
-            node_swac = seg_swac_dic[iseg + 1]
-            downstr = sorted_by_ca[node_swac][idx['downstr']]
-            if downstr in swac_seg_dic:
-                sd[iseg]['outseg'] = swac_seg_dic[downstr]
-            else:
-                sd[iseg]['outseg'] = 0
+    Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
+    for iseg in range(nss):
+        conn = [iseg]
+        node_swac = seg_swac_dic[iseg + 1]
+        downstr = sorted_by_ca[node_swac][idx['downstr']]
+        for n in Gs.neighbors(node_swac):
+            if n in swac_seg_dic:
+                if n == downstr:
+                    conn.append(-float(swac_seg_dic[n] - 1))
+                else:
+                    conn.append(float((swac_seg_dic[n] - 1)))
 
-    elif data['params']['gwmodel_type'] == 'mf6':
-        Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
-        for iseg in range(nss):
-            conn = [iseg]
-            node_swac = seg_swac_dic[iseg + 1]
-            downstr = sorted_by_ca[node_swac][idx['downstr']]
-            for n in Gs.neighbors(node_swac):
-                if n in swac_seg_dic:
-                    if n == downstr:
-                        conn.append(-float(swac_seg_dic[n] - 1))
-                    else:
-                        conn.append(float((swac_seg_dic[n] - 1)))
-
-            # update num connections
-            cd.append(conn)
-            rd[iseg][9] = len(cd[iseg]) - 1
+        # update num connections
+        cd.append(conn)
+        rd[iseg][9] = len(cd[iseg]) - 1
 
     for per in range(nper):
         for node in range(1, nodes + 1):
@@ -2119,37 +2079,19 @@ def _get_sfr_file_mf6(data, runoff):
         else:
             ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
 
-        if data['params']['gwmodel_type'] == 'mfusg':
-            for iseg in range(nss):
-                sd[iseg]['runoff'] = ro[iseg]
-                sd[iseg]['flow'] = flow[iseg]
-
-        elif data['params']['gwmodel_type'] == 'mf6':
-            for iseg in range(nss):
-                if per not in sd:
-                    sd[per] = []
-                sd[per].append((iseg, 'RUNOFF', ro[iseg]))
-                sd[per].append((iseg, 'INFLOW', flow[iseg]))
-
-        # add segment data for this period
-        if data['params']['gwmodel_type'] == 'mfusg':
-            seg_data[per] = copy.deepcopy(sd)
+        for iseg in range(nss):
+            if per not in sd:
+                sd[per] = []
+            sd[per].append((iseg, 'RUNOFF', ro[iseg]))
+            sd[per].append((iseg, 'INFLOW', flow[iseg]))
 
     isfropt = 1
-    if data['params']['gwmodel_type'] == 'mfusg':
-        sfr = flopy_adaptor.mf_str2(m, nstrm, nss, istcb1, istcb2, rd, seg_data)
+    sfr = flopy_adaptor.mf_gwf_sfr(m, nss, rd, cd, sd)
 
-    elif data['params']['gwmodel_type'] == 'mf6':
-        sfr = flopy_adaptor.mf_gwf_sfr(m, nss, rd, cd, sd)
-
-        if len(data['params']['sfr_obs']) > 0:
-            sfr.obs.initialize(filename=data['params']['sfr_obs'])
+    if len(data['params']['sfr_obs']) > 0:
+        sfr.obs.initialize(filename=data['params']['sfr_obs'])
 
     sfr.heading = "# SFR package for  MODFLOW-USG, generated by SWAcMod."
-
-    # compute the slopes
-    if data['params']['gwmodel_type'] == 'mfusg':
-        m.sfr.get_slopes()
 
     return sfr
 
