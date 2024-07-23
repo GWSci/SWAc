@@ -1917,27 +1917,6 @@ def _get_sfr_file_mf6(data, runoff):
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
 
-    packagedata = []
-    str_count = 0
-    for node_swac, line in sorted_by_ca.items():
-        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
-        if str_flag > 0:
-            if node_mf > 0:
-                if data['params']['disv']:
-                    n = (0, node_mf - 1)
-                else:
-                    n = (node_mf - 1,)
-            else:
-                if data['params']['disv']:
-                    n = (-100000000, 0)
-                else:
-                    n = (-100000000, )
-
-            packagedata.append([str_count, n, length, width,
-                        0.0001, z, bed_thk, str_k, 0.0001, 1, 1.0, 0])
-
-            str_count += 1
-
     perioddata = {}
     perioddata[0] = []
     str_count = 0
@@ -1969,6 +1948,27 @@ def _get_sfr_file_mf6(data, runoff):
                     conn.append(float((swac_seg_dic[n] - 1)))
 
         connectiondata.append(conn)
+
+    packagedata = []
+    str_count = 0
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width) = line
+        if str_flag > 0:
+            if node_mf > 0:
+                if data['params']['disv']:
+                    n = (0, node_mf - 1)
+                else:
+                    n = (node_mf - 1,)
+            else:
+                if data['params']['disv']:
+                    n = (-100000000, 0)
+                else:
+                    n = (-100000000, )
+
+            packagedata.append([str_count, n, length, width,
+                        0.0001, z, bed_thk, str_k, 0.0001, 1, 1.0, 0])
+
+            str_count += 1
 
     for iseg in range(nss):
         packagedata[iseg][9] = len(connectiondata[iseg]) - 1
