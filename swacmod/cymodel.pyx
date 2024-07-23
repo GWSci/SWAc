@@ -1892,9 +1892,7 @@ def _get_sfr_file_mfusg(data, runoff):
         else:
             ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
 
-        for iseg in range(nss):
-            sd[iseg]['runoff'] = ro[iseg]
-            sd[iseg]['flow'] = flow[iseg]
+        append_runoff_and_flow_to_sd(sd, nss, per, ro, flow)
 
         # add segment data for this period
         segment_data[per] = copy.deepcopy(sd)
@@ -1904,6 +1902,11 @@ def _get_sfr_file_mfusg(data, runoff):
     sfr = flopy_adaptor.make_sfr_file_mfusg(path, nper, nodes, nstrm, nss, njag, lenx, istcb1, istcb2, segment_data, reach_data, sfr_heading)
 
     return sfr
+
+def append_runoff_and_flow_to_sd(sd, nss, per, ro, flow):
+    for iseg in range(nss):
+        sd[iseg]['runoff'] = ro[iseg]
+        sd[iseg]['flow'] = flow[iseg]
 
 def _get_sfr_file_mf6(data, runoff):
     """get SFR object."""
@@ -2014,11 +2017,7 @@ def _get_sfr_file_mf6(data, runoff):
         else:
             ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
 
-        for iseg in range(nss):
-            if per not in perioddata:
-                perioddata[per] = []
-            perioddata[per].append((iseg, 'RUNOFF', ro[iseg]))
-            perioddata[per].append((iseg, 'INFLOW', flow[iseg]))
+        apppend_runoff_and_flow_to_perioddata(perioddata, nss, per, ro, flow)
 
     isfropt = 1
     if len(data['params']['sfr_obs']) > 0:
@@ -2031,6 +2030,14 @@ def _get_sfr_file_mf6(data, runoff):
     sfr = flopy_adaptor.make_sfr_file_mf6(is_disv, path, nper, nodes, nss, packagedata, connectiondata, perioddata, optional_obs_filename, sfr_heading)
 
     return sfr
+
+def apppend_runoff_and_flow_to_perioddata(perioddata, nss, per, ro, flow):
+    for iseg in range(nss):
+        if per not in perioddata:
+            perioddata[per] = []
+        perioddata[per].append((iseg, 'RUNOFF', ro[iseg]))
+        perioddata[per].append((iseg, 'INFLOW', flow[iseg]))
+
 
 ##############################################################################
 
