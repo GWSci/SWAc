@@ -1943,11 +1943,6 @@ def _get_sfr_file_mf6(data, runoff):
     sd = {}
     sfr = None
 
-    if data['params']['disv']:
-        m = flopy_adaptor.make_model_for_sfr_mf6_disv(path, nper)
-    else:
-        m = flopy_adaptor.make_model_for_sfr_mf6_disu(path, nodes, nper)
-
     sd[0] = []
     seg_data = {}
     swac_seg_dic = {}
@@ -2028,6 +2023,10 @@ def _get_sfr_file_mf6(data, runoff):
             sd[per].append((iseg, 'INFLOW', flow[iseg]))
 
     isfropt = 1
+    if data['params']['disv']:
+        m = flopy_adaptor.make_model_for_sfr_mf6_disv(path, nper)
+    else:
+        m = flopy_adaptor.make_model_for_sfr_mf6_disu(path, nodes, nper)
     sfr = flopy_adaptor.mf_gwf_sfr(m, nss, rd, cd, sd)
 
     if len(data['params']['sfr_obs']) > 0:
