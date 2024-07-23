@@ -354,13 +354,12 @@ END period  5
 		cd = [1, 1]
 		sd = {0: [(0, "STAGE", 7)]}
 
-		sim = flopy_adaptor._mf_simulation()
-		model = flopy_adaptor._mf_model(sim, path)
-		flopy_adaptor._mf_gwf_disv(model)
-		flopy_adaptor._mf_tdis(sim, nper)
-		sfr = flopy_adaptor.mf_gwf_sfr(model, nss, rd, cd, sd)
+		is_disv = True
+		nodes = None
+		optional_obs_filename = None
+		sfr_heading = None
+		sfr = flopy_adaptor.make_sfr_file_mf6(is_disv, path, nper, nodes, nss, rd, cd, sd, optional_obs_filename, sfr_heading)
 
-		self.assertEqual(model, sfr.model_or_sim)
 		self.assertEqual(False, sfr.loading_package)
 		self.assertEqual('  UNIT_CONVERSION   86400.00000000\n', sfr.unit_conversion.get_file_entry())
 		self.assertEqual(nss, sfr.nreaches.get_data((0, 'STAGE', 7)))
