@@ -832,7 +832,7 @@ def get_mf6rch_file(data, rchrate):
     nodes = data['params']['num_nodes']
 
     irch = np.zeros(nodes, dtype=int)
-    node_index_to_rch_index = np.zeros(nodes, dtype=int)
+    node_index_to_rch_index = np.full(nodes, -1, dtype=int)
     if rch_params is not None:
         for node_number, vals in rch_params.iteritems():
             node_index = node_number - 1
@@ -858,8 +858,9 @@ def make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, irch, node_index_to
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
         spd_index = 0
         for i in range(nodes):
-            if irch[i] > 0:
-                spd[per][spd_index] = ((0, irch[i] - 1),
+            rch_index = node_index_to_rch_index[i]
+            if rch_index >= 0:
+                spd[per][spd_index] = ((0, rch_index),
                             rchrate[(nodes * per) + i + 1] * fac)
                 spd_index += 1
 
@@ -873,8 +874,9 @@ def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, irch, node_index_to
     for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
         spd_index = 0
         for i in range(nodes):
-            if irch[i] > 0:
-                spd[per][spd_index] = ((irch[i] - 1,),
+            rch_index = node_index_to_rch_index[i]
+            if rch_index >= 0:
+                spd[per][spd_index] = ((rch_index,),
                             rchrate[(nodes * per) + i + 1] * fac)
                 spd_index += 1
 
