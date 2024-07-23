@@ -820,7 +820,7 @@ def get_mf6rch_file(data, rchrate):
 
     import os.path
 
-    cdef int i, per
+    cdef int node_index, per
 
     # this is equivalent of strange hardcoded 1000 in format_recharge_row
     #  which is called in the mf6 output function
@@ -833,11 +833,12 @@ def get_mf6rch_file(data, rchrate):
 
     irch = np.zeros((nodes, 1), dtype=int)
     if rch_params is not None:
-        for inode, vals in rch_params.iteritems():
-            irch[inode - 1, 0] = vals[0]
+        for node_number, vals in rch_params.iteritems():
+            node_index = node_number - 1
+            irch[node_index, 0] = vals[0]
     else:
-        for i in range(nodes):
-            irch[i, 0] = i + 1
+        for node_index in range(nodes):
+            irch[node_index, 0] = node_index + 1
 
     if data['params']['disv']:
         rch_out = make_mf6_rch_file_with_disv(path, nodes, nper, irch, rchrate, fac)
