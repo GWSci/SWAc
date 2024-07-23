@@ -828,7 +828,7 @@ def get_mf6rch_file(data, rchrate):
     path = make_path(data)
     rch_params = data['params']['recharge_node_mapping']
     nper = extract_nper(data)
-    nodes = data['params']['num_nodes']
+    nodes = extract_node_count(data)
 
     node_index_to_rch_index = np.full(nodes, -1, dtype=int)
     if rch_params is not None:
@@ -850,6 +850,9 @@ def get_mf6rch_file(data, rchrate):
 
 def extract_nper(data):
     return len(data['params']['time_periods'])
+
+def extract_node_count(data):
+    return data['params']['num_nodes']
 
 def make_path(data):
     fileout = data['params']['run_name']
@@ -1629,7 +1632,7 @@ def aggregate_reporting_op(output, area, reporting):
 
 def get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic):
     nper = extract_nper(data)
-    nodes = data['params']['num_nodes']
+    nodes = extract_node_count(data)
     description = "Accumulating SFR flows  "
     result = np.zeros((nper, nss))
     for per in tqdm(range(nper), desc=description):
@@ -1640,7 +1643,7 @@ def get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg
 
 def get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic):
     nper = extract_nper(data)
-    nodes = data['params']['num_nodes']
+    nodes = extract_node_count(data)
     description = "Accumulating nitrate mass to surface water  "
     result = np.zeros((nper, nss))
     for per in tqdm(range(nper), desc=description):
@@ -1789,8 +1792,6 @@ def get_sfr_file(data, runoff):
 def _get_sfr_file_mfusg(data, runoff):
     """get SFR object."""
 
-    nper = extract_nper(data)
-    nodes = data['params']['num_nodes']
     sorted_by_ca = make_sorted_by_ca(data)
     idx = make_idx()
     nstrm = nss = count_nss(idx, sorted_by_ca)
@@ -1846,9 +1847,12 @@ def _get_sfr_file_mfusg(data, runoff):
 
     segment_data = {}
     ro_and_flow_accumulator = lambda per, ro, flow: append_runoff_and_flow_to_sd(segment_data, sd, nss, per, ro, flow)
+    nodes = extract_node_count(data)
     append_ro_and_flow(data, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
 
     path = make_path(data)
+    nper = extract_nper(data)
+    nodes = extract_node_count(data)
     njag = nodes + 2
     lenx = int((njag/2) - (nodes/2))
     istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
@@ -1903,7 +1907,7 @@ def _get_sfr_file_mf6(data, runoff):
 
     path = make_path(data)
     nper = extract_nper(data)
-    nodes = data['params']['num_nodes']
+    nodes = extract_node_count(data)
     sorted_by_ca = make_sorted_by_ca(data)
     idx = make_idx()
     nss = count_nss(idx, sorted_by_ca)
@@ -2047,7 +2051,7 @@ def make_modflow_dis(m, data):
     return result
 
 def make_str_flg(data, sorted_by_ca):
-    nodes = data['params']['num_nodes']
+    nodes = extract_node_count(data)
     str_flg = np.zeros((nodes), dtype=int)
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
@@ -2068,7 +2072,7 @@ def make_swac_seg_dic(data, sorted_by_ca):
     return swac_seg_dic
 
 def make_seg_swac_dic(data, sorted_by_ca):
-    nodes = data['params']['num_nodes']
+    nodes = extract_node_count(data)
     str_count = 0
     seg_swac_dic = {}
     for node_swac, line in sorted_by_ca.items():
@@ -2103,7 +2107,7 @@ def update_rd(sorted_by_ca, rd, dis):
             str_count += 1
 
 def initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss):
-    nodes = data['params']['num_nodes']
+    nodes = extract_node_count(data)
     Gs = build_graph(nodes, sorted_by_ca, str_flg, di=False)
     cd = []
     for iseg in range(nss):
@@ -2128,7 +2132,7 @@ def initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_
 def combine_runoff_with_area(data, runoff):
     areas = data['params']['node_areas']
     nper = extract_nper(data)
-    nodes = data['params']['num_nodes']
+    nodes = extract_node_count(data)
     # units oddness - lots of hardcoded 1000s in input_output.py
     fac = 0.001
     for per in range(nper):
@@ -2283,7 +2287,7 @@ def get_evt_file(data, evtrate):
     path = make_path(data)
 
     nper = extract_nper(data)
-    nodes = data['params']['num_nodes']
+    nodes = extract_node_count(data)
     m = None
 
     ievtcb = data['params']['ievtcb']
