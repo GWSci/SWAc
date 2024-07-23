@@ -81,9 +81,7 @@ BEGIN period  1
 END period  1
 
 BEGIN period  2
-  
   1 23       0.01700000
-  
 END period  2
 
 """
