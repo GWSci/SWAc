@@ -1873,6 +1873,8 @@ def _get_sfr_file_mfusg(data, runoff):
         else:
             sd[iseg]['outseg'] = 0
 
+    ro_and_flow_accumulator = append_runoff_and_flow_to_sd
+
     for per in range(nper):
         for node in range(1, nodes + 1):
             i = (nodes * per) + node
@@ -1892,7 +1894,7 @@ def _get_sfr_file_mfusg(data, runoff):
         else:
             ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
 
-        append_runoff_and_flow_to_sd(sd, nss, per, ro, flow)
+        ro_and_flow_accumulator(sd, nss, per, ro, flow)
 
         # add segment data for this period
         segment_data[per] = copy.deepcopy(sd)
@@ -1998,6 +2000,8 @@ def _get_sfr_file_mf6(data, runoff):
         connectiondata.append(conn)
         packagedata[iseg][9] = len(connectiondata[iseg]) - 1
 
+    ro_and_flow_accumulator = apppend_runoff_and_flow_to_perioddata
+
     for per in range(nper):
         for node in range(1, nodes + 1):
             i = (nodes * per) + node
@@ -2017,7 +2021,7 @@ def _get_sfr_file_mf6(data, runoff):
         else:
             ro, flow = get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes * per, nodes, nss)
 
-        apppend_runoff_and_flow_to_perioddata(perioddata, nss, per, ro, flow)
+        ro_and_flow_accumulator(perioddata, nss, per, ro, flow)
 
     isfropt = 1
     if len(data['params']['sfr_obs']) > 0:
