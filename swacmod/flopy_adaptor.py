@@ -18,14 +18,14 @@ def make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes):
 	spd = make_empty_modflow_gwf_evt_stress_period_data(m, nodes, nper)
 	return m, spd
 
-def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, nodes):
+def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, maxbound):
 	sim = _mf_simulation()
 	m = _mf_model(sim, path)
 	_mf_gwf_disv(m)
 
 	_mf_tdis(sim, nper)
 
-	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, nodes, nper)
+	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, maxbound, nper)
 	return m, spd
 
 def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes, maxbound):
