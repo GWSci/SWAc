@@ -843,7 +843,7 @@ def get_mf6rch_file(data, rchrate):
             irch[node_index] = node_index + 1
             node_index_to_rch_index[node_index] = node_index
 
-    maxbound = (irch > 0).sum()
+    maxbound = (node_index_to_rch_index >= 0).sum()
 
     if data['params']['disv']:
         rch_out = make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac)
