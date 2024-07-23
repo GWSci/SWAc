@@ -1796,6 +1796,30 @@ def _get_sfr_file_mfusg(data, runoff):
     idx = make_idx()
     nstrm = nss = count_nss(idx, sorted_by_ca)
 
+    segment_data = make_segment_data(data, nss, sorted_by_ca, idx, runoff)
+
+    return _make_sfr_mfusg(data, nstrm, nss, segment_data, sorted_by_ca)
+
+def make_reach_data(sorted_by_ca, nstrm):
+    reach_data = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
+    str_count = 0
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
+         depth, width) = line
+        if str_flag > 0:
+            reach_data[str_count]['node'] = node_mf - 1  # external
+            reach_data[str_count]['iseg'] = str_count + 1  # serial
+            reach_data[str_count]['ireach'] = 1  # str_count + 1 # serial
+            reach_data[str_count]['rchlen'] = length  # external
+            reach_data[str_count]['strtop'] = z  # external
+            reach_data[str_count]['strthick'] = bed_thk  # constant (for now)
+            reach_data[str_count]['strhc1'] = str_k  # constant (for now)
+
+            # inc stream counter
+            str_count += 1
+    return reach_data
+
+def make_segment_data(data, nss, sorted_by_ca, idx, runoff):
     sd = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
@@ -1835,27 +1859,7 @@ def _get_sfr_file_mfusg(data, runoff):
     ro_and_flow_accumulator = lambda per, ro, flow: append_runoff_and_flow_to_sd(segment_data, sd, nss, per, ro, flow)
     nodes = extract_node_count(data)
     append_ro_and_flow(data, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
-
-    return _make_sfr_mfusg(data, nstrm, nss, segment_data, sorted_by_ca)
-
-def make_reach_data(sorted_by_ca, nstrm):
-    reach_data = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
-    str_count = 0
-    for node_swac, line in sorted_by_ca.items():
-        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
-         depth, width) = line
-        if str_flag > 0:
-            reach_data[str_count]['node'] = node_mf - 1  # external
-            reach_data[str_count]['iseg'] = str_count + 1  # serial
-            reach_data[str_count]['ireach'] = 1  # str_count + 1 # serial
-            reach_data[str_count]['rchlen'] = length  # external
-            reach_data[str_count]['strtop'] = z  # external
-            reach_data[str_count]['strthick'] = bed_thk  # constant (for now)
-            reach_data[str_count]['strhc1'] = str_k  # constant (for now)
-
-            # inc stream counter
-            str_count += 1
-    return reach_data
+    return segment_data
 
 def count_nss(idx, sorted_by_ca):
     str_flag_index = idx['str_flag']
