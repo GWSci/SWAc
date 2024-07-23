@@ -49,21 +49,6 @@ def make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx, nss, nstrm):
 	rd = modflow_sfr2_get_empty_reach_data(nstrm)
 	return m, sd, rd
 
-def make_model_for_sfr_mf6_disv(path, nper):
-	sim = _mf_simulation()
-	m = _mf_model(sim, path)
-	_mf_gwf_disv(m)
-	_mf_tdis(sim, nper)
-	return m
-
-def make_model_for_sfr_mf6_disu(path, nodes, nper):
-	sim = _mf_simulation()
-	m = _mf_model(sim, path)
-	njag = nodes + 2
-	_mf_gwf_disu(m, nodes, njag)
-	_mf_tdis(sim, nper)
-	return m
-
 def _mf_simulation():
 	return flopy.mf6.MFSimulation(verbosity_level=0, exe_name="mf6.exe")
 
@@ -304,3 +289,44 @@ def make_sfr_file_mf6(is_disv, path, nper, nodes, nss, rd, cd, sd, optional_obs_
 
 	sfr.heading = sfr_heading
 	return sfr
+
+def make_model_for_sfr_mf6_disv(path, nper):
+	sim = _mf_simulation()
+	m = _mf_model(sim, path)
+	_mf_gwf_disv(m)
+	_mf_tdis(sim, nper)
+	return m
+
+def make_model_for_sfr_mf6_disu(path, nodes, nper):
+	sim = _mf_simulation()
+	m = _mf_model(sim, path)
+	njag = nodes + 2
+	_mf_gwf_disu(m, nodes, njag)
+	_mf_tdis(sim, nper)
+	return m
+
+def mf_gwf_sfr(model, nss, rd, cd, sd):
+	return flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr(
+		model,
+		loading_package=False,
+		auxiliary=None,
+		boundnames=None,
+		print_input=None,
+		print_stage=None,
+		print_flows=None,
+		save_flows=None,
+		stage_filerecord=None,
+		budget_filerecord=None,
+		timeseries=None,
+		observations=None,
+		mover=None,
+		maximum_iterations=None,
+		unit_conversion=86400.0,
+		nreaches=nss,
+		packagedata=rd,
+		connectiondata=cd,
+		diversions=None,
+		perioddata=sd,
+		filename=None,
+		pname=None,
+		parent_file=None)
