@@ -1797,10 +1797,7 @@ def _get_sfr_file_mfusg(data, runoff):
     nstrm = nss = count_nss(idx, sorted_by_ca)
     sd = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
     reach_data = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
-    swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
-    seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
 
-    # initialise reach & segment data
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
@@ -1814,7 +1811,14 @@ def _get_sfr_file_mfusg(data, runoff):
             reach_data[str_count]['strthick'] = bed_thk  # constant (for now)
             reach_data[str_count]['strhc1'] = str_k  # constant (for now)
 
-            # segment data
+            # inc stream counter
+            str_count += 1
+
+    str_count = 0
+    for node_swac, line in sorted_by_ca.items():
+        (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
+         depth, width) = line
+        if str_flag > 0:
             sd[str_count]['nseg'] = str_count + 1  # serial
             sd[str_count]['icalc'] = 0  # constant
             sd[str_count]['outseg'] = 0
@@ -1834,6 +1838,8 @@ def _get_sfr_file_mfusg(data, runoff):
             # inc stream counter
             str_count += 1
 
+    swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
+    seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
     for iseg in range(nss):
         node_swac = seg_swac_dic[iseg + 1]
         downstr = sorted_by_ca[node_swac][idx['downstr']]
