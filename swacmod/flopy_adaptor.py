@@ -39,12 +39,6 @@ def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes, maxbound):
 	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, maxbound, nper)
 	return m, spd
 
-def make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx):
-	m = modflow_model(path, "mfusg", False)
-	modflow_disu(m, nodes, nper, njag, lenx)
-	m.dis = m.disu
-	return m
-
 def _mf_simulation():
 	return flopy.mf6.MFSimulation(verbosity_level=0, exe_name="mf6.exe")
 
@@ -298,7 +292,9 @@ def _mf_gwf_sfr(model, nreaches, packagedata, connectiondata, perioddata):
 		parent_file=None)
 
 def make_sfr_file_mfusg(path, nper, nodes, nstrm, nss, njag, lenx, istcb1, istcb2, seg_data, rd, sfr_heading):
-	m = make_model_for_sfr_mfusg(path, nodes, nper, njag, lenx)
+	m = modflow_model(path, "mfusg", False)
+	modflow_disu(m, nodes, nper, njag, lenx)
+	m.dis = m.disu
 	sfr = mf_str2(m, nstrm, nss, istcb1, istcb2, rd, seg_data)
 
 	sfr.heading = sfr_heading
