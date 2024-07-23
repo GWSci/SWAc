@@ -1801,28 +1801,17 @@ def _get_sfr_file_mfusg(data, runoff):
 
     istcb1, istcb2 = data['params']['istcb1'], data['params']['istcb2']
 
-    cd = []
-    reach_data = []
-    sd = {}
-    sfr = None
-
     sd = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
     reach_data = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
 
-    segment_data = {}
     swac_seg_dic = {}
     seg_swac_dic = {}
-    # for mf6 only
-    str_flg = np.zeros((nodes), dtype=int)
 
     # initialise reach & segment data
     str_count = 0
     for node_swac, line in sorted_by_ca.items():
         (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k,  # hcond1
          depth, width) = line
-        # for mf6 only
-        str_flg[node_swac-1] = str_flag
-        ca = ca
         if str_flag > 0:
             swac_seg_dic[node_swac] = str_count + 1
             seg_swac_dic[str_count + 1] = node_swac
@@ -1863,6 +1852,7 @@ def _get_sfr_file_mfusg(data, runoff):
         else:
             sd[iseg]['outseg'] = 0
 
+    segment_data = {}
     ro_and_flow_accumulator = lambda per, ro, flow: append_runoff_and_flow_to_sd(segment_data, sd, nss, per, ro, flow)
 
     append_ro_and_flow(data, nper, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator)
