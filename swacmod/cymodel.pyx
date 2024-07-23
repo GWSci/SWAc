@@ -1790,7 +1790,7 @@ def _get_sfr_file_mfusg(data, runoff):
     njag = nodes + 2
     lenx = int((njag/2) - (nodes/2))
 
-    sorted_by_ca = make_sorted_by_ca_for_sfr(data)
+    sorted_by_ca = make_sorted_by_ca(data)
 
     idx = make_idx()
 
@@ -1870,12 +1870,6 @@ def _get_sfr_file_mfusg(data, runoff):
 
     return sfr
 
-def make_sorted_by_ca_for_sfr(data):
-    rte_topo = data['params']['routing_topology']
-    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
-                                      key=lambda x: x[1][4]))
-    return sorted_by_ca
-
 def append_ro_and_flow(data, nper, nodes, nss, runoff, sorted_by_ca, swac_seg_dic, ro_and_flow_accumulator):
     areas = data['params']['node_areas']
     # units oddness - lots of hardcoded 1000s in input_output.py
@@ -1921,7 +1915,7 @@ def _get_sfr_file_mf6(data, runoff):
     njag = nodes + 2
     lenx = int((njag/2) - (nodes/2))
 
-    sorted_by_ca = make_sorted_by_ca_for_sfr(data)
+    sorted_by_ca = make_sorted_by_ca(data)
 
     idx = make_idx()
 
@@ -2373,7 +2367,6 @@ def do_swrecharge_mask_original(data, runoff, recharge):
     """do ror with monthly mask"""
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
-    rte_topo = data['params']['routing_topology']
 
     cdef:
         size_t length = len(series['date'])
@@ -2383,8 +2376,7 @@ def do_swrecharge_mask_original(data, runoff, recharge):
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
         int day, month
 
-    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
-                                      key=lambda x: x[1][4]))
+    sorted_by_ca = make_sorted_by_ca(data)
 
     # 'downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
     #         'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
@@ -2444,7 +2436,6 @@ def do_swrecharge_mask_natproc(data, runoff, recharge):
     """do ror with monthly mask"""
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
-    rte_topo = data['params']['routing_topology']
     areas = data['params']['node_areas']
     catchment = data['params']["reporting_zone_mapping"]
     #  try here
@@ -2461,8 +2452,7 @@ def do_swrecharge_mask_natproc(data, runoff, recharge):
         double fac = 0.001
         double qty_mmd, qty_m3d
 
-    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
-                                      key=lambda x: x[1][4]))
+    sorted_by_ca = make_sorted_by_ca(data)
 
     # 'downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z',
     #         'bed_thk', 'str_k', 'depth', 'width'] # removed hcond1
@@ -2603,7 +2593,6 @@ def all_days_mask(data):
     """get overall RoR mask for run"""
     series, params = data['series'], data['params']
     nnodes = data['params']['num_nodes']
-    rte_topo = data['params']['routing_topology']
 
     cdef:
         size_t length = len(series['date'])
@@ -2613,8 +2602,7 @@ def all_days_mask(data):
         size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
         int month
 
-    sorted_by_ca = OrderedDict(sorted(rte_topo.items(),
-                                      key=lambda x: x[1][4]))
+    sorted_by_ca = make_sorted_by_ca(data)
 
     mask = np.full((nnodes), 0, dtype='int')
 
