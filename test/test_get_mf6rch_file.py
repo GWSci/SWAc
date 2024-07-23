@@ -101,19 +101,15 @@ END period  2
 END options
 
 BEGIN dimensions
-  MAXBOUND  3
+  MAXBOUND  1
 END dimensions
 
 BEGIN period  1
   1 23       0.00700000
-  
-  
 END period  1
 
 BEGIN period  2
   1 23       0.01700000
-  
-  
 END period  2
 
 """
@@ -162,19 +158,15 @@ END period  2
 END options
 
 BEGIN dimensions
-  MAXBOUND  3
+  MAXBOUND  1
 END dimensions
 
 BEGIN period  1
   23       0.00700000
-  
-  
 END period  1
 
 BEGIN period  2
   23       0.01700000
-  
-  
 END period  2
 
 """
