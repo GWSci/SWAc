@@ -841,10 +841,22 @@ def get_mf6rch_file(data, rchrate):
 
     maxbound = (node_index_to_rch_index >= 0).sum()
 
+    rch_indexes = np.zeros((nper, maxbound), dtype = int)
+    rch = np.zeros((nper, maxbound))
+
+    for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
+        spd_index = 0
+        for node_index in range(nodes):
+            rch_index = node_index_to_rch_index[node_index]
+            if rch_index >= 0:
+                rch_indexes[per, spd_index] = rch_index
+                rch[per, spd_index] = rchrate[(nodes * per) + node_index + 1] * fac
+                spd_index += 1
+
     if data['params']['disv']:
-        rch_out = make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac)
+        rch_out = make_mf6_rch_file_with_disv(path, nper, maxbound, fac, rch_indexes, rch)
     else:
-        rch_out = make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac)
+        rch_out = make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch)
 
     return rch_out
 
@@ -858,20 +870,8 @@ def make_path(data):
     fileout = data['params']['run_name']
     return os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
 
-def make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac):
+def make_mf6_rch_file_with_disv(path, nper, maxbound, fac, rch_indexes, rch):
     m, spd = flopy_adaptor.make_model_with_disv_and_empty_spd_for_rch_out(path, nper, maxbound)
-
-    rch_indexes = np.zeros((nper, maxbound), dtype = int)
-    rch = np.zeros((nper, maxbound))
-
-    for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
-        spd_index = 0
-        for node_index in range(nodes):
-            rch_index = node_index_to_rch_index[node_index]
-            if rch_index >= 0:
-                rch_indexes[per, spd_index] = rch_index
-                rch[per, spd_index] = rchrate[(nodes * per) + node_index + 1] * fac
-                spd_index += 1
 
     for per in range(nper):
         for spd_index in range(maxbound):
@@ -879,23 +879,10 @@ def make_mf6_rch_file_with_disv(path, nodes, nper, maxbound, node_index_to_rch_i
                         rch[per, spd_index])
 
     rch_out = flopy_adaptor.mf_gwf_rch(m, maxbound, spd)
-    spd = None
     return rch_out
 
-def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, node_index_to_rch_index, rchrate, fac):
+def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch):
     m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes, maxbound)
-
-    rch_indexes = np.zeros((nper, maxbound), dtype = int)
-    rch = np.zeros((nper, maxbound))
-
-    for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
-        spd_index = 0
-        for node_index in range(nodes):
-            rch_index = node_index_to_rch_index[node_index]
-            if rch_index >= 0:
-                rch_indexes[per, spd_index] = rch_index
-                rch[per, spd_index] = rchrate[(nodes * per) + node_index + 1] * fac
-                spd_index += 1
 
     for per in range(nper):
         for spd_index in range(maxbound):
