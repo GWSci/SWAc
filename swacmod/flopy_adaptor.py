@@ -275,3 +275,23 @@ def make_evt_mf6(path, nper, nodes, ievt, stress_period_data):
 			if ievt[i, 0] > 0:
 				spd[per][i] = stress_period_data[per][i]
 	return modflow_gwf_evt(m, nodes, spd)
+
+def make_mf6_rch_file_with_disv(path, nper, maxbound, rch_indexes, rch):
+    m, spd = make_model_with_disv_and_empty_spd_for_rch_out(path, nper, maxbound)
+
+    for per in range(nper):
+        for spd_index in range(maxbound):
+            spd[per][spd_index] = ((0, rch_indexes[per, spd_index]),
+                        rch[per, spd_index])
+
+    return mf_gwf_rch(m, maxbound, spd)
+
+def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch):
+    m, spd = make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes, maxbound)
+
+    for per in range(nper):
+        for spd_index in range(maxbound):
+            spd[per][spd_index] = ((rch_indexes[per, spd_index],),
+                        rch[per, spd_index])
+
+    return mf_gwf_rch(m, maxbound, spd)

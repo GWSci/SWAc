@@ -854,9 +854,9 @@ def get_mf6rch_file(data, rchrate):
                 spd_index += 1
 
     if data['params']['disv']:
-        return make_mf6_rch_file_with_disv(path, nper, maxbound, rch_indexes, rch)
+        return flopy_adaptor.make_mf6_rch_file_with_disv(path, nper, maxbound, rch_indexes, rch)
     else:
-        return make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch)
+        return flopy_adaptor.make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch)
 
 def extract_nper(data):
     return len(data['params']['time_periods'])
@@ -867,26 +867,6 @@ def extract_node_count(data):
 def make_path(data):
     fileout = data['params']['run_name']
     return os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
-
-def make_mf6_rch_file_with_disv(path, nper, maxbound, rch_indexes, rch):
-    m, spd = flopy_adaptor.make_model_with_disv_and_empty_spd_for_rch_out(path, nper, maxbound)
-
-    for per in range(nper):
-        for spd_index in range(maxbound):
-            spd[per][spd_index] = ((0, rch_indexes[per, spd_index]),
-                        rch[per, spd_index])
-
-    return flopy_adaptor.mf_gwf_rch(m, maxbound, spd)
-
-def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch):
-    m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes, maxbound)
-
-    for per in range(nper):
-        for spd_index in range(maxbound):
-            spd[per][spd_index] = ((rch_indexes[per, spd_index],),
-                        rch[per, spd_index])
-
-    return flopy_adaptor.mf_gwf_rch(m, maxbound, spd)
 
 ###############################################################################
 
