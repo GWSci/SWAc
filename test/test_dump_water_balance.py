@@ -5,6 +5,8 @@ import tempfile
 import os
 import datetime
 import swacmod.utils as utils
+import h5py
+import numpy as np
 
 class Test_Dump_water_Balance(unittest.TestCase):
 	def test_dump_water_balance_csv(self):
@@ -26,6 +28,29 @@ class Test_Dump_water_Balance(unittest.TestCase):
 			actual = file.read()
 
 		self.assertEqual(expected_csv, actual)
+
+	def test_dump_water_balance_h5(self):
+		class_name = self.__class__.__name__
+		test_name = sys._getframe().f_code.co_name
+		run_name = f"run-{class_name}-{test_name}"
+
+		data, output = make_data_and_output(run_name)
+
+		file_format = "h5"
+		output_dir = tempfile.gettempdir()
+		node = 1
+		zone = None
+		reduced = True
+		input_output.dump_water_balance(data, output, file_format, output_dir, node, zone, reduced)
+
+		expected_path = os.path.join(output_dir, f"{run_name}_n_1.{file_format}")
+
+		actual = {}
+		with h5py.File(expected_path, "r") as in_file:
+			for dataset_name in in_file.keys():
+				dataset = in_file[dataset_name]
+				actual[dataset_name] = np.array(dataset)
+		np.testing.assert_array_almost_equal([6, 60, 600, 6000], actual["swacmod_output"])
 
 def make_data_and_output(run_name):
 	date_series = [datetime.datetime(2024, 1, 1), datetime.datetime(2024, 1, 2), datetime.datetime(2024, 1, 3)]

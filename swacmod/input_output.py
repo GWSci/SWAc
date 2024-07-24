@@ -425,7 +425,7 @@ def dump_water_balance(data,
             os.remove(path)
         except OSError:
             pass
-        with h5py.File(path) as outfile:
+        with h5py.File(path, "w") as outfile:
             root = "swacmod_output"
             outfile.create_dataset(root, data=final, compression="gzip")
 
