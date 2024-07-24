@@ -131,8 +131,8 @@ def dis_get_lrc(dis, nlay, nrow, ncol, node_numbers):
 	lrc_list = []
 	for i, node_index in enumerate(convert_node_numbers_to_node_indexes(node_numbers)):
 		l, _, _ = lrc_list_old[i]
-		c = node_index % ncol
 		r = (node_index // ncol) % nrow
+		c = node_index % ncol
 		lrc_list.append((l, r, c))
 	return convert_0_based_lrc_to_1_based_column(lrc_list)
 
