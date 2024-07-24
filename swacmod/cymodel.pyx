@@ -2350,15 +2350,6 @@ def get_evt_file_mf6(data, evtrate):
 
     surf, exdp, ievt = extract_surf_exdp_ievt(data)
 
-    evt_dic = {}
-    evtr = np.zeros(nodes)
-    for per in tqdm(range(nper), desc="Generating EVT flux     "):
-        for node_index in range(nodes):
-            node_number = node_index + 1
-            evtr[node_index] = evtrate[(nodes * per) + node_number] * fac
-        evt_dic[per] = evtr.copy()
-
-
     stress_period_data = {}
     for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
         stress_period_data[per] = {}
