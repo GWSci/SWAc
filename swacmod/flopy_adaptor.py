@@ -124,9 +124,9 @@ def dis_get_lrc(dis, nlay, nrow, ncol, node_numbers):
 	# 1-based in flopy 3.3.2
 	# 0-based in flopy 3.3.3
 	if isinstance(node_numbers, list):
-		_validate_node_numbers(dis, node_numbers)
+		_validate_node_numbers(dis, nlay, nrow, ncol, node_numbers)
 	else:
-		_validate_node_numbers(dis, [node_numbers])
+		_validate_node_numbers(dis, nlay, nrow, ncol, [node_numbers])
 	lrc_list = []
 	for node_index in convert_node_numbers_to_node_indexes(node_numbers):
 		l = node_index // ncol // nrow
@@ -135,11 +135,11 @@ def dis_get_lrc(dis, nlay, nrow, ncol, node_numbers):
 		lrc_list.append((l, r, c))
 	return convert_0_based_lrc_to_1_based_column(lrc_list)
 
-def _validate_node_numbers(dis, node_numbers):
-	max_node_number = (dis.nlay * dis.nrow * dis.ncol)
+def _validate_node_numbers(dis, nlay, nrow, ncol, node_numbers):
+	max_node_number = (nlay * nrow * ncol)
 	for node_number in node_numbers:
 		if node_number <= 0 or node_number > max_node_number:
-			message = f"The node number {node_number} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {dis.nlay}, {dis.nrow}, {dis.ncol} respectively."
+			message = f"The node number {node_number} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {nlay}, {nrow}, {ncol} respectively."
 			raise Exception(message)
 
 def convert_node_numbers_to_node_indexes(node_numbers):
