@@ -2020,7 +2020,8 @@ def get_str_file(data, runoff):
 
     sorted_by_ca = make_sorted_by_ca(data)
     nstrm = nss = count_nss(sorted_by_ca)
-    m, dis, rd = make_modflow_str(data, nstrm, nss)
+    m, dis = make_modflow_str(data, nstrm, nss)
+    rd, _ = flopy_adaptor.modflow_str_get_empty(nstrm, nss)
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
     update_rd(sorted_by_ca, rd, dis)
@@ -2073,8 +2074,7 @@ def make_modflow_str(data, nstrm, nss):
     m = make_modflow_model(data)
     dis = make_modflow_dis(m, data)
     flopy_adaptor.modflow_bas(m)
-    rd, sd = flopy_adaptor.modflow_str_get_empty(nstrm, nss)
-    return m, dis, rd
+    return m, dis
 
 def make_modflow_model(data):
     import os.path
