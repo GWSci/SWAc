@@ -2364,9 +2364,10 @@ def get_evt_file_mf6(data, evtrate):
         stress_period_data[per] = {}
         for node_index in range(nodes):
             if ievt[node_index, 0] > 0:
+                node_number = node_index + 1
                 stress_period_data[per][node_index] = ((ievt[node_index, 0] - 1,),
                                 surf[node_index, 0],
-                                evt_dic[per][node_index],
+                                evtrate[(nodes * per) + node_number] * fac,
                                 exdp[node_index, 0],
                                 -999.0, -999.0)
 
