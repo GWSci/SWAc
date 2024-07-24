@@ -2032,14 +2032,9 @@ def get_str_file(data, runoff):
     path = make_path(data)
     nper = extract_nper(data)
     nlay, nrow, ncol = data['params']['mf96_lrc']
+    strm_heading = "# DELETE ME"
 
-    m = flopy_adaptor.modflow_model(path, "mf2005", True)
-    dis = flopy_adaptor.modflow_dis(m, nlay, nrow, ncol, nper)
-    flopy_adaptor.modflow_bas(m)
-    strm = flopy_adaptor.modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
-    strm.heading = "# DELETE ME"
-
-    return strm
+    return flopy_adaptor.make_str(path, nlay, nrow, ncol, nper, nstrm, istcb1, istcb2, reach_data, segment_data, strm_heading)
 
 def make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic):
     nper = extract_nper(data)

@@ -290,3 +290,11 @@ def _make_sfr2(model, nstrm, nss, istcb1, istcb2, reach_data, segment_data):
 		extension='sfr',
 		unit_number=None,
 		filenames=None)
+
+def make_str(path, nlay, nrow, ncol, nper, nstrm, istcb1, istcb2, reach_data, segment_data, strm_heading):
+	m = modflow_model(path, "mf2005", True)
+	dis = modflow_dis(m, nlay, nrow, ncol, nper)
+	modflow_bas(m)
+	strm = modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
+	strm.heading = strm_heading
+	return strm
