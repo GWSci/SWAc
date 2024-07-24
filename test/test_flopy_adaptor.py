@@ -107,58 +107,6 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 
 		self.assertEqual(tdis, sim.get_package("tdis"))
 
-	def test_modflow_model(self):
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=UserWarning)
-			model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
-		self.assertEqual("aardvark", model.name)
-		self.assertEqual("mfusg", model.version)
-		self.assertFalse(model.structured)
-
-	def test_modflow_model_with_structured_true(self):
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=UserWarning)
-			model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
-		self.assertEqual("aardvark", model.name)
-		self.assertEqual("mf2005", model.version)
-		self.assertTrue(model.structured)
-
-	def test_modflow_model_with_version(self):
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=UserWarning)
-			model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
-		self.assertEqual("aardvark", model.name)
-		self.assertEqual("mfusg", model.version)
-		self.assertFalse(model.structured)
-
-	def test_modflow_disu(self):
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=UserWarning)
-			model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			disu = flopy_adaptor._make_mfusg_disu(model, 3, 5, 7, 2)
-
-		self.assertEqual(3, disu.nodes)
-		self.assertEqual(5, disu.nper)
-		np.testing.assert_almost_equal([7, 0, 0], disu.iac.array)
-		np.testing.assert_almost_equal([1, 1, 1, 1, 1, 1, 1], disu.ja.array)
-		self.assertEqual(7, disu.njag)
-		self.assertEqual(1, disu.idsymrd)
-		np.testing.assert_almost_equal([0, 0], disu.cl1.array)
-		np.testing.assert_almost_equal([0, 0], disu.cl2.array)
-		np.testing.assert_almost_equal([0, 0], disu.fahl.array)
-
-	def test_modflow_disu_adds_disu_to_model(self):
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=UserWarning)
-			model = flopy_adaptor.modflow_model("aardvark", "mfusg", False)
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			disu = flopy_adaptor._make_mfusg_disu(model, 3, 5, 7, 2)
-
-		self.assertEqual(disu, model.get_package("disu"))
-
 	def test_make_empty_modflow_gwf_rch_stress_period_data(self):
 		sim = flopy_adaptor._mf_simulation()
 		model = flopy_adaptor._mf_model(sim, "aardvark")

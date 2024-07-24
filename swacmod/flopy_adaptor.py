@@ -238,7 +238,7 @@ def _make_sfr2(model, nstrm, nss, istcb1, istcb2, reach_data, segment_data):
 		filenames=None)
 
 def make_str(path, nlay, nrow, ncol, nper, nstrm, istcb1, istcb2, reach_data, segment_data, strm_heading):
-	model = modflow_model(path, "mf2005", True)
+	model = flopy.modflow.Modflow(modelname=path, version="mf2005", structured=True)
 	modflow_dis(model, nlay, nrow, ncol, nper)
 	flopy.modflow.ModflowBas(model, ifrefm=False)
 	strm = _modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data)
@@ -258,7 +258,7 @@ def _modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
 		irdflg={0:2, 1:2})
 
 def make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt):
-	m = modflow_model(path, "mfusg", True)
+	m = flopy.modflow.Modflow(modelname=path, version="mfusg", structured=True)
 	modflow_dis(m, 1, nodes, 1, nper)
 	evt_out = modflow_evt(m, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
 	return evt_out
