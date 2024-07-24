@@ -45,12 +45,16 @@ class Test_Dump_water_Balance(unittest.TestCase):
 
 		expected_path = os.path.join(output_dir, f"{run_name}_n_1.{file_format}")
 
-		actual = {}
-		with h5py.File(expected_path, "r") as in_file:
-			for dataset_name in in_file.keys():
-				dataset = in_file[dataset_name]
-				actual[dataset_name] = np.array(dataset)
+		actual = read_h5py(expected_path)
 		np.testing.assert_array_almost_equal([6, 60, 600, 6000], actual["swacmod_output"])
+
+def read_h5py(path):
+	result = {}
+	with h5py.File(path, "r") as in_file:
+		for dataset_name in in_file.keys():
+			dataset = in_file[dataset_name]
+			result[dataset_name] = np.array(dataset)
+	return result
 
 def make_data_and_output(run_name):
 	date_series = [datetime.datetime(2024, 1, 1), datetime.datetime(2024, 1, 2), datetime.datetime(2024, 1, 3)]
