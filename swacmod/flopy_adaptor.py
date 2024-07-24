@@ -141,7 +141,7 @@ def convert_node_numbers_to_node_indexes(node_numbers):
 	if isinstance(node_numbers, list):
 		return [n - 1 for n in node_numbers]
 	else:
-		return node_numbers - 1
+		return [node_numbers - 1]
 
 def convert_0_based_lrc_to_1_based_column(lrc_list):
 	# Flopy 3.3.2 had a quirk in get_lrc. The layer and row returned were 0-based but the column was 1-based.
