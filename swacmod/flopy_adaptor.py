@@ -119,7 +119,7 @@ def modflow_dis(model, nlay, nrow, ncol, nper):
 		ncol=ncol,
 		nper=nper)
 
-def dis_get_lrc(dis, node_numbers):
+def dis_get_lrc(dis, nlay, nrow, ncol, node_numbers):
 	# The input node numbers appear to be:
 	# 1-based in flopy 3.3.2
 	# 0-based in flopy 3.3.3
