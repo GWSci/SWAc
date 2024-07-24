@@ -127,7 +127,11 @@ def dis_get_lrc(dis, nlay, nrow, ncol, node_numbers):
 		_validate_node_numbers(dis, node_numbers)
 	else:
 		_validate_node_numbers(dis, [node_numbers])
-	lrc_list = dis.get_lrc(convert_node_numbers_to_node_indexes(node_numbers))
+	lrc_list_old = dis.get_lrc(convert_node_numbers_to_node_indexes(node_numbers))
+	lrc_list = []
+	for i, node_index in enumerate(convert_node_numbers_to_node_indexes(node_numbers)):
+		l, r, c = lrc_list_old[i]
+		lrc_list.append((l, r, c))
 	return convert_0_based_lrc_to_1_based_column(lrc_list)
 
 def _validate_node_numbers(dis, node_numbers):
