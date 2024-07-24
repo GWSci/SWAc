@@ -22,8 +22,6 @@ from swacmod.snow_melt import SnowMelt
 import swacmod.timer as timer
 import swacmod.flopy_adaptor as flopy_adaptor
 
-###############################################################################
-
 def get_precipitation(data, output, node):
     """C) Precipitation [mm/d]."""
     series, params = data['series'], data['params']
@@ -32,8 +30,6 @@ def get_precipitation(data, output, node):
     rainfall_ts = series['rainfall_ts'][:, zone_rf] * coef_rf
     return {'rainfall_ts': rainfall_ts}
 
-###############################################################################
-
 def get_precipitation_r(data, output, node):
     """C) Precipitation [mm/d]."""
     series, params = data['series'], data['params']
@@ -41,8 +37,6 @@ def get_precipitation_r(data, output, node):
     coef_rf = params['rainfall_zone_mapping'][node][1]
     rainfall_ts = series['rainfall_ts'][:, zone_rf] * coef_rf
     return {'rainfall_ts': rainfall_ts}
-
-###############################################################################
 
 def get_pe(data, output, node):
     """D) Potential Evapotranspiration (PE) [mm/d]."""
@@ -59,8 +53,6 @@ def get_pe(data, output, node):
         pe_ts = np.zeros(len(series['date']))
 
     return {'pe_ts': pe_ts}
-
-###############################################################################
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
@@ -89,8 +81,6 @@ def get_pefac(data, output, node):
 
     return {'pefac': np.array(pefac)}
 
-###############################################################################
-
 def get_canopy_storage(data, output, node):
     """F) Canopy Storage and PEfac Limited Interception [mm/d]."""
     series, params = data['series'], data['params']
@@ -111,21 +101,15 @@ def get_canopy_storage(data, output, node):
 
     return {'canopy_storage': canopy_storage}
 
-###############################################################################
-
 def get_net_pefac(data, output, node):
     """G) Vegetation-factored PE less Canopy Evaporation [mm/d]."""
     net_pefac = output['pefac'] - output['canopy_storage']
     return {'net_pefac': net_pefac}
 
-###############################################################################
-
 def get_precip_to_ground(data, output, node):
     """H) Precipitation at Groundlevel [mm/d]."""
     precip_to_ground = output['rainfall_ts'] - output['canopy_storage']
     return {'precip_to_ground': precip_to_ground}
-
-###############################################################################
 
 def get_snowfall_o(data, output, node):
     """I) Snowfall [mm/d]."""
@@ -147,14 +131,10 @@ def get_snowfall_o(data, output, node):
 
     return {'snowfall_o': snowfall_o}
 
-###############################################################################
-
 def get_rainfall_o(data, output, node):
     """J) Precipitation as Rainfall [mm/d]."""
     rainfall_o = output['precip_to_ground'] - output['snowfall_o']
     return {'rainfall_o': rainfall_o}
-
-###############################################################################
 
 def get_snow_simple(data, output, node):
     """"Multicolumn function.
@@ -199,8 +179,6 @@ def get_snow_simple(data, output, node):
         col_snowpack[num] = snowpack
 
     return {'snowpack': col_snowpack.base, 'snowmelt': col_snowmelt.base}
-
-##############################################################################
 
 def get_snow_complex(data, output, node):
     """"
@@ -275,14 +253,10 @@ def get_snow_complex(data, output, node):
                 'snowfall_o': col_snowfall_o.base,
                 'rainfall_o': col_rainfall_o.base}
 
-##############################################################################
-
 def get_net_rainfall(data, output, node):
     """M) Net Rainfall and Snow Melt [mm/d]."""
     net_rainfall = output['snowmelt'] + output['rainfall_o']
     return {'net_rainfall': net_rainfall}
-
-##############################################################################
 
 def get_rawrew(data, output, node):
     """S) RAWREW (Readily Available Water, Readily Evaporable Water)."""
@@ -292,8 +266,6 @@ def get_rawrew(data, output, node):
     else:
         rawrew = np.zeros(len(series['date']))
     return {'rawrew': rawrew}
-
-##############################################################################
 
 def get_tawtew(data, output, node):
     """T) TAWTEW (Total Available Water, Readily Evaporable Water)."""
@@ -305,8 +277,6 @@ def get_tawtew(data, output, node):
         tawtew = np.zeros(len(series['date']))
 
     return {'tawtew': tawtew}
-
-##############################################################################
 
 def get_ae(data, output, node):
     """Multicolumn function.
@@ -496,8 +466,6 @@ def get_ae(data, output, node):
 
     return col
 
-###############################################################################
-
 def get_unutilised_pe(data, output, node):
     """Z) Unutilised PE [mm/d]."""
     series, params = data['series'], data['params']
@@ -509,8 +477,6 @@ def get_unutilised_pe(data, output, node):
         unutilised_pe = np.zeros(len(series['date']))
 
     return {'unutilised_pe': unutilised_pe}
-
-###############################################################################
 
 def get_rejected_recharge(data, output, node):
     """AA) Rejected Recharge."""
@@ -539,8 +505,6 @@ def get_rejected_recharge(data, output, node):
 
     return {'rejected_recharge': rejected_recharge}
 
-###############################################################################
-
 def get_perc_through_root(data, output, node):
     """AB) Percolation Through the Root Zone [mm/d]."""
     params = data['params']
@@ -553,8 +517,6 @@ def get_perc_through_root(data, output, node):
         perc = np.copy(output['percol_in_root'])
 
     return {'perc_through_root': perc - output['rejected_recharge']}
-
-###############################################################################
 
 def get_subroot_leak(data, output, node):
     """AC) Sub Root Zone Leakege / Inputs [mm/d]."""
@@ -570,8 +532,6 @@ def get_subroot_leak(data, output, node):
 
     return {'subroot_leak': subroot_leak}
 
-###############################################################################
-
 def get_interflow_bypass(data, output, node):
     """AD) Bypassing the Interflow Store [mm/d]."""
     params = data['params']
@@ -585,8 +545,6 @@ def get_interflow_bypass(data, output, node):
                                output['subroot_leak'])
 
     return {'interflow_bypass': interflow_bypass}
-
-###############################################################################
 
 def get_interflow_store_input(data, output, node):
     """AE) Input to Interflow Store [mm/d]."""
@@ -609,8 +567,6 @@ def get_interflow_store_input(data, output, node):
                              (not_ponded * output['interflow_bypass']))
 
     return {'interflow_store_input': interflow_store_input}
-
-###############################################################################
 
 def get_interflow(data, output, node):
     """Multicolumn function.
@@ -674,8 +630,6 @@ def get_interflow(data, output, node):
 
     return col
 
-###############################################################################
-
 def get_recharge_store_input(data, output, node):
     """AI) Input to Recharge Store [mm/d]."""
 
@@ -706,8 +660,6 @@ def get_recharge_store_input(data, output, node):
                                 output['runoff_recharge'])
 
     return {'recharge_store_input': recharge_store_input}
-
-###############################################################################
 
 def get_recharge(data, output, node):
     """Multicolumn function.
@@ -795,8 +747,6 @@ def get_recharge(data, output, node):
     col['combined_recharge'] = col_combined_recharge.base
     return col
 
-###############################################################################
-
 def get_mf6rch_file(data, rchrate):
     """get mf6 RCH object."""
 
@@ -856,8 +806,6 @@ def make_rch_indexes_and_rch(data, maxbound, node_index_to_rch_index, rchrate):
                 rch[per, spd_index] = rchrate[(nodes * per) + node_index + 1] * fac
                 spd_index += 1
     return rch_indexes, rch
-
-###############################################################################
 
 def get_combined_str(data, output, node):
     """Multicolumn function.
@@ -1059,8 +1007,6 @@ def get_combined_str(data, output, node):
 
     return col
 
-###############################################################################
-
 def get_combined_ae(data, output, node):
     """AN) AE: Combined AE [mm/d]."""
 
@@ -1081,8 +1027,6 @@ def get_combined_ae(data, output, node):
 
     return {'combined_ae': combined_ae}
 
-###############################################################################
-
 def get_evt(data, output, node):
     """AO) EVT: Unitilised PE [mm/d]."""
 
@@ -1099,16 +1043,12 @@ def get_evt(data, output, node):
 
     return {'evt': (1.0 - pond_area) * output['unutilised_pe']}
 
-###############################################################################
-
 def get_average_in(data, output, node):
     """AP) AVERAGE IN [mm]."""
     average_in = (output['rainfall_ts'] +
                   output['subroot_leak'] +
                   output['swdis_ts'])
     return {'average_in': average_in}
-
-###############################################################################
 
 def get_average_out(data, output, node):
     """AQ) AVERAGE OUT [mm]."""
@@ -1144,8 +1084,6 @@ def get_average_out(data, output, node):
                     output['swabs_ts'])
 
     return {'average_out': average_out}
-
-###############################################################################
 
 def get_change(data, output, node):
     """AR) TOTAL STORAGE CHANGE [mm]."""
@@ -1192,8 +1130,6 @@ def get_change(data, output, node):
 
     return {'total_storage_change': col_change.base}
 
-###############################################################################
-
 def get_balance(data, output, node):
     """AS) BALANCE [mm]."""
     balance = (output['average_in'] -
@@ -1201,8 +1137,6 @@ def get_balance(data, output, node):
                output['total_storage_change'])
 
     return {'balance': balance}
-
-###############################################################################
 
 def _calculate_total_mass_leached_from_cell_on_days(
         double max_load_per_year_kg_per_cell,
@@ -1238,8 +1172,6 @@ def _calculate_total_mass_leached_from_cell_on_days(
         result[i] = mass_leached_for_day
     return result
 
-###############################################################################
-
 def _cumulative_fraction_leaked_per_day(double her_at_5_percent, double her_at_50_percent, double her_at_95_percent, double her_per_day):
     cdef:
         double days_in_year = 365.25
@@ -1248,8 +1180,6 @@ def _cumulative_fraction_leaked_per_day(double her_at_5_percent, double her_at_5
     her_per_year = days_in_year * her_per_day
     y = _cumulative_fraction_leaked_per_year(her_at_5_percent, her_at_50_percent, her_at_95_percent, her_per_year)
     return y / days_in_year
-
-###############################################################################
 
 def _cumulative_fraction_leaked_per_year(double her_at_5_percent, double her_at_50_percent, double her_at_95_percent, double her_per_year):
     cdef:
@@ -1271,15 +1201,11 @@ def _cumulative_fraction_leaked_per_year(double her_at_5_percent, double her_at_
     y = (m * x) + c
     return max(0, y)
 
-###############################################################################
-
 def calculate_mass_reaching_water_table_array_kg_per_day(blackboard):
     cdef:
         double[:] proportion_reaching_water_table_array_per_day = blackboard.proportion_reaching_water_table_array_per_day
         double[:] mi_array_kg_per_day = blackboard.mi_array_kg_per_day
     return _calculate_mass_reaching_water_table_array_kg_per_day(proportion_reaching_water_table_array_per_day, mi_array_kg_per_day)
-
-###############################################################################
 
 def calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
     cdef:
@@ -1291,8 +1217,6 @@ def calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
         days,
         proportion_reaching_water_table_array_per_day,
         mi_array_kg_per_day)
-
-###############################################################################
 
 def _calculate_mass_reaching_water_table_array_kg_per_day(
         double[:] proportion_reaching_water_table_array_per_day,
@@ -1316,8 +1240,6 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(
             result_kg[day_nitrate_was_leached + i] += proportion_reaching_water_table_array_per_day[i] * mass_leached_on_day_kg
 
     return np.array(result_kg)
-
-###############################################################################
 
 def _calculate_historical_mass_reaching_water_table_array_kg_per_day(
         days,
@@ -1344,8 +1266,6 @@ def _calculate_historical_mass_reaching_water_table_array_kg_per_day(
             result_kg[i] += proportion_reaching_water_table_array_per_day[proportion_index] * mass_leached_on_day_kg
 
     return np.array(result_kg)
-
-###############################################################################
 
 def _calculate_m1a_b_array_kg_per_day(blackboard):
     cdef:
@@ -1380,8 +1300,6 @@ def _calculate_m1a_b_array_kg_per_day(blackboard):
         m1a_b_array_kg_per_day[1,i] = m1b_kg_per_day
     return m1a_b_array_kg_per_day
 
-###############################################################################
-
 def _divide_arrays(double[:] a, double[:] b):
     cdef:
         double[:] result = np.zeros_like(a)
@@ -1390,8 +1308,6 @@ def _divide_arrays(double[:] a, double[:] b):
         if b[i] != 0:
             result[i] = a[i] / b[i]
     return result
-
-###############################################################################
 
 def _divide_2D_arrays(double[:,:] a, double[:,:] b):
     cdef:
@@ -1402,8 +1318,6 @@ def _divide_2D_arrays(double[:,:] a, double[:,:] b):
         if b[i,j] != 0:
             result[i,j] = a[i,j] / b[i,j]
     return result
-
-###############################################################################
 
 def _aggregate_nitrate(
             time_periods,
@@ -1437,8 +1351,6 @@ def _aggregate_nitrate(
 
     return aggregation
 
-###############################################################################
-
 def _aggregate_surface_water_nitrate(
             time_periods,
             size_t len_time_periods,
@@ -1458,8 +1370,6 @@ def _aggregate_surface_water_nitrate(
 
     return aggregation
 
-###############################################################################
-
 def aggregate_mi(
             double[:,:] aggregation,
             time_periods,
@@ -1476,8 +1386,6 @@ def aggregate_mi(
         for day_index in range(first_day_index, last_day_index):
             aggregation[node][time_period_index] += mi_array_kg_per_day[day_index]
     return aggregation
-
-###############################################################################
 
 def _calculate_aggregate_mi_unpacking(blackboard):
     cdef:
@@ -1517,8 +1425,6 @@ def write_nitrate_csv(filename, nitrate_aggregation, header_row):
                 line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, concentration)
                 f.write(line)
 
-###############################################################################
-
 def aggregate(output, area, ponded_frac, reporting=None, index=None):
     """Aggregate reporting over output periods."""
     new_rep = {}
@@ -1550,26 +1456,6 @@ def aggregate(output, area, ponded_frac, reporting=None, index=None):
             new_rep[key] += convert(reporting[key])
     return new_rep
 
-###############################################################################
-
-def aggregate_op(output, area):
-    """Aggregate reporting over output periods."""
-    new_rep = {}
-    for key in output:
-        new_rep[key] = output[key] * area
-    return new_rep
-
-###############################################################################
-
-def aggregate_reporting_op(output, area, reporting):
-    """Aggregate reporting over output periods."""
-    new_rep = {}
-    for key in output:
-        new_rep[key] = output[key] * area
-        if reporting:
-            new_rep[key] += reporting[key]
-    return new_rep
-
 def aggregate_op(output, area):
     """Aggregate reporting over output periods."""
     new_rep = {}
@@ -1586,7 +1472,21 @@ def aggregate_reporting_op(output, area, reporting):
             new_rep[key] += reporting[key]
     return new_rep
 
-###############################################################################
+def aggregate_op(output, area):
+    """Aggregate reporting over output periods."""
+    new_rep = {}
+    for key in output:
+        new_rep[key] = output[key] * area
+    return new_rep
+
+def aggregate_reporting_op(output, area, reporting):
+    """Aggregate reporting over output periods."""
+    new_rep = {}
+    for key in output:
+        new_rep[key] = output[key] * area
+        if reporting:
+            new_rep[key] += reporting[key]
+    return new_rep
 
 def get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic):
     nper = extract_nper(data)
@@ -1735,8 +1635,6 @@ def calculate_de_accumulated_flows(stream_ca_order, sfr_released):
         if downstream_index >= 0:
             de_accumulated_flows[downstream_index] -= sfr_released[index]
     return de_accumulated_flows
-
-###############################################################################
 
 def get_sfr_file(data, runoff):
     """get SFR object."""
@@ -1969,8 +1867,6 @@ def apppend_runoff_and_flow_to_perioddata(perioddata, nss, per, ro, flow):
         perioddata[per].append((iseg, 'RUNOFF', ro[iseg]))
         perioddata[per].append((iseg, 'INFLOW', flow[iseg]))
 
-##############################################################################
-
 def get_str_file(data, runoff):
     """get STR object."""
 
@@ -2124,8 +2020,6 @@ def combine_runoff_with_area(data, runoff):
             runoff[i] = runoff[i] * areas[node] * fac
     return runoff
 
-##############################################################################
-
 def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     """integrate flows and nitrate mass in stream cells"""
 
@@ -2141,8 +2035,6 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     stream_mass_array = get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic)
     stream_conc = _divide_2D_arrays(stream_mass_array, str_flow_array)
     return stream_conc
-
-###############################################################################
 
 def write_sfr(sfr, filename=None):
     """
@@ -2212,8 +2104,6 @@ def write_sfr(sfr, filename=None):
             _write_segment_data(sfr, i, j, f_sfr, fmt1, fmt2, cols)
     f_sfr.close()
 
-###############################################################################
-
 def _write_segment_data(sfr, i, j, f_sfr, fmt1, fmt2, cols):
 
     nseg, icalc, outseg, iupseg, flow, runoff, etsw, pptsw, \
@@ -2246,8 +2136,6 @@ def _write_segment_data(sfr, i, j, f_sfr, fmt1, fmt2, cols):
     f_sfr.write('{!s}'.format(depth1) + ' ')
 
     f_sfr.write('\n')
-
-###############################################################################
 
 def get_evt_file(data, evtrate):
     """get EVT object."""
@@ -2323,15 +2211,11 @@ def _make_stress_period_data(data, evtrate, surf, exdp, ievt):
                     -999.0)
     return stress_period_data
 
-###############################################################################
-
 def do_swrecharge_mask(data, runoff, recharge):
     if ff.use_natproc:
         return do_swrecharge_mask_natproc(data, runoff, recharge)
     else:
         return do_swrecharge_mask_original(data, runoff, recharge)
-
-###############################################################################
 
 def do_swrecharge_mask_original(data, runoff, recharge):
     """do ror with monthly mask"""
@@ -2398,8 +2282,6 @@ def do_swrecharge_mask_original(data, runoff, recharge):
         # pbar.update(day)
     return runoff, recharge
 
-###############################################################################
-
 def do_swrecharge_mask_natproc(data, runoff, recharge):
     """do ror with monthly mask"""
     series, params = data['series'], data['params']
@@ -2459,8 +2341,6 @@ def do_swrecharge_mask_natproc(data, runoff, recharge):
                             break
 
     return runoff, recharge
-
-###############################################################################
 
 def get_ror_flows_sfr(sorted_by_ca, runoff, nodes, day, areas): #, cat):
     """get flows for one period"""
