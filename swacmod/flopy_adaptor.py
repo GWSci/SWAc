@@ -65,20 +65,6 @@ def _make_empty_modflow_gwf_rch_stress_period_data(model, maxbound, nper):
 		nseg=1,
 		stress_periods=range(nper))
 
-def mf_gwf_rch(model, maxbound, spd):
-	return flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(model,
-                                                       fixed_cell=False,
-                                                       print_input=None,
-                                                       print_flows=None,
-                                                       save_flows=None,
-                                                       timeseries=None,
-                                                       observations=None,
-                                                       maxbound=maxbound,
-                                                       stress_period_data=spd,
-                                                       filename=None,
-                                                       pname=None,
-                                                       parent_file=None)
-
 def write_mf_gwf_rch(rch):
 	rch.write()
 
@@ -295,3 +281,17 @@ def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch):
                         rch[per, spd_index])
 
     return mf_gwf_rch(m, maxbound, spd)
+
+def mf_gwf_rch(model, maxbound, spd):
+	return flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(model,
+                                                       fixed_cell=False,
+                                                       print_input=None,
+                                                       print_flows=None,
+                                                       save_flows=None,
+                                                       timeseries=None,
+                                                       observations=None,
+                                                       maxbound=maxbound,
+                                                       stress_period_data=spd,
+                                                       filename=None,
+                                                       pname=None,
+                                                       parent_file=None)
