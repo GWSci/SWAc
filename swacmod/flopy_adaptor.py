@@ -242,46 +242,33 @@ def make_evt_mf6(path, nper, nodes, ievt, stress_period_data):
 	return modflow_gwf_evt(m, nodes, spd)
 
 def make_mf6_rch_file_with_disv(path, nper, maxbound, rch_indexes, rch):
-    m, spd = make_model_with_disv_and_empty_spd_for_rch_out(path, nper, maxbound)
-
-    for per in range(nper):
-        for spd_index in range(maxbound):
-            spd[per][spd_index] = ((0, rch_indexes[per, spd_index]),
-                        rch[per, spd_index])
-
-    return _mf_gwf_rch(m, maxbound, spd)
-
-def make_model_with_disv_and_empty_spd_for_rch_out(path, nper, maxbound):
 	sim = _mf_simulation()
 	m = _mf_model(sim, path)
 	_mf_gwf_disv(m)
-
 	_mf_tdis(sim, nper)
-
 	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, maxbound, nper)
-	return m, spd
+
+	for per in range(nper):
+		for spd_index in range(maxbound):
+			spd[per][spd_index] = ((0, rch_indexes[per, spd_index]),
+						rch[per, spd_index])
+
+	return _mf_gwf_rch(m, maxbound, spd)
 
 def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch):
-    m, spd = make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes, maxbound)
-
-    for per in range(nper):
-        for spd_index in range(maxbound):
-            spd[per][spd_index] = ((rch_indexes[per, spd_index],),
-                        rch[per, spd_index])
-
-    return _mf_gwf_rch(m, maxbound, spd)
-
-def make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes, maxbound):
 	sim = _mf_simulation()
 	m = _mf_model(sim, path)
 	njag = nodes + 2
 	_mf_gwf_disu(m, nodes, njag, area=1.0)
-
 	_mf_tdis(sim, nper)
-
 	spd = _make_empty_modflow_gwf_rch_stress_period_data(m, maxbound, nper)
-	return m, spd
 
+	for per in range(nper):
+		for spd_index in range(maxbound):
+			spd[per][spd_index] = ((rch_indexes[per, spd_index],),
+						rch[per, spd_index])
+
+	return _mf_gwf_rch(m, maxbound, spd)
 
 def _mf_gwf_rch(model, maxbound, spd):
 	return flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(model,
