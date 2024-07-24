@@ -2297,6 +2297,68 @@ def _write_segment_data(sfr, i, j, f_sfr, fmt1, fmt2, cols):
 def get_evt_file(data, evtrate):
     """get EVT object."""
 
+    if data['params']['gwmodel_type'] == 'mfusg':
+        return get_evt_file_mfusg(data, evtrate)
+    elif data['params']['gwmodel_type'] == 'mf6':
+        return get_evt_file_mf6(data, evtrate)
+
+def get_evt_file_mfusg(data, evtrate):
+    """get EVT object."""
+
+    import os.path
+
+    cdef int i, per, nper, nodes
+
+    # units oddness - lots of hardcoded 1000s in input_output.py
+    cdef float fac = 0.001
+    path = make_path(data)
+
+    nper = extract_nper(data)
+    nodes = extract_node_count(data)
+    m = None
+
+    ievtcb = data['params']['ievtcb']
+    nevtopt = data['params']['nevtopt']
+    evt_params = data['params']['evt_parameters']
+    evt_out = None
+
+    ievt = np.zeros((nodes, 1), dtype=int)
+    surf = np.zeros((nodes, 1))
+    exdp = np.zeros((nodes, 1))
+    evtr = np.zeros((nodes, 1))
+
+    for inode, vals in evt_params.iteritems():
+        ievt[inode - 1, 0] = vals[0]
+        surf[inode - 1, 0] = vals[1]
+        exdp[inode - 1, 0] = vals[2]
+
+    evt_dic = {}
+    for per in tqdm(range(nper), desc="Generating EVT flux     "):
+        for inode in range(1, nodes + 1):
+            evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
+        evt_dic[per] = evtr.copy()
+
+    if data['params']['gwmodel_type'] == 'mfusg':
+        evt_out = flopy_adaptor.make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
+    elif data['params']['gwmodel_type'] == 'mf6':
+        m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes)
+
+        for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
+            for i in range(nodes):
+                if ievt[i, 0] > 0:
+                    spd[per][i] = ((ievt[i, 0] - 1,),
+                                   surf[i, 0],
+                                   evt_dic[per][i, 0],
+                                   exdp[i, 0],
+                                   -999.0, -999.0)
+
+        evt_out = flopy_adaptor.modflow_gwf_evt(m, nodes, spd)
+
+    return evt_out
+
+def get_evt_file_mf6(data, evtrate):
+    """get EVT object."""
+
     import os.path
 
     cdef int i, per, nper, nodes
