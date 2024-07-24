@@ -2371,26 +2371,23 @@ def get_evt_file_mf6(data, evtrate):
             evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
         evt_dic[per] = evtr.copy()
 
-    m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes)
 
-    spd_prep = {}
-    for per in tqdm(range(nper), desc="Generating MF6 EVT flux 2  "):
-        spd_prep[per] = {}
+    stress_period_data = {}
+    for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
+        stress_period_data[per] = {}
         for i in range(nodes):
             if ievt[i, 0] > 0:
-                spd_prep[per][i] = ((ievt[i, 0] - 1,),
+                stress_period_data[per][i] = ((ievt[i, 0] - 1,),
                                 surf[i, 0],
                                 evt_dic[per][i, 0],
                                 exdp[i, 0],
                                 -999.0, -999.0)
 
-    for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
+    m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes)
+    for per in range(nper):
         for i in range(nodes):
             if ievt[i, 0] > 0:
-                spd[per][i] = spd_prep[per][i]
-
-    print(f"\n\n\nspd = {spd}\n\n\n")
-
+                spd[per][i] = stress_period_data[per][i]
     evt_out = flopy_adaptor.modflow_gwf_evt(m, nodes, spd)
 
     return evt_out
