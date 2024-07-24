@@ -119,7 +119,7 @@ def modflow_dis(model, nlay, nrow, ncol, nper):
 		ncol=ncol,
 		nper=nper)
 
-def dis_get_lrc(dis, nlay, nrow, ncol, node_numbers):
+def dis_get_lrc(nlay, nrow, ncol, node_numbers):
 	if isinstance(node_numbers, list):
 		node_number_list = node_numbers
 	else:

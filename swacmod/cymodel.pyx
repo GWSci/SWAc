@@ -2027,7 +2027,7 @@ def get_str_file(data, runoff):
     nstrm = count_nss(sorted_by_ca)
     istcb1 = data['params']['istcb1']
     istcb2 = data['params']['istcb2']
-    reach_data = make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic, dis)
+    reach_data = make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic)
     segment_data = make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic)
     strm = flopy_adaptor.modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
     strm.heading = "# DELETE ME"
@@ -2043,12 +2043,12 @@ def make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic):
     segment_data={iper: cd for iper in range(nper)}
     return segment_data
 
-def make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic, dis):
+def make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic):
     import copy
 
     nstrm = nss = count_nss(sorted_by_ca)
     rd, _ = flopy_adaptor.modflow_str_get_empty(nstrm, nss)
-    update_rd(data, sorted_by_ca, rd, dis)
+    update_rd(data, sorted_by_ca, rd)
 
     runoff_with_area = combine_runoff_with_area(data, runoff)
     str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
@@ -2120,7 +2120,7 @@ def make_seg_swac_dic(sorted_by_ca):
             str_count += 1
     return seg_swac_dic
 
-def update_rd(data, sorted_by_ca, rd, dis):
+def update_rd(data, sorted_by_ca, rd):
     str_count = 0
     nlay, nrow, ncol = data['params']['mf96_lrc']
     for _, line in sorted_by_ca.items():
@@ -2129,7 +2129,7 @@ def update_rd(data, sorted_by_ca, rd, dis):
         if str_flag > 0:
             # NB docs say node number should be zero based (node_mf -1)
             #  but doesn't seem to be
-            l, r, c = flopy_adaptor.dis_get_lrc(dis, nlay, nrow, ncol, node_mf)[0]
+            l, r, c = flopy_adaptor.dis_get_lrc(nlay, nrow, ncol, node_mf)[0]
             rd[str_count]['k'] = l - 1
             rd[str_count]['i'] = r - 1
             rd[str_count]['j'] = c - 1
