@@ -90,7 +90,7 @@ evt_parameters:
     type:
         - !!python/name:dict
         - !!python/name:list
-        
+
 output_sfr:
     required: false
     type:
@@ -129,8 +129,8 @@ istcb1:
 istcb2:
     required: false
     type:
-        - !!python/name:int        
-        
+        - !!python/name:int
+
 output_individual:
     required: false
     type:
@@ -158,7 +158,7 @@ spatial_output_date:
         # - !!python/name:datetime.datetime
         # - !!python/name:basestring
         - !!python/name:str
-        
+
 ##############################################
 # Model parameters: Zones names and mappings #
 ##############################################
@@ -974,7 +974,7 @@ routing_topology:
         - !!python/name:list
         - !!python/name:float
 
-        
+
 ###############
 # Time series #
 ###############

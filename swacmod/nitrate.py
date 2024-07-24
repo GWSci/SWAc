@@ -216,7 +216,7 @@ def _convert_nitrate_to_surface_water_kg_to_tons_array(blackboard):
 	return blackboard.nitrate_to_surface_water_kg_per_day / 1000.0
 
 def _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard):
-	return (blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day 
+	return (blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day
 		 + blackboard.historical_nitrate_reaching_water_table_array_tons_per_day)
 
 def make_aggregation_array(data):

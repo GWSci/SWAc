@@ -14,7 +14,7 @@ class SnowMelt:
 		## Converted Inputs :
 		Tav = (Tmax_C+Tmin_C)/2.0		      # degrees C
 		# print(Tav)
-		precip_m = precip_mm*0.001        # precip in m 
+		precip_m = precip_mm*0.001        # precip in m
 		R_m = np.copy(precip_m)           # (m) depth of rain
 		R_m[Tav < 0] = 0.0                  # ASSUMES ALL SNOW at < 0C
 		NewSnowDensity = 50+3.4*(Tav+15)  # kg/m3
@@ -28,7 +28,7 @@ class SnowMelt:
 		
 		lat = lat_deg*np.pi/180.0	          # latitude in radians
 		
-		rh = np.log((windHt+0.001)/0.001)*np.log((tempHt+0.0002)/0.0002)/(0.41*0.41*windSp*86400)	# (day/m) Thermal Resistance	 
+		rh = np.log((windHt+0.001)/0.001)*np.log((tempHt+0.0002)/0.0002)/(0.41*0.41*windSp*86400)	# (day/m) Thermal Resistance
 		if (np.isscalar(windSp)): rh = np.full(precip_mm.size, rh)									##	creates a vector of rh values
 		cloudiness = EstCloudiness(Tmax_C,Tmin_C)
 		AE         = AtmosphericEmissivity(Tav, cloudiness)	# (-) Atmospheric Emissivity
@@ -36,7 +36,7 @@ class SnowMelt:
 		#  New Variables	:
 		SnowTemp        = np.zeros_like(precip_m, dtype=float) 		# Degrees C
 		rhos            = SatVaporDensity(SnowTemp)	# 	vapor density at surface (kg/m3)
-		rhoa            = SatVaporDensity(Tmin_C)		#	vapor density of atmoshpere (kg/m3) 
+		rhoa            = SatVaporDensity(Tmin_C)		#	vapor density of atmoshpere (kg/m3)
 		SnowWaterEq     = np.zeros_like(precip_mm, dtype=float)		#  (m) Equiv depth of water
 		TE              = np.full_like(precip_mm, SurfEmissiv, dtype=float)	#	(-) Terrestrial Emissivity
 		DCoef           = np.zeros_like(precip_m, dtype=float)				#   Density Coefficient (-) (Simplified version)
@@ -51,19 +51,19 @@ class SnowMelt:
 		S 		= np.zeros_like(precip_m)	#	Solar Radiation (kJ/m2/d)
 		La 		= Longwave(AE, Tav)					#	Atmospheric Longwave Radiation (kJ/m2/d)
 		Lt 		= np.zeros_like(precip_m)	#	Terrestrial Longwave Radiation (kJ/m2/d)
-		G 		= 173.0								#	Ground Condution (kJ/m2/d) 
+		G 		= 173.0								#	Ground Condution (kJ/m2/d)
 		P 		= Cw * R_m * Tav					# 	Precipitation Heat (kJ/m2/d)
 		Energy 	= np.zeros_like(precip_m)	# Net Energy (kJ/m2/d)
 
-		##  Initial Values. 
+		##  Initial Values.
 		SnowWaterEq[0] = startingSnowDepth_m * startingSnowDensity_kg_m3 / WaterDens
 		SnowDepth[0] = startingSnowDepth_m			
 		Albedo[0] = ifelse(NewSnow[0] > 0, 0.98-(0.98-0.50)*np.exp(-4*NewSnow[0]*10),ifelse(startingSnowDepth_m == 0, groundAlbedo, max(groundAlbedo, 0.5+(groundAlbedo-0.85)/10)))  # If snow on the ground or new snow, assume Albedo yesterday was 0.5
 		S[0] = Solar(lat, np.array([JDay[0]]), Tmax_C[0], Tmin_C[0], Albedo[0], forest, aspect, slope, True)[0]
-		H[0] = 1.29*(Tav[0]-SnowTemp[0])/rh[0] 
+		H[0] = 1.29*(Tav[0]-SnowTemp[0])/rh[0]
 		E[0] = lambdaV*(rhoa[0]-rhos[0])/rh[0]
-		if(startingSnowDepth_m > 0): 
-			TE[0] = 0.97 
+		if(startingSnowDepth_m > 0):
+			TE[0] = 0.97
 		Lt[0] = Longwave(TE[0],SnowTemp[0])
 		Energy[0] = S[0] + La[0] - Lt[0] + H[0] + E[0] + G + P[0]
 		if ((startingSnowDepth_m+NewSnow[0])>0):
@@ -71,7 +71,7 @@ class SnowMelt:
 		else:
 			SnowDensity[0] = 450
 		SnowMelt[0] = max(0,
-		                  min((startingSnowDepth_m/10.0+NewSnowWatEq[0]),  # yesterday on ground + today new  
+		                  min((startingSnowDepth_m/10.0+NewSnowWatEq[0]),  # yesterday on ground + today new
 		                      (Energy[0]-SnowHeatCap*(startingSnowDepth_m/10.0+NewSnowWatEq[0])*WaterDens*(0-SnowTemp[0]))/(LatHeatFreez*WaterDens) ) )
 		SnowDepth[0] = max(0, (startingSnowDepth_m/10 + NewSnowWatEq[0]-SnowMelt[0])*WaterDens/SnowDensity[0])
 		SnowWaterEq[0] = max(0,startingSnowDepth_m/10.0-SnowMelt[0]+NewSnowWatEq[0])	
@@ -97,7 +97,7 @@ class SnowMelt:
 						)
 
 			rhos[i] = SatVaporDensity(SnowTemp[i])
-			H[i] = 1.29*(Tav[i]-SnowTemp[i])/rh[i] 
+			H[i] = 1.29*(Tav[i]-SnowTemp[i])/rh[i]
 			E[i] = lambdaV*(rhoa[i]-rhos[i])/rh[i]
 			Lt[i] = Longwave(TE[i],SnowTemp[i])
 			Energy[i] = S[i] + La[i] - Lt[i] + H[i] + E[i] + G + P[i]
@@ -106,7 +106,7 @@ class SnowMelt:
 		
 			if ((SnowDepth[i-1]+NewSnow[i]) > 0):
 				SnowDensity[i] = min(
-						450, 
+						450,
 						((SnowDensity[i-1]+k*30*(450-SnowDensity[i-1])*np.exp(-DCoef[i]))*SnowDepth[i-1] + NewSnowDensity[i]*NewSnow[i])/(SnowDepth[i-1]+NewSnow[i])
 					)
 			else:
@@ -117,7 +117,7 @@ class SnowMelt:
 				min(
 					(SnowWaterEq[i-1]+NewSnowWatEq[i]),  # yesterday on ground + today new
 					(Energy[i]-SnowHeatCap*(SnowWaterEq[i-1]+NewSnowWatEq[i])*WaterDens*(0-SnowTemp[i]))/(LatHeatFreez*WaterDens)
-				)  
+				)
 			)
 
 			SnowDepth[i] = max(0,(SnowWaterEq[i-1]+NewSnowWatEq[i]-SnowMelt[i])*WaterDens/SnowDensity[i])
@@ -149,7 +149,7 @@ def EstCloudiness(Tx, Tn):
 	cl[cl < 0] = 0.0 # TODO This line is untested. Unsure how to force this condition.
 	return cl
 
-# fraction of direct solar radiation passing through 
+# fraction of direct solar radiation passing through
 # the atmosphere based on the Bristow-Campbell eqn
 #Tx: maximum daily temperature [C]
 #Tn: minimum daily temperature [C]
@@ -219,7 +219,7 @@ def declination(Jday):
 #aspect: ground aspect [rad from north]
 def slopefactor(lat, Jday, slope, aspect):
 	SolAsp = np.full_like(Jday, np.pi)  # Average Solar aspect is binary - either north (0) or south (pi) for the day
-	SolAsp[lat - declination(Jday) < 0] = 0   # 
+	SolAsp[lat - declination(Jday) < 0] = 0
 	SF = np.cos(slope) - np.sin(slope)*np.cos(aspect-(np.pi-SolAsp))/np.tan(solarangle(lat,Jday))
 	if (np.isscalar(SF)):
 		if (SF < 0):

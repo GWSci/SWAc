@@ -318,7 +318,7 @@ class SnowMeltTest(unittest.TestCase):
 		self.assert_result_equals([1028.56427342964, 1250.2552784], "SnowMelt")
 		self.assert_attribute_equals([450, 450], "SnowDensity")
 		self.assert_result_equals([222219.936523837, 222217.158178774], "SnowDepth")
- 
+
 	def assert_attribute_equals(self, expected, name):
 		self.sm, x = self.params.apply()
 		actual = getattr(self.sm, name)

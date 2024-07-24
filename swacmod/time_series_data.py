@@ -10,7 +10,7 @@ try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-    
+
 try:
     basestring
 except NameError:
@@ -26,7 +26,7 @@ class Numpy_Dumpy_Time_Series_Data(TimeSeriesData):
 		shape = convert_numpydumpy_filename_to_shape(filename)
 		try:
 			self.rows = numpy.memmap(
-				filename = filename, 
+				filename = filename,
 				dtype = float,
 				mode = "r",
 				shape = shape)
@@ -124,7 +124,7 @@ def convert_rows_to_file_backed_array(base_path, rows, csv_filename):
 	dtype = calculate_dtype_for_python_list(rows)
 	shape = calculate_shape_for_python_list(rows)
 	result = numpy.memmap(
-		filename = calculate_filename_for_backing_file(base_path, csv_filename, shape), 
+		filename = calculate_filename_for_backing_file(base_path, csv_filename, shape),
 		dtype = dtype,
 		mode = "w+",
 		shape = shape)

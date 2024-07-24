@@ -183,9 +183,9 @@ def get_flows_adaptor(sorted_by_ca, explain = False, use_ones = False):
 def make_routing_parameters(
 	downstr = -1, # swac node downstream of this one
 	str_flag = 0, # 1 = stream cell, 0 = *not* stream cell
-	node_mf = -1, # modflow node number of this node 
+	node_mf = -1, # modflow node number of this node
 	RCHLEN = -1, # the modflow SFR variable RCHLEN
-	ca = -1, # the upstream contributing area 
+	ca = -1, # the upstream contributing area
 	STRTOP = -1, # the modflow SFR variable STRTOP
 	STRTHICK = -1, # the modflow SFR variable STRTHICK
 	STRHC1 = -1, # the modflow SFR variable STRHC1

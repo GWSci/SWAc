@@ -552,9 +552,9 @@ routing_process: enabled
 #  values =
 #  1 downstr - swac node downstream of this one
 #  2 str_flag - 1 = stream cell, 0 = *not* stream cell
-#  3 node_mf - modflow node number of this node 
+#  3 node_mf - modflow node number of this node
 #  4 RCHLEN - the modflow SFR variable RCHLEN
-#  5 ca - the upstream contributing area 
+#  5 ca - the upstream contributing area
 #  6 STRTOP - the modflow SFR variable STRTOP
 #  7 STRTHICK - the modflow SFR variable STRTHICK
 #  8 STRHC1 - the modflow SFR variable STRHC1

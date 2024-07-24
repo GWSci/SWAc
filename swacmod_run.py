@@ -115,7 +115,7 @@ def _compare_methods(unoptimised, optimised, data, output, node):
     timer.switch_off(comparison_time_switcher)
 
     np.testing.assert_equal(unoptimised_result, optimised_result)
-        
+
     return optimised_result
 
 ###############################################################################
@@ -271,11 +271,11 @@ def compare_lambdas(name, time_switcher, unoptimised, optimised):
 
     timer.switch_to(time_switcher, f"{name} (comparison)")
     np.testing.assert_equal(unoptimised_result, optimised_result)
-        
+
     return optimised_result
 
 def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, spatial_index):
-                
+
     if node in data["params"]["output_individual"]:
         timer.switch_to(time_switcher, "aggregate_output (output_individual)")
         # if this node for individual output then preserve
@@ -354,7 +354,7 @@ def compare_lambdas(name, time_switcher, unoptimised, optimised):
 
     timer.switch_to(time_switcher, f"{name} (comparison)")
     np.testing.assert_equal(unoptimised_result, optimised_result)
-        
+
     return optimised_result
 
 def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, stream_nitrate_aggregation, nitrate_mi_aggregation, spatial_index, pond_area):
@@ -542,7 +542,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = np.zeros(1, dtype=np.single)
         nitrate_aggregation = nitrate.make_aggregation_array(data)
-        stream_nitrate_aggregation = nitrate.make_aggregation_array(data)    
+        stream_nitrate_aggregation = nitrate.make_aggregation_array(data)
         nitrate_mi_aggregation = nitrate.make_mi_aggregation_array(data)
         recharge = np.zeros(1, dtype=np.single)
         runoff = np.zeros(1, dtype=np.single)
@@ -907,7 +907,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             evt, tmp = None, None
             del evt, tmp
             gc.collect()
-        
+
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
 
