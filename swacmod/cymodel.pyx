@@ -892,7 +892,7 @@ def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, node_index_to_rch_i
             if rch_index >= 0:
                 rch_indexes[per, spd_index] = rch_index
                 rch[per, spd_index] = rchrate[(nodes * per) + node_index + 1] * fac
-                spd[per][spd_index] = ((rch_index,),
+                spd[per][spd_index] = ((rch_indexes[per, spd_index],),
                             rch[per, spd_index])
                 spd_index += 1
 
