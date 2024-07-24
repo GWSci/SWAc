@@ -127,10 +127,7 @@ def dis_get_lrc(dis, nlay, nrow, ncol, node_numbers):
 		node_number_list = node_numbers
 	else:
 		node_number_list = [node_numbers]
-	if isinstance(node_numbers, list):
-		_validate_node_numbers(nlay, nrow, ncol, node_number_list)
-	else:
-		_validate_node_numbers(nlay, nrow, ncol, node_number_list)
+	_validate_node_numbers(nlay, nrow, ncol, node_number_list)
 	lrc_list = []
 	for node_index in convert_node_numbers_to_node_indexes(node_number_list):
 		l = node_index // ncol // nrow
