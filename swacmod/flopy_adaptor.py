@@ -116,13 +116,6 @@ def modflow_dis(model, nlay, nrow, ncol, nper):
 		ncol=ncol,
 		nper=nper)
 
-def _validate_node_numbers(nlay, nrow, ncol, node_numbers):
-	max_node_number = (nlay * nrow * ncol)
-	for node_number in node_numbers:
-		if node_number <= 0 or node_number > max_node_number:
-			message = f"The node number {node_number} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {nlay}, {nrow}, {ncol} respectively."
-			raise Exception(message)
-
 def make_empty_modflow_gwf_evt_stress_period_data(model, nodes, nper):
 	return flopy.mf6.ModflowGwfevt.stress_period_data.empty(
 		model,

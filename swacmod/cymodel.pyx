@@ -2305,8 +2305,6 @@ def get_evt_file(data, evtrate):
 def get_evt_file_mfusg(data, evtrate):
     cdef int per, nper, nodes
 
-    # units oddness - lots of hardcoded 1000s in input_output.py
-    cdef float fac = 0.001
     path = make_path(data)
 
     nper = extract_nper(data)
@@ -2317,19 +2315,26 @@ def get_evt_file_mfusg(data, evtrate):
     nevtopt = data['params']['nevtopt']
     evt_out = None
 
-    evtr = np.zeros((nodes, 1))
-
-    evt_dic = {}
-    for per in tqdm(range(nper), desc="Generating EVT flux     "):
-        for inode in range(1, nodes + 1):
-            evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
-        evt_dic[per] = evtr.copy()
-
+    evt_dic = make_evt_dic(data, evtrate)
     surf, exdp, ievt = extract_surf_exdp_ievt(data)
 
     evt_out = flopy_adaptor.make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
 
     return evt_out
+
+def make_evt_dic(data, evtrate):
+    # units oddness - lots of hardcoded 1000s in input_output.py
+    cdef float fac = 0.001
+
+    nodes = extract_node_count(data)
+    nper = extract_nper(data)
+    evtr = np.zeros((nodes, 1))
+    evt_dic = {}
+    for per in tqdm(range(nper), desc="Generating EVT flux     "):
+        for inode in range(1, nodes + 1):
+            evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
+        evt_dic[per] = evtr.copy()
+    return evt_dic
 
 def extract_surf_exdp_ievt(data):
     nodes = extract_node_count(data)
