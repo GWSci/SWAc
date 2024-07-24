@@ -17,7 +17,6 @@ try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-import h5py
 import numpy
 from dateutil import parser
 from tqdm import tqdm
@@ -31,6 +30,7 @@ from . import __version__
 from . import time_series_data as time_series_data
 from . import feature_flags as ff
 import swacmod.csv_resource as csv_resource
+import swacmod.h5py_adaptor as h5py_adaptor
 
 try:
     basestring
@@ -426,11 +426,7 @@ def dump_water_balance(data,
         except OSError:
             pass
         root = "swacmod_output"
-        write_h5py(path, root, final)
-
-def write_h5py(file_path, dataset_name, data):
-    with h5py.File(file_path, "w") as outfile:
-        outfile.create_dataset(dataset_name, data=data, compression="gzip")
+        h5py_adaptor.write_h5py(path, root, final)
 
 def get_row_spatial(vector, mult):
     """Get a row of data for output."""
