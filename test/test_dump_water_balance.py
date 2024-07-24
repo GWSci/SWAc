@@ -7,6 +7,7 @@ import datetime
 import swacmod.utils as utils
 import h5py
 import numpy as np
+import swacmod.h5py_adaptor as h5py_adaptor
 
 class Test_Dump_water_Balance(unittest.TestCase):
 	def test_dump_water_balance_csv(self):
@@ -45,7 +46,7 @@ class Test_Dump_water_Balance(unittest.TestCase):
 
 		expected_path = os.path.join(output_dir, f"{run_name}_n_1.{file_format}")
 
-		actual = read_h5py(expected_path)
+		actual = h5py_adaptor.read_h5py(expected_path)
 		np.testing.assert_array_almost_equal([6, 60, 600, 6000], actual["swacmod_output"])
 
 def read_h5py(path):
