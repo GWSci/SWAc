@@ -270,7 +270,7 @@ def make_mf6_rch_file_with_disv(path, nper, maxbound, rch_indexes, rch):
             spd[per][spd_index] = ((0, rch_indexes[per, spd_index]),
                         rch[per, spd_index])
 
-    return mf_gwf_rch(m, maxbound, spd)
+    return _mf_gwf_rch(m, maxbound, spd)
 
 def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch):
     m, spd = make_model_with_disu_and_empty_spd_for_rch_out(path, nper, nodes, maxbound)
@@ -280,9 +280,9 @@ def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch):
             spd[per][spd_index] = ((rch_indexes[per, spd_index],),
                         rch[per, spd_index])
 
-    return mf_gwf_rch(m, maxbound, spd)
+    return _mf_gwf_rch(m, maxbound, spd)
 
-def mf_gwf_rch(model, maxbound, spd):
+def _mf_gwf_rch(model, maxbound, spd):
 	return flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(model,
                                                        fixed_cell=False,
                                                        print_input=None,

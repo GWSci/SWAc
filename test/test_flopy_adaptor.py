@@ -126,7 +126,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 		flopy_adaptor._mf_tdis(sim, stress_period_count)
 		spd = flopy_adaptor._make_empty_modflow_gwf_rch_stress_period_data(model, node_count, stress_period_count)
 
-		rch = flopy_adaptor.mf_gwf_rch(model, node_count, spd)
+		rch = flopy_adaptor._mf_gwf_rch(model, node_count, spd)
 
 		self.assertEqual(model, rch.model_or_sim)
 		self.assertEqual('  MAXBOUND  3\n', rch.maxbound.get_file_entry())
@@ -152,7 +152,7 @@ class Test_Flopy_Adaptor(unittest.TestCase):
 					value = value + 1
 				value = value + 100
 
-			rch = flopy_adaptor.mf_gwf_rch(model, node_count, spd)
+			rch = flopy_adaptor._mf_gwf_rch(model, node_count, spd)
 
 			flopy_adaptor.write_mf_gwf_rch(rch)
 			actual = file_test_helpers.slurp_without_first_line(path + ".rch")
