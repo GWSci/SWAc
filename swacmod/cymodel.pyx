@@ -2022,25 +2022,27 @@ def get_str_file(data, runoff):
     nstrm = nss = count_nss(sorted_by_ca)
     m, dis, rd = make_modflow_str(data, nstrm, nss)
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
-    update_rd(sorted_by_ca, rd, dis)
-
-    nper = extract_nper(data)
-    idx = make_idx()
-    nss = count_nss(sorted_by_ca)
-    str_flg = make_str_flg(data, sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
-    cd = initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
-    segment_data={iper: cd for iper in range(nper)}
+    update_rd(sorted_by_ca, rd, dis)
 
     nstrm = count_nss(sorted_by_ca)
     istcb1 = data['params']['istcb1']
     istcb2 = data['params']['istcb2']
     reach_data = make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic, rd)
-    # segment_data
+    segment_data = make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic)
     strm = flopy_adaptor.modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
     strm.heading = "# DELETE ME"
 
     return strm
+
+def make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic):
+    nper = extract_nper(data)
+    idx = make_idx()
+    nss = count_nss(sorted_by_ca)
+    str_flg = make_str_flg(data, sorted_by_ca)
+    cd = initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
+    segment_data={iper: cd for iper in range(nper)}
+    return segment_data
 
 def make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic, rd):
     import copy
