@@ -2338,21 +2338,7 @@ def get_evt_file_mfusg(data, evtrate):
             evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
         evt_dic[per] = evtr.copy()
 
-    if data['params']['gwmodel_type'] == 'mfusg':
-        evt_out = flopy_adaptor.make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
-    elif data['params']['gwmodel_type'] == 'mf6':
-        m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes)
-
-        for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
-            for i in range(nodes):
-                if ievt[i, 0] > 0:
-                    spd[per][i] = ((ievt[i, 0] - 1,),
-                                   surf[i, 0],
-                                   evt_dic[per][i, 0],
-                                   exdp[i, 0],
-                                   -999.0, -999.0)
-
-        evt_out = flopy_adaptor.modflow_gwf_evt(m, nodes, spd)
+    evt_out = flopy_adaptor.make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
 
     return evt_out
 
@@ -2392,21 +2378,18 @@ def get_evt_file_mf6(data, evtrate):
             evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
         evt_dic[per] = evtr.copy()
 
-    if data['params']['gwmodel_type'] == 'mfusg':
-        evt_out = flopy_adaptor.make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
-    elif data['params']['gwmodel_type'] == 'mf6':
-        m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes)
+    m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes)
 
-        for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
-            for i in range(nodes):
-                if ievt[i, 0] > 0:
-                    spd[per][i] = ((ievt[i, 0] - 1,),
-                                   surf[i, 0],
-                                   evt_dic[per][i, 0],
-                                   exdp[i, 0],
-                                   -999.0, -999.0)
+    for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
+        for i in range(nodes):
+            if ievt[i, 0] > 0:
+                spd[per][i] = ((ievt[i, 0] - 1,),
+                                surf[i, 0],
+                                evt_dic[per][i, 0],
+                                exdp[i, 0],
+                                -999.0, -999.0)
 
-        evt_out = flopy_adaptor.modflow_gwf_evt(m, nodes, spd)
+    evt_out = flopy_adaptor.modflow_gwf_evt(m, nodes, spd)
 
     return evt_out
 
