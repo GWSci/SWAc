@@ -2340,16 +2340,25 @@ def extract_surf_exdp_ievt(data):
     return surf, exdp, ievt
 
 def get_evt_file_mf6(data, evtrate):
-    cdef int i, per, nper, nodes
-
-    # units oddness - lots of hardcoded 1000s in input_output.py
-    cdef float fac = 0.001
 
     nper = extract_nper(data)
     nodes = extract_node_count(data)
 
     surf, exdp, ievt = extract_surf_exdp_ievt(data)
 
+    path = make_path(data)
+    nper = extract_nper(data)
+    nodes = extract_node_count(data)
+    # ievt
+    stress_period_data = _make_stress_period_data(data, evtrate, surf, exdp, ievt)
+    return flopy_adaptor.make_evt(path, nper, nodes, ievt, stress_period_data)
+
+def _make_stress_period_data(data, evtrate, surf, exdp, ievt):
+    # units oddness - lots of hardcoded 1000s in input_output.py
+    cdef float fac = 0.001
+
+    nper = extract_nper(data)
+    nodes = extract_node_count(data)
     stress_period_data = {}
     for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
         stress_period_data[per] = {}
@@ -2361,14 +2370,7 @@ def get_evt_file_mf6(data, evtrate):
                                 evtrate[(nodes * per) + node_number] * fac,
                                 exdp[node_index, 0],
                                 -999.0, -999.0)
-
-
-    path = make_path(data)
-    nper = extract_nper(data)
-    nodes = extract_node_count(data)
-    # ievt
-    # stress_period_data
-    return flopy_adaptor.make_evt(path, nper, nodes, ievt, stress_period_data)
+    return stress_period_data
 
 ###############################################################################
 
