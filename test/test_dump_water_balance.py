@@ -30,6 +30,10 @@ class Test_Dump_water_Balance(unittest.TestCase):
 		for column in utils.col_order():
 			output[column] = [1, 2, 3]
 		output.pop('date')
+		output["combined_recharge"] = [10, 20, 30]
+		output["combined_str"] = [100, 200, 300]
+		output["combined_ae"] = [1000, 2000, 3000]
+		output["evt"] = [10000, 20000, 30000]
 		
 		file_format = "csv"
 		output_dir = tempfile.gettempdir()
@@ -45,5 +49,5 @@ class Test_Dump_water_Balance(unittest.TestCase):
 		self.assertEqual(expected_csv, actual)
 
 expected_csv = """DATE,nDays,Area,CombinedRecharge,CombinedSW,CombinedAE,UnitilisedPE
-02/01/2024,2,100,0.6000000000000001,0.6000000000000001,0.6000000000000001,0.6000000000000001
+02/01/2024,2,100,6.0,60.0,600.0,6000.0
 """
