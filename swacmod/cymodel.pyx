@@ -2018,23 +2018,25 @@ def apppend_runoff_and_flow_to_perioddata(perioddata, nss, per, ro, flow):
 def get_str_file(data, runoff):
     """get STR object."""
 
-    nper = extract_nper(data)
     sorted_by_ca = make_sorted_by_ca(data)
-    idx = make_idx()
     nstrm = nss = count_nss(sorted_by_ca)
     m, dis, rd = make_modflow_str(data, nstrm, nss)
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     update_rd(sorted_by_ca, rd, dis)
 
+    nper = extract_nper(data)
+    idx = make_idx()
+    nss = count_nss(sorted_by_ca)
     str_flg = make_str_flg(data, sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
     cd = initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
+    segment_data={iper: cd for iper in range(nper)}
 
-    nstrm = nss = count_nss(sorted_by_ca)
+    nstrm = count_nss(sorted_by_ca)
     istcb1 = data['params']['istcb1']
     istcb2 = data['params']['istcb2']
     reach_data = make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic, rd)
-    segment_data={iper: cd for iper in range(nper)}
+    # segment_data
     strm = flopy_adaptor.modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
     strm.heading = "# DELETE ME"
 
