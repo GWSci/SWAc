@@ -2303,24 +2303,15 @@ def get_evt_file(data, evtrate):
         return get_evt_file_mf6(data, evtrate)
 
 def get_evt_file_mfusg(data, evtrate):
-    cdef int per, nper, nodes
-
     path = make_path(data)
-
-    nper = extract_nper(data)
     nodes = extract_node_count(data)
-    m = None
-
-    ievtcb = data['params']['ievtcb']
+    nper = extract_nper(data)
     nevtopt = data['params']['nevtopt']
-    evt_out = None
-
+    ievtcb = data['params']['ievtcb']
     evt_dic = make_evt_dic(data, evtrate)
     surf, exdp, ievt = extract_surf_exdp_ievt(data)
 
-    evt_out = flopy_adaptor.make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
-
-    return evt_out
+    return flopy_adaptor.make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
 
 def make_evt_dic(data, evtrate):
     # units oddness - lots of hardcoded 1000s in input_output.py
