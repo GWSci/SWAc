@@ -818,26 +818,12 @@ def get_recharge(data, output, node):
 def get_mf6rch_file(data, rchrate):
     """get mf6 RCH object."""
 
-    import os.path
-
-    cdef int node_index, per
+    node_index_to_rch_index = make_node_index_to_rch_index(data)
 
     path = make_path(data)
-    rch_params = data['params']['recharge_node_mapping']
-    nper = extract_nper(data)
     nodes = extract_node_count(data)
-
-    node_index_to_rch_index = np.full(nodes, -1, dtype=int)
-    if rch_params is not None:
-        for node_number, vals in rch_params.iteritems():
-            node_index = node_number - 1
-            node_index_to_rch_index[node_index] = vals[0] - 1
-    else:
-        for node_index in range(nodes):
-            node_index_to_rch_index[node_index] = node_index
-
+    nper = extract_nper(data)
     maxbound = (node_index_to_rch_index >= 0).sum()
-
     rch_indexes, rch = make_rch_indexes_and_rch(data, maxbound, node_index_to_rch_index, rchrate)
 
     if data['params']['disv']:
@@ -854,6 +840,19 @@ def extract_node_count(data):
 def make_path(data):
     fileout = data['params']['run_name']
     return os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+
+def make_node_index_to_rch_index(data):
+    nodes = extract_node_count(data)
+    rch_params = data['params']['recharge_node_mapping']
+    node_index_to_rch_index = np.full(nodes, -1, dtype=int)
+    if rch_params is not None:
+        for node_number, vals in rch_params.iteritems():
+            node_index = node_number - 1
+            node_index_to_rch_index[node_index] = vals[0] - 1
+    else:
+        for node_index in range(nodes):
+            node_index_to_rch_index[node_index] = node_index
+    return node_index_to_rch_index
 
 def make_rch_indexes_and_rch(data, maxbound, node_index_to_rch_index, rchrate):
     # this is equivalent of strange hardcoded 1000 in format_recharge_row
