@@ -374,15 +374,6 @@ END period  5
 		actual_period_data = {k: v.tolist() for k, v in sfr.perioddata.get_data().items()}
 		self.assertEqual(sd, actual_period_data)
 
-	def test_modflow_bas(self):
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=UserWarning)
-			model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
-		bas = flopy_adaptor.modflow_bas(model)
-
-		self.assertEqual(bas, model.get_package("bas6"))
-		self.assertFalse(bas.ifrefm)
-
 	def test_modflow_str_get_empty(self):
 		ncells = 2,
 		nss = 3

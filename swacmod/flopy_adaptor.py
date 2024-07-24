@@ -105,9 +105,6 @@ def modflow_sfr2_get_empty_segment_data(nss):
 def modflow_sfr2_get_empty_reach_data(nstrm):
 	return flopy.modflow.ModflowSfr2.get_empty_reach_data(nstrm, structured=False)
 
-def modflow_bas(model):
-	return flopy.modflow.ModflowBas(model, ifrefm=False)
-
 def modflow_str_get_empty(ncells, nss):
 	return flopy.modflow.ModflowStr.get_empty(ncells=ncells, nss=nss)
 
@@ -282,7 +279,7 @@ def _make_sfr2(model, nstrm, nss, istcb1, istcb2, reach_data, segment_data):
 def make_str(path, nlay, nrow, ncol, nper, nstrm, istcb1, istcb2, reach_data, segment_data, strm_heading):
 	m = modflow_model(path, "mf2005", True)
 	dis = modflow_dis(m, nlay, nrow, ncol, nper)
-	modflow_bas(m)
+	flopy.modflow.ModflowBas(m, ifrefm=False)
 	strm = _modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
 	strm.heading = strm_heading
 	return strm
