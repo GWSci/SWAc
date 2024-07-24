@@ -277,10 +277,10 @@ def _make_sfr2(model, nstrm, nss, istcb1, istcb2, reach_data, segment_data):
 		filenames=None)
 
 def make_str(path, nlay, nrow, ncol, nper, nstrm, istcb1, istcb2, reach_data, segment_data, strm_heading):
-	m = modflow_model(path, "mf2005", True)
-	dis = modflow_dis(m, nlay, nrow, ncol, nper)
-	flopy.modflow.ModflowBas(m, ifrefm=False)
-	strm = _modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
+	model = modflow_model(path, "mf2005", True)
+	modflow_dis(model, nlay, nrow, ncol, nper)
+	flopy.modflow.ModflowBas(model, ifrefm=False)
+	strm = _modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data)
 	strm.heading = strm_heading
 	return strm
 
