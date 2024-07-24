@@ -12,28 +12,7 @@ class Test_Dump_water_Balance(unittest.TestCase):
 		test_name = sys._getframe().f_code.co_name
 		run_name = f"run-{class_name}-{test_name}"
 
-		date_series = [datetime.datetime(2024, 1, 1), datetime.datetime(2024, 1, 2), datetime.datetime(2024, 1, 3)]
-
-		data = {
-			"params": {
-				"num_nodes" : 1,
-				"run_name": run_name,
-				"node_areas": {1 : 100},
-				"time_periods": [[1, 3]],
-				"output_fac": 2,
-			},
-			"series": {
-				"date": date_series
-			},
-		}
-		output = {}
-		for column in utils.col_order():
-			output[column] = [1, 2, 3]
-		output.pop('date')
-		output["combined_recharge"] = [10, 20, 30]
-		output["combined_str"] = [100, 200, 300]
-		output["combined_ae"] = [1000, 2000, 3000]
-		output["evt"] = [10000, 20000, 30000]
+		data, output = make_data_and_output(run_name)
 		
 		file_format = "csv"
 		output_dir = tempfile.gettempdir()
@@ -47,6 +26,31 @@ class Test_Dump_water_Balance(unittest.TestCase):
 			actual = file.read()
 
 		self.assertEqual(expected_csv, actual)
+
+def make_data_and_output(run_name):
+	date_series = [datetime.datetime(2024, 1, 1), datetime.datetime(2024, 1, 2), datetime.datetime(2024, 1, 3)]
+
+	data = {
+		"params": {
+			"num_nodes" : 1,
+			"run_name": run_name,
+			"node_areas": {1 : 100},
+			"time_periods": [[1, 3]],
+			"output_fac": 2,
+		},
+		"series": {
+			"date": date_series
+		},
+	}
+	output = {}
+	for column in utils.col_order():
+		output[column] = [1, 2, 3]
+	output.pop('date')
+	output["combined_recharge"] = [10, 20, 30]
+	output["combined_str"] = [100, 200, 300]
+	output["combined_ae"] = [1000, 2000, 3000]
+	output["evt"] = [10000, 20000, 30000]
+	return data, output
 
 expected_csv = """DATE,nDays,Area,CombinedRecharge,CombinedSW,CombinedAE,UnitilisedPE
 02/01/2024,2,100,6.0,60.0,600.0,6000.0
