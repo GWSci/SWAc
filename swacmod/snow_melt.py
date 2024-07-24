@@ -206,7 +206,6 @@ def PotentialSolar(lat, Jday):
 		delta = max(min(delta,1),-1)
 	return 117500*(np.arccos(delta)*np.sin(lat)*np.sin(dec)+np.cos(lat)*np.cos(dec)*np.sin(np.arccos(-delta)))/np.pi
 
-
 # solar declination [rad]
 #Jday: Julian date or day of the year [day]
 def declination(Jday):

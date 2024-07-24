@@ -158,7 +158,6 @@ def balance_conversions():
             ('BALANCE', True, False)
         ]
 
-###############################################################################
 class ValidationError(Exception):
     """General exception for validation errors."""
     def __init__(self, msg):
@@ -166,8 +165,6 @@ class ValidationError(Exception):
         new_msg = '---> Validation failed: %s' % msg
         Exception.__init__(self, new_msg)
 
-
-###############################################################################
 class FinalizationError(Exception):
     """General exception for validation errors."""
     def __init__(self, msg):
@@ -175,8 +172,6 @@ class FinalizationError(Exception):
         new_msg = '---> Finalization failed: %s' % msg
         Exception.__init__(self, new_msg)
 
-
-###############################################################################
 class InputOutputError(Exception):
     """General exception for validation errors."""
     def __init__(self, msg):
@@ -184,8 +179,6 @@ class InputOutputError(Exception):
         new_msg = '---> InputOutput failed: %s' % msg
         Exception.__init__(self, new_msg)
 
-
-###############################################################################
 def get_ram_usage_for_process(pid=None):
     """Get memory usage for process given its id.
 
@@ -198,8 +191,6 @@ def get_ram_usage_for_process(pid=None):
     mem = process.memory_info()[0] / float(2**20)
     return mem
 
-
-###############################################################################
 def weighted_sum(to_sum, weights):
     """Get the weighted sum given a list and its weights."""
     if len(to_sum) != len(weights):
@@ -208,8 +199,6 @@ def weighted_sum(to_sum, weights):
     temp = [to_sum[i] * weights[i] for i in range(len(to_sum))]
     return sum(temp)
 
-
-###############################################################################
 def aggregate_output(data, output, method='sum'):
     """Aggregate all columns according to user-defined time periods."""
     final = {}
@@ -218,8 +207,6 @@ def aggregate_output(data, output, method='sum'):
         final[col] = new_col
     return final
 
-
-###############################################################################
 def aggregate_output_col(data, output, column, method='sum'):
     """Aggregate an output column according to user-defined time periods."""
     times = data['params']['time_periods']
@@ -237,8 +224,6 @@ def aggregate_output_col(data, output, column, method='sum'):
             #     print final[num]
     return final
 
-
-###############################################################################
 def aggregate_array(data, array, method='average'):
     """Aggregate 1d array according to user-defined time periods."""
     times = data['params']['time_periods']
@@ -250,8 +235,6 @@ def aggregate_array(data, array, method='average'):
             final[num] /= (time[1] - time[0])
     return final
 
-
-###############################################################################
 def get_modified_time(path):
     """Get the datetime a file was modified."""
     try:
@@ -264,8 +247,6 @@ def get_modified_time(path):
         mod = datetime.datetime(1901, 1, 1, 0, 0, 0)
     return mod
 
-
-###############################################################################
 def build_taw_raw(params):
     """Build the TAW and RAW matrices."""
     taw, raw = {}, {}
@@ -287,8 +268,6 @@ def build_taw_raw(params):
 
     return taw, raw
 
-
-###############################################################################
 def invert_taw_raw(param, params):
     """Invert the TAW and RAW matrices, from month by zone to node by month."""
     new_param = {}
@@ -302,8 +281,6 @@ def invert_taw_raw(param, params):
 
     return new_param
 
-
-###############################################################################
 def compile_model():
     """Compile Cython model."""
     mod_c = get_modified_time(os.path.join(CONSTANTS['CODE_DIR'], 'cymodel.c'))
@@ -327,8 +304,6 @@ def compile_model():
         boo = False
     return boo
 
-###############################################################################
-
 def monthdelta(d1, d2):
     " difference in months between two dates"
     year_diff = d2.year - d1.year
@@ -336,7 +311,6 @@ def monthdelta(d1, d2):
     day_correction = (-1) if d2.day < d1.day else 0
     result = (12 * year_diff) + month_diff + day_correction
     return result
-
 
 def weekdelta(d1, d2):
     " difference in weeks between two dates"
@@ -346,12 +320,10 @@ def weekdelta(d1, d2):
 
     return (monday2 - monday1).days / 7
 
-
 def daterange(start_date, end_date):
     "iterate over dates"
     for n in range(int((end_date - start_date).days)):
         yield start_date + datetime.timedelta(n)
-
 
 def month_indices(month, data):
     "get day numbers of a month"

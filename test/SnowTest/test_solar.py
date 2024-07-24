@@ -97,4 +97,3 @@ class SolarTest(unittest.TestCase):
 		expected = [-4303.6, -108.43, -17115]
 		np.testing.assert_almost_equal(expected, actual)
 
-

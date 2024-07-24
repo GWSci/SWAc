@@ -57,13 +57,11 @@ def anonymous_arena_init(self, size, fd=-1):
     self.fd = fd  # still kept but is not used !
     self.buffer = mmap.mmap(-1, self.size)
 
-
 # monkey patch for anonymous memory mapping python 3
 if not ff.disable_multiprocessing:
     if sys.version_info > (3,):
         if mp.get_start_method() == 'fork':
             Arena.__init__ = anonymous_arena_init
-
 
 class Worker:
     "mp worker"
@@ -85,8 +83,6 @@ class Worker:
             print("join ", self.name)
         self.process.join()
 
-
-###############################################################################
 def aggregate_reporting(reporting):
     """Aggregate reporting zones across processes."""
     logging.info("\tAggregating reporting across processes")
@@ -98,7 +94,6 @@ def aggregate_reporting(reporting):
             for key2 in reporting[key]:
                 new_rep[key[1]][key2] += reporting[key][key2]
     return new_rep
-
 
 def compare_methods(unoptimised, optimised):
     result = lambda data, output, node: _compare_methods(unoptimised, optimised, data, output, node)
@@ -118,7 +113,6 @@ def _compare_methods(unoptimised, optimised, data, output, node):
 
     return optimised_result
 
-###############################################################################
 def get_output(data, node, time_switcher):
     """Run the model."""
     logging.debug("\tRunning model for node %d", node)
@@ -176,8 +170,6 @@ def get_output(data, node, time_switcher):
     logging.debug("\tNode %d done (%dms).", node, (end - start) * 1000)
     return output
 
-
-###############################################################################
 def run_process(
         env,
         num,
@@ -432,22 +424,14 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
                                     index=spatial_index)
     logging.info("mp.Process %d ended", num)
 
-###############################################################################
-
 # this stuff stranded here for windows - multiprocessing cannot handle
 #  - functions not in the top level
 #  - not pickleable objects as arguments to that function :(
-
-
 def listener(q, total):
     pbar = tqdm(total=total, desc="SWAcMod Parallel        ")
     for item in iter(q.get, None):
         pbar.update()
     pbar.close()
-
-
-###############################################################################
-
 
 def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
         data=None, env=Environment()):
@@ -952,8 +936,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
 
-
-###############################################################################
 def run_main():
     if not ff.disable_multiprocessing:
         mp.freeze_support()

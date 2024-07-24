@@ -32,7 +32,6 @@ from . import time_series_data as time_series_data
 from . import feature_flags as ff
 import swacmod.csv_resource as csv_resource
 
-
 try:
     basestring
 except NameError:
@@ -42,8 +41,6 @@ if sys.version_info > (3,):
     long = int
     raw_input = input
 
-
-###############################################################################
 def start_logging(env, level=logging.INFO, path=None, run_name=None):
     """Start logging output.
 
@@ -80,14 +77,11 @@ def start_logging(env, level=logging.INFO, path=None, run_name=None):
 
     return path
 
-
-###############################################################################
 def format_time(diff):
     """Format a time difference for output."""
     secs = int(round(diff))
     return str(datetime.timedelta(0, secs))
 
-###############################################################################
 def load_yaml(filein):
     """Load a YAML file, lowercase its keys."""
     logging.debug("\t\tLoading %s", filein)
@@ -107,8 +101,6 @@ def load_yaml(filein):
                 yml[new_key] = value
     return yml
 
-
-###############################################################################
 def format_recharge_row(row):
     """Convert list of values to output string."""
     final = []
@@ -124,16 +116,12 @@ def format_recharge_row(row):
         final.append(splitter.join(split))
     return " ".join(final) + "\n"
 
-
-###############################################################################
 def get_recharge_path(data):
     """Return the path of the recharge file."""
     fileout = "%s_recharge.rch" % data["params"]["run_name"]
     path = os.path.join(u.CONSTANTS["OUTPUT_DIR"], fileout)
     return path
 
-
-###############################################################################
 def get_output_path(data, file_format, output_dir, node=None, zone=None):
     """Return the path of the recharge file."""
     run = data["params"]["run_name"]
@@ -151,8 +139,6 @@ def get_output_path(data, file_format, output_dir, node=None, zone=None):
     path = os.path.join(output_dir, fileout)
     return path
 
-
-###############################################################################
 def check_open_files(data, file_format, output_dir):
     """Check if any of the scheduled output files can't be open."""
     paths = []
@@ -183,8 +169,6 @@ def check_open_files(data, file_format, output_dir):
                 _ = raw_input('\nCannot write to "%s", make sure the file is '
                               "not in use then press Enter." % path)
 
-
-###############################################################################
 def dump_recharge_file(data, recharge):
     """Write recharge to file."""
 
@@ -247,9 +231,6 @@ def dump_recharge_file(data, recharge):
                 if row:
                     rech_file.write(" ".join(str(i[0]) for i in row) + "\n")
 
-###############################################################################
-
-
 def dump_mf96_recharge_file(data, recharge):
     """Write recharge to mf96 rch file."""
 
@@ -283,9 +264,7 @@ def dump_mf96_recharge_file(data, recharge):
             if row:
                 rech_file.write(row + "\n")
 
-
 def get_spatial_path(data, output_dir):
-    ###########################################################################
     """Get the path of the spatial data output CSV file."""
     if data["params"]["spatial_output_date"] == "mean":
         nam_list = ["mean"] + ['month' + str(i + 1) for i in range(12)]
@@ -298,8 +277,6 @@ def get_spatial_path(data, output_dir):
     ]
     return path
 
-
-###############################################################################
 def dump_spatial_output(env, data, spatials, output_dir, reduced=False):
     """Write spatial output to file."""
 
@@ -336,19 +313,12 @@ def dump_spatial_output(env, data, spatials, output_dir, reduced=False):
                                  mult) for node in spatials.keys()])
             writer = None
 
-###############################################################################
-
-
 def dump_sfr_output(sfr):
     from swacmod.model import write_sfr
 
     logging.info("\tDumping SFR file")
     write_sfr(sfr)
     # sfr.write_file()
-
-
-###############################################################################
-
 
 def dump_evt_output(evt, f=None):
     """
@@ -394,8 +364,6 @@ def dump_evt_output(evt, f=None):
             f_evt.write(ievt)
     f_evt.close()
 
-
-###############################################################################
 def dump_water_balance(data,
                        output,
                        file_format,
@@ -461,8 +429,6 @@ def dump_water_balance(data,
             root = "swacmod_output"
             outfile.create_dataset(root, data=final, compression="gzip")
 
-
-###############################################################################
 def get_row_spatial(vector, mult):
     """Get a row of data for output."""
 
@@ -474,8 +440,6 @@ def get_row_spatial(vector, mult):
 
     return row
 
-
-###############################################################################
 def get_row_spatial_reduced(vector, mult):
     """Get a reduced row of data for output."""
 
@@ -486,8 +450,6 @@ def get_row_spatial_reduced(vector, mult):
 
     return row
 
-
-###############################################################################
 def get_row_balance(aggregated, num, reduced, mult):
     """Get a row of data for output."""
     if reduced:
@@ -503,8 +465,6 @@ def get_row_balance(aggregated, num, reduced, mult):
 
     row = numpy.array(row) * mult
     return row
-
-###############################################################################
 
 def load_params_from_yaml(
         specs_file=u.CONSTANTS["SPECS_FILE"],
@@ -596,7 +556,6 @@ def _use_array_directly(param):
             or param == "historical_time_periods"
             or param == "historical_mi_array_kg_per_time_period")
 
-###############################################################################
 def load_and_validate(specs_file, input_file, input_dir):
     """Load, finalize and validate model parameters and time series."""
     data = load_params_from_yaml(specs_file=specs_file,
@@ -611,8 +570,6 @@ def load_and_validate(specs_file, input_file, input_dir):
 
     return data
 
-
-###############################################################################
 def load_results():
     """Load 'Calculations' sheet."""
     check = dict((k, []) for k in u.col_order())

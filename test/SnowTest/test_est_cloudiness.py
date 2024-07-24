@@ -32,6 +32,5 @@ class EstCloudinessTest(unittest.TestCase):
 			]
 		np.testing.assert_almost_equal(expected, actual)
 
-
 	def calculateCloudiness(self, Tx, Tn):
 		return snow_melt.EstCloudiness(np.array(Tx), np.array(Tn))	

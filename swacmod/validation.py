@@ -10,8 +10,6 @@ import multiprocessing
 from . import utils as u
 from . import checks as c
 
-
-###############################################################################
 def val_run_name(data, name):
     """Validate run_name.
 
@@ -20,8 +18,6 @@ def val_run_name(data, name):
     rnm = data["params"][name]
     c.check_type(param=rnm, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_num_cores(data, name):
     """Validate num_cores.
 
@@ -38,8 +34,6 @@ def val_num_cores(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_num_nodes(data, name):
     """Validate num_nodes.
 
@@ -50,8 +44,6 @@ def val_num_nodes(data, name):
     c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
     c.check_values_limits(values=[num], name=name, low_l=0)
 
-
-###############################################################################
 def val_start_date(data, name):
     """Validate start_date.
 
@@ -67,7 +59,6 @@ def val_start_date(data, name):
     except:
         raise
 
-###############################################################################
 def val_time_periods(data, name):
     """Validate time_periods.
 
@@ -106,8 +97,6 @@ def val_time_periods(data, name):
         )
         raise u.ValidationError(msg % name)
 
-
-###############################################################################
 def val_output_recharge(data, name):
     """Validate output_recharge.
 
@@ -117,8 +106,6 @@ def val_output_recharge(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_routing_process(data, name):
     """Validate routing_process.
 
@@ -127,8 +114,6 @@ def val_routing_process(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_output_sfr(data, name):
     """Validate output_sfr.
 
@@ -138,8 +123,6 @@ def val_output_sfr(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_sfr_obs(data, name):
     """Validate sfr_obs.
 
@@ -148,8 +131,6 @@ def val_sfr_obs(data, name):
     obs = data["params"][name]
     c.check_type(param=obs, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_output_individual(data, name):
     """Validate output_individual.
 
@@ -167,8 +148,6 @@ def val_output_individual(data, name):
                + '1 <= x <= ' "num_nodes")
         raise u.ValidationError(msg % name)
 
-
-###############################################################################
 def val_irchcb(data, name):
     """Validate irchcb.
 
@@ -178,8 +157,6 @@ def val_irchcb(data, name):
 
     c.check_type(param=irc, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_nodes_per_line(data, name):
     """Validate nodes_per_line.
 
@@ -191,8 +168,6 @@ def val_nodes_per_line(data, name):
 
     c.check_values_limits(values=[npl], name=name, low_l=0)
 
-
-###############################################################################
 def val_output_fac(data, name):
     """Validate output_fac.
 
@@ -204,8 +179,6 @@ def val_output_fac(data, name):
 
     c.check_values_limits(values=[fac], name=name, low_l=0.0)
 
-
-###############################################################################
 def val_spatial_output_date(data, name):
     """Validate spatial_output_date.
 
@@ -220,8 +193,6 @@ def val_spatial_output_date(data, name):
 
     c.check_type(param=dat, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_rainfall_ts(data, name):
     """Validate rainfall_ts.
 
@@ -238,8 +209,6 @@ def val_rainfall_ts(data, name):
         len_list=[len(data["series"]["date"]), len(rzn)],
     )
 
-
-###############################################################################
 def val_pe_ts(data, name):
     """Validate pe_ts.
 
@@ -256,8 +225,6 @@ def val_pe_ts(data, name):
         len_list=[len(data["series"]["date"]), len(pzn)],
     )
 
-
-###############################################################################
 def val_temperature_ts(data, name):
     """Validate temperature_ts.
 
@@ -274,7 +241,6 @@ def val_temperature_ts(data, name):
         len_list=[len(data["series"]["date"]), len(tzn)],
     )
 
-###############################################################################
 def val_tmax_c_ts(data, name):
     """Validate tmax_c_ts.
 
@@ -291,8 +257,6 @@ def val_tmax_c_ts(data, name):
         len_list=[len(data["series"]["date"]), len(tzn)],
     )
 
-
-###############################################################################
 def val_tmin_c_ts(data, name):
     """Validate tmin_c_ts.
 
@@ -309,7 +273,6 @@ def val_tmin_c_ts(data, name):
         len_list=[len(data["series"]["date"]), len(tzn)],
     )
 
-###############################################################################
 def val_windsp_ts(data, name):
     """Validate windsp_ts.
 
@@ -326,8 +289,6 @@ def val_windsp_ts(data, name):
         len_list=[len(data["series"]["date"]), len(tzn)],
     )
 
-
-###############################################################################
 def val_subroot_leakage_ts(data, name):
     """Validate subroot_leakage_ts.
 
@@ -344,8 +305,6 @@ def val_subroot_leakage_ts(data, name):
         len_list=[len(data["series"]["date"]), len(szn)],
     )
 
-
-###############################################################################
 def val_swdis_ts(data, name):
     """Validate swdis_ts.
 
@@ -374,10 +333,6 @@ def val_swdis_ts(data, name):
             t_types=data["specs"][name]["type"],
             len_list=[length[freq_flag], len(swdisn)],
         )
-
-
-###############################################################################
-
 
 def val_swabs_ts(data, name):
     """Validate swabs_ts.
@@ -408,8 +363,6 @@ def val_swabs_ts(data, name):
             len_list=[length[freq_flag], len(swabsn)],
         )
 
-
-###############################################################################
 def val_swdis_locs(data, name):
     """Validate swdis_locs.
 
@@ -427,7 +380,6 @@ def val_swdis_locs(data, name):
             param=swdisl, name=name, t_types=data["specs"][name]["type"],
             keys=range(1, tot)
         )
-
 
         c.check_values_limits(
             values=swdisl.values(),
@@ -447,8 +399,6 @@ def val_swdis_locs(data, name):
             include_high=True,
         )
 
-
-###############################################################################
 def val_swabs_locs(data, name):
     """Validate swabs_locs.
 
@@ -486,8 +436,6 @@ def val_swabs_locs(data, name):
             include_high=True,
         )
 
-
-###############################################################################
 def val_node_areas(data, name):
     """Validate node_areas.
 
@@ -508,8 +456,6 @@ def val_node_areas(data, name):
     c.check_values_limits(values=nda.values(), name=name, low_l=0,
                           include_low=True)
 
-
-###############################################################################
 def val_reporting_zone_names(data, name):
     """Validate reporting_zone_names.
 
@@ -518,8 +464,6 @@ def val_reporting_zone_names(data, name):
     rzn = data["params"][name]
     c.check_type(param=rzn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_reporting_zone_mapping(data, name):
     """Validate reporting_zone_mapping.
 
@@ -547,8 +491,6 @@ def val_reporting_zone_mapping(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_rainfall_zone_names(data, name):
     """Validate rainfall_zone_names.
 
@@ -557,8 +499,6 @@ def val_rainfall_zone_names(data, name):
     rzn = data["params"][name]
     c.check_type(param=rzn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_rainfall_zone_mapping(data, name):
     """Validate rainfall_zone_mapping.
 
@@ -586,8 +526,6 @@ def val_rainfall_zone_mapping(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_pe_zone_names(data, name):
     """Validate pe_zone_names.
 
@@ -596,8 +534,6 @@ def val_pe_zone_names(data, name):
     pzn = data["params"][name]
     c.check_type(param=pzn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_pe_zone_mapping(data, name):
     """Validate pe_zone_mapping.
 
@@ -625,7 +561,6 @@ def val_pe_zone_mapping(data, name):
         include_high=True,
     )
 
-###############################################################################
 def val_tmax_c_zone_mapping(data, name):
     """Validate tmax_c_zone_mapping.
 
@@ -653,7 +588,6 @@ def val_tmax_c_zone_mapping(data, name):
         include_high=True,
     )
 
-###############################################################################
 def val_tmax_c_zone_names(data, name):
     """Validate tmax_c_zone_names.
 
@@ -662,8 +596,6 @@ def val_tmax_c_zone_names(data, name):
     tzn = data["params"][name]
     c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_tmin_c_zone_mapping(data, name):
     """Validate tmin_c_zone_mapping.
 
@@ -691,7 +623,6 @@ def val_tmin_c_zone_mapping(data, name):
         include_high=True,
     )
 
-###############################################################################
 def val_tmin_c_zone_names(data, name):
     """Validate tmin_c_zone_names.
 
@@ -700,7 +631,6 @@ def val_tmin_c_zone_names(data, name):
     tzn = data["params"][name]
     c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
 
-###############################################################################
 def val_windsp_zone_mapping(data, name):
     """Validate windsp_zone_mapping.
 
@@ -728,7 +658,6 @@ def val_windsp_zone_mapping(data, name):
         include_high=True,
     )
 
-###############################################################################
 def val_windsp_zone_names(data, name):
     """Validate windsp_zone_names.
 
@@ -737,7 +666,6 @@ def val_windsp_zone_names(data, name):
     tzn = data["params"][name]
     c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
 
-###############################################################################
 def val_temperature_zone_names(data, name):
     """Validate temperature_zone_names.
 
@@ -746,8 +674,6 @@ def val_temperature_zone_names(data, name):
     tzn = data["params"][name]
     c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_temperature_zone_mapping(data, name):
     """Validate temperature_zone_mapping.
 
@@ -775,8 +701,6 @@ def val_temperature_zone_mapping(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_subroot_zone_names(data, name):
     """Validate subroot_zone_names.
 
@@ -785,8 +709,6 @@ def val_subroot_zone_names(data, name):
     szn = data["params"][name]
     c.check_type(param=szn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_subroot_zone_mapping(data, name):
     """Validate subroot_zone_mapping.
 
@@ -814,8 +736,6 @@ def val_subroot_zone_mapping(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_rapid_runoff_zone_names(data, name):
     """Validate rapid_runoff_zone_names.
 
@@ -824,8 +744,6 @@ def val_rapid_runoff_zone_names(data, name):
     rrn = data["params"][name]
     c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_rapid_runoff_zone_mapping(data, name):
     """Validate rapid_runoff_zone_mapping.
 
@@ -853,8 +771,6 @@ def val_rapid_runoff_zone_mapping(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_interflow_zone_names(data, name):
     """Validate interflow_zone_names.
 
@@ -863,8 +779,6 @@ def val_interflow_zone_names(data, name):
     rrn = data["params"][name]
     c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_interflow_zone_mapping(data, name):
     """Validate interflow_zone_mapping.
 
@@ -892,8 +806,6 @@ def val_interflow_zone_mapping(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_swrecharge_zone_names(data, name):
     """Validate swrecharge_zone_names.
 
@@ -902,8 +814,6 @@ def val_swrecharge_zone_names(data, name):
     rrn = data["params"][name]
     c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_swrecharge_zone_mapping(data, name):
     """Validate swrecharge_zone_mapping.
 
@@ -931,9 +841,6 @@ def val_swrecharge_zone_mapping(data, name):
         include_high=True,
     )
 
-
-
-###############################################################################
 def val_rorecharge_zone_names(data, name):
     """Validate rorecharge_zone_names.
     1) type has to be a dictionary of strings
@@ -941,8 +848,6 @@ def val_rorecharge_zone_names(data, name):
     rrn = data['params'][name]
     c.check_type(param=rrn, name=name, t_types=data['specs'][name]['type'])
 
-
-###############################################################################
 def val_single_cell_swrecharge_zone_mapping(data, name):
     """Validate single_cell_swrecharge_zone_mapping.
     1) type has to be a dictionary of integers
@@ -965,8 +870,6 @@ def val_single_cell_swrecharge_zone_mapping(data, name):
                           high_l=len(rzn),
                           include_high=True)
 
-
-###############################################################################
 def val_single_cell_swrecharge_zone_names(data, name):
     """Validate single_cell_swrecharge_zone_names.
 
@@ -975,8 +878,6 @@ def val_single_cell_swrecharge_zone_names(data, name):
     mzn = data["params"][name]
     c.check_type(param=mzn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_macropore_zone_names(data, name):
     """Validate macropore_zone_names.
 
@@ -985,8 +886,6 @@ def val_macropore_zone_names(data, name):
     mzn = data["params"][name]
     c.check_type(param=mzn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_macropore_zone_mapping(data, name):
     """Validate macropore_zone_mapping.
 
@@ -1014,8 +913,6 @@ def val_macropore_zone_mapping(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_macropore_activation_option(data, name):
     """macropore_activation_option.
 
@@ -1029,8 +926,6 @@ def val_macropore_activation_option(data, name):
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_soil_zone_names(data, name):
     """Validate soil_zone_names.
 
@@ -1039,8 +934,6 @@ def val_soil_zone_names(data, name):
     szn = data["params"][name]
     c.check_type(param=szn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_landuse_zone_names(data, name):
     """Validate landuse_zone_names.
 
@@ -1049,8 +942,6 @@ def val_landuse_zone_names(data, name):
     lzn = data["params"][name]
     c.check_type(param=lzn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_canopy_process(data, name):
     """Validate canopy_process.
 
@@ -1065,8 +956,6 @@ def val_canopy_process(data, name):
         values=[cpr], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_canopy_zone_names(data, name):
     """Validate canopy_zone_names.
 
@@ -1075,8 +964,6 @@ def val_canopy_zone_names(data, name):
     rrn = data["params"][name]
     c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_canopy_zone_mapping(data, name):
     """Validate canopy_zone_mapping.
 
@@ -1104,8 +991,6 @@ def val_canopy_zone_mapping(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_free_throughfall(data, name):
     """Validate free_throughfall.
 
@@ -1132,8 +1017,6 @@ def val_free_throughfall(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_max_canopy_storage(data, name):
     """Validate max_canopy_storage.
 
@@ -1154,8 +1037,6 @@ def val_max_canopy_storage(data, name):
     c.check_values_limits(values=mcs.values(), name=name, low_l=0,
                           include_low=True)
 
-
-###############################################################################
 def val_snow_process_simple(data, name):
     """Validate snow_process.
 
@@ -1169,8 +1050,6 @@ def val_snow_process_simple(data, name):
     c.check_values_limits(
         values=[spr], name=name, constraints=data["specs"][name]["constraints"]
     )
-
-###############################################################################
 
 def val_snow_process_complex(data, name):
     """Validate snow_process.
@@ -1186,8 +1065,6 @@ def val_snow_process_complex(data, name):
         values=[spr], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_snow_params_simple(data, name):
     """Validate snow_params_simple.
 
@@ -1217,7 +1094,6 @@ def val_snow_params_simple(data, name):
         include_low=True,
     )
 
-###############################################################################
 def val_snow_params_complex(data, name):
     """Validate snow_params_complex.
 
@@ -1247,7 +1123,6 @@ def val_snow_params_complex(data, name):
         include_low=True,
     )
 
-###############################################################################
 def val_rapid_runoff_process(data, name):
     """Validate rapid_runoff_process.
 
@@ -1262,8 +1137,6 @@ def val_rapid_runoff_process(data, name):
         values=[rrp], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_rapid_runoff_params(data, name):
     """Validate rapid_runoff_params.
 
@@ -1302,8 +1175,6 @@ def val_rapid_runoff_params(data, name):
             include_high=True,
         )
 
-
-###############################################################################
 def val_rorecharge_process(data, name):
     """Validate rorecharge_process.
     1) type has to be a string
@@ -1323,8 +1194,6 @@ def val_rorecharge_process(data, name):
                           name=name,
                           constraints=data['specs'][name]['constraints'])
 
-
-###############################################################################
 def val_single_cell_swrecharge_proportion(data, name):
     """Validate single_cell_swrecharge_proportion.
     1) type has to be a dict of lists
@@ -1348,8 +1217,6 @@ def val_single_cell_swrecharge_proportion(data, name):
                           include_low=True,
                           include_high=True)
 
-
-###############################################################################
 def val_single_cell_swrecharge_limit(data, name):
     """Validate single_cell_swrecharge_limit.
     1) type has to be a dict of lists
@@ -1365,8 +1232,6 @@ def val_single_cell_swrecharge_limit(data, name):
                  len_list=[len(rzn)],
                  keys=range(1, 13))
 
-
-###############################################################################
 def val_single_cell_swrecharge_activation(data, name):
     """Validate single_cell_swrecharge_activation.
     1) type has to be a dict of lists
@@ -1382,8 +1247,6 @@ def val_single_cell_swrecharge_activation(data, name):
                  len_list=[len(rzn)],
                  keys=range(1, 13))
 
-
-###############################################################################
 def val_swrecharge_process(data, name):
     """Validate swrecharge_process.
 
@@ -1402,8 +1265,6 @@ def val_swrecharge_process(data, name):
         values=[rop], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_swrecharge_proportion(data, name):
     """Validate swrecharge_proportion.
 
@@ -1432,8 +1293,6 @@ def val_swrecharge_proportion(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_swrecharge_limit(data, name):
     """Validate swrecharge_limit.
 
@@ -1452,8 +1311,6 @@ def val_swrecharge_limit(data, name):
         keys=range(1, 13),
     )
 
-
-###############################################################################
 def val_macropore_process(data, name):
     """Validate macropore_process.
 
@@ -1472,8 +1329,6 @@ def val_macropore_process(data, name):
         values=[mpp], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_macropore_proportion(data, name):
     """Validate macropore_proportion.
 
@@ -1502,8 +1357,6 @@ def val_macropore_proportion(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_macropore_limit(data, name):
     """Validate macropore_limit.
 
@@ -1522,8 +1375,6 @@ def val_macropore_limit(data, name):
         keys=range(1, 13),
     )
 
-
-###############################################################################
 def val_macropore_activation(data, name):
     """Validate macropore_activation.
 
@@ -1542,8 +1393,6 @@ def val_macropore_activation(data, name):
         keys=range(1, 13),
     )
 
-
-###############################################################################
 def val_macropore_recharge(data, name):
     """Validate macropore_recharge.
 
@@ -1572,8 +1421,6 @@ def val_macropore_recharge(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_fao_process(data, name):
     """Validate fao_process.
 
@@ -1588,8 +1435,6 @@ def val_fao_process(data, name):
         values=[fao], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_fao_input(data, name):
     """Validate fao_input.
 
@@ -1604,8 +1449,6 @@ def val_fao_input(data, name):
         values=[fao], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_soil_static_params(data, name):
     """Validate soil_static_params.
 
@@ -1630,8 +1473,6 @@ def val_soil_static_params(data, name):
         keys=["FC", "WP", "p"],
     )
 
-
-###############################################################################
 def val_smd(data, name):
     """Validate smd.
 
@@ -1653,8 +1494,6 @@ def val_smd(data, name):
         keys=["starting_SMD"],
     )
 
-
-###############################################################################
 def val_soil_spatial(data, name):
     """Validate soil_spatial.
 
@@ -1685,8 +1524,6 @@ def val_soil_spatial(data, name):
         msg = 'Parameter "%s" requires the sum of its values to be 1.0'
         raise u.ValidationError(msg % name)
 
-
-###############################################################################
 def val_lu_spatial(data, name):
     """Validate lu_spatial.
 
@@ -1715,8 +1552,6 @@ def val_lu_spatial(data, name):
                'to be 1.0 within a tolerance of 1e-5')
         raise u.ValidationError(msg % name)
 
-
-###############################################################################
 def val_zr(data, name):
     """Validate ZR.
 
@@ -1741,8 +1576,6 @@ def val_zr(data, name):
         keys=range(1, 13),
     )
 
-
-###############################################################################
 def val_kc(data, name):
     """Validate KC.
 
@@ -1764,8 +1597,6 @@ def val_kc(data, name):
         keys=range(1, 13),
     )
 
-
-###############################################################################
 def val_taw(data, name):
     """Validate TAW.
 
@@ -1787,8 +1618,6 @@ def val_taw(data, name):
         keys=range(1, tot + 1),
     )
 
-
-###############################################################################
 def val_raw(data, name):
     """Validate RAW.
 
@@ -1810,8 +1639,6 @@ def val_raw(data, name):
         keys=range(1, tot + 1),
     )
 
-
-###############################################################################
 def val_percolation_rejection(data, name):
     """Validate percolation_rejection.
 
@@ -1836,8 +1663,6 @@ def val_percolation_rejection(data, name):
     c.check_values_limits(values=list(per.values())[0], name=name, low_l=0.0,
                           include_low=True)
 
-
-###############################################################################
 def val_percolation_rejection_ts(data, name):
     """Validate percolation_rejection_ts.
 
@@ -1864,8 +1689,6 @@ def val_percolation_rejection_ts(data, name):
     c.check_values_limits(values=per[0], name=name, low_l=0.0,
                           include_low=True)
 
-
-###############################################################################
 def val_percolation_rejection_use_timeseries(data, name):
     """Validate percolation_rejection_use_timeseries.
 
@@ -1875,8 +1698,6 @@ def val_percolation_rejection_use_timeseries(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_leakage_process(data, name):
     """Validate leakage_process.
 
@@ -1891,8 +1712,6 @@ def val_leakage_process(data, name):
         values=[lep], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_subsoilzone_leakage_fraction(data, name):
     """Validate subsoilzone_leakage_fraction.
 
@@ -1909,8 +1728,6 @@ def val_subsoilzone_leakage_fraction(data, name):
         keys=range(1, tot + 1),
     )
 
-
-###############################################################################
 def val_interflow_process(data, name):
     """Validate interflow_process.
 
@@ -1925,8 +1742,6 @@ def val_interflow_process(data, name):
         values=[ifp], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_init_interflow_store(data, name):
     """init_interflow_store.
 
@@ -1947,8 +1762,6 @@ def val_init_interflow_store(data, name):
     c.check_values_limits(values=nda.values(), name=name, low_l=0,
                           include_low=True)
 
-
-###############################################################################
 def val_interflow_store_bypass(data, name):
     """interflow_store_bypass.
 
@@ -1969,8 +1782,6 @@ def val_interflow_store_bypass(data, name):
     c.check_values_limits(values=nda.values(), name=name, low_l=0,
                           include_low=True)
 
-
-###############################################################################
 def val_infiltration_limit(data, name):
     """infiltration_limit.
 
@@ -1991,8 +1802,6 @@ def val_infiltration_limit(data, name):
     c.check_values_limits(values=nda.values(), name=name, low_l=0,
                           include_low=True)
 
-
-###############################################################################
 def val_interflow_decay(data, name):
     """interflow_decay.
 
@@ -2013,7 +1822,6 @@ def val_interflow_decay(data, name):
     c.check_values_limits(values=nda.values(), name=name, low_l=0,
                           include_low=True)
 
-###############################################################################
 def val_infiltration_limit_ts(data, name):
     """Validate infiltration_limit_ts.
 
@@ -2040,8 +1848,6 @@ def val_infiltration_limit_ts(data, name):
     c.check_values_limits(values=per[0], name=name, low_l=0.0,
                           include_low=True)
 
-
-###############################################################################
 def val_infiltration_limit_use_timeseries(data, name):
     """Validate infiltration_limit_use_timeseries.
 
@@ -2051,8 +1857,6 @@ def val_infiltration_limit_use_timeseries(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_interflow_decay_ts(data, name):
     """Validate interflow_decay_ts.
 
@@ -2079,8 +1883,6 @@ def val_interflow_decay_ts(data, name):
     c.check_values_limits(values=per[0], name=name, low_l=0.0,
                           include_low=True)
 
-
-###############################################################################
 def val_interflow_decay_use_timeseries(data, name):
     """Validate interflow_decay_use_timeseries.
 
@@ -2090,8 +1892,6 @@ def val_interflow_decay_use_timeseries(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_recharge_attenuation_process(data, name):
     """Validate recharge_attenuation_process.
 
@@ -2106,8 +1906,6 @@ def val_recharge_attenuation_process(data, name):
         values=[rap], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_recharge_attenuation_params(data, name):
     """Validate recharge_attenuation_params.
 
@@ -2136,8 +1934,6 @@ def val_recharge_attenuation_params(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_sw_process_natproc(data, name):
     """Validate sw_process_natproc.
 
@@ -2152,7 +1948,6 @@ def val_sw_process_natproc(data, name):
         values=[rap], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-###############################################################################
 def val_sw_zone_names(data, name):
     """Validate sw_zone_names.
 
@@ -2162,8 +1957,6 @@ def val_sw_zone_names(data, name):
         rrn = data["params"][name]
         c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_sw_zone_mapping(data, name):
     """Validate sw_zone_mapping.
 
@@ -2192,8 +1985,6 @@ def val_sw_zone_mapping(data, name):
             include_high=True,
         )
 
-
-###############################################################################
 def val_sw_downstream(data, name):
     """Validate sw_downstream.
 
@@ -2214,7 +2005,6 @@ def val_sw_downstream(data, name):
             keys=range(1, 13),
         )
 
-
         c.check_values_limits(
             values=[j for i in rrp.values() for j in i],
             name=name,
@@ -2224,8 +2014,6 @@ def val_sw_downstream(data, name):
             include_high=True,
         )
 
-
-###############################################################################
 def val_sw_bed_infiltration(data, name):
     """Validate bed_infiltration.
 
@@ -2255,8 +2043,6 @@ def val_sw_bed_infiltration(data, name):
             include_high=True,
         )
 
-
-###############################################################################
 def val_sw_direct_recharge(data, name):
     """Validate direct_recharge.
 
@@ -2286,7 +2072,6 @@ def val_sw_direct_recharge(data, name):
             include_high=True,
         )
 
-###############################################################################
 def val_sw_activation(data, name):
     """Validate sw_activation.
 
@@ -2306,8 +2091,6 @@ def val_sw_activation(data, name):
             keys=range(1, 13),
         )
 
-
-###############################################################################
 def val_sw_pe_to_open_water(data, name):
     """Validate pe_to_open_water.
 
@@ -2327,8 +2110,6 @@ def val_sw_pe_to_open_water(data, name):
             keys=range(1, 13),
         )
 
-
-###############################################################################
 def val_sw_init_ponding(data, name):
     """Validate nsw_init_ponding.
 
@@ -2338,7 +2119,6 @@ def val_sw_init_ponding(data, name):
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
 
-###############################################################################
 def val_sw_max_ponding(data, name):
     """Validate sw_max_ponding.
 
@@ -2348,7 +2128,6 @@ def val_sw_max_ponding(data, name):
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
 
-###############################################################################
 def val_sw_ponding_area(data, name):
     """Validate sw_ponding_area.
 
@@ -2366,8 +2145,6 @@ def val_sw_ponding_area(data, name):
             include_high=True,
         )
 
-
-###############################################################################
 def val_sw_process(data, name):
     """Validate sw_process.
 
@@ -2382,8 +2159,6 @@ def val_sw_process(data, name):
         values=[rap], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_sw_params(data, name):
     """Validate sw_params.
 
@@ -2412,8 +2187,6 @@ def val_sw_params(data, name):
         include_high=True,
     )
 
-
-###############################################################################
 def val_routing_topology(data, name):
     """Validate routing .
 
@@ -2432,8 +2205,6 @@ def val_routing_topology(data, name):
         len_list=[10],
     )
 
-
-###############################################################################
 def val_recharge_node_mapping(data, name):
     """Validate recharge node .
 
@@ -2449,8 +2220,6 @@ def val_recharge_node_mapping(data, name):
         len_list=[1],
     )
 
-
-###############################################################################
 def val_istcb1(data, name):
     """Validate istcb1.
 
@@ -2460,8 +2229,6 @@ def val_istcb1(data, name):
 
     c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_istcb2(data, name):
     """Validate istcb2.
 
@@ -2471,8 +2238,6 @@ def val_istcb2(data, name):
 
     c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_swdis_f(data, name):
     """Validate swdis_f.
 
@@ -2486,8 +2251,6 @@ def val_swdis_f(data, name):
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_swabs_f(data, name):
     """Validate swabs_f.
 
@@ -2501,8 +2264,6 @@ def val_swabs_f(data, name):
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_output_evt(data, name):
     """Validate output_evt.
 
@@ -2512,8 +2273,6 @@ def val_output_evt(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_excess_sw_process(data, name):
     """Validate excess_sw_process.
 
@@ -2528,8 +2287,6 @@ def val_excess_sw_process(data, name):
         values=[cpr], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_evt_parameters(data, name):
     """Validate evt parameters .
 
@@ -2548,8 +2305,6 @@ def val_evt_parameters(data, name):
         len_list=[3],
     )
 
-
-###############################################################################
 def val_ievtcb(data, name):
     """Validate ievtcb.
 
@@ -2559,8 +2314,6 @@ def val_ievtcb(data, name):
 
     c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
 
-
-###############################################################################
 def val_nevtopt(data, name):
     """Validate nevtopt.
 
@@ -2574,8 +2327,6 @@ def val_nevtopt(data, name):
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-
-###############################################################################
 def val_gwmodel_type(data, name):
     """Validate gwmodel_type.
 
@@ -2589,7 +2340,6 @@ def val_gwmodel_type(data, name):
     c.check_values_limits(
         values=[rap], name=name, constraints=data["specs"][name]["constraints"]
     )
-
 
 FUNC_PARAMS = [
     val_run_name,
@@ -2702,7 +2452,6 @@ FUNC_PARAMS = [
     val_canopy_zone_names
 ]
 
-
 FUNC_SERIES = [
     val_rainfall_ts,
     val_pe_ts,
@@ -2718,8 +2467,6 @@ FUNC_SERIES = [
     val_interflow_decay_ts,
 ]
 
-
-###############################################################################
 def validate_params(data):
     """Validate all parameters using their specifications."""
     logging.info("\tValidating parameters")
@@ -2731,8 +2478,6 @@ def validate_params(data):
 
     logging.info("\tDone.")
 
-
-###############################################################################
 def validate_series(data):
     """Validate all time series using their specifications."""
     logging.info("\tValidating time series")
