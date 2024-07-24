@@ -116,21 +116,6 @@ def modflow_dis(model, nlay, nrow, ncol, nper):
 		ncol=ncol,
 		nper=nper)
 
-def dis_get_lrc(nlay, nrow, ncol, node_numbers):
-	if isinstance(node_numbers, list):
-		node_number_list = node_numbers
-	else:
-		node_number_list = [node_numbers]
-	_validate_node_numbers(nlay, nrow, ncol, node_number_list)
-	lrc_list = []
-	for node_number in node_number_list:
-		node_index = node_number - 1
-		l = node_index // ncol // nrow
-		r = (node_index // ncol) % nrow
-		c = 1 + (node_index % ncol) # Flopy 3.3.2 had a quirk in get_lrc. The layer and row returned were 0-based but the column was 1-based.
-		lrc_list.append((l, r, c))
-	return lrc_list
-
 def _validate_node_numbers(nlay, nrow, ncol, node_numbers):
 	max_node_number = (nlay * nrow * ncol)
 	for node_number in node_numbers:
