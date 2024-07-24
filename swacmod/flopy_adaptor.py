@@ -182,7 +182,7 @@ def _mf_gwf_sfr(model, nreaches, packagedata, connectiondata, perioddata):
 		parent_file=None)
 
 def make_sfr_file_mfusg(path, nper, nodes, nstrm, nss, njag, lenx, istcb1, istcb2, segment_data, reach_data, sfr_heading):
-	model = modflow_model(path, "mfusg", False)
+	model = flopy.mfusg.MfUsg(modelname=path, version="mfusg", structured=False)
 	_make_mfusg_disu(model, nodes, nper, njag, lenx)
 	model.dis = model.disu
 	sfr = _make_sfr2(model, nstrm, nss, istcb1, istcb2, reach_data, segment_data)
