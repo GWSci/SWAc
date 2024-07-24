@@ -822,9 +822,6 @@ def get_mf6rch_file(data, rchrate):
 
     cdef int node_index, per
 
-    # this is equivalent of strange hardcoded 1000 in format_recharge_row
-    #  which is called in the mf6 output function
-    fac = 0.001
     path = make_path(data)
     rch_params = data['params']['recharge_node_mapping']
     nper = extract_nper(data)
@@ -841,17 +838,7 @@ def get_mf6rch_file(data, rchrate):
 
     maxbound = (node_index_to_rch_index >= 0).sum()
 
-    rch_indexes = np.zeros((nper, maxbound), dtype = int)
-    rch = np.zeros((nper, maxbound))
-
-    for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
-        spd_index = 0
-        for node_index in range(nodes):
-            rch_index = node_index_to_rch_index[node_index]
-            if rch_index >= 0:
-                rch_indexes[per, spd_index] = rch_index
-                rch[per, spd_index] = rchrate[(nodes * per) + node_index + 1] * fac
-                spd_index += 1
+    rch_indexes, rch = make_rch_indexes_and_rch(data, maxbound, node_index_to_rch_index, rchrate)
 
     if data['params']['disv']:
         return flopy_adaptor.make_mf6_rch_file_with_disv(path, nper, maxbound, rch_indexes, rch)
@@ -867,6 +854,27 @@ def extract_node_count(data):
 def make_path(data):
     fileout = data['params']['run_name']
     return os.path.join(u.CONSTANTS['OUTPUT_DIR'], fileout)
+
+def make_rch_indexes_and_rch(data, maxbound, node_index_to_rch_index, rchrate):
+    # this is equivalent of strange hardcoded 1000 in format_recharge_row
+    #  which is called in the mf6 output function
+    fac = 0.001
+
+    nper = extract_nper(data)
+    nodes = extract_node_count(data)
+
+    rch_indexes = np.zeros((nper, maxbound), dtype = int)
+    rch = np.zeros((nper, maxbound))
+
+    for per in tqdm(range(nper), desc="Generating MF6 RCH  "):
+        spd_index = 0
+        for node_index in range(nodes):
+            rch_index = node_index_to_rch_index[node_index]
+            if rch_index >= 0:
+                rch_indexes[per, spd_index] = rch_index
+                rch[per, spd_index] = rchrate[(nodes * per) + node_index + 1] * fac
+                spd_index += 1
+    return rch_indexes, rch
 
 ###############################################################################
 
