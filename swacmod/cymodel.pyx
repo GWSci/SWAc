@@ -2020,7 +2020,6 @@ def get_str_file(data, runoff):
 
     sorted_by_ca = make_sorted_by_ca(data)
     nstrm = nss = count_nss(sorted_by_ca)
-    m, dis = make_modflow_str(data, nstrm, nss)
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
 
@@ -2029,6 +2028,13 @@ def get_str_file(data, runoff):
     istcb2 = data['params']['istcb2']
     reach_data = make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic)
     segment_data = make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic)
+
+    path = make_path(data)
+    m = flopy_adaptor.modflow_model(path, "mf2005", True)
+    nper = extract_nper(data)
+    nlay, nrow, ncol = data['params']['mf96_lrc']
+    dis = flopy_adaptor.modflow_dis(m, nlay, nrow, ncol, nper)
+    flopy_adaptor.modflow_bas(m)
     strm = flopy_adaptor.modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
     strm.heading = "# DELETE ME"
 
@@ -2070,24 +2076,6 @@ def make_idx():
     names = ['downstr', 'str_flag', 'node_mf', 'length', 'ca', 'z', 'bed_thk', 'str_k', 'depth', 'width']
     idx = {y: x for (x, y) in enumerate(names)}
     return idx
-
-def make_modflow_str(data, nstrm, nss):
-    m = make_modflow_model(data)
-    dis = make_modflow_dis(m, data)
-    flopy_adaptor.modflow_bas(m)
-    return m, dis
-
-def make_modflow_model(data):
-    import os.path
-    path = make_path(data)
-    result = flopy_adaptor.modflow_model(path, "mf2005", True)
-    return result
-
-def make_modflow_dis(m, data):
-    nper = extract_nper(data)
-    nlay, nrow, ncol = data['params']['mf96_lrc']
-    result = flopy_adaptor.modflow_dis(m, nlay, nrow, ncol, nper)
-    return result
 
 def make_str_flg(data, sorted_by_ca):
     nodes = extract_node_count(data)
