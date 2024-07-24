@@ -2344,45 +2344,38 @@ def get_evt_file_mf6(data, evtrate):
 
     # units oddness - lots of hardcoded 1000s in input_output.py
     cdef float fac = 0.001
-    path = make_path(data)
 
     nper = extract_nper(data)
     nodes = extract_node_count(data)
-    m = None
 
-    ievtcb = data['params']['ievtcb']
-    nevtopt = data['params']['nevtopt']
-    evt_params = data['params']['evt_parameters']
-    evt_out = None
-
-    ievt = np.zeros((nodes, 1), dtype=int)
-    surf = np.zeros((nodes, 1))
-    exdp = np.zeros((nodes, 1))
     evtr = np.zeros((nodes, 1))
-
-    for inode, vals in evt_params.iteritems():
-        ievt[inode - 1, 0] = vals[0]
-        surf[inode - 1, 0] = vals[1]
-        exdp[inode - 1, 0] = vals[2]
+    surf, exdp, ievt = extract_surf_exdp_ievt(data)
 
     evt_dic = {}
     for per in tqdm(range(nper), desc="Generating EVT flux     "):
-        for inode in range(1, nodes + 1):
-            evtr[inode - 1, 0] = evtrate[(nodes * per) + inode] * fac
+        for node_number in range(1, nodes + 1):
+            node_index = node_number - 1
+            evtr[node_index, 0] = evtrate[(nodes * per) + node_number] * fac
         evt_dic[per] = evtr.copy()
 
 
     stress_period_data = {}
     for per in tqdm(range(nper), desc="Generating MF6 EVT  "):
         stress_period_data[per] = {}
-        for i in range(nodes):
-            if ievt[i, 0] > 0:
-                stress_period_data[per][i] = ((ievt[i, 0] - 1,),
-                                surf[i, 0],
-                                evt_dic[per][i, 0],
-                                exdp[i, 0],
+        for node_index in range(nodes):
+            if ievt[node_index, 0] > 0:
+                stress_period_data[per][node_index] = ((ievt[node_index, 0] - 1,),
+                                surf[node_index, 0],
+                                evt_dic[per][node_index, 0],
+                                exdp[node_index, 0],
                                 -999.0, -999.0)
 
+
+    path = make_path(data)
+    nper = extract_nper(data)
+    nodes = extract_node_count(data)
+    # ievt
+    # stress_period_data
     return flopy_adaptor.make_evt(path, nper, nodes, ievt, stress_period_data)
 
 ###############################################################################
