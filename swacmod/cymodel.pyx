@@ -2021,15 +2021,13 @@ def get_str_file(data, runoff):
     sorted_by_ca = make_sorted_by_ca(data)
     nstrm = nss = count_nss(sorted_by_ca)
     m, dis = make_modflow_str(data, nstrm, nss)
-    rd, _ = flopy_adaptor.modflow_str_get_empty(nstrm, nss)
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
-    update_rd(sorted_by_ca, rd, dis)
 
     nstrm = count_nss(sorted_by_ca)
     istcb1 = data['params']['istcb1']
     istcb2 = data['params']['istcb2']
-    reach_data = make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic, rd)
+    reach_data = make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic, dis)
     segment_data = make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic)
     strm = flopy_adaptor.modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
     strm.heading = "# DELETE ME"
@@ -2045,10 +2043,13 @@ def make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic):
     segment_data={iper: cd for iper in range(nper)}
     return segment_data
 
-def make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic, rd):
+def make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic, dis):
     import copy
 
-    nss = count_nss(sorted_by_ca)
+    nstrm = nss = count_nss(sorted_by_ca)
+    rd, _ = flopy_adaptor.modflow_str_get_empty(nstrm, nss)
+    update_rd(sorted_by_ca, rd, dis)
+
     runoff_with_area = combine_runoff_with_area(data, runoff)
     str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
 
