@@ -141,18 +141,6 @@ def _validate_node_numbers(nlay, nrow, ncol, node_numbers):
 			message = f"The node number {node_number} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {nlay}, {nrow}, {ncol} respectively."
 			raise Exception(message)
 
-def modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
-	return flopy.modflow.ModflowStr(
-		model,
-		mxacts=nstrm,
-		nss=nstrm,
-		ntrib=8,
-		ipakcb=istcb1,
-		istcb2=istcb2,
-		stress_period_data=reach_data,
-		segment_data=segment_data,
-		irdflg={0:2, 1:2})
-
 def make_empty_modflow_gwf_evt_stress_period_data(model, nodes, nper):
 	return flopy.mf6.ModflowGwfevt.stress_period_data.empty(
 		model,
@@ -295,6 +283,18 @@ def make_str(path, nlay, nrow, ncol, nper, nstrm, istcb1, istcb2, reach_data, se
 	m = modflow_model(path, "mf2005", True)
 	dis = modflow_dis(m, nlay, nrow, ncol, nper)
 	modflow_bas(m)
-	strm = modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
+	strm = _modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
 	strm.heading = strm_heading
 	return strm
+
+def _modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
+	return flopy.modflow.ModflowStr(
+		model,
+		mxacts=nstrm,
+		nss=nstrm,
+		ntrib=8,
+		ipakcb=istcb1,
+		istcb2=istcb2,
+		stress_period_data=reach_data,
+		segment_data=segment_data,
+		irdflg={0:2, 1:2})

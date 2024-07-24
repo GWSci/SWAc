@@ -483,7 +483,7 @@ END period  5
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
-			str = flopy_adaptor.modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data)
+			str = flopy_adaptor._modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data)
 
 		self.assertEqual(str, model.get_package("str"))
 		self.assertEqual(nstrm, str.mxacts)
