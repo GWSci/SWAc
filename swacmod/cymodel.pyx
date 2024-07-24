@@ -895,9 +895,12 @@ def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, node_index_to_rch_i
             if rch_index >= 0:
                 rch_indexes[per, spd_index] = rch_index
                 rch[per, spd_index] = rchrate[(nodes * per) + node_index + 1] * fac
-                spd[per][spd_index] = ((rch_indexes[per, spd_index],),
-                            rch[per, spd_index])
                 spd_index += 1
+
+    for per in range(nper):
+        for spd_index in range(maxbound):
+            spd[per][spd_index] = ((rch_indexes[per, spd_index],),
+                        rch[per, spd_index])
 
     rch_out = flopy_adaptor.mf_gwf_rch(m, maxbound, spd)
     spd = None
