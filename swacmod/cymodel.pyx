@@ -2039,7 +2039,15 @@ def get_str_file(data, runoff):
     str_flg = make_str_flg(data, sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
     cd = initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_dic, nss)
-    strm = make_strm(data, m, nstrm, reach_data, nper, cd)
+
+    nstrm = nss = count_nss(sorted_by_ca)
+    istcb1 = data['params']['istcb1']
+    istcb2 = data['params']['istcb2']
+    # reach_data
+    segment_data={iper: cd for iper in range(nper)}
+    strm = flopy_adaptor.modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
+    strm.heading = "# DELETE ME"
+
     return strm
 
 def make_sorted_by_ca(data):
@@ -2160,14 +2168,6 @@ def combine_runoff_with_area(data, runoff):
             i = (nodes * per) + node
             runoff[i] = runoff[i] * areas[node] * fac
     return runoff
-
-def make_strm(data, m, nstrm, reach_data, nper, cd):
-    istcb1 = data['params']['istcb1']
-    istcb2 = data['params']['istcb2']
-    segment_data={iper: cd for iper in range(nper)}
-    strm = flopy_adaptor.modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
-    strm.heading = "# DELETE ME"
-    return strm
 
 ##############################################################################
 
