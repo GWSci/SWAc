@@ -2359,11 +2359,13 @@ def _make_stress_period_data(data, evtrate, surf, exdp, ievt):
         for node_index in range(nodes):
             if ievt[node_index, 0] > 0:
                 node_number = node_index + 1
-                stress_period_data[per][node_index] = ((ievt[node_index, 0] - 1,),
-                                surf[node_index, 0],
-                                evtrate[(nodes * per) + node_number] * fac,
-                                exdp[node_index, 0],
-                                -999.0, -999.0)
+                stress_period_data[per][node_index] = (
+                    (ievt[node_index, 0] - 1,),
+                    surf[node_index, 0],
+                    evtrate[(nodes * per) + node_number] * fac,
+                    exdp[node_index, 0],
+                    -999.0,
+                    -999.0)
     return stress_period_data
 
 ###############################################################################
