@@ -432,7 +432,7 @@ END period  5
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			flopy_adaptor.modflow_dis(model, 1, 3, 1, 5)
-			evt = flopy_adaptor.modflow_evt(model, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
+			evt = flopy_adaptor._modflow_evt(model, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
 		
 		self.assertEqual(evt, model.get_package("evt"))
 		self.assertEqual(nevtopt, evt.nevtop)

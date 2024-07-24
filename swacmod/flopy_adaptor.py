@@ -107,16 +107,6 @@ def make_empty_modflow_gwf_evt_stress_period_data(model, nodes, nper):
 		stress_periods=range(nper),
 		aux_vars=['dummy'])
 
-def modflow_evt(model, nevtopt, ievtcb, evt_dic, surf, exdp, ievt):
-	return flopy.modflow.ModflowEvt(
-		model,
-		nevtop=nevtopt,
-		ipakcb=ievtcb,
-		evtr=evt_dic,
-		surf={0: surf},
-		exdp={0: exdp},
-		ievt={0: ievt})
-
 def modflow_gwf_evt(model, nodes, spd):
 	return flopy.mf6.ModflowGwfevt(
 		model,
@@ -260,8 +250,18 @@ def _modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
 def make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt):
 	m = flopy.modflow.Modflow(modelname=path, version="mfusg", structured=True)
 	modflow_dis(m, 1, nodes, 1, nper)
-	evt_out = modflow_evt(m, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
+	evt_out = _modflow_evt(m, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
 	return evt_out
+
+def _modflow_evt(model, nevtopt, ievtcb, evt_dic, surf, exdp, ievt):
+	return flopy.modflow.ModflowEvt(
+		model,
+		nevtop=nevtopt,
+		ipakcb=ievtcb,
+		evtr=evt_dic,
+		surf={0: surf},
+		exdp={0: exdp},
+		ievt={0: ievt})
 
 def make_evt_mf6(path, nper, nodes, ievt, stress_period_data):
 	sim = _mf_simulation()
