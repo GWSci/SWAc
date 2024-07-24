@@ -2383,14 +2383,7 @@ def get_evt_file_mf6(data, evtrate):
                                 exdp[i, 0],
                                 -999.0, -999.0)
 
-    m, spd = flopy_adaptor.make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes)
-    for per in range(nper):
-        for i in range(nodes):
-            if ievt[i, 0] > 0:
-                spd[per][i] = stress_period_data[per][i]
-    evt_out = flopy_adaptor.modflow_gwf_evt(m, nodes, spd)
-
-    return evt_out
+    return flopy_adaptor.make_evt(path, nper, nodes, ievt, stress_period_data)
 
 ###############################################################################
 
