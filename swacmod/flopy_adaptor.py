@@ -274,7 +274,7 @@ def _modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
 		segment_data=segment_data,
 		irdflg={0:2, 1:2})
 
-def make_evt(path, nper, nodes, ievt, stress_period_data):
+def make_evt_mf6(path, nper, nodes, ievt, stress_period_data):
 	m, spd = make_model_with_disu_and_empty_spd_for_evt_out(path, nper, nodes)
 	for per in range(nper):
 		for i in range(nodes):

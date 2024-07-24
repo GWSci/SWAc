@@ -2340,18 +2340,12 @@ def extract_surf_exdp_ievt(data):
     return surf, exdp, ievt
 
 def get_evt_file_mf6(data, evtrate):
-
-    nper = extract_nper(data)
-    nodes = extract_node_count(data)
-
-    surf, exdp, ievt = extract_surf_exdp_ievt(data)
-
     path = make_path(data)
     nper = extract_nper(data)
     nodes = extract_node_count(data)
-    # ievt
+    ievt = surf, exdp, ievt = extract_surf_exdp_ievt(data)
     stress_period_data = _make_stress_period_data(data, evtrate, surf, exdp, ievt)
-    return flopy_adaptor.make_evt(path, nper, nodes, ievt, stress_period_data)
+    return flopy_adaptor.make_evt_mf6(path, nper, nodes, ievt, stress_period_data)
 
 def _make_stress_period_data(data, evtrate, surf, exdp, ievt):
     # units oddness - lots of hardcoded 1000s in input_output.py
