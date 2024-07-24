@@ -2030,9 +2030,10 @@ def get_str_file(data, runoff):
     segment_data = make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic)
 
     path = make_path(data)
-    m = flopy_adaptor.modflow_model(path, "mf2005", True)
     nper = extract_nper(data)
     nlay, nrow, ncol = data['params']['mf96_lrc']
+
+    m = flopy_adaptor.modflow_model(path, "mf2005", True)
     dis = flopy_adaptor.modflow_dis(m, nlay, nrow, ncol, nper)
     flopy_adaptor.modflow_bas(m)
     strm = flopy_adaptor.modflow_str(m, nstrm, istcb1, istcb2, reach_data, segment_data)
