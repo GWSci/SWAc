@@ -120,9 +120,6 @@ def modflow_dis(model, nlay, nrow, ncol, nper):
 		nper=nper)
 
 def dis_get_lrc(dis, nlay, nrow, ncol, node_numbers):
-	# The input node numbers appear to be:
-	# 1-based in flopy 3.3.2
-	# 0-based in flopy 3.3.3
 	if isinstance(node_numbers, list):
 		node_number_list = node_numbers
 	else:
@@ -133,9 +130,9 @@ def dis_get_lrc(dis, nlay, nrow, ncol, node_numbers):
 		node_index = node_number - 1
 		l = node_index // ncol // nrow
 		r = (node_index // ncol) % nrow
-		c = node_index % ncol
+		c = 1 + (node_index % ncol) # Flopy 3.3.2 had a quirk in get_lrc. The layer and row returned were 0-based but the column was 1-based.
 		lrc_list.append((l, r, c))
-	return convert_0_based_lrc_to_1_based_column(lrc_list)
+	return lrc_list
 
 def _validate_node_numbers(nlay, nrow, ncol, node_numbers):
 	max_node_number = (nlay * nrow * ncol)
@@ -143,10 +140,6 @@ def _validate_node_numbers(nlay, nrow, ncol, node_numbers):
 		if node_number <= 0 or node_number > max_node_number:
 			message = f"The node number {node_number} is out of bounds. Node numbers muse be in the range 1--{max_node_number}. Layer, row and column counts are {nlay}, {nrow}, {ncol} respectively."
 			raise Exception(message)
-
-def convert_0_based_lrc_to_1_based_column(lrc_list):
-	# Flopy 3.3.2 had a quirk in get_lrc. The layer and row returned were 0-based but the column was 1-based.
-	return [(l, r, c+1) for (l, r, c) in lrc_list]
 
 def modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
 	return flopy.modflow.ModflowStr(
