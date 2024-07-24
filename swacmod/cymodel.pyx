@@ -2019,21 +2019,18 @@ def get_str_file(data, runoff):
     """get STR object."""
 
     sorted_by_ca = make_sorted_by_ca(data)
-    nstrm = nss = count_nss(sorted_by_ca)
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     seg_swac_dic = make_seg_swac_dic(sorted_by_ca)
 
+    path = make_path(data)
+    nlay, nrow, ncol = data['params']['mf96_lrc']
+    nper = extract_nper(data)
     nstrm = count_nss(sorted_by_ca)
     istcb1 = data['params']['istcb1']
     istcb2 = data['params']['istcb2']
     reach_data = make_reach_data_for_str(data, runoff, sorted_by_ca, swac_seg_dic)
     segment_data = make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic)
-
-    path = make_path(data)
-    nper = extract_nper(data)
-    nlay, nrow, ncol = data['params']['mf96_lrc']
     strm_heading = "# DELETE ME"
-
     return flopy_adaptor.make_str(path, nlay, nrow, ncol, nper, nstrm, istcb1, istcb2, reach_data, segment_data, strm_heading)
 
 def make_segment_data_for_str(data, sorted_by_ca, seg_swac_dic, swac_seg_dic):
