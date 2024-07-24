@@ -37,13 +37,6 @@ def modflow_model(path, version, structured):
 	else:
 		return flopy.mfusg.MfUsg(modelname=path, version=version, structured=structured)
 
-def _make_empty_modflow_gwf_rch_stress_period_data(model, maxbound, nper):
-	return flopy.mf6.ModflowGwfrch.stress_period_data.empty(
-		model,
-		maxbound=maxbound,
-		nseg=1,
-		stress_periods=range(nper))
-
 def write_mf_gwf_rch(rch):
 	rch.write()
 
@@ -269,6 +262,13 @@ def make_mf6_rch_file_with_disu(path, nodes, nper, maxbound, rch_indexes, rch):
 						rch[per, spd_index])
 
 	return _mf_gwf_rch(m, maxbound, spd)
+
+def _make_empty_modflow_gwf_rch_stress_period_data(model, maxbound, nper):
+	return flopy.mf6.ModflowGwfrch.stress_period_data.empty(
+		model,
+		maxbound=maxbound,
+		nseg=1,
+		stress_periods=range(nper))
 
 def _mf_gwf_rch(model, maxbound, spd):
 	return flopy.mf6.modflow.mfgwfrch.ModflowGwfrch(model,
