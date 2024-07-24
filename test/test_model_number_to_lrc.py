@@ -2,10 +2,10 @@ import unittest
 
 class Test_Model_Number_to_Lrc(unittest.TestCase):
 	def test_modflow_dis_get_lrc_when_node_number_is_out_of_range(self):
-		self.assert_dis_get_lrc_exception_with_message("The node number 0 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", 0)
-		self.assert_dis_get_lrc_exception_with_message("The node number -1 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", -1)
-		self.assert_dis_get_lrc_exception_with_message("The node number 31 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", 31)
-		self.assert_dis_get_lrc_exception_with_message("The node number 32 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", 32)
+		self.assert_dis_get_lrc_exception_with_message("The node number 0 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", [0])
+		self.assert_dis_get_lrc_exception_with_message("The node number -1 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", [-1])
+		self.assert_dis_get_lrc_exception_with_message("The node number 31 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", [31])
+		self.assert_dis_get_lrc_exception_with_message("The node number 32 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", [32])
 
 		self.assert_dis_get_lrc_exception_with_message("The node number 0 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", [0])
 		self.assert_dis_get_lrc_exception_with_message("The node number 0 is out of bounds. Node numbers muse be in the range 1--30. Layer, row and column counts are 2, 3, 5 respectively.", [1, 0])
@@ -39,10 +39,7 @@ class Test_Model_Number_to_Lrc(unittest.TestCase):
 		self.assertEqual([(1, 2, 1), (1, 2, 2), (1, 2, 3), (1, 2, 4), (1, 2, 5)], dis_get_lrc(2, 3, 5, [26, 27, 28, 29, 30]))
 
 def dis_get_lrc(nlay, nrow, ncol, node_numbers):
-	if isinstance(node_numbers, list):
-		node_number_list = node_numbers
-	else:
-		node_number_list = [node_numbers]
+	node_number_list = node_numbers
 	_validate_node_numbers(nlay, nrow, ncol, node_number_list)
 	lrc_list = []
 	for node_number in node_number_list:
