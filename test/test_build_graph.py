@@ -38,6 +38,13 @@ class Test_Build_Graph(unittest.TestCase):
 		self.assertEqual(3, graph.number_of_nodes())
 		self.assertEqual(0, graph.number_of_edges())
 
+	def test_build_graph_adds_ca_to_nodes_when_use_natproc_is_true(self):
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(3)
+		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc = True)
+		self.assertEqual(10, graph.nodes[1]["ca"])
+		self.assertEqual(20, graph.nodes[2]["ca"])
+		self.assertEqual(30, graph.nodes[3]["ca"])
+
 def make_args_for_node_count(node_count):
 	nnodes = node_count
 	sorted_by_ca = {}
@@ -51,7 +58,7 @@ def make_args_for_node_count(node_count):
 def make_sorted_by_ca_line(node_number, downstr = -1, str_flag = 0):
 	node_mf = None
 	length = None
-	ca = None
+	ca = 10 * node_number
 	z = None
 	bed_thk = None
 	str_k = None
@@ -69,10 +76,10 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
     for node in range(1, nnodes + 1):
     #     if ff.use_natproc:
     #         if mask[node-1] == 1: #  and sorted_by_ca[node][4] > 0.0:
-    #             G.add_node(node, ca=sorted_by_ca[node][4])
+                G.add_node(node, ca=sorted_by_ca[node][4])
     #     else:
     #         if mask[node-1] == 1:
-                G.add_node(node)
+                # G.add_node(node)
     # for node_swac, line in sorted_by_ca.items():
     #     if ff.use_natproc:
     #         downstr = int(line[0])
