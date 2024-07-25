@@ -1,6 +1,7 @@
 import unittest
 import networkx as nx
 import swacmod.feature_flags as ff
+import swacmod.networkx_adaptor as networkx_adaptor
 
 class Test_Build_Graph(unittest.TestCase):
 	def test_build_empty_graph(self):
@@ -206,12 +207,7 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
                 edges.append((node_swac, downstr))
 
     if di:
-        G = nx.DiGraph()
-        for node, attr in nodes.items():
-            G.add_node(node, **attr)
-
-        for e in edges:
-            G.add_edge(e[0], e[1])
+        return networkx_adaptor.make_directed_graph(nodes, edges)
     else:
         G = nx.Graph()
 
