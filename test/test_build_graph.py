@@ -93,11 +93,10 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
     else:
         G = nx.Graph()
     for node in range(1, nnodes + 1):
-        if use_natproc:
-            if mask[node-1] == 1: #  and sorted_by_ca[node][4] > 0.0:
+        if mask[node-1] == 1:
+            if use_natproc:
                 G.add_node(node, ca=sorted_by_ca[node][4])
-        else:
-            if mask[node-1] == 1:
+            else:
                 G.add_node(node)
     # for node_swac, line in sorted_by_ca.items():
     #     if ff.use_natproc:
