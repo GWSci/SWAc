@@ -1994,7 +1994,7 @@ def initialise_segment(data, sorted_by_ca, str_flg, seg_swac_dic, idx, swac_seg_
         conn = []
         node_swac = seg_swac_dic[iseg + 1]
         downstr = sorted_by_ca[node_swac][idx['downstr']]
-        for n in Gs.neighbors(node_swac):
+        for n in networkx_adaptor.neighbors(Gs, node_swac):
             if n in swac_seg_dic:
                 if n == downstr:
                     # do nothing I only want the +ve numbers here
