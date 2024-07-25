@@ -88,16 +88,19 @@ def make_sorted_by_ca_line(node_number, downstr = -1, str_flag = 0):
 def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
     if use_natproc is None:
         use_natproc = ff.use_natproc
+
     if di:
         G = nx.DiGraph()
     else:
         G = nx.Graph()
-    for node in range(1, nnodes + 1):
-        if mask[node-1] == 1:
+
+    for node_number in range(1, nnodes + 1):
+        node_index = node_number - 1
+        if mask[node_index] == 1:
             if use_natproc:
-                G.add_node(node, ca=sorted_by_ca[node][4])
+                G.add_node(node_number, ca=sorted_by_ca[node_number][4])
             else:
-                G.add_node(node)
+                G.add_node(node_number)
     # for node_swac, line in sorted_by_ca.items():
     #     if ff.use_natproc:
     #         downstr = int(line[0])
