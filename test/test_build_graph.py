@@ -135,7 +135,6 @@ class Test_Build_Graph(unittest.TestCase):
 			2: make_sorted_by_ca_line(2),
 		}
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc=True)
-		print(f"\n\n\n{graph.edges}\n\n\n")
 		self.assertTrue(graph.has_edge(1, 2))
 
 def make_args_for_node_count(node_count):
@@ -175,11 +174,9 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
                 G.add_node(node_number, ca=sorted_by_ca[node_number][4])
             else:
                 G.add_node(node_number)
+
     for node_swac, line in sorted_by_ca.items():
-        if ff.use_natproc:
-            downstr = int(line[0])
-        else:
-            downstr = int(line[0])
+        downstr = int(line[0])
         if downstr > 0:
             if use_natproc:
     #             if downstr not in G.nodes:
