@@ -43,11 +43,11 @@ def make_args_for_node_count(node_count):
 	sorted_by_ca = {}
 	for node_index in range(node_count):
 		node_number = node_index + 1
-		sorted_by_ca[node_number] = make_sorted_by_ca_line(str_flag = 1)
+		sorted_by_ca[node_number] = make_sorted_by_ca_line(node_number, str_flag = 1)
 	mask = [1] * node_count
 	return nnodes, sorted_by_ca, mask
 
-def make_sorted_by_ca_line(downstr = -1, str_flag = 0):
+def make_sorted_by_ca_line(node_number, downstr = -1, str_flag = 0):
 	node_mf = None
 	length = None
 	ca = None
