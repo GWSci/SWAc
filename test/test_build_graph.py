@@ -212,6 +212,9 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
                     G.add_node(downstr, ca=sorted_by_ca[downstr][4])
                     nodes.append((downstr, {"ca":sorted_by_ca[downstr][4]}))
             if mask[node_swac-1] == 1:
-                G.add_edge(node_swac, downstr)
                 edges.append((node_swac, downstr))
+
+    for e in edges:
+        G.add_edge(e[0], e[1])
+
     return G
