@@ -38,28 +38,6 @@ class Test_Build_Graph(unittest.TestCase):
 		self.assertEqual(3, graph.number_of_nodes())
 		self.assertEqual(0, graph.number_of_edges())
 
-def make_args_for_empty_graph():
-	nnodes = 0
-	sorted_by_ca = None
-	mask = None
-	return nnodes, sorted_by_ca, mask
-
-def make_args_for_one_node():
-	nnodes = 1
-	sorted_by_ca = {1: make_sorted_by_ca_line(str_flag = 1)}
-	mask = [1]
-	return nnodes, sorted_by_ca, mask
-
-def make_args_for_three_nodes():
-	nnodes = 3
-	sorted_by_ca = {
-		1: make_sorted_by_ca_line(str_flag = 1),
-		2: make_sorted_by_ca_line(str_flag = 1),
-		3: make_sorted_by_ca_line(str_flag = 1),
-	}
-	mask = [1, 1, 1]
-	return nnodes, sorted_by_ca, mask
-
 def make_args_for_node_count(node_count):
 	nnodes = node_count
 	sorted_by_ca = {}
