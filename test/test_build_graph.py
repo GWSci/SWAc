@@ -192,8 +192,6 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
         G = nx.Graph()
 
     nodes = {}
-    edges = []
-
     for node_index in range(nnodes):
         if mask[node_index] == 1:
             node_number = node_index + 1
@@ -202,6 +200,7 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
             else:
                 nodes[node_number] = {}
 
+    edges = []
     for node_swac, line in sorted_by_ca.items():
         downstr = int(line[0])
         if downstr > 0:
