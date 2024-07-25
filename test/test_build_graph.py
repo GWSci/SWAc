@@ -192,6 +192,7 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
         G = nx.Graph()
 
     nodes = []
+    nodes2 = {}
     edges = []
 
     for node_index in range(nnodes):
@@ -199,15 +200,18 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
             node_number = node_index + 1
             if use_natproc:
                 nodes.append((node_number, {"ca":sorted_by_ca[node_number][4]}))
+                nodes2[node_number] = {"ca":sorted_by_ca[node_number][4]}
             else:
                 nodes.append((node_number, {}))
+                nodes2[node_number] = {}
 
     for node_swac, line in sorted_by_ca.items():
         downstr = int(line[0])
         if downstr > 0:
             if use_natproc:
-                if downstr not in G.nodes:
+                if downstr not in nodes2:
                     nodes.append((downstr, {"ca":sorted_by_ca[downstr][4]}))
+                    nodes2[downstr] = {"ca":sorted_by_ca[downstr][4]}
             if mask[node_swac-1] == 1:
                 edges.append((node_swac, downstr))
 
