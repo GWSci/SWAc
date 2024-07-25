@@ -9,6 +9,11 @@ class Test_Build_Graph(unittest.TestCase):
 		self.assertEqual(0, graph.number_of_nodes())
 		self.assertEqual(0, graph.number_of_edges())
 
+	def test_build_graph_creates_a_directed_graph_when_di_is_omitted(self):
+		nnodes, sorted_by_ca, mask = make_args_for_empty_graph()
+		graph = build_graph(nnodes, sorted_by_ca, mask)
+		self.assertEqual("<class 'networkx.classes.digraph.DiGraph'>", str(type(graph)))
+
 	def test_build_graph_creates_a_directed_graph_when_di_is_True(self):
 		nnodes, sorted_by_ca, mask = make_args_for_empty_graph()
 		di = True
