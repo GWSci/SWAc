@@ -198,10 +198,8 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
         if mask[node_index] == 1:
             node_number = node_index + 1
             if use_natproc:
-                G.add_node(node_number, ca=sorted_by_ca[node_number][4])
                 nodes.append((node_number, {"ca":sorted_by_ca[node_number][4]}))
             else:
-                G.add_node(node_number)
                 nodes.append((node_number, {}))
 
     for node_swac, line in sorted_by_ca.items():
@@ -209,10 +207,12 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
         if downstr > 0:
             if use_natproc:
                 if downstr not in G.nodes:
-                    G.add_node(downstr, ca=sorted_by_ca[downstr][4])
                     nodes.append((downstr, {"ca":sorted_by_ca[downstr][4]}))
             if mask[node_swac-1] == 1:
                 edges.append((node_swac, downstr))
+
+    for n in nodes:
+        G.add_node(n[0], **n[1])
 
     for e in edges:
         G.add_edge(e[0], e[1])
