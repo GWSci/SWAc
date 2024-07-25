@@ -179,10 +179,8 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
         downstr = int(line[0])
         if downstr > 0:
             if use_natproc:
-    #             if downstr not in G.nodes:
-                G.add_node(downstr, ca=sorted_by_ca[downstr][4])
-    #         else:
-    #             pass
+                if downstr not in G.nodes:
+                    G.add_node(downstr, ca=sorted_by_ca[downstr][4])
             if mask[node_swac-1] == 1:
                 G.add_edge(node_swac, downstr)
     return G
