@@ -4,21 +4,22 @@ import swacmod.feature_flags as ff
 
 class Test_Build_Graph(unittest.TestCase):
 	def test_build_empty_graph(self):
-		nnodes = None
-		sorted_by_ca = None
-		mask = None
-		di = None
-		graph = build_graph(nnodes, sorted_by_ca, mask, di)
+		nnodes, sorted_by_ca, mask = make_args_for_empty_graph()
+		graph = build_graph(nnodes, sorted_by_ca, mask)
 		self.assertEqual(0, graph.number_of_nodes())
 		self.assertEqual(0, graph.number_of_edges())
 
 	def test_build_graph_creates_a_directed_graph_when_di_is_True(self):
-		nnodes = None
-		sorted_by_ca = None
-		mask = None
+		nnodes, sorted_by_ca, mask = make_args_for_empty_graph()
 		di = True
 		graph = build_graph(nnodes, sorted_by_ca, mask, di)
 		self.assertEqual("<class 'networkx.classes.digraph.DiGraph'>", str(type(graph)))
+
+def make_args_for_empty_graph():
+	nnodes = None
+	sorted_by_ca = None
+	mask = None
+	return nnodes, sorted_by_ca, mask
 
 def build_graph(nnodes, sorted_by_ca, mask, di=True):
     # if di:
