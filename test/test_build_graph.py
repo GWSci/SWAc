@@ -137,6 +137,16 @@ class Test_Build_Graph(unittest.TestCase):
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc=True)
 		self.assertTrue(graph.has_edge(1, 2))
 
+	def test_build_graph_does_not_add_extra_downstream_nodes_when_natproc_is_false(self):
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
+		sorted_by_ca = {
+			1: make_sorted_by_ca_line(1, downstr = 2),
+			2: make_sorted_by_ca_line(2),
+		}
+		mask = [0, 0]
+		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc=False)
+		self.assertEqual([], list(graph.nodes))
+
 def make_args_for_node_count(node_count):
 	nnodes = node_count
 	sorted_by_ca = {}
