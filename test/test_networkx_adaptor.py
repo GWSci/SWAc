@@ -49,6 +49,12 @@ class Test_Networkx_Adaptor(unittest.TestCase):
 		}
 		self.assertEqual(expected, actual)
 
+	def test_neighbours(self):
+		G = make_graph_for_shortest_path_length()
+		self.assertEqual([2], list(nx.neighbors(G, 1)))
+		self.assertEqual([3, 4], list(nx.neighbors(G, 2)))
+		self.assertEqual([], list(nx.neighbors(G, 4)))
+
 def make_graph_for_shortest_path_length():
 		edges = [
 			(1, 2),

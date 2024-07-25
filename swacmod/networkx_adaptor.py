@@ -15,3 +15,6 @@ def _populate_graph(G, nodes, edges):
 
 def shortest_path_length(G, source=None, target=None):
 	return nx.shortest_path_length(G, source, target)
+
+def neighbors(G, node):
+	return G.neighbors(node)
