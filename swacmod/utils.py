@@ -188,7 +188,7 @@ def get_ram_usage_for_process(pid=None):
     if not pid:
         pid = os.getpid()
     process = psutil.Process(pid)
-    mem = process.memory_info()[0] / float(2**20)
+    mem = process.memory_info().rss / float(2**20)
     return mem
 
 def weighted_sum(to_sum, weights):
