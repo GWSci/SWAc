@@ -11,7 +11,6 @@ import datetime
 import subprocess as sp
 
 # Third Party Libraries
-import psutil
 import numpy as np
 
 import swacmod.feature_flags as ff
