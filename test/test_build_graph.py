@@ -207,13 +207,18 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
 
     if di:
         G = nx.DiGraph()
+        for node, attr in nodes.items():
+            G.add_node(node, **attr)
+
+        for e in edges:
+            G.add_edge(e[0], e[1])
     else:
         G = nx.Graph()
 
-    for node, attr in nodes.items():
-        G.add_node(node, **attr)
+        for node, attr in nodes.items():
+            G.add_node(node, **attr)
 
-    for e in edges:
-        G.add_edge(e[0], e[1])
+        for e in edges:
+            G.add_edge(e[0], e[1])
 
     return G
