@@ -64,6 +64,16 @@ class Test_Build_Graph(unittest.TestCase):
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc = True)
 		self.assertEqual([2], list(graph.nodes))
 
+	def test_build_graph_adds_edges(self):
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
+		sorted_by_ca = {
+			1: make_sorted_by_ca_line(1, downstr = 2, str_flag = 1),
+			2: make_sorted_by_ca_line(2, str_flag = 1),
+		}
+		graph = build_graph(nnodes, sorted_by_ca, mask)
+		self.assertEqual(1, graph.number_of_edges())
+		self.assertTrue(graph.has_edge(1, 2))
+
 def make_args_for_node_count(node_count):
 	nnodes = node_count
 	sorted_by_ca = {}
@@ -101,17 +111,17 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
                 G.add_node(node_number, ca=sorted_by_ca[node_number][4])
             else:
                 G.add_node(node_number)
-    # for node_swac, line in sorted_by_ca.items():
+    for node_swac, line in sorted_by_ca.items():
     #     if ff.use_natproc:
-    #         downstr = int(line[0])
+        downstr = int(line[0])
     #     else:
     #         downstr = line[0]
-    #     if downstr > 0:
+        if downstr > 0:
     #         if ff.use_natproc:
     #             if downstr not in G.nodes:
     #                 G.add_node(downstr, ca=sorted_by_ca[downstr][4])
     #         else:
     #             pass
     #         if mask[node_swac-1] == 1:
-    #             G.add_edge(node_swac, downstr)
+            G.add_edge(node_swac, downstr)
     return G
