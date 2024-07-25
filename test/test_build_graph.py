@@ -88,6 +88,16 @@ class Test_Build_Graph(unittest.TestCase):
 		self.assertTrue(graph.has_edge(2, 4))
 		self.assertTrue(graph.has_edge(3, 4))
 
+	def test_build_graph_adds_masked_nodes_when_required_for_edges(self):
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
+		sorted_by_ca = {
+			1: make_sorted_by_ca_line(1, downstr = 2, str_flag = 1),
+			2: make_sorted_by_ca_line(2),
+		}
+		mask = [1, 0]
+		graph = build_graph(nnodes, sorted_by_ca, mask)
+		self.assertEqual([1, 2], list(graph.nodes))
+
 def make_args_for_node_count(node_count):
 	nnodes = node_count
 	sorted_by_ca = {}
