@@ -209,12 +209,4 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
     if di:
         return networkx_adaptor.make_directed_graph(nodes, edges)
     else:
-        G = nx.Graph()
-
-        for node, attr in nodes.items():
-            G.add_node(node, **attr)
-
-        for e in edges:
-            G.add_edge(e[0], e[1])
-
-    return G
+        return networkx_adaptor.make_undirected_graph(nodes, edges)
