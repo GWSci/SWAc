@@ -52,6 +52,12 @@ class Test_Build_Graph(unittest.TestCase):
 		self.assertTrue("ca" not in graph.nodes[2])
 		self.assertTrue("ca" not in graph.nodes[3])
 
+	def test_build_graph_does_not_add_masked_nodes_when_use_natproc_is_false(self):
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(3)
+		mask = [0, 1, 0]
+		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc = False)
+		self.assertEqual([2], list(graph.nodes))
+
 def make_args_for_node_count(node_count):
 	nnodes = node_count
 	sorted_by_ca = {}
@@ -85,7 +91,7 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
     #         if mask[node-1] == 1: #  and sorted_by_ca[node][4] > 0.0:
                 G.add_node(node, ca=sorted_by_ca[node][4])
         else:
-    #         if mask[node-1] == 1:
+            if mask[node-1] == 1:
                 G.add_node(node)
     # for node_swac, line in sorted_by_ca.items():
     #     if ff.use_natproc:
