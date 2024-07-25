@@ -186,11 +186,6 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
     if use_natproc is None:
         use_natproc = ff.use_natproc
 
-    if di:
-        G = nx.DiGraph()
-    else:
-        G = nx.Graph()
-
     nodes = {}
     for node_index in range(nnodes):
         if mask[node_index] == 1:
@@ -209,6 +204,11 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
                     nodes[downstr] = {"ca":sorted_by_ca[downstr][4]}
             if mask[node_swac-1] == 1:
                 edges.append((node_swac, downstr))
+
+    if di:
+        G = nx.DiGraph()
+    else:
+        G = nx.Graph()
 
     for node, attr in nodes.items():
         G.add_node(node, **attr)
