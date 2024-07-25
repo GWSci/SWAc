@@ -15,6 +15,7 @@ import psutil
 import numpy as np
 
 import swacmod.feature_flags as ff
+import swacmod.psutil_adaptor as psutil_adaptor
 
 CONSTANTS = {}
 
@@ -187,8 +188,7 @@ def get_ram_usage_for_process(pid=None):
     """
     if not pid:
         pid = os.getpid()
-    process = psutil.Process(pid)
-    mem = process.memory_info().rss / float(2**20)
+    mem = psutil_adaptor.memory_info_for_pid(pid).rss / float(2**20)
     return mem
 
 def weighted_sum(to_sum, weights):
