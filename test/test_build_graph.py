@@ -74,6 +74,20 @@ class Test_Build_Graph(unittest.TestCase):
 		self.assertEqual(1, graph.number_of_edges())
 		self.assertTrue(graph.has_edge(1, 2))
 
+	def test_build_graph_adds_multiple_edges(self):
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(4)
+		sorted_by_ca = {
+			1: make_sorted_by_ca_line(1, downstr = 2, str_flag = 1),
+			2: make_sorted_by_ca_line(2, downstr = 4, str_flag = 1),
+			3: make_sorted_by_ca_line(3, downstr = 4, str_flag = 1),
+			4: make_sorted_by_ca_line(4, str_flag = 1),
+		}
+		graph = build_graph(nnodes, sorted_by_ca, mask)
+		self.assertEqual(3, graph.number_of_edges())
+		self.assertTrue(graph.has_edge(1, 2))
+		self.assertTrue(graph.has_edge(2, 4))
+		self.assertTrue(graph.has_edge(3, 4))
+
 def make_args_for_node_count(node_count):
 	nnodes = node_count
 	sorted_by_ca = {}
