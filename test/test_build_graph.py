@@ -179,7 +179,7 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
         if ff.use_natproc:
             downstr = int(line[0])
         else:
-            downstr = line[0]
+            downstr = int(line[0])
         if downstr > 0:
             if use_natproc:
     #             if downstr not in G.nodes:
