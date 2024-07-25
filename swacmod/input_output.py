@@ -579,7 +579,7 @@ def load_results():
             values = []
             for num, cell in enumerate(row):
                 if num == 0:
-                    values.append(parser.parse(cell))
+                    values.append(datetime.datetime.strptime(cell, "%d/%m/%Y"))
                 else:
                     values.append(float(cell))
             for num, value in enumerate(values):
