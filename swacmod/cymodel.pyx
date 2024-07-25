@@ -21,6 +21,7 @@ sys.path.append(os.path.join(os.path.dirname(u.__file__), ".."))
 from swacmod.snow_melt import SnowMelt
 import swacmod.timer as timer
 import swacmod.flopy_adaptor as flopy_adaptor
+import swacmod.networkx_adaptor as networkx_adaptor
 
 def get_precipitation(data, output, node):
     """C) Precipitation [mm/d]."""
@@ -2403,32 +2404,33 @@ def get_ror_flows_tree(G, runoff, nodes, day):
 
     return flow
 
-def build_graph(nnodes, sorted_by_ca, mask, di=True):
-    if di:
-        G = nx.DiGraph()
-    else:
-        G = nx.Graph()
-    for node in range(1, nnodes + 1):
-        if ff.use_natproc:
-            if mask[node-1] == 1: #  and sorted_by_ca[node][4] > 0.0:
-                G.add_node(node, ca=sorted_by_ca[node][4])
-        else:
-            if mask[node-1] == 1:
-                G.add_node(node)
-    for node_swac, line in sorted_by_ca.items():
-        if ff.use_natproc:
-            downstr = int(line[0])
-        else:
-            downstr = line[0]
-        if downstr > 0:
-            if ff.use_natproc:
-                if downstr not in G.nodes:
-                    G.add_node(downstr, ca=sorted_by_ca[downstr][4])
+def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
+    if use_natproc is None:
+        use_natproc = ff.use_natproc
+
+    nodes = {}
+    for node_index in range(nnodes):
+        if mask[node_index] == 1:
+            node_number = node_index + 1
+            if use_natproc:
+                nodes[node_number] = {"ca":sorted_by_ca[node_number][4]}
             else:
-                pass
+                nodes[node_number] = {}
+
+    edges = []
+    for node_swac, line in sorted_by_ca.items():
+        downstr = int(line[0])
+        if downstr > 0:
+            if use_natproc:
+                if downstr not in nodes:
+                    nodes[downstr] = {"ca":sorted_by_ca[downstr][4]}
             if mask[node_swac-1] == 1:
-                G.add_edge(node_swac, downstr)
-    return G
+                edges.append((node_swac, downstr))
+
+    if di:
+        return networkx_adaptor.make_directed_graph(nodes, edges)
+    else:
+        return networkx_adaptor.make_undirected_graph(nodes, edges)
 
 def all_days_mask(data):
     """get overall RoR mask for run"""

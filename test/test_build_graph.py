@@ -1,6 +1,7 @@
 import unittest
 import swacmod.feature_flags as ff
 import swacmod.networkx_adaptor as networkx_adaptor
+import swacmod.model as m
 
 class Test_Build_Graph(unittest.TestCase):
 	def test_build_empty_graph(self):
@@ -183,29 +184,4 @@ def make_sorted_by_ca_line(node_number, downstr = -1, str_flag = 0):
 	return (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width)
 
 def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
-    if use_natproc is None:
-        use_natproc = ff.use_natproc
-
-    nodes = {}
-    for node_index in range(nnodes):
-        if mask[node_index] == 1:
-            node_number = node_index + 1
-            if use_natproc:
-                nodes[node_number] = {"ca":sorted_by_ca[node_number][4]}
-            else:
-                nodes[node_number] = {}
-
-    edges = []
-    for node_swac, line in sorted_by_ca.items():
-        downstr = int(line[0])
-        if downstr > 0:
-            if use_natproc:
-                if downstr not in nodes:
-                    nodes[downstr] = {"ca":sorted_by_ca[downstr][4]}
-            if mask[node_swac-1] == 1:
-                edges.append((node_swac, downstr))
-
-    if di:
-        return networkx_adaptor.make_directed_graph(nodes, edges)
-    else:
-        return networkx_adaptor.make_undirected_graph(nodes, edges)
+	return m.build_graph(nnodes, sorted_by_ca, mask, di, use_natproc)
