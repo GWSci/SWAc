@@ -15,6 +15,12 @@ class Test_Build_Graph(unittest.TestCase):
 		graph = build_graph(nnodes, sorted_by_ca, mask, di)
 		self.assertEqual("<class 'networkx.classes.digraph.DiGraph'>", str(type(graph)))
 
+	def test_build_graph_creates_a_non_directed_graph_when_di_is_False(self):
+		nnodes, sorted_by_ca, mask = make_args_for_empty_graph()
+		di = False
+		graph = build_graph(nnodes, sorted_by_ca, mask, di)
+		self.assertEqual("<class 'networkx.classes.graph.Graph'>", str(type(graph)))
+
 def make_args_for_empty_graph():
 	nnodes = None
 	sorted_by_ca = None
@@ -22,10 +28,10 @@ def make_args_for_empty_graph():
 	return nnodes, sorted_by_ca, mask
 
 def build_graph(nnodes, sorted_by_ca, mask, di=True):
-    # if di:
-    G = nx.DiGraph()
-    # else:
-    #     G = nx.Graph()
+    if di:
+        G = nx.DiGraph()
+    else:
+        G = nx.Graph()
     # for node in range(1, nnodes + 1):
     #     if ff.use_natproc:
     #         if mask[node-1] == 1: #  and sorted_by_ca[node][4] > 0.0:
