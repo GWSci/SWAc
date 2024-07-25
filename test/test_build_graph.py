@@ -148,6 +148,10 @@ class Test_Build_Graph(unittest.TestCase):
 		self.assertEqual([], list(graph.nodes))
 
 	def test_build_graph_adds_extra_downstream_nodes_when_natproc_is_true(self):
+		"""
+		I am almost certain that this represents a bug.
+		This means that all the dry cells will be included in the graph even though they have no edges.
+		"""
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
 		sorted_by_ca = {
 			1: make_sorted_by_ca_line(1, downstr = 2),
