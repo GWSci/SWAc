@@ -1,5 +1,4 @@
 import unittest
-import networkx as nx
 import swacmod.feature_flags as ff
 import swacmod.networkx_adaptor as networkx_adaptor
 
