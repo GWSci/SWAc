@@ -94,9 +94,9 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
     else:
         G = nx.Graph()
 
-    for node_number in range(1, nnodes + 1):
-        node_index = node_number - 1
+    for node_index in range(nnodes):
         if mask[node_index] == 1:
+            node_number = node_index + 1
             if use_natproc:
                 G.add_node(node_number, ca=sorted_by_ca[node_number][4])
             else:
