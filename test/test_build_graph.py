@@ -215,8 +215,8 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
             if mask[node_swac-1] == 1:
                 edges.append((node_swac, downstr))
 
-    for n in nodes:
-        G.add_node(n[0], **n[1])
+    for node, attr in nodes2.items():
+        G.add_node(node, **attr)
 
     for e in edges:
         G.add_edge(e[0], e[1])
