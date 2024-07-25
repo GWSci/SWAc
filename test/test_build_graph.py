@@ -55,7 +55,9 @@ def make_sorted_by_ca_line(downstr = -1, str_flag = 0):
 	width = None
 	return (downstr, str_flag, node_mf, length, ca, z, bed_thk, str_k, depth, width)
 
-def build_graph(nnodes, sorted_by_ca, mask, di=True):
+def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
+    if use_natproc is None:
+        use_natproc = ff.use_natproc
     if di:
         G = nx.DiGraph()
     else:
