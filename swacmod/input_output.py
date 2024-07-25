@@ -18,7 +18,6 @@ try:
 except ImportError:
     from yaml import Loader
 import numpy
-from dateutil import parser
 from tqdm import tqdm
 
 # Internal modules
