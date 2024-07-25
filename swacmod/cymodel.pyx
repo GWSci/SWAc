@@ -2252,7 +2252,6 @@ def do_swrecharge_mask_original(data, runoff, recharge):
                 lst = [n[0] for n in
                        nx.shortest_path_length(Gc, target=node).items()]
                 for n in lst:
-                    #  for n in nx.ancestors(Gc, node):
                     mask[n-1] = 1
         return build_graph(nnodes, sorted_by_ca, mask)
 
@@ -2395,7 +2394,6 @@ def get_ror_flows_tree(G, runoff, nodes, day):
         lst = [nd[0] for nd in nx.shortest_path_length(
             G,
             source=node_swac).items()]
-        #  lst = nx.descendants(G, node_swac)
         for d in lst:
             if done[d-1] != 1:
                 acc = (flow[node - 1] + max(0.0, runoff[c + d]))
@@ -2468,7 +2466,6 @@ def all_days_mask(data):
         if mask[node-1] == 1:
             lst = [n[0] for n in nx.shortest_path_length(Gc,
                                                          source=node).items()]
-            #  for n in nx.descendants(Gc, node):
             for n in lst:
                 mask[n-1] = 1
 
