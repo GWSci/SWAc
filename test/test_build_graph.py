@@ -202,7 +202,7 @@ def build_graph(nnodes, sorted_by_ca, mask, di=True, use_natproc = None):
                 nodes.append((node_number, {"ca":sorted_by_ca[node_number][4]}))
             else:
                 G.add_node(node_number)
-                nodes.append(node_number)
+                nodes.append((node_number, {}))
 
     for node_swac, line in sorted_by_ca.items():
         downstr = int(line[0])
