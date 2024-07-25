@@ -1818,7 +1818,7 @@ def make_connectiondata(data, sorted_by_ca, seg_swac_dic, swac_seg_dic):
         conn = [iseg]
         node_swac = seg_swac_dic[iseg + 1]
         downstr = sorted_by_ca[node_swac][idx['downstr']]
-        for n in Gs.neighbors(node_swac):
+        for n in networkx_adaptor.neighbors(Gs, node_swac):
             if n in swac_seg_dic:
                 if n == downstr:
                     conn.append(-float(swac_seg_dic[n] - 1))
