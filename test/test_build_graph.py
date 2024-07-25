@@ -4,36 +4,36 @@ import swacmod.feature_flags as ff
 
 class Test_Build_Graph(unittest.TestCase):
 	def test_build_empty_graph(self):
-		nnodes, sorted_by_ca, mask = make_args_for_empty_graph()
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(0)
 		graph = build_graph(nnodes, sorted_by_ca, mask)
 		self.assertEqual(0, graph.number_of_nodes())
 		self.assertEqual(0, graph.number_of_edges())
 
 	def test_build_graph_creates_a_directed_graph_when_di_is_omitted(self):
-		nnodes, sorted_by_ca, mask = make_args_for_empty_graph()
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(0)
 		graph = build_graph(nnodes, sorted_by_ca, mask)
 		self.assertEqual("<class 'networkx.classes.digraph.DiGraph'>", str(type(graph)))
 
 	def test_build_graph_creates_a_directed_graph_when_di_is_True(self):
-		nnodes, sorted_by_ca, mask = make_args_for_empty_graph()
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(0)
 		di = True
 		graph = build_graph(nnodes, sorted_by_ca, mask, di)
 		self.assertEqual("<class 'networkx.classes.digraph.DiGraph'>", str(type(graph)))
 
 	def test_build_graph_creates_a_non_directed_graph_when_di_is_False(self):
-		nnodes, sorted_by_ca, mask = make_args_for_empty_graph()
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(0)
 		di = False
 		graph = build_graph(nnodes, sorted_by_ca, mask, di)
 		self.assertEqual("<class 'networkx.classes.graph.Graph'>", str(type(graph)))
 
 	def test_build_graph_adds_one_node(self):
-		nnodes, sorted_by_ca, mask = make_args_for_one_node()
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(1)
 		graph = build_graph(nnodes, sorted_by_ca, mask)
 		self.assertEqual(1, graph.number_of_nodes())
 		self.assertEqual(0, graph.number_of_edges())
 
 	def test_build_graph_adds_multiple_nodes(self):
-		nnodes, sorted_by_ca, mask = make_args_for_three_nodes()
+		nnodes, sorted_by_ca, mask = make_args_for_node_count(3)
 		graph = build_graph(nnodes, sorted_by_ca, mask)
 		self.assertEqual(3, graph.number_of_nodes())
 		self.assertEqual(0, graph.number_of_edges())
@@ -58,6 +58,15 @@ def make_args_for_three_nodes():
 		3: make_sorted_by_ca_line(str_flag = 1),
 	}
 	mask = [1, 1, 1]
+	return nnodes, sorted_by_ca, mask
+
+def make_args_for_node_count(node_count):
+	nnodes = node_count
+	sorted_by_ca = {}
+	for node_index in range(node_count):
+		node_number = node_index + 1
+		sorted_by_ca[node_number] = make_sorted_by_ca_line(str_flag = 1)
+	mask = [1] * node_count
 	return nnodes, sorted_by_ca, mask
 
 def make_sorted_by_ca_line(downstr = -1, str_flag = 0):
