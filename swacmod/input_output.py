@@ -100,27 +100,6 @@ def load_yaml(filein):
                 yml[new_key] = value
     return yml
 
-def format_recharge_row(row):
-    """Convert list of values to output string."""
-    final = []
-    for value in row:
-        if value >= 0:
-            string = "%.6e" % (value / 1000.0)
-        else:
-            string = "%.5e" % (value / 1000.0)
-        splitter = "e+" if "e+" in string else "e-"
-        split = string.split(splitter)
-        if len(split[1]) == 2:
-            split[1] = "0%s" % split[1]
-        final.append(splitter.join(split))
-    return " ".join(final) + "\n"
-
-def get_recharge_path(data):
-    """Return the path of the recharge file."""
-    fileout = "%s_recharge.rch" % data["params"]["run_name"]
-    path = os.path.join(u.CONSTANTS["OUTPUT_DIR"], fileout)
-    return path
-
 def get_output_path(data, file_format, output_dir, node=None, zone=None):
     """Return the path of the recharge file."""
     run = data["params"]["run_name"]
