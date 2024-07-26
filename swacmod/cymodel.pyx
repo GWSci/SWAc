@@ -2385,7 +2385,7 @@ def get_ror_flows_tree(G, runoff, nodes, day):
     done = np.zeros((nodes), dtype='int')
     c = nodes * day
     leaf_nodes = [x for x in G.nodes()
-                  if networkx_adaptor.out_degree(G, x) == 1 and networkx_adaptor.in_degree(G, x) == 0]
+                  if G.out_degree(x) == 1 and networkx_adaptor.in_degree(G, x) == 0]
     for node_swac in leaf_nodes:
         node = node_swac
         acc = max(0.0, runoff[c + node])
