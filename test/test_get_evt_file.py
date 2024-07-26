@@ -54,7 +54,6 @@ INTERNAL               1   (1E15.6) -1 #evtr2
 		}
 		evtrate = [-1, 37, 41, 43, 47, 53, 59]
 		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			warnings.filterwarnings("ignore", category=UserWarning)
 
 			evt_out = m.get_evt_file(data, evtrate)
@@ -106,7 +105,6 @@ END period  2
 		}
 		evtrate = [-1, 37, 41, 43, 47, 53, 59]
 		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			warnings.filterwarnings("ignore", category=UserWarning)
 
 			evt_out = m.get_evt_file(data, evtrate)

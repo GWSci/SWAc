@@ -25,7 +25,6 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 		runoff = [-1, 5, 7, 11, 13, 17, 19]
 
 		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
 			warnings.filterwarnings("ignore", category=UserWarning)
 			str = m.get_str_file(data, runoff)
 
@@ -165,7 +164,6 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 			runoff = np.array([7.0, 11.0, 13.0, 17.0, 19.0, 23.0, 29.0])
 
 			with warnings.catch_warnings():
-				warnings.filterwarnings("ignore", category=DeprecationWarning)
 				warnings.filterwarnings("ignore", category=UserWarning)
 				str = m.get_str_file(data, runoff)
 
@@ -202,7 +200,6 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 			runoff = np.array([7.0, 11.0, 13.0, 17.0, 19.0, 23.0, 29.0])
 
 			with warnings.catch_warnings():
-				warnings.filterwarnings("ignore", category=DeprecationWarning)
 				warnings.filterwarnings("ignore", category=UserWarning)
 				str = m.get_str_file(data, runoff)
 
@@ -238,9 +235,7 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 
 		stream_nitrate_aggregation = np.array([[31.0, 37.0, 41.0], [43.0, 47.0, 53.0]])
 
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			actual = m.get_str_nitrate(data, runoff, stream_nitrate_aggregation)
+		actual = m.get_str_nitrate(data, runoff, stream_nitrate_aggregation)
 
 		expected = [
 			[0.0, 0.0, 482.352941],
@@ -264,9 +259,7 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 
 		stream_nitrate_aggregation = np.array([[31.0, 37.0, 41.0], [43.0, 47.0, 53.0]])
 
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			actual = m.get_str_nitrate(data, runoff, stream_nitrate_aggregation)
+		actual = m.get_str_nitrate(data, runoff, stream_nitrate_aggregation)
 
 		expected = [
 			[0.0, 0.0, 482.352941],

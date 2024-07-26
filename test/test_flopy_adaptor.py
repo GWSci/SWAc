@@ -213,9 +213,7 @@ END period  5
 				self.assertTrue(math.isnan(actual[per][node][1]))
 
 	def test_modflow_sfr2_get_empty_segment_data(self):
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			actual = flopy_adaptor.modflow_sfr2_get_empty_segment_data(3)
+		actual = flopy_adaptor.modflow_sfr2_get_empty_segment_data(3)
 
 		self.assert_zeros(3, 34, actual)
 
@@ -229,9 +227,7 @@ END period  5
 				self.assertEqual(0.0, actual[i][j])
 
 	def test_modflow_sfr2_get_empty_reach_data(self):
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			actual = flopy_adaptor.modflow_sfr2_get_empty_reach_data(3)
+		actual = flopy_adaptor.modflow_sfr2_get_empty_reach_data(3)
 		actual_list = actual.tolist()
 		expected = [
 			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
@@ -251,11 +247,9 @@ END period  5
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=UserWarning)
 			model = flopy_adaptor.modflow_model(path, "mfusg", False)
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			rd = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
-			seg_data = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
-			sfr = flopy_adaptor._make_sfr2(model, nstrm, nss, istcb1, istcb2, rd, seg_data)
+		rd = flopy_adaptor.modflow_sfr2_get_empty_reach_data(nstrm)
+		seg_data = flopy_adaptor.modflow_sfr2_get_empty_segment_data(nss)
+		sfr = flopy_adaptor._make_sfr2(model, nstrm, nss, istcb1, istcb2, rd, seg_data)
 
 		self.assertEqual(nstrm, sfr.nstrm)
 		self.assertEqual(1, sfr.nss) # The constructor overrides the supplied value.
@@ -325,9 +319,7 @@ END period  5
 	def test_modflow_str_get_empty(self):
 		ncells = 2,
 		nss = 3
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			rd, sd = flopy_adaptor.modflow_str_get_empty(ncells, nss)
+		rd, sd = flopy_adaptor.modflow_str_get_empty(ncells, nss)
 		
 		expected_rd = [
 			[0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -360,9 +352,7 @@ END period  5
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=UserWarning)
 			model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			dis = flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
+		dis = flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
 		return model, dis
 
 	def test_modflow_str(self):
@@ -382,10 +372,8 @@ END period  5
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=UserWarning)
 			model = flopy_adaptor.modflow_model("aardvark", "mf2005", True)
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
-			str = flopy_adaptor._modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data)
+		flopy_adaptor.modflow_dis(model, nlay, nrow, ncol, nper)
+		str = flopy_adaptor._modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data)
 
 		self.assertEqual(str, model.get_package("str"))
 		self.assertEqual(nstrm, str.mxacts)
@@ -429,10 +417,8 @@ END period  5
 		with warnings.catch_warnings():
 			warnings.filterwarnings("ignore", category=UserWarning)
 			model = flopy_adaptor.modflow_model("aardvark", "mfusg", True)
-		with warnings.catch_warnings():
-			warnings.filterwarnings("ignore", category=DeprecationWarning)
-			flopy_adaptor.modflow_dis(model, 1, 3, 1, 5)
-			evt = flopy_adaptor._modflow_evt(model, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
+		flopy_adaptor.modflow_dis(model, 1, 3, 1, 5)
+		evt = flopy_adaptor._modflow_evt(model, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
 		
 		self.assertEqual(evt, model.get_package("evt"))
 		self.assertEqual(nevtopt, evt.nevtop)
