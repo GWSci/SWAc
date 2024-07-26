@@ -24,9 +24,9 @@ source env/bin/activate
 python3 -c "import swacmod.compile_model"
 
 if [ "$use_coverage" = true ]; then
-	env TQDM_DISABLE=true coverage run -m unittest discover -s $discovery_root
+	env TQDM_DISABLE=true coverage run -m unittest discover --durations 10 -s $discovery_root
 else
-	env TQDM_DISABLE=true python3 -m unittest discover -s $discovery_root
+	env TQDM_DISABLE=true python3 -m unittest discover --durations 10 --s $discovery_root
 fi
 
 exit_status=$?
