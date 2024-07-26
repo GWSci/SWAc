@@ -2391,7 +2391,7 @@ def get_ror_flows_tree(G, runoff, nodes, day):
         node = node_swac
         acc = max(0.0, runoff[c + node])
 
-        lst = [nd[0] for nd in nx.shortest_path_length(
+        lst = [nd[0] for nd in networkx_adaptor.shortest_path_length(
             G,
             source=node_swac).items()]
         for d in lst:
