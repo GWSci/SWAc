@@ -3,7 +3,7 @@ coverage==7.6.0
 flopy==3.7.0
 h5py==3.11.0
 networkx==3.3
-numpy==1.23.2
+numpy==1.26.4
 pandas==2.2.2
 psutil==6.0.0
 python-dateutil==2.9.0.post0
