@@ -9,3 +9,4 @@ psutil==6.0.0
 python-dateutil==2.9.0.post0
 PyYAML==6.0.1
 tqdm==4.66.4
+setuptools==71.1.0

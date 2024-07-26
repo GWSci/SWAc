@@ -3,9 +3,9 @@
 set -e
 
 brew update
-brew install python@3.11
+brew install python
 
-python3.11 -m venv env
+python3 -m venv env
 
 source env/bin/activate
 pip install -r requirements.txt
