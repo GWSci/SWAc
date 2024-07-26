@@ -43,10 +43,10 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 
 	def test_calculate_cumulative_proportion_reaching_water_table_varies_with_params(self):
 		a = 1.38
-		μ = np.array([1.58])
+		μ = 1.58
 		σ = 3.96
 		alpha = 1.7
-		effective_porosity = np.array([1.0 / 0.0029])
+		effective_porosity = 1.0 / 0.0029
 		DTW = 0.001
 		t = 1
 		original = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t)
