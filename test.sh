@@ -33,6 +33,7 @@ exit_status=$?
 
 if [ "$use_coverage" = true ]; then
 	coverage report -m
+	coverage html
 fi
 
 if [ "$show_outdated_dependencies" = true ]; then
