@@ -63,10 +63,6 @@ class test_time_switcher(unittest.TestCase):
 		]
 		self.assertEqual(expected, actual)
 
-	def assert_report(self, time_switcher, expected_report):
-		actual = timer._time_switcher_report(time_switcher)
-		self.assertEqual(expected_report, actual)
-
 class mock_time():
 	def __init__(self, times):
 		self.times = list(times)
