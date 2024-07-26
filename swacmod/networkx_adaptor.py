@@ -31,3 +31,6 @@ def nodes(G):
 class Networkx_Adaptor_Graph:
 	def __init__(self, G):
 		self.G = G
+
+	def nodes(self):
+		return list(self.G.nodes())
