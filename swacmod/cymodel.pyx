@@ -8,7 +8,6 @@ from collections import OrderedDict
 # Internal modules
 from . import utils as u
 from tqdm import tqdm
-import networkx as nx
 import sys
 import cython
 cimport cython
@@ -2465,7 +2464,7 @@ def all_days_mask(data):
     # do downstream from RoR areas as flows will be different
     for node in range(1, nnodes + 1):
         if mask[node-1] == 1:
-            lst = [n[0] for n in nx.shortest_path_length(Gc,
+            lst = [n[0] for n in networkx_adaptor.shortest_path_length(Gc,
                                                          source=node).items()]
             for n in lst:
                 mask[n-1] = 1
