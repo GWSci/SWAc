@@ -2228,7 +2228,6 @@ def do_swrecharge_mask_original(data, runoff, recharge):
         double[:, :] ror_prop = params['ror_prop']
         double[:, :] ror_limit = params['ror_limit']
         long long[:] months = np.array(series['months'], dtype=np.int64)
-        size_t zone_ror = params['swrecharge_zone_mapping'][1] - 1
         int day, month
 
     sorted_by_ca = make_sorted_by_ca(data)
