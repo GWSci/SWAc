@@ -2267,7 +2267,7 @@ def do_swrecharge_mask_original(data, runoff, recharge):
         acc_flow = get_ror_flows_tree(Gp[month],
                                       runoff, nnodes, day)
         # iterate over nodes relevent to this month's RoR parameters
-        for node in networkx_adaptor.nodes(Gp[month]):
+        for node in Gp[month].nodes():
             ro = acc_flow[node - 1]
             if ro > 0.0:
                 zone_ror = params['swrecharge_zone_mapping'][node] - 1
@@ -2384,7 +2384,7 @@ def get_ror_flows_tree(G, runoff, nodes, day):
     flow = np.zeros((nodes))
     done = np.zeros((nodes), dtype='int')
     c = nodes * day
-    leaf_nodes = [x for x in networkx_adaptor.nodes(G)
+    leaf_nodes = [x for x in G.nodes()
                   if networkx_adaptor.out_degree(G, x) == 1 and networkx_adaptor.in_degree(G, x) == 0]
     for node_swac in leaf_nodes:
         node = node_swac

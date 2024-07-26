@@ -25,9 +25,6 @@ def in_degree(G, node):
 def out_degree(G, node):
 	return G.G.out_degree(node)
 
-def nodes(G):
-	return G.nodes()
-
 class Networkx_Adaptor_Graph:
 	def __init__(self, G):
 		self.G = G
