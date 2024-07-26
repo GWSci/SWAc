@@ -2250,7 +2250,7 @@ def do_swrecharge_mask_original(data, runoff, recharge):
                 mask[node-1] = 1
                 # add upstream bits
                 lst = [n[0] for n in
-                       nx.shortest_path_length(Gc, target=node).items()]
+                       networkx_adaptor.shortest_path_length(Gc, target=node).items()]
                 for n in lst:
                     mask[n-1] = 1
         return build_graph(nnodes, sorted_by_ca, mask)
