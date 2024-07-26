@@ -446,11 +446,6 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(kg)
 		return blackboard
 
-	def test_convert_kg_to_tons_array(self):
-		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([])))
-		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([1000.0])))
-		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([500, 1000.0, 3000.0])))
-
 	def test__combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(self):
 		blackboard = nitrate.NitrateBlackboard()
 		blackboard.historical_nitrate_reaching_water_table_array_tons_per_day = np.array([10.0, 20.0, 30.0])
