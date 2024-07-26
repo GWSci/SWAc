@@ -31,3 +31,6 @@ class Networkx_Adaptor_Graph:
 
 	def out_degree(self, node):
 		return self.G.out_degree(node)
+
+	def in_degree(self, node):
+		return self.G.in_degree(node)
