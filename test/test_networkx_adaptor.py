@@ -41,7 +41,7 @@ class Test_Networkx_Adaptor(unittest.TestCase):
 
 	def test_shortest_path_length_with_only_target_specified_and_not_all_nodes_reachable(self):
 		G = make_graph_for_shortest_path_length()
-		actual = nx.shortest_path_length(G, target = 3)
+		actual = G.shortest_path_length(target = 3)
 		expected = {
 			1: 2,
 			2: 1,
