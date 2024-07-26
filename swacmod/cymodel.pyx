@@ -2249,7 +2249,7 @@ def do_swrecharge_mask_original(data, runoff, recharge):
                 mask[node-1] = 1
                 # add upstream bits
                 lst = [n[0] for n in
-                       networkx_adaptor.shortest_path_length(Gc, target=node).items()]
+                       Gc.shortest_path_length(target=node).items()]
                 for n in lst:
                     mask[n-1] = 1
         return build_graph(nnodes, sorted_by_ca, mask)
@@ -2390,9 +2390,7 @@ def get_ror_flows_tree(G, runoff, nodes, day):
         node = node_swac
         acc = max(0.0, runoff[c + node])
 
-        lst = [nd[0] for nd in networkx_adaptor.shortest_path_length(
-            G,
-            source=node_swac).items()]
+        lst = [nd[0] for nd in G.shortest_path_length(source=node_swac).items()]
         for d in lst:
             if done[d-1] != 1:
                 acc = (flow[node - 1] + max(0.0, runoff[c + d]))

@@ -13,9 +13,6 @@ def _populate_graph(G, nodes, edges):
 		G.add_edge(e[0], e[1])
 	return Networkx_Adaptor_Graph(G)
 
-def shortest_path_length(G, source=None, target=None):
-	return G.shortest_path_length(source, target)
-
 class Networkx_Adaptor_Graph:
 	def __init__(self, G):
 		self.G = G

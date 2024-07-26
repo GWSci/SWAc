@@ -4,12 +4,12 @@ import swacmod.networkx_adaptor as nx
 class Test_Networkx_Adaptor(unittest.TestCase):
 	def test_shortest_path_length_with_source_and_target_specified(self):
 		G = make_graph_for_shortest_path_length()
-		actual = nx.shortest_path_length(G, source = 1, target = 4)
+		actual = G.shortest_path_length(source = 1, target = 4)
 		self.assertEqual(2, actual)
 
 	def test_shortest_path_length_with_only_source_specified(self):
 		G = make_graph_for_shortest_path_length()
-		actual = nx.shortest_path_length(G, source = 1)
+		actual = G.shortest_path_length(source = 1)
 		expected = {
 			1: 0,
 			2: 1,
@@ -20,7 +20,7 @@ class Test_Networkx_Adaptor(unittest.TestCase):
 
 	def test_shortest_path_length_with_only_source_specified_and_not_all_nodes_reachable(self):
 		G = make_graph_for_shortest_path_length()
-		actual = nx.shortest_path_length(G, source = 2)
+		actual = G.shortest_path_length(source = 2)
 		expected = {
 			2: 0,
 			3: 1,
@@ -30,7 +30,7 @@ class Test_Networkx_Adaptor(unittest.TestCase):
 
 	def test_shortest_path_length_with_only_target_specified(self):
 		G = make_graph_for_shortest_path_length()
-		actual = nx.shortest_path_length(G, target = 4)
+		actual = G.shortest_path_length(target = 4)
 		expected = {
 			1: 2,
 			2: 1,
