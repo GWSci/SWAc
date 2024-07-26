@@ -86,8 +86,8 @@ class Test_Get_Flows(unittest.TestCase):
 		self.assert_get_flows(sorted_by_ca, [0, 3, 2], [0, 0, 0])
 		# TODO I think the result should be [5, 3, 2] and that there should be no accumulation because the nodes are in the wrong order.
 
-	def assert_get_flows(self, sorted_by_ca, expected_A, expected_B, explain = False, use_ones = False):
-		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, explain, use_ones)
+	def assert_get_flows(self, sorted_by_ca, expected_A, expected_B, use_ones = False):
+		actual_A, actual_B = get_flows_adaptor(sorted_by_ca, use_ones)
 		np.testing.assert_array_almost_equal(expected_A, actual_A)
 		np.testing.assert_array_almost_equal(expected_B, actual_B)
 
@@ -161,7 +161,7 @@ class Test_Get_Flows(unittest.TestCase):
 		self.assert_get_flows(sorted_by_ca, [1, 1, 1, 0], [3, 3, 3, 0], use_ones = True)
 		# TODO I think the result should be [1, 1, 1, 1], [3, 3, 11, 15].
 
-def get_flows_adaptor(sorted_by_ca, explain = False, use_ones = False):
+def get_flows_adaptor(sorted_by_ca, use_ones = False):
 	swac_seg_dic = {}
 	stream_index = 1
 	for node_number, params in sorted_by_ca.items():
@@ -177,7 +177,7 @@ def get_flows_adaptor(sorted_by_ca, explain = False, use_ones = False):
 		long_list_for_source = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199]
 	source = [-1000, -2000, -3000] + long_list_for_source[:nodes]
 	index_offset = 3
-	actual_A, actual_B = get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, explain)
+	actual_A, actual_B = get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
 	return actual_A, actual_B
 
 def make_routing_parameters(
@@ -194,27 +194,16 @@ def make_routing_parameters(
 ):
 	return [downstr, str_flag, node_mf, RCHLEN, ca, STRTOP, STRTHICK, STRHC1, DEPTH2, WIDTH2]
 
-def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, explain = False):
+def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset):
     result_A = np.zeros((nss))
     result_B = np.zeros((nss))
     done = np.zeros((nodes), dtype=int)
-
-    if explain:
-        print()
-        print(f"sorted_by_ca = {sorted_by_ca}")
-        print(f"swac_seg_dic = {swac_seg_dic}")
-        print(f"nodes = {nodes}")
-        print(f"nss = {nss}")
-        print(f"source = {source}")
-        print(f"index_offset = {index_offset}")
-        print()
 
     for node_number, line in sorted_by_ca.items():
         node_index = node_number - 1
         downstr, str_flag = line[:2]
         acc = 0.0
         iteration_number = 0
-        do_explain_for(explain, node_number, node_index, downstr, str_flag, acc)
         while downstr > 1:
             str_flag = sorted_by_ca[node_number][1]
             is_str = str_flag >= 1
@@ -227,7 +216,6 @@ def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, expl
                 if is_done:
                     result_B[stream_cell_index] += acc
                     acc = 0.0
-                    do_explain(explain, iteration_number, node_number, node_index, downstr, str_flag, is_str, is_done, acc, stream_cell_index, result_A, result_B)
                     break
                 else:
                     result_A[stream_cell_index] = source[node_index + index_offset]
@@ -240,23 +228,8 @@ def get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset, expl
                     acc += max(0.0, source[node_index + index_offset])
                     done[node_index] = 1
 
-            do_explain(explain, iteration_number, node_number, node_index, downstr, str_flag, is_str, is_done, acc, stream_cell_index, result_A, result_B)
             node_number = downstr
             node_index = node_number - 1
             downstr = sorted_by_ca[node_number][0]
             iteration_number += 1
-    if explain:
-        print(f"acc = {acc}; result_A = {result_A}; result_B = {result_B}")
     return result_A, result_B
-
-def do_explain_for(explain, node_number, node_index, downstr, str_flag, acc):
-	if explain:
-		print(f"  node_number = {node_number}; node_index = {node_index}; downstr = {downstr}; str_flag = {str_flag}; acc = {acc}")
-
-def do_explain(explain, iteration_number, node_number, node_index, downstr, str_flag, is_str, is_done, acc, stream_cell_index, result_A, result_B):
-	if explain:
-		if (stream_cell_index is not None):
-			suffix = f"; result_A = {result_A[stream_cell_index]}; result_B = {result_B[stream_cell_index]}"
-		else:
-			suffix = ""
-		print(f"  iteration_number = {iteration_number}; node_number = {node_number}; node_index = {node_index}; downstr = {downstr}; str_flag = {str_flag}; is_str = {is_str}; is_done = {is_done}; acc = {acc}" + suffix)
