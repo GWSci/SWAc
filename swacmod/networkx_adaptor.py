@@ -24,3 +24,6 @@ def in_degree(G, node):
 
 def out_degree(G, node):
 	return G.out_degree(node)
+
+def nodes(G):
+	return list(G.nodes())

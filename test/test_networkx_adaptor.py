@@ -69,6 +69,10 @@ class Test_Networkx_Adaptor(unittest.TestCase):
 		self.assertEqual(1, nx.out_degree(G, 3))
 		self.assertEqual(0, nx.out_degree(G, 4))
 
+	def test_nodes(self):
+		G = make_graph_for_shortest_path_length()
+		self.assertEqual([1, 2, 3, 4], nx.nodes(G))
+
 def make_graph_for_shortest_path_length():
 		edges = [
 			(1, 2),
