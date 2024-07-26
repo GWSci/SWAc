@@ -18,3 +18,6 @@ def shortest_path_length(G, source=None, target=None):
 
 def neighbors(G, node):
 	return G.neighbors(node)
+
+def in_degree(G, node):
+	return G.in_degree(node)
