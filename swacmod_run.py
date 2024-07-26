@@ -702,7 +702,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
                     runoff_recharge -= np.frombuffer(runoff.get_obj(),
                                                     dtype=np.float32)
             # aggregate amended recharge & runoff arrays by output periods
-            for node in tqdm(list(m.all_days_mask(data).nodes),
+            for node in tqdm(list(m.all_days_mask(data).nodes()),
                              desc="Aggregating Fluxes      "):
 
                 # get indices of output for this node
