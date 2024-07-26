@@ -21,3 +21,6 @@ def neighbors(G, node):
 
 def in_degree(G, node):
 	return G.in_degree(node)
+
+def out_degree(G, node):
+	return G.out_degree(node)
