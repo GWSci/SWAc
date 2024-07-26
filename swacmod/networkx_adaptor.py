@@ -11,19 +11,23 @@ def _populate_graph(G, nodes, edges):
 		G.add_node(node, **attr)
 	for e in edges:
 		G.add_edge(e[0], e[1])
-	return G
+	return Networkx_Adaptor_Graph(G)
 
 def shortest_path_length(G, source=None, target=None):
-	return nx.shortest_path_length(G, source, target)
+	return nx.shortest_path_length(G.G, source, target)
 
 def neighbors(G, node):
-	return G.neighbors(node)
+	return G.G.neighbors(node)
 
 def in_degree(G, node):
-	return G.in_degree(node)
+	return G.G.in_degree(node)
 
 def out_degree(G, node):
-	return G.out_degree(node)
+	return G.G.out_degree(node)
 
 def nodes(G):
-	return list(G.nodes())
+	return list(G.G.nodes())
+
+class Networkx_Adaptor_Graph:
+	def __init__(self, G):
+		self.G = G

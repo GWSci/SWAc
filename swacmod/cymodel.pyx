@@ -2267,7 +2267,7 @@ def do_swrecharge_mask_original(data, runoff, recharge):
         acc_flow = get_ror_flows_tree(Gp[month],
                                       runoff, nnodes, day)
         # iterate over nodes relevent to this month's RoR parameters
-        for node in list(Gp[month].nodes):
+        for node in networkx_adaptor.nodes(Gp[month]):
             ro = acc_flow[node - 1]
             if ro > 0.0:
                 zone_ror = params['swrecharge_zone_mapping'][node] - 1

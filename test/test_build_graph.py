@@ -7,63 +7,63 @@ class Test_Build_Graph(unittest.TestCase):
 	def test_build_empty_graph(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(0)
 		graph = build_graph(nnodes, sorted_by_ca, mask)
-		self.assertEqual(0, graph.number_of_nodes())
-		self.assertEqual(0, graph.number_of_edges())
+		self.assertEqual(0, graph.G.number_of_nodes())
+		self.assertEqual(0, graph.G.number_of_edges())
 
 	def test_build_graph_creates_a_directed_graph_when_di_is_omitted(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(0)
 		graph = build_graph(nnodes, sorted_by_ca, mask)
-		self.assertEqual("<class 'networkx.classes.digraph.DiGraph'>", str(type(graph)))
+		self.assertEqual("<class 'networkx.classes.digraph.DiGraph'>", str(type(graph.G)))
 
 	def test_build_graph_creates_a_directed_graph_when_di_is_True(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(0)
 		di = True
 		graph = build_graph(nnodes, sorted_by_ca, mask, di)
-		self.assertEqual("<class 'networkx.classes.digraph.DiGraph'>", str(type(graph)))
+		self.assertEqual("<class 'networkx.classes.digraph.DiGraph'>", str(type(graph.G)))
 
 	def test_build_graph_creates_a_non_directed_graph_when_di_is_False(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(0)
 		di = False
 		graph = build_graph(nnodes, sorted_by_ca, mask, di)
-		self.assertEqual("<class 'networkx.classes.graph.Graph'>", str(type(graph)))
+		self.assertEqual("<class 'networkx.classes.graph.Graph'>", str(type(graph.G)))
 
 	def test_build_graph_adds_one_node(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(1)
 		graph = build_graph(nnodes, sorted_by_ca, mask)
-		self.assertEqual(1, graph.number_of_nodes())
-		self.assertEqual(0, graph.number_of_edges())
+		self.assertEqual(1, graph.G.number_of_nodes())
+		self.assertEqual(0, graph.G.number_of_edges())
 
 	def test_build_graph_adds_multiple_nodes(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(3)
 		graph = build_graph(nnodes, sorted_by_ca, mask)
-		self.assertEqual(3, graph.number_of_nodes())
-		self.assertEqual(0, graph.number_of_edges())
+		self.assertEqual(3, graph.G.number_of_nodes())
+		self.assertEqual(0, graph.G.number_of_edges())
 
 	def test_build_graph_adds_ca_to_nodes_when_use_natproc_is_true(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(3)
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc = True)
-		self.assertEqual(10, graph.nodes[1]["ca"])
-		self.assertEqual(20, graph.nodes[2]["ca"])
-		self.assertEqual(30, graph.nodes[3]["ca"])
+		self.assertEqual(10, graph.G.nodes[1]["ca"])
+		self.assertEqual(20, graph.G.nodes[2]["ca"])
+		self.assertEqual(30, graph.G.nodes[3]["ca"])
 
 	def test_build_graph_does_not_add_ca_to_nodes_when_use_natproc_is_false(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(3)
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc = False)
-		self.assertTrue("ca" not in graph.nodes[1])
-		self.assertTrue("ca" not in graph.nodes[2])
-		self.assertTrue("ca" not in graph.nodes[3])
+		self.assertTrue("ca" not in graph.G.nodes[1])
+		self.assertTrue("ca" not in graph.G.nodes[2])
+		self.assertTrue("ca" not in graph.G.nodes[3])
 
 	def test_build_graph_does_not_add_masked_nodes_when_use_natproc_is_false(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(3)
 		mask = [0, 1, 0]
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc = False)
-		self.assertEqual([2], list(graph.nodes))
+		self.assertEqual([2], list(graph.G.nodes))
 
 	def test_build_graph_does_not_add_masked_nodes_when_use_natproc_is_true(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(3)
 		mask = [0, 1, 0]
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc = True)
-		self.assertEqual([2], list(graph.nodes))
+		self.assertEqual([2], list(graph.G.nodes))
 
 	def test_build_graph_adds_edges(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
@@ -72,8 +72,8 @@ class Test_Build_Graph(unittest.TestCase):
 			2: make_sorted_by_ca_line(2, str_flag = 1),
 		}
 		graph = build_graph(nnodes, sorted_by_ca, mask)
-		self.assertEqual(1, graph.number_of_edges())
-		self.assertTrue(graph.has_edge(1, 2))
+		self.assertEqual(1, graph.G.number_of_edges())
+		self.assertTrue(graph.G.has_edge(1, 2))
 
 	def test_build_graph_adds_multiple_edges(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(4)
@@ -84,10 +84,10 @@ class Test_Build_Graph(unittest.TestCase):
 			4: make_sorted_by_ca_line(4, str_flag = 1),
 		}
 		graph = build_graph(nnodes, sorted_by_ca, mask)
-		self.assertEqual(3, graph.number_of_edges())
-		self.assertTrue(graph.has_edge(1, 2))
-		self.assertTrue(graph.has_edge(2, 4))
-		self.assertTrue(graph.has_edge(3, 4))
+		self.assertEqual(3, graph.G.number_of_edges())
+		self.assertTrue(graph.G.has_edge(1, 2))
+		self.assertTrue(graph.G.has_edge(2, 4))
+		self.assertTrue(graph.G.has_edge(3, 4))
 
 	def test_build_graph_adds_masked_downstream_nodes_when_required_for_edges(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
@@ -97,7 +97,7 @@ class Test_Build_Graph(unittest.TestCase):
 		}
 		mask = [1, 0]
 		graph = build_graph(nnodes, sorted_by_ca, mask)
-		self.assertEqual([1, 2], list(graph.nodes))
+		self.assertEqual([1, 2], list(graph.G.nodes))
 
 	def test_build_graph_does_not_add_masked_downstream_nodes_when_required_for_edges(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
@@ -107,7 +107,7 @@ class Test_Build_Graph(unittest.TestCase):
 		}
 		mask = [0, 1]
 		graph = build_graph(nnodes, sorted_by_ca, mask)
-		self.assertEqual([2], list(graph.nodes))
+		self.assertEqual([2], list(graph.G.nodes))
 
 	def test_build_graph_adds_added_masked_nodes_include_ca_when_use_natproc_is_true(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
@@ -117,7 +117,7 @@ class Test_Build_Graph(unittest.TestCase):
 		}
 		mask = [1, 0]
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc=True)
-		self.assertEqual(20, graph.nodes[2]["ca"])
+		self.assertEqual(20, graph.G.nodes[2]["ca"])
 
 	def test_build_graph_adds_added_masked_nodes_does_not_include_ca_when_use_natproc_is_false(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
@@ -127,7 +127,7 @@ class Test_Build_Graph(unittest.TestCase):
 		}
 		mask = [1, 0]
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc=False)
-		self.assertTrue("ca" not in graph.nodes[2])
+		self.assertTrue("ca" not in graph.G.nodes[2])
 
 	def test_build_graph_converts_downstream_to_int_when_natproc_is_true(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
@@ -136,7 +136,7 @@ class Test_Build_Graph(unittest.TestCase):
 			2: make_sorted_by_ca_line(2),
 		}
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc=True)
-		self.assertTrue(graph.has_edge(1, 2))
+		self.assertTrue(graph.G.has_edge(1, 2))
 
 	def test_build_graph_does_not_add_extra_downstream_nodes_when_natproc_is_false(self):
 		nnodes, sorted_by_ca, mask = make_args_for_node_count(2)
@@ -146,7 +146,7 @@ class Test_Build_Graph(unittest.TestCase):
 		}
 		mask = [0, 0]
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc=False)
-		self.assertEqual([], list(graph.nodes))
+		self.assertEqual([], list(graph.G.nodes))
 
 	def test_build_graph_adds_extra_downstream_nodes_when_natproc_is_true(self):
 		"""
@@ -160,7 +160,7 @@ class Test_Build_Graph(unittest.TestCase):
 		}
 		mask = [0, 0]
 		graph = build_graph(nnodes, sorted_by_ca, mask, use_natproc=True)
-		self.assertEqual([2], list(graph.nodes))
+		self.assertEqual([2], list(graph.G.nodes))
 
 def make_args_for_node_count(node_count):
 	nnodes = node_count
