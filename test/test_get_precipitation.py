@@ -46,13 +46,6 @@ def oracle_get_precipitation(data):
 		result.append(precipitation["rainfall_ts"])
 	return numpy.array(result)
 
-def lazy_to_array(lazy):
-	result = []
-	for node in nodes:
-		precipitation = lazy[node - 1]
-		result.append(precipitation)
-	return numpy.array(result)
-
 def get_precipitation(data, output, node):
     """C) Precipitation [mm/d]."""
     series, params = data['series'], data['params']
