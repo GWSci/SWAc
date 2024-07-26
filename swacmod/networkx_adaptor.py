@@ -19,9 +19,6 @@ def shortest_path_length(G, source=None, target=None):
 def neighbors(G, node):
 	return G.G.neighbors(node)
 
-def in_degree(G, node):
-	return G.G.in_degree(node)
-
 class Networkx_Adaptor_Graph:
 	def __init__(self, G):
 		self.G = G
