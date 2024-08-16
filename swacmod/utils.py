@@ -4,11 +4,8 @@
 
 # Standard Library
 import os
-import sys
-import struct
 import logging
 import datetime
-import subprocess as sp
 
 # Third Party Libraries
 import numpy as np
@@ -233,18 +230,6 @@ def aggregate_array(data, array, method='average'):
         if method == 'average':
             final[num] /= (time[1] - time[0])
     return final
-
-def get_modified_time(path):
-    """Get the datetime a file was modified."""
-    try:
-        mod = datetime.datetime.fromtimestamp(os.path.getmtime(path))
-        mod = datetime.datetime(mod.year, mod.month, mod.day, mod.hour,
-                                mod.minute, mod.second)
-    except OSError:
-        logging.warning('Could not find %s, set modified time to 1/1/1901',
-                        path)
-        mod = datetime.datetime(1901, 1, 1, 0, 0, 0)
-    return mod
 
 def build_taw_raw(params):
     """Build the TAW and RAW matrices."""
