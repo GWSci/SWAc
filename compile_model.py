@@ -17,11 +17,7 @@ def compile_model():
                         stdout=sp.PIPE,
                         stderr=sp.PIPE)
         proc.wait()
-        if proc.returncode != 0:
-            print('Could not compile C extensions:')
-            print('%s' % proc.stdout.read())
-            print('%s' % proc.stderr.read())
-            sys.exit(proc.returncode)
+        if_errors_report_and_exit(proc)
 
 def calculate_code_directory():
     current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -44,6 +40,13 @@ def get_modified_time(path):
                         path)
         mod = datetime.datetime(1901, 1, 1, 0, 0, 0)
     return mod
+
+def if_errors_report_and_exit(proc):
+    if proc.returncode != 0:
+        print('Could not compile C extensions:')
+        print('%s' % proc.stdout.read())
+        print('%s' % proc.stderr.read())
+        sys.exit(proc.returncode)
 
 if __name__ == "__main__":
     compile_model()
