@@ -1,6 +1,5 @@
 import unittest
 import numpy as np
-from swacmod import compile_model
 import swacmod.nitrate as nitrate
 
 class Test_Nitrate_Mass_Balance(unittest.TestCase):

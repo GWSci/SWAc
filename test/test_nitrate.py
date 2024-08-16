@@ -2,7 +2,6 @@ from datetime import date
 import unittest
 import numpy as np
 import os
-from swacmod import compile_model
 import swacmod.model as m
 import swacmod.nitrate as nitrate
 import swacmod.timer as timer
