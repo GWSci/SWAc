@@ -7,12 +7,9 @@ import logging
 
 def compile_model():
     """Compile Cython model."""
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-    code_directory = os.path.join(current_directory, 'swacmod')
-    mod_c = get_modified_time(os.path.join(code_directory, 'cymodel.c'))
-    mod_pyx = get_modified_time(
-        os.path.join(code_directory, 'cymodel.pyx'))
-    if mod_pyx >= mod_c:
+    is_compile_required = calculate_is_compile_required()
+    code_directory = calculate_code_directory()
+    if is_compile_required:
         arch = struct.calcsize('P') * 8
         print('cymodel.pyx modified, recompiling for %d-bit' % arch)
         proc = sp.Popen([sys.executable, 'setup.py', 'build_ext', '--inplace'],
@@ -25,6 +22,16 @@ def compile_model():
             print('%s' % proc.stdout.read())
             print('%s' % proc.stderr.read())
             sys.exit(proc.returncode)
+
+def calculate_code_directory():
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(current_directory, 'swacmod')
+
+def calculate_is_compile_required():
+    code_directory = calculate_code_directory()
+    mod_c = get_modified_time(os.path.join(code_directory, 'cymodel.c'))
+    mod_pyx = get_modified_time(os.path.join(code_directory, 'cymodel.pyx'))
+    return mod_pyx >= mod_c
 
 def get_modified_time(path):
     """Get the datetime a file was modified."""
