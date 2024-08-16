@@ -4,18 +4,19 @@ import subprocess as sp
 import sys
 import datetime
 import logging
-from swacmod import utils as u
 
 def compile_model():
     """Compile Cython model."""
-    mod_c = get_modified_time(os.path.join(u.CONSTANTS['CODE_DIR'], 'cymodel.c'))
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    code_directory = os.path.join(current_directory, 'swacmod')
+    mod_c = get_modified_time(os.path.join(code_directory, 'cymodel.c'))
     mod_pyx = get_modified_time(
-        os.path.join(u.CONSTANTS['CODE_DIR'], 'cymodel.pyx'))
+        os.path.join(code_directory, 'cymodel.pyx'))
     if mod_pyx >= mod_c:
         arch = struct.calcsize('P') * 8
         print('cymodel.pyx modified, recompiling for %d-bit' % arch)
         proc = sp.Popen([sys.executable, 'setup.py', 'build_ext', '--inplace'],
-                        cwd=u.CONSTANTS['CODE_DIR'],
+                        cwd=code_directory,
                         stdout=sp.PIPE,
                         stderr=sp.PIPE)
         proc.wait()
