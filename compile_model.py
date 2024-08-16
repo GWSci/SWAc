@@ -22,10 +22,6 @@ def compile_model():
             print('%s' % proc.stdout.read())
             print('%s' % proc.stderr.read())
             sys.exit(proc.returncode)
-        boo = True
-    else:
-        boo = False
-    return boo
 
 if __name__ == "__main__":
     compile_model()
