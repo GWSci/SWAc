@@ -9,7 +9,7 @@ def compile_model():
     """Compile Cython model."""
     is_compile_required = calculate_is_compile_required()
     if is_compile_required:
-        proc = compile_model()
+        proc = execute_compilation_process()
         if_errors_report_and_exit(proc)
 
 def calculate_is_compile_required():
@@ -34,7 +34,7 @@ def get_modified_time(path):
         mod = datetime.datetime(1901, 1, 1, 0, 0, 0)
     return mod
 
-def compile_model():
+def execute_compilation_process():
     arch = struct.calcsize('P') * 8
     code_directory = calculate_code_directory()
     print('cymodel.pyx modified, recompiling for %d-bit' % arch)
