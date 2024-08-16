@@ -13,8 +13,8 @@ import time
 import random
 import logging
 import argparse
+import multiprocessing as mp
 if not ff.disable_multiprocessing:
-    import multiprocessing as mp
     from multiprocessing.heap import Arena
 else:
     import queue
@@ -935,9 +935,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     timer.print_time_switcher_report(total_timer_switcher_for_run)
 
 def run_main():
-    if not ff.disable_multiprocessing:
-        mp.freeze_support()
-
     # Parser for command line arguments
     DESCRIPTION = """
     Invoke this script to run SWAcMod.
@@ -1011,4 +1008,5 @@ def run_main():
             print("")
 
 if __name__ == "__main__":
+    mp.freeze_support()
     run_main()
