@@ -36,7 +36,6 @@ from swacmod import input_output as io
 import swacmod.flopy_adaptor as flopy_adaptor
 
 # Compile and import model
-from swacmod import compile_model
 from swacmod import model as m
 import swacmod.model_numpy as model_numpy
 
@@ -476,7 +475,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
 
     env.print('\nStart "%s"' % params["run_name"])
     logging.info("Start SWAcMod run")
-    logging.info(compile_model.get_status())
 
     if data is None:
         data = io.load_and_validate(specs_file, input_file, input_dir)
