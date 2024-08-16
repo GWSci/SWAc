@@ -280,28 +280,6 @@ def invert_taw_raw(param, params):
 
     return new_param
 
-def compile_model():
-    """Compile Cython model."""
-    mod_c = get_modified_time(os.path.join(CONSTANTS['CODE_DIR'], 'cymodel.c'))
-    mod_pyx = get_modified_time(
-        os.path.join(CONSTANTS['CODE_DIR'], 'cymodel.pyx'))
-    if mod_pyx >= mod_c:
-        arch = struct.calcsize('P') * 8
-        print('cymodel.pyx modified, recompiling for %d-bit' % arch)
-        proc = sp.Popen([sys.executable, 'setup.py', 'build_ext', '--inplace'],
-                        cwd=CONSTANTS['CODE_DIR'],
-                        stdout=sp.PIPE,
-                        stderr=sp.PIPE)
-        proc.wait()
-        if proc.returncode != 0:
-            print('Could not compile C extensions:')
-            print('%s' % proc.stdout.read())
-            print('%s' % proc.stderr.read())
-            sys.exit(proc.returncode)
-        boo = True
-    else:
-        boo = False
-    return boo
 
 def monthdelta(d1, d2):
     " difference in months between two dates"
