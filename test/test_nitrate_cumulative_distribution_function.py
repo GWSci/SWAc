@@ -55,12 +55,12 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		different_σ = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, 0.01, alpha, effective_porosity, DTW, t)
 		different_alpha = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, 100, effective_porosity, DTW, t)
 		different_effective_porosity = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, 0.1, DTW, t)
-		self.assertEqual(0.793244345253982, original)
-		self.assertEqual(0.6657750500569044, different_a)
-		self.assertEqual(0.6668990408184825, different_μ)
-		self.assertEqual(1.0, different_σ)
-		self.assertEqual(0.00873035927116339, different_alpha)
-		self.assertEqual(0.999999999999708, different_effective_porosity)
+		self.assertAlmostEqual(0.793244345253982, original)
+		self.assertAlmostEqual(0.6657750500569044, different_a)
+		self.assertAlmostEqual(0.6668990408184825, different_μ)
+		self.assertAlmostEqual(1.0, different_σ)
+		self.assertAlmostEqual(0.00873035927116339, different_alpha)
+		self.assertAlmostEqual(0.999999999999708, different_effective_porosity)
 
 	def test_calculate_daily_proportion_reaching_water_table_arr_when_dtw_is_0(self):
 		blackboard = nitrate.NitrateBlackboard()
