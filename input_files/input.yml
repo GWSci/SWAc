@@ -683,7 +683,7 @@ nitrate_calibration_a: 1.38
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: fitting parameter mu in above equation (floating point, number of entries = num_nodes) [L] 
-nitrate_calibration_mu: OTRNO3010_mu.csv
+nitrate_calibration_mu: mu.csv
 
 # Floating-point value, fitting parameter sigma in above equation
 nitrate_calibration_sigma: 3.96
@@ -693,7 +693,7 @@ nitrate_calibration_alpha: 3906.25
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: effective porosity
-nitrate_calibration_effective_porosity: OTRNO3012_effective_porosity.csv
+nitrate_calibration_effective_porosity: effective_porosity.csv
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: depth to water in m (floating point, number of entries = num_nodes) [L]
@@ -710,7 +710,7 @@ nitrate_depth_to_water: Average_DTW.csv
 # Column 9: 5PercLoadM (not used in SWAcMod)
 # Column 10: 50PercLoad (not used in SWAcMod)
 # Column 11: 95PercLoad (not used in SWAcMod)
-nitrate_loading: SWAc_NEAP_NO3_as_N_upscaled_2pt5.csv
+nitrate_loading: NO3_loading.csv
 
 #######################
 # Process: SW Release #
