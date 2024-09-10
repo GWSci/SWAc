@@ -914,10 +914,6 @@ swabs_locs: swabs_locs.csv
 # Rainfall in mm (floating point, number of rows = maximum value in time_periods) [L]
 rainfall_ts: rainfall_ts.yml
 
-# This parameter is required.
-# This parameter can accept a path to YAML or CSV
-#rainfall_rasters: rainfall_rasters.yml
-
 # This parameter is optional.
 # This parameter is required only if the FAO or the Canopy process is enabled.
 # This parameter can accept a path to YAML or CSV
