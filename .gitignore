@@ -23,6 +23,6 @@ build/
 venv/
 Pip*
 env/
-temp*
+temp_file_backed_array/
 temp_scratch_files/
 swacmod_run.spec
