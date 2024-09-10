@@ -1,0 +1,5 @@
+# SW Release Ponding Area
+# integers are zones
+sw_ponding_area:
+  1: 0.1
+  2: 0.1

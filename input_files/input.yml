@@ -55,23 +55,31 @@ temp_file_backed_array_directory: temp_scratch_files/
 # This parameter is required.
 num_nodes: 10
 
-# Area of each node.
+# Area of each node [L2]
 # This parameter is required.
 # This parameter can accept a path to YAML or CSV
+# col #1: node number (integer, number of entries = num_nodes)
+# col #2: node area (floating point) [L2]
 node_areas: node_areas.yml
 
-# X,Ya of each node.
+# X,Y of each node [L]
 # This parameter is optional.
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: X coordinate (floating point) [L]
+# col #3: Y coordinate (floating point) [L]
 node_xy: node_xy.csv
 
 # Start date for the time series. Has to be in format "YYYY-MM-DD".
 # This parameter is required.
 start_date: 1980-01-01
 
-# Output data will be aggregated according to these time windows.
+# Output data will be aggregated according to these time periods.
 # This parameter is required.
 # This parameter can accept a path to YAML or CSV
+# col #1: first day of this time period (integer, number of entries = number of time periods) [T]
+# col #2: first day of next time period (integer, number of entries = number of time periods) [T]
+# (seconds, hours or other can be entered if used as standard unit of time in all files)
 time_periods: time_periods.csv
 
 # Number of cores to be used
@@ -91,7 +99,7 @@ output_recharge: true
 # This parameter is optional. If not specified, it will be set to "none".
 #output_individual: "1-10"
 
-# IRCHCB.
+# IRCHCB (unit number in MODFLOW rch file for output to cell-by-cell file)
 # This parameter is an integer.
 # This parameter is optional. If not specified, it will be set to 50.
 irchcb: 50
@@ -105,8 +113,9 @@ nodes_per_line: 5
 # This parameter can accept a path to YAML or CSV
 # Optional, if omitted assumes recharge goes to upper most active layer
 # file is in the format SWAcNode,MFNode
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: MF node number (integer, number of entries = num_nodes)
 recharge_node_mapping: rch_nodes.csv
-
 
 # Output unit conversion factor
 # This parameter is a positive float.
@@ -126,124 +135,171 @@ spatial_output_date: 1980-01-01
 # Reporting zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# N.B. Nodes in zone 0 will not be calculated
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 reporting_zone_mapping: reporting_zone_mapping.yml
 
 # Reporting zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in reporting_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in reporting_zone_mapping)
 reporting_zone_names: reporting_zone_names.yml
 
 # Rainfall zone mapping.
 # This parameter is required
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 rainfall_zone_mapping: rainfall_zone_mapping.yml
 
 # Rainfall zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in rainfall_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in rainfall_zone_mapping)
 rainfall_zone_names: rainfall_zone_names.yml
 
 # PE zone mapping.
 # This parameter is required.
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 pe_zone_mapping: pe_zone_mapping.yml
 
 # PE zone names.
 # This parameter is optional.
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in pe_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in pe_zone_mapping)
 pe_zone_names: pe_zone_names.yml
 
 # Temperature zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 temperature_zone_mapping: temperature_zone_mapping.yml
 
 # Temperature zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in temperature_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in temperature_zone_mapping)
 temperature_zone_names: temperature_zone_names.yml
 
 # Tmax_C zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 tmax_c_zone_mapping: tmax_c_zone_mapping.yml
 
 # Tmax_C zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in tmax_c_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in tmax_c_zone_mapping)
 tmax_c_zone_names: tmax_c_zone_names.yml
 
 # Tmin_C zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 tmin_c_zone_mapping: tmin_c_zone_mapping.yml
 
 # Tmin_C zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in tmin_c_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in tmin_c_zone_mapping)
 tmin_c_zone_names: tmin_c_zone_names.yml
 
 # windSp zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 windsp_zone_mapping: windsp_zone_mapping.yml
 
 # windSp zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in windsp_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in windsp_zone_mapping)
 windsp_zone_names: windsp_zone_names.yml
-
 
 # Subroot zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 subroot_zone_mapping: subroot_zone_mapping.yml
 
 # Subroot zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in subroot_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in subroot_zone_mapping)
 subroot_zone_names: subroot_zone_names.yml
 
 # Rapid Runoff Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 rapid_runoff_zone_mapping: rapid_runoff_zone_mapping.yml
 
 # Rapid runoff zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in rapid_runoff_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in rapid_runoff_zone_mapping)
 rapid_runoff_zone_names: rapid_runoff_zone_names.yml
 
 # Runoff Recharge Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 swrecharge_zone_mapping: swrecharge_zone_mapping.yml
 
 # Runoff recharge zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in swrecharge_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in swrecharge_zone_mapping)
 swrecharge_zone_names: swrecharge_zone_names.yml
 
 # Macropore Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 macropore_zone_mapping: macropore_zone_mapping.yml
 
 # Macropore zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in macropore_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in macropore_zone_mapping)
 macropore_zone_names: macropore_zone_names.yml
 
 # Soil zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries defines number of columns in soil_spatial - see FAO process)
+# col #2: Zone name (text string, enclosed by ' ', number of entries defines number of columns in soil_spatial - see FAO process)
 soil_zone_names: soil_zone_names.yml
 
 # Land zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries defines number of columns in lu_spatial - see FAO process)
+# col #2: Zone name (text string, enclosed by ' ', number of entries defines number of columns in lu_spatial - see FAO process)
 landuse_zone_names: landuse_zone_names.yml
-
 
 ############################################
 # Process: Canopy interception and storage #
@@ -256,20 +312,27 @@ canopy_process: enabled
 # Canopy Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 canopy_zone_mapping: canopy_zone_mapping.yml
 
 # Canopy zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in canopy_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in canopy_zone_mapping)
 canopy_zone_names: canopy_zone_names.yml
-
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in canopy_zone_mapping)
+# col #2: Free throughfall proportion (floating point, number of entries = max zone number in canopy_zone_mapping)
 free_throughfall: free_throughfall.yml
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in canopy_zone_mapping)
+# col #2: Max canopy storage in mm (floating point, number of entries = max zone number in canopy_zone_mapping) [L]
 max_canopy_storage: max_canopy_storage.yml
 
 
@@ -283,6 +346,10 @@ snow_process_simple: enabled
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Starting snow pack in mm (integer, number of entries = num_nodes) [L]
+# col #3: Max air temperature for snowfall in degrees C (integer, number of entries = num_nodes) [oC]
+# col #4: Min air temperature for snowmelt in degrees C (integer, number of entries = num_nodes) [oC]
 snow_params_simple: snow_params.yml
 
 # Complex snow process: can be either "enabled" or "disabled"
@@ -291,6 +358,17 @@ snow_process_complex: disabled
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Latitude in degrees (floating point, number of entries = num_nodes) [deg]
+# col #3: Slope as vertical height over horizontal distance (floating point, number of entries = num_nodes) [-]
+# col #4: Aspect in degrees (inverted for S hemisphere) (floating point, number of entries = num_nodes) [dd]
+# col #5: Height of T measurement above ground in m (floating point, number of entries = num_nodes) [L]
+# col #6: Height of wind speed measurement above ground in m (floating point, number of entries = num_nodes) [L]
+# col #7: Ground albedo (floating point, number of entries = num_nodes) [-]
+# col #8: Surface emissivity ratio (floating point, number of entries = num_nodes) [-]
+# col #9: Proportion of tree cover (floating point, number of entries = num_nodes) [-]
+# col #10: Starting snow depth in m (floating point, number of entries = num_nodes) [L]
+# col #11: Starting snow density in kg/m3 (floating point, number of entries = num_nodes) [M/L3]
 snow_params_complex: snow_params_complex.yml
 
 #######################################################
@@ -304,6 +382,12 @@ rapid_runoff_process: enabled
 # Proportion of rainfall converted to runoff.
 # This parameter is optional
 # This parameter can accept a path to YAML
+# Use example file for full input syntax
+# One block per zone in rapid_runoff_zone_mapping
+# For each block:
+# Row #1: class_smd: followed by Soil Moisture Deficit class limits
+# Row #2: class_ri: followed by rainfall intensity class limits
+# Row #3 onwards: proportion of rainfall as runoff for each SMD class (1 row per rain intensity class) 
 rapid_runoff_params: rapid_runoff_params.yml
 
 
@@ -318,11 +402,19 @@ swrecharge_process: enabled
 # Runoff Recharge Proportion of RO
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in swrecharge_zone_names
+# col #1: Month number (integer, number of entries = 12)
+# col #2: Proportion of runoff as recharge in this cell for zone 1 (floating point, number of entries = 12) [-]
+# Additional cols: Proportion of runoff as recharge in this cell for zones 2 to n, where n is number of entries in swrecharge_zone_names (floating point, number of entries = 12) [-]
 swrecharge_proportion: swrecharge_proportion.yml
 
 # Runoff Recharge Limit [mm]
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in swrecharge_zone_names
+# col #1: Month number (integer, number of entries = 12)
+# col #2: Maximum runoff recharge in mm for this cell in zone 1 (floating point, number of entries = 12) [L]
+# Additional cols: Maximum runoff recharge in mm for this cell in zones 2 to n, where n is number of entries in swrecharge_zone_names (floating point, number of entries = 12) [L]
 swrecharge_limit: swrecharge_limit.yml
 
 ################################################
@@ -330,9 +422,8 @@ swrecharge_limit: swrecharge_limit.yml
 ################################################
 
 # Runoff Recharge in single cells process:
-#  can be either "enabled" or "disabled"
-# you won't want the routed process
-# "swrecharge_process" active at the same time
+# Set to "disabled"
+# Legacy feature (no longer maintained)
 # This parameter is required
 single_cell_swrecharge_process: disabled
 
@@ -348,21 +439,37 @@ macropore_process: enabled
 # and Interflow [mm]
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in macropore_zone_names
+# col #1: Month number (integer, number of entries = 12)
+# col #2: Proportion of rainfall as macropore recharge in zone 1 (floating point, number of entries = 12) [-]
+# Additional cols: Proportion of rainfall as macropore recharge in zones 2 to n, where n is number of entries in macropore_zone_names (floating point, number of entries = 12) [-]
 macropore_proportion: macropore_proportion.yml
 
 # MacroPore Bypass Limit [mm]
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in macropore_zone_names
+# col #1: Month number (integer, number of entries = 12)
+# col #2: Maximum macropore recharge in zone 1 (floating point, number of entries = 12) [-]
+# Additional cols: Maximum macropore recharge in zones 2 to n, where n is number of entries in macropore_zone_names (floating point, number of entries = 12) [-]
 macropore_limit: macropore_limit.yml
 
 # MacroPore Bypass Activation [mm]
 # This parameter is optional. If not specified, it will be set to 0.0.
 # This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in macropore_zone_names
+# col #1: Month number (integer, number of entries = 12)
+# col #2: SMD (or rainfall) threshold in mm for macropore recharge to occur in zone 1 (floating point, number of entries = 12) [-]
+# Additional cols: SMD (or rainfall) threshold in mm for macropore recharge to occur in zones 2 to n, where n is number of entries in macropore_zone_names (floating point, number of entries = 12) [-]
 macropore_activation: macropore_activation.yml
 
 # MacroPore Proportion Direct Recharge
 # This parameter is optional. If not specified, it will be set to 0.0.
 # This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in macropore_zone_names
+# col #1: Month number (integer, number of entries = 12)
+# col #2: Proportion of rainfall assigned to macropore recharge in zone 1 (floating point, number of entries = 12) [-]
+# Additional cols: Proportion of rainfall assigned to macropore recharge in zones 2 to n, where n is number of entries in macropore_zone_names (floating point, number of entries = 12) [-]
 macropore_recharge: macropore_recharge.yml
 
 # MacroPore Activation Option
@@ -387,6 +494,9 @@ fao_input: 'l'
 # If not specified and "fao_input" is "ls", "fao_process" will be set to
 # "disabled"
 # This parameter can accept a path to YAML or CSV
+# row #1: 'WP' followed by wilting point in m3/m3 for each soil zone (floating point, 1 column for each entry in soil_zone_names) [L3/L3]
+# row #2: 'p' followed by RAW as a fraction TAW for each soil zone (floating point, 1 column for each entry in soil_zone_names) [-]
+# row #3: 'FC' followed by field capacity in m3/m3 for each soil zone (floating point, 1 column for each entry in soil_zone_names) [L3/L3]
 soil_static_params: soil_static_params.yml
 
 # SMD Properties (starting SMD)
@@ -394,6 +504,7 @@ soil_static_params: soil_static_params.yml
 # If not specified and "fao_input" is "ls", "fao_process" will be set to
 # "disabled"
 # This parameter can accept a path to YAML or CSV
+# row #1: 'starting_SMD' followed by initial SMD in mm for each soil zone (integer, 1 column for each entry in soil_zone_names) [L]
 smd: smd.yml
 
 # Soil Spatial
@@ -401,12 +512,16 @@ smd: smd.yml
 # If not specified and "fao_input" is "ls", "fao_process" will be set to
 # "disabled"
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# Additional cols: Proportion of this node in each soil zone (floating point, 1 column for each entry in soil_zone_names)
 soil_spatial: soil_spatial.yml
 
 # LU Spatial
 # This parameter is optional.
 # If not specified, "fao_process" will be set to "disabled"
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# Additional cols: Proportion of this node in each soil zone (floating point, 1 column for each entry in landuse_zone_names) [-]
 lu_spatial: lu_spatial.yml
 
 # LU Time Variant: Zr
@@ -414,33 +529,50 @@ lu_spatial: lu_spatial.yml
 # If not specified and "fao_input" is "ls", "fao_process" will be set to
 # "disabled"
 # This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in landuse_zone_names
+# col #1: Month number (integer, number of entries = 12)
+# Additional cols: Rooting depth in m for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [L]
 zr: zr.yml
 
 # LU Time Variant: Kc
 # This parameter is optional.
 # If not specified, "fao_process" will be set to "disabled"
 # This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in landuse_zone_names
+# col #1: Month number (integer, number of entries = 12)
+# Additional cols: Crop coefficient for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [-]
 kc: kc.yml
 
 # TAW
 # This parameter is optional.
 # If not specified and "fao_input" is "l", "fao_input" will be set to "ls".
 # This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in landuse_zone_names
+# col #1: Month number (integer, number of entries = 12)
+# Additional cols: Total Available soil Water in mm for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [-]
 taw: taw.yml
 
 # RAW
 # This parameter is optional.
 # If not specified and "fao_input" is "l", "fao_input" will be set to "ls".
 # This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in landuse_zone_names
+# col #1: Month number (integer, number of entries = 12)
+# Additional cols: Readily Available soil Water in mm for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [-]
 raw: raw.yml
 
 # Percolation Limit (Rejected Recharge initiation)
 # This parameter is optional.
 # This parameter can accept a path to YAML or CSV
+# Single column: percolation_rejection keyword, followed by percolation limit in mm for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [L]
 percolation_rejection: percolation_rejection.yml
 
+# Assign percolation rejection as time series
+# Can be either true or false
 percolation_rejection_use_timeseries: true
 
+# row #1: percolation_rejection_ts: keyword
+# 1 additional row for each day (or user-defined time unit) in time_periods, followed by percolation limit in mm for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [L]
 percolation_rejection_ts: percolation_rejection_ts.yml
 
 ############################################
@@ -454,6 +586,8 @@ leakage_process: enabled
 # Fraction of leakage to Permit
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Proportion of subsoilzone leakage permitted in each cell, linked to maximum rate listed in subroot_leakage_ts (floating point, number of entries = num_nodes) [-]
 subsoilzone_leakage_fraction: subsoilzone_leakage_fraction.yml
 
 
@@ -471,27 +605,47 @@ interflow_process: enabled
 # Interflow Zone Mapping
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
 interflow_zone_mapping: interflow_zone_mapping.yml
 
 # Runoff recharge zone names.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in interflow_zone_mapping)
 interflow_zone_names: interflow_zone_names.yml
 
+# col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
+# col #2: Initial value for interflow store in mm (floating point, number of entries = max zone number in interflow_zone_mapping) [L]
 init_interflow_store: init_interflow_store.yml
 
+# col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
+# col #2: Proportion of water from root zone percolation and subrootzone leakage bypassing the interflow store (floating point, number of entries = max zone number in interflow_zone_mapping) [L]
 interflow_store_bypass: interflow_store_bypass.yml
 
+# col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
+# col #2: Maximum infiltration to groundwater from interflow store in mm (floating point, number of entries = max zone number in interflow_zone_mapping) [L]
 infiltration_limit: infiltration_limit.yml
 
+# col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
+# col #2: Proportion of interflow store in each day (or user-defined time unit) released to surface water (floating point, number of entries = max zone number in interflow_zone_mapping) [-]
 interflow_decay: interflow_decay.yml
 
+# Assign infiltration limit as time series
+# Can be either true or false
 infiltration_limit_use_timeseries: true
 
+# Assign interflow decay as time series
+# Can be either true or false
 interflow_decay_use_timeseries: true
 
+# row #1: infiltration_limit_ts: keyword
+# 1 additional row for each day (or user-defined time unit) in time_periods, followed by infiltration limit in mm for each interflow zone (floating point, 1 column for each entry in interflow_zone_names) [L]
 infiltration_limit_ts: infiltration_limit_ts.yml
 
+# row #1: interflow_decay_ts: keyword
+# 1 additional row for each day (or user-defined time unit) in time_periods, followed by interflow decay proportion for each interflow zone (floating point, 1 column for each entry in interflow_zone_names) [-]
 interflow_decay_ts: interflow_decay_ts.yml
 
 ###############################################
@@ -505,15 +659,58 @@ recharge_attenuation_process: enabled
 # Recharge Parameters
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Initial recharge store in mm (floating point, number of entries = num_nodes) [L]
+# col #3: Proportion of recharge store released each day (or user-defined time unit) (floating point, number of entries = num_nodes) [-]
+# col #4: Maximum rate of release in mm (floating point, number of entries = num_nodes) [L]
 recharge_attenuation_params: recharge_attenuation_params.yml
 
 
 #######################
 # Process: Nitrate #
 #######################
-
-nitrate_process: disabled
+# historical nitrate process: can be either "enabled" or "disabled"
+# This parameter is required
+# If enabled, nitrate process must also be enabled and its outputs will be made available to a sequential (e.g. future-facing) run
 historical_nitrate_process: disabled
+# Nitrate process: can be either "enabled" or "disabled"
+# This parameter is required
+# If enabled, entries required for all subsequent parameters
+nitrate_process: disabled
+
+# Floating-point value, representing logarithm base in cumulative distribution function of unsaturated zone K, where F(K) = 0.5*[1+erf(-(loga(K)-mu)/(sigma*SQRT(2)))]
+nitrate_calibration_a: 1.38
+
+# Column 1: SWAc node number (integer, number of entries = num_nodes)
+# Column 2: fitting parameter mu in above equation (floating point, number of entries = num_nodes) [L] 
+nitrate_calibration_mu: mu.csv
+
+# Floating-point value, fitting parameter sigma in above equation
+nitrate_calibration_sigma: 3.96
+
+# Floating-point value, fitting parameter alpha in above equation
+nitrate_calibration_alpha: 3906.25
+
+# Column 1: SWAc node number (integer, number of entries = num_nodes)
+# Column 2: effective porosity
+nitrate_calibration_effective_porosity: effective_porosity.csv
+
+# Column 1: SWAc node number (integer, number of entries = num_nodes)
+# Column 2: depth to water in m (floating point, number of entries = num_nodes) [L]
+nitrate_depth_to_water: Average_DTW.csv
+
+# Column 1: SWAc node number (integer, number of entries = num_nodes)
+# Column 2: UNIQUE (not used in SWAcMod)
+# Column 3: X (not used in SWAcMod)
+# Column 4: Y (not used in SWAcMod)
+# Column 5: Max load (kg/hectare)
+# Column 6: HER at 5% (mm/day)
+# Column 7: HER at 50% (mm/day)
+# Column 8: HER at 95% (mm/day)
+# Column 9: 5PercLoadM (not used in SWAcMod)
+# Column 10: 50PercLoad (not used in SWAcMod)
+# Column 11: 95PercLoad (not used in SWAcMod)
+nitrate_loading: NO3_loading.csv
 
 #######################
 # Process: SW Release #
@@ -526,6 +723,9 @@ sw_process: enabled
 # SW Parameters
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# Column 1: SWAc node number (integer, number of entries = num_nodes)
+# Column 2: Intial SW store in mm (floating point, number of entries = num_nodes) [L]
+# Column 3: Proportion of SW store released each day (or user-defined time unit) (floating point, number of entries = num_nodes) [-]
 sw_params: sw_params.yml
 
 ###############################
@@ -536,6 +736,71 @@ sw_params: sw_params.yml
 # This parameter is required
 # If enabled all FAO inputs should reflect open water
 sw_process_natproc: disabled
+
+# SW Release Zone Mapping
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = num_nodes)
+# col #2: Zone number (integer, number of entries = num_nodes)
+sw_zone_mapping: sw_zone_mapping.yml
+
+# SW release zone names.
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+# col #1: Zone number (integer, number of entries = max zone number in sw_zone_mapping)
+# col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in sw_zone_mapping)
+sw_zone_names: sw_zone_names.yml
+
+# SW Release downstream proportion
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in sw_zone_names
+# row #1: sw_downstream: keyword
+# col #1: Month number (integer, number of entries = 12)
+# Additional cols: Proportion of ponded water released in each time unit (floating point, 1 column for each entry in sw_zone_names) [-]
+sw_downstream: sw_downstream.yml
+
+# SW Release Activation threshold [mm]
+# This parameter is optional
+# This parameter can accept a path to YAML or CSV
+# Number of cols defined by number of entries in sw_zone_names
+# row #1: sw_activation: keyword
+# col #1: Month number (integer, number of entries = 12)
+# Additional cols: Minimum water depth in mm before bed infiltration can occur (floating point, 1 column for each entry in sw_zone_names) [L]
+sw_activation: sw_activation.yml
+
+# SW Release Proportion Bed Infiltration
+# Number of cols defined by number of entries in sw_zone_names
+# row #1: sw_bed_infiltration: keyword
+# col #1: Month number (integer, number of entries = 12)
+# Additional cols: Proportion of ponded water infiltrating through bed to recharge attenuation store (floating point, 1 column for each entry in sw_zone_names) [-]
+sw_bed_infiltration: sw_bed_infiltration.yml
+
+# SW Release Proportion Direct Recharge
+# Number of cols defined by number of entries in sw_zone_names
+# row #1: sw_direct_recharge: keyword
+# col #1: Month number (integer, number of entries = 12)
+# Additional cols: Proportion of ponded water leaving bed and bypassing recharge attenuation store (floating point, 1 column for each entry in sw_zone_names) [-]
+sw_direct_recharge: sw_direct_recharge.yml
+
+# SW Release PE to open water
+# Number of cols defined by number of entries in sw_zone_names
+# row #1: sw_pe_to_open_water: keyword
+# col #1: Month number (integer, number of entries = 12)
+# Additional cols: Open water evaporation coefficient for each zone (floating point, 1 column for each entry in sw_zone_names) [-]
+sw_pe_to_open_water: sw_pe_to_open_water.yml
+
+# # SW Release Initial ponding depth [mm]
+sw_init_ponding: 5.0
+
+# # SW Release Max ponding depth [mm]
+sw_max_ponding: 300.0
+
+# # SW Release Area subject to ponding [fraction]
+# row #1: sw_ponding_area:: keyword
+# col #1: Zone number (integer, number of entries = max zone number in sw_zone_mapping)
+# col #2: Proportion of cell subject to ponding (floating point, 1 column for each entry in sw_zone_names) [-]
+sw_ponding_area: sw_ponding_area.yml
 
 ############################################
 # Process: Routed Runoff                   #
@@ -548,18 +813,17 @@ routing_process: enabled
 # Routing network topology and SFR parameters
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-# key = swac node
-#  values =
-#  1 downstr - swac node downstream of this one
-#  2 str_flag - 1 = stream cell, 0 = *not* stream cell
-#  3 node_mf - modflow node number of this node
-#  4 RCHLEN - the modflow SFR variable RCHLEN
-#  5 ca - the upstream contributing area
-#  6 STRTOP - the modflow SFR variable STRTOP
-#  7 STRTHICK - the modflow SFR variable STRTHICK
-#  8 STRHC1 - the modflow SFR variable STRHC1
-#  9 DEPTH2 - the modflow SFR variable DEPTH2
-#  10 WIDTH2 - the modflow SFR variable WIDTH2
+# col #1: SWAc node number (integer, number of entries = number of nodes subject to EVT)
+# col #2: downstr - swac node downstream of this one
+# col #3: str_flag - 1 = stream cell, 0 = *not* stream cell
+# col #4: node_mf - modflow node number of this node
+# col #5: RCHLEN - the modflow SFR variable RCHLEN
+# col #6: ca - the upstream contributing area
+# col #7: STRTOP - the modflow SFR variable STRTOP
+# col #8: STRTHICK - the modflow SFR variable STRTHICK
+# col #9: STRHC1 - the modflow SFR variable STRHC1
+# col #10: DEPTH2 - the modflow SFR variable DEPTH2
+# col #11: WIDTH2 - the modflow SFR variable WIDTH2
 routing_topology: routing_parameters.csv
 
 # Output modflow sfr2 file switch
@@ -590,12 +854,12 @@ attenuate_sfr_flows: false
 # This parameter is optional.
 sfr_obs: gauges_sfr.obs
 
-# istcb1.
+# istcb1 (MODFLOW unit number)
 # Has to be an integer.
 # This parameter is optional. If not specified, it will be set to 50.
 istcb1: 50
 
-# istcb2
+# istcb2 (MODFLOW unit number)
 # Has to be an integer.
 # This parameter is optional. If not specified, it will be set to 55.
 istcb2: 55
@@ -603,10 +867,14 @@ istcb2: 55
 # Surface water discharges time-series m3/day
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# One column for each SW discharge location in swdis_locs
+# SW discharge rate in m3/day (or other user-defined time unit) (floating point, number of rows = maximum value in time_periods)
 swdis_ts: swdis_ts.csv
 
-# # Surface water discharges points
-# # This parameter can accept a path to YAML or CSV
+# Surface water discharges points
+# This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = number of nodes with SW discharges)
+# col #2: Index number of discharge from 1 to number of nodes with SW discharges (integer, number of entries = number of nodes with SW discharges)
 swdis_locs: swdis_locs.yml
 
 # swdis_f
@@ -618,6 +886,8 @@ swdis_locs: swdis_locs.yml
 # Surface water abstractions time-series m3/day
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# One column for each SW abstraction location in swabs_locs
+# SW abstraction rate in m3/day (or other user-defined time unit) (floating point, number of rows = maximum value in time_periods)
 swabs_ts: swabs_ts.csv
 
 # swabs_f
@@ -629,6 +899,8 @@ swabs_ts: swabs_ts.csv
 
 # Surface water discharges points
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = number of nodes with SW abstractions)
+# col #2: Index number of abstraction from 1 to number of nodes with SW abstractions (integer, number of entries = number of nodes with SW abstractions)
 swabs_locs: swabs_locs.csv
 
 
@@ -638,6 +910,8 @@ swabs_locs: swabs_locs.csv
 
 # This parameter is required.
 # This parameter can accept a path to YAML or CSV
+# One column for each entry in rainfall_zone_names
+# Rainfall in mm (floating point, number of rows = maximum value in time_periods) [L]
 rainfall_ts: rainfall_ts.yml
 
 # This parameter is required.
@@ -647,35 +921,50 @@ rainfall_ts: rainfall_ts.yml
 # This parameter is optional.
 # This parameter is required only if the FAO or the Canopy process is enabled.
 # This parameter can accept a path to YAML or CSV
+# One column for each entry in pe_zone_names
+# Rainfall in mm (floating point, number of rows = maximum value in time_periods) [L]
 pe_ts: pe_ts.yml
 
 # This parameter is optional.
 # This parameter is required only if the Snow process is enabled.
 # This parameter can accept a path to YAML or CSV
+# One column for each entry in temperature_zone_names
+# Temperature in C (floating point, number of rows = maximum value in time_periods) [C]
 temperature_ts: temperature_ts.yml
 
 # This parameter is optional.
 # This parameter is required only if the Snow process is enabled.
 # This parameter can accept a path to YAML or CSV
+# One column for each entry in tmax_c_zone_names
+# Max temperature in C (floating point, number of rows = maximum value in time_periods) [C]
 tmax_c_ts: tmax_c_ts.yml
 
 # This parameter is optional.
 # This parameter is required only if the Snow process is enabled.
 # This parameter can accept a path to YAML or CSV
+# One column for each entry in tmin_c_zone_names
+# Min temperature in C (floating point, number of rows = maximum value in time_periods) [C]
 tmin_c_ts: tmin_c_ts.yml
 
 # This parameter is optional.
 # This parameter is required only if the Snow process is enabled.
 # This parameter can accept a path to YAML or CSV
+# One column for each entry in windsp_zone_names
+# Wind speed in m/s (floating point, number of rows = maximum value in time_periods) [L/T]
 windsp_ts: windsp_ts.yml
-
 
 # This parameter is optional.
 # This parameter is required only if the Leakage process is enabled.
 # This parameter can accept a path to YAML or CSV
+# One column for each entry in subroot_zone_names 
+# Maximum subroot leakage rate in mm (floating point, number of rows = maximum value in time_periods) [L]
 subroot_leakage_ts: subroot_leakage_ts.yml
 
+# Single keyword: mf6, mf96 or mfusg 
 gwmodel_type: mf6
+
+# Only read if mf96 entered above.
+# Number of layers, rows and columns in model
 mf96_lrc: [2, 2, 5]
 
 ##############
@@ -693,14 +982,18 @@ excess_sw_process: disabled
 # evt parameters (ievt, surf, exdp)
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
+# col #1: SWAc node number (integer, number of entries = number of nodes subject to EVT)
+# col #2: MF node number (integer, number of entries = number of nodes subject to EVT)
+# col #3: Elevation of the ET surface in m (floating point, number of entries = number of nodes subject to EVT) [L]
+# col #4: ET extinction depth in m (floating point, number of entries = number of nodes subject to EVT) [L]
 evt_parameters: evt_params.csv
 
-# ievtcb
+# ievtcb (unit number in MODFLOW evt file for output to cell-by-cell file)
 # This parameter is an integer.
 # This parameter is optional. If not specified, it will be set to 50.
 #ievtcb: 50
 
-# nevtopt
+# nevtopt (MODFLOW ET option code)
 # This parameter is an integer.
 # This parameter is optional. If not specified, it will be set to 2.
 #nevtopt: 2
