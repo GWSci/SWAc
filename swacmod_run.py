@@ -600,7 +600,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
             )
 
         q.put(None)
-        pbar.update()
         pbar.close()
 
     else:
