@@ -4,6 +4,7 @@ set -e
 
 brew update
 brew install python
+brew install pandoc
 
 python3 -m venv env
 
