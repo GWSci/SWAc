@@ -5,6 +5,12 @@ if %errorlevel% neq 0 (
     exit /b
 )
 
+where pandoc >nul 2>nul
+if %errorlevel% neq 0 (
+    echo Cannot find Pandoc. Please install it from https://pandoc.org and rerun this script.
+    exit /b
+)
+
 @echo on
 python -m venv env || exit /b
 
