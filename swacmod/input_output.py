@@ -120,10 +120,6 @@ def get_output_path(data, file_format, output_dir, node=None, zone=None):
 def check_open_files(data, file_format, output_dir):
     """Check if any of the scheduled output files can't be open."""
     paths = []
-    if (data["params"]["output_recharge"]
-            and data["params"]["gwmodel_type"] == "mfusg"):
-        paths.append(get_recharge_path(data))
-
     if data["params"]["spatial_output_date"]:
         for p in get_spatial_path(data, output_dir):
             paths.append(p)
