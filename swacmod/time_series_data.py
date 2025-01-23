@@ -11,11 +11,6 @@ try:
 except ImportError:
     from yaml import Loader
 
-try:
-    basestring
-except NameError:
-    basestring = str
-
 from . import utils as u
 
 class TimeSeriesData:
@@ -167,7 +162,7 @@ def load_yaml(filein):
         return yml
 
     for key in keys:
-        if isinstance(key, basestring):
+        if isinstance(key, str):
             if not key.islower():
                 new_key = key.lower()
                 value = yml.pop(key)
