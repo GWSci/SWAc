@@ -39,7 +39,7 @@ if [ "$run_linter" = true ]; then
 	deactivate
 	source env-lint/bin/activate
 
-	echo "Running linter."
+	Pylint --extension-pkg-allow-list=swacmod.model --disable=R,C,W --ignore=env,env-lint .
 
 	deactivate
 	source env/bin/activate
