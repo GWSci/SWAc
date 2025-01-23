@@ -7,6 +7,5 @@ class Test_Finalization(unittest.TestCase):
 
 def fin_run_name_adaptor(input_run_name):
     data = {"params": {"run_name": input_run_name}}
-    name = "run_name"
-    finalization.fin_run_name(data, name)
-    return data["params"][name]
+    finalization.fin_run_name(data, "run_name")
+    return data["params"]["run_name"]
