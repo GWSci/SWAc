@@ -56,7 +56,7 @@ def fin_run_name(data, name):
     params = data["params"]
     rnm = params[name]
 
-    if not isinstance(rnm, basestring):
+    if not isinstance(rnm, str):
         params[name] = str(rnm)
         logging.info('\t\tConverted "%s" to string', name)
 
