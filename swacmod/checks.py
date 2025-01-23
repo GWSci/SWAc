@@ -12,10 +12,7 @@ import numpy as np
 from . import utils as u
 from . import time_series_data
 
-try:
-    basestring
-except NameError:
-    basestring = str
+basestring = str # TODO str should be inlined, but only when the syrrounding code can be tested.
 
 MAPPING = {
     (int, int): ["an integer", "integers"],
