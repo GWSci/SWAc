@@ -1,5 +1,6 @@
 import flopy
 import numpy as np
+import warnings
 
 def _mf_simulation():
 	return flopy.mf6.MFSimulation(verbosity_level=0, exe_name="mf6.exe")
@@ -30,6 +31,11 @@ def _mf_tdis(sim, nper):
 		filename=None,
 		pname=None,
 		parent_file=None)
+
+def modflow_model_ignoring_warnings(path, version, structured):
+	with warnings.catch_warnings():
+		warnings.filterwarnings("ignore", category=UserWarning)
+		return modflow_model(path, version, structured)
 
 def modflow_model(path, version, structured):
 	if structured:
@@ -130,7 +136,7 @@ def _mf_gwf_sfr(model, nreaches, packagedata, connectiondata, perioddata):
 		parent_file=None)
 
 def make_sfr_file_mfusg(path, nper, nodes, nstrm, nss, njag, lenx, istcb1, istcb2, segment_data, reach_data, sfr_heading):
-	model = flopy.mfusg.MfUsg(modelname=path, version="mfusg", structured=False)
+	model = modflow_model_ignoring_warnings(path, "mfusg", False)
 	_make_mfusg_disu(model, nodes, nper, njag, lenx)
 	model.dis = model.disu
 	sfr = _make_sfr2(model, nstrm, nss, istcb1, istcb2, reach_data, segment_data)
@@ -206,7 +212,7 @@ def _modflow_str(model, nstrm, istcb1, istcb2, reach_data, segment_data):
 		irdflg={0:2, 1:2})
 
 def make_mfusg_evt(path, nodes, nper, nevtopt, ievtcb, evt_dic, surf, exdp, ievt):
-	m = flopy.modflow.Modflow(modelname=path, version="mfusg", structured=True)
+	m = modflow_model_ignoring_warnings(path, "mfusg", True)
 	modflow_dis(m, 1, nodes, 1, nper)
 	evt_out = _modflow_evt(m, nevtopt, ievtcb, evt_dic, surf, exdp, ievt)
 	return evt_out
