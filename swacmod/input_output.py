@@ -31,11 +31,6 @@ from . import feature_flags as ff
 import swacmod.csv_resource as csv_resource
 import swacmod.h5py_adaptor as h5py_adaptor
 
-try:
-    basestring
-except NameError:
-    basestring = str
-
 if sys.version_info > (3,):
     long = int
     raw_input = input
@@ -93,7 +88,7 @@ def load_yaml(filein):
         return yml
 
     for key in keys:
-        if isinstance(key, basestring):
+        if isinstance(key, str):
             if not key.islower():
                 new_key = key.lower()
                 value = yml.pop(key)
