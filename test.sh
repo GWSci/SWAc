@@ -39,7 +39,12 @@ if [ "$run_linter" = true ]; then
 	deactivate
 	source env-lint/bin/activate
 
-	Pylint --extension-pkg-allow-list=swacmod.model --disable=R,C,W --ignore=env,env-lint --generated-member=flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr.obs .
+	Pylint \
+		--extension-pkg-allow-list=swacmod.model \
+		--disable=R,C,W \
+		--ignore=env,env-lint \
+		--generated-member=flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr.obs \
+		.
 
 	deactivate
 	source env/bin/activate
