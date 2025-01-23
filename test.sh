@@ -1,6 +1,7 @@
 discovery_root="test"
 use_coverage=false
 show_outdated_dependencies=false
+run_linter=false
 
 for arg in "$@"
 do
@@ -10,10 +11,13 @@ do
 		use_coverage=true
 	elif [[ "$arg" == "--dependencies" ]]; then
 		show_outdated_dependencies=true
+	elif [[ "$arg" == "--lint" ]]; then
+		run_linter=true
 	elif [[ "$arg" == "--full" ]]; then
 		discovery_root="."
 		use_coverage=true
 		show_outdated_dependencies=true
+		run_linter=true
 	else
 		echo "Arg not recognised: $arg"
 		exit 1
@@ -30,6 +34,10 @@ else
 fi
 
 exit_status=$?
+
+if [ "$run_linter" = true ]; then
+	echo "Running linter."
+fi
 
 if [ "$use_coverage" = true ]; then
 	coverage report -m
