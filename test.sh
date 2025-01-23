@@ -35,6 +35,11 @@ fi
 
 exit_status=$?
 
+if [ "$use_coverage" = true ]; then
+	coverage report -m
+	coverage html
+fi
+
 if [ "$run_linter" = true ]; then
 	deactivate
 	source env-lint/bin/activate
@@ -48,11 +53,6 @@ if [ "$run_linter" = true ]; then
 
 	deactivate
 	source env/bin/activate
-fi
-
-if [ "$use_coverage" = true ]; then
-	coverage report -m
-	coverage html
 fi
 
 if [ "$show_outdated_dependencies" = true ]; then
