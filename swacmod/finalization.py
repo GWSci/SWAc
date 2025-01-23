@@ -15,13 +15,6 @@ import numpy as np
 from . import utils as u
 import swacmod.feature_flags as ff
 
-try:
-    basestring
-    print("*** Found basestring. ***")
-except NameError:
-    print("*** Did not find basestring ***")
-    basestring = str
-
 def fin_start_date(data, name):
     """Finalize the "start_date" parameter.
 
