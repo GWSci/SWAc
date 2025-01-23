@@ -11,6 +11,9 @@ class Test_Finalization(unittest.TestCase):
     def test_fin_run_name_does_not_convert_digits(self):
         self.assertEqual("1234567890", fin_run_name_adaptor("1234567890"))
 
+    def test_fin_run_name_does_not_convert_dashed(self):
+        self.assertEqual("---", fin_run_name_adaptor("---"))
+
 def fin_run_name_adaptor(input_run_name):
     data = {"params": {"run_name": input_run_name}}
     finalization.fin_run_name(data, "run_name")
