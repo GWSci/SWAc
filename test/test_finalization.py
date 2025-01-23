@@ -23,6 +23,9 @@ class Test_Finalization(unittest.TestCase):
     def test_fin_run_name_converts_non_strings_into_a_string(self):
         self.assertEqual("123", fin_run_name_adaptor(123))
 
+    def test_fin_run_name_converts_non_strings_into_a_string_and_then_applies_character_replacements(self):
+        self.assertEqual("1_23", fin_run_name_adaptor(1.23))
+
 def fin_run_name_adaptor(input_run_name):
     data = {"params": {"run_name": input_run_name}}
     finalization.fin_run_name(data, "run_name")
