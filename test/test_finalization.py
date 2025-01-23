@@ -17,6 +17,9 @@ class Test_Finalization(unittest.TestCase):
     def test_fin_run_name_converts_symbols_to_underscores(self):
         self.assertEqual("_____", fin_run_name_adaptor("!@£$%"))
 
+    def test_fin_run_name_converts_spaces_to_underscores(self):
+        self.assertEqual("__", fin_run_name_adaptor("  "))
+
 def fin_run_name_adaptor(input_run_name):
     data = {"params": {"run_name": input_run_name}}
     finalization.fin_run_name(data, "run_name")
