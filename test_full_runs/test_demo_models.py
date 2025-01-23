@@ -16,8 +16,9 @@ class TestFixture():
 		test_instance.maxDiff = None
 	
 	def clear_output_directory(self):
+		Path(self.output_folder).mkdir(exist_ok=True)
 		for f in Path(self.output_folder).iterdir():
-			f.unlink()		
+			f.unlink()
 
 	def run_swacmod(self):
 		default_input_file = u.CONSTANTS["INPUT_FILE"]
@@ -73,6 +74,23 @@ class Test_Demo_Models(unittest.TestCase):
 			ff.use_natproc = default_use_natproc
 		fixture.assert_all_but_first_line_identical("my_run.evt")
 		fixture.assert_all_but_first_line_identical("my_run.rch")
+		fixture.assert_all_but_first_line_identical("my_run.sfr")
+		fixture.assert_file_is_identical("my_runSpatial1980-01-01.csv")
+		fixture.assert_file_is_identical("my_run_z_1.csv")
+		fixture.assert_file_is_identical("my_run_z_2.csv")
+
+	def test_demo_model_mfusg(self):
+		fixture = TestFixture(self, "test/reference_output_mfusg/", "output_files_mfusg/", "test/resources/input_files_mfusg/input.yml")
+		fixture.clear_output_directory()
+
+		default_use_natproc = ff.use_natproc
+		try:
+			ff.use_natproc = False
+			fixture.run_swacmod()
+		finally:
+			ff.use_natproc = default_use_natproc
+		fixture.assert_all_but_first_line_identical("my_run.evt")
+		fixture.assert_all_but_first_line_identical("my_run_recharge.rch")
 		fixture.assert_all_but_first_line_identical("my_run.sfr")
 		fixture.assert_file_is_identical("my_runSpatial1980-01-01.csv")
 		fixture.assert_file_is_identical("my_run_z_1.csv")
