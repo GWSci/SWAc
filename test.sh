@@ -36,7 +36,13 @@ fi
 exit_status=$?
 
 if [ "$run_linter" = true ]; then
+	deactivate
+	source env-lint/bin/activate
+
 	echo "Running linter."
+
+	deactivate
+	source env/bin/activate
 fi
 
 if [ "$use_coverage" = true ]; then
