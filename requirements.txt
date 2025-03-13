@@ -11,14 +11,14 @@ networkx==3.4.2
 numpy==1.26.4
 packaging==24.2
 pandas==2.2.3
-pillow==10.4.0
-psutil==6.0.0
+pillow==11.1.0
+psutil==7.0.0
 pyinstaller==6.10.0
 pyparsing==3.2.1
 python-dateutil==2.9.0.post0
 pytz==2025.1
 PyYAML==6.0.2
-setuptools==74.1.2
+setuptools==76.0.0
 six==1.17.0
 tqdm==4.67.1
 tzdata==2025.1
