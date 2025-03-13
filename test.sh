@@ -57,6 +57,14 @@ fi
 
 if [ "$show_outdated_dependencies" = true ]; then
 	pip list --outdated
+
+	deactivate
+	source env-lint/bin/activate
+
+	pip list --outdated
+
+	deactivate
+	source env/bin/activate
 fi
 deactivate
 exit $exit_status
