@@ -56,11 +56,14 @@ if [ "$run_linter" = true ]; then
 fi
 
 if [ "$show_outdated_dependencies" = true ]; then
+
+	printf "\nOutdated dependencies from env:\n\n"
 	pip list --outdated
 
 	deactivate
 	source env-lint/bin/activate
 
+	printf "\nOutdated dependencies from env-lint:\n\n"
 	pip list --outdated
 
 	deactivate
