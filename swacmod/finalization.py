@@ -1479,3 +1479,12 @@ def finalize_series(data):
         logging.debug('\t\t"%s" finalized', series)
 
     logging.info("\tDone.")
+
+def finalize_required_params(data):
+    for param in data['specs']:
+        if data['specs'][param]['required']:
+            if param in data['params']:
+                continue
+            else:
+                data['params'][param] = 'disabled'
+        
