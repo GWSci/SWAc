@@ -558,13 +558,10 @@ def fast_load(specs_file, input_file):
     "Load the main input file, without loading the files the parameters point to"
     specs = load_yaml(specs_file)
     params = load_yaml(input_file)
-
     for key in specs:
         if key not in params:
             params[key] = None
-
     params, series = get_series_from_params(params)
-
     data = {"specs": specs, "series": series, "params": params}
     return data
 
