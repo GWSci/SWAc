@@ -459,6 +459,13 @@ def get_row_balance(aggregated, num, reduced, mult):
     row = numpy.array(row) * mult
     return row
 
+def get_series_from_params(params):
+    series = {}
+    keys = [i for i in params if i.endswith("_ts")]
+    for key in keys:
+        series[key] = params.pop(key)
+    return series
+
 def load_params_from_yaml(
         specs_file=u.CONSTANTS["SPECS_FILE"],
         input_file=u.CONSTANTS["INPUT_FILE"],
@@ -521,10 +528,7 @@ def load_params_from_yaml(
         if key not in params:
             params[key] = None
 
-    series = {}
-    keys = [i for i in params if i.endswith("_ts")]
-    for key in keys:
-        series[key] = params.pop(key)
+    series = get_series_from_params(params)
 
     data = {"specs": specs, "series": series, "params": params}
 
