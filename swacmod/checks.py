@@ -11,7 +11,6 @@ import numpy as np
 # Internal modules
 from . import utils as u
 from . import time_series_data
-from . import input_output
 
 basestring = str # TODO str should be inlined, but only when the syrrounding code can be tested.
 
@@ -132,15 +131,4 @@ def check_required(data):
             continue
         key = "series" if param.endswith("ts") else "params"
         if data[key][param] is None:
-            raise u.ValidationError('Parameter "%s" is required' % param)
-
-def fast_input_check(specs_file, input_file):
-    """Check that all required parameters have been provided, without loading them"""
-    specs = input_output.load_yaml(specs_file)
-    params = input_output.load_yaml(input_file)
-
-    for param in specs:
-        if not specs[param]["required"]:
-            continue
-        if (param not in params) or (params[param] is None):
             raise u.ValidationError('Parameter "%s" is required' % param)

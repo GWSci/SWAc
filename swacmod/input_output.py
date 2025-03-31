@@ -556,7 +556,6 @@ def _use_array_directly(param):
 
 def load_and_validate(specs_file, input_file, input_dir):
     """Load, finalize and validate model parameters and time series."""
-#    c.fast_input_check(specs_file, input_file)
     data = load_params_from_yaml(specs_file=specs_file,
                                  input_file=input_file,
                                  input_dir=input_dir)
