@@ -554,6 +554,16 @@ def _use_array_directly(param):
             or param == "historical_time_periods"
             or param == "historical_mi_array_kg_per_time_period")
 
+def fast_load(specs_file, input_file):
+    "Load the main input file, without loading the files the parameters point to"
+    specs = load_yaml(specs_file)
+    params = load_yaml(input_file)
+
+    params, series = get_series_from_params(params)
+
+    data = {"specs": specs, "series": series, "params": params}
+    return data
+
 def load_and_validate(specs_file, input_file, input_dir):
     """Load, finalize and validate model parameters and time series."""
     data = load_params_from_yaml(specs_file=specs_file,
