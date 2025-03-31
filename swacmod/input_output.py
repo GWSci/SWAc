@@ -562,14 +562,6 @@ def fast_load(specs_file, input_file):
     for key in specs:
         if key not in params:
             params[key] = None
-    
-    # the finalise_params function expects that the data have been loaded and
-    # are in the proper format. If they haven't been loaded (i.e. if they still
-    # reference a file), treat them as missing 
-    # for key in params:
-    #     if type(params[key]) == str:
-    #         if params[key].endswith(".csv") or params[key].endswith(".yml"):
-    #             params[key] = None
 
     params, series = get_series_from_params(params)
 
