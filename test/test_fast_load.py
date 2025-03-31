@@ -13,5 +13,5 @@ class Test_Fast_Load_Returns_Dictonaries(unittest.TestCase):
             self.assertEqual(dict, type(data[key]))
     
 def load_data():
-        data = fast_load(u.CONSTANTS["SPECS_FILE"], u.CONSTANTS["INPUT_FILE"])
+        data = fast_load(u.CONSTANTS["SPECS_FILE"], u.CONSTANTS["TEST_INPUT_FILE"])
         return data    
