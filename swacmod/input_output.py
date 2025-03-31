@@ -460,11 +460,12 @@ def get_row_balance(aggregated, num, reduced, mult):
     return row
 
 def get_series_from_params(params):
+    """Get the params dictionary and separate it into series and params"""
     series = {}
     keys = [i for i in params if i.endswith("_ts")]
     for key in keys:
         series[key] = params.pop(key)
-    return series
+    return params, series
 
 def load_params_from_yaml(
         specs_file=u.CONSTANTS["SPECS_FILE"],
@@ -528,7 +529,7 @@ def load_params_from_yaml(
         if key not in params:
             params[key] = None
 
-    series = get_series_from_params(params)
+    params, series = get_series_from_params(params)
 
     data = {"specs": specs, "series": series, "params": params}
 
@@ -555,7 +556,7 @@ def _use_array_directly(param):
 
 def load_and_validate(specs_file, input_file, input_dir):
     """Load, finalize and validate model parameters and time series."""
-    c.fast_input_check(specs_file, input_file)
+#    c.fast_input_check(specs_file, input_file)
     data = load_params_from_yaml(specs_file=specs_file,
                                  input_file=input_file,
                                  input_dir=input_dir)
