@@ -2,6 +2,7 @@ import unittest
 from swacmod.input_output import fast_load
 import swacmod.utils as u
 import swacmod.checks as c
+import swacmod.finalization as f
 import random
 
 class Test_Fast_Load_Returns_Dictonaries(unittest.TestCase):
@@ -17,6 +18,7 @@ class Test_Fast_Load_Returns_Dictonaries(unittest.TestCase):
 class Test_Fast_Load_And_Check(unittest.TestCase):
     def test_random_required_parameter_is_missing(self):
         data = load_test_data()
+        f.finalize_required_params(data)
         data = remove_random_required_param(data)
         try:
             # this should fail with a check error
@@ -35,7 +37,7 @@ def get_random_required_key(d):
 
 def remove_random_required_param(data):
     key = get_random_required_key(data['specs'])
-    while key not in list(data['params'].keys()):
+    while key not in list(data['params'].keys()) or key == 'temp_file_backed_array_directory': #this is not a user-defined required param
         key = get_random_required_key(data['specs'])
     data['params'].pop(key)
     return data
