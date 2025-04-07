@@ -135,7 +135,8 @@ spatial_output_date: 1980-01-01
 # Reporting zone mapping.
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
-# N.B. Nodes in zone 0 will not be calculated
+# N.B. Nodes in zone 0 will not be calculated and will effectively be switched off
+# Nodes not assigned to a zone, will by default be assigned to zone 0 and will not be calculated
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
 reporting_zone_mapping: reporting_zone_mapping.yml
