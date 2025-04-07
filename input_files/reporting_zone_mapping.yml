@@ -1,4 +1,5 @@
 # Nodes in zone 0 will not be calculated
+# Nodes not assigned to a zone will be assigned to zone 0 by default
 reporting_zone_mapping:
     1: 1
     2: 1
