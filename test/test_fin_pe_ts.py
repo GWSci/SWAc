@@ -15,7 +15,26 @@ class Test_pe_ts_Finalisation(unittest.TestCase):
             test_input_file = os.path.join(temp_dir, 'input.yml')
             change_input_file(test_input_file, 'fao_process:', 'fao_process: disabled\n')
             change_input_file(test_input_file, 'canopy_process:', 'canopy_process: disabled\n')
-
-            data = load_and_validate(specs_file=specs_file,
-                                     input_file=test_input_file,
-                                     input_dir=temp_dir)
+            try:
+                data = load_and_validate(specs_file=specs_file,
+                                        input_file=test_input_file,
+                                        input_dir=temp_dir)
+                actual = 0
+            except:
+                actual = 1
+        self.assertEqual(0, actual)
+    
+    def test_canopy_is_disabled_and_fao_is_enabled(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            shutil.copytree(u.CONSTANTS['TEST_INPUT_DIR'], temp_dir, dirs_exist_ok=True)
+            test_input_file = os.path.join(temp_dir, 'input.yml')
+            change_input_file(test_input_file, 'fao_process:', 'fao_process: enabled\n')
+            change_input_file(test_input_file, 'canopy_process:', 'canopy_process: disabled\n')
+            try:
+                data = load_and_validate(specs_file=specs_file,
+                                        input_file=test_input_file,
+                                        input_dir=temp_dir)
+                actual = 0
+            except:
+                actual = 1
+        self.assertEqual(0, actual)
