@@ -503,7 +503,7 @@ def load_params_from_yaml(
                     with csv_resource.reader_for(absolute) as reader:
                         rows = [[ast.literal_eval(j) for j in row]
                                 for row in reader]
-                except Exception as err:
+                except IOError as err:
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
                 try:
@@ -516,13 +516,13 @@ def load_params_from_yaml(
                         else:
                             params[param] = dict(
                                 (row[0], row[1]) for row in rows)
-                except Exception as err:
+                except IndexError as err:
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
             elif ext == "yml":
                 try:
                     params[param] = load_yaml(absolute)[param]
-                except Exception as err:
+                except (IOError, KeyError) as err:
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
     for key in specs:
