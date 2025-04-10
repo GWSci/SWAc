@@ -14,12 +14,6 @@ class Test_Files_Failing_Validation(unittest.TestCase):
             lines[0] += '043.das'
             with open(os.path.join(temp_dir, 'time_periods.csv'), 'w') as file:
                 file.writelines(lines)
-            try:
+            with self.assertRaisesRegex(Exception, 'time_periods'):
                 load_params_from_yaml(input_file=os.path.join(temp_dir, 'input.yml'),
                                     input_dir=temp_dir)
-            except Exception as err:
-                self.assertIn('time_periods', str(err))
-    
-    
-
-
