@@ -13,8 +13,8 @@ class Test_pe_ts_Finalisation(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             shutil.copytree(u.CONSTANTS['TEST_INPUT_DIR'], temp_dir, dirs_exist_ok=True)
             test_input_file = os.path.join(temp_dir, 'input.yml')
-            change_input_file(test_input_file, 'fao_process:', 'fao_process: disabled\n')
-            change_input_file(test_input_file, 'canopy_process:', 'canopy_process: disabled\n')
+            pairs = [['fao_process', 'disabled'], ['canopy_process', 'disabled']]
+            for p in pairs: change_input_file(test_input_file, p[0], p[1])
             try:
                 data = load_and_validate(specs_file=specs_file,
                                         input_file=test_input_file,
@@ -28,8 +28,8 @@ class Test_pe_ts_Finalisation(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             shutil.copytree(u.CONSTANTS['TEST_INPUT_DIR'], temp_dir, dirs_exist_ok=True)
             test_input_file = os.path.join(temp_dir, 'input.yml')
-            change_input_file(test_input_file, 'fao_process:', 'fao_process: enabled\n')
-            change_input_file(test_input_file, 'canopy_process:', 'canopy_process: disabled\n')
+            pairs = [['fao_process', 'enabled'], ['canopy_process', 'disabled']]
+            for p in pairs: change_input_file(test_input_file, p[0], p[1])
             try:
                 data = load_and_validate(specs_file=specs_file,
                                         input_file=test_input_file,
@@ -43,8 +43,8 @@ class Test_pe_ts_Finalisation(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             shutil.copytree(u.CONSTANTS['TEST_INPUT_DIR'], temp_dir, dirs_exist_ok=True)
             test_input_file = os.path.join(temp_dir, 'input.yml')
-            change_input_file(test_input_file, 'fao_process:', 'fao_process: disabled\n')
-            change_input_file(test_input_file, 'canopy_process:', 'canopy_process: enabled\n')
+            pairs = [['fao_process', 'disabled'], ['canopy_process', 'enabled']]
+            for p in pairs: change_input_file(test_input_file, p[0], p[1])
             try:
                 data = load_and_validate(specs_file=specs_file,
                                         input_file=test_input_file,
