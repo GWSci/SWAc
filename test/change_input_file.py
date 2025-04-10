@@ -1,8 +1,8 @@
-def change_input_file(input_file, line_contains, change_to):
-    with open(input_file, 'r') as f:
-        lines = f.readlines()
-    for idx, l in enumerate(lines):
-        if line_contains in l:
-            lines[idx] = change_to
+from swacmod.input_output import load_yaml
+import yaml
+
+def change_input_file(input_file, param, change_to):
+    file = load_yaml(input_file)
+    file[param] = change_to
     with open(input_file, 'w') as f:
-        f.writelines(lines)
+        yaml.dump(file, f)
