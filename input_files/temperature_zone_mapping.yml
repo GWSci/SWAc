@@ -1,6 +1,5 @@
 # Columns are
 # 1) zone
-# 2) proportion
 temperature_zone_mapping:
     1: 1
     2: 1
