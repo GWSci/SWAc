@@ -153,6 +153,7 @@ reporting_zone_names: reporting_zone_names.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
+# col #3: Proportion of node area covered by zone (floating point, number of entries = num_nodes) [-]
 rainfall_zone_mapping: rainfall_zone_mapping.yml
 
 # Rainfall zone names.
