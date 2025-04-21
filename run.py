@@ -1,7 +1,10 @@
 import subprocess
 import sys
 
-python_binary = "env/bin/python3"
+if sys.platform == "win32":
+    python_binary = "env/Scripts/python"
+else:
+    python_binary = "env/bin/python3"
 
 args = sys.argv[1:]
 
