@@ -30,7 +30,7 @@ python3 "compile_model.py"
 if [ "$use_coverage" = true ]; then
 	env TQDM_DISABLE=true coverage run -m unittest discover --durations 10 -s $discovery_root
 else
-	env TQDM_DISABLE=true python3 -m unittest discover --durations 10 --s $discovery_root
+	env TQDM_DISABLE=true coverage run -m unittest discover --durations 10 -s $discovery_root
 fi
 
 exit_status=$?
