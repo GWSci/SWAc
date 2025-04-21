@@ -28,3 +28,5 @@ subprocess.run([
 ])
 
 subprocess.run(["pandoc", "doc/getting-started.md", "-o", "dist/getting-started.html"])
+
+subprocess.run("zip --quiet --recurse-paths dist/input_files.zip input_files/", shell=True)
