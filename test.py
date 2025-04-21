@@ -4,6 +4,7 @@ import subprocess
 args = sys.argv[1:]
 python_binary = "env/bin/python3"
 coverage_binary = "env/bin/coverage"
+linter_binary = "env-lint/bin/Pylint"
 
 discovery_root = "test"
 use_coverage = False
@@ -44,5 +45,15 @@ exit_status = result.returncode
 if use_coverage:
     subprocess.run([coverage_binary, "report", "-m"])
     subprocess.run([coverage_binary, "html"])
+
+if run_linter:
+    subprocess.run([
+        linter_binary,
+        "--extension-pkg-allow-list=swacmod.model",
+        "--disable=R,C,W",
+        "--ignore=env,env-lint",
+        "--generated-member=flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr.obs",
+        ".",
+    ])
 
 sys.exit(exit_status)
