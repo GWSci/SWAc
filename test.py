@@ -31,9 +31,14 @@ for arg in args:
 subprocess.run([python_binary, "compile_model.py"])
 
 if use_coverage:
-    pass
-    # env TQDM_DISABLE=true coverage run -m unittest discover --durations 10 -s $discovery_root
+    subprocess.run(
+        [coverage_binary, "run", "-m", "unittest", "discover", "--durations", "10", "-s", discovery_root],
+        env={"TQDM_DISABLE": "true"})
 else:
     subprocess.run(
         [python_binary, "-m", "unittest", "discover", "--durations", "10", "--s", discovery_root],
         env={"TQDM_DISABLE": "true"})
+
+if use_coverage:
+    subprocess.run([coverage_binary, "report", "-m"])
+    subprocess.run([coverage_binary, "html"])
