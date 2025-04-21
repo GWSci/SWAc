@@ -5,6 +5,8 @@ args = sys.argv[1:]
 python_binary = "env/bin/python3"
 coverage_binary = "env/bin/coverage"
 linter_binary = "env-lint/bin/Pylint"
+pip_binary = "env/bin/pip"
+linter_pip_binary = "env-lint/bin/pip"
 
 discovery_root = "test"
 use_coverage = False
@@ -55,5 +57,12 @@ if run_linter:
         "--generated-member=flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr.obs",
         ".",
     ])
+
+if show_outdated_dependencies:
+    print("\nOutdated dependencies from env:\n")
+    subprocess.run([pip_binary, "list", "--outdated"])
+
+    print("\nOutdated dependencies from env-lint:\n")
+    subprocess.run([linter_pip_binary, "list", "--outdated"])
 
 sys.exit(exit_status)
