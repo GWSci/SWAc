@@ -26,3 +26,5 @@ subprocess.run([
     "--onefile",
     "swacmod_run.py",
 ])
+
+subprocess.run(["pandoc", "doc/getting-started.md", "-o", "dist/getting-started.html"])
