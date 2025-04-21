@@ -2,11 +2,19 @@ import sys
 import subprocess
 
 args = sys.argv[1:]
-python_binary = "env/bin/python3"
-coverage_binary = "env/bin/coverage"
-linter_binary = "env-lint/bin/Pylint"
-pip_binary = "env/bin/pip"
-linter_pip_binary = "env-lint/bin/pip"
+
+if sys.platform == "win32":
+    python_binary = "env/Scripts/python"
+    coverage_binary = "env/Scripts/coverage"
+    linter_binary = "env-lint/Scripts/Pylint"
+    pip_binary = "env/Scripts/pip"
+    linter_pip_binary = "env-lint/Scripts/pip"
+else:
+    python_binary = "env/bin/python3"
+    coverage_binary = "env/bin/coverage"
+    linter_binary = "env-lint/bin/Pylint"
+    pip_binary = "env/bin/pip"
+    linter_pip_binary = "env-lint/bin/pip"
 
 discovery_root = "test"
 use_coverage = False
@@ -33,14 +41,24 @@ for arg in args:
 
 subprocess.run([python_binary, "compile_model.py"])
 
-if use_coverage:
-    result = subprocess.run(
-        [coverage_binary, "run", "-m", "unittest", "discover", "--durations", "10", "-s", discovery_root],
-        env={"TQDM_DISABLE": "true"})
+result = subprocess.run(
+    [coverage_binary, "run", "-m", "unittest", "discover", "-s", discovery_root])
+if sys.platform == "win32":
+    if use_coverage:
+        result = subprocess.run(
+            [coverage_binary, "run", "-m", "unittest", "discover", "-s", discovery_root])
+    else:
+        result = subprocess.run(
+            [python_binary, "-m", "unittest", "discover", "--s", discovery_root])
 else:
-    result = subprocess.run(
-        [python_binary, "-m", "unittest", "discover", "--durations", "10", "--s", discovery_root],
-        env={"TQDM_DISABLE": "true"})
+    if use_coverage:
+        result = subprocess.run(
+            [coverage_binary, "run", "-m", "unittest", "discover", "--durations", "10", "-s", discovery_root],
+            env={"TQDM_DISABLE": "true"})
+    else:
+        result = subprocess.run(
+            [python_binary, "-m", "unittest", "discover", "--durations", "10", "--s", discovery_root],
+            env={"TQDM_DISABLE": "true"})
 
 exit_status = result.returncode
 
