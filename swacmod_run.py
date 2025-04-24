@@ -35,6 +35,7 @@ from swacmod import utils as u
 from swacmod import input_output as io
 from swacmod.input_files.input_files_version_1 import input_data as input_data_v1
 from swacmod.input_files.input_files_version_2 import input_data as input_data_v2
+import swacmod.input_files.input_file_reader as input_file_reader
 import swacmod.flopy_adaptor as flopy_adaptor
 
 # Compile and import model
@@ -844,18 +845,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.print_time_switcher_report(total_timer_switcher_for_run)
 
 def read_inputs(specs_file, input_file, input_dir):
-    version = detect_version(input_file)
-    if (version == 1):
-        return input_data_v1.load_and_validate(specs_file, input_file, input_dir)
-    elif (version == 2):
-        return input_data_v2.load_and_validate(specs_file, input_file, input_dir)
-    else:
-        raise Exception(f"Unknown version: '{version}'.")
-
-def detect_version(input_file):
-    params = input_data_v1.load_yaml(input_file)
-    version = params.get("version", 1)
-    return version
+    return input_file_reader.read_inputs(specs_file, input_file, input_dir)
 
 def scrape_run_name_and_start_logging(debug, env, input_file):
     level = logging.DEBUG if debug else logging.INFO
