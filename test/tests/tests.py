@@ -77,6 +77,17 @@ class EndToEndTests(unittest.TestCase):
         self.assertRaises(u.ValidationError, v.val_start_date, self.data, name)
         self.data['params'][name] = old
 
+    def test_get_output_contains_all_keys_in_col_order(self):
+        """Test for get_output() function."""
+        time_switcher = timer.make_time_switcher()
+        for node in self.ids:
+            output = swacmod.get_output(self.data, node, time_switcher)
+            results = io.load_results()
+            for key in u.col_order():
+                if key in ['', 'date']:
+                    continue
+                self.assertTrue(key in results)
+
     @unittest.skip
     def test_get_output_A(self):
         """Test for get_output() function."""
@@ -87,7 +98,6 @@ class EndToEndTests(unittest.TestCase):
             for key in u.col_order():
                 if key in ['', 'date']:
                     continue
-                self.assertTrue(key in results)
                 self.assertTrue(key in self.data['series'] or
                                 key in output)
                 self.assertEqual(len(results) + 2,
