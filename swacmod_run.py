@@ -380,9 +380,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         input_file = u.CONSTANTS["INPUT_FILE"]
         input_dir = u.CONSTANTS["INPUT_DIR"]
 
-    level = logging.DEBUG if debug else logging.INFO
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (loading data)")
+    level = logging.DEBUG if debug else logging.INFO
     params = io.load_yaml(input_file)
     log_path = io.start_logging(env, level=level, run_name=params["run_name"])
 
