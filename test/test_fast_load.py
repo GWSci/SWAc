@@ -1,7 +1,7 @@
 import unittest
 from swacmod.input_files.input_files_version_1.input_data import fast_load
 import swacmod.utils as u
-import swacmod.checks as c
+import swacmod.input_files.input_files_version_1.checks as c
 import swacmod.finalization as f
 import random
 

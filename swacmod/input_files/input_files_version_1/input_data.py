@@ -19,7 +19,7 @@ from tqdm import tqdm
 
 # Internal modules
 from ... import utils as u
-from ... import checks as c
+from . import checks as c
 from . import validation as v
 from ... import finalization as f
 from ... import __version__
