@@ -5,7 +5,6 @@ from __future__ import print_function
 # Standard Library
 import os
 import csv
-import sys
 import logging
 import datetime
 
@@ -18,10 +17,6 @@ from . import utils as u
 from . import __version__
 from . import feature_flags as ff
 import swacmod.h5py_adaptor as h5py_adaptor
-
-if sys.version_info > (3,):
-    long = int
-    raw_input = input
 
 def start_logging(env, level=logging.INFO, path=None, run_name=None):
     """Start logging output.
@@ -98,6 +93,8 @@ def get_output_path(data, file_format, output_dir, node=None, zone=None):
         _ = len(str(len(set(zones))))
         counter = eval("'%%0%dd' % _") % zone
         fileout = "%s_z_%s.%s" % (run, counter, file_format)
+    else:
+        raise Exception("Cannot create output path without either a nore or a zone.")
 
     path = os.path.join(output_dir, fileout)
     return path
@@ -129,7 +126,7 @@ def check_open_files(data, file_format, output_dir):
                 fileobj.close()
                 break
             except IOError:
-                _ = raw_input('\nCannot write to "%s", make sure the file is '
+                _ = input('\nCannot write to "%s", make sure the file is '
                               "not in use then press Enter." % path)
 
 def dump_recharge_file(data, recharge):
