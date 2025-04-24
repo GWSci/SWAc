@@ -49,7 +49,7 @@ def load_yaml(filein):
                 yml[new_key] = value
     return yml
 
-def get_series_from_params(params):
+def _get_series_from_params(params):
     """Get the params dictionary and separate it into series and params"""
     series = {}
     keys = [i for i in params if i.endswith("_ts")]
@@ -119,7 +119,7 @@ def load_params_from_yaml(
         if key not in params:
             params[key] = None
 
-    params, series = get_series_from_params(params)
+    params, series = _get_series_from_params(params)
 
     data = {"specs": specs, "series": series, "params": params}
 
@@ -151,7 +151,7 @@ def fast_load(specs_file, input_file):
     for key in specs:
         if key not in params:
             params[key] = None
-    params, series = get_series_from_params(params)
+    params, series = _get_series_from_params(params)
     data = {"specs": specs, "series": series, "params": params}
     return data
 
