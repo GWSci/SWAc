@@ -16,7 +16,6 @@ import numpy
 # Internal modules
 from . import utils as u
 from . import __version__
-from . import time_series_data as time_series_data
 from . import feature_flags as ff
 import swacmod.h5py_adaptor as h5py_adaptor
 
