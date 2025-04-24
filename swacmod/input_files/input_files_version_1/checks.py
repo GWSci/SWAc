@@ -10,7 +10,7 @@ import numpy as np
 
 # Internal modules
 from ... import utils as u
-from ... import time_series_data
+from . import time_series_data
 
 basestring = str # TODO str should be inlined, but only when the syrrounding code can be tested.
 

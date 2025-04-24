@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import swacmod.time_series_data as time_series_data
+import swacmod.input_files.input_files_version_1.time_series_data as time_series_data
 import swacmod.utils as utils
 import swacmod.nitrate as nitrate
 import tempfile

@@ -1,4 +1,4 @@
-import swacmod.time_series_data as ts
+import swacmod.input_files.input_files_version_1.time_series_data as ts
 import unittest
 import os
 

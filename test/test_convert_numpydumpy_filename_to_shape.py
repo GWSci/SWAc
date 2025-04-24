@@ -1,4 +1,4 @@
-from swacmod.time_series_data import convert_numpydumpy_filename_to_shape
+from swacmod.input_files.input_files_version_1.time_series_data import convert_numpydumpy_filename_to_shape
 import unittest
 
 class Test_Convert_Numpydumpy_Filename_To_Shape(unittest.TestCase):
