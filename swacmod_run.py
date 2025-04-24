@@ -33,6 +33,7 @@ from tqdm import tqdm
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
+from swacmod import input_data as input_data
 import swacmod.flopy_adaptor as flopy_adaptor
 
 # Compile and import model
