@@ -43,6 +43,9 @@
 # Global parameters #
 #####################
 
+# The version of the file format.
+version: 2
+
 # Pattern for output file names.
 # This parameter is required.
 run_name: my_run

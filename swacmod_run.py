@@ -385,7 +385,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_to(timer_switcher_for_run, "run_main > run (loading data)")
     level, log_path = scrape_run_name_and_start_logging(debug, env, input_file)
 
-    data = input_data.load_and_validate(specs_file, input_file, input_dir)
+    data = read_inputs(specs_file, input_file, input_dir)
     params = data["params"]
 
     if not skip:
@@ -841,6 +841,20 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def read_inputs(specs_file, input_file, input_dir):
+    version = detect_version(input_file)
+    if (version == 1):
+        return input_data.load_and_validate(specs_file, input_file, input_dir)
+    elif (version == 2):
+        return input_data.load_and_validate(specs_file, input_file, input_dir)
+    else:
+        raise Exception(f"Unknown version: '{version}'.")
+
+def detect_version(input_file):
+    params = input_data.load_yaml(input_file)
+    version = params.get("version", 1)
+    return version
 
 def scrape_run_name_and_start_logging(debug, env, input_file):
     level = logging.DEBUG if debug else logging.INFO
