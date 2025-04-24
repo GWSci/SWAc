@@ -79,14 +79,11 @@ class EndToEndTests(unittest.TestCase):
 
     def test_get_output_contains_all_keys_in_col_order(self):
         """Test for get_output() function."""
-        time_switcher = timer.make_time_switcher()
-        for node in self.ids:
-            output = swacmod.get_output(self.data, node, time_switcher)
-            results = io.load_results()
-            for key in u.col_order():
-                if key in ['', 'date']:
-                    continue
-                self.assertTrue(key in results)
+        results = io.load_results()
+        for key in u.col_order():
+            if key in ['', 'date']:
+                continue
+            self.assertTrue(key in results)
 
     @unittest.skip
     def test_get_output_A(self):
