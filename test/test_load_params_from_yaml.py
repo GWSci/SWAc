@@ -1,6 +1,6 @@
 import numpy as np
 import unittest
-import swacmod.input_output as input_output
+import swacmod.input_data as input_data
 import swacmod.time_series_data
 
 class Test_Load_Params_From_Yaml(unittest.TestCase):
@@ -102,7 +102,7 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 		self.assertEqual(expected, load_params()["sfr_flow_monthly_proportions"])
 
 def load_params():
-	input = input_output.load_params_from_yaml(
+	input = input_data.load_params_from_yaml(
 		input_file="./test/resources/loading_params/input.yml",
 		input_dir="./test/resources/loading_params/",
 		tqdm=lambda x, desc: x)

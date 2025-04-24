@@ -385,7 +385,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_to(timer_switcher_for_run, "run_main > run (loading data)")
     level, log_path = scrape_run_name_and_start_logging(debug, env, input_file)
 
-    data = io.load_and_validate(specs_file, input_file, input_dir)
+    data = input_data.load_and_validate(specs_file, input_file, input_dir)
     params = data["params"]
 
     if not skip:
@@ -844,7 +844,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 
 def scrape_run_name_and_start_logging(debug, env, input_file):
     level = logging.DEBUG if debug else logging.INFO
-    params = io.load_yaml(input_file)
+    params = input_data.load_yaml(input_file)
     log_path = io.start_logging(env, level=level, run_name=params["run_name"])
 
     env.print('\nStart "%s"' % params["run_name"])
