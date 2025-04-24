@@ -78,7 +78,7 @@ class EndToEndTests(unittest.TestCase):
         self.data['params'][name] = old
 
     @unittest.skip
-    def test_get_output(self):
+    def test_get_output_A(self):
         """Test for get_output() function."""
         time_switcher = timer.make_time_switcher()
         for node in self.ids:
@@ -105,6 +105,14 @@ class EndToEndTests(unittest.TestCase):
                     new_list = output[key]
 
                 self.assertEqual(len(new_list), len(results[key]))
+
+    @unittest.skip
+    def test_get_output_B(self):
+        """Test for get_output() function."""
+        time_switcher = timer.make_time_switcher()
+        for node in self.ids:
+            output = swacmod.get_output(self.data, node, time_switcher)
+            results = io.load_results()
             for num in range(len(self.data['series']['date'])):
                 for key in u.col_order():
                     if key in ['', 'date']:
