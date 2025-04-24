@@ -12,7 +12,7 @@ import multiprocessing
 import numpy as np
 
 # Internal modules
-from . import utils as u
+from ... import utils as u
 import swacmod.feature_flags as ff
 
 def fin_start_date(data, name):

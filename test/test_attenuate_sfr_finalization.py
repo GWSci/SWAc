@@ -1,5 +1,5 @@
 import unittest
-import swacmod.finalization as finalization
+import swacmod.input_files.input_files_version_1.finalization as finalization
 
 class Test_Attenuate_Sfr_Finalization(unittest.TestCase):
 	def test_output_sfr_is_false_when_missing(self):

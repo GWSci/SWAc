@@ -1,7 +1,7 @@
 import datetime
 import numpy as np
 import unittest
-import swacmod.finalization as finalization
+import swacmod.input_files.input_files_version_1.finalization as finalization
 import swacmod.utils as utils
 
 class Test_Historical_Nitrate_Finalization(unittest.TestCase):

@@ -2,7 +2,7 @@ import unittest
 import swacmod.model as m
 import numpy as np
 import datetime
-import swacmod.finalization as finalization
+import swacmod.input_files.input_files_version_1.finalization as finalization
 
 class Test_Do_Swrecharge_Mask_Original(unittest.TestCase):
 	def test_make_make_routing_topology(self):

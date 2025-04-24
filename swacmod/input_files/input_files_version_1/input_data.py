@@ -21,7 +21,7 @@ from tqdm import tqdm
 from ... import utils as u
 from . import checks as c
 from . import validation as v
-from ... import finalization as f
+from . import finalization as f
 from ... import __version__
 from ... import time_series_data as time_series_data
 import swacmod.csv_resource as csv_resource

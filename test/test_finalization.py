@@ -1,5 +1,5 @@
 import unittest
-import swacmod.finalization as finalization
+import swacmod.input_files.input_files_version_1.finalization as finalization
 
 class Test_Finalization(unittest.TestCase):
     def test_fin_run_name_does_not_convert_lower_case_letters(self):
