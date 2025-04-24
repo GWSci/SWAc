@@ -11,3 +11,4 @@ class Test_Migrations(unittest.TestCase):
         expected = 2
         self.assertEqual(expected, input_file_reader.migrate({"version": 2})["version"])
         self.assertEqual(expected, input_file_reader.migrate({"version": 1})["version"])
+        self.assertEqual(expected, input_file_reader.migrate({})["version"])
