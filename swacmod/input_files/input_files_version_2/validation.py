@@ -8,7 +8,7 @@ import multiprocessing
 
 # Internal modules
 import swacmod.utils as u
-from . import checks as c
+import swacmod.input_files.input_files_version_2.checks as c
 
 def val_run_name(data, name):
     """Validate run_name.
