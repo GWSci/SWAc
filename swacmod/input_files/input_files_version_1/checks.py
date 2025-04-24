@@ -9,8 +9,8 @@ import datetime
 import numpy as np
 
 # Internal modules
-from ... import utils as u
-from . import time_series_data
+import swacmod.utils as u
+import swacmod.input_files.input_files_version_1.time_series_data as time_series_data
 
 basestring = str # TODO str should be inlined, but only when the surrounding code can be tested.
 

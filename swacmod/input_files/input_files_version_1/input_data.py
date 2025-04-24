@@ -18,11 +18,11 @@ except ImportError:
 from tqdm import tqdm
 
 # Internal modules
-from ... import utils as u
-from . import checks as c
-from . import validation as v
-from . import finalization as f
-from . import time_series_data as time_series_data
+import swacmod.utils as u
+import swacmod.input_files.input_files_version_1.checks as c
+import swacmod.input_files.input_files_version_1.validation as v
+import swacmod.input_files.input_files_version_1.finalization as f
+import swacmod.input_files.input_files_version_1.time_series_data as time_series_data
 import swacmod.csv_resource as csv_resource
 
 if sys.version_info > (3,):
