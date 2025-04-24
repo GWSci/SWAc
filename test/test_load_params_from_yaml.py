@@ -2,6 +2,7 @@ import numpy as np
 import unittest
 import swacmod.input_files.input_files_version_1.input_data as input_data
 import swacmod.input_files.input_files_version_1.time_series_data
+import swacmod.utils as u
 
 class Test_Load_Params_From_Yaml(unittest.TestCase):
 	def test_historical_mi_array_kg_per_time_period_is_read_from_input_file(self):
@@ -103,6 +104,7 @@ class Test_Load_Params_From_Yaml(unittest.TestCase):
 
 def load_params():
 	input = input_data.load_params_from_yaml(
+		specs_file=u.CONSTANTS["SPECS_FILE"],
 		input_file="./test/resources/loading_params/input.yml",
 		input_dir="./test/resources/loading_params/",
 		tqdm=lambda x, desc: x)
