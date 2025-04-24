@@ -84,7 +84,6 @@ class EndToEndTests(unittest.TestCase):
                 continue
             self.assertTrue(key in results)
 
-    @unittest.skip
     def test_output_contains_all_keys_in_col_order(self):
         time_switcher = timer.make_time_switcher()
         for node in self.ids:
