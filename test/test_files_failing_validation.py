@@ -4,6 +4,7 @@ import tempfile
 import shutil
 import swacmod.utils as u
 import os
+from tqdm import tqdm
 
 class Test_Files_Failing_Validation(unittest.TestCase):
     def test_load_and_validate_a_model_with_a_jumbled_up_file(self):
@@ -15,5 +16,8 @@ class Test_Files_Failing_Validation(unittest.TestCase):
             with open(os.path.join(temp_dir, 'time_periods.csv'), 'w') as file:
                 file.writelines(lines)
             with self.assertRaisesRegex(Exception, 'time_periods'):
-                load_params_from_yaml(input_file=os.path.join(temp_dir, 'input.yml'),
-                                    input_dir=temp_dir)
+                load_params_from_yaml(
+                    specs_file=u.CONSTANTS["SPECS_FILE"],
+                    input_file=os.path.join(temp_dir, 'input.yml'),
+                    input_dir=temp_dir,
+                    tqdm=tqdm)
