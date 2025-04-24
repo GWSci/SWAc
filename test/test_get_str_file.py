@@ -1,7 +1,6 @@
 import unittest
 import swacmod.model as m
 import warnings
-import swacmod.input_output as input_output
 import test.file_test_helpers as file_test_helpers
 
 class Test_Get_Str_File(unittest.TestCase):
