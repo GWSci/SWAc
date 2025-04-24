@@ -19,3 +19,6 @@ def scrape_run_name(input_file):
     params = input_data_v1.load_yaml(input_file)
     run_name = params["run_name"]
     return run_name
+
+def migrate_v1_to_v2(data):
+    pass

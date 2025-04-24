@@ -33,8 +33,6 @@ from tqdm import tqdm
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
-from swacmod.input_files.input_files_version_1 import input_data as input_data_v1
-from swacmod.input_files.input_files_version_2 import input_data as input_data_v2
 import swacmod.input_files.input_file_reader as input_file_reader
 import swacmod.flopy_adaptor as flopy_adaptor
 
