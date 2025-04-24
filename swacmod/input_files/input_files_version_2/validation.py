@@ -7,7 +7,7 @@ import logging
 import multiprocessing
 
 # Internal modules
-from ... import utils as u
+import swacmod.utils as u
 from . import checks as c
 
 def val_run_name(data, name):
