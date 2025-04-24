@@ -349,8 +349,7 @@ def listener(q, total):
         pbar.update()
     pbar.close()
 
-def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
-        data=None, env=Environment()):
+def run(test=False, debug=False, file_format=None, reduced=False, skip=False, env=Environment()):
     """Run model for all nodes."""
     total_timer_switcher_for_run = timer.make_time_switcher()
     timer.switch_to(total_timer_switcher_for_run, "run_main > run")
@@ -384,17 +383,13 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False,
     level = logging.DEBUG if debug else logging.INFO
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (loading data)")
-    if data is None:
-        params = io.load_yaml(input_file)
-    else:
-        params = data['params']
+    params = io.load_yaml(input_file)
     log_path = io.start_logging(env, level=level, run_name=params["run_name"])
 
     env.print('\nStart "%s"' % params["run_name"])
     logging.info("Start SWAcMod run")
 
-    if data is None:
-        data = io.load_and_validate(specs_file, input_file, input_dir)
+    data = io.load_and_validate(specs_file, input_file, input_dir)
 
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
