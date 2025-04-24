@@ -11,7 +11,7 @@ try:
 except ImportError:
     from yaml import Loader
 
-from ... import utils as u
+import swacmod.utils as u
 
 class TimeSeriesData:
 	pass
