@@ -14,3 +14,8 @@ def detect_version(input_file):
     params = input_data_v1.load_yaml(input_file)
     version = params.get("version", 1)
     return version
+
+def scrape_run_name(input_file):
+    params = input_data_v1.load_yaml(input_file)
+    run_name = params["run_name"]
+    return run_name
