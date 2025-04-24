@@ -33,7 +33,7 @@ from tqdm import tqdm
 # Internal modules
 from swacmod import utils as u
 from swacmod import input_output as io
-from swacmod.input_files.input_files_version_1 import input_data as input_data
+from swacmod.input_files.input_files_version_1 import input_data as input_data_v1
 import swacmod.flopy_adaptor as flopy_adaptor
 
 # Compile and import model
@@ -845,20 +845,20 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 def read_inputs(specs_file, input_file, input_dir):
     version = detect_version(input_file)
     if (version == 1):
-        return input_data.load_and_validate(specs_file, input_file, input_dir)
+        return input_data_v1.load_and_validate(specs_file, input_file, input_dir)
     elif (version == 2):
-        return input_data.load_and_validate(specs_file, input_file, input_dir)
+        return input_data_v1.load_and_validate(specs_file, input_file, input_dir)
     else:
         raise Exception(f"Unknown version: '{version}'.")
 
 def detect_version(input_file):
-    params = input_data.load_yaml(input_file)
+    params = input_data_v1.load_yaml(input_file)
     version = params.get("version", 1)
     return version
 
 def scrape_run_name_and_start_logging(debug, env, input_file):
     level = logging.DEBUG if debug else logging.INFO
-    params = input_data.load_yaml(input_file)
+    params = input_data_v1.load_yaml(input_file)
     log_path = io.start_logging(env, level=level, run_name=params["run_name"])
 
     env.print('\nStart "%s"' % params["run_name"])
