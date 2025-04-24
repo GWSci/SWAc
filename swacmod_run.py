@@ -846,7 +846,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 
 def scrape_run_name_and_start_logging(debug, env, input_file):
     level = logging.DEBUG if debug else logging.INFO
-    run_name = scrape_run_name(input_file)
+    run_name = input_file_reader.scrape_run_name(input_file)
     log_path = io.start_logging(env, level=level, run_name=run_name)
 
     env.print('\nStart "%s"' % run_name)
