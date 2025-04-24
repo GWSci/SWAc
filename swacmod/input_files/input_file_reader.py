@@ -21,4 +21,6 @@ def scrape_run_name(input_file):
     return run_name
 
 def migrate_v1_to_v2(data):
-    pass
+    result = data
+    result["version"] = 2
+    return result
