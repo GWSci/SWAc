@@ -3,7 +3,7 @@ import tempfile
 import swacmod.utils as u
 import os
 import shutil
-from swacmod.input_output import load_and_validate
+from swacmod.input_data import load_and_validate
 from test.change_input_file import change_input_file
 
 class Test_pe_ts_Finalisation(unittest.TestCase):
