@@ -345,6 +345,9 @@ def dump_water_balance(data,
         string = "for zone %d" % zone
         items = data["params"]["reporting_zone_mapping"].items()
         area = sum([areas[i[0]] for i in items if i[1] == zone])
+    else:
+        area = 0.0
+        string = ""
 
     path = get_output_path(data, file_format, output_dir, node=node, zone=zone)
     logging.info("\tDumping water balance %s", string)
