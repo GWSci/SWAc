@@ -4,11 +4,9 @@ from __future__ import print_function
 
 # Standard Library
 import os
-import csv
 import ast
 import sys
 import logging
-import datetime
 
 # Third Party Libraries
 import yaml
@@ -17,7 +15,6 @@ try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-import numpy
 from tqdm import tqdm
 
 # Internal modules
@@ -27,9 +24,7 @@ from . import validation as v
 from . import finalization as f
 from . import __version__
 from . import time_series_data as time_series_data
-from . import feature_flags as ff
 import swacmod.csv_resource as csv_resource
-import swacmod.h5py_adaptor as h5py_adaptor
 
 if sys.version_info > (3,):
     long = int
