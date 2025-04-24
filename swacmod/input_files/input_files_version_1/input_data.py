@@ -161,7 +161,8 @@ def load_and_validate(specs_file, input_file, input_dir):
     c.check_required(data)
     data = load_params_from_yaml(specs_file=specs_file,
                                  input_file=input_file,
-                                 input_dir=input_dir)
+                                 input_dir=input_dir,
+                                 tqdm=tqdm)
 
     f.finalize_params(data)
     f.finalize_series(data)
