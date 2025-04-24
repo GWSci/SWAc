@@ -7,8 +7,8 @@ import logging
 import multiprocessing
 
 # Internal modules
-from . import utils as u
-from . import checks as c
+from ... import utils as u
+from ... import checks as c
 
 def val_run_name(data, name):
     """Validate run_name.

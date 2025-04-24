@@ -14,7 +14,7 @@ import numpy as np
 # Internal modules
 import swacmod_run as swacmod
 from swacmod import utils as u
-from swacmod import validation as v
+from swacmod.input_files.input_files_version_1 import validation as v
 from swacmod import input_output as io
 from swacmod.input_files.input_files_version_1 import input_data as input_data
 import swacmod.timer as timer
