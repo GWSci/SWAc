@@ -1,5 +1,5 @@
 import unittest
-from swacmod.input_data import load_params_from_yaml
+from swacmod.input_files.input_files_version_1.input_data import load_params_from_yaml
 import tempfile
 import shutil
 import swacmod.utils as u

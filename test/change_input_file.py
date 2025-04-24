@@ -1,4 +1,4 @@
-from swacmod.input_data import load_yaml
+from swacmod.input_files.input_files_version_1.input_data import load_yaml
 import yaml
 
 def change_input_file(input_file, param, change_to):

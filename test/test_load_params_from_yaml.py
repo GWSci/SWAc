@@ -1,6 +1,6 @@
 import numpy as np
 import unittest
-import swacmod.input_data as input_data
+import swacmod.input_files.input_files_version_1.input_data as input_data
 import swacmod.time_series_data
 
 class Test_Load_Params_From_Yaml(unittest.TestCase):
