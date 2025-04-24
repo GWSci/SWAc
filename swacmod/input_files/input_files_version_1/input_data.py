@@ -56,12 +56,7 @@ def _get_series_from_params(params):
         series[key] = params.pop(key)
     return params, series
 
-def load_params_from_yaml(
-        specs_file=u.CONSTANTS["SPECS_FILE"],
-        input_file=u.CONSTANTS["INPUT_FILE"],
-        input_dir=u.CONSTANTS["INPUT_DIR"],
-        tqdm=tqdm
-):
+def load_params_from_yaml(specs_file, input_file, input_dir, tqdm):
     """Load model specifications, parameters and time series."""
     logging.info("\tLoading parameters and time series")
 
@@ -159,10 +154,7 @@ def load_and_validate(specs_file, input_file, input_dir):
     data = fast_load(specs_file, input_file)
     f.finalize_required_params(data)
     c.check_required(data)
-    data = load_params_from_yaml(specs_file=specs_file,
-                                 input_file=input_file,
-                                 input_dir=input_dir,
-                                 tqdm=tqdm)
+    data = load_params_from_yaml(specs_file, input_file, input_dir, tqdm)
 
     f.finalize_params(data)
     f.finalize_series(data)
