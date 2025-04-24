@@ -846,13 +846,17 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 
 def scrape_run_name_and_start_logging(debug, env, input_file):
     level = logging.DEBUG if debug else logging.INFO
-    params = input_data_v1.load_yaml(input_file)
-    run_name = params["run_name"]
+    run_name = scrape_run_name(input_file)
     log_path = io.start_logging(env, level=level, run_name=run_name)
 
     env.print('\nStart "%s"' % run_name)
     logging.info("Start SWAcMod run")
     return level,log_path
+
+def scrape_run_name(input_file):
+    params = input_data_v1.load_yaml(input_file)
+    run_name = params["run_name"]
+    return run_name
 
 def run_main():
     # Parser for command line arguments
