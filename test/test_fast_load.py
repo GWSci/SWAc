@@ -1,5 +1,5 @@
 import unittest
-from swacmod.input_output import fast_load
+from swacmod.input_data import fast_load
 import swacmod.utils as u
 import swacmod.checks as c
 import swacmod.finalization as f
