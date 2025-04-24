@@ -743,6 +743,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
                                    reduced=reduced)
 
         timer.switch_to(output_timer_token, "output_sfr")
+        roff_agg = None
         if data["params"]["output_sfr"]:
             env.print("\t- SFR file")
             if data['params']['gwmodel_type'] == 'mf96':
@@ -783,6 +784,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
                 elif data["params"]["excess_sw_process"] == "sw_only":
                     timer.switch_to(output_timer_token, "output_evt (sw_only)")
                     evt = m.get_evt_file(data, -np.copy(np.array(runoff_agg)))
+                else:
+                    raise Exception("Could not determine evt.")
             else:
                 timer.switch_to(output_timer_token, "output_evt (else)")
                 evt = m.get_evt_file(data, evtr_agg)
