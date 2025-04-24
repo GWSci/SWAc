@@ -390,6 +390,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     logging.info("Start SWAcMod run")
 
     data = io.load_and_validate(specs_file, input_file, input_dir)
+    params = data["params"]
 
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
