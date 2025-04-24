@@ -1,1 +1,1 @@
-python3 test.py "$@"
+python3 run_test.py "$@"
