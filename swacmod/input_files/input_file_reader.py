@@ -20,6 +20,10 @@ def scrape_run_name(input_file):
     run_name = params["run_name"]
     return run_name
 
+def migrate(data):
+    result = data
+    return result
+
 def migrate_v1_to_v2(data):
     result = data
     result["version"] = 2
