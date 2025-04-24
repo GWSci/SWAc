@@ -10,3 +10,4 @@ class Test_Migrations(unittest.TestCase):
     def test_migrating_all_versions_migrates_to_latest(self):
         expected = 2
         self.assertEqual(expected, input_file_reader.migrate({"version": 2})["version"])
+        self.assertEqual(expected, input_file_reader.migrate({"version": 1})["version"])

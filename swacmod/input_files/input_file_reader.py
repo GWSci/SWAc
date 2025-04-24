@@ -22,6 +22,8 @@ def scrape_run_name(input_file):
 
 def migrate(data):
     result = data
+    if (result["version"] == 1):
+        result = migrate_v1_to_v2(result)
     return result
 
 def migrate_v1_to_v2(data):
