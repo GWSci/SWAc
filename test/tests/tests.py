@@ -16,6 +16,7 @@ import swacmod_run as swacmod
 from swacmod import utils as u
 from swacmod import validation as v
 from swacmod import input_output as io
+from swacmod import input_data as input_data
 import swacmod.timer as timer
 
 class EndToEndTests(unittest.TestCase):
@@ -25,7 +26,7 @@ class EndToEndTests(unittest.TestCase):
     input_file = u.CONSTANTS['TEST_INPUT_FILE']
     input_dir = u.CONSTANTS['TEST_INPUT_DIR']
 
-    data = io.load_and_validate(specs_file, input_file, input_dir)
+    data = input_data.load_and_validate(specs_file, input_file, input_dir)
     if not data:
         print('Loading failed, interrupting tests now.')
         sys.exit()
