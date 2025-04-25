@@ -32,6 +32,13 @@ infiltration_limit:
         with self.assertRaisesRegex(Exception, 'Error: Could not find the key "infiltration_limit" in the file "aardvark.yaml".'):
             load_alt_yaml_adaptor("infiltration_limit", "")
 
+    def test_load_yml_alt_format_when_extra_keys_are_present(self):
+        with self.assertRaisesRegex(Exception, 'Error: Found the key "cat" in the file "aardvark.yaml". The only key should be "infiltration_limit". Common causes of this error are typos and forgetting to indent the key-value pairs in a map.'):
+            load_alt_yaml_adaptor("infiltration_limit", """
+infiltration_limit: bat
+cat: dog
+""")
+
 def load_alt_yaml_adaptor(param, external_file_contents):
     file_opener = make_mock_file_opener({
         "aardvark.yaml": external_file_contents,
