@@ -92,6 +92,8 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm, file_opener=_
         if key not in params:
             params[key] = None
 
+    validate_no_extra_params(specs, params, input_file)
+
     params, series = _get_series_from_params(params)
 
     data = {"specs": specs, "series": series, "params": params}
