@@ -125,12 +125,19 @@ def load_csv_alt_format(params, no_list, param, absolute):
         raise u.InputOutputError(msg)
 
 def load_yml_alt_format(params, param, absolute, file_opener):
+    parsed_yaml = load_yaml_file_contents(param, absolute, file_opener)
+    validate_alt_yml(param, absolute, parsed_yaml)
+    params[param] = parsed_yaml[param]
+
+def load_yaml_file_contents(param, absolute, file_opener):
     try:
         parsed_yaml = load_yaml(absolute, file_opener)
     except Exception as err:
         msg = "Could not import %s: %s" % (param, err)
         raise u.InputOutputError(msg)
-    
+    return parsed_yaml
+
+def validate_alt_yml(param, absolute, parsed_yaml):
     errors = []
 
     keys = extract_keys_or_empty_list(parsed_yaml)
@@ -145,8 +152,6 @@ def load_yml_alt_format(params, param, absolute, file_opener):
     if len(errors) > 0:
         message = "\n".join(errors)
         raise Exception(message)
-
-    params[param] = parsed_yaml[param]
 
 def extract_keys_or_empty_list(something_that_might_have_keys):
     try:
