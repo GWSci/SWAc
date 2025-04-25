@@ -29,11 +29,14 @@ if sys.version_info > (3,):
     long = int
     raw_input = input
 
-def load_yaml(filein):
+def _default_file_open(filename):
+    return open(filename, "r")
+
+def load_yaml(filein, file_opener=_default_file_open):
     """Load a YAML file, lowercase its keys."""
     logging.debug("\t\tLoading %s", filein)
 
-    with open(filein, "r") as fp:
+    with file_opener(filein) as fp:
         yml = yaml.load(fp, Loader=Loader)
     try:
         keys = yml.keys()
