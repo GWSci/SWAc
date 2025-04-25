@@ -30,3 +30,4 @@ temp_scratch_files/
 swacmod_run.spec
 env-lint/
 __pycache__
+tmp*
