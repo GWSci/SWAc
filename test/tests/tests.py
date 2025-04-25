@@ -40,3 +40,10 @@ class EndToEndTests(unittest.TestCase):
         self.assertRaises(u.ValidationError, v.val_start_date, self.data, name)
         self.data['params'][name] = old
 
+def load_data():
+    specs_file = u.CONSTANTS['SPECS_FILE']
+    input_file = u.CONSTANTS['TEST_INPUT_FILE']
+    input_dir = u.CONSTANTS['TEST_INPUT_DIR']
+
+    data = input_data.load_and_validate(specs_file, input_file, input_dir)
+    return data
