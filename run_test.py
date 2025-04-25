@@ -1,5 +1,6 @@
 import sys
 import subprocess
+import os
 
 args = sys.argv[1:]
 
@@ -41,15 +42,17 @@ for arg in args:
 
 subprocess.run([python_binary, "compile_model.py"])
 
-result = subprocess.run(
-    [coverage_binary, "run", "-m", "unittest", "discover", "-s", discovery_root])
 if sys.platform == "win32":
+    env = dict(os.environ)
+    env["TQDM_DISABLE"] = "true"
     if use_coverage:
         result = subprocess.run(
-            [coverage_binary, "run", "-m", "unittest", "discover", "-s", discovery_root])
+            [coverage_binary, "run", "-m", "unittest", "discover", "-s", discovery_root],
+            env=env)
     else:
         result = subprocess.run(
-            [python_binary, "-m", "unittest", "discover", "--s", discovery_root])
+            [python_binary, "-m", "unittest", "discover", "--s", discovery_root],
+            env=env)
 else:
     if use_coverage:
         result = subprocess.run(
