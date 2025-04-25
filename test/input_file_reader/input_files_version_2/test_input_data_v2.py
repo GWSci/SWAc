@@ -25,13 +25,7 @@ infiltration_limit:
   1: 1.2
   2: 3.4
 """
-        file_opener = make_mock_file_opener({
-            "aardvark.yaml": aardvark_contents,
-        })
-        params = {"infiltration_limit": "aardvark.yaml"}
         param = "infiltration_limit"
-        absolute = "aardvark.yaml"
-        # input_data.load_yml_alt_format(params, param, absolute, file_opener)
         params = load_alt_yaml_adaptor(param, aardvark_contents)
 
         expected = {"infiltration_limit": {1: 1.2, 2: 3.4}}
