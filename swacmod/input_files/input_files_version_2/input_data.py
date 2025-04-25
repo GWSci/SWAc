@@ -104,11 +104,7 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm):
                     msg = "Could not import %s: %s" % (param, err)
                     raise u.InputOutputError(msg)
             elif ext == "yml":
-                try:
-                    params[param] = load_yaml(absolute)[param]
-                except Exception as err:
-                    msg = "Could not import %s: %s" % (param, err)
-                    raise u.InputOutputError(msg)
+                load_yml_alt_format(params, param, absolute)
     for key in specs:
         if key not in params:
             params[key] = None
@@ -118,6 +114,13 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm):
     data = {"specs": specs, "series": series, "params": params}
 
     return data
+
+def load_yml_alt_format(params, param, absolute):
+    try:
+        params[param] = load_yaml(absolute)[param]
+    except Exception as err:
+        msg = "Could not import %s: %s" % (param, err)
+        raise u.InputOutputError(msg)
 
 def _use_time_series_data(param):
     return param in [
