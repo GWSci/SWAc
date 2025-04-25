@@ -107,7 +107,7 @@ class EndToEndTests(unittest.TestCase):
                                  len(output))
 
     @unittest.skip
-    def test_get_output_A(self):
+    def test_all_column_lengths_are_the_same(self):
         time_switcher = timer.make_time_switcher()
         for node in self.ids:
             output = swacmod.get_output(self.data, node, time_switcher)
