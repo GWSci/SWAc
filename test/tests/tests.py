@@ -95,7 +95,7 @@ class EndToEndTests(unittest.TestCase):
                                 key in output)
 
     @unittest.skip
-    def test_get_output_A(self):
+    def test_get_output_and_result_file_have_sort_of_the_same_row_count_but_not_really(self):
         time_switcher = timer.make_time_switcher()
         for node in self.ids:
             output = swacmod.get_output(self.data, node, time_switcher)
@@ -105,6 +105,16 @@ class EndToEndTests(unittest.TestCase):
                     continue
                 self.assertEqual(len(results) + 2,
                                  len(output))
+
+    @unittest.skip
+    def test_get_output_A(self):
+        time_switcher = timer.make_time_switcher()
+        for node in self.ids:
+            output = swacmod.get_output(self.data, node, time_switcher)
+            results = io.load_results()
+            for key in u.col_order():
+                if key in ['', 'date']:
+                    continue
                 if key in self.data['series'] and key not in \
                         ['rainfall_ts', 'pe_ts', 'swabs_ts',
                          'swdis_ts']:
