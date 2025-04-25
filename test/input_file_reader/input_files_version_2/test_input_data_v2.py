@@ -14,21 +14,9 @@ class Test_Input_Files_v2(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_load_yaml_reads_yaml_file_with_one_key(self):
-        file_opener = make_mock_file_opener({
-            "aardvark.yaml": "bat: cat",
-        })
-        expected = {"bat": "cat"}
-        actual = input_data.load_yaml("aardvark.yaml", file_opener=file_opener)
-        self.assertEqual(expected, actual)
         self.assert_load_yaml("bat: cat", {"bat": "cat"})
 
     def test_load_yaml_converts_keys_to_lower_case(self):
-        file_opener = make_mock_file_opener({
-            "aardvark.yaml": "BAT: CAT",
-        })
-        expected = {"bat": "CAT"}
-        actual = input_data.load_yaml("aardvark.yaml", file_opener=file_opener)
-        self.assertEqual(expected, actual)
         self.assert_load_yaml("BAT: CAT", {"bat": "CAT"})
 
 def make_mock_file_opener(filenames_to_contents):
