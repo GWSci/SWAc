@@ -28,13 +28,14 @@ class EndToEndTests(unittest.TestCase):
 
     def test_val_num_nodes(self):
         """Test for val_num_nodes() function."""
+        data = load_data()
         name = 'num_nodes'
-        old = self.data['params'][name]
-        self.data['params'][name] = 1.0
-        self.assertRaises(u.ValidationError, v.val_num_nodes, self.data, name)
-        self.data['params'][name] = -1
-        self.assertRaises(u.ValidationError, v.val_num_nodes, self.data, name)
-        self.data['params'][name] = old
+        old = data['params'][name]
+        data['params'][name] = 1.0
+        self.assertRaises(u.ValidationError, v.val_num_nodes, data, name)
+        data['params'][name] = -1
+        self.assertRaises(u.ValidationError, v.val_num_nodes, data, name)
+        data['params'][name] = old
 
     def test_val_start_date(self):
         """Test for val_start_date() function."""
