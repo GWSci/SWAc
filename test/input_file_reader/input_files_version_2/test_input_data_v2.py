@@ -39,6 +39,13 @@ infiltration_limit: bat
 cat: dog
 """)
 
+    def test_load_yml_alt_format_when_multiple_errors_are_present(self):
+        with self.assertRaisesRegex(Exception, 'infiltration_limit.*\n.*cat.*\n.*elephant'):
+            load_alt_yaml_adaptor("infiltration_limit", """
+cat: dog
+elephant: fox
+""")
+
 def load_alt_yaml_adaptor(param, external_file_contents):
     file_opener = make_mock_file_opener({
         "aardvark.yaml": external_file_contents,
