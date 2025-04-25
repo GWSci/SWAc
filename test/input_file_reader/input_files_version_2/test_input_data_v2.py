@@ -9,6 +9,14 @@ class Test_Input_Files_v2(unittest.TestCase):
         })
         actual = input_data.load_yaml("aardvark.yaml", file_opener=file_opener)
         self.assertEqual(None, actual)
+        self.assert_load_yaml("", None)
+
+    def assert_load_yaml(self, input_file_contents, expected):
+        file_opener = make_mock_file_opener({
+            "aardvark.yaml": input_file_contents,
+        })
+        actual = input_data.load_yaml("aardvark.yaml", file_opener=file_opener)
+        self.assertEqual(expected, actual)
 
     def test_load_yaml_reads_yaml_file_with_one_key(self):
         file_opener = make_mock_file_opener({
