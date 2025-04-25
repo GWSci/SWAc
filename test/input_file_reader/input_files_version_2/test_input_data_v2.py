@@ -29,13 +29,6 @@ infiltration_limit:
         self.assertEqual(expected, params)
 
     def test_load_yml_alt_format_when_the_requested_key_is_missing(self):
-        aardvark_contents = ""
-        file_opener = make_mock_file_opener({
-            "aardvark.yaml": aardvark_contents,
-        })
-        params = {"infiltration_limit": "aardvark.yaml"}
-        param = "infiltration_limit"
-        absolute = "aardvark.yaml"
         with self.assertRaisesRegex(Exception, 'Error: Could not find the key "infiltration_limit" in the file "aardvark.yaml".'):
             load_alt_yaml_adaptor("infiltration_limit", "")
 
