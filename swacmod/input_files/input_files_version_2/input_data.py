@@ -83,26 +83,7 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm):
                 base_path = params["temp_file_backed_array_directory"]
                 params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
             elif ext == "csv":
-                try:
-                    with csv_resource.reader_for(absolute) as reader:
-                        rows = [[ast.literal_eval(j) for j in row]
-                                for row in reader]
-                except Exception as err:
-                    msg = "Could not import %s: %s" % (param, err)
-                    raise u.InputOutputError(msg)
-                try:
-                    if _use_array_directly(param):
-                        params[param] = rows
-                    else:
-                        if param not in no_list:
-                            params[param] = dict(
-                                (row[0], row[1:]) for row in rows)
-                        else:
-                            params[param] = dict(
-                                (row[0], row[1]) for row in rows)
-                except Exception as err:
-                    msg = "Could not import %s: %s" % (param, err)
-                    raise u.InputOutputError(msg)
+                load_csv_alt_format(params, no_list, param, absolute)
             elif ext == "yml":
                 load_yml_alt_format(params, param, absolute)
     for key in specs:
@@ -114,6 +95,28 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm):
     data = {"specs": specs, "series": series, "params": params}
 
     return data
+
+def load_csv_alt_format(params, no_list, param, absolute):
+    try:
+        with csv_resource.reader_for(absolute) as reader:
+            rows = [[ast.literal_eval(j) for j in row]
+                                for row in reader]
+    except Exception as err:
+        msg = "Could not import %s: %s" % (param, err)
+        raise u.InputOutputError(msg)
+    try:
+        if _use_array_directly(param):
+            params[param] = rows
+        else:
+            if param not in no_list:
+                params[param] = dict(
+                                (row[0], row[1:]) for row in rows)
+            else:
+                params[param] = dict(
+                                (row[0], row[1]) for row in rows)
+    except Exception as err:
+        msg = "Could not import %s: %s" % (param, err)
+        raise u.InputOutputError(msg)
 
 def load_yml_alt_format(params, param, absolute):
     try:
