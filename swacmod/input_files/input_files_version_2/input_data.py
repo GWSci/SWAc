@@ -76,6 +76,8 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm, file_opener=_
         ["rainfall_zone_mapping", "pe_zone_mapping", "subroot_zone_mapping"]
     ])
 
+    validate_no_extra_params(specs, params, input_file)
+
     for param in tqdm(params, desc="SWAcMod load params     "):
         if isinstance(params[param], str) and "alt_format" in specs[param]:
             absolute = os.path.join(input_dir, params[param])
@@ -92,7 +94,6 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm, file_opener=_
         if key not in params:
             params[key] = None
 
-    validate_no_extra_params(specs, params, input_file)
 
     params, series = _get_series_from_params(params)
 
