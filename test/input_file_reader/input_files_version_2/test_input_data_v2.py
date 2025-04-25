@@ -37,7 +37,7 @@ infiltration_limit:
         param = "infiltration_limit"
         absolute = "aardvark.yaml"
         with self.assertRaisesRegex(Exception, 'Error: Could not find the key "infiltration_limit" in the file "aardvark.yaml".'):
-            input_data.load_yml_alt_format(params, param, absolute, file_opener)
+            load_alt_yaml_adaptor("infiltration_limit", "")
 
 def load_alt_yaml_adaptor(param, external_file_contents):
     file_opener = make_mock_file_opener({
