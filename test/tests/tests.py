@@ -5,19 +5,13 @@ from __future__ import print_function
 """SWAcMod tests."""
 
 # Standard Library
-import sys
 import unittest
 
-# Third Party Libraries
-import numpy as np
 
 # Internal modules
-import swacmod_run as swacmod
 from swacmod import utils as u
 from swacmod.input_files.input_files_version_1 import validation as v
-from swacmod import input_output as io
 from swacmod.input_files.input_files_version_1 import input_data as input_data
-import swacmod.timer as timer
 
 class EndToEndTests(unittest.TestCase):
     """Test suite for the SWAcMod project."""
