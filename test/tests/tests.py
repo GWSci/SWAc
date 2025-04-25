@@ -35,7 +35,6 @@ class EndToEndTests(unittest.TestCase):
     def test_val_start_date(self):
         """Test for val_start_date() function."""
         name = 'start_date'
-        data = {'params': {name: 1.0}}
         old = self.data['params'][name]
         self.data['params'][name] = 1.0
         self.assertRaises(u.ValidationError, v.val_start_date, self.data, name)
