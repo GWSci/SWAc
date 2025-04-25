@@ -80,8 +80,7 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm):
             if ext not in specs[param]["alt_format"] and ext != "numpydumpy":
                 continue
             if _use_time_series_data(param):
-                base_path = params["temp_file_backed_array_directory"]
-                params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
+                load_temp_file_backed_array(params, param, absolute, ext)
             elif ext == "csv":
                 load_csv_alt_format(params, no_list, param, absolute)
             elif ext == "yml":
@@ -95,6 +94,10 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm):
     data = {"specs": specs, "series": series, "params": params}
 
     return data
+
+def load_temp_file_backed_array(params, param, absolute, ext):
+    base_path = params["temp_file_backed_array_directory"]
+    params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
 
 def load_csv_alt_format(params, no_list, param, absolute):
     try:
