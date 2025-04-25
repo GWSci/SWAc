@@ -49,12 +49,18 @@ elephant: fox
     def test_validate_no_extra_params_when_params_are_empty_thorws_no_exception(self):
         specs = {"aardvark": None, "bat": None}
         params = {}
-        input_data.validate_no_extra_params(specs, params)
+        input_data.validate_no_extra_params(specs, params, "input.yaml")
 
     def test_validate_no_extra_params_when_params_are_recognised_thorws_no_exception(self):
         specs = {"aardvark": None, "bat": None}
         params = {"aardvark": None, "bat": None}
-        input_data.validate_no_extra_params(specs, params)
+        input_data.validate_no_extra_params(specs, params, "input.yaml")
+
+    def test_validate_no_extra_params_when_one_params_is_unrecognised_throws_an_exception(self):
+        specs = {"aardvark": None, "bat": None}
+        params = {"aardvark": None, "bat": None, "cat": None}
+        with self.assertRaisesRegex(Exception, 'Error: Found the key "cat" in the file "input.yaml". This key is not valid. A full list of valid keys is: \\["aardvark", "bat"\\].'):
+            input_data.validate_no_extra_params(specs, params, "input.yaml")
 
 def load_alt_yaml_adaptor(param, external_file_contents):
     file_opener = make_mock_file_opener({

@@ -204,5 +204,16 @@ def load_and_validate(specs_file, input_file, input_dir):
 
     return data
 
-def validate_no_extra_params(specs, params):
-    pass
+def validate_no_extra_params(specs, params, input_file):
+    valid_keys = set(specs.keys())
+    found_keys = set(params.keys())
+    unrecognised_keys = found_keys.difference(valid_keys)
+    errors = []
+
+    valid_keys_string = ", ".join([f'"{k}"' for k in sorted(valid_keys)])
+    for key in unrecognised_keys:
+        errors.append(f'Error: Found the key "{key}" in the file "{input_file}". This key is not valid. A full list of valid keys is: [{valid_keys_string}].')
+
+    if len(errors) > 0:
+        message = "\n".join(errors)
+        raise Exception(message)
