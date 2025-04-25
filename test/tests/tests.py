@@ -27,11 +27,6 @@ class EndToEndTests(unittest.TestCase):
     input_dir = u.CONSTANTS['TEST_INPUT_DIR']
 
     data = input_data.load_and_validate(specs_file, input_file, input_dir)
-    if not data:
-        print('Loading failed, interrupting tests now.')
-        sys.exit()
-
-    ids = range(1, data['params']['num_nodes'] + 1)
 
     def test_val_num_nodes(self):
         """Test for val_num_nodes() function."""
