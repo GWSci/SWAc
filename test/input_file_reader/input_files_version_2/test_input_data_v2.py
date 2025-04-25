@@ -51,6 +51,11 @@ elephant: fox
         params = {}
         input_data.validate_no_extra_params(specs, params)
 
+    def test_validate_no_extra_params_when_params_are_recognised_thorws_no_exception(self):
+        specs = {"aardvark": None, "bat": None}
+        params = {"aardvark": None, "bat": None}
+        input_data.validate_no_extra_params(specs, params)
+
 def load_alt_yaml_adaptor(param, external_file_contents):
     file_opener = make_mock_file_opener({
         "aardvark.yaml": external_file_contents,
