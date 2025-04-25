@@ -16,6 +16,7 @@ class EndToEndTests(unittest.TestCase):
         data = load_data()
         name = 'num_nodes'
         data['params'][name] = 1.0
+        data['specs'][name] = {'required': True, 'type': [int]}
         self.assertRaises(u.ValidationError, v.val_num_nodes, data, name)
 
     def test_val_num_nodes_when_out_of_range(self):
