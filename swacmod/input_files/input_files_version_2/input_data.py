@@ -59,12 +59,12 @@ def _get_series_from_params(params):
         series[key] = params.pop(key)
     return params, series
 
-def load_params_from_yaml(specs_file, input_file, input_dir, tqdm):
+def load_params_from_yaml(specs_file, input_file, input_dir, tqdm, file_opener=_default_file_open):
     """Load model specifications, parameters and time series."""
     logging.info("\tLoading parameters and time series")
 
-    specs = load_yaml(specs_file)
-    params = load_yaml(input_file)
+    specs = load_yaml(specs_file, file_opener)
+    params = load_yaml(input_file, file_opener)
 
     no_list = ([
         "node_areas",
@@ -87,7 +87,7 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm):
             elif ext == "csv":
                 load_csv_alt_format(params, no_list, param, absolute)
             elif ext == "yml":
-                load_yml_alt_format(params, param, absolute)
+                load_yml_alt_format(params, param, absolute, file_opener)
     for key in specs:
         if key not in params:
             params[key] = None
@@ -124,9 +124,9 @@ def load_csv_alt_format(params, no_list, param, absolute):
         msg = "Could not import %s: %s" % (param, err)
         raise u.InputOutputError(msg)
 
-def load_yml_alt_format(params, param, absolute):
+def load_yml_alt_format(params, param, absolute, file_opener):
     try:
-        params[param] = load_yaml(absolute)[param]
+        params[param] = load_yaml(absolute, file_opener)[param]
     except Exception as err:
         msg = "Could not import %s: %s" % (param, err)
         raise u.InputOutputError(msg)

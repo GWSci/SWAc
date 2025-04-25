@@ -19,5 +19,23 @@ class Test_Input_Files_v2(unittest.TestCase):
     def test_load_yaml_converts_keys_to_lower_case(self):
         self.assert_load_yaml("BAT: CAT", {"bat": "CAT"})
 
+    def test_load_yml_alt_format_when_there_are_no_extra_keys(self):
+        aardvark_contents = """
+infiltration_limit:
+  1: 1.2
+  2: 3.4
+"""
+        file_opener = make_mock_file_opener({
+            "aardvark.yaml": aardvark_contents,
+        })
+        params = {"infiltration_limit": "aardvark.yaml"}
+        param = "infiltration_limit"
+        absolute = "aardvark.yaml"
+        input_data.load_yml_alt_format(params, param, absolute, file_opener)
+
+        expected = {"infiltration_limit": {1: 1.2, 2: 3.4}}
+        self.assertEqual(expected, params)
+
+
 def make_mock_file_opener(filenames_to_contents):
     return lambda filename: io.StringIO(filenames_to_contents[filename])
