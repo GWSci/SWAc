@@ -46,6 +46,11 @@ cat: dog
 elephant: fox
 """)
 
+    def test_validate_no_extra_params_when_params_are_empty_thorws_no_exception(self):
+        specs = {"aardvark": None, "bat": None}
+        params = {}
+        input_data.validate_no_extra_params(specs, params)
+
 def load_alt_yaml_adaptor(param, external_file_contents):
     file_opener = make_mock_file_opener({
         "aardvark.yaml": external_file_contents,

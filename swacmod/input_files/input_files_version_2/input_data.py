@@ -203,3 +203,6 @@ def load_and_validate(specs_file, input_file, input_dir):
     v.validate_series(data)
 
     return data
+
+def validate_no_extra_params(specs, params):
+    pass
