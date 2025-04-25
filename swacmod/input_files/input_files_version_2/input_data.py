@@ -146,8 +146,7 @@ def load_yml_alt_format(params, param, absolute, file_opener):
         message = "\n".join(errors)
         raise Exception(message)
 
-    if param in keys:
-        params[param] = parsed_yaml[param]
+    params[param] = parsed_yaml[param]
 
 def extract_keys_or_empty_list(something_that_might_have_keys):
     try:
