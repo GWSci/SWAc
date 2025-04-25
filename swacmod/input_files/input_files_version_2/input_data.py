@@ -207,7 +207,7 @@ def load_and_validate(specs_file, input_file, input_dir):
 def validate_no_extra_params(specs, params, input_file):
     valid_keys = set(specs.keys())
     found_keys = set(params.keys())
-    unrecognised_keys = found_keys.difference(valid_keys)
+    unrecognised_keys = sorted(found_keys.difference(valid_keys))
     errors = []
 
     valid_keys_string = ", ".join([f'"{k}"' for k in sorted(valid_keys)])

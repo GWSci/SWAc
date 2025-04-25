@@ -65,7 +65,7 @@ elephant: fox
     def test_validate_no_extra_params_when_multiple_params_are_unrecognised_throws_an_exception(self):
         specs = {"aardvark": None, "bat": None}
         params = {"aardvark": None, "bat": None, "dog": None, "cat": None}
-        with self.assertRaisesRegex(Exception, 'cat.*\n.*dog'):
+        with self.assertRaisesRegex(Exception, '"cat".*\n.*"dog"'):
             input_data.validate_no_extra_params(specs, params, "input.yaml")
 
 def load_alt_yaml_adaptor(param, external_file_contents):
