@@ -28,3 +28,5 @@ env/
 temp_file_backed_array/
 temp_scratch_files/
 swacmod_run.spec
+env-lint/
+__pycache__
