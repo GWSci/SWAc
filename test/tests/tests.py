@@ -22,10 +22,6 @@ def load_data():
     return data
 
 class EndToEndTests(unittest.TestCase):
-    """Test suite for the SWAcMod project."""
-
-    data = load_data()
-
     def test_val_num_nodes(self):
         """Test for val_num_nodes() function."""
         data = load_data()
