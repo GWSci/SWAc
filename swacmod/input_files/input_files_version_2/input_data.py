@@ -135,7 +135,7 @@ def load_yml_alt_format(params, param, absolute, file_opener):
 
     keys = extract_keys_or_empty_list(parsed_yaml)
 
-    if (not _is_in(param, parsed_yaml)):
+    if (not param in keys):
         errors.append(f'Error: Could not find the key "{param}" in the file "{absolute}".')
 
     for key in keys:
