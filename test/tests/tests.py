@@ -13,7 +13,7 @@ def load_data():
 
 class EndToEndTests(unittest.TestCase):
     def test_val_num_nodes_with_wrong_type(self):
-        data = load_data()
+        data = {'params': {}, 'specs': {}}
         name = 'num_nodes'
         data['params'][name] = 1.0
         data['specs'][name] = {'required': True, 'type': [int]}
