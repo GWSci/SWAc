@@ -62,6 +62,12 @@ elephant: fox
         with self.assertRaisesRegex(Exception, 'Error: Found the key "cat" in the file "input.yaml". This key is not valid. A full list of valid keys is: \\["aardvark", "bat"\\].'):
             input_data.validate_no_extra_params(specs, params, "input.yaml")
 
+    def test_validate_no_extra_params_when_multiple_params_are_unrecognised_throws_an_exception(self):
+        specs = {"aardvark": None, "bat": None}
+        params = {"aardvark": None, "bat": None, "dog": None, "cat": None}
+        with self.assertRaisesRegex(Exception, 'cat.*\n.*dog'):
+            input_data.validate_no_extra_params(specs, params, "input.yaml")
+
 def load_alt_yaml_adaptor(param, external_file_contents):
     file_opener = make_mock_file_opener({
         "aardvark.yaml": external_file_contents,
