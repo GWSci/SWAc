@@ -126,10 +126,28 @@ def load_csv_alt_format(params, no_list, param, absolute):
 
 def load_yml_alt_format(params, param, absolute, file_opener):
     try:
-        params[param] = load_yaml(absolute, file_opener)[param]
+        parsed_yaml = load_yaml(absolute, file_opener)
     except Exception as err:
         msg = "Could not import %s: %s" % (param, err)
         raise u.InputOutputError(msg)
+    
+    errors = []
+
+    if (not _is_in(param, parsed_yaml)):
+        errors.append(f'Error: Could not find the key "{param}" in the file "{absolute}".')
+
+    if len(errors) > 0:
+        message = "\n".join(errors)
+        raise Exception(message)
+
+    if _is_in(param, parsed_yaml):
+        params[param] = parsed_yaml[param]
+
+def _is_in(needle, haystack):
+    try:
+        return needle in haystack
+    except TypeError:
+        return False
 
 def _use_time_series_data(param):
     return param in [
