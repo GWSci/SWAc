@@ -146,7 +146,7 @@ def load_yml_alt_format(params, param, absolute, file_opener):
         message = "\n".join(errors)
         raise Exception(message)
 
-    if _is_in(param, parsed_yaml):
+    if param in keys:
         params[param] = parsed_yaml[param]
 
 def extract_keys_or_empty_list(something_that_might_have_keys):
@@ -154,12 +154,6 @@ def extract_keys_or_empty_list(something_that_might_have_keys):
         return something_that_might_have_keys.keys()
     except Exception:
         return []
-
-def _is_in(needle, haystack):
-    try:
-        return needle in haystack
-    except TypeError:
-        return False
 
 def _use_time_series_data(param):
     return param in [
