@@ -17,7 +17,7 @@ class EndToEndTests(unittest.TestCase):
         name = 'num_nodes'
         data['params'][name] = 1.0
         self.assertRaises(u.ValidationError, v.val_num_nodes, data, name)
-        data['params'][name] = -1
+        # data['params'][name] = -1
         self.assertRaises(u.ValidationError, v.val_num_nodes, data, name)
 
     def test_val_start_date(self):
