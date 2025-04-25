@@ -27,8 +27,6 @@ CONSTANTS['TEST_INPUT_DIR'] = os.path.join(CONSTANTS['TEST_DIR'],
                                            'input_files')
 CONSTANTS['TEST_INPUT_FILE'] = os.path.join(CONSTANTS['TEST_INPUT_DIR'],
                                             'input.yml')
-CONSTANTS['TEST_RESULTS_FILE'] = os.path.join(CONSTANTS['TEST_DIR'],
-                                              'results.csv')
 
 def col_order():
     if ff.use_natproc:
