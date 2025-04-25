@@ -39,7 +39,7 @@ def load_yaml(filein, file_opener=_default_file_open):
     with file_opener(filein) as fp:
         yml = yaml.load(fp, Loader=Loader)
     try:
-        keys = yml.keys()
+        keys = list(yml.keys())
     except AttributeError:
         return yml
 

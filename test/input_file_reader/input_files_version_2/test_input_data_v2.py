@@ -18,5 +18,13 @@ class Test_Input_Files_v2(unittest.TestCase):
         actual = input_data.load_yaml("aardvark.yaml", file_opener=file_opener)
         self.assertEqual(expected, actual)
 
+    def test_load_yaml_converts_keys_to_lower_case(self):
+        file_opener = make_mock_file_opener({
+            "aardvark.yaml": "BAT: CAT",
+        })
+        expected = {"bat": "CAT"}
+        actual = input_data.load_yaml("aardvark.yaml", file_opener=file_opener)
+        self.assertEqual(expected, actual)
+
 def make_mock_file_opener(filenames_to_contents):
     return lambda filename: io.StringIO(filenames_to_contents[filename])
