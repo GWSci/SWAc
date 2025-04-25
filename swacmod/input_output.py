@@ -427,21 +427,3 @@ def get_row_balance(aggregated, num, reduced, mult):
 
     row = numpy.array(row) * mult
     return row
-
-def load_results():
-    """Load 'Calculations' sheet."""
-    check = dict((k, []) for k in u.col_order())
-
-    with open(u.CONSTANTS["TEST_RESULTS_FILE"], "r") as csvfile:
-        reader = csv.reader(csvfile, delimiter=",", quoting=csv.QUOTE_MINIMAL)
-        for row in reader:
-            values = []
-            for num, cell in enumerate(row):
-                if num == 0:
-                    values.append(datetime.datetime.strptime(cell, "%d/%m/%Y"))
-                else:
-                    values.append(float(cell))
-            for num, value in enumerate(values):
-                check[u.col_order()[num]].append(value)
-
-    return check
