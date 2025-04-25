@@ -20,14 +20,11 @@ class Test_Input_Files_v2(unittest.TestCase):
         self.assert_load_yaml("BAT: CAT", {"bat": "CAT"})
 
     def test_load_yml_alt_format_when_there_are_no_extra_keys(self):
-        aardvark_contents = """
+        params = load_alt_yaml_adaptor("infiltration_limit", """
 infiltration_limit:
   1: 1.2
   2: 3.4
-"""
-        param = "infiltration_limit"
-        params = load_alt_yaml_adaptor(param, aardvark_contents)
-
+""")
         expected = {"infiltration_limit": {1: 1.2, 2: 3.4}}
         self.assertEqual(expected, params)
 
