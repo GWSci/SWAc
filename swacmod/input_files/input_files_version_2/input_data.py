@@ -85,6 +85,22 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm, file_opener=_
 
     validate_no_extra_params(specs, params, input_file)
 
+    _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
+    _supply_null_values_for_missing_fields(specs, params)
+
+
+    params, series = _get_series_from_params(params)
+
+    data = {"specs": specs, "series": series, "params": params}
+
+    return data
+
+def _supply_null_values_for_missing_fields(specs, params):
+    for key in specs:
+        if key not in params:
+            params[key] = None
+
+def _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list):
     for param in tqdm(params, desc="SWAcMod load params     "):
         if isinstance(params[param], str) and "alt_format" in specs[param]:
             absolute = os.path.join(input_dir, params[param])
@@ -97,16 +113,6 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm, file_opener=_
                 load_csv_alt_format(params, no_list, param, absolute)
             elif ext == "yml":
                 load_yml_alt_format(params, param, absolute, file_opener)
-    for key in specs:
-        if key not in params:
-            params[key] = None
-
-
-    params, series = _get_series_from_params(params)
-
-    data = {"specs": specs, "series": series, "params": params}
-
-    return data
 
 def load_temp_file_backed_array(params, param, absolute, ext):
     base_path = params["temp_file_backed_array_directory"]
