@@ -6,12 +6,15 @@ def scrape_run_name(input_file):
     run_name = params["run_name"]
     return run_name
 
-def read_inputs(specs_file, input_file, input_dir):
-    version = detect_version(input_file)
+def _default_file_open(filename):
+    return open(filename, "r")
+
+def read_inputs(specs_file, input_file, input_dir, file_opener=_default_file_open):
+    version = detect_version(input_file, file_opener)
     if (version == 1):
         parsed_input_data = input_data_v1.load_and_validate(specs_file, input_file, input_dir)
     elif (version == 2):
-        parsed_input_data = input_data_v2.load_and_validate(input_file, input_dir)
+        parsed_input_data = input_data_v2.load_and_validate(input_file, input_dir, file_opener)
     else:
         raise Exception(f"Unknown version: '{version}'.")
 
@@ -21,8 +24,8 @@ def read_inputs(specs_file, input_file, input_dir):
 
     return parsed_input_data.data
 
-def detect_version(input_file):
-    params = input_data_v1.load_yaml(input_file)
+def detect_version(input_file, file_opener=_default_file_open):
+    params = input_data_v2.load_yaml(input_file, file_opener)
     version = params.get("version", 1)
     return version
 
