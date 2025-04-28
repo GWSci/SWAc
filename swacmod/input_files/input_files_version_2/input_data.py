@@ -216,6 +216,8 @@ def load_and_validate(specs_file, input_file, input_dir):
 def validate(params, input_file):
     errors = []
     warnings = []
+    if (not "version" in params):
+        errors.append("some error")
     return Validation_Result(errors, warnings)
 
 def validate_no_extra_params(specs, params, input_file):

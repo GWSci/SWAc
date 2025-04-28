@@ -14,6 +14,13 @@ class Test_Input_Data_v2_Validation(unittest.TestCase):
         validation_result = input_data.validate(params, input_file)
         self.assertEqual(0, len(validation_result.warnings))
 
+    def test_validating_a_file_missing_a_required_field_reports_an_error(self):
+        params = make_sample_valid_input_file()
+        del params["version"]
+        input_file = "some_input_file.yml"
+        validation_result = input_data.validate(params, input_file)
+        self.assertEqual(1, len(validation_result.errors))
+
 def make_sample_valid_input_file():
     return {
         "version": 2,
