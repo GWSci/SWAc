@@ -46,7 +46,16 @@ def load_and_validate(specs_file, input_file, input_dir):
     f.finalize_required_params(data)
     c.check_required(data)
 
-    data = _load_params_from_yaml(specs_file, input_file, input_dir, tqdm)
+    file_opener=_default_file_open
+    logging.info("\tLoading parameters and time series")
+    specs = load_yaml(specs_file, file_opener)
+    params = load_yaml(input_file, file_opener)
+    no_list = _make_no_list(params)
+    validate_no_extra_params(specs, params, input_file)
+    _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
+    _supply_null_values_for_missing_fields(specs, params)
+    params, series = _get_series_from_params(params)
+    data = {"specs": specs, "series": series, "params": params}
 
     f.finalize_params(data)
     f.finalize_series(data)
@@ -90,18 +99,6 @@ def _get_series_from_params(params):
     for key in keys:
         series[key] = params.pop(key)
     return params, series
-
-def _load_params_from_yaml(specs_file, input_file, input_dir, tqdm, file_opener=_default_file_open):
-    logging.info("\tLoading parameters and time series")
-    specs = load_yaml(specs_file, file_opener)
-    params = load_yaml(input_file, file_opener)
-    no_list = _make_no_list(params)
-    validate_no_extra_params(specs, params, input_file)
-    _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
-    _supply_null_values_for_missing_fields(specs, params)
-    params, series = _get_series_from_params(params)
-    data = {"specs": specs, "series": series, "params": params}
-    return data
 
 def _make_no_list(params):
     no_list = ([
