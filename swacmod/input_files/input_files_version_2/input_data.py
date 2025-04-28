@@ -7,6 +7,7 @@ import os
 import ast
 import sys
 import logging
+from dataclasses import dataclass
 
 # Third Party Libraries
 import yaml
@@ -28,6 +29,10 @@ import swacmod.csv_resource as csv_resource
 if sys.version_info > (3,):
     long = int
     raw_input = input
+
+@dataclass
+class Validation_Result:
+    errors: list
 
 def _default_file_open(filename):
     return open(filename, "r")
@@ -208,7 +213,7 @@ def load_and_validate(specs_file, input_file, input_dir):
     return data
 
 def validate(params, input_file):
-    pass
+    return Validation_Result([])
 
 def validate_no_extra_params(specs, params, input_file):
     valid_keys = set(specs.keys())
