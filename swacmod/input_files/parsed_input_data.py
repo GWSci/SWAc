@@ -9,3 +9,5 @@ class ParsedInputData:
     def print(self, printer=print):
         for e in self.errors:
             printer(e)
+        for w in self.warnings:
+            printer(w)
