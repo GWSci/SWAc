@@ -218,8 +218,9 @@ def validate(params, input_file):
     warnings = []
     if (not "version" in params):
         errors.append(f'Error: The file "{input_file}" is missing the required field "version".')
-    if (not "run_name" in params):
-        errors.append(f'Error: The file "{input_file}" is missing the required field "run_name".')
+    for field in ["run_name"]:
+        if (not field in params):
+            errors.append(f'Error: The file "{input_file}" is missing the required field "{field}".')
     return Validation_Result(errors, warnings)
 
 def validate_no_extra_params(specs, params, input_file):
