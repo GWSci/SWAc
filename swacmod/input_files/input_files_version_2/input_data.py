@@ -36,16 +36,20 @@ class Validation_Result:
     errors: list
     warnings: list
 
-def load_and_validate(specs_file, input_file, input_dir):
+def _default_file_open(filename):
+    return open(filename, "r")
+
+def load_and_validate(specs_file, input_file, input_dir, file_opener=_default_file_open):
     """Load, finalize and validate model parameters and time series."""
     specs = specs_module.make_specs_dictionary(specs_module.make_specs())
-    params = load_yaml(input_file)
+    params = load_yaml(input_file, file_opener)
     _supply_null_values_for_missing_fields(specs, params)
     params, series = _get_series_from_params(params)
     data = {"specs": specs, "series": series, "params": params}
     f.finalize_required_params(data)
     c.check_required(data)
 
+    file_opener=_default_file_open
     file_opener=_default_file_open
     logging.info("\tLoading parameters and time series")
     params = load_yaml(input_file, file_opener)
@@ -63,9 +67,6 @@ def load_and_validate(specs_file, input_file, input_dir):
     v.validate_series(data)
 
     return data
-
-def _default_file_open(filename):
-    return open(filename, "r")
 
 def load_yaml(filein, file_opener=_default_file_open):
     """Load a YAML file, lowercase its keys."""
