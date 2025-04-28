@@ -31,6 +31,7 @@ class Test_Input_Data_v2_Validation(unittest.TestCase):
         validation_result = input_data.validate(params, "some_input_file.yml")
         all_errors_string = "\n".join(validation_result.errors)
         self.assertIn('"version"', all_errors_string)
+        self.assertIn('"run_name"', all_errors_string)
 
 def make_sample_valid_input_file():
     return {
