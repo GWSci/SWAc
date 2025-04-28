@@ -216,7 +216,8 @@ def load_and_validate(specs_file, input_file, input_dir):
 def validate(params, input_file):
     errors = []
     warnings = []
-    for field in ["version", "run_name"]:
+    required_fields = ["version", "run_name"]
+    for field in required_fields:
         if (not field in params):
             errors.append(f'Error: The file "{input_file}" is missing the required field "{field}".')
     return Validation_Result(errors, warnings)
