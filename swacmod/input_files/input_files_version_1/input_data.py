@@ -23,6 +23,7 @@ import swacmod.input_files.input_files_version_1.checks as c
 import swacmod.input_files.input_files_version_1.validation as v
 import swacmod.input_files.input_files_version_1.finalization as f
 import swacmod.input_files.input_files_version_1.time_series_data as time_series_data
+from swacmod.input_files.parsed_input_data import ParsedInputData
 import swacmod.csv_resource as csv_resource
 
 if sys.version_info > (3,):
@@ -162,4 +163,4 @@ def load_and_validate(specs_file, input_file, input_dir):
     v.validate_params(data)
     v.validate_series(data)
 
-    return data
+    return ParsedInputData(data, [], [])

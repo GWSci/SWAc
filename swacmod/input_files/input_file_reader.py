@@ -9,7 +9,7 @@ def scrape_run_name(input_file):
 def read_inputs(specs_file, input_file, input_dir):
     version = detect_version(input_file)
     if (version == 1):
-        return input_data_v1.load_and_validate(specs_file, input_file, input_dir)
+        return input_data_v1.load_and_validate(specs_file, input_file, input_dir).data
     elif (version == 2):
         return input_data_v2.load_and_validate(specs_file, input_file, input_dir).data
     else:
