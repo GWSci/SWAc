@@ -45,6 +45,7 @@ def load_and_validate(specs_file, input_file, input_dir):
     data = {"specs": specs, "series": series, "params": params}
     f.finalize_required_params(data)
     c.check_required(data)
+    
     data = load_params_from_yaml(specs_file, input_file, input_dir, tqdm)
 
     f.finalize_params(data)
@@ -91,12 +92,18 @@ def _get_series_from_params(params):
     return params, series
 
 def load_params_from_yaml(specs_file, input_file, input_dir, tqdm, file_opener=_default_file_open):
-    """Load model specifications, parameters and time series."""
     logging.info("\tLoading parameters and time series")
-
     specs = load_yaml(specs_file, file_opener)
     params = load_yaml(input_file, file_opener)
+    no_list = _make_no_list(params)
+    validate_no_extra_params(specs, params, input_file)
+    _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
+    _supply_null_values_for_missing_fields(specs, params)
+    params, series = _get_series_from_params(params)
+    data = {"specs": specs, "series": series, "params": params}
+    return data
 
+def _make_no_list(params):
     no_list = ([
         "node_areas",
         "free_throughfall",
@@ -106,18 +113,8 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm, file_opener=_
         i for i in params if ("zone_mapping" in i or "_locs" in i) and i not in
         ["rainfall_zone_mapping", "pe_zone_mapping", "subroot_zone_mapping"]
     ])
-
-    validate_no_extra_params(specs, params, input_file)
-
-    _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
-    _supply_null_values_for_missing_fields(specs, params)
-
-
-    params, series = _get_series_from_params(params)
-
-    data = {"specs": specs, "series": series, "params": params}
-
-    return data
+    
+    return no_list
 
 def validate(params, input_file):
     errors = []
