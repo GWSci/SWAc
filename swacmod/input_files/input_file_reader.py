@@ -9,7 +9,7 @@ def scrape_run_name(input_file):
 def _default_file_open(filename):
     return open(filename, "r")
 
-def read_inputs(specs_file, input_file, input_dir, file_opener=_default_file_open):
+def read_inputs(specs_file, input_file, input_dir, file_opener=_default_file_open, printer=print):
     version = detect_version(input_file, file_opener)
     if (version == 1):
         parsed_input_data = input_data_v1.load_and_validate(specs_file, input_file, input_dir)
@@ -18,7 +18,7 @@ def read_inputs(specs_file, input_file, input_dir, file_opener=_default_file_ope
     else:
         raise Exception(f"Unknown version: '{version}'.")
 
-    parsed_input_data.print()
+    parsed_input_data.print(printer)
     if parsed_input_data.has_errors():
         raise Exception("Run has exited with errors.")
 
