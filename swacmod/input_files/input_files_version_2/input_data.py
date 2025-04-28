@@ -24,7 +24,7 @@ import swacmod.input_files.input_files_version_2.checks as c
 import swacmod.input_files.input_files_version_2.validation as v
 import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
-import swacmod.input_files.input_files_version_2.specs as specs
+import swacmod.input_files.input_files_version_2.specs as specs_module
 import swacmod.csv_resource as csv_resource
 
 if sys.version_info > (3,):
@@ -53,7 +53,7 @@ def load_and_validate(specs_file, input_file, input_dir):
 
 def fast_load(specs_file, input_file):
     "Load the main input file, without loading the files the parameters point to"
-    specs = load_yaml(specs_file)
+    specs = specs_module.make_specs_dictionary(specs_module.make_specs())
     params = load_yaml(input_file)
     for key in specs:
         if key not in params:
@@ -124,7 +124,7 @@ def load_params_from_yaml(specs_file, input_file, input_dir, tqdm, file_opener=_
 def validate(params, input_file):
     errors = []
     warnings = []
-    required_fields = specs.required_field_names(specs.make_specs())
+    required_fields = specs_module.required_field_names(specs_module.make_specs())
     for field in required_fields:
         if (not field in params):
             errors.append(f'Error: The file "{input_file}" is missing the required field "{field}".')

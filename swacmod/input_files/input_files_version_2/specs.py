@@ -14,6 +14,19 @@ def required_field_names(input_field_list):
     required_field_names = [x.name for x in required_fields]
     return required_field_names
 
+def make_specs_dictionary(input_field_list):
+    result = {}
+    for f in input_field_list:
+        value = {"required": f.required}
+        if len(f.alt_format) > 0:
+            value["alt_format"] = f.alt_format
+        if f.type is not None:
+            value["type"] = f.type
+        if f.constraints is not None:
+            value["constraints"] = f.constraints
+        result[f.name] = value
+    return result
+
 def make_specs():
     return [
         Input_Parameter('run_name', required=True, alt_format=[], type=[str], constraints=None),
