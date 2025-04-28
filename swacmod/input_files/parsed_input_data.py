@@ -7,4 +7,5 @@ class ParsedInputData:
     warnings: list
 
     def print(self, printer=print):
-        pass
+        for e in self.errors:
+            printer(e)
