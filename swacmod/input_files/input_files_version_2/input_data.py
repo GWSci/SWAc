@@ -20,7 +20,6 @@ from tqdm import tqdm
 
 # Internal modules
 import swacmod.utils as u
-import swacmod.input_files.input_files_version_2.checks as c
 import swacmod.input_files.input_files_version_2.validation as v
 import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
