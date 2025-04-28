@@ -13,6 +13,7 @@ class Test_Parsed_Input_Data(unittest.TestCase):
     def test_has_errors(self):
         self.assertFalse(ParsedInputData(None, [], []).has_errors())
         self.assertFalse(ParsedInputData(None, [], ["x"]).has_errors())
+        self.assertTrue(ParsedInputData(None, ["x"], []).has_errors())
 
 class Printer_Spy:
     def __init__(self):

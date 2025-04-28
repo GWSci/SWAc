@@ -13,4 +13,4 @@ class ParsedInputData:
             printer(w)
 
     def has_errors(self):
-        return False
+        return len(self.errors) > 0
