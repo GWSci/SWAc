@@ -55,7 +55,9 @@ def load_and_validate(specs_file, input_file, input_dir, file_opener=_default_fi
     logging.info("\tLoading parameters and time series")
     params = load_yaml(input_file, file_opener)
     no_list = _make_no_list(params)
-    validate_no_extra_params(specs, params, input_file)
+    validation_result = validate_no_extra_params2(specs, params, input_file)
+    if len(validation_result.errors) > 0:
+        return ParsedInputData(params, validation_result.errors, validation_result.warnings)
     _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
     _supply_null_values_for_missing_fields(specs, params)
     params, series = _get_series_from_params(params)
