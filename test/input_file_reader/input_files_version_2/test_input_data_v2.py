@@ -46,10 +46,11 @@ cat: dog
 elephant: fox
 """)
 
-    def test_validate_no_extra_params_when_params_are_empty_thorws_no_exception(self):
+    def test_validate_no_extra_params_when_params_are_empty_finds_no_errors(self):
         specs = {"aardvark": None, "bat": None}
         params = {}
-        input_data.validate_no_extra_params(specs, params, "input.yaml")
+        actual = input_data.validate_no_extra_params2(specs, params, "input.yaml")
+        self.assertEqual(0, len(actual.errors))
 
     def test_validate_no_extra_params_when_params_are_recognised_thorws_no_exception(self):
         specs = {"aardvark": None, "bat": None}
