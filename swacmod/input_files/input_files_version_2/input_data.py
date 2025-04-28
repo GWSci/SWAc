@@ -117,6 +117,9 @@ def _make_no_list(params):
     return no_list
 
 def validate(params, input_file):
+    return validate_required_fields(params, input_file)
+
+def validate_required_fields(params, input_file):
     errors = []
     warnings = []
     required_fields = specs_module.required_field_names(specs_module.make_specs())
