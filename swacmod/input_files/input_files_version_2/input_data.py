@@ -38,7 +38,11 @@ class Validation_Result:
 
 def load_and_validate(specs_file, input_file, input_dir):
     """Load, finalize and validate model parameters and time series."""
-    data = fast_load(specs_file, input_file)
+    specs = specs_module.make_specs_dictionary(specs_module.make_specs())
+    params = load_yaml(input_file)
+    _supply_null_values_for_missing_fields(specs, params)
+    params, series = _get_series_from_params(params)
+    data = {"specs": specs, "series": series, "params": params}
     f.finalize_required_params(data)
     c.check_required(data)
     data = load_params_from_yaml(specs_file, input_file, input_dir, tqdm)
@@ -49,15 +53,6 @@ def load_and_validate(specs_file, input_file, input_dir):
     v.validate_params(data)
     v.validate_series(data)
 
-    return data
-
-def fast_load(specs_file, input_file):
-    "Load the main input file, without loading the files the parameters point to"
-    specs = specs_module.make_specs_dictionary(specs_module.make_specs())
-    params = load_yaml(input_file)
-    _supply_null_values_for_missing_fields(specs, params)
-    params, series = _get_series_from_params(params)
-    data = {"specs": specs, "series": series, "params": params}
     return data
 
 def _default_file_open(filename):
