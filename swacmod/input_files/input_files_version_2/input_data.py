@@ -65,7 +65,7 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     v.validate_params(data)
     v.validate_series(data)
 
-    return validation_result.update(ParsedInputData)(data, [], [])
+    return validation_result.update(ParsedInputData(data, [], []))
 
 def load_yaml(filein, file_opener=_default_file_open):
     """Load a YAML file, lowercase its keys."""
