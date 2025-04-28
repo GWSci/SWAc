@@ -35,7 +35,7 @@ if sys.version_info > (3,):
 def _default_file_open(filename):
     return open(filename, "r")
 
-def load_and_validate(specs_file, input_file, input_dir, file_opener=_default_file_open):
+def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     """Load, finalize and validate model parameters and time series."""
     specs_object = specs_module.make_specs()
     specs = specs_module.make_specs_dictionary(specs_object)

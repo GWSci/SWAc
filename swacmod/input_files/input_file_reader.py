@@ -11,7 +11,7 @@ def read_inputs(specs_file, input_file, input_dir):
     if (version == 1):
         parsed_input_data = input_data_v1.load_and_validate(specs_file, input_file, input_dir)
     elif (version == 2):
-        parsed_input_data = input_data_v2.load_and_validate(specs_file, input_file, input_dir)
+        parsed_input_data = input_data_v2.load_and_validate(input_file, input_dir)
     else:
         raise Exception(f"Unknown version: '{version}'.")
 
