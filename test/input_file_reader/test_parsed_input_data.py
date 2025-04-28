@@ -15,6 +15,12 @@ class Test_Parsed_Input_Data(unittest.TestCase):
         self.assertFalse(ParsedInputData(None, [], ["x"]).has_errors())
         self.assertTrue(ParsedInputData(None, ["x"], []).has_errors())
 
+
+    def test_updating_parsed_input_data_replaces_data_field(self):
+        testee = ParsedInputData("a", [], [])
+        testee.update(ParsedInputData("b", [], []))
+        self.assertEqual("b", testee.data)
+
 class Printer_Spy:
     def __init__(self):
         self.result = ""

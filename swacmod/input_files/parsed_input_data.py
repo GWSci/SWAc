@@ -14,3 +14,7 @@ class ParsedInputData:
 
     def has_errors(self):
         return len(self.errors) > 0
+
+    def update(self, new):
+        self.data = new.data
+        return self
