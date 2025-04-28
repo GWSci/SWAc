@@ -2,7 +2,7 @@ import unittest
 from swacmod.input_files.parsed_input_data import ParsedInputData
 
 class Test_Parsed_Input_Data(unittest.TestCase):
-    def test_x(self):
+    def test_parsed_input_data_prints_errors_and_warnings(self):
         self.assertEqual("", print_adaptor(ParsedInputData(None, [], [])))
 
 def print_adaptor(testee):
