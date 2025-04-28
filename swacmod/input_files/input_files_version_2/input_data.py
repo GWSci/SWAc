@@ -55,9 +55,7 @@ def fast_load(specs_file, input_file):
     "Load the main input file, without loading the files the parameters point to"
     specs = specs_module.make_specs_dictionary(specs_module.make_specs())
     params = load_yaml(input_file)
-    for key in specs:
-        if key not in params:
-            params[key] = None
+    _supply_null_values_for_missing_fields(specs, params)
     params, series = _get_series_from_params(params)
     data = {"specs": specs, "series": series, "params": params}
     return data
