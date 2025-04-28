@@ -33,6 +33,7 @@ if sys.version_info > (3,):
 @dataclass
 class Validation_Result:
     errors: list
+    warnings: list
 
 def _default_file_open(filename):
     return open(filename, "r")
@@ -213,7 +214,7 @@ def load_and_validate(specs_file, input_file, input_dir):
     return data
 
 def validate(params, input_file):
-    return Validation_Result([])
+    return Validation_Result([], [])
 
 def validate_no_extra_params(specs, params, input_file):
     valid_keys = set(specs.keys())

@@ -7,3 +7,9 @@ class Test_Input_Data_v2_Validation(unittest.TestCase):
         input_file = "some_input_file.yml"
         validation_result = input_data.validate(params, input_file)
         self.assertEqual(0, len(validation_result.errors))
+
+    def test_a_valid_file_has_no_warnings(self):
+        params = {}
+        input_file = "some_input_file.yml"
+        validation_result = input_data.validate(params, input_file)
+        self.assertEqual(0, len(validation_result.warnings))
