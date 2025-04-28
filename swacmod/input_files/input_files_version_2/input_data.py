@@ -77,6 +77,11 @@ def load_yaml(filein, file_opener=_default_file_open):
                 yml[new_key] = value
     return yml
 
+def _supply_null_values_for_missing_fields(specs, params):
+    for key in specs:
+        if key not in params:
+            params[key] = None
+
 def _get_series_from_params(params):
     """Get the params dictionary and separate it into series and params"""
     series = {}
@@ -195,11 +200,6 @@ def _use_array_directly(param):
             or param == "time_periods"
             or param == "historical_time_periods"
             or param == "historical_mi_array_kg_per_time_period")
-
-def _supply_null_values_for_missing_fields(specs, params):
-    for key in specs:
-        if key not in params:
-            params[key] = None
 
 def load_yml_alt_format(params, param, absolute, file_opener):
     parsed_yaml = load_yaml_file_contents(param, absolute, file_opener)
