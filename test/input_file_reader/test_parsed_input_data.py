@@ -10,6 +10,9 @@ class Test_Parsed_Input_Data(unittest.TestCase):
         self.assertEqual("cd", print_adaptor(ParsedInputData(None, [], ["c", "d"])))
         self.assertEqual("abcd", print_adaptor(ParsedInputData(None, ["a", "b"], ["c", "d"])))
 
+    def test_has_errors(self):
+        self.assertFalse(ParsedInputData(None, [], []).has_errors())
+
 class Printer_Spy:
     def __init__(self):
         self.result = ""

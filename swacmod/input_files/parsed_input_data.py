@@ -11,3 +11,6 @@ class ParsedInputData:
             printer(e)
         for w in self.warnings:
             printer(w)
+
+    def has_errors(self):
+        return False
