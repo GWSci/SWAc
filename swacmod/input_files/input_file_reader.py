@@ -1,5 +1,5 @@
-from swacmod.input_files.input_files_version_1 import input_data as input_data_v1
-from swacmod.input_files.input_files_version_2 import input_data as input_data_v2
+import swacmod.input_files.input_files_version_1.input_data as input_data_v1
+import swacmod.input_files.input_files_version_2.input_data as input_data_v2
 
 def scrape_run_name(input_file):
     params = input_data_v1.load_yaml(input_file)
