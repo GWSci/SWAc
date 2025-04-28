@@ -207,6 +207,9 @@ def load_and_validate(specs_file, input_file, input_dir):
 
     return data
 
+def validate(params, input_file):
+    pass
+
 def validate_no_extra_params(specs, params, input_file):
     valid_keys = set(specs.keys())
     found_keys = set(params.keys())
