@@ -123,12 +123,3 @@ def check_values_limits(
         if not all(i in constraints for i in values):
             msg = 'Parameter "%s" requires to be one in %s'
             raise u.ValidationError(msg % (name, constraints))
-
-def check_required(data):
-    """Check that all required parameters have been provided."""
-    for param in data["specs"]:
-        if not data["specs"][param]["required"]:
-            continue
-        key = "series" if param.endswith("ts") else "params"
-        if data[key][param] is None:
-            raise u.ValidationError('Parameter "%s" is required' % param)

@@ -47,7 +47,6 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     params, series = _get_series_from_params(params)
     data = {"specs": specs, "series": series, "params": params}
     f.finalize_required_params(data)
-    c.check_required(data)
 
     file_opener=_default_file_open
     file_opener=_default_file_open
@@ -61,7 +60,6 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
 
     f.finalize_params(data)
     f.finalize_series(data)
-    c.check_required(data)
     v.validate_params(data)
     v.validate_series(data)
 
