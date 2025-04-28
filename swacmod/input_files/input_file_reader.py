@@ -15,6 +15,10 @@ def read_inputs(specs_file, input_file, input_dir):
     else:
         raise Exception(f"Unknown version: '{version}'.")
 
+    parsed_input_data.print()
+    if parsed_input_data.has_errors():
+        raise Exception("Run has exited with errors.")
+
     return parsed_input_data.data
 
 def detect_version(input_file):
