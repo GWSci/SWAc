@@ -9,13 +9,13 @@ def scrape_run_name(input_file):
 def read_inputs(specs_file, input_file, input_dir):
     version = detect_version(input_file)
     if (version == 1):
-        result = input_data_v1.load_and_validate(specs_file, input_file, input_dir)
+        parsed_input_data = input_data_v1.load_and_validate(specs_file, input_file, input_dir)
     elif (version == 2):
-        result = input_data_v2.load_and_validate(specs_file, input_file, input_dir)
+        parsed_input_data = input_data_v2.load_and_validate(specs_file, input_file, input_dir)
     else:
         raise Exception(f"Unknown version: '{version}'.")
 
-    return result.data
+    return parsed_input_data.data
 
 def detect_version(input_file):
     params = input_data_v1.load_yaml(input_file)
