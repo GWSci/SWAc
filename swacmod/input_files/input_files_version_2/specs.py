@@ -9,6 +9,11 @@ class Input_Parameter:
     type: list
     constraints: list
 
+def required_field_names(input_field_list):
+    required_fields = filter(lambda x: x.required, input_field_list)
+    required_field_names = [x.name for x in required_fields]
+    return required_field_names
+
 def make_specs():
     return [
         Input_Parameter('run_name', required=True, alt_format=[], type=[str], constraints=None),
@@ -157,7 +162,7 @@ def make_specs():
         Input_Parameter('swabs_f', required=False, alt_format=[], type=[int], constraints=[0, 1, 2]),
         Input_Parameter('gwmodel_type', required=False, alt_format=[], type=[str], constraints=['mf6', 'mfusg', 'mf96']),
         Input_Parameter('mf96_lrc', required=False, alt_format=[], type=None, constraints=None),
-        Input_Parameter('version', required=False, alt_format=[], type=None, constraints=None),
+        Input_Parameter('version', required=True, alt_format=[], type=None, constraints=None),
         Input_Parameter('node_xy', required=False, alt_format=['yml', 'csv'], type=[dict, list, float], constraints=None),
         Input_Parameter('disv', required=False, alt_format=[], type=[bool], constraints=None),
     ]

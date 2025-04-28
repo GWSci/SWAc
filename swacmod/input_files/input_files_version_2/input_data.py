@@ -24,6 +24,7 @@ import swacmod.input_files.input_files_version_2.checks as c
 import swacmod.input_files.input_files_version_2.validation as v
 import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
+import swacmod.input_files.input_files_version_2.specs as specs
 import swacmod.csv_resource as csv_resource
 
 if sys.version_info > (3,):
@@ -216,7 +217,7 @@ def load_and_validate(specs_file, input_file, input_dir):
 def validate(params, input_file):
     errors = []
     warnings = []
-    required_fields = ["version", "run_name"]
+    required_fields = specs.required_field_names(specs.make_specs())
     for field in required_fields:
         if (not field in params):
             errors.append(f'Error: The file "{input_file}" is missing the required field "{field}".')
