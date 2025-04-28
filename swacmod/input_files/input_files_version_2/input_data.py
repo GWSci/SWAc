@@ -25,6 +25,7 @@ import swacmod.input_files.input_files_version_2.validation as v
 import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 import swacmod.input_files.input_files_version_2.specs as specs_module
+from swacmod.input_files.parsed_input_data import ParsedInputData
 import swacmod.csv_resource as csv_resource
 
 if sys.version_info > (3,):
@@ -66,7 +67,7 @@ def load_and_validate(specs_file, input_file, input_dir, file_opener=_default_fi
     v.validate_params(data)
     v.validate_series(data)
 
-    return data
+    return ParsedInputData(data, [], [])
 
 def load_yaml(filein, file_opener=_default_file_open):
     """Load a YAML file, lowercase its keys."""
