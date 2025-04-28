@@ -52,7 +52,7 @@ def load_and_validate(specs_file, input_file, input_dir, file_opener=_default_fi
     params = load_yaml(input_file, file_opener)
     no_list = _make_no_list(params)
     validation_result = validate(specs, params, input_file)
-    if len(validation_result.errors) > 0:
+    if validation_result.has_errors():
         return ParsedInputData(params, validation_result.errors, validation_result.warnings)
     _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
     _supply_null_values_for_missing_fields(specs, params)
@@ -65,7 +65,7 @@ def load_and_validate(specs_file, input_file, input_dir, file_opener=_default_fi
     v.validate_params(data)
     v.validate_series(data)
 
-    return ParsedInputData(data, [], [])
+    return validation_result.update(ParsedInputData)(data, [], [])
 
 def load_yaml(filein, file_opener=_default_file_open):
     """Load a YAML file, lowercase its keys."""
