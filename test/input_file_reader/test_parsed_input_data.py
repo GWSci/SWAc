@@ -5,6 +5,7 @@ class Test_Parsed_Input_Data(unittest.TestCase):
     def test_parsed_input_data_prints_errors_and_warnings(self):
         self.assertEqual("", print_adaptor(ParsedInputData(None, [], [])))
         self.assertEqual("a", print_adaptor(ParsedInputData(None, ["a"], [])))
+        self.assertEqual("ab", print_adaptor(ParsedInputData(None, ["a", "b"], [])))
 
 class Printer_Spy:
     def __init__(self):
