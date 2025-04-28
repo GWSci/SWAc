@@ -49,19 +49,19 @@ elephant: fox
     def test_validate_no_extra_params_when_params_are_empty_finds_no_errors(self):
         specs = {"aardvark": None, "bat": None}
         params = {}
-        actual = input_data.validate_no_extra_params2(specs, params, "input.yaml")
+        actual = input_data.validate_no_extra_params(specs, params, "input.yaml")
         self.assertEqual(0, len(actual.errors))
 
     def test_validate_no_extra_params_when_params_are_recognised_finds_no_errors(self):
         specs = {"aardvark": None, "bat": None}
         params = {"aardvark": None, "bat": None}
-        actual = input_data.validate_no_extra_params2(specs, params, "input.yaml")
+        actual = input_data.validate_no_extra_params(specs, params, "input.yaml")
         self.assertEqual(0, len(actual.errors))
 
     def test_validate_no_extra_params_when_one_params_is_unrecognised_finds_an_error(self):
         specs = {"aardvark": None, "bat": None}
         params = {"aardvark": None, "bat": None, "cat": None}
-        actual = input_data.validate_no_extra_params2(specs, params, "input.yaml")
+        actual = input_data.validate_no_extra_params(specs, params, "input.yaml")
         self.assertEqual(1, len(actual.errors))
         self.assertIn(
             'Error: Found the key "cat" in the file "input.yaml". This key is not valid. A full list of valid keys is: ["aardvark", "bat"].',
@@ -70,7 +70,7 @@ elephant: fox
     def test_validate_no_extra_params_when_multiple_params_are_unrecognised_finds_2_errors(self):
         specs = {"aardvark": None, "bat": None}
         params = {"aardvark": None, "bat": None, "dog": None, "cat": None}
-        actual = input_data.validate_no_extra_params2(specs, params, "input.yaml")
+        actual = input_data.validate_no_extra_params(specs, params, "input.yaml")
         self.assertEqual(2, len(actual.errors))
         self.assertIn(
             'Error: Found the key "cat" in the file "input.yaml". This key is not valid. A full list of valid keys is: ["aardvark", "bat"].',
