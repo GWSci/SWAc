@@ -111,7 +111,7 @@ def _make_no_list(params):
     
     return no_list
 
-def validate(params, input_file):
+def validate(specs, params, input_file):
     result = ParsedInputData(params, [], [])
     result.update(validate_required_fields(params, input_file))
     return result
