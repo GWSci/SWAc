@@ -48,7 +48,6 @@ def load_and_validate(specs_file, input_file, input_dir):
 
     file_opener=_default_file_open
     logging.info("\tLoading parameters and time series")
-    specs = load_yaml(specs_file, file_opener)
     params = load_yaml(input_file, file_opener)
     no_list = _make_no_list(params)
     validate_no_extra_params(specs, params, input_file)
