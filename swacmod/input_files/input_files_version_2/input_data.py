@@ -32,11 +32,6 @@ if sys.version_info > (3,):
     long = int
     raw_input = input
 
-@dataclass
-class Validation_Result:
-    errors: list
-    warnings: list
-
 def _default_file_open(filename):
     return open(filename, "r")
 
