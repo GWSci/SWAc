@@ -9,7 +9,6 @@ class Test_Input_Data_v2_Validation(unittest.TestCase):
 
     def test_a_valid_file_has_no_warnings(self):
         params = make_sample_valid_input_file()
-        input_file = "some_input_file.yml"
         validation_result = input_data.validate(params, "some_input_file.yml")
         self.assertEqual(0, len(validation_result.warnings))
 
@@ -26,6 +25,12 @@ class Test_Input_Data_v2_Validation(unittest.TestCase):
         expected = 'Error: The file "some_input_file.yml" is missing the required field "version".'
         actual = validation_result.errors[0]
         self.assertEqual(expected, actual)
+
+    def test_validating_empty_params_reports_all_missing_required_parameters(self):
+        params = {}
+        validation_result = input_data.validate(params, "some_input_file.yml")
+        all_errors_string = "\n".join(validation_result.errors)
+        self.assertIn('"version"', all_errors_string)
 
 def make_sample_valid_input_file():
     return {
