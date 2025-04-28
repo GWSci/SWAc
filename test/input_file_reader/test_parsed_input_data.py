@@ -21,6 +21,11 @@ class Test_Parsed_Input_Data(unittest.TestCase):
         testee.update(ParsedInputData("b", [], []))
         self.assertEqual("b", testee.data)
 
+    def test_updating_parsed_input_data_concatenates_errors(self):
+        testee = ParsedInputData(None, ["a"], [])
+        testee.update(ParsedInputData(None, ["b"], []))
+        self.assertEqual(["a", "b"], testee.errors)
+
 class Printer_Spy:
     def __init__(self):
         self.result = ""

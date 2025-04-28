@@ -17,4 +17,5 @@ class ParsedInputData:
 
     def update(self, new):
         self.data = new.data
+        self.errors += new.errors
         return self
