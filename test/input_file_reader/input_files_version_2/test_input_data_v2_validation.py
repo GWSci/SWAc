@@ -4,7 +4,27 @@ import swacmod.input_files.input_files_version_2.input_data as input_data
 import swacmod.input_files.input_files_version_2.specs as specs_module
 import swacmod.input_files.input_file_reader as input_file_reader
 
+class Printer_Spy:
+    def __init__(self):
+        self.result = ""
+    
+    def do_print(self, x):
+        self.result += x
+
 class Test_Input_Data_v2_Validation_Through_Input_File_Reader(unittest.TestCase):
+    def test_reading_input_data_with_an_invalid_file_throws_an_exception(self):
+        input_file = "some_file.yml"
+        input_dir = "some_dir/"
+        params = make_sample_valid_input_file()
+        del params["num_nodes"]
+        input_file_contents = ""
+        for k, v in params.items():
+            input_file_contents += f"{k}: {v}\n"
+        file_opener = make_mock_file_opener({input_file: input_file_contents})
+        printer = lambda x: None
+        with self.assertRaisesRegex(Exception, "Run has exited with errors."):
+            input_file_reader.read_inputs(None, input_file, input_dir, file_opener = file_opener, printer=printer)
+
     def test_reading_input_data_with_an_invalid_file_records_the_error(self):
         input_file = "some_file.yml"
         input_dir = "some_dir/"
@@ -14,8 +34,12 @@ class Test_Input_Data_v2_Validation_Through_Input_File_Reader(unittest.TestCase)
         for k, v in params.items():
             input_file_contents += f"{k}: {v}\n"
         file_opener = make_mock_file_opener({input_file: input_file_contents})
-        with self.assertRaisesRegex(Exception, "Run has exited with errors."):
-            input_file_reader.read_inputs(None, input_file, input_dir, file_opener = file_opener)
+        printer_spy = Printer_Spy()
+        try:
+            input_file_reader.read_inputs(None, input_file, input_dir, file_opener=file_opener, printer=printer_spy.do_print)
+        except:
+            pass
+        self.assertEqual('Error: The file "some_file.yml" is missing the required field "num_nodes".', printer_spy.result)
 
 def make_mock_file_opener(filenames_to_contents):
     return lambda filename: io.StringIO(filenames_to_contents[filename])
