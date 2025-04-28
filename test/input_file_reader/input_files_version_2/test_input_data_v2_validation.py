@@ -4,28 +4,25 @@ import swacmod.input_files.input_files_version_2.input_data as input_data
 class Test_Input_Data_v2_Validation(unittest.TestCase):
     def test_a_valid_file_has_no_errors(self):
         params = make_sample_valid_input_file()
-        input_file = "some_input_file.yml"
-        validation_result = input_data.validate(params, input_file)
+        validation_result = input_data.validate(params, "some_input_file.yml")
         self.assertEqual(0, len(validation_result.errors))
 
     def test_a_valid_file_has_no_warnings(self):
         params = make_sample_valid_input_file()
         input_file = "some_input_file.yml"
-        validation_result = input_data.validate(params, input_file)
+        validation_result = input_data.validate(params, "some_input_file.yml")
         self.assertEqual(0, len(validation_result.warnings))
 
     def test_validating_a_file_missing_a_required_field_reports_an_error(self):
         params = make_sample_valid_input_file()
         del params["version"]
-        input_file = "some_input_file.yml"
-        validation_result = input_data.validate(params, input_file)
+        validation_result = input_data.validate(params, "some_input_file.yml")
         self.assertEqual(1, len(validation_result.errors))
 
     def test_validating_a_file_missing_a_required_field_has_text_describing_the_problem(self):
         params = make_sample_valid_input_file()
         del params["version"]
-        input_file = "some_input_file.yml"
-        validation_result = input_data.validate(params, input_file)
+        validation_result = input_data.validate(params, "some_input_file.yml")
         expected = 'Error: The file "some_input_file.yml" is missing the required field "version".'
         actual = validation_result.errors[0]
         self.assertEqual(expected, actual)
