@@ -2342,7 +2342,7 @@ def val_gwmodel_type(data, name):
     )
 
 FUNC_PARAMS = [
-    # val_run_name,
+    val_run_name,
     # val_num_cores,
     # val_num_nodes,
     # val_node_areas,
@@ -2495,7 +2495,14 @@ def validate(params, specs):
         "specs": specs
     }
 
+    errors = []
+
     for function in FUNC_PARAMS:
         param = function.__name__.replace("val_", "")
-        function(data, param)
+        try:
+            function(data, param)
+        except u.ValidationError as err:
+            errors.append(err.args[0])
         logging.debug('\t\t"%s" validated', param)
+    
+    return errors
