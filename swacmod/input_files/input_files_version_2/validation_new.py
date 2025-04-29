@@ -1618,13 +1618,7 @@ def val_interflow_decay_ts(data, name):
                           include_low=True)
 
 def val_interflow_decay_use_timeseries(data, name):
-    """Validate interflow_decay_use_timeseries.
-
-    1) type has to be a boolean
-    """
-    opr = data["params"][name]
-
-    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_recharge_attenuation_process(data, name):
     c.validate_type(data, name)
