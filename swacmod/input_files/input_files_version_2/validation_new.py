@@ -1202,18 +1202,8 @@ def val_fao_process(data, name):
     c.validate_enum(data, name)
 
 def val_fao_input(data, name):
-    """Validate fao_input.
-
-    1) type has to be a string
-    2) value has to be one in ['ls', 'l']
-    """
-    fao = data["params"][name]
-
-    c.check_type(param=fao, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[fao], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_soil_static_params(data, name):
     """Validate soil_static_params.
