@@ -83,13 +83,7 @@ def val_time_periods(data, name):
     #     raise u.ValidationError(msg % name)
 
 def val_output_recharge(data, name):
-    """Validate output_recharge.
-
-    1) type has to be a boolean
-    """
-    opr = data["params"][name]
-
-    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_routing_process(data, name):
     """Validate routing_process.
