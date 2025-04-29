@@ -2295,7 +2295,7 @@ FUNC_PARAMS = [
     # val_spatial_output_date,
     val_reporting_zone_names,
     # val_reporting_zone_mapping,
-    # val_rainfall_zone_names,
+    val_rainfall_zone_names,
     # val_rainfall_zone_mapping,
     # val_rapid_runoff_zone_names,
     # val_rapid_runoff_zone_mapping,

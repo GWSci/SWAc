@@ -44,6 +44,7 @@ class Test_Validation_New(unittest.TestCase):
             "output_fac": -5,
             "reporting_zone_names": "x",
             "reporting_zone_names": {1:2, 3:4},
+            "rainfall_zone_names": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -74,7 +75,7 @@ def make_valid_params():
         "reporting_zone_mapping": "reporting_zone_mapping.yml",
         "reporting_zone_names": {1:"b", 2:"d"},
         "rainfall_zone_mapping": "rainfall_zone_mapping.yml",
-        "rainfall_zone_names": "rainfall_zone_names.yml",
+        "rainfall_zone_names": {},
         "pe_zone_mapping": "pe_zone_mapping.yml",
         "pe_zone_names": "pe_zone_names.yml",
         "output_individual": set([1, 2, 3]),
