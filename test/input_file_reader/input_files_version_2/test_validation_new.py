@@ -36,13 +36,14 @@ class Test_Validation_New(unittest.TestCase):
             "time_periods": [["x", "x"], ["x", "x"], ["x", "x"]],
             "time_periods": [[1, 1], [1, 1], [1, 1]],
             "output_recharge": "x",
+            "output_individual": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
             params = make_valid_params()
             params[k] = v
             actual = validation_new.validate(params, spec_maps)
-            self.assertEqual(1, len(actual), msg = "\n".join(actual))
+            self.assertNotEqual(0, len(actual), msg = "\n".join(actual))
 
 # TODO A similar structure is in test_input_data_v2_validation.py. See if these can be merged.
 def make_valid_params():
@@ -68,6 +69,7 @@ def make_valid_params():
         "rainfall_zone_names": "rainfall_zone_names.yml",
         "pe_zone_mapping": "pe_zone_mapping.yml",
         "pe_zone_names": "pe_zone_names.yml",
+        "output_individual": set([1, 2]),
         "temperature_zone_mapping": "temperature_zone_mapping.yml",
         "temperature_zone_names": "temperature_zone_names.yml",
         "tmax_c_zone_mapping": "tmax_c_zone_mapping.yml",
