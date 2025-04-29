@@ -24,7 +24,7 @@ class Test_Validation_New(unittest.TestCase):
             "num_cores": "x",
             "num_cores": 1000,
             "num_nodes": "x",
-            "num_nodes": "-1",
+            "num_nodes": -1,
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
