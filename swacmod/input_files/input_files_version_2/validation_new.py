@@ -11,12 +11,7 @@ import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.checks as c
 
 def val_run_name(data, name):
-    """Validate run_name.
-
-    1) type has to be string
-    """
-    rnm = data["params"][name]
-    c.check_type(param=rnm, name=name, t_types=data["specs"][name]["type"])
+    c.check_type(param=data["params"][name], name=name, t_types=data["specs"][name]["type"])
 
 def val_num_cores(data, name):
     """Validate num_cores.
