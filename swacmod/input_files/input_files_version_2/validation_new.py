@@ -111,14 +111,9 @@ def val_sfr_obs(data, name):
     c.check_type(param=obs, name=name, t_types=data["specs"][name]["type"])
 
 def val_output_individual(data, name):
-    """Validate output_individual.
-
-    1) type has to be a set of integers
-    2) all ids in the list have also to be node ids
-    """
     oin = data["params"][name]
 
-    c.check_type(param=oin, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
     ids = set(range(1, data["params"]["num_nodes"] + 1))
 
