@@ -401,12 +401,7 @@ def val_node_areas(data, name):
     c.check_values_limits(values=data["params"][name].values(), name=name, low_l=0, include_low=True)
 
 def val_reporting_zone_names(data, name):
-    """Validate reporting_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    rzn = data["params"][name]
-    c.check_type(param=rzn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_reporting_zone_mapping(data, name):
     """Validate reporting_zone_mapping.
