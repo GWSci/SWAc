@@ -6,4 +6,5 @@ class Test_Validation_New(unittest.TestCase):
     def test_x(self):
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         params = {"run_name": 5}
-        validation_new.validate(params, spec_maps)
+        actual = validation_new.validate(params, spec_maps)
+        self.assertEqual("---> Validation failed: Parameter \"run_name\" has to be a string, found a <class 'int'> instead", actual[0])
