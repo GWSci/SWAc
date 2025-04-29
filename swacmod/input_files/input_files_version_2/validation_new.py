@@ -130,15 +130,8 @@ def val_nodes_per_line(data, name):
     c.check_values_limits(values=[data["params"][name]], name=name, low_l=0)
 
 def val_output_fac(data, name):
-    """Validate output_fac.
-
-    1) type has to be a positive float
-    """
-    fac = data["params"][name]
-
-    c.check_type(param=fac, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(values=[fac], name=name, low_l=0.0)
+    c.validate_type(data, name)
+    c.check_values_limits(values=[data["params"][name]], name=name, low_l=0.0)
 
 def val_spatial_output_date(data, name):
     """Validate spatial_output_date.
