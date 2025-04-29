@@ -123,13 +123,7 @@ def val_output_individual(data, name):
         raise u.ValidationError(msg % name)
 
 def val_irchcb(data, name):
-    """Validate irchcb.
-
-    1) type has to be an integer
-    """
-    irc = data["params"][name]
-
-    c.check_type(param=irc, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_nodes_per_line(data, name):
     """Validate nodes_per_line.
