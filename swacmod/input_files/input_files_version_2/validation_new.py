@@ -86,12 +86,7 @@ def val_output_recharge(data, name):
     c.validate_type(data, name)
 
 def val_routing_process(data, name):
-    """Validate routing_process.
-
-    """
-    opr = data["params"][name]
-
-    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_output_sfr(data, name):
     """Validate output_sfr.
@@ -808,18 +803,8 @@ def val_landuse_zone_names(data, name):
     c.validate_type(data, name)
 
 def val_canopy_process(data, name):
-    """Validate canopy_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    cpr = data["params"][name]
-
-    c.check_type(param=cpr, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[cpr], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_canopy_zone_names(data, name):
     c.validate_type(data, name)
@@ -898,32 +883,12 @@ def val_max_canopy_storage(data, name):
                           include_low=True)
 
 def val_snow_process_simple(data, name):
-    """Validate snow_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    spr = data["params"][name]
-
-    c.check_type(param=spr, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[spr], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_snow_process_complex(data, name):
-    """Validate snow_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    spr = data["params"][name]
-
-    c.check_type(param=spr, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[spr], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_snow_params_simple(data, name):
     """Validate snow_params_simple.
@@ -984,18 +949,8 @@ def val_snow_params_complex(data, name):
     )
 
 def val_rapid_runoff_process(data, name):
-    """Validate rapid_runoff_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    rrp = data["params"][name]
-
-    c.check_type(param=rrp, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[rrp], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_rapid_runoff_params(data, name):
     """Validate rapid_runoff_params.
@@ -1036,23 +991,14 @@ def val_rapid_runoff_params(data, name):
         )
 
 def val_rorecharge_process(data, name):
-    """Validate rorecharge_process.
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
     rop = data['params'][name]
     rrp = data['params']['rapid_runoff_process']
     if rop == 'enabled' and rrp == 'disabled':
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
         raise u.ValidationError(msg % (name, 'rapid_runoff_process'))
 
-    c.check_type(param=rop,
-                 name=name,
-                 t_types=data['specs'][name]['type'])
-
-    c.check_values_limits(values=[rop],
-                          name=name,
-                          constraints=data['specs'][name]['constraints'])
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_single_cell_swrecharge_proportion(data, name):
     """Validate single_cell_swrecharge_proportion.
@@ -1108,22 +1054,14 @@ def val_single_cell_swrecharge_activation(data, name):
                  keys=range(1, 13))
 
 def val_swrecharge_process(data, name):
-    """Validate swrecharge_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
     rop = data["params"][name]
     rrp = data["params"]["rapid_runoff_process"]
     if rop == "enabled" and rrp == "disabled":
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
         raise u.ValidationError(msg % (name, "rapid_runoff_process"))
 
-    c.check_type(param=rop, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[rop], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_swrecharge_proportion(data, name):
     """Validate swrecharge_proportion.
@@ -1172,22 +1110,14 @@ def val_swrecharge_limit(data, name):
     )
 
 def val_macropore_process(data, name):
-    """Validate macropore_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
     mpp = data["params"][name]
     rrp = data["params"]["rapid_runoff_process"]
     if mpp == "enabled" and rrp == "disabled":
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
         raise u.ValidationError(msg % (name, "rapid_runoff_process"))
 
-    c.check_type(param=mpp, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[mpp], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_macropore_proportion(data, name):
     """Validate macropore_proportion.
@@ -1282,18 +1212,8 @@ def val_macropore_recharge(data, name):
     )
 
 def val_fao_process(data, name):
-    """Validate fao_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    fao = data["params"][name]
-
-    c.check_type(param=fao, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[fao], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_fao_input(data, name):
     """Validate fao_input.
@@ -1559,18 +1479,8 @@ def val_percolation_rejection_use_timeseries(data, name):
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
 def val_leakage_process(data, name):
-    """Validate leakage_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    lep = data["params"][name]
-
-    c.check_type(param=lep, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[lep], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_subsoilzone_leakage_fraction(data, name):
     """Validate subsoilzone_leakage_fraction.
@@ -1589,18 +1499,8 @@ def val_subsoilzone_leakage_fraction(data, name):
     )
 
 def val_interflow_process(data, name):
-    """Validate interflow_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    ifp = data["params"][name]
-
-    c.check_type(param=ifp, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[ifp], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_init_interflow_store(data, name):
     """init_interflow_store.
@@ -1753,18 +1653,8 @@ def val_interflow_decay_use_timeseries(data, name):
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
 def val_recharge_attenuation_process(data, name):
-    """Validate recharge_attenuation_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    rap = data["params"][name]
-
-    c.check_type(param=rap, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[rap], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_recharge_attenuation_params(data, name):
     """Validate recharge_attenuation_params.
@@ -1795,18 +1685,8 @@ def val_recharge_attenuation_params(data, name):
     )
 
 def val_sw_process_natproc(data, name):
-    """Validate sw_process_natproc.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    rap = data["params"][name]
-
-    c.check_type(param=rap, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[rap], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_sw_zone_names(data, name):
     """Validate sw_zone_names.
@@ -2006,18 +1886,8 @@ def val_sw_ponding_area(data, name):
         )
 
 def val_sw_process(data, name):
-    """Validate sw_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    rap = data["params"][name]
-
-    c.check_type(param=rap, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[rap], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_sw_params(data, name):
     """Validate sw_params.
@@ -2134,18 +2004,8 @@ def val_output_evt(data, name):
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
 def val_excess_sw_process(data, name):
-    """Validate excess_sw_process.
-
-    1) type has to be a string
-    2) value has to be one in ['enabled', 'disabled']
-    """
-    cpr = data["params"][name]
-
-    c.check_type(param=cpr, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[cpr], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_evt_parameters(data, name):
     """Validate evt parameters .

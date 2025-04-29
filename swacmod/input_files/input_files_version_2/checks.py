@@ -97,6 +97,11 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             types = []
             len_list = []
 
+def validate_enum(data, name):
+    check_values_limits(
+        values=[data["params"][name]], name=name, constraints=data["specs"][name]["constraints"]
+    )
+
 def check_values_limits(
     values=None,
     name=None,
