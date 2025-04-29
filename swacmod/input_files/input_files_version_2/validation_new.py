@@ -403,7 +403,7 @@ def val_reporting_zone_mapping(data, name):
     zone_name = "reporting_zone_names"
     rzm = data["params"][name]
     tot = data["params"][tot_name]
-    rzn = data["params"]["reporting_zone_names"]
+    rzn = data["params"][zone_name]
 
     c.check_type(
         param=rzm,
