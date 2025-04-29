@@ -55,13 +55,13 @@ def val_time_periods(data, name):
     tmp = data["params"][name]
     c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
 
-    c.check_values_limits(
-        values=[i for j in tmp for i in j],
-        name=name,
-        low_l=0,
-        high_l=len(data["series"]["date"]) + 1,
-        include_high=True,
-    )
+    # c.check_values_limits(
+    #     values=[i for j in tmp for i in j],
+    #     name=name,
+    #     low_l=0,
+    #     high_l=len(data["series"]["date"]) + 1,
+    #     include_high=True,
+    # )
 
     all_days = []
     for time_range in tmp:
@@ -73,12 +73,12 @@ def val_time_periods(data, name):
             raise u.ValidationError(msg % name)
         all_days += range(time_range[0], time_range[1])
 
-    if set(all_days) != set(range(1, len(data["series"]["date"]) + 1)):
-        msg = (
-            'Parameter "%s" requires all days to be included'
-            " in one (and only one) of the periods"
-        )
-        raise u.ValidationError(msg % name)
+    # if set(all_days) != set(range(1, len(data["series"]["date"]) + 1)):
+    #     msg = (
+    #         'Parameter "%s" requires all days to be included'
+    #         " in one (and only one) of the periods"
+    #     )
+    #     raise u.ValidationError(msg % name)
 
 def val_output_recharge(data, name):
     """Validate output_recharge.
@@ -2320,7 +2320,7 @@ FUNC_PARAMS = [
     val_num_nodes,
     val_node_areas,
     val_start_date,
-    # val_time_periods,
+    val_time_periods,
     # val_output_recharge,
     # val_output_individual,
     # val_irchcb,

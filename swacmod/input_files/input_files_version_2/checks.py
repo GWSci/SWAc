@@ -55,7 +55,8 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
 
         if not isinstance(param, t_type):
             msg = 'Parameter "%s" has to be %s, found a %s instead'
-            raise u.ValidationError(msg % (name, MAPPING[t_type][0],
+            type_in_english = MAPPING.get(t_type, [t_type, t_type])[0]
+            raise u.ValidationError(msg % (name, type_in_english,
                                            type(param)))
 
         if t_type == expanded_list and new_len and len(param) != new_len:
