@@ -69,7 +69,7 @@ def make_valid_params():
         "rainfall_zone_names": "rainfall_zone_names.yml",
         "pe_zone_mapping": "pe_zone_mapping.yml",
         "pe_zone_names": "pe_zone_names.yml",
-        "output_individual": set([1, 2]),
+        "output_individual": set([1, 2, 3]),
         "temperature_zone_mapping": "temperature_zone_mapping.yml",
         "temperature_zone_names": "temperature_zone_names.yml",
         "tmax_c_zone_mapping": "tmax_c_zone_mapping.yml",
