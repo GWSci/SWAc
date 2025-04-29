@@ -158,6 +158,7 @@ class Test_Validation_New(unittest.TestCase):
             "infiltration_limit_use_timeseries": "x",
             "interflow_decay_use_timeseries": "x",
             "fao_input": 5,
+            "fao_input": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
