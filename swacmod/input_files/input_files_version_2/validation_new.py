@@ -2309,7 +2309,7 @@ FUNC_PARAMS = [
     val_output_recharge,
     val_output_individual,
     val_irchcb,
-    # val_nodes_per_line,
+    val_nodes_per_line,
     # val_output_fac,
     # val_spatial_output_date,
     # val_reporting_zone_names,

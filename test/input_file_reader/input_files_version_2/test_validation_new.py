@@ -38,6 +38,7 @@ class Test_Validation_New(unittest.TestCase):
             "output_recharge": "x",
             "output_individual": "x",
             "irchcb": "x",
+            "nodes_per_line": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
