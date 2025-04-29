@@ -11,11 +11,11 @@ class Test_Validation_New(unittest.TestCase):
             "---> Validation failed: Parameter \"run_name\" has to be a string, found a <class 'int'> instead",
             actual[0])
 
-    def validations_pass_for_valid_input(self):
+    def test_validations_pass_for_valid_input(self):
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
-        params = {"run_name": 5}
+        params = make_valid_params()
         actual = validation_new.validate(params, spec_maps)
-        self.assertEqual(0, len(actual))
+        self.assertEqual(0, len(actual), msg = "\n".join(actual))
 
 # TODO A similar structure is in test_input_data_v2_validation.py. See if these can be merged.
 def make_valid_params():
