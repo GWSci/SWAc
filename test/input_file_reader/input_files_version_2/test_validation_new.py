@@ -40,6 +40,7 @@ class Test_Validation_New(unittest.TestCase):
             "irchcb": "x",
             "nodes_per_line": "x",
             "nodes_per_line": -5,
+            "output_fac": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
