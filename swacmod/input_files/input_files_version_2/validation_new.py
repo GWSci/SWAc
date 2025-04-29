@@ -399,14 +399,10 @@ def val_reporting_zone_names(data, name):
     c.validate_type(data, name)
 
 def val_reporting_zone_mapping(data, name):
-    """Validate reporting_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
+    tot_name = "num_nodes"
+    zone_name = "reporting_zone_names"
     rzm = data["params"][name]
-    tot = data["params"]["num_nodes"]
+    tot = data["params"][tot_name]
     rzn = data["params"]["reporting_zone_names"]
 
     c.check_type(
@@ -429,15 +425,11 @@ def val_rainfall_zone_names(data, name):
     c.validate_type(data, name)
 
 def val_rainfall_zone_mapping(data, name):
-    """Validate rainfall_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
+    tot_name = "num_nodes"
+    zone_name = "rainfall_zone_names"
     rzm = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    rzn = data["params"]["rainfall_zone_names"]
+    tot = data["params"][tot_name]
+    rzn = data["params"][zone_name]
 
     c.check_type(
         param=rzm,
