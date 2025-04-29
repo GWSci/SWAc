@@ -76,7 +76,7 @@ def make_valid_params():
         "reporting_zone_mapping": "reporting_zone_mapping.yml",
         "reporting_zone_names": {1:"b", 2:"d"},
         "rainfall_zone_mapping": "rainfall_zone_mapping.yml",
-        "rainfall_zone_names": {},
+        "rainfall_zone_names": {1:"b", 2:"d"},
         "pe_zone_mapping": "pe_zone_mapping.yml",
         "pe_zone_names": "pe_zone_names.yml",
         "output_individual": set([1, 2, 3]),
