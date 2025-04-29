@@ -55,6 +55,7 @@ def val_time_periods(data, name):
     tmp = data["params"][name]
     c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
 
+    # TODO: Validation needs to be done post-finalization
     # c.check_values_limits(
     #     values=[i for j in tmp for i in j],
     #     name=name,
@@ -73,6 +74,7 @@ def val_time_periods(data, name):
             raise u.ValidationError(msg % name)
         all_days += range(time_range[0], time_range[1])
 
+    # TODO: Validation needs to be done post-finalization
     # if set(all_days) != set(range(1, len(data["series"]["date"]) + 1)):
     #     msg = (
     #         'Parameter "%s" requires all days to be included'
