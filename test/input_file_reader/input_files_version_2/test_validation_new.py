@@ -32,6 +32,9 @@ class Test_Validation_New(unittest.TestCase):
             "node_areas": {1: -11, 2: -13, 3: -17},
             "start_date": "x",
             "time_periods": "x",
+            "time_periods": [[], [], []],
+            "time_periods": [["x", "x"], ["x", "x"], ["x", "x"]],
+            "time_periods": [[1, 1], [1, 1], [1, 1]],
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -50,7 +53,7 @@ def make_valid_params():
         "node_areas": {1: 11, 2: 13, 3: 17},
         "node_xy": "node_xy.csv",
         "start_date": datetime.datetime(1980, 1, 1),
-        "time_periods": [],
+        "time_periods": [[1, 2], [3, 4], [5, 6]],
         "num_cores": 1,
         "output_recharge": True,
         "irchcb": 50,
