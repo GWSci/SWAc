@@ -36,6 +36,9 @@ def expand_t_type(t_type):
         t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
     return t_type
 
+def validate_type(data, name):
+    check_type(param=data["params"][name], name=name, t_types=data["specs"][name]["type"])
+
 def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     """Check the parameter is of type t_type."""
     types = [i for i in t_types]

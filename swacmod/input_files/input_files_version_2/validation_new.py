@@ -11,16 +11,10 @@ import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.checks as c
 
 def val_run_name(data, name):
-    c.check_type(param=data["params"][name], name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_num_cores(data, name):
-    """Validate num_cores.
-
-    1) type has to be integer
-    2) value has to be 0 < x <= number of machine cores
-    """
-    num = data["params"][name]
-    c.check_type(param=data["params"][name], name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
     c.check_values_limits(
         values=[data["params"][name]],
         name=name,

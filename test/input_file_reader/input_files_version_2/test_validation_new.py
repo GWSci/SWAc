@@ -18,7 +18,7 @@ class Test_Validation_New(unittest.TestCase):
         actual = validation_new.validate(params, spec_maps)
         self.assertEqual(0, len(actual), msg = "\n".join(actual))
 
-    def test_invalid_values_throw_errors(self):
+    def test_invalid_values_record_errors(self):
         invalid_pairs = {
             "run_name": 5,
             "num_cores": "x",
