@@ -45,6 +45,7 @@ class Test_Validation_New(unittest.TestCase):
             "reporting_zone_names": "x",
             "reporting_zone_names": {1:2, 3:4},
             "rainfall_zone_names": "x",
+            "rainfall_zone_names": {1:2, 3:4},
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
