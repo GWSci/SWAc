@@ -20,9 +20,9 @@ def val_num_cores(data, name):
     2) value has to be 0 < x <= number of machine cores
     """
     num = data["params"][name]
-    c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
+    c.check_type(param=data["params"][name], name=name, t_types=data["specs"][name]["type"])
     c.check_values_limits(
-        values=[num],
+        values=[data["params"][name]],
         name=name,
         low_l=0,
         high_l=multiprocessing.cpu_count(),
