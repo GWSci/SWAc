@@ -234,7 +234,6 @@ def make_valid_params():
         "sw_process_natproc": "enabled",
         "routing_process": "enabled",
         "excess_sw_process": "sw_rip",
-
         "gwmodel_type": "mf6",
         "nitrate_calibration_a": 1.38,
         "nitrate_calibration_sigma": 3.96,
