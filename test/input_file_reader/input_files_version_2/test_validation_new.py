@@ -72,7 +72,7 @@ def make_valid_params():
         "output_fac": 1.0,
         "spatial_output_date": "1980-01-01",
         "reporting_zone_mapping": "reporting_zone_mapping.yml",
-        "reporting_zone_names": {"a":"b", "c":"d"},
+        "reporting_zone_names": {1:"b", 2:"d"},
         "rainfall_zone_mapping": "rainfall_zone_mapping.yml",
         "rainfall_zone_names": "rainfall_zone_names.yml",
         "pe_zone_mapping": "pe_zone_mapping.yml",
