@@ -25,6 +25,9 @@ class Test_Validation_New(unittest.TestCase):
             "num_cores": 1000,
             "num_nodes": "x",
             "num_nodes": -1,
+            "node_areas": "x",
+            "node_areas": {},
+            "node_areas": {1: "x", 2: "x", 3: "x"}
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -39,8 +42,8 @@ def make_valid_params():
         "version": 2,
         "run_name": "my_run",
         "temp_file_backed_array_directory": "temp_scratch_files/",
-        "num_nodes": 10,
-        "node_areas": "node_areas.yml",
+        "num_nodes": 3,
+        "node_areas": {1: 11, 2: 13, 3: 17},
         "node_xy": "node_xy.csv",
         "start_date": "1980-01-01",
         "time_periods": "time_periods.csv",

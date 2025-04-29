@@ -24,14 +24,8 @@ def val_num_cores(data, name):
     )
 
 def val_num_nodes(data, name):
-    """Validate num_nodes.
-
-    1) type has to be integer
-    2) value has to be > 0
-    """
-    num = data["params"][name]
-    c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
-    c.check_values_limits(values=[num], name=name, low_l=0)
+    c.validate_type(data, name)
+    c.check_values_limits(values=[data["params"][name]], name=name, low_l=0)
 
 def val_start_date(data, name):
     """Validate start_date.
@@ -2334,7 +2328,7 @@ FUNC_PARAMS = [
     val_run_name,
     val_num_cores,
     val_num_nodes,
-    # val_node_areas,
+    val_node_areas,
     # val_start_date,
     # val_time_periods,
     # val_output_recharge,
