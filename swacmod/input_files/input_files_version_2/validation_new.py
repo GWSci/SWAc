@@ -89,13 +89,7 @@ def val_routing_process(data, name):
     c.validate_type(data, name)
 
 def val_output_sfr(data, name):
-    """Validate output_sfr.
-
-    1) type has to be a boolean
-    """
-    opr = data["params"][name]
-
-    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_sfr_obs(data, name):
     """Validate sfr_obs.
@@ -1462,13 +1456,7 @@ def val_percolation_rejection_ts(data, name):
                           include_low=True)
 
 def val_percolation_rejection_use_timeseries(data, name):
-    """Validate percolation_rejection_use_timeseries.
-
-    1) type has to be a boolean
-    """
-    opr = data["params"][name]
-
-    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_leakage_process(data, name):
     c.validate_type(data, name)
@@ -1601,13 +1589,7 @@ def val_infiltration_limit_ts(data, name):
                           include_low=True)
 
 def val_infiltration_limit_use_timeseries(data, name):
-    """Validate infiltration_limit_use_timeseries.
-
-    1) type has to be a boolean
-    """
-    opr = data["params"][name]
-
-    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_interflow_decay_ts(data, name):
     """Validate interflow_decay_ts.
@@ -1943,22 +1925,10 @@ def val_recharge_node_mapping(data, name):
     )
 
 def val_istcb1(data, name):
-    """Validate istcb1.
-
-    1) type has to be an integer
-    """
-    x = data["params"][name]
-
-    c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_istcb2(data, name):
-    """Validate istcb2.
-
-    1) type has to be an integer
-    """
-    x = data["params"][name]
-
-    c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_swdis_f(data, name):
     """Validate swdis_f.
@@ -1987,13 +1957,7 @@ def val_swabs_f(data, name):
     )
 
 def val_output_evt(data, name):
-    """Validate output_evt.
-
-    1) type has to be a boolean
-    """
-    opr = data["params"][name]
-
-    c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_excess_sw_process(data, name):
     c.validate_type(data, name)
@@ -2040,18 +2004,8 @@ def val_nevtopt(data, name):
     )
 
 def val_gwmodel_type(data, name):
-    """Validate gwmodel_type.
-
-    1) type has to be a string
-    2) value has to be one in ['mf6', 'mfusg']
-    """
-    rap = data["params"][name]
-
-    c.check_type(param=rap, name=name, t_types=data["specs"][name]["type"])
-
-    c.check_values_limits(
-        values=[rap], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 FUNC_PARAMS = [
     val_run_name,
@@ -2130,8 +2084,8 @@ FUNC_PARAMS = [
     # val_interflow_store_bypass,
     # val_infiltration_limit,
     # val_interflow_decay,
-    # val_infiltration_limit_use_timeseries,
-    # val_interflow_decay_use_timeseries,
+    val_infiltration_limit_use_timeseries,
+    val_interflow_decay_use_timeseries,
     val_recharge_attenuation_process,
     # val_recharge_attenuation_params,
     val_sw_process_natproc,
@@ -2144,20 +2098,20 @@ FUNC_PARAMS = [
     # val_sw_params,
     # val_swdis_locs,
     # val_swabs_locs,
-    # val_output_sfr,
+    val_output_sfr,
     # val_sfr_obs,
-    # val_istcb1,
-    # val_istcb2,
+    val_istcb1,
+    val_istcb2,
     # val_routing_topology,
     # val_swdis_f,
     # val_swabs_f,
-    # val_output_evt,
+    val_output_evt,
     # val_evt_parameters,
     # val_ievtcb,
     # val_nevtopt,
-    # val_gwmodel_type,
+    val_gwmodel_type,
     val_excess_sw_process,
-    # val_percolation_rejection_use_timeseries,
+    val_percolation_rejection_use_timeseries,
     val_interflow_zone_mapping,
     val_interflow_zone_names,
     val_canopy_zone_mapping,

@@ -142,6 +142,21 @@ class Test_Validation_New(unittest.TestCase):
             "sw_zone_mapping": "x",
             "sw_zone_mapping": {"a": "b", "c": "d"},
 
+            "gwmodel_type": 5,
+            # "nitrate_calibration_a": "x", # TODO no validation
+            # "nitrate_calibration_sigma": "x",# TODO no validation
+            # "nitrate_calibration_alpha": "x",# TODO no validation
+            # "sw_init_ponding": "x", # TODO validation not called
+            # "sw_max_ponding": "x", # TODO validation not called
+            "output_sfr": "x",
+            # "attenuate_sfr_flows": "x", # TODO no validation
+            "istcb1": "x",
+            "istcb2": "x",
+            # "mf96_lrc": "x", # TODO no validation
+            "output_evt": "x",
+            "percolation_rejection_use_timeseries": "x",
+            "infiltration_limit_use_timeseries": "x",
+            "interflow_decay_use_timeseries": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -217,6 +232,23 @@ def make_valid_params():
         "sw_process_natproc": "enabled",
         "routing_process": "enabled",
         "excess_sw_process": "sw_rip",
+
+        "gwmodel_type": "mf6",
+        "nitrate_calibration_a": 1.38,
+        "nitrate_calibration_sigma": 3.96,
+        "nitrate_calibration_alpha": 3906.25,
+        "sw_init_ponding": 5.0,
+        "sw_max_ponding": 300.0,
+        "output_sfr": True,
+        "attenuate_sfr_flows": False,
+        "istcb1": 50,
+        "istcb2": 55,
+        "mf96_lrc": [2, 2, 5],
+        "output_evt": True,
+        "percolation_rejection_use_timeseries": True,
+        "infiltration_limit_use_timeseries": True,
+        "interflow_decay_use_timeseries": True,
+
         "free_throughfall": "free_throughfall.yml",
         "max_canopy_storage": "max_canopy_storage.yml",
         "snow_params_simple": "snow_params.yml",
@@ -238,22 +270,16 @@ def make_valid_params():
         "taw": "taw.yml",
         "raw": "raw.yml",
         "percolation_rejection": "percolation_rejection.yml",
-        "percolation_rejection_use_timeseries": "true",
         "percolation_rejection_ts": "percolation_rejection_ts.yml",
         "subsoilzone_leakage_fraction": "subsoilzone_leakage_fraction.yml",
         "init_interflow_store": "init_interflow_store.yml",
         "interflow_store_bypass": "interflow_store_bypass.yml",
         "infiltration_limit": "infiltration_limit.yml",
         "interflow_decay": "interflow_decay.yml",
-        "infiltration_limit_use_timeseries": "true",
-        "interflow_decay_use_timeseries": "true",
         "infiltration_limit_ts": "infiltration_limit_ts.yml",
         "interflow_decay_ts": "interflow_decay_ts.yml",
         "recharge_attenuation_params": "recharge_attenuation_params.yml",
-        "nitrate_calibration_a": 1.38,
         "nitrate_calibration_mu": "mu.csv",
-        "nitrate_calibration_sigma": 3.96,
-        "nitrate_calibration_alpha": 3906.25,
         "nitrate_calibration_effective_porosity": "effective_porosity.csv",
         "nitrate_depth_to_water": "Average_DTW.csv",
         "nitrate_loading": "NO3_loading.csv",
@@ -263,15 +289,9 @@ def make_valid_params():
         "sw_bed_infiltration": "sw_bed_infiltration.yml",
         "sw_direct_recharge": "sw_direct_recharge.yml",
         "sw_pe_to_open_water": "sw_pe_to_open_water.yml",
-        "sw_init_ponding": 5.0,
-        "sw_max_ponding": 300.0,
         "sw_ponding_area": "sw_ponding_area.yml",
         "routing_topology": "routing_parameters.csv",
-        "output_sfr": True,
-        "attenuate_sfr_flows": False,
         "sfr_obs": "gauges_sfr.obs",
-        "istcb1": 50,
-        "istcb2": 55,
         "swdis_ts": "swdis_ts.csv",
         "swdis_locs": "swdis_locs.yml",
         "swabs_ts": "swabs_ts.csv",
@@ -283,8 +303,5 @@ def make_valid_params():
         "tmin_c_ts": "tmin_c_ts.yml",
         "windsp_ts": "windsp_ts.yml",
         "subroot_leakage_ts": "subroot_leakage_ts.yml",
-        "gwmodel_type": "mf6",
-        "mf96_lrc": [2, 2, 5],
-        "output_evt": True,
         "evt_parameters": "evt_params.csv",
     }
