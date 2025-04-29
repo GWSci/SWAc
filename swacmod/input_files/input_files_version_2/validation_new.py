@@ -461,12 +461,7 @@ def val_rainfall_zone_mapping(data, name):
     )
 
 def val_pe_zone_names(data, name):
-    """Validate pe_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    pzn = data["params"][name]
-    c.check_type(param=pzn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_pe_zone_mapping(data, name):
     """Validate pe_zone_mapping.
@@ -523,12 +518,7 @@ def val_tmax_c_zone_mapping(data, name):
     )
 
 def val_tmax_c_zone_names(data, name):
-    """Validate tmax_c_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    tzn = data["params"][name]
-    c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_tmin_c_zone_mapping(data, name):
     """Validate tmin_c_zone_mapping.
@@ -558,12 +548,7 @@ def val_tmin_c_zone_mapping(data, name):
     )
 
 def val_tmin_c_zone_names(data, name):
-    """Validate tmin_c_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    tzn = data["params"][name]
-    c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_windsp_zone_mapping(data, name):
     """Validate windsp_zone_mapping.
@@ -593,20 +578,10 @@ def val_windsp_zone_mapping(data, name):
     )
 
 def val_windsp_zone_names(data, name):
-    """Validate windsp_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    tzn = data["params"][name]
-    c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_temperature_zone_names(data, name):
-    """Validate temperature_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    tzn = data["params"][name]
-    c.check_type(param=tzn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_temperature_zone_mapping(data, name):
     """Validate temperature_zone_mapping.
@@ -636,12 +611,7 @@ def val_temperature_zone_mapping(data, name):
     )
 
 def val_subroot_zone_names(data, name):
-    """Validate subroot_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    szn = data["params"][name]
-    c.check_type(param=szn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_subroot_zone_mapping(data, name):
     """Validate subroot_zone_mapping.
@@ -671,12 +641,7 @@ def val_subroot_zone_mapping(data, name):
     )
 
 def val_rapid_runoff_zone_names(data, name):
-    """Validate rapid_runoff_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    rrn = data["params"][name]
-    c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_rapid_runoff_zone_mapping(data, name):
     """Validate rapid_runoff_zone_mapping.
@@ -706,12 +671,7 @@ def val_rapid_runoff_zone_mapping(data, name):
     )
 
 def val_interflow_zone_names(data, name):
-    """Validate interflow_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    rrn = data["params"][name]
-    c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_interflow_zone_mapping(data, name):
     """Validate interflow_zone_mapping.
@@ -741,12 +701,7 @@ def val_interflow_zone_mapping(data, name):
     )
 
 def val_swrecharge_zone_names(data, name):
-    """Validate swrecharge_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    rrn = data["params"][name]
-    c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_swrecharge_zone_mapping(data, name):
     """Validate swrecharge_zone_mapping.
@@ -776,11 +731,7 @@ def val_swrecharge_zone_mapping(data, name):
     )
 
 def val_rorecharge_zone_names(data, name):
-    """Validate rorecharge_zone_names.
-    1) type has to be a dictionary of strings
-    """
-    rrn = data['params'][name]
-    c.check_type(param=rrn, name=name, t_types=data['specs'][name]['type'])
+    c.validate_type(data, name)
 
 def val_single_cell_swrecharge_zone_mapping(data, name):
     """Validate single_cell_swrecharge_zone_mapping.
@@ -805,20 +756,10 @@ def val_single_cell_swrecharge_zone_mapping(data, name):
                           include_high=True)
 
 def val_single_cell_swrecharge_zone_names(data, name):
-    """Validate single_cell_swrecharge_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    mzn = data["params"][name]
-    c.check_type(param=mzn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_macropore_zone_names(data, name):
-    """Validate macropore_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    mzn = data["params"][name]
-    c.check_type(param=mzn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_macropore_zone_mapping(data, name):
     """Validate macropore_zone_mapping.
@@ -861,20 +802,10 @@ def val_macropore_activation_option(data, name):
     )
 
 def val_soil_zone_names(data, name):
-    """Validate soil_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    szn = data["params"][name]
-    c.check_type(param=szn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_landuse_zone_names(data, name):
-    """Validate landuse_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    lzn = data["params"][name]
-    c.check_type(param=lzn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_canopy_process(data, name):
     """Validate canopy_process.
@@ -891,12 +822,7 @@ def val_canopy_process(data, name):
     )
 
 def val_canopy_zone_names(data, name):
-    """Validate canopy_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    rrn = data["params"][name]
-    c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_canopy_zone_mapping(data, name):
     """Validate canopy_zone_mapping.
