@@ -2489,5 +2489,13 @@ def validate_series(data):
 
     logging.info("\tDone.")
 
-def validate(params, spec_maps):
-    pass
+def validate(params, specs):
+    data = {
+        "params": params,
+        "specs": specs
+    }
+
+    for function in FUNC_PARAMS:
+        param = function.__name__.replace("val_", "")
+        function(data, param)
+        logging.debug('\t\t"%s" validated', param)
