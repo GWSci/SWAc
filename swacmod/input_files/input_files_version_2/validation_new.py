@@ -427,8 +427,7 @@ def val_node_areas(data, name):
         keys=range(1, data["params"]["num_nodes"] + 1),
     )
 
-    c.check_values_limits(values=data["params"][name].values(), name=name, low_l=0,
-                          include_low=True)
+    c.check_values_limits(values=data["params"][name].values(), name=name, low_l=0, include_low=True)
 
 def val_reporting_zone_names(data, name):
     """Validate reporting_zone_names.
