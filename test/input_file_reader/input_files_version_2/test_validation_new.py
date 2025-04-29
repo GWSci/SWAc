@@ -157,6 +157,7 @@ class Test_Validation_New(unittest.TestCase):
             "percolation_rejection_use_timeseries": "x",
             "infiltration_limit_use_timeseries": "x",
             "interflow_decay_use_timeseries": "x",
+            "fao_input": 5,
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -248,6 +249,7 @@ def make_valid_params():
         "percolation_rejection_use_timeseries": True,
         "infiltration_limit_use_timeseries": True,
         "interflow_decay_use_timeseries": True,
+        "fao_input": 'l',
 
         "free_throughfall": "free_throughfall.yml",
         "max_canopy_storage": "max_canopy_storage.yml",
@@ -260,7 +262,6 @@ def make_valid_params():
         "macropore_limit": "macropore_limit.yml",
         "macropore_activation": "macropore_activation.yml",
         "macropore_recharge": "macropore_recharge.yml",
-        "fao_input": 'l',
         "soil_static_params": "soil_static_params.yml",
         "smd": "smd.yml",
         "soil_spatial": "soil_spatial.yml",
