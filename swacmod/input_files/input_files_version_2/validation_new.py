@@ -431,12 +431,7 @@ def val_reporting_zone_mapping(data, name):
     )
 
 def val_rainfall_zone_names(data, name):
-    """Validate rainfall_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
-    rzn = data["params"][name]
-    c.check_type(param=rzn, name=name, t_types=data["specs"][name]["type"])
+    c.validate_type(data, name)
 
 def val_rainfall_zone_mapping(data, name):
     """Validate rainfall_zone_mapping.
