@@ -27,7 +27,8 @@ class Test_Validation_New(unittest.TestCase):
             "num_nodes": -1,
             "node_areas": "x",
             "node_areas": {},
-            "node_areas": {1: "x", 2: "x", 3: "x"}
+            "node_areas": {1: "x", 2: "x", 3: "x"},
+            "node_areas": {1: -11, 2: -13, 3: -17},
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():

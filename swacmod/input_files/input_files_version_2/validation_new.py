@@ -420,23 +420,14 @@ def val_swabs_locs(data, name):
         )
 
 def val_node_areas(data, name):
-    """Validate node_areas.
-
-    1) type has to be a dict of floats
-    2) all node ids have to be present
-    3) values have to be >= 0.
-    """
-    nda = data["params"][name]
-    tot = data["params"]["num_nodes"]
-
     c.check_type(
-        param=nda,
+        param=data["params"][name],
         name=name,
         t_types=data["specs"][name]["type"],
-        keys=range(1, tot + 1),
+        keys=range(1, data["params"]["num_nodes"] + 1),
     )
 
-    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+    c.check_values_limits(values=data["params"][name].values(), name=name, low_l=0,
                           include_low=True)
 
 def val_reporting_zone_names(data, name):
