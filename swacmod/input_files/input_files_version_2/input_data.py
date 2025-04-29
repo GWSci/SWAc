@@ -21,6 +21,7 @@ from tqdm import tqdm
 # Internal modules
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.validation as v
+import swacmod.input_files.input_files_version_2.validation_new as validation_new
 import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 import swacmod.input_files.input_files_version_2.specs as specs_module
@@ -43,6 +44,10 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     if validation_result.has_errors():
         return ParsedInputData(params, validation_result.errors, validation_result.warnings)
     _supply_null_values_for_missing_fields(specs, params)
+    validation_errors = validation_new.validate(params, specs)
+    validation_result.update(ParsedInputData(params, validation_errors, []))
+    if validation_result.has_errors():
+        return validation_result
     params, series = _get_series_from_params(params)
     data = {"specs": specs, "series": series, "params": params}
     f.finalize_required_params(data)

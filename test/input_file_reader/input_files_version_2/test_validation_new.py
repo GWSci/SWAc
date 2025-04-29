@@ -13,6 +13,13 @@ class Test_Validation_New(unittest.TestCase):
             "---> Validation failed: Parameter \"run_name\" has to be a string, found a <class 'int'> instead",
             actual[0])
 
+    def test_validations_skipped_for_alt_files(self):
+        spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
+        params = make_valid_params()
+        params["time_periods"] = "some-alt-file.yml"
+        actual = validation_new.validate(params, spec_maps)
+        self.assertEqual(0, len(actual), msg = "\n".join(actual))
+
     def test_validations_pass_for_valid_input(self):
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         params = make_valid_params()

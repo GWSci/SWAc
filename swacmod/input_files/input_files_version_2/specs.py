@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, date
 
 @dataclass
 class Input_Parameter:
@@ -33,7 +33,7 @@ def make_specs():
         Input_Parameter('temp_file_backed_array_directory', required=True, alt_format=[], type=[str], constraints=None),
         Input_Parameter('num_nodes', required=True, alt_format=[], type=[int], constraints=None),
         Input_Parameter('node_areas', required=True, alt_format=['yml', 'csv'], type=[dict, float], constraints=None),
-        Input_Parameter('start_date', required=True, alt_format=[], type=[datetime], constraints=None),
+        Input_Parameter('start_date', required=True, alt_format=[], type=[date], constraints=None),
         Input_Parameter('time_periods', required=True, alt_format=['yml', 'csv'], type=[list, list, int], constraints=None),
         Input_Parameter('num_cores', required=False, alt_format=[], type=[int], constraints=None),
         Input_Parameter('output_recharge', required=False, alt_format=[], type=[bool], constraints=None),

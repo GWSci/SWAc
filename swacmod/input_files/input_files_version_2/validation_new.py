@@ -2149,6 +2149,9 @@ def validate(params, specs):
 
     for function in FUNC_PARAMS:
         param = function.__name__.replace("val_", "")
+        is_param_skipped = (params[param] == None) or is_alt(specs, params, param)
+        if is_param_skipped:
+            continue
         try:
             function(data, param)
         except u.ValidationError as err:
@@ -2156,3 +2159,16 @@ def validate(params, specs):
         logging.debug('\t\t"%s" validated', param)
     
     return errors
+
+def is_alt(specs, params, param):
+    value = params[param]
+
+    if not isinstance(value, str):
+        return False
+
+    alt_formats = specs[param].get("alt_format", [])
+    for alt in alt_formats:
+        suffix = f".{alt}"
+        if value.endswith(suffix):
+            return True
+    return False
