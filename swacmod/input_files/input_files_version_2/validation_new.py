@@ -2333,7 +2333,7 @@ def val_gwmodel_type(data, name):
 FUNC_PARAMS = [
     val_run_name,
     val_num_cores,
-    # val_num_nodes,
+    val_num_nodes,
     # val_node_areas,
     # val_start_date,
     # val_time_periods,

@@ -23,6 +23,7 @@ class Test_Validation_New(unittest.TestCase):
             "run_name": 5,
             "num_cores": "x",
             "num_cores": 1000,
+            "num_nodes": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
