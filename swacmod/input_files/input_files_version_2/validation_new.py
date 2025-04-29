@@ -2314,7 +2314,7 @@ FUNC_PARAMS = [
     val_time_periods,
     val_output_recharge,
     val_output_individual,
-    # val_irchcb,
+    val_irchcb,
     # val_nodes_per_line,
     # val_output_fac,
     # val_spatial_output_date,

@@ -37,13 +37,15 @@ class Test_Validation_New(unittest.TestCase):
             "time_periods": [[1, 1], [1, 1], [1, 1]],
             "output_recharge": "x",
             "output_individual": "x",
+            "irchcb": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
             params = make_valid_params()
             params[k] = v
             actual = validation_new.validate(params, spec_maps)
-            self.assertNotEqual(0, len(actual), msg = "\n".join(actual))
+            message = f"Expected an error for [{k} = {v}]."
+            self.assertNotEqual(0, len(actual), msg = message)
 
 # TODO A similar structure is in test_input_data_v2_validation.py. See if these can be merged.
 def make_valid_params():
