@@ -2323,7 +2323,7 @@ FUNC_PARAMS = [
     val_node_areas,
     val_start_date,
     val_time_periods,
-    # val_output_recharge,
+    val_output_recharge,
     # val_output_individual,
     # val_irchcb,
     # val_nodes_per_line,

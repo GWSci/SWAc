@@ -35,6 +35,7 @@ class Test_Validation_New(unittest.TestCase):
             "time_periods": [[], [], []],
             "time_periods": [["x", "x"], ["x", "x"], ["x", "x"]],
             "time_periods": [[1, 1], [1, 1], [1, 1]],
+            "output_recharge": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
