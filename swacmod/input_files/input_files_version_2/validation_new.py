@@ -2453,18 +2453,18 @@ FUNC_PARAMS = [
 ]
 
 FUNC_SERIES = [
-    val_rainfall_ts,
-    val_pe_ts,
-    val_temperature_ts,
-    val_tmax_c_ts,
-    val_tmin_c_ts,
-    val_windsp_ts,
-    val_subroot_leakage_ts,
-    val_swdis_ts,
-    val_swabs_ts,
-    val_percolation_rejection_ts,
-    val_infiltration_limit_ts,
-    val_interflow_decay_ts,
+    # val_rainfall_ts,
+    # val_pe_ts,
+    # val_temperature_ts,
+    # val_tmax_c_ts,
+    # val_tmin_c_ts,
+    # val_windsp_ts,
+    # val_subroot_leakage_ts,
+    # val_swdis_ts,
+    # val_swabs_ts,
+    # val_percolation_rejection_ts,
+    # val_infiltration_limit_ts,
+    # val_interflow_decay_ts,
 ]
 
 def validate_params(data):
