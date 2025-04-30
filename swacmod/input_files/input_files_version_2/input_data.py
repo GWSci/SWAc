@@ -60,8 +60,6 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     no_list = _make_no_list(params)
     _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
 
-    _supply_null_values_for_missing_fields(specs, params)
-
     params, series = _get_series_from_params(params)
     data = {"specs": specs, "series": series, "params": params}
 
