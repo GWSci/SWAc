@@ -1,6 +1,7 @@
 import unittest
 import io
 import swacmod.input_files.input_files_version_2.input_data as input_data
+import swacmod.input_files.input_files_version_2.validator as validator
 import swacmod.input_files.input_files_version_2.specs as specs_module
 import swacmod.input_files.input_file_reader as input_file_reader
 
@@ -48,27 +49,27 @@ class Test_Input_Data_v2_Validation(unittest.TestCase):
     def test_a_valid_file_has_no_errors(self):
         specs = specs_module.make_specs()
         params = make_sample_valid_input_file()
-        validation_result = input_data.validate_keys(specs, params, "some_input_file.yml")
+        validation_result = validator.validate_keys(specs, params, "some_input_file.yml")
         self.assertEqual(0, len(validation_result.errors))
 
     def test_a_valid_file_has_no_warnings(self):
         specs = specs_module.make_specs()
         params = make_sample_valid_input_file()
-        validation_result = input_data.validate_keys(specs, params, "some_input_file.yml")
+        validation_result = validator.validate_keys(specs, params, "some_input_file.yml")
         self.assertEqual(0, len(validation_result.warnings))
 
     def test_validating_a_file_missing_a_required_field_reports_an_error(self):
         specs = specs_module.make_specs()
         params = make_sample_valid_input_file()
         del params["version"]
-        validation_result = input_data.validate_keys(specs, params, "some_input_file.yml")
+        validation_result = validator.validate_keys(specs, params, "some_input_file.yml")
         self.assertEqual(1, len(validation_result.errors))
 
     def test_validating_a_file_missing_a_required_field_has_text_describing_the_problem(self):
         specs = specs_module.make_specs()
         params = make_sample_valid_input_file()
         del params["version"]
-        validation_result = input_data.validate_keys(specs, params, "some_input_file.yml")
+        validation_result = validator.validate_keys(specs, params, "some_input_file.yml")
         expected = 'Error: The file "some_input_file.yml" is missing the required field "version".'
         actual = validation_result.errors[0]
         self.assertEqual(expected, actual)
@@ -76,7 +77,7 @@ class Test_Input_Data_v2_Validation(unittest.TestCase):
     def test_validating_empty_params_reports_all_missing_required_parameters(self):
         specs = specs_module.make_specs()
         params = {}
-        validation_result = input_data.validate_keys(specs, params, "some_input_file.yml")
+        validation_result = validator.validate_keys(specs, params, "some_input_file.yml")
         all_errors_string = "\n".join(validation_result.errors)
         self.assertIn('"version"', all_errors_string)
         self.assertIn('"run_name"', all_errors_string)
