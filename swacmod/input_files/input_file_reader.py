@@ -1,5 +1,6 @@
 import swacmod.input_files.input_files_version_1.input_data as input_data_v1
 import swacmod.input_files.input_files_version_2.input_data as input_data_v2
+from swacmod.input_files.input_files_version_2.loader import load_yaml
 
 def scrape_run_name(input_file):
     params = input_data_v1.load_yaml(input_file)
@@ -25,7 +26,7 @@ def read_inputs(specs_file, input_file, input_dir, file_opener=_default_file_ope
     return parsed_input_data.data
 
 def detect_version(input_file, file_opener=_default_file_open):
-    params = input_data_v2.load_yaml(input_file, file_opener)
+    params = load_yaml(input_file, file_opener)
     version = params.get("version", 1)
     return version
 
