@@ -40,7 +40,8 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     specs_object = specs_module.make_specs()
     specs = specs_module.make_specs_dictionary(specs_object)
     params = load_yaml(input_file, file_opener)
-    validation_result = validate(specs_object, params, input_file)
+    validation_result = ParsedInputData(params, [], [])
+    validation_result.update(validate(specs_object, params, input_file))
     if validation_result.has_errors():
         return ParsedInputData(params, validation_result.errors, validation_result.warnings)
     _supply_null_values_for_missing_fields(specs, params)
