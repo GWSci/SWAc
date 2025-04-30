@@ -52,11 +52,10 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     if validation_result.has_errors():
         return validation_result
 
-    params, series = _get_series_from_params(params)
-    data = {"specs": specs, "series": series, "params": params}
+    params_copy = dict(params)
+    params_copy, series = _get_series_from_params(params_copy)
+    data = {"specs": specs, "series": series, "params": params_copy}
     f.finalize_required_params(data)
-
-    params = load_yaml(input_file, file_opener)
 
     no_list = _make_no_list(params)
     _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
