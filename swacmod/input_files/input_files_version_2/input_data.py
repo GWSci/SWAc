@@ -55,8 +55,6 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     data = {"specs": specs, "series": series, "params": params}
     f.finalize_required_params(data)
 
-    file_opener=_default_file_open
-    file_opener=_default_file_open
     logging.info("\tLoading parameters and time series")
     params = load_yaml(input_file, file_opener)
 
