@@ -37,6 +37,7 @@ def _default_file_open(filename):
 
 def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     """Load, finalize and validate model parameters and time series."""
+    logging.info("\tLoading parameters and time series")
     specs_object = specs_module.make_specs()
     specs = specs_module.make_specs_dictionary(specs_object)
     params = load_yaml(input_file, file_opener)
@@ -55,7 +56,6 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     data = {"specs": specs, "series": series, "params": params}
     f.finalize_required_params(data)
 
-    logging.info("\tLoading parameters and time series")
     params = load_yaml(input_file, file_opener)
 
     no_list = _make_no_list(params)
