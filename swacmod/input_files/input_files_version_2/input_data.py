@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.loader as loader
+import swacmod.input_files.input_files_version_2.validator as validator
 import swacmod.input_files.input_files_version_2.validation as v
 import swacmod.input_files.input_files_version_2.validation_new as validation_new
 import swacmod.input_files.input_files_version_2.finalization as f
@@ -29,7 +30,7 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     params = loader.load_yaml(input_file, file_opener)
     validation_result = ParsedInputData(params, [], [])
 
-    validation_result.update(validate_keys(specs_object, params, input_file))
+    validation_result.update(validator.validate_keys(specs_object, params, input_file))
     if validation_result.has_errors():
         return ParsedInputData(params, validation_result.errors, validation_result.warnings)
 
