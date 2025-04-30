@@ -102,8 +102,7 @@ def _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list):
 def f_is_alt_format(specs, params, param):
     if isinstance(params[param], str) and "alt_format" in specs[param]:
         ext = params[param].split(".")[-1]
-        is_not_alt_format = ext not in specs[param]["alt_format"] and ext != "numpydumpy"
-        return not is_not_alt_format
+        return ext in specs[param]["alt_format"] or ext != "numpydumpy"
     return False
 
 def load_alt_format(file_opener, params, no_list, param, absolute, ext):
