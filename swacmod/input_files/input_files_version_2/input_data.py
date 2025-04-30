@@ -164,14 +164,6 @@ def load_yml_alt_format(params, param, absolute, file_opener):
     validate_alt_yml(param, absolute, parsed_yaml)
     params[param] = parsed_yaml[param]
 
-def load_yaml_file_contents(param, absolute, file_opener):
-    try:
-        parsed_yaml = loader.load_yaml(absolute, file_opener)
-    except Exception as err:
-        msg = "Could not import %s: %s" % (param, err)
-        raise u.InputOutputError(msg)
-    return parsed_yaml
-
 def validate_alt_yml(param, absolute, parsed_yaml):
     errors = []
 
