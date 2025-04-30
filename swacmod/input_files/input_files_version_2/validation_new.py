@@ -9,6 +9,7 @@ import multiprocessing
 # Internal modules
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.checks as c
+from swacmod.input_files.parsed_input_data import ParsedInputData
 
 def val_run_name(data, name):
     c.validate_type(data, name)
@@ -2138,6 +2139,11 @@ def validate_series(data):
         logging.debug('\t\t"%s" validated', series)
 
     logging.info("\tDone.")
+
+def validate_2(params, specs):
+    errors = validate(params, specs)
+    warnings = []
+    return ParsedInputData(params, errors, warnings)
 
 def validate(params, specs):
     data = {
