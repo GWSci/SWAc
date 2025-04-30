@@ -23,13 +23,12 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     specs_object = specs_module.make_specs()
     specs = specs_module.make_specs_dictionary(specs_object)
 
-    validation_result = ParsedInputData(None, [], [])
+    params = loader.load_yaml(input_file, file_opener)
+    validation_result = ParsedInputData(params, [], [])
+    validation_result.update(validator.validate_keys(specs_object, params, input_file))
 
-    validation_result.update(load_and_validate_main_yaml(specs_object, input_file, file_opener))
     if validation_result.has_errors():
         return validation_result
-
-    params = validation_result.data
 
     _supply_null_values_for_missing_fields(specs, params)
     validation_result.update(validation_new.validate_2(params, specs))
@@ -49,12 +48,6 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     v.validate_series(data)
 
     return validation_result.update(ParsedInputData(data, [], []))
-
-def load_and_validate_main_yaml(specs_object, input_file, file_opener):
-    params = loader.load_yaml(input_file, file_opener)
-    result = ParsedInputData(params, [], [])
-    result.update(validator.validate_keys(specs_object, params, input_file))
-    return result
 
 def convert_params_and_specs_into_data(specs, params):
     specs_copy = dict(specs)
