@@ -1,16 +1,8 @@
 import ast
-import logging
 import numpy
 import os
 import swacmod.performance_logging as performance_logging
 import swacmod.csv_resource as csv_resource
-import yaml
-
-try:
-    from yaml import CLoader as Loader
-except ImportError:
-    from yaml import Loader
-
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.loader as loader
 
