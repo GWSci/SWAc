@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 import os
-import sys
 import logging
 
 from tqdm import tqdm
@@ -14,10 +13,6 @@ import swacmod.input_files.input_files_version_2.validation_new as validation_ne
 import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.specs as specs_module
 from swacmod.input_files.parsed_input_data import ParsedInputData
-
-if sys.version_info > (3,):
-    long = int
-    raw_input = input
 
 def _default_file_open(filename):
     return open(filename, "r")
