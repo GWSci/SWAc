@@ -90,28 +90,6 @@ def _make_no_list(params):
     
     return no_list
 
-def validate_required_fields(params, input_file):
-    errors = []
-    warnings = []
-    required_fields = specs_module.required_field_names(specs_module.make_specs())
-    for field in required_fields:
-        if (not field in params):
-            errors.append(f'Error: The file "{input_file}" is missing the required field "{field}".')
-    return ParsedInputData(params, errors, warnings)
-
-def validate_no_extra_params(specs, params, input_file):
-    valid_keys = set(specs.keys())
-    found_keys = set(params.keys())
-    unrecognised_keys = sorted(found_keys.difference(valid_keys))
-    errors = []
-    warnings = []
-
-    valid_keys_string = ", ".join([f'"{k}"' for k in sorted(valid_keys)])
-    for key in unrecognised_keys:
-        errors.append(f'Error: Found the key "{key}" in the file "{input_file}". This key is not valid. A full list of valid keys is: [{valid_keys_string}].')
-
-    return ParsedInputData(params, errors, warnings)
-
 def _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list):
     for param in tqdm(params, desc="SWAcMod load params     "):
         if isinstance(params[param], str) and "alt_format" in specs[param]:
