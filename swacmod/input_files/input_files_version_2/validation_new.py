@@ -2118,28 +2118,6 @@ FUNC_SERIES = [
     # val_interflow_decay_ts,
 ]
 
-def validate_params(data):
-    """Validate all parameters using their specifications."""
-    logging.info("\tValidating parameters")
-
-    for function in FUNC_PARAMS:
-        param = function.__name__.replace("val_", "")
-        function(data, param)
-        logging.debug('\t\t"%s" validated', param)
-
-    logging.info("\tDone.")
-
-def validate_series(data):
-    """Validate all time series using their specifications."""
-    logging.info("\tValidating time series")
-
-    for function in FUNC_SERIES:
-        series = function.__name__.replace("val_", "")
-        function(data, series)
-        logging.debug('\t\t"%s" validated', series)
-
-    logging.info("\tDone.")
-
 def validate_2(params, specs):
     errors = validate(params, specs)
     warnings = []
