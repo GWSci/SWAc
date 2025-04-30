@@ -97,7 +97,8 @@ def _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list):
             absolute = os.path.join(input_dir, params[param])
             ext = params[param].split(".")[-1]
             is_not_alt_format = ext not in specs[param]["alt_format"] and ext != "numpydumpy"
-            if is_not_alt_format:
+            is_alt_format = not is_not_alt_format
+            if not is_alt_format:
                 continue
             if _use_time_series_data(param):
                 loader.load_temp_file_backed_array(params, param, absolute, ext)
