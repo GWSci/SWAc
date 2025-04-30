@@ -20,6 +20,7 @@ from tqdm import tqdm
 
 # Internal modules
 import swacmod.utils as u
+import swacmod.input_files.input_files_version_2.loader as loader
 import swacmod.input_files.input_files_version_2.validation as v
 import swacmod.input_files.input_files_version_2.validation_new as validation_new
 import swacmod.input_files.input_files_version_2.finalization as f
@@ -40,7 +41,7 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     logging.info("\tLoading parameters and time series")
     specs_object = specs_module.make_specs()
     specs = specs_module.make_specs_dictionary(specs_object)
-    params = load_yaml(input_file, file_opener)
+    params = loader.load_yaml(input_file, file_opener)
     validation_result = ParsedInputData(params, [], [])
 
     validation_result.update(validate_keys(specs_object, params, input_file))
@@ -209,7 +210,7 @@ def load_yml_alt_format(params, param, absolute, file_opener):
 
 def load_yaml_file_contents(param, absolute, file_opener):
     try:
-        parsed_yaml = load_yaml(absolute, file_opener)
+        parsed_yaml = loader.load_yaml(absolute, file_opener)
     except Exception as err:
         msg = "Could not import %s: %s" % (param, err)
         raise u.InputOutputError(msg)
