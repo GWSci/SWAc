@@ -71,25 +71,6 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
 
     return validation_result.update(ParsedInputData(data, [], []))
 
-def load_yaml(filein, file_opener=_default_file_open):
-    """Load a YAML file, lowercase its keys."""
-    logging.debug("\t\tLoading %s", filein)
-
-    with file_opener(filein) as fp:
-        yml = yaml.load(fp, Loader=Loader)
-    try:
-        keys = list(yml.keys())
-    except AttributeError:
-        return yml
-
-    for key in keys:
-        if isinstance(key, str):
-            if not key.islower():
-                new_key = key.lower()
-                value = yml.pop(key)
-                yml[new_key] = value
-    return yml
-
 def _supply_null_values_for_missing_fields(specs, params):
     for key in specs:
         if key not in params:
