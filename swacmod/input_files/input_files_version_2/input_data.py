@@ -53,15 +53,12 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     if validation_result.has_errors():
         return validation_result
 
-    params_copy = dict(params)
-    params_copy, series = _get_series_from_params(params_copy)
-    data = {"specs": specs, "series": series, "params": params_copy}
+    data = convert_params_and_specs_into_data(specs, params)
     f.finalize_required_params(data)
 
     load_alt_formats(input_dir, file_opener, specs, params)
 
-    params, series = _get_series_from_params(params)
-    data = {"specs": specs, "series": series, "params": params}
+    data = convert_params_and_specs_into_data(specs, params)
 
     f.finalize_params(data)
     f.finalize_series(data)
@@ -69,6 +66,13 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     v.validate_series(data)
 
     return validation_result.update(ParsedInputData(data, [], []))
+
+def convert_params_and_specs_into_data(specs, params):
+    specs_copy = dict(specs)
+    params_copy = dict(params)
+    params_copy, series = _get_series_from_params(params_copy)
+    data = {"specs": specs_copy, "series": series, "params": params_copy}
+    return data
 
 def load_alt_formats(input_dir, file_opener, specs, params):
     no_list = _make_no_list(params)
