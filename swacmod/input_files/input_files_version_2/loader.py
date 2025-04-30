@@ -80,3 +80,11 @@ def _use_array_directly(param):
             or param == "time_periods"
             or param == "historical_time_periods"
             or param == "historical_mi_array_kg_per_time_period")
+
+def load_yaml_file_contents(param, absolute, file_opener):
+    try:
+        parsed_yaml = loader.load_yaml(absolute, file_opener)
+    except Exception as err:
+        msg = "Could not import %s: %s" % (param, err)
+        raise u.InputOutputError(msg)
+    return parsed_yaml
