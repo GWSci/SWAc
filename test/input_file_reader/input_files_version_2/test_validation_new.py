@@ -17,7 +17,7 @@ class Test_Validation_New(unittest.TestCase):
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         params = make_valid_params()
         params["time_periods"] = "some-alt-file.yml"
-        actual = validation_new.validate(params, spec_maps)
+        actual = validation_new.validate_2(params, spec_maps).errors
         self.assertEqual(0, len(actual), msg = "\n".join(actual))
 
     def test_validations_pass_for_valid_input(self):
