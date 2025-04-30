@@ -150,26 +150,6 @@ def calculate_shape_for_python_list(x):
 	message = f"Cannot determine shape for {x}.\n Type = {type(x)}"
 	raise Exception(message)
 
-# Copied from input_output.py
-def load_yaml(filein):
-    """Load a YAML file, lowercase its keys."""
-    logging.debug("\t\tLoading %s", filein)
-
-    with open(filein, "r") as fp:
-        yml = yaml.load(fp, Loader=Loader)
-    try:
-        keys = yml.keys()
-    except AttributeError:
-        return yml
-
-    for key in keys:
-        if isinstance(key, str):
-            if not key.islower():
-                new_key = key.lower()
-                value = yml.pop(key)
-                yml[new_key] = value
-    return yml
-
 def calculate_is_in_memory(filename):
 	file_size = os.stat(filename).st_size
 	memory_cutoff = 300000
