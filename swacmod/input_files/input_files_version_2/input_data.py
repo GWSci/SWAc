@@ -142,7 +142,7 @@ def _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list):
             if _use_time_series_data(param):
                 loader.load_temp_file_backed_array(params, param, absolute, ext)
             elif ext == "csv":
-                load_csv_alt_format(params, no_list, param, absolute)
+                loader.load_csv_alt_format(params, no_list, param, absolute)
             elif ext == "yml":
                 load_yml_alt_format(params, param, absolute, file_opener)
 
@@ -158,34 +158,6 @@ def _use_time_series_data(param):
         "pe_ts",
         "windsp_ts",
     ]
-
-def load_csv_alt_format(params, no_list, param, absolute):
-    try:
-        with csv_resource.reader_for(absolute) as reader:
-            rows = [[ast.literal_eval(j) for j in row]
-                                for row in reader]
-    except Exception as err:
-        msg = "Could not import %s: %s" % (param, err)
-        raise u.InputOutputError(msg)
-    try:
-        if _use_array_directly(param):
-            params[param] = rows
-        else:
-            if param not in no_list:
-                params[param] = dict(
-                                (row[0], row[1:]) for row in rows)
-            else:
-                params[param] = dict(
-                                (row[0], row[1]) for row in rows)
-    except Exception as err:
-        msg = "Could not import %s: %s" % (param, err)
-        raise u.InputOutputError(msg)
-
-def _use_array_directly(param):
-    return (param.endswith("_ts")
-            or param == "time_periods"
-            or param == "historical_time_periods"
-            or param == "historical_mi_array_kg_per_time_period")
 
 def load_yml_alt_format(params, param, absolute, file_opener):
     parsed_yaml = load_yaml_file_contents(param, absolute, file_opener)

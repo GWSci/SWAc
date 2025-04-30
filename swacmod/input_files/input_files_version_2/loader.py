@@ -52,3 +52,31 @@ def load_yaml(filein, file_opener=_default_file_open):
 def load_temp_file_backed_array(params, param, absolute, ext):
     base_path = params["temp_file_backed_array_directory"]
     params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
+
+def load_csv_alt_format(params, no_list, param, absolute):
+    try:
+        with csv_resource.reader_for(absolute) as reader:
+            rows = [[ast.literal_eval(j) for j in row]
+                                for row in reader]
+    except Exception as err:
+        msg = "Could not import %s: %s" % (param, err)
+        raise u.InputOutputError(msg)
+    try:
+        if _use_array_directly(param):
+            params[param] = rows
+        else:
+            if param not in no_list:
+                params[param] = dict(
+                                (row[0], row[1:]) for row in rows)
+            else:
+                params[param] = dict(
+                                (row[0], row[1]) for row in rows)
+    except Exception as err:
+        msg = "Could not import %s: %s" % (param, err)
+        raise u.InputOutputError(msg)
+
+def _use_array_directly(param):
+    return (param.endswith("_ts")
+            or param == "time_periods"
+            or param == "historical_time_periods"
+            or param == "historical_mi_array_kg_per_time_period")
