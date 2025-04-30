@@ -58,8 +58,7 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     data = {"specs": specs, "series": series, "params": params_copy}
     f.finalize_required_params(data)
 
-    no_list = _make_no_list(params)
-    _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
+    load_alt_formats(input_dir, file_opener, specs, params)
 
     params, series = _get_series_from_params(params)
     data = {"specs": specs, "series": series, "params": params}
@@ -70,6 +69,10 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     v.validate_series(data)
 
     return validation_result.update(ParsedInputData(data, [], []))
+
+def load_alt_formats(input_dir, file_opener, specs, params):
+    no_list = _make_no_list(params)
+    _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list)
 
 def _supply_null_values_for_missing_fields(specs, params):
     for key in specs:
