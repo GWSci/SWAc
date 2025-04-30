@@ -1,22 +1,7 @@
 from __future__ import print_function
 
-import os
-import sys
-import logging
-
-from tqdm import tqdm
-
-import swacmod.utils as u
-import swacmod.input_files.input_files_version_2.loader as loader
-import swacmod.input_files.input_files_version_2.validation as v
-import swacmod.input_files.input_files_version_2.validation_new as validation_new
-import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.specs as specs_module
 from swacmod.input_files.parsed_input_data import ParsedInputData
-
-if sys.version_info > (3,):
-    long = int
-    raw_input = input
 
 def validate_keys(specs, params, input_file):
     result = ParsedInputData(params, [], [])
