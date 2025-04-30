@@ -2,9 +2,7 @@ from __future__ import print_function
 """SWAcMod input/output functions."""
 
 # Standard Library
-import os
 import ast
-import sys
 import logging
 from dataclasses import dataclass
 
@@ -14,11 +12,8 @@ import yaml
 # Internal modules
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.validation as v
-import swacmod.input_files.input_files_version_2.validation_new as validation_new
 import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
-import swacmod.input_files.input_files_version_2.specs as specs_module
-from swacmod.input_files.parsed_input_data import ParsedInputData
 import swacmod.csv_resource as csv_resource
 
 try:
