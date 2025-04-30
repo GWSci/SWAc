@@ -171,7 +171,7 @@ class Test_Validation_New(unittest.TestCase):
         for k, v in invalid_pairs.items():
             params = make_valid_params()
             params[k] = v
-            actual = validation_new.validate(params, spec_maps)
+            actual = validation_new.validate_2(params, spec_maps).errors
             message = f"Expected an error for [{k} = {v}]."
             self.assertNotEqual(0, len(actual), msg = message)
 
