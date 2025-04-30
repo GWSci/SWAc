@@ -45,3 +45,25 @@ def validate_no_extra_params(specs, params, input_file):
         errors.append(f'Error: Found the key "{key}" in the file "{input_file}". This key is not valid. A full list of valid keys is: [{valid_keys_string}].')
 
     return ParsedInputData(params, errors, warnings)
+
+def validate_alt_yml(param, absolute, parsed_yaml):
+    errors = []
+
+    keys = extract_keys_or_empty_list(parsed_yaml)
+
+    if (not param in keys):
+        errors.append(f'Error: Could not find the key "{param}" in the file "{absolute}".')
+
+    for key in keys:
+        if (key != param):
+            errors.append(f'Error: Found the key "{key}" in the file "{absolute}". The only key should be "{param}". Common causes of this error are typos and forgetting to indent the key-value pairs in a map.')
+
+    if len(errors) > 0:
+        message = "\n".join(errors)
+        raise Exception(message)
+
+def extract_keys_or_empty_list(something_that_might_have_keys):
+    try:
+        return something_that_might_have_keys.keys()
+    except Exception:
+        return []
