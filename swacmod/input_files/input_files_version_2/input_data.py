@@ -98,14 +98,16 @@ def _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list):
             ext = params[param].split(".")[-1]
             is_not_alt_format = ext not in specs[param]["alt_format"] and ext != "numpydumpy"
             is_alt_format = not is_not_alt_format
-            if not is_alt_format:
-                continue
-            if _use_time_series_data(param):
-                loader.load_temp_file_backed_array(params, param, absolute, ext)
-            elif ext == "csv":
-                loader.load_csv_alt_format(params, no_list, param, absolute)
-            elif ext == "yml":
-                load_yml_alt_format(params, param, absolute, file_opener)
+            if is_alt_format:
+                load_alt_format(file_opener, params, no_list, param, absolute, ext)
+
+def load_alt_format(file_opener, params, no_list, param, absolute, ext):
+    if _use_time_series_data(param):
+        loader.load_temp_file_backed_array(params, param, absolute, ext)
+    elif ext == "csv":
+        loader.load_csv_alt_format(params, no_list, param, absolute)
+    elif ext == "yml":
+        load_yml_alt_format(params, param, absolute, file_opener)
 
 def _use_time_series_data(param):
     return param in [
