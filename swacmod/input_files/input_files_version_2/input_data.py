@@ -160,7 +160,7 @@ def _use_time_series_data(param):
     ]
 
 def load_yml_alt_format(params, param, absolute, file_opener):
-    parsed_yaml = load_yaml_file_contents(param, absolute, file_opener)
+    parsed_yaml = loader.load_yaml_file_contents(param, absolute, file_opener)
     validate_alt_yml(param, absolute, parsed_yaml)
     params[param] = parsed_yaml[param]
 

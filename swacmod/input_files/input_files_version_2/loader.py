@@ -83,7 +83,7 @@ def _use_array_directly(param):
 
 def load_yaml_file_contents(param, absolute, file_opener):
     try:
-        parsed_yaml = loader.load_yaml(absolute, file_opener)
+        parsed_yaml = load_yaml(absolute, file_opener)
     except Exception as err:
         msg = "Could not import %s: %s" % (param, err)
         raise u.InputOutputError(msg)
