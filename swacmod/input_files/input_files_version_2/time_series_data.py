@@ -12,6 +12,7 @@ except ImportError:
     from yaml import Loader
 
 import swacmod.utils as u
+import swacmod.input_files.input_files_version_2.loader as loader
 
 class TimeSeriesData:
 	pass
@@ -82,7 +83,7 @@ class CsvTimeSeriesData_File_Backed(TimeSeriesData):
 class YamlTimeSeriesData(TimeSeriesData):
 	def __init__(self, param_name, csv_filename):
 		try:
-			rows = load_yaml(csv_filename)[param_name]
+			rows = loader.load_yaml(csv_filename)[param_name]
 			self.rows = rows
 		except (IOError, KeyError) as err:
 			message = f"Could not read file: {csv_filename}"
@@ -100,7 +101,7 @@ class YamlTimeSeriesData(TimeSeriesData):
 class YamlTimeSeriesData_File_Backed(TimeSeriesData):
 	def __init__(self, base_path, param_name, csv_filename):
 		try:
-			rows = load_yaml(csv_filename)[param_name]
+			rows = loader.load_yaml(csv_filename)[param_name]
 		except (IOError, KeyError) as err:
 			message = f"Could not read file: {csv_filename}"
 			raise u.InputOutputError(message)

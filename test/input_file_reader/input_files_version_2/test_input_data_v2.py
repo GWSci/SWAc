@@ -1,6 +1,7 @@
 import unittest
 import io
 import swacmod.input_files.input_files_version_2.input_data as input_data
+import swacmod.input_files.input_files_version_2.loader as loader
 
 class Test_Input_Files_v2(unittest.TestCase):
     def test_load_yaml_reads_empty_yaml_file(self):
@@ -10,7 +11,7 @@ class Test_Input_Files_v2(unittest.TestCase):
         file_opener = make_mock_file_opener({
             "aardvark.yaml": input_file_contents,
         })
-        actual = input_data.load_yaml("aardvark.yaml", file_opener=file_opener)
+        actual = loader.load_yaml("aardvark.yaml", file_opener=file_opener)
         self.assertEqual(expected, actual)
 
     def test_load_yaml_reads_yaml_file_with_one_key(self):
