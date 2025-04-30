@@ -105,8 +105,6 @@ def f_is_alt_format(specs, params, param):
         ext = params[param].split(".")[-1]
     else:
         ext = None
-    if isinstance(params[param], str) and "alt_format" in specs[param]:
-        return ext in alt_extensions
     return ext in alt_extensions
 
 def load_alt_format(file_opener, params, no_list, param, absolute, ext):
