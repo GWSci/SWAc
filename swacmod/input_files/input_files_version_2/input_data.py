@@ -120,6 +120,12 @@ def validate(specs, params, input_file):
     result.update(validate_no_extra_params(specs_module.make_specs_dictionary(specs), params, input_file))
     return result
 
+def validate_keys(specs, params, input_file):
+    result = ParsedInputData(params, [], [])
+    result.update(validate_required_fields(params, input_file))
+    result.update(validate_no_extra_params(specs_module.make_specs_dictionary(specs), params, input_file))
+    return result
+
 def validate_required_fields(params, input_file):
     errors = []
     warnings = []
