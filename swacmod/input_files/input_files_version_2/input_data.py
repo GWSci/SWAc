@@ -32,6 +32,7 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
 
     _supply_null_values_for_missing_fields(specs, params)
     validation_result.update(validation_new.validate_2(params, specs))
+
     if validation_result.has_errors():
         return validation_result
 
