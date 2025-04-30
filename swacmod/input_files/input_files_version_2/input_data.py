@@ -100,15 +100,11 @@ def _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list):
             load_alt_format(file_opener, params, no_list, param, absolute, ext)
 
 def f_is_alt_format(specs, params, param):
-    should_load_alt_format = False
-    might_be_alt_format = isinstance(params[param], str) and "alt_format" in specs[param]
-    if might_be_alt_format:
+    if isinstance(params[param], str) and "alt_format" in specs[param]:
         ext = params[param].split(".")[-1]
         is_not_alt_format = ext not in specs[param]["alt_format"] and ext != "numpydumpy"
-        is_alt_format = not is_not_alt_format
-        if is_alt_format:
-            should_load_alt_format = True
-    return should_load_alt_format
+        return not is_not_alt_format
+    return False
 
 def load_alt_format(file_opener, params, no_list, param, absolute, ext):
     if _use_time_series_data(param):
