@@ -92,7 +92,7 @@ def _make_no_list(params):
 
 def _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list):
     for param in tqdm(params, desc="SWAcMod load params     "):
-        if isinstance(params[param], str) and "alt_format" in specs[param]:
+        if is_alt_format(specs, params, param):
             absolute = os.path.join(input_dir, params[param])
             ext = params[param].split(".")[-1]
             if ext not in specs[param]["alt_format"] and ext != "numpydumpy":
@@ -103,6 +103,9 @@ def _load_alt_formats(input_dir, tqdm, file_opener, specs, params, no_list):
                 loader.load_csv_alt_format(params, no_list, param, absolute)
             elif ext == "yml":
                 load_yml_alt_format(params, param, absolute, file_opener)
+
+def is_alt_format(specs, params, param):
+    return isinstance(params[param], str) and "alt_format" in specs[param]
 
 def _use_time_series_data(param):
     return param in [
