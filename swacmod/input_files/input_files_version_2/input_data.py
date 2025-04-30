@@ -107,7 +107,7 @@ def f_is_alt_format(specs, params, param):
         ext = None
     if isinstance(params[param], str) and "alt_format" in specs[param]:
         return ext in alt_extensions
-    return False
+    return ext in alt_extensions
 
 def load_alt_format(file_opener, params, no_list, param, absolute, ext):
     if _use_time_series_data(param):
