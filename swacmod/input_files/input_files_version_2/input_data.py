@@ -159,10 +159,6 @@ def _use_time_series_data(param):
         "windsp_ts",
     ]
 
-def load_temp_file_backed_array(params, param, absolute, ext):
-    base_path = params["temp_file_backed_array_directory"]
-    params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
-
 def load_csv_alt_format(params, no_list, param, absolute):
     try:
         with csv_resource.reader_for(absolute) as reader:
