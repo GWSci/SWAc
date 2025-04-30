@@ -44,8 +44,7 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
     if validation_result.has_errors():
         return ParsedInputData(params, validation_result.errors, validation_result.warnings)
     _supply_null_values_for_missing_fields(specs, params)
-    validation_errors = validation_new.validate(params, specs)
-    validation_result.update(ParsedInputData(params, validation_errors, []))
+    validation_result.update(validation_new.validate_2(params, specs))
     if validation_result.has_errors():
         return validation_result
     params, series = _get_series_from_params(params)
