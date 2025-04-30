@@ -1,33 +1,18 @@
-# -*- coding: utf-8 -*-
 from __future__ import print_function
-"""SWAcMod input/output functions."""
 
-# Standard Library
 import os
-import ast
 import sys
 import logging
-from dataclasses import dataclass
 
-# Third Party Libraries
-import yaml
-
-try:
-    from yaml import CLoader as Loader
-except ImportError:
-    from yaml import Loader
 from tqdm import tqdm
 
-# Internal modules
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.loader as loader
 import swacmod.input_files.input_files_version_2.validation as v
 import swacmod.input_files.input_files_version_2.validation_new as validation_new
 import swacmod.input_files.input_files_version_2.finalization as f
-import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 import swacmod.input_files.input_files_version_2.specs as specs_module
 from swacmod.input_files.parsed_input_data import ParsedInputData
-import swacmod.csv_resource as csv_resource
 
 if sys.version_info > (3,):
     long = int
