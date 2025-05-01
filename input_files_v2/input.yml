@@ -146,7 +146,7 @@ reporting_zone_mapping: reporting_zone_mapping.yml
 
 # Reporting zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in reporting_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in reporting_zone_mapping)
 reporting_zone_names: reporting_zone_names.yml
@@ -161,7 +161,7 @@ rainfall_zone_mapping: rainfall_zone_mapping.yml
 
 # Rainfall zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in rainfall_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in rainfall_zone_mapping)
 rainfall_zone_names: rainfall_zone_names.yml
@@ -176,7 +176,7 @@ pe_zone_mapping: pe_zone_mapping.yml
 
 # PE zone names.
 # This parameter is optional.
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in pe_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in pe_zone_mapping)
 pe_zone_names: pe_zone_names.yml
@@ -190,7 +190,7 @@ temperature_zone_mapping: temperature_zone_mapping.yml
 
 # Temperature zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in temperature_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in temperature_zone_mapping)
 temperature_zone_names: temperature_zone_names.yml
@@ -204,7 +204,7 @@ tmax_c_zone_mapping: tmax_c_zone_mapping.yml
 
 # Tmax_C zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in tmax_c_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in tmax_c_zone_mapping)
 tmax_c_zone_names: tmax_c_zone_names.yml
@@ -218,7 +218,7 @@ tmin_c_zone_mapping: tmin_c_zone_mapping.yml
 
 # Tmin_C zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in tmin_c_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in tmin_c_zone_mapping)
 tmin_c_zone_names: tmin_c_zone_names.yml
@@ -232,7 +232,7 @@ windsp_zone_mapping: windsp_zone_mapping.yml
 
 # windSp zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in windsp_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in windsp_zone_mapping)
 windsp_zone_names: windsp_zone_names.yml
@@ -247,7 +247,7 @@ subroot_zone_mapping: subroot_zone_mapping.yml
 
 # Subroot zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in subroot_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in subroot_zone_mapping)
 subroot_zone_names: subroot_zone_names.yml
@@ -261,7 +261,7 @@ rapid_runoff_zone_mapping: rapid_runoff_zone_mapping.yml
 
 # Rapid runoff zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in rapid_runoff_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in rapid_runoff_zone_mapping)
 rapid_runoff_zone_names: rapid_runoff_zone_names.yml
@@ -275,7 +275,7 @@ swrecharge_zone_mapping: swrecharge_zone_mapping.yml
 
 # Runoff recharge zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in swrecharge_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in swrecharge_zone_mapping)
 swrecharge_zone_names: swrecharge_zone_names.yml
@@ -289,21 +289,21 @@ macropore_zone_mapping: macropore_zone_mapping.yml
 
 # Macropore zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in macropore_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in macropore_zone_mapping)
 macropore_zone_names: macropore_zone_names.yml
 
 # Soil zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries defines number of columns in soil_spatial - see FAO process)
 # col #2: Zone name (text string, enclosed by ' ', number of entries defines number of columns in soil_spatial - see FAO process)
 soil_zone_names: soil_zone_names.yml
 
 # Land zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries defines number of columns in lu_spatial - see FAO process)
 # col #2: Zone name (text string, enclosed by ' ', number of entries defines number of columns in lu_spatial - see FAO process)
 landuse_zone_names: landuse_zone_names.yml
@@ -325,7 +325,7 @@ canopy_zone_mapping: canopy_zone_mapping.yml
 
 # Canopy zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in canopy_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in canopy_zone_mapping)
 canopy_zone_names: canopy_zone_names.yml
@@ -618,7 +618,7 @@ interflow_zone_mapping: interflow_zone_mapping.yml
 
 # Runoff recharge zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in interflow_zone_mapping)
 interflow_zone_names: interflow_zone_names.yml
@@ -753,7 +753,7 @@ sw_zone_mapping: sw_zone_mapping.yml
 
 # SW release zone names.
 # This parameter is optional
-# This parameter can accept a path to YAML or CSV
+# This parameter can accept a path to YAML
 # col #1: Zone number (integer, number of entries = max zone number in sw_zone_mapping)
 # col #2: Zone name (text string, enclosed by ' ', number of entries = max zone number in sw_zone_mapping)
 sw_zone_names: sw_zone_names.yml
