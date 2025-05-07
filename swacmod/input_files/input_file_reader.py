@@ -14,7 +14,7 @@ def read_inputs(specs_file, input_file, input_dir, file_opener=_default_file_ope
     version = detect_version(input_file, file_opener)
     if (version == 1):
         parsed_input_data = input_data_v1.load_and_validate(specs_file, input_file, input_dir)
-        parsed_input_data = migrate(parsed_input_data)
+        parsed_input_data.data = migrate_v1_to_v2(parsed_input_data.data)
     elif (version == 2):
         parsed_input_data = input_data_v2.load_and_validate(input_file, input_dir, file_opener)
     else:
@@ -40,6 +40,24 @@ def migrate(data):
 def migrate_v1_to_v2(data):
     result = data
     result["version"] = 2
-    if 'leakage_process' in result: result['subroot_leakage_process'] = result.pop('leakage_process')
-    if 'subsoilzone_leakage_fraction' in result: result['subroot_leakage_fraction'] = result.pop('subsoilzone_leakage_fraction')
+    pairs = [('leakage_process', 'subroot_leakage_process'),
+             ('subsoilzone_leakage_fraction', 'subroot_leakage_fraction')]
+    for pair in pairs:
+        old, new = pair[0] , pair[1]
+        if 'params' in result: 
+            result = migrate_params(result, old, new)
+        if 'series' in result: 
+            result = migrate_series(result, old, new)
+    return result
+
+def migrate_params(data, old, new):
+    result = data
+    if old in result['params']: 
+        result['params'][new] = result['params'].pop(old)
+    return result
+
+def migrate_series(data, old, new):
+    result = data
+    if old in result['series']: 
+        result['series'][new] = result['series'].pop(old)
     return result
