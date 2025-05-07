@@ -111,8 +111,8 @@ class Test_Validation_New(unittest.TestCase):
             # "nitrate_process": 5, # TODO: Needs a validation
             "sw_process": "x",
             "sw_process": 5,
-            "sw_process_natproc": "x",
-            "sw_process_natproc": 5,
+            "sw_ponding_process": "x",
+            "sw_ponding_process": 5,
             # "routing_process": "x", # TODO: Validation not called
             # "routing_process": 5, # TODO: Validation not called
             "excess_sw_process": "x",
@@ -238,7 +238,7 @@ def make_valid_params():
         "historical_nitrate_process": "enabled",
         "nitrate_process": "enabled",
         "sw_process": "enabled",
-        "sw_process_natproc": "enabled",
+        "sw_ponding_process": "enabled",
         "routing_process": "enabled",
         "excess_sw_process": "sw_rip",
         "gwmodel_type": "mf6",

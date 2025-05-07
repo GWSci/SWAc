@@ -182,7 +182,7 @@ def make_sample_valid_input_file():
         "nitrate_loading": "NO3_loading.csv",
         "sw_process": "enabled",
         "sw_params": "sw_params.yml",
-        "sw_process_natproc": "disabled",
+        "sw_ponding_process": "disabled",
         "sw_zone_mapping": "sw_zone_mapping.yml",
         "sw_zone_names": "sw_zone_names.yml",
         "sw_downstream": "sw_downstream.yml",
