@@ -14,7 +14,7 @@ def read_inputs(specs_file, input_file, input_dir, file_opener=_default_file_ope
     version = detect_version(input_file, file_opener)
     if (version == 1):
         parsed_input_data = input_data_v1.load_and_validate(specs_file, input_file, input_dir)
-        parsed_input_data.data = migrate_v1_to_v2(parsed_input_data.data)
+        parsed_input_data.data = migrate(parsed_input_data.data)
     elif (version == 2):
         parsed_input_data = input_data_v2.load_and_validate(input_file, input_dir, file_opener)
     else:
