@@ -522,10 +522,10 @@ def get_subroot_leak(data, output, node):
     """AC) Sub Root Zone Leakege / Inputs [mm/d]."""
     series, params = data['series'], data['params']
 
-    if params['leakage_process'] == 'enabled':
+    if params['subroot_leakage_process'] == 'enabled':
         zone_sr = params['subroot_zone_mapping'][node][0] - 1
         coef_sr = params['subroot_zone_mapping'][node][1]
-        slf = params['subsoilzone_leakage_fraction'][node]
+        slf = params['subroot_leakage_fraction'][node]
         subroot_leak = series['subroot_leakage_ts'][:, zone_sr] * coef_sr * slf
     else:
         subroot_leak = np.zeros(len(series['date']))
