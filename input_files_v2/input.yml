@@ -736,13 +736,13 @@ sw_process: enabled
 sw_params: sw_params.yml
 
 ###############################
-# Process: SW Release Natproc #
+# Process: SW Ponding #
 ###############################
 
 # SW release process: can be either "enabled" or "disabled"
 # This parameter is required
 # If enabled all FAO inputs should reflect open water
-sw_process_natproc: disabled
+sw_ponding_process: disabled
 
 # SW Release Zone Mapping
 # This parameter is optional
