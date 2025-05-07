@@ -583,19 +583,19 @@ percolation_rejection_use_timeseries: true
 percolation_rejection_ts: percolation_rejection_ts.yml
 
 ############################################
-# Process: Percentage of leakage to Permit #
+# Process: Subroot Leakage #
 ############################################
 
 # Leakage process: can be either "enabled" or "disabled"
 # This parameter is required
-leakage_process: enabled
+subroot_leakage_process: enabled
 
 # Fraction of leakage to Permit
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Proportion of subsoilzone leakage permitted in each cell, linked to maximum rate listed in subroot_leakage_ts (floating point, number of entries = num_nodes) [-]
-subsoilzone_leakage_fraction: subsoilzone_leakage_fraction.yml
+subroot_leakage_fraction: subsoilzone_leakage_fraction.yml
 
 
 ######################
