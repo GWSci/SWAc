@@ -216,7 +216,7 @@ def run_process(
         if pbar is not None:
             pbar.update()
 
-        if data["params"]['sw_process_natproc'] == 'enabled':
+        if data["params"]['sw_ponding_process'] == 'enabled':
             zone_sw = data["params"]['sw_zone_mapping'][node]
             pond_area = data["params"]['sw_ponding_area'][zone_sw]
         else:
@@ -614,7 +614,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
                 # get indices of output for this node
                 idx = range(node, (nnodes * days) + 1, nnodes)
 
-                if params['sw_process_natproc'] == 'enabled':
+                if params['sw_ponding_process'] == 'enabled':
                     zone_sw = data['params']['sw_zone_mapping'][node]
                     pond_area = data['params']['sw_ponding_area'][zone_sw]
                 else:
