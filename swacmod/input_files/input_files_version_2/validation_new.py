@@ -1454,7 +1454,7 @@ def val_subroot_leakage_process(data, name):
     c.validate_enum(data, name)
 
 def val_subroot_leakage_fraction(data, name):
-    """Validate subsoilzone_leakage_fraction.
+    """Validate subroot_leakage_fraction.
 
     1) type has to be a dictionary of lists of floats
     2) all node ids have to be present
