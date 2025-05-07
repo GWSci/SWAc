@@ -22,4 +22,9 @@ class Test_Migrations(unittest.TestCase):
         data = {'params':{'subsoilzone_leakage_fraction': 'sausage'}}
         actual = input_file_reader.migrate_v1_to_v2(data)
         self.assertIn('subroot_leakage_fraction', actual['params'])
+    
+    def test_migrating_from_sw_process_natproc_to_sw_ponding_process(self):
+        data = {'params':{'sw_process_natproc': 'sausage'}}
+        actual = input_file_reader.migrate_v1_to_v2(data)
+        self.assertIn('sw_ponding_process', actual['params'])
 
