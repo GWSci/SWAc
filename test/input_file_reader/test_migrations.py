@@ -14,6 +14,12 @@ class Test_Migrations(unittest.TestCase):
         self.assertEqual(expected, input_file_reader.migrate({})["version"])
 
     def test_migrating_from_leakage_process_to_subroot_leakage_process(self):
-        data = {'leakage_process': 'disabled'}
+        data = {'leakage_process': 'sausage'}
         actual = input_file_reader.migrate_v1_to_v2(data)
         self.assertIn('subroot_leakage_process', actual)
+    
+    def test_migrating_from_subsoilzone_leakage_fraction_to_subroot_leakage_fraction(self):
+        data = {'subsoilzone_leakage_fraction': 'sausage'}
+        actual = input_file_reader.migrate_v1_to_v2(data)
+        self.assertIn('subroot_leakage_fraction', actual)
+

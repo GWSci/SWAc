@@ -40,4 +40,5 @@ def migrate_v1_to_v2(data):
     result = data
     result["version"] = 2
     if 'leakage_process' in result: result['subroot_leakage_process'] = result.pop('leakage_process')
+    if 'subsoilzone_leakage_fraction' in result: result['subroot_leakage_fraction'] = result.pop('subsoilzone_leakage_fraction')
     return result
