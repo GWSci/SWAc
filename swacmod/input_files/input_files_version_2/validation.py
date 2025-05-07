@@ -1934,8 +1934,8 @@ def val_recharge_attenuation_params(data, name):
         include_high=True,
     )
 
-def val_sw_process_natproc(data, name):
-    """Validate sw_process_natproc.
+def val_sw_ponding_process(data, name):
+    """Validate sw_ponding_process.
 
     1) type has to be a string
     2) value has to be one in ['enabled', 'disabled']
@@ -1953,7 +1953,7 @@ def val_sw_zone_names(data, name):
 
     1) type has to be a dictionary of strings
     """
-    if data["params"]['sw_process_natproc'] == "enabled":
+    if data["params"]['sw_ponding_process'] == "enabled":
         rrn = data["params"][name]
         c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
 
@@ -1964,7 +1964,7 @@ def val_sw_zone_mapping(data, name):
     2) all node ids have to be present
     3) values (i.e. zone ids) have to be 0 <= x <= number of zones
     """
-    if data["params"]['sw_process_natproc'] == "enabled":
+    if data["params"]['sw_ponding_process'] == "enabled":
         rorzm = data["params"][name]
         tot = data["params"]["num_nodes"]
         rzn = data["params"]["sw_zone_names"]
@@ -1993,7 +1993,7 @@ def val_sw_downstream(data, name):
     3) the bottom list requires lenght equal to the number of zones
     4) all elements of each list have to be 0 <= x <= 1
     """
-    if data["params"]['sw_process_natproc'] == "enabled":
+    if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
 
@@ -2022,7 +2022,7 @@ def val_sw_bed_infiltration(data, name):
     3) the bottom list requires lenght equal to the number of zones
     4) all elements of each list have to be 0 <= x <= 1
     """
-    if data["params"]['sw_process_natproc'] == "enabled":
+    if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
 
@@ -2051,7 +2051,7 @@ def val_sw_direct_recharge(data, name):
     3) the bottom list requires lenght equal to the number of zones
     4) all elements of each list have to be 0 <= x <= 1
     """
-    if data["params"]['sw_process_natproc'] == "enabled":
+    if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
 
@@ -2079,7 +2079,7 @@ def val_sw_activation(data, name):
     2) the top list requires length 12 (months)
     3) the bottom list requires length equal to the number of zones
     """
-    if data["params"]['sw_process_natproc'] == "enabled":
+    if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
 
@@ -2098,7 +2098,7 @@ def val_sw_pe_to_open_water(data, name):
     2) the top list requires length 12 (months)
     3) the bottom list requires length equal to the number of zones
     """
-    if data["params"]['sw_process_natproc'] == "enabled":
+    if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
 
@@ -2115,7 +2115,7 @@ def val_sw_init_ponding(data, name):
 
     1) type has to be a float
     """
-    if data["params"]['sw_process_natproc'] == "enabled":
+    if data["params"]['sw_ponding_process'] == "enabled":
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
 
@@ -2124,7 +2124,7 @@ def val_sw_max_ponding(data, name):
 
     1) type has to be float
     """
-    if data["params"]['sw_process_natproc'] == "enabled":
+    if data["params"]['sw_ponding_process'] == "enabled":
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
 
@@ -2134,7 +2134,7 @@ def val_sw_ponding_area(data, name):
     1) type has to be float
     2) value has to be 0.0 < x <= 1.0
     """
-    if data["params"]['sw_process_natproc'] == "enabled":
+    if data["params"]['sw_ponding_process'] == "enabled":
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
         c.check_values_limits(
@@ -2422,7 +2422,7 @@ FUNC_PARAMS = [
     val_interflow_decay_use_timeseries,
     val_recharge_attenuation_process,
     val_recharge_attenuation_params,
-    val_sw_process_natproc,
+    val_sw_ponding_process,
     val_sw_downstream,
     val_sw_activation,
     val_sw_bed_infiltration,
