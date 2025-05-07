@@ -349,7 +349,7 @@ def get_ae(data, output, node):
         double[:] sw_ponding_area = params['sw_pond_area']
         double pond_area, not_ponded
 
-    if params['sw_process_natproc'] == 'enabled':
+    if params['sw_ponding_process'] == 'enabled':
         zone_sw = params['sw_zone_mapping'][node] - 1
         pond_area = sw_ponding_area[zone_sw]
     else:
@@ -554,7 +554,7 @@ def get_interflow_store_input(data, output, node):
         double pond_area, not_ponded
         size_t zone_sw
 
-    if data['params']['sw_process_natproc'] == 'enabled':
+    if data['params']['sw_ponding_process'] == 'enabled':
         zone_sw = data['params']['sw_zone_mapping'][node] - 1
         pond_area = sw_ponding_area[zone_sw]
     else:
@@ -640,7 +640,7 @@ def get_recharge_store_input(data, output, node):
         double pond_area
         size_t zone_sw
 
-    if params['sw_process_natproc'] == 'enabled':
+    if params['sw_ponding_process'] == 'enabled':
         zone_sw = params['sw_zone_mapping'][node] - 1
         pond_area = sw_ponding_area[zone_sw]
     else:
@@ -685,7 +685,7 @@ def get_recharge(data, output, node):
         double macropore_num
         double pond_area
 
-    if params['sw_process_natproc'] == 'enabled':
+    if params['sw_ponding_process'] == 'enabled':
         zone_sw = params['sw_zone_mapping'][node] - 1
         pond_area = sw_ponding_area[zone_sw]
     else:
@@ -885,7 +885,7 @@ def get_combined_str(data, output, node):
             col_combined_str[num] = rlp * base
             col_attenuation[num] = base - col_combined_str[num]
 
-    elif params['sw_process_natproc'] == 'enabled':
+    elif params['sw_ponding_process'] == 'enabled':
 
         col_attenuation[0] = params['sw_init_ponding']
         zone_sw = params['sw_zone_mapping'][node] - 1
@@ -1015,7 +1015,7 @@ def get_combined_ae(data, output, node):
         double pond_area
         size_t zone_sw
 
-    if data['params']['sw_process_natproc'] == 'enabled':
+    if data['params']['sw_ponding_process'] == 'enabled':
         zone_sw = data['params']['sw_zone_mapping'][node] - 1
         pond_area = sw_ponding_area[zone_sw]
     else:
@@ -1035,7 +1035,7 @@ def get_evt(data, output, node):
         double pond_area
         size_t zone_sw
 
-    if data['params']['sw_process_natproc'] == 'enabled':
+    if data['params']['sw_ponding_process'] == 'enabled':
         zone_sw = data['params']['sw_zone_mapping'][node] - 1
         pond_area = sw_ponding_area[zone_sw]
     else:
@@ -1058,7 +1058,7 @@ def get_average_out(data, output, node):
         double pond_area
         size_t zone_sw
 
-    if data['params']['sw_process_natproc'] == 'enabled':
+    if data['params']['sw_ponding_process'] == 'enabled':
         zone_sw = data['params']['sw_zone_mapping'][node] - 1
         pond_area = sw_ponding_area[zone_sw]
     else:
@@ -1098,7 +1098,7 @@ def get_change(data, output, node):
         double[:] sw_ponding_area = params['sw_pond_area']
         double pond_area, not_ponded
 
-    if params['sw_process_natproc'] == 'enabled':
+    if params['sw_ponding_process'] == 'enabled':
         zone_sw = params['sw_zone_mapping'][node] - 1
         pond_area = sw_ponding_area[zone_sw]
     else:
