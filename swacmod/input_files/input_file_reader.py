@@ -39,7 +39,7 @@ def migrate(data):
 
 def migrate_v1_to_v2(data):
     result = data
-    result["version"] = 2
+    result['params']["version"] = 2
     pairs = [('leakage_process', 'subroot_leakage_process'),
              ('subsoilzone_leakage_fraction', 'subroot_leakage_fraction')]
     for pair in pairs:
