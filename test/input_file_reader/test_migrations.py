@@ -12,3 +12,8 @@ class Test_Migrations(unittest.TestCase):
         self.assertEqual(expected, input_file_reader.migrate({"version": 2})["version"])
         self.assertEqual(expected, input_file_reader.migrate({"version": 1})["version"])
         self.assertEqual(expected, input_file_reader.migrate({})["version"])
+
+    def test_migrating_from_leakage_process_to_subroot_leakage_process(self):
+        data = {'leakage_process': 'disabled'}
+        actual = input_file_reader.migrate_v1_to_v2(data)
+        self.assertIn('subroot_leakage_process', actual)
