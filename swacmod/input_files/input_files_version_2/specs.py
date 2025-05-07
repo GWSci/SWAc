@@ -149,7 +149,7 @@ def make_specs():
         Input_Parameter('nitrate_loading', required=False, alt_format=['yml', 'csv'], type=[dict, list, float], constraints=None),
         Input_Parameter('sw_process', required=True, alt_format=[], type=[str], constraints=['enabled', 'disabled']),
         Input_Parameter('sw_params', required=False, alt_format=['yml', 'csv'], type=[dict, list, float], constraints=None),
-        Input_Parameter('sw_process_natproc', required=True, alt_format=[], type=[str], constraints=['enabled', 'disabled']),
+        Input_Parameter('sw_ponding_process', required=True, alt_format=[], type=[str], constraints=['enabled', 'disabled']),
         Input_Parameter('sw_init_ponding', required=False, alt_format=[], type=[float], constraints=None),
         Input_Parameter('sw_max_ponding', required=False, alt_format=[], type=[float], constraints=None),
         Input_Parameter('sw_ponding_area', required=False, alt_format=['yml', 'csv'], type=[dict, float], constraints=None),
