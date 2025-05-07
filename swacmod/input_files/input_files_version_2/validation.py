@@ -1698,8 +1698,8 @@ def val_percolation_rejection_use_timeseries(data, name):
 
     c.check_type(param=opr, name=name, t_types=data["specs"][name]["type"])
 
-def val_leakage_process(data, name):
-    """Validate leakage_process.
+def val_subroot_leakage_process(data, name):
+    """Validate subroot_leakage_process.
 
     1) type has to be a string
     2) value has to be one in ['enabled', 'disabled']
@@ -2411,7 +2411,7 @@ FUNC_PARAMS = [
     val_taw,
     val_raw,
     val_percolation_rejection,
-    val_leakage_process,
+    val_subroot_leakage_process,
     val_subsoilzone_leakage_fraction,
     val_interflow_process,
     val_init_interflow_store,
