@@ -1449,11 +1449,11 @@ def val_percolation_rejection_ts(data, name):
 def val_percolation_rejection_use_timeseries(data, name):
     c.validate_type(data, name)
 
-def val_leakage_process(data, name):
+def val_subroot_leakage_process(data, name):
     c.validate_type(data, name)
     c.validate_enum(data, name)
 
-def val_subsoilzone_leakage_fraction(data, name):
+def val_subroot_leakage_fraction(data, name):
     """Validate subsoilzone_leakage_fraction.
 
     1) type has to be a dictionary of lists of floats
@@ -2062,8 +2062,8 @@ FUNC_PARAMS = [
     # val_taw,
     # val_raw,
     # val_percolation_rejection,
-    val_leakage_process,
-    # val_subsoilzone_leakage_fraction,
+    val_subroot_leakage_process,
+    # val_subroot_leakage_fraction,
     val_interflow_process,
     # val_init_interflow_store,
     # val_interflow_store_bypass,
