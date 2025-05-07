@@ -773,7 +773,7 @@ def fin_percolation_rejection_use_timeseries(data, name):
         params["percolation_rejection_use_timeseries"] = False
         logging.info('\t\tSwitched "percolation_rejection_use_timeseries" to "false"')
 
-def fin_subsoilzone_leakage_fraction(data, name):
+def fin_subroot_leakage_fraction(data, name):
     """Finalize the "subsoilzone_leakage_fraction" parameter.
 
     1) if not provided, set it to all 0s.
@@ -1254,7 +1254,7 @@ def fin_subroot_leakage_ts(data, name):
     """Finalize the "subroot_leakage_ts" series."""
     series, specs, params = data["series"], data["specs"], data["params"]
 
-    if params["leakage_process"] == "enabled" and not specs[name]["required"]:
+    if params["subroot_leakage_process"] == "enabled" and not specs[name]["required"]:
         specs[name]["required"] = True
         series[name] = np.array(series[name])
         logging.info('\t\tSwitched "%s" to "required"', name)
@@ -1398,7 +1398,7 @@ FUNC_PARAMS = [
     fin_kc,
     fin_percolation_rejection,
     fin_percolation_rejection_use_timeseries,
-    fin_subsoilzone_leakage_fraction,
+    fin_subroot_leakage_fraction,
     fin_recharge_attenuation_params,
     fin_sw_params,
     fin_sw_zone_mapping,
