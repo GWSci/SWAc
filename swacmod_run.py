@@ -42,7 +42,7 @@ import swacmod.model_numpy as model_numpy
 
 import swacmod.historical_solute as historical_solute
 import swacmod.solute as solute
-import swacmod.solute_proportion_reaching_water_table as nitrate_proportion
+import swacmod.solute_proportion_reaching_water_table as solute_proportion
 from swacmod.environment import Environment
 
 # win fix
@@ -154,8 +154,8 @@ def get_output(data, node, time_switcher):
         m.get_average_out,
         m.get_change,
         m.get_balance,
-        historical_solute.get_historical_nitrate,
-        solute.get_nitrate,
+        historical_solute.get_historical_solute,
+        solute.get_solute,
     ]
 
     for function in methods:
@@ -180,9 +180,9 @@ def run_process(
         recharge_agg,
         runoff_agg,
         evtr_agg,
-        nitrate_aggregation,
-        stream_nitrate_aggregation,
-        nitrate_mi_aggregation,
+        solute_aggregation,
+        stream_solute_aggregation,
+        solute_mi_aggregation,
         recharge,
         runoff,
         log_path,
@@ -230,7 +230,7 @@ def run_process(
 
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
-                aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, stream_nitrate_aggregation, nitrate_mi_aggregation, spatial_index, pond_area)
+                aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, spatial_index, pond_area)
 
     logging.info("mp.Process %d ended", num)
 
@@ -266,7 +266,7 @@ def compare_lambdas(name, time_switcher, unoptimised, optimised):
 
     return optimised_result
 
-def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, nitrate_aggregation, stream_nitrate_aggregation, nitrate_mi_aggregation, spatial_index, pond_area):
+def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, spatial_index, pond_area):
     if node in data["params"]["output_individual"]:
         timer.switch_to(time_switcher, "aggregate_output (output_individual)")
         # if this node for individual output then preserve
@@ -327,11 +327,11 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
             evtr_agg[(nnodes * i) + int(node)] = p
         evt = None
 
-    timer.switch_to(time_switcher, "aggregate_output > (nitrate)")
+    timer.switch_to(time_switcher, "aggregate_output > (solute)")
     if data["params"]["solute_process"] == "enabled":
-        solute.aggregate_nitrate(nitrate_aggregation, data, output, node)
-        solute.aggregate_surface_water_nitrate(stream_nitrate_aggregation, data, output, node)
-        solute.aggregate_mi(nitrate_mi_aggregation, data, output, node)
+        solute.aggregate_solute(solute_aggregation, data, output, node)
+        solute.aggregate_surface_water_solute(stream_solute_aggregation, data, output, node)
+        solute.aggregate_mi(solute_mi_aggregation, data, output, node)
 
     timer.switch_to(time_switcher, "aggregate_output > (spatial_output_date)")
     if data["params"]["spatial_output_date"]:
@@ -401,9 +401,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         runoff_agg = mp.Array("f", 1)
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = mp.Array("f", 1)
-        nitrate_aggregation = solute.make_aggregation_array(data)
-        stream_nitrate_aggregation = solute.make_aggregation_array(data)
-        nitrate_mi_aggregation = solute.make_mi_aggregation_array(data)
+        solute_aggregation = solute.make_aggregation_array(data)
+        stream_solute_aggregation = solute.make_aggregation_array(data)
+        solute_mi_aggregation = solute.make_mi_aggregation_array(data)
         recharge = mp.Array("f", 1)
         runoff = mp.Array("f", 1)
         if params["swrecharge_process"] == "enabled" or data["params"][
@@ -432,9 +432,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         runoff_agg = np.zeros(1, dtype=np.single)
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = np.zeros(1, dtype=np.single)
-        nitrate_aggregation = solute.make_aggregation_array(data)
-        stream_nitrate_aggregation = solute.make_aggregation_array(data)
-        nitrate_mi_aggregation = solute.make_mi_aggregation_array(data)
+        solute_aggregation = solute.make_aggregation_array(data)
+        stream_solute_aggregation = solute.make_aggregation_array(data)
+        solute_mi_aggregation = solute.make_mi_aggregation_array(data)
         recharge = np.zeros(1, dtype=np.single)
         runoff = np.zeros(1, dtype=np.single)
         if params["swrecharge_process"] == "enabled" or data["params"][
@@ -493,9 +493,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
                 recharge_agg,
                 runoff_agg,
                 evtr_agg,
-                nitrate_aggregation,
-                stream_nitrate_aggregation,
-                nitrate_mi_aggregation,
+                solute_aggregation,
+                stream_solute_aggregation,
+                solute_mi_aggregation,
                 recharge,
                 runoff,
                 log_path,
@@ -533,9 +533,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
                     recharge_agg,
                     runoff_agg,
                     evtr_agg,
-                    nitrate_aggregation,
-                    stream_nitrate_aggregation,
-                    nitrate_mi_aggregation,
+                    solute_aggregation,
+                    stream_solute_aggregation,
+                    solute_mi_aggregation,
                     recharge,
                     runoff,
                     log_path,
@@ -804,13 +804,13 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
 
-        timer.switch_to(output_timer_token, "output_nitrate")
+        timer.switch_to(output_timer_token, "output_solute")
         if data["params"]["solute_process"] == "enabled":
             if data['params']['gwmodel_type'] == 'mf96':
-                stream_conc = m.get_str_nitrate(data, roff_agg, stream_nitrate_aggregation)
-                solute.write_stream_nitrate_csv(data, stream_conc)
-            solute.write_nitrate_csv(data, nitrate_aggregation)
-            solute.write_mi_csv(data, nitrate_mi_aggregation)
+                stream_conc = m.get_str_solute(data, roff_agg, stream_solute_aggregation)
+                solute.write_stream_solute_csv(data, stream_conc)
+            solute.write_solute_csv(data, solute_aggregation)
+            solute.write_mi_csv(data, solute_mi_aggregation)
 
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
