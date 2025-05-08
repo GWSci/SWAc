@@ -49,7 +49,7 @@ def _do_nitrate_calculations(blackboard):
 	blackboard.mass_balance_error_kg = _calculate_mass_balance_error_kg(blackboard)
 	_check_masses_balance(blackboard)
 	blackboard.proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(blackboard)
-	blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard))
+	blackboard.solute_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard))
 	blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day = _convert_kg_to_tons_array(blackboard)
 	blackboard.nitrate_reaching_water_table_array_tons_per_day = _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard)
 	blackboard.nitrate_to_surface_water_kg_per_day = _calculate_nitrate_to_surface_water_array_kg_per_day(blackboard)
@@ -210,7 +210,7 @@ def _calculate_nitrate_to_surface_water_array_kg_per_day(blackboard):
 	return blackboard.m1b_array_kg_per_day + blackboard.m3_array_kg_per_day
 
 def _convert_kg_to_tons_array(blackboard):
-	return blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day / 1000.0
+	return blackboard.solute_reaching_water_table_array_from_this_run_kg_per_day / 1000.0
 
 def _convert_nitrate_to_surface_water_kg_to_tons_array(blackboard):
 	return blackboard.nitrate_to_surface_water_kg_per_day / 1000.0
@@ -324,7 +324,7 @@ def _convert_blackboard_to_result(blackboard):
 		"m4_array_kg_per_day" : blackboard.m4_array_kg_per_day,
 		"mi_array_kg_per_day" : blackboard.mi_array_kg_per_day,
 		"proportion_reaching_water_table_array_per_day" : blackboard.proportion_reaching_water_table_array_per_day,
-		"nitrate_reaching_water_table_array_from_this_run_kg_per_day" : blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day,
+		"solute_reaching_water_table_array_from_this_run_kg_per_day" : blackboard.solute_reaching_water_table_array_from_this_run_kg_per_day,
 		"nitrate_reaching_water_table_array_tons_per_day" : blackboard.nitrate_reaching_water_table_array_tons_per_day,
 		"nitrate_to_surface_water_kg_per_day" : blackboard.nitrate_to_surface_water_kg_per_day,
 		"nitrate_to_surface_water_array_tons_per_day" : blackboard.nitrate_to_surface_water_array_tons_per_day,

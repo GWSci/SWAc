@@ -30,7 +30,7 @@ class NitrateBlackboard:
 		self.mi_array_kg_per_day = None
 		self.solute_depth_to_water = None
 		self.solute_loading = None
-		self.nitrate_reaching_water_table_array_from_this_run_kg_per_day = None
+		self.solute_reaching_water_table_array_from_this_run_kg_per_day = None
 		self.nitrate_reaching_water_table_array_from_this_run_tons_per_day = None
 		self.nitrate_reaching_water_table_array_tons_per_day = None
 		self.node = None
