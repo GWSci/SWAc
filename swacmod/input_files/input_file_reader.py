@@ -43,7 +43,8 @@ def migrate_v1_to_v2(data):
     pairs = [('leakage_process', 'subroot_leakage_process'),
              ('subsoilzone_leakage_fraction', 'subroot_leakage_fraction'),
              ('sw_process_natproc', 'sw_ponding_process'),
-             ('historical_nitrate_process', 'historical_solute_process')]
+             ('historical_nitrate_process', 'historical_solute_process'),
+             ('nitrate_process', 'solute_process')]
     for pair in pairs:
         old, new = pair[0] , pair[1]
         if 'params' in result: 
