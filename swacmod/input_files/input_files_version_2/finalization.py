@@ -23,7 +23,7 @@ def fin_start_date(data, name):
     return _finalize_date(data, name)
 
 def fin_historical_start_date(data, name):
-    if (data["params"]["historical_nitrate_process"] != "enabled"):
+    if (data["params"]["historical_solute_process"] != "enabled"):
         return
     _finalize_date(data, name)
 
@@ -1148,7 +1148,7 @@ def fin_months(data, name):
     series[name] = dates.astype("datetime64[M]").astype(int) % 12
 
 def fin_historical_nitrate_days(data, name):
-    if (data["params"]["historical_nitrate_process"] != "enabled"):
+    if (data["params"]["historical_solute_process"] != "enabled"):
         return
     series, params = data["series"], data["params"]
     time_periods = params["historical_time_periods"]
