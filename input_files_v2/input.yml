@@ -672,14 +672,15 @@ recharge_attenuation_process: enabled
 # col #4: Maximum rate of release in mm (floating point, number of entries = num_nodes) [L]
 recharge_attenuation_params: recharge_attenuation_params.yml
 
+#######################
+# Process: Solute #
+#######################
 
-#######################
-# Process: Nitrate #
-#######################
-# historical nitrate process: can be either "enabled" or "disabled"
+# historical solute process: can be either "enabled" or "disabled"
 # This parameter is required
-# If enabled, nitrate process must also be enabled and its outputs will be made available to a sequential (e.g. future-facing) run
-historical_nitrate_process: disabled
+# If enabled, solute process must also be enabled and its outputs will be made available to a sequential (e.g. future-facing) run
+historical_solute_process: disabled
+
 # Nitrate process: can be either "enabled" or "disabled"
 # This parameter is required
 # If enabled, entries required for all subsequent parameters
