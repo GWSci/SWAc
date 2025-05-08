@@ -1,7 +1,7 @@
 from datetime import date
 import swacmod.model as m
 import swacmod.nitrate as nitrate
-import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
+import swacmod.solute_proportion_reaching_water_table as nitrate_proportion
 import numpy as np
 import swacmod.timer as timer
 import unittest

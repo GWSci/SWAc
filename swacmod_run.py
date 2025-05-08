@@ -42,7 +42,7 @@ import swacmod.model_numpy as model_numpy
 
 import swacmod.historical_solute as historical_solute
 import swacmod.nitrate as nitrate
-import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
+import swacmod.solute_proportion_reaching_water_table as nitrate_proportion
 from swacmod.environment import Environment
 
 # win fix

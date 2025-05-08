@@ -1,6 +1,6 @@
 import numpy as np
 import swacmod.model as m
-import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
+import swacmod.solute_proportion_reaching_water_table as nitrate_proportion
 
 class HistoricalNitrateBlackboard():
 	def __init__(self):
