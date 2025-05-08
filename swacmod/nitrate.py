@@ -16,7 +16,7 @@ def get_nitrate(data, output, node):
 	}
 
 def calculate_nitrate(data, output, node, logging = logging):
-	if "enabled" == data["params"]["nitrate_process"]:
+	if "enabled" == data["params"]["solute_process"]:
 		blackboard = NitrateBlackboard()
 		blackboard.initialise_blackboard(data, output, node, logging)
 		blackboard = _do_nitrate_calculations(blackboard)
