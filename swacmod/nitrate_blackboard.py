@@ -69,7 +69,7 @@ class NitrateBlackboard:
 		self.nitrate_loading = params["nitrate_loading"][self.node]
 		self.a = params["solute_calibration_a"]
 		self.μ = params["solute_calibration_mu"][self.node]
-		self.σ = params["nitrate_calibration_sigma"]
+		self.σ = params["solute_calibration_sigma"]
 		self.alpha = params["nitrate_calibration_alpha"]
 		self.effective_porosity = params["nitrate_calibration_effective_porosity"][self.node]
 

@@ -36,7 +36,7 @@ class HistoricalNitrateBlackboard():
 		self.nitrate_depth_to_water = data["params"]["nitrate_depth_to_water"][node]
 		self.node = node
 		self.μ = data["params"]["solute_calibration_mu"][node]
-		self.σ = data["params"]["nitrate_calibration_sigma"]
+		self.σ = data["params"]["solute_calibration_sigma"]
 		return self
 
 def calculate_total_days_count_upper_bound(data):
