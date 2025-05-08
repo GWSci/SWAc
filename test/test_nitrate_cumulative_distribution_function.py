@@ -1,7 +1,7 @@
 from datetime import date
 import swacmod.model as m
 import swacmod.solute as solute
-import swacmod.solute_proportion_reaching_water_table as nitrate_proportion
+import swacmod.solute_proportion_reaching_water_table as solute_proportion
 import numpy as np
 import swacmod.timer as timer
 import unittest
@@ -15,13 +15,13 @@ class Test_Solute_Cumulative_Distribution_Function(unittest.TestCase):
 		effective_porosity = 1.0 / 0.0029
 		DTW = 100
 		t = 0
-		previous_nitrate = 0
+		previous_solute = 0
 		while True:
-			current_nitrate = nitrate_proportion._calculate_daily_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t + 1)
-			if current_nitrate < previous_nitrate:
+			current_solute = solute_proportion._calculate_daily_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t + 1)
+			if current_solute < previous_solute:
 				break
 			t += 1
-			previous_nitrate = current_nitrate
+			previous_solute = current_solute
 		self.assertEqual(6927, t)
 	
 	def test_calculate_daily_proportion_reaching_water_table_arr(self):
@@ -49,12 +49,12 @@ class Test_Solute_Cumulative_Distribution_Function(unittest.TestCase):
 		effective_porosity = 1.0 / 0.0029
 		DTW = 0.001
 		t = 1
-		original = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t)
-		different_a = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(100, μ, σ, alpha, effective_porosity, DTW, t)
-		different_μ = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, 0.05, σ, alpha, effective_porosity, DTW, t)
-		different_σ = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, 0.01, alpha, effective_porosity, DTW, t)
-		different_alpha = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, 100, effective_porosity, DTW, t)
-		different_effective_porosity = nitrate_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, 0.1, DTW, t)
+		original = solute_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, effective_porosity, DTW, t)
+		different_a = solute_proportion._calculate_cumulative_proportion_reaching_water_table(100, μ, σ, alpha, effective_porosity, DTW, t)
+		different_μ = solute_proportion._calculate_cumulative_proportion_reaching_water_table(a, 0.05, σ, alpha, effective_porosity, DTW, t)
+		different_σ = solute_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, 0.01, alpha, effective_porosity, DTW, t)
+		different_alpha = solute_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, 100, effective_porosity, DTW, t)
+		different_effective_porosity = solute_proportion._calculate_cumulative_proportion_reaching_water_table(a, μ, σ, alpha, 0.1, DTW, t)
 		self.assertAlmostEqual(0.793244345253982, original)
 		self.assertAlmostEqual(0.6657750500569044, different_a)
 		self.assertAlmostEqual(0.6668990408184825, different_μ)
