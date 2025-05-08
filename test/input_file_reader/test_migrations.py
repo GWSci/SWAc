@@ -57,3 +57,8 @@ class Test_Migrations(unittest.TestCase):
         data = {'params':{'nitrate_calibration_alpha': 'sausage'}}
         actual = input_file_reader.migrate_v1_to_v2(data)
         self.assertIn('solute_calibration_alpha', actual['params'])
+    
+    def test_migtating_from_nitrate_calibration_effective_porosity_to_solute_calibration_effective_porosity(self):
+        data = {'params':{'nitrate_calibration_effective_porosity': 'sausage'}}
+        actual = input_file_reader.migrate_v1_to_v2(data)
+        self.assertIn('solute_calibration_effective_porosity', actual['params'])
