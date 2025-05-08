@@ -1147,7 +1147,7 @@ def fin_months(data, name):
     dates = np.array([np.datetime64(str(i.date())) for i in series["date"]])
     series[name] = dates.astype("datetime64[M]").astype(int) % 12
 
-def fin_historical_nitrate_days(data, name):
+def fin_historical_solute_days(data, name):
     if (data["params"]["historical_solute_process"] != "enabled"):
         return
     series, params = data["series"], data["params"]
@@ -1433,7 +1433,7 @@ FUNC_PARAMS = [
 FUNC_SERIES = [
     fin_date,
     fin_months,
-    fin_historical_nitrate_days,
+    fin_historical_solute_days,
     fin_rainfall_ts,
     fin_pe_ts,
     fin_temperature_ts,
