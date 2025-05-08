@@ -681,10 +681,10 @@ recharge_attenuation_params: recharge_attenuation_params.yml
 # If enabled, solute process must also be enabled and its outputs will be made available to a sequential (e.g. future-facing) run
 historical_solute_process: disabled
 
-# Nitrate process: can be either "enabled" or "disabled"
+# Solute process: can be either "enabled" or "disabled"
 # This parameter is required
 # If enabled, entries required for all subsequent parameters
-nitrate_process: disabled
+solute_process: disabled
 
 # Floating-point value, representing logarithm base in cumulative distribution function of unsaturated zone K, where F(K) = 0.5*[1+erf(-(loga(K)-mu)/(sigma*SQRT(2)))]
 nitrate_calibration_a: 1.38
