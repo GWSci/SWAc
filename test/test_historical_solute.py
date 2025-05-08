@@ -27,7 +27,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		output = {}
 		node = input_node
 		process_result = historical_solute.get_historical_nitrate(data, output, node)
-		actual = process_result["historical_nitrate_reaching_water_table_array_tons_per_day"]
+		actual = process_result["historical_solute_reaching_water_table_array_tons_per_day"]
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_truncated_historical_nitrate_days_when_both_sets_of_date_are_empty(self):
@@ -90,7 +90,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 	def test_calculate_historical_nitrate_populates_historical_nitrate_reaching_water_table_array_tons_per_day(self):
 		actual = historical_solute._calculate_historical_nitrate(self.make_sample_blackboard())
-		self.assertIsNotNone(actual.historical_nitrate_reaching_water_table_array_tons_per_day)
+		self.assertIsNotNone(actual.historical_solute_reaching_water_table_array_tons_per_day)
 
 	def make_sample_blackboard(self):
 		blackboard = historical_solute.HistoricalNitrateBlackboard()
@@ -338,8 +338,8 @@ class Test_Historical_Nitrate(unittest.TestCase):
 	def test_get_historical_nitrate_return_answer_when_enabled(self):
 		data, output, node = self.make_sample_data_output_node()
 		actual_output = historical_solute.get_historical_nitrate(data, output, node)
-		actual = actual_output["historical_nitrate_reaching_water_table_array_tons_per_day"]
+		actual = actual_output["historical_solute_reaching_water_table_array_tons_per_day"]
 
 		expected_blackboard = historical_solute._calculate_historical_nitrate(self.make_sample_blackboard())
-		expected = expected_blackboard.historical_nitrate_reaching_water_table_array_tons_per_day
+		expected = expected_blackboard.historical_solute_reaching_water_table_array_tons_per_day
 		np.testing.assert_allclose(expected, actual)

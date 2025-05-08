@@ -1,6 +1,6 @@
 import numpy as np
 import swacmod.model as m
-import swacmod.solute_proportion_reaching_water_table as nitrate_proportion
+import swacmod.solute_proportion_reaching_water_table as solute_proportion
 
 class HistoricalNitrateBlackboard():
 	def __init__(self):
@@ -11,7 +11,7 @@ class HistoricalNitrateBlackboard():
 		self.historical_mi_array_kg_per_day = None
 		self.historical_mi_array_kg_per_time_period = None
 		self.historical_mass_reaching_water_table_array_kg_per_day = None
-		self.historical_nitrate_reaching_water_table_array_tons_per_day = None
+		self.historical_solute_reaching_water_table_array_tons_per_day = None
 		self.historical_nitrate_days = None
 		self.historical_time_periods = None
 		self.historic_proportion_reaching_water_table_array_per_day = None
@@ -54,13 +54,13 @@ def get_historical_nitrate(data, output, node):
 		blackboard = blackboard.initialise_blackboard(data, output, node)
 		blackboard = _calculate_historical_nitrate(blackboard)
 		return {
-			"historical_nitrate_reaching_water_table_array_tons_per_day": blackboard.historical_nitrate_reaching_water_table_array_tons_per_day,
+			"historical_solute_reaching_water_table_array_tons_per_day": blackboard.historical_solute_reaching_water_table_array_tons_per_day,
 		}
 	else:
 		length = len(data["series"]["date"])
 		empty_array = np.zeros(length)
 		return {
-			"historical_nitrate_reaching_water_table_array_tons_per_day": empty_array,
+			"historical_solute_reaching_water_table_array_tons_per_day": empty_array,
 		}
 
 def _calculate_aggregate_mi_unpacking(blackboard):
@@ -72,7 +72,7 @@ def _calculate_historical_nitrate(blackboard):
 	blackboard.truncated_historical_mi_array_kg_per_day = _calculate_truncated_historical_mi_array_kg_per_day(blackboard)
 	blackboard.historic_proportion_reaching_water_table_array_per_day = _calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
 	blackboard.historical_mass_reaching_water_table_array_kg_per_day = _calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard)
-	blackboard.historical_nitrate_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(blackboard)
+	blackboard.historical_solute_reaching_water_table_array_tons_per_day = _convert_kg_to_tons_array(blackboard)
 	return blackboard
 
 def _calculate_truncated_historical_nitrate_days(blackboard):
@@ -89,7 +89,7 @@ def _calculate_truncated_historical_mi_array_kg_per_day(blackboard):
 	return blackboard.historical_mi_array_kg_per_day[:truncated_length]
 
 def _calculate_historic_proportion_reaching_water_table_array_per_day(blackboard):	
-	return nitrate_proportion.calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
+	return solute_proportion.calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
 
 def _calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard):
 	return m.calculate_historical_mass_reaching_water_table_array_kg_per_day(blackboard)
