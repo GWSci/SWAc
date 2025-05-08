@@ -105,8 +105,8 @@ class Test_Validation_New(unittest.TestCase):
             "interflow_process": 5,
             "recharge_attenuation_process": "x",
             "recharge_attenuation_process": 5,
-            # "historical_nitrate_process": "x", # TODO: Needs a validation
-            # "historical_nitrate_process": 5, # TODO: Needs a validation
+            # "historical_solute_process": "x", # TODO: Needs a validation
+            # "historical_solute_process": 5, # TODO: Needs a validation
             # "nitrate_process": "x", # TODO: Needs a validation
             # "nitrate_process": 5, # TODO: Needs a validation
             "sw_process": "x",
@@ -235,7 +235,7 @@ def make_valid_params():
         "subroot_leakage_process": "enabled",
         "interflow_process": "enabled",
         "recharge_attenuation_process": "enabled",
-        "historical_nitrate_process": "enabled",
+        "historical_solute_process": "enabled",
         "nitrate_process": "enabled",
         "sw_process": "enabled",
         "sw_ponding_process": "enabled",
