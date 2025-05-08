@@ -3,7 +3,7 @@ import swacmod.historical_solute as historical_solute
 import unittest
 import numpy as np
 
-class Test_Nitrate_mi_Aggregation_Unpacking(unittest.TestCase):
+class Test_Solute_mi_Aggregation_Unpacking(unittest.TestCase):
 	def test_solute_mi_aggregation_unpacking_for_one_day(self):
 		historical_time_periods = [[1, 2]]
 		expected = [3.0]
@@ -47,7 +47,7 @@ class Test_Nitrate_mi_Aggregation_Unpacking(unittest.TestCase):
 		if len(historical_time_periods) > 0:
 			for i in range(1, historical_time_periods[len(historical_time_periods) - 1][1]):
 				historical_solute_days.append(date(2023, 1, i + 1))
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 		blackboard.historical_solute_days = historical_solute_days
 		blackboard.historical_time_periods = historical_time_periods
 		blackboard.historical_mi_array_kg_per_time_period = historical_mi_array_kg_per_time_period[0]
