@@ -151,7 +151,7 @@ class Test_Validation_New(unittest.TestCase):
 
             "gwmodel_type": 5,
             # "solute_calibration_a": "x", # TODO no validation
-            # "nitrate_calibration_sigma": "x",# TODO no validation
+            # "solute_calibration_sigma": "x",# TODO no validation
             # "nitrate_calibration_alpha": "x",# TODO no validation
             # "sw_init_ponding": "x", # TODO validation not called
             # "sw_max_ponding": "x", # TODO validation not called
@@ -243,7 +243,7 @@ def make_valid_params():
         "excess_sw_process": "sw_rip",
         "gwmodel_type": "mf6",
         "solute_calibration_a": 1.38,
-        "nitrate_calibration_sigma": 3.96,
+        "solute_calibration_sigma": 3.96,
         "nitrate_calibration_alpha": 3906.25,
         "sw_init_ponding": 5.0,
         "sw_max_ponding": 300.0,
