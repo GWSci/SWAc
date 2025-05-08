@@ -35,7 +35,7 @@ class HistoricalNitrateBlackboard():
 		self.historical_time_periods = data["params"]["historical_time_periods"]
 		self.nitrate_depth_to_water = data["params"]["nitrate_depth_to_water"][node]
 		self.node = node
-		self.μ = data["params"]["nitrate_calibration_mu"][node]
+		self.μ = data["params"]["solute_calibration_mu"][node]
 		self.σ = data["params"]["nitrate_calibration_sigma"]
 		return self
 
