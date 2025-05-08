@@ -322,7 +322,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 				"solute_calibration_a": 10.0,
 				"nitrate_depth_to_water": {7: np.array([10.0])},
 				"solute_calibration_alpha" : 1.0,
-				"nitrate_calibration_effective_porosity" : {7: np.array([1.0])},
+				"solute_calibration_effective_porosity" : {7: np.array([1.0])},
 				"solute_calibration_mu": {7: np.array([0.0])},
 				"solute_calibration_sigma": 1.0,
 			},

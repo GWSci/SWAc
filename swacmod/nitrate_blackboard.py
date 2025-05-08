@@ -71,7 +71,7 @@ class NitrateBlackboard:
 		self.μ = params["solute_calibration_mu"][self.node]
 		self.σ = params["solute_calibration_sigma"]
 		self.alpha = params["solute_calibration_alpha"]
-		self.effective_porosity = params["nitrate_calibration_effective_porosity"][self.node]
+		self.effective_porosity = params["solute_calibration_effective_porosity"][self.node]
 
 		self.perc_through_root_mm_per_day = output["perc_through_root"]
 		self.TAW_array_mm = output["tawtew"]

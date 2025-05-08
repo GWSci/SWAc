@@ -1,4 +1,4 @@
-nitrate_calibration_effective_porosity:
+solute_calibration_effective_porosity:
     1: 0.15
     2: 0.15
     3: 0.12
