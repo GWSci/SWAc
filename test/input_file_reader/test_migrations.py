@@ -27,4 +27,9 @@ class Test_Migrations(unittest.TestCase):
         data = {'params':{'sw_process_natproc': 'sausage'}}
         actual = input_file_reader.migrate_v1_to_v2(data)
         self.assertIn('sw_ponding_process', actual['params'])
+    
+    def test_migtating_from_historical_nitrate_process_to_historical_solute_process(self):
+        data = {'params':{'historical_nitrate_process': 'sausage'}}
+        actual = input_file_reader.migrate_v1_to_v2(data)
+        self.assertIn('historical_solute_process', actual['params'])
 
