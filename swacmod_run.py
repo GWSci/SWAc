@@ -328,7 +328,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
         evt = None
 
     timer.switch_to(time_switcher, "aggregate_output > (nitrate)")
-    if data["params"]["nitrate_process"] == "enabled":
+    if data["params"]["solute_process"] == "enabled":
         nitrate.aggregate_nitrate(nitrate_aggregation, data, output, node)
         nitrate.aggregate_surface_water_nitrate(stream_nitrate_aggregation, data, output, node)
         nitrate.aggregate_mi(nitrate_mi_aggregation, data, output, node)
@@ -805,7 +805,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         timer.print_time_switcher_report(output_timer_token)
 
         timer.switch_to(output_timer_token, "output_nitrate")
-        if data["params"]["nitrate_process"] == "enabled":
+        if data["params"]["solute_process"] == "enabled":
             if data['params']['gwmodel_type'] == 'mf96':
                 stream_conc = m.get_str_nitrate(data, roff_agg, stream_nitrate_aggregation)
                 nitrate.write_stream_nitrate_csv(data, stream_conc)
