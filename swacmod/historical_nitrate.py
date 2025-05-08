@@ -27,7 +27,7 @@ class HistoricalNitrateBlackboard():
 		total_days_upper_bound = calculate_total_days_count_upper_bound(data)
 
 		self.a = data["params"]["solute_calibration_a"]
-		self.alpha = data["params"]["nitrate_calibration_alpha"]
+		self.alpha = data["params"]["solute_calibration_alpha"]
 		self.days = data["series"]["date"]
 		self.effective_porosity = data["params"]["nitrate_calibration_effective_porosity"][node]
 		self.historical_mi_array_kg_per_time_period = data["params"]["historical_mi_array_kg_per_time_period"][node]
