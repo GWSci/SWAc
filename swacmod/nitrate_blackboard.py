@@ -29,7 +29,7 @@ class NitrateBlackboard:
 		self.mass_balance_error_kg = None
 		self.mi_array_kg_per_day = None
 		self.solute_depth_to_water = None
-		self.nitrate_loading = None
+		self.solute_loading = None
 		self.nitrate_reaching_water_table_array_from_this_run_kg_per_day = None
 		self.nitrate_reaching_water_table_array_from_this_run_tons_per_day = None
 		self.nitrate_reaching_water_table_array_tons_per_day = None
@@ -66,7 +66,7 @@ class NitrateBlackboard:
 		params = data["params"]
 		self.solute_depth_to_water = params["solute_depth_to_water"][self.node]
 		self.cell_area_m_sq = params["node_areas"][self.node]
-		self.nitrate_loading = params["nitrate_loading"][self.node]
+		self.solute_loading = params["solute_loading"][self.node]
 		self.a = params["solute_calibration_a"]
 		self.μ = params["solute_calibration_mu"][self.node]
 		self.σ = params["solute_calibration_sigma"]

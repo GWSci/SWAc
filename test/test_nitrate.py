@@ -124,7 +124,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.cell_area_m_sq = 2500
 		blackboard.her_array_mm_per_day = np.array([60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25])
 		# Node,UNIQUE,X,Y,LOAD0,HER_5_MaxL,HER_50_Max,HER_95_Max,5PercLoadM,50PercLoad,95PercLoad
-		blackboard.nitrate_loading = [0, 0, 0, max_load_per_year, her_at_5_percent, her_at_50_percent, her_at_95_percent, 0, 0, 0]
+		blackboard.solute_loading = [0, 0, 0, max_load_per_year, her_at_5_percent, her_at_50_percent, her_at_95_percent, 0, 0, 0]
 		actual = nitrate._calculate_m0_array_kg_per_day(blackboard)
 
 		np.testing.assert_array_equal(expected, actual)
@@ -471,7 +471,7 @@ class Test_Nitrate(unittest.TestCase):
 				"solute_calibration_alpha": 1.7,
 				"solute_calibration_effective_porosity": {7: [1.0 / 0.0029]},
 				"solute_depth_to_water": {7: [0.00205411]},
-				"nitrate_loading": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
+				"solute_loading": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
 				"solute_process": "enabled",
 			}, "series" : {
 				"date": [date(2023, 1, 1), date(2023, 1, 2), ]
@@ -529,7 +529,7 @@ class Test_Nitrate(unittest.TestCase):
 			"params": {
 				"node_areas": {7: 2500.0},
 				"solute_depth_to_water": {7: [0.00205411]},
-				"nitrate_loading": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
+				"solute_loading": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
 				"solute_process": "disabled",
 			}, "series" : {
 				"date": [date(2023, 1, 1), date(2023, 1, 2), ]

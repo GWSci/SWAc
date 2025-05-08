@@ -718,7 +718,7 @@ solute_depth_to_water: Average_DTW.csv
 # Column 9: 5PercLoadM (not used in SWAcMod)
 # Column 10: 50PercLoad (not used in SWAcMod)
 # Column 11: 95PercLoad (not used in SWAcMod)
-nitrate_loading: NO3_loading.csv
+solute_loading: NO3_loading.csv
 
 #######################
 # Process: SW Release #
