@@ -287,7 +287,7 @@ def make_valid_params():
         "infiltration_limit_ts": "infiltration_limit_ts.yml",
         "interflow_decay_ts": "interflow_decay_ts.yml",
         "recharge_attenuation_params": "recharge_attenuation_params.yml",
-        "nitrate_calibration_mu": "mu.csv",
+        "solute_calibration_mu": "mu.csv",
         "nitrate_calibration_effective_porosity": "effective_porosity.csv",
         "nitrate_depth_to_water": "Average_DTW.csv",
         "nitrate_loading": "NO3_loading.csv",
