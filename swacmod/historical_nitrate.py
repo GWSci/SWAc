@@ -49,7 +49,7 @@ def calculate_total_days_count_upper_bound(data):
 	return date_len + historical_nitrate_days_len
 
 def get_historical_nitrate(data, output, node):
-	if (data["params"]["historical_nitrate_process"] == "enabled"):
+	if (data["params"]["historical_solute_process"] == "enabled"):
 		blackboard = HistoricalNitrateBlackboard()
 		blackboard = blackboard.initialise_blackboard(data, output, node)
 		blackboard = _calculate_historical_nitrate(blackboard)
