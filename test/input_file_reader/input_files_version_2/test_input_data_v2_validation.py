@@ -171,7 +171,7 @@ def make_sample_valid_input_file():
         "interflow_decay_ts": "interflow_decay_ts.yml",
         "recharge_attenuation_process": "enabled",
         "recharge_attenuation_params": "recharge_attenuation_params.yml",
-        "historical_nitrate_process": "disabled",
+        "historical_solute_process": "disabled",
         "nitrate_process": "disabled",
         "nitrate_calibration_a": 1.38,
         "nitrate_calibration_mu": "mu.csv",
