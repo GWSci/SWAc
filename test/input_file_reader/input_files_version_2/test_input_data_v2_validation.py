@@ -172,7 +172,7 @@ def make_sample_valid_input_file():
         "recharge_attenuation_process": "enabled",
         "recharge_attenuation_params": "recharge_attenuation_params.yml",
         "historical_solute_process": "disabled",
-        "nitrate_process": "disabled",
+        "solute_process": "disabled",
         "nitrate_calibration_a": 1.38,
         "nitrate_calibration_mu": "mu.csv",
         "nitrate_calibration_sigma": 3.96,
