@@ -466,7 +466,7 @@ class Test_Nitrate(unittest.TestCase):
 			"params": {
 				"node_areas": {7: 2500.0},
 				"solute_calibration_a": 1.38,
-				"nitrate_calibration_mu": {7: [1.58]},
+				"solute_calibration_mu": {7: [1.58]},
 				"nitrate_calibration_sigma": 3.96,
 				"nitrate_calibration_alpha": 1.7,
 				"nitrate_calibration_effective_porosity": {7: [1.0 / 0.0029]},
