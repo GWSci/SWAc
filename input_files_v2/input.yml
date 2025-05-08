@@ -697,7 +697,7 @@ solute_calibration_mu: mu.csv
 solute_calibration_sigma: 3.96
 
 # Floating-point value, fitting parameter alpha in above equation
-nitrate_calibration_alpha: 3906.25
+solute_calibration_alpha: 3906.25
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: effective porosity
