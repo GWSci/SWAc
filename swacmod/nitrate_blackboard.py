@@ -67,7 +67,7 @@ class NitrateBlackboard:
 		self.nitrate_depth_to_water = params["nitrate_depth_to_water"][self.node]
 		self.cell_area_m_sq = params["node_areas"][self.node]
 		self.nitrate_loading = params["nitrate_loading"][self.node]
-		self.a = params["nitrate_calibration_a"]
+		self.a = params["solute_calibration_a"]
 		self.μ = params["nitrate_calibration_mu"][self.node]
 		self.σ = params["nitrate_calibration_sigma"]
 		self.alpha = params["nitrate_calibration_alpha"]
