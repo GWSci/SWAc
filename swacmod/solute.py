@@ -2,7 +2,7 @@ import logging
 import numpy as np
 import os
 import swacmod.feature_flags as ff
-from swacmod.solute_blackboard import NitrateBlackboard
+from swacmod.solute_blackboard import SoluteBlackboard
 import swacmod.utils as utils
 import swacmod.model as m
 import swacmod.solute_proportion_reaching_water_table as solute_proportion
@@ -17,7 +17,7 @@ def get_solute(data, output, node):
 
 def calculate_solute(data, output, node, logging = logging):
 	if "enabled" == data["params"]["solute_process"]:
-		blackboard = NitrateBlackboard()
+		blackboard = SoluteBlackboard()
 		blackboard.initialise_blackboard(data, output, node, logging)
 		blackboard = _do_solute_calculations(blackboard)
 		return _convert_blackboard_to_result(blackboard)
@@ -200,7 +200,7 @@ def _make_unbalanced_day_log_message(i, blackboard):
 	m4 = blackboard.m4_array_kg_per_day[i]
 	mass_balance_error = blackboard.mass_balance_error_kg[i]
 	total_NO3_to_receptors = blackboard.total_NO3_to_receptors_kg[i]
-	message = f"Nitrate masses do not balance for node {blackboard.node} using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index {i} with a mass balance error of {mass_balance_error} kg. total_NO3_to_receptors = {total_NO3_to_receptors} kg; M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg; M3 = {m3} kg; M4 = {m4} kg."
+	message = f"Solute masses do not balance for node {blackboard.node} using the equation M0 = M1 + M2 + M3 + M4. The day with the largest mass balance error is at index {i} with a mass balance error of {mass_balance_error} kg. total_NO3_to_receptors = {total_NO3_to_receptors} kg; M0 = {m0} kg; M1 = {m1} kg; M2 = {m2} kg; M3 = {m3} kg; M4 = {m4} kg."
 	return message
 
 def _calculate_proportion_reaching_water_table_array_per_day(blackboard):

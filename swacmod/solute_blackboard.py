@@ -1,6 +1,6 @@
 import numpy as np
 
-class NitrateBlackboard:
+class SoluteBlackboard:
 	def __init__(self):
 		self.a = None
 		self.ae = None
