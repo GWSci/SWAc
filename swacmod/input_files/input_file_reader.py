@@ -47,7 +47,8 @@ def migrate_v1_to_v2(data):
              ('nitrate_process', 'solute_process'),
              ('nitrate_calibration_a', 'solute_calibration_a'),
              ('nitrate_calibration_mu', 'solute_calibration_mu'),
-             ('nitrate_calibration_sigma', 'solute_calibration_sigma')]
+             ('nitrate_calibration_sigma', 'solute_calibration_sigma'),
+             ('nitrate_calibration_alpha', 'solute_calibration_alpha')]
     for pair in pairs:
         old, new = pair[0] , pair[1]
         if 'params' in result: 
