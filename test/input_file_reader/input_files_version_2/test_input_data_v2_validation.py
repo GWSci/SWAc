@@ -174,7 +174,7 @@ def make_sample_valid_input_file():
         "historical_solute_process": "disabled",
         "solute_process": "disabled",
         "solute_calibration_a": 1.38,
-        "nitrate_calibration_mu": "mu.csv",
+        "solute_calibration_mu": "mu.csv",
         "nitrate_calibration_sigma": 3.96,
         "nitrate_calibration_alpha": 3906.25,
         "nitrate_calibration_effective_porosity": "effective_porosity.csv",
