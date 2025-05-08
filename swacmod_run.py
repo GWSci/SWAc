@@ -40,7 +40,7 @@ import swacmod.flopy_adaptor as flopy_adaptor
 from swacmod import model as m
 import swacmod.model_numpy as model_numpy
 
-import swacmod.historical_nitrate as historical_nitrate
+import swacmod.historical_solute as historical_solute
 import swacmod.nitrate as nitrate
 import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
 from swacmod.environment import Environment
@@ -154,7 +154,7 @@ def get_output(data, node, time_switcher):
         m.get_average_out,
         m.get_change,
         m.get_balance,
-        historical_nitrate.get_historical_nitrate,
+        historical_solute.get_historical_nitrate,
         nitrate.get_nitrate,
     ]
 

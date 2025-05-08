@@ -1,5 +1,5 @@
 from datetime import date
-import swacmod.historical_nitrate as historical_nitrate
+import swacmod.historical_solute as historical_solute
 import unittest
 import numpy as np
 
@@ -47,12 +47,12 @@ class Test_Nitrate_mi_Aggregation_Unpacking(unittest.TestCase):
 		if len(historical_time_periods) > 0:
 			for i in range(1, historical_time_periods[len(historical_time_periods) - 1][1]):
 				historical_nitrate_days.append(date(2023, 1, i + 1))
-		blackboard = historical_nitrate.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalNitrateBlackboard()
 		blackboard.historical_nitrate_days = historical_nitrate_days
 		blackboard.historical_time_periods = historical_time_periods
 		blackboard.historical_mi_array_kg_per_time_period = historical_mi_array_kg_per_time_period[0]
 		blackboard.node = node
 
-		actual = historical_nitrate._calculate_aggregate_mi_unpacking(blackboard)
+		actual = historical_solute._calculate_aggregate_mi_unpacking(blackboard)
 
 		np.testing.assert_allclose(expected, actual)
