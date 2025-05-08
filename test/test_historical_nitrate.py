@@ -99,7 +99,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.historical_mi_array_kg_per_time_period = np.array([10.0, 20.0])
 		blackboard.historical_nitrate_days = [date(2023, 1, 1), date(2023, 1, 2), ]
 		blackboard.historical_time_periods = [[1, 2], [2, 3]]
-		blackboard.nitrate_depth_to_water = np.array([10.0])
+		blackboard.solute_depth_to_water = np.array([10.0])
 		blackboard.alpha = 1.0
 		blackboard.effective_porosity = np.array([1.0])
 		blackboard.node = 7
@@ -183,7 +183,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assign_common_blackboard_inputs_for_proportion_reaching_water_table(blackboard)
 		blackboard.days = new_days
 		blackboard.truncated_historical_nitrate_days = historic_days
-		blackboard.nitrate_depth_to_water = np.zeros(len(combined_days))
+		blackboard.solute_depth_to_water = np.zeros(len(combined_days))
 		actual = historical_nitrate._calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
 
 		expected = np.array([1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ])
@@ -234,7 +234,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assertEqual(expected, actual)
 
 	def assign_common_blackboard_inputs_for_proportion_reaching_water_table(self, blackboard):
-		blackboard.nitrate_depth_to_water = np.array([10.0])
+		blackboard.solute_depth_to_water = np.array([10.0])
 		blackboard.alpha = 1.0
 		blackboard.effective_porosity = np.array([1.0])
 		blackboard.a = 10.0
@@ -306,7 +306,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		np.testing.assert_allclose(expected.historical_mi_array_kg_per_time_period, actual.historical_mi_array_kg_per_time_period)
 		self.assertEqual(expected.historical_time_periods, actual.historical_time_periods)
 		self.assertEqual(expected.historical_nitrate_days, actual.historical_nitrate_days)
-		np.testing.assert_allclose(expected.nitrate_depth_to_water, actual.nitrate_depth_to_water)
+		np.testing.assert_allclose(expected.solute_depth_to_water, actual.solute_depth_to_water)
 		self.assertEqual(expected.alpha, actual.alpha)
 		self.assertEqual(expected.effective_porosity, actual.effective_porosity)
 		self.assertEqual(expected.node, actual.node)
@@ -320,7 +320,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 				"historical_solute_process": "enabled",
 				"historical_time_periods" : [[1, 2], [2, 3]],
 				"solute_calibration_a": 10.0,
-				"nitrate_depth_to_water": {7: np.array([10.0])},
+				"solute_depth_to_water": {7: np.array([10.0])},
 				"solute_calibration_alpha" : 1.0,
 				"solute_calibration_effective_porosity" : {7: np.array([1.0])},
 				"solute_calibration_mu": {7: np.array([0.0])},

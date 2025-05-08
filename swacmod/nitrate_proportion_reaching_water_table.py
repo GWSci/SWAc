@@ -12,7 +12,7 @@ def calculate_historic_proportion_reaching_water_table_array_per_day(blackboard)
 def _calculate_proportion_reaching_water_table_array_per_day(blackboard, historical_days_count):
 	time_switcher = blackboard.time_switcher
 	length = historical_days_count + len(blackboard.days)
-	depth_to_water_m = blackboard.nitrate_depth_to_water[0]
+	depth_to_water_m = blackboard.solute_depth_to_water[0]
 	mu = blackboard.μ[0]
 	effective_porosity_value = blackboard.effective_porosity[0]
 	if depth_to_water_m == 0.0:

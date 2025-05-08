@@ -178,7 +178,7 @@ def make_sample_valid_input_file():
         "solute_calibration_sigma": 3.96,
         "solute_calibration_alpha": 3906.25,
         "solute_calibration_effective_porosity": "effective_porosity.csv",
-        "nitrate_depth_to_water": "Average_DTW.csv",
+        "solute_depth_to_water": "Average_DTW.csv",
         "nitrate_loading": "NO3_loading.csv",
         "sw_process": "enabled",
         "sw_params": "sw_params.yml",

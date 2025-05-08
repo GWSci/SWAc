@@ -705,7 +705,7 @@ solute_calibration_effective_porosity: effective_porosity.csv
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: depth to water in m (floating point, number of entries = num_nodes) [L]
-nitrate_depth_to_water: Average_DTW.csv
+solute_depth_to_water: Average_DTW.csv
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: UNIQUE (not used in SWAcMod)
