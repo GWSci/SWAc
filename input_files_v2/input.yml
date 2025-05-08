@@ -691,7 +691,7 @@ solute_calibration_a: 1.38
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: fitting parameter mu in above equation (floating point, number of entries = num_nodes) [L] 
-nitrate_calibration_mu: mu.csv
+solute_calibration_mu: mu.csv
 
 # Floating-point value, fitting parameter sigma in above equation
 nitrate_calibration_sigma: 3.96
