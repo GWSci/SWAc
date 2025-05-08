@@ -3,7 +3,7 @@ import swacmod.solute as solute
 import numpy as np
 import unittest
 
-class Test_Nitrate_Aggregation(unittest.TestCase):
+class Test_Solute_Aggregation(unittest.TestCase):
 	def test_solute_aggregation_for_empty_data(self):
 		data = make_data(node_areas = {0: 10.0}, time_periods = {})
 		output = {
