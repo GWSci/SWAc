@@ -26,7 +26,7 @@ class HistoricalNitrateBlackboard():
 	def initialise_blackboard(self, data, output, node):
 		total_days_upper_bound = calculate_total_days_count_upper_bound(data)
 
-		self.a = data["params"]["nitrate_calibration_a"]
+		self.a = data["params"]["solute_calibration_a"]
 		self.alpha = data["params"]["nitrate_calibration_alpha"]
 		self.days = data["series"]["date"]
 		self.effective_porosity = data["params"]["nitrate_calibration_effective_porosity"][node]
