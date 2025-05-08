@@ -1,0 +1,6 @@
+# canopy interception zone names
+canopy_zone_names:
+    1: Catchment1
+    2: Catchment2
+    3: somethingelse
+
