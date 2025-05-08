@@ -19,7 +19,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 	def assert_historical_nitrate(self, expected, input_process_enabled, input_days, input_historical_days, input_historical_mi, input_node):
 		data = {
 			"params": {
-				"historical_nitrate_process": input_process_enabled,
+				"historical_solute_process": input_process_enabled,
 			}, "series" : {
 				"date": input_days
 			},
@@ -317,7 +317,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		data = {
 			"params": {
 				"historical_mi_array_kg_per_time_period" : {7 : np.array([10.0, 20.0])},
-				"historical_nitrate_process": "enabled",
+				"historical_solute_process": "enabled",
 				"historical_time_periods" : [[1, 2], [2, 3]],
 				"nitrate_calibration_a": 10.0,
 				"nitrate_depth_to_water": {7: np.array([10.0])},
