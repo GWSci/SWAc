@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import os
 import swacmod.model as m
-import swacmod.nitrate as nitrate
+import swacmod.solute as solute
 import swacmod.timer as timer
 
 class Test_Nitrate(unittest.TestCase):
@@ -26,10 +26,10 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_her(input_precip_to_ground, input_ae, expected)
 
 	def assert_her(self, input_precip_to_ground, input_ae, expected):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.precip_to_ground = input_precip_to_ground
 		blackboard.ae = input_ae
-		actual = nitrate._calculate_her_array_mm_per_day(blackboard)
+		actual = solute._calculate_her_array_mm_per_day(blackboard)
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_cumulative_fraction_leaked_per_year(self):
@@ -117,7 +117,7 @@ class Test_Nitrate(unittest.TestCase):
 		max_load_per_cell_per_year = 10000 * 365.25
 		expected = [0.6 * max_load_per_cell_per_year, 0.4 * max_load_per_cell_per_year, 0, 0.6 * max_load_per_cell_per_year, 0.4 * max_load_per_cell_per_year, 0]
 
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.node = 3
 		blackboard.time_switcher = timer.make_time_switcher()
 		blackboard.days = [date(2023, 9, 28), date(2023, 9, 29), date(2023, 9, 30), date(2023, 10, 1), date(2023, 10, 2), date(2023, 10, 3)]
@@ -125,42 +125,42 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.her_array_mm_per_day = np.array([60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25, 60 * 365.25])
 		# Node,UNIQUE,X,Y,LOAD0,HER_5_MaxL,HER_50_Max,HER_95_Max,5PercLoadM,50PercLoad,95PercLoad
 		blackboard.solute_loading = [0, 0, 0, max_load_per_year, her_at_5_percent, her_at_50_percent, her_at_95_percent, 0, 0, 0]
-		actual = nitrate._calculate_m0_array_kg_per_day(blackboard)
+		actual = solute._calculate_m0_array_kg_per_day(blackboard)
 
 		np.testing.assert_array_equal(expected, actual)
 
 	def test_calculate_Pro_is_normally_one_minus_the_other_three_proportions(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.her_array_mm_per_day = np.array([1.0, 1.0])
 		blackboard.p_non = np.array([0.1, 0.01])
 		blackboard.Pherperc = np.array([0.2, 0.02])
 		blackboard.Psmd = np.array([0.4, 0.04])
 
-		actual = nitrate._calculate_Pro(blackboard)
+		actual = solute._calculate_Pro(blackboard)
 
 		expected = np.array([0.3, 0.93])
 		np.testing.assert_allclose(expected, actual, )
 
 	def test_calculate_Pro_is_zero_when_her_is_zero(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.her_array_mm_per_day = np.array([0.0, 0.0])
 		blackboard.p_non = np.array([0.1, 0.01])
 		blackboard.Pherperc = np.array([0.2, 0.02])
 		blackboard.Psmd = np.array([0.4, 0.04])
 
-		actual = nitrate._calculate_Pro(blackboard)
+		actual = solute._calculate_Pro(blackboard)
 
 		expected = np.array([0.0, 0.0])
 		np.testing.assert_allclose(expected, actual, )
 
 	def test_calculate_Pro_is_zero_when_her_is_negative(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.her_array_mm_per_day = np.array([-1.0, -1.0])
 		blackboard.p_non = np.array([0.1, 0.01])
 		blackboard.Pherperc = np.array([0.2, 0.02])
 		blackboard.Psmd = np.array([0.4, 0.04])
 
-		actual = nitrate._calculate_Pro(blackboard)
+		actual = solute._calculate_Pro(blackboard)
 
 		expected = np.array([0.0, 0.0])
 		np.testing.assert_allclose(expected, actual)
@@ -190,17 +190,17 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_Psmd(expected, dSMD_array_mm_per_day, her_array_mm_per_day)
 
 	def assert_Psmd(self, expected_Psmd, input_dSMD_array_mm_per_day, input_her_array_mm_per_day):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.dSMD_array_mm_per_day = np.array(input_dSMD_array_mm_per_day)
 		blackboard.her_array_mm_per_day = np.array(input_her_array_mm_per_day)
 
-		actual = nitrate._calculate_Psmd(blackboard)
+		actual = solute._calculate_Psmd(blackboard)
 
 		expected = np.array(expected_Psmd)
 		np.testing.assert_allclose(expected, actual)
 
 	def test_calculate_Pro_is_zero_when_the_other_three_proportions_are_greater_than_one(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.her_array_mm_per_day = np.array([1.0, 1.0])
 		blackboard.p_non = np.array([0.3, 0.6])
 		blackboard.Pherperc = np.array([0.4, 0.7])
@@ -212,7 +212,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.dSMD_array_mm_per_day = np.zeros(2)
 		blackboard.logging = DummyLogger()
 
-		actual = nitrate._calculate_Pro(blackboard)
+		actual = solute._calculate_Pro(blackboard)
 
 		expected = np.array([0.0, 0.0])
 		np.testing.assert_allclose(expected, actual, )
@@ -239,12 +239,12 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_m1_array_kg_per_day(expected, input_Psoilperc, input_M_soil_tot_kg, input_M_soil_in_kg)
 
 	def assert_m1_array_kg_per_day(self, expected, input_Psoilperc, input_M_soil_tot_kg, input_M_soil_in_kg):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.Psoilperc = np.array(input_Psoilperc)
 		blackboard.M_soil_tot_kg = np.array(input_M_soil_tot_kg)
 		blackboard.M_soil_in_kg = np.array(input_M_soil_in_kg)
 		expected_numpy = np.array(expected)
-		actual = nitrate._calculate_m1_array_kg_per_day(blackboard)
+		actual = solute._calculate_m1_array_kg_per_day(blackboard)
 		np.testing.assert_array_equal(expected_numpy, actual)
 
 	def test_calculate_m1a_array_kg_per_day_for_just_one_day(self):
@@ -272,17 +272,17 @@ class Test_Nitrate(unittest.TestCase):
 		self.assert_m1a_array(input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected)
 
 	def assert_m1a_array(self, input_interflow_volume, input_infiltration_recharge, input_interflow_to_rivers, input_m1_array_kg_per_day, expected):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.m1_array_kg_per_day = input_m1_array_kg_per_day
 		blackboard.interflow_volume = input_interflow_volume
 		blackboard.infiltration_recharge = input_infiltration_recharge
 		blackboard.interflow_to_rivers = input_interflow_to_rivers
 
-		actual = nitrate._calculate_m1a_b_array_kg_per_day(blackboard)[0, :]
+		actual = solute._calculate_m1a_b_array_kg_per_day(blackboard)[0, :]
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_p_non_her_is_1_when_her_is_less_than_zero(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.runoff_mm_per_day = np.array([2.0, 0.0, 0.0, 2.0])
 		blackboard.Pherperc = np.array([1.0, 1.0, 1.0, 1.0])
 		blackboard.her_array_mm_per_day = np.array([0.0, 0.0, 0.0, 0.0])
@@ -292,13 +292,13 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.macropore_dir_mm_per_day = np.array([0.0, 0.0, 500.0, 500.0])
 		blackboard.her_array_mm_per_day = np.array([-1.0, -2.0, -3.0, -4.0])
 
-		actual = nitrate._calculate_p_non_her(blackboard)
+		actual = solute._calculate_p_non_her(blackboard)
 
 		expected = np.array([1.0, 1.0, 1.0, 1.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_p_non_her_is_1_when_her_is_equal_to_zero(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.runoff_mm_per_day = np.array([2.0, 0.0, 0.0, 2.0])
 		blackboard.Pherperc = np.array([1.0, 1.0, 1.0, 1.0])
 		blackboard.her_array_mm_per_day = np.array([0.0, 0.0, 0.0, 0.0])
@@ -308,13 +308,13 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.macropore_dir_mm_per_day = np.array([0.0, 0.0, 500.0, 500.0])
 		blackboard.her_array_mm_per_day = np.array([0.0, 0.0, 0.0, 0.0])
 
-		actual = nitrate._calculate_p_non_her(blackboard)
+		actual = solute._calculate_p_non_her(blackboard)
 
 		expected = np.array([1.0, 1.0, 1.0, 1.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_p_non_her_contains_runoff_and_both_macropore_terms_in_numerator_and_denominator_when_HER_is_positive(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.runoff_mm_per_day = np.array([5.0])
 		blackboard.Pherperc = np.array([0.0])
 		blackboard.her_array_mm_per_day = np.array([0.0])
@@ -324,7 +324,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.macropore_dir_mm_per_day = np.array([2.0])
 		blackboard.her_array_mm_per_day = np.array([1.0])
 
-		actual = nitrate._calculate_p_non_her(blackboard)
+		actual = solute._calculate_p_non_her(blackboard)
 
 		numerator = 5.0 + 3.0 + 2.0 - 1.0
 		denominator = 5.0 + 3.0 + 2.0
@@ -334,7 +334,7 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_p_non_her_contains_HER_scaled_by_Pherperc_when_HER_is_positive(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.runoff_mm_per_day = np.array([5.0])
 		blackboard.Pherperc = np.array([0.2])
 		blackboard.her_array_mm_per_day = np.array([0.0])
@@ -344,7 +344,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.macropore_dir_mm_per_day = np.array([2.0])
 		blackboard.her_array_mm_per_day = np.array([10.0])
 
-		actual = nitrate._calculate_p_non_her(blackboard)
+		actual = solute._calculate_p_non_her(blackboard)
 
 		her_scaled_by_pherperc = 10.0 * 0.2
 		runoff_and_macropore_minus_her = 5.0 + 3.0 + 2.0 - 10.0
@@ -356,7 +356,7 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_p_non_her_contains_HER_scaled_by_Psmd_when_HER_is_positive(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.runoff_mm_per_day = np.array([5.0])
 		blackboard.Pherperc = np.array([0.0])
 		blackboard.her_array_mm_per_day = np.array([0.0])
@@ -366,7 +366,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.macropore_dir_mm_per_day = np.array([2.0])
 		blackboard.her_array_mm_per_day = np.array([10.0])
 
-		actual = nitrate._calculate_p_non_her(blackboard)
+		actual = solute._calculate_p_non_her(blackboard)
 
 		her_scaled_by_psmd = 10.0 * 0.3
 		runoff_and_macropore_minus_her = 5.0 + 3.0 + 2.0 - 10.0
@@ -378,7 +378,7 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_p_non_her_contains_all_terms_when_HER_is_positive(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.runoff_mm_per_day = np.array([5.0])
 		blackboard.Pherperc = np.array([0.2])
 		blackboard.her_array_mm_per_day = np.array([0.0])
@@ -388,7 +388,7 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.macropore_dir_mm_per_day = np.array([2.0])
 		blackboard.her_array_mm_per_day = np.array([10.0])
 
-		actual = nitrate._calculate_p_non_her(blackboard)
+		actual = solute._calculate_p_non_her(blackboard)
 
 		her_scaled_by_pherperc = 10.0 * 0.2
 		her_scaled_by_psmd = 10.0 * 0.3
@@ -401,56 +401,56 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_p_non(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.runoff_recharge_mm_per_day = np.array([100.0, 0.0, 0.0, 100.0, 100.0, 0.0])
 		blackboard.macropore_att_mm_per_day = np.array([0.0, 40.0, 40.0, 0.0, 0.0, 40.0])
 		blackboard.macropore_dir_mm_per_day = np.array([0.0, 60.0, 60.0, 0.0, 0.0, 60.0])
 		blackboard.her_array_mm_per_day = np.array([10.0, 20.0, 0.0, -10.0, 10.0, 20.0])
 		blackboard.p_non_her = np.array([0.0, 0.0, 0.0, 0.0, 0.2, 0.4])
-		actual = nitrate._calculate_p_non(blackboard)
+		actual = solute._calculate_p_non(blackboard)
 		expected = np.array([10.0, 5.0, 0.0, 0.0, 8.0, 3.0])
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_m2_array_kg_per_day(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.runoff_recharge_mm_per_day = np.array([100.0, 0.0, 0.0])
 		blackboard.macropore_att_mm_per_day = np.array([0.0, 40.0, 40.0])
 		blackboard.macropore_dir_mm_per_day = np.array([0.0, 60.0, 60.0])
 		blackboard.her_array_mm_per_day = np.array([10.0, 20.0, 0.0])
 		blackboard.m0_array_kg_per_day = np.array([50.0, 60.0, 60.0])
 		blackboard.p_non_her = np.array([0.0, 0.0, 0.0])
-		blackboard.p_non = nitrate._calculate_p_non(blackboard)
-		actual = nitrate._calculate_m2_array_kg_per_day(blackboard)
+		blackboard.p_non = solute._calculate_p_non(blackboard)
+		actual = solute._calculate_m2_array_kg_per_day(blackboard)
 		expected = np.array([500.0, 300.0, 0.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_mi_array_kg_per_day(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.m1a_array_kg_per_day = np.array([100.0, 200.0, 300.0])
 		blackboard.m2_array_kg_per_day = np.array([40.0, 50.0, 60.0])
 
-		actual = nitrate._calculate_mi_array_kg_per_day(blackboard)
+		actual = solute._calculate_mi_array_kg_per_day(blackboard)
 		expected = np.array([140.0, 250.0, 360.0])
 
 		np.testing.assert_array_almost_equal(expected, actual)
 	
 	def test_convert_kg_to_tons_array(self):
-		np.testing.assert_array_almost_equal(np.array([]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([])))
-		np.testing.assert_array_almost_equal(np.array([1.0]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([1000.0])))
-		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), nitrate._convert_kg_to_tons_array(self.make_blackboard_with_kg([500, 1000.0, 3000.0])))
+		np.testing.assert_array_almost_equal(np.array([]), solute._convert_kg_to_tons_array(self.make_blackboard_with_kg([])))
+		np.testing.assert_array_almost_equal(np.array([1.0]), solute._convert_kg_to_tons_array(self.make_blackboard_with_kg([1000.0])))
+		np.testing.assert_array_almost_equal(np.array([0.5, 1.0, 3.0]), solute._convert_kg_to_tons_array(self.make_blackboard_with_kg([500, 1000.0, 3000.0])))
 
 	def make_blackboard_with_kg(self, kg):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.nitrate_reaching_water_table_array_from_this_run_kg_per_day = np.array(kg)
 		return blackboard
 
 	def test__combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.historical_nitrate_reaching_water_table_array_tons_per_day = np.array([10.0, 20.0, 30.0])
 		blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day = np.array([1.0, 2.0, 3.0])
 
-		actual = nitrate._combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard)
+		actual = solute._combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard)
 
 		expected = np.array([11.0, 22.0, 33.0])
 		np.testing.assert_array_almost_equal(expected, actual)
@@ -499,7 +499,7 @@ class Test_Nitrate(unittest.TestCase):
 
 	def test_calculate_nitrate(self):
 		data, output, node = self.make_data_output_and_node()
-		actual = nitrate.calculate_nitrate(data, output, node, logging = DummyLogger())
+		actual = solute.calculate_nitrate(data, output, node, logging = DummyLogger())
 		np.testing.assert_array_almost_equal(np.array([80.0, 80.0]), actual["her_array_mm_per_day"])
 		np.testing.assert_array_almost_equal(np.array([100.0, 100.0]), actual["m0_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([75.0, 43.478261]), actual["m1_array_kg_per_day"])
@@ -514,7 +514,7 @@ class Test_Nitrate(unittest.TestCase):
 
 	def test_get_nitrate(self):
 		data, output, node = self.make_data_output_and_node()
-		actual = nitrate.get_nitrate(data, output, node)
+		actual = solute.get_nitrate(data, output, node)
 		np.testing.assert_array_almost_equal(np.array([25.0, 38.89441]), actual["mi_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([100.0, 200.015]), actual["nitrate_reaching_water_table_array_tons_per_day"])
 
@@ -552,29 +552,29 @@ class Test_Nitrate(unittest.TestCase):
 			"tawtew": np.array([0.0, 6.0]),
 		}
 		node = 7
-		actual = nitrate.calculate_nitrate(data, output, node)
+		actual = solute.calculate_nitrate(data, output, node)
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["mi_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["nitrate_reaching_water_table_array_tons_per_day"])
 
 	def test_output_file_path(self):
 		expected_filename = "aardvark_nitrate.csv"
-		make_filename_function = nitrate.make_output_filename
+		make_filename_function = solute.make_output_filename
 		self.assert_output_file_path(expected_filename, make_filename_function)
 
 	def test_mi_output_file_path(self):
 		expected_filename = "aardvark_mi.csv"
-		make_filename_function = nitrate.make_mi_output_filename
+		make_filename_function = solute.make_mi_output_filename
 		self.assert_output_file_path(expected_filename, make_filename_function)
 
 	def test_nitrate_surface_flow_output_file_path(self):
 		expected_filename = "aardvark_stream_nitrate.csv"
-		make_filename_function = nitrate.make_nitrate_surface_flow_filename
+		make_filename_function = solute.make_nitrate_surface_flow_filename
 		self.assert_output_file_path(expected_filename, make_filename_function)
 	
 	def test_convert_mm_to_m(self):
 		np.testing.assert_array_almost_equal(
 			np.array([0.0, 1.0, 0.001]),
-			nitrate._convert_mm_to_m(np.array([0.0, 1000.0, 1.0])))
+			solute._convert_mm_to_m(np.array([0.0, 1000.0, 1.0])))
 
 	def assert_output_file_path(self, expected_filename, make_filename_function):
 		data = {

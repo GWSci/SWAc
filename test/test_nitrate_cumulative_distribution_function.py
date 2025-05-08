@@ -1,6 +1,6 @@
 from datetime import date
 import swacmod.model as m
-import swacmod.nitrate as nitrate
+import swacmod.solute as solute
 import swacmod.solute_proportion_reaching_water_table as nitrate_proportion
 import numpy as np
 import swacmod.timer as timer
@@ -25,7 +25,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		self.assertEqual(6927, t)
 	
 	def test_calculate_daily_proportion_reaching_water_table_arr(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.a = 1.38
 		blackboard.μ = np.array([1.58])
 		blackboard.σ = 3.96
@@ -38,7 +38,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		blackboard.solute_depth_to_water = [0.001]
 
 		expected = np.array([0.0, 0.793244, 0.120028])
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(blackboard)
+		actual = solute._calculate_proportion_reaching_water_table_array_per_day(blackboard)
 		np.testing.assert_array_almost_equal(expected, actual)
 
 	def test_calculate_cumulative_proportion_reaching_water_table_varies_with_params(self):
@@ -63,7 +63,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		self.assertAlmostEqual(0.999999999999708, different_effective_porosity)
 
 	def test_calculate_daily_proportion_reaching_water_table_arr_when_dtw_is_0(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.a = 1.38
 		blackboard.μ = np.array([1.58])
 		blackboard.σ = 3.96
@@ -76,11 +76,11 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		blackboard.output = None
 		blackboard.node = 3
 
-		actual = nitrate._calculate_proportion_reaching_water_table_array_per_day(blackboard)
+		actual = solute._calculate_proportion_reaching_water_table_array_per_day(blackboard)
 		np.testing.assert_array_almost_equal([1.0, 0.0, 0.0], actual)
 	
 	def test_total_mass_leached_on_day_for_zero_days(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.proportion_reaching_water_table_array_per_day = np.array([])
 		blackboard.mi_array_kg_per_day = np.array([])
 
@@ -89,7 +89,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected_total_mass_on_day_kg, actual)
 
 	def test_total_mass_leached_on_day_for_1_day(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.proportion_reaching_water_table_array_per_day = np.array([0.3])
 		blackboard.mi_array_kg_per_day = np.array([100.0])
 
@@ -98,7 +98,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected_total_mass_on_day_kg, actual)
 
 	def test_total_mass_leached_on_day_for_two_days(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.proportion_reaching_water_table_array_per_day = np.array([0.3, 0.4])
 		blackboard.mi_array_kg_per_day = np.array([100.0, 200.0])
 
@@ -108,7 +108,7 @@ class Test_Nitrate_Cumulative_Distribution_Function(unittest.TestCase):
 		np.testing.assert_array_almost_equal(expected_total_mass_on_day_kg, actual)
 
 	def test_total_mass_leached_on_day(self):
-		blackboard = nitrate.NitrateBlackboard()
+		blackboard = solute.NitrateBlackboard()
 		blackboard.proportion_reaching_water_table_array_per_day = np.array([0.0, 0.3, 0.4, 0.2, 0.1])
 		blackboard.mi_array_kg_per_day = np.array([100.0, 200.0, 0.0, 300.0, 250.0])
 

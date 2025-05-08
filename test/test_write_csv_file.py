@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import swacmod.input_files.input_files_version_1.time_series_data as time_series_data
 import swacmod.utils as utils
-import swacmod.nitrate as nitrate
+import swacmod.solute as solute
 import tempfile
 import pathlib
 
@@ -37,7 +37,7 @@ class Test_Write_Csv_File(unittest.TestCase):
 			}
 		}
 
-		filename = nitrate.write_nitrate_csv(data, nitrate_aggregation)
+		filename = solute.write_nitrate_csv(data, nitrate_aggregation)
 		self.files_to_delete.append(filename)
 		return filename
 
@@ -59,7 +59,7 @@ class Test_Write_Csv_File(unittest.TestCase):
 			}
 		}
 
-		filename = nitrate.write_stream_nitrate_csv(data, nitrate_aggregation)
+		filename = solute.write_stream_nitrate_csv(data, nitrate_aggregation)
 		self.files_to_delete.append(filename)
 		return filename
 
@@ -95,7 +95,7 @@ class Test_Write_Csv_File(unittest.TestCase):
 			}
 		}
 
-		filename = nitrate.write_mi_csv(data, nitrate_mi_aggregation)
+		filename = solute.write_mi_csv(data, nitrate_mi_aggregation)
 		self.files_to_delete.append(filename)
 		return filename
 

@@ -1,5 +1,5 @@
 from datetime import date
-import swacmod.nitrate as nitrate
+import swacmod.solute as solute
 import numpy as np
 import unittest
 
@@ -12,8 +12,8 @@ class Test_Surface_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_surface_water_nitrate(actual, data, output, node)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_surface_water_nitrate(actual, data, output, node)
 		expected = np.zeros(shape = (0, 1))
 		np.testing.assert_array_equal(expected, actual)
 
@@ -25,8 +25,8 @@ class Test_Surface_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_surface_water_nitrate(actual, data, output, node)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_surface_water_nitrate(actual, data, output, node)
 		expected = np.array([[15.0]])
 		np.testing.assert_array_equal(expected, actual)
 
@@ -43,9 +43,9 @@ class Test_Surface_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node_1 = 1
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_surface_water_nitrate(actual, data, output_node_0, node_0)
-		actual = nitrate.aggregate_surface_water_nitrate(actual, data, output_node_1, node_1)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_surface_water_nitrate(actual, data, output_node_0, node_0)
+		actual = solute.aggregate_surface_water_nitrate(actual, data, output_node_1, node_1)
 		expected = np.array([[15.0, 500.5]])
 		np.testing.assert_array_equal(expected, actual)
 
@@ -57,8 +57,8 @@ class Test_Surface_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_surface_water_nitrate(actual, data, output, node)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_surface_water_nitrate(actual, data, output, node)
 		expected = np.array([[1113.75]])
 		np.testing.assert_array_equal(expected, actual)
 
@@ -70,8 +70,8 @@ class Test_Surface_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_surface_water_nitrate(actual, data, output, node)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_surface_water_nitrate(actual, data, output, node)
 		expected = np.array([[217.5], [852.5], [1757.5]])
 		np.testing.assert_array_equal(expected, actual)
 

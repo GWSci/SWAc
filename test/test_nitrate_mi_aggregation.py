@@ -1,5 +1,5 @@
 from datetime import date
-import swacmod.nitrate as nitrate
+import swacmod.solute as solute
 import numpy as np
 import unittest
 
@@ -53,11 +53,11 @@ class Test_Nitrate_mi_Aggregation(unittest.TestCase):
 			}
 		}
 
-		actual = nitrate.make_mi_aggregation_array(data)
+		actual = solute.make_mi_aggregation_array(data)
 		for node in range(len(output_per_node)):
 			output = {
 				"mi_array_kg_per_day": np.array(output_per_node[node])
 			}
-			actual = nitrate.aggregate_mi(actual, data, output, node)
+			actual = solute.aggregate_mi(actual, data, output, node)
 
 		np.testing.assert_allclose(expected, actual)

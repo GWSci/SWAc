@@ -1,6 +1,6 @@
 import cProfile
 import unittest
-import swacmod.nitrate as nitrate
+import swacmod.solute as solute
 
 class Test_Profile_Csv_Writing(unittest.TestCase):
 	
@@ -11,7 +11,7 @@ class Test_Profile_Csv_Writing(unittest.TestCase):
 		self.assertEqual(1, 2)
 
 def profile(command, data, nitrate_aggregation):
-	globals = {"nitrate" : nitrate}
+	globals = {"nitrate" : solute}
 	locals = {"data": data, "nitrate_aggregation": nitrate_aggregation}
 	cProfile.runctx(command, globals, locals)
 	
@@ -26,7 +26,7 @@ def make_nitrate_aggregation():
 			"node_areas" : [0] * node_count,
 		}
 	}
-	nitrate_aggregation = nitrate.make_aggregation_array(data)
+	nitrate_aggregation = solute.make_aggregation_array(data)
 	i = 0.0
 	for t in range(time_period_count):
 		for n in range(node_count):

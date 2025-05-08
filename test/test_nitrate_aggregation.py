@@ -1,5 +1,5 @@
 from datetime import date
-import swacmod.nitrate as nitrate
+import swacmod.solute as solute
 import numpy as np
 import unittest
 
@@ -12,8 +12,8 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_nitrate(actual, data, output, node)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_nitrate(actual, data, output, node)
 		expected = np.zeros(shape = (0, 1))
 		np.testing.assert_array_equal(expected, actual)
 
@@ -25,8 +25,8 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_nitrate(actual, data, output, node)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_nitrate(actual, data, output, node)
 		expected = np.array([[20.0]])
 		np.testing.assert_array_equal(expected, actual)
 
@@ -38,8 +38,8 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_nitrate(actual, data, output, node)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_nitrate(actual, data, output, node)
 		expected = np.array([[0.0]])
 		np.testing.assert_array_equal(expected, actual)
 
@@ -56,9 +56,9 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node_1 = 1
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_nitrate(actual, data, output_node_0, node_0)
-		actual = nitrate.aggregate_nitrate(actual, data, output_node_1, node_1)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_nitrate(actual, data, output_node_0, node_0)
+		actual = solute.aggregate_nitrate(actual, data, output_node_1, node_1)
 		expected = np.array([[20.0, 70.0]])
 		np.testing.assert_array_equal(expected, actual)
 
@@ -70,8 +70,8 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_nitrate(actual, data, output, node)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_nitrate(actual, data, output, node)
 		expected = np.array([[270.0]])
 		np.testing.assert_array_equal(expected, actual)
 
@@ -83,8 +83,8 @@ class Test_Nitrate_Aggregation(unittest.TestCase):
 		}
 		node = 0
 
-		actual = nitrate.make_aggregation_array(data)
-		actual = nitrate.aggregate_nitrate(actual, data, output, node)
+		actual = solute.make_aggregation_array(data)
+		actual = solute.aggregate_nitrate(actual, data, output, node)
 		expected = np.array([[290.0], [310.0], [370.0]])
 		np.testing.assert_array_equal(expected, actual)
 

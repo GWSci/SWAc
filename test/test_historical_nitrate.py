@@ -1,7 +1,7 @@
 from datetime import date
 import numpy as np
 import swacmod.historical_solute as historical_solute
-import swacmod.nitrate as nitrate
+import swacmod.solute as solute
 import unittest
 
 class Test_Historical_Nitrate(unittest.TestCase):
@@ -242,10 +242,10 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.σ = 1.0
 
 	def make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(self, combined_days):
-		nitrate_blackboard = nitrate.NitrateBlackboard()
+		nitrate_blackboard = solute.NitrateBlackboard()
 		self.assign_common_blackboard_inputs_for_proportion_reaching_water_table(nitrate_blackboard)
 		nitrate_blackboard.days = combined_days
-		cumulative_proportion_for_the_entire_period = nitrate._calculate_proportion_reaching_water_table_array_per_day(nitrate_blackboard)
+		cumulative_proportion_for_the_entire_period = solute._calculate_proportion_reaching_water_table_array_per_day(nitrate_blackboard)
 		np.testing.assert_allclose(
 			np.array([False, True, True, True, True, True, True, True, True, True]),
 			cumulative_proportion_for_the_entire_period > 0
