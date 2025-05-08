@@ -43,12 +43,17 @@ class Test_Migrations(unittest.TestCase):
         actual = input_file_reader.migrate_v1_to_v2(data)
         self.assertIn('solute_calibration_a', actual['params'])
     
-    def test_migtating_from_nitrate_calibration_a_to_solute_calibration_a(self):
+    def test_migtating_from_nitrate_calibration_mu_to_solute_calibration_mu(self):
         data = {'params':{'nitrate_calibration_mu': 'sausage'}}
         actual = input_file_reader.migrate_v1_to_v2(data)
         self.assertIn('solute_calibration_mu', actual['params'])
     
-    def test_migtating_from_nitrate_calibration_a_to_solute_calibration_a(self):
+    def test_migtating_from_nitrate_calibration_sigma_to_solute_calibration_sigma(self):
         data = {'params':{'nitrate_calibration_sigma': 'sausage'}}
         actual = input_file_reader.migrate_v1_to_v2(data)
         self.assertIn('solute_calibration_sigma', actual['params'])
+    
+    def test_migtating_from_nitrate_calibration_alpha_to_solute_calibration_alpha(self):
+        data = {'params':{'nitrate_calibration_alpha': 'sausage'}}
+        actual = input_file_reader.migrate_v1_to_v2(data)
+        self.assertIn('solute_calibration_alpha', actual['params'])
