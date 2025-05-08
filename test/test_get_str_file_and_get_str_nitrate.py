@@ -218,7 +218,7 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 		finally:
 			ff.use_natproc = original_use_natproc
 
-	def test_get_str_nitrate_for_3_nodes_and_2_sp(self):
+	def test_get_str_solute_for_3_nodes_and_2_sp(self):
 		data = {
 			"params": {
 				"node_areas" : {1: 2.0, 2: 3.0, 3: 5.0},
@@ -233,16 +233,16 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 		}
 		runoff = np.array([7.0, 11.0, 13.0, 17.0, 19.0, 23.0, 29.0])
 
-		stream_nitrate_aggregation = np.array([[31.0, 37.0, 41.0], [43.0, 47.0, 53.0]])
+		stream_solute_aggregation = np.array([[31.0, 37.0, 41.0], [43.0, 47.0, 53.0]])
 
-		actual = m.get_str_nitrate(data, runoff, stream_nitrate_aggregation)
+		actual = m.get_str_solute(data, runoff, stream_solute_aggregation)
 
 		expected = [
 			[0.0, 0.0, 482.352941],
 			[0.0, 0.0, 365.517241]]
 		np.testing.assert_array_almost_equal(expected, actual)
 
-	def test_get_str_nitrate_for_4_nodes_3_str_and_2_sp(self):
+	def test_get_str_solute_for_4_nodes_3_str_and_2_sp(self):
 		data = {
 			"params": {
 				"node_areas" : {1: 2.0, 2: 3.0, 3: 5.0, 4: 1.0},
@@ -257,9 +257,9 @@ class Test_Get_Str_File_And_Get_Str_Nitrate(unittest.TestCase):
 		}
 		runoff = np.array([7.0, 11.0, 13.0, 17.0, 19.0, 23.0, 29.0, 31.0, 37.0])
 
-		stream_nitrate_aggregation = np.array([[31.0, 37.0, 41.0], [43.0, 47.0, 53.0]])
+		stream_solute_aggregation = np.array([[31.0, 37.0, 41.0], [43.0, 47.0, 53.0]])
 
-		actual = m.get_str_nitrate(data, runoff, stream_nitrate_aggregation)
+		actual = m.get_str_solute(data, runoff, stream_solute_aggregation)
 
 		expected = [
 			[0.0, 0.0, 482.352941],

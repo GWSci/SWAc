@@ -5,27 +5,27 @@ import swacmod.feature_flags as ff
 from swacmod.solute_blackboard import NitrateBlackboard
 import swacmod.utils as utils
 import swacmod.model as m
-import swacmod.solute_proportion_reaching_water_table as nitrate_proportion
+import swacmod.solute_proportion_reaching_water_table as solute_proportion
 
-def get_nitrate(data, output, node):
-	nitrate = calculate_nitrate(data, output, node)
+def get_solute(data, output, node):
+	solute = calculate_solute(data, output, node)
 	return {
-		"mi_array_kg_per_day" : nitrate["mi_array_kg_per_day"],
-		"nitrate_reaching_water_table_array_tons_per_day" : nitrate["nitrate_reaching_water_table_array_tons_per_day"],
-		"nitrate_to_surface_water_array_tons_per_day" : nitrate["nitrate_to_surface_water_array_tons_per_day"],
+		"mi_array_kg_per_day" : solute["mi_array_kg_per_day"],
+		"solute_reaching_water_table_array_tons_per_day" : solute["solute_reaching_water_table_array_tons_per_day"],
+		"solute_to_surface_water_array_tons_per_day" : solute["solute_to_surface_water_array_tons_per_day"],
 	}
 
-def calculate_nitrate(data, output, node, logging = logging):
+def calculate_solute(data, output, node, logging = logging):
 	if "enabled" == data["params"]["solute_process"]:
 		blackboard = NitrateBlackboard()
 		blackboard.initialise_blackboard(data, output, node, logging)
-		blackboard = _do_nitrate_calculations(blackboard)
+		blackboard = _do_solute_calculations(blackboard)
 		return _convert_blackboard_to_result(blackboard)
 	else:
 		length = output["precip_to_ground"].size
 		return _make_empty_result(length)
 
-def _do_nitrate_calculations(blackboard):
+def _do_solute_calculations(blackboard):
 	blackboard.her_array_mm_per_day = _calculate_her_array_mm_per_day(blackboard)
 	blackboard.m0_array_kg_per_day = _calculate_m0_array_kg_per_day(blackboard)
 	blackboard.Psoilperc = _calculate_Psoilperc(blackboard)
@@ -50,10 +50,10 @@ def _do_nitrate_calculations(blackboard):
 	_check_masses_balance(blackboard)
 	blackboard.proportion_reaching_water_table_array_per_day = _calculate_proportion_reaching_water_table_array_per_day(blackboard)
 	blackboard.solute_reaching_water_table_array_from_this_run_kg_per_day = np.array(m.calculate_mass_reaching_water_table_array_kg_per_day(blackboard))
-	blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day = _convert_kg_to_tons_array(blackboard)
-	blackboard.nitrate_reaching_water_table_array_tons_per_day = _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard)
-	blackboard.nitrate_to_surface_water_kg_per_day = _calculate_nitrate_to_surface_water_array_kg_per_day(blackboard)
-	blackboard.nitrate_to_surface_water_array_tons_per_day = _convert_nitrate_to_surface_water_kg_to_tons_array(blackboard)
+	blackboard.solute_reaching_water_table_array_from_this_run_tons_per_day = _convert_kg_to_tons_array(blackboard)
+	blackboard.solute_reaching_water_table_array_tons_per_day = _combine_solute_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard)
+	blackboard.solute_to_surface_water_kg_per_day = _calculate_solute_to_surface_water_array_kg_per_day(blackboard)
+	blackboard.solute_to_surface_water_array_tons_per_day = _convert_solute_to_surface_water_kg_to_tons_array(blackboard)
 	return blackboard
 
 def _calculate_her_array_mm_per_day(blackboard):
@@ -204,20 +204,20 @@ def _make_unbalanced_day_log_message(i, blackboard):
 	return message
 
 def _calculate_proportion_reaching_water_table_array_per_day(blackboard):
-	return nitrate_proportion.calculate_proportion_reaching_water_table_array_per_day(blackboard)
+	return solute_proportion.calculate_proportion_reaching_water_table_array_per_day(blackboard)
 
-def _calculate_nitrate_to_surface_water_array_kg_per_day(blackboard):
+def _calculate_solute_to_surface_water_array_kg_per_day(blackboard):
 	return blackboard.m1b_array_kg_per_day + blackboard.m3_array_kg_per_day
 
 def _convert_kg_to_tons_array(blackboard):
 	return blackboard.solute_reaching_water_table_array_from_this_run_kg_per_day / 1000.0
 
-def _convert_nitrate_to_surface_water_kg_to_tons_array(blackboard):
-	return blackboard.nitrate_to_surface_water_kg_per_day / 1000.0
+def _convert_solute_to_surface_water_kg_to_tons_array(blackboard):
+	return blackboard.solute_to_surface_water_kg_per_day / 1000.0
 
-def _combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard):
-	return (blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day
-		 + blackboard.historical_nitrate_reaching_water_table_array_tons_per_day)
+def _combine_solute_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard):
+	return (blackboard.solute_reaching_water_table_array_from_this_run_tons_per_day
+		 + blackboard.historical_solute_reaching_water_table_array_tons_per_day)
 
 def make_aggregation_array(data):
 	time_periods = data["params"]["time_periods"]
@@ -233,22 +233,22 @@ def make_mi_aggregation_array(data):
 	shape = (node_count, len_time_periods)
 	return np.zeros(shape = shape)
 
-def aggregate_nitrate(aggregation, data, output, node):
+def aggregate_solute(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
-	nitrate_reaching_water_table_array_tons_per_day = output["nitrate_reaching_water_table_array_tons_per_day"]
+	solute_reaching_water_table_array_tons_per_day = output["solute_reaching_water_table_array_tons_per_day"]
 	combined_recharge_m_cubed = _calculate_combined_recharge_m_cubed(data, output, node)
 
 	node_areas = data["params"]["node_areas"]
 	len_time_periods = _len_time_periods(time_periods)
-	m._aggregate_nitrate(time_periods, len_time_periods, nitrate_reaching_water_table_array_tons_per_day, combined_recharge_m_cubed, aggregation, node, node_areas)
+	m._aggregate_solute(time_periods, len_time_periods, solute_reaching_water_table_array_tons_per_day, combined_recharge_m_cubed, aggregation, node, node_areas)
 	return aggregation
 	
-def aggregate_surface_water_nitrate(aggregation, data, output, node):
+def aggregate_surface_water_solute(aggregation, data, output, node):
 	time_periods = data["params"]["time_periods"]
-	nitrate_to_surface_water_array_tons_per_day = output["nitrate_to_surface_water_array_tons_per_day"]
+	solute_to_surface_water_array_tons_per_day = output["solute_to_surface_water_array_tons_per_day"]
 
 	len_time_periods = _len_time_periods(time_periods)
-	m._aggregate_surface_water_nitrate(time_periods, len_time_periods, nitrate_to_surface_water_array_tons_per_day, aggregation, node)
+	m._aggregate_surface_water_solute(time_periods, len_time_periods, solute_to_surface_water_array_tons_per_day, aggregation, node)
 	return aggregation
 
 def aggregate_mi(aggregation, data, output, node):
@@ -270,41 +270,41 @@ def _calculate_combined_recharge_m_cubed(data, output, node):
 def _convert_mm_to_m(arr):
 	return arr / 1000.0
 
-def write_nitrate_csv(data, nitrate_aggregation):
+def write_solute_csv(data, solute_aggregation):
 	filename = make_output_filename(data)
 	header_row = b'"Stress Period","Node","Recharge Concentration (metric tons/m3)"\r\n'
-	m.write_nitrate_csv(filename, nitrate_aggregation, header_row)
+	m.write_solute_csv(filename, solute_aggregation, header_row)
 	return filename
 	
-def write_stream_nitrate_csv(data, stream_conc):
-	filename = make_nitrate_surface_flow_filename(data)
+def write_stream_solute_csv(data, stream_conc):
+	filename = make_solute_surface_flow_filename(data)
 	header_row = b'"Stress Period","Reach","Stream Concentration (metric tons/m3)"\r\n'
-	m.write_nitrate_csv(filename, stream_conc, header_row)
+	m.write_solute_csv(filename, stream_conc, header_row)
 	return filename
 
-def write_mi_csv(data, nitrate_mi_aggregation):
-	node_count = nitrate_mi_aggregation.shape[0]
-	time_period_count = nitrate_mi_aggregation.shape[1]
+def write_mi_csv(data, solute_mi_aggregation):
+	node_count = solute_mi_aggregation.shape[0]
+	time_period_count = solute_mi_aggregation.shape[1]
 
 	filename = make_mi_output_filename(data)
 	with open(filename, "wb") as f:
 		for node in range(node_count):
-			cell = b"%g" % (nitrate_mi_aggregation[node, 0])
+			cell = b"%g" % (solute_mi_aggregation[node, 0])
 			f.write(cell)
 			for time_period in range(1, time_period_count):
-				cell = b",%g" % (nitrate_mi_aggregation[node, time_period])
+				cell = b",%g" % (solute_mi_aggregation[node, time_period])
 				f.write(cell)
 			f.write(b"\r\n")
 	return filename
 
 def make_output_filename(data):
-	return _make_run_filename_with_suffix(data, "nitrate")
+	return _make_run_filename_with_suffix(data, "solute")
 
 def make_mi_output_filename(data):
 	return _make_run_filename_with_suffix(data, "mi")
 
-def make_nitrate_surface_flow_filename(data):
-	return _make_run_filename_with_suffix(data, "stream_nitrate")
+def make_solute_surface_flow_filename(data):
+	return _make_run_filename_with_suffix(data, "stream_solute")
 
 def _make_run_filename_with_suffix(data, suffix):
 	run_name = data["params"]["run_name"]
@@ -325,15 +325,15 @@ def _convert_blackboard_to_result(blackboard):
 		"mi_array_kg_per_day" : blackboard.mi_array_kg_per_day,
 		"proportion_reaching_water_table_array_per_day" : blackboard.proportion_reaching_water_table_array_per_day,
 		"solute_reaching_water_table_array_from_this_run_kg_per_day" : blackboard.solute_reaching_water_table_array_from_this_run_kg_per_day,
-		"nitrate_reaching_water_table_array_tons_per_day" : blackboard.nitrate_reaching_water_table_array_tons_per_day,
-		"nitrate_to_surface_water_kg_per_day" : blackboard.nitrate_to_surface_water_kg_per_day,
-		"nitrate_to_surface_water_array_tons_per_day" : blackboard.nitrate_to_surface_water_array_tons_per_day,
+		"solute_reaching_water_table_array_tons_per_day" : blackboard.solute_reaching_water_table_array_tons_per_day,
+		"solute_to_surface_water_kg_per_day" : blackboard.solute_to_surface_water_kg_per_day,
+		"solute_to_surface_water_array_tons_per_day" : blackboard.solute_to_surface_water_array_tons_per_day,
 	}
 
 def _make_empty_result(length):
 	empty_array = np.zeros(length)
 	return {
 		"mi_array_kg_per_day" : empty_array,
-		"nitrate_reaching_water_table_array_tons_per_day" : empty_array,
-		"nitrate_to_surface_water_array_tons_per_day" : empty_array,
+		"solute_reaching_water_table_array_tons_per_day" : empty_array,
+		"solute_to_surface_water_array_tons_per_day" : empty_array,
 	}

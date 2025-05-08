@@ -445,12 +445,12 @@ class Test_Nitrate(unittest.TestCase):
 		blackboard.solute_reaching_water_table_array_from_this_run_kg_per_day = np.array(kg)
 		return blackboard
 
-	def test__combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(self):
+	def test__combine_solute_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(self):
 		blackboard = solute.NitrateBlackboard()
-		blackboard.historical_nitrate_reaching_water_table_array_tons_per_day = np.array([10.0, 20.0, 30.0])
-		blackboard.nitrate_reaching_water_table_array_from_this_run_tons_per_day = np.array([1.0, 2.0, 3.0])
+		blackboard.historical_solute_reaching_water_table_array_tons_per_day = np.array([10.0, 20.0, 30.0])
+		blackboard.solute_reaching_water_table_array_from_this_run_tons_per_day = np.array([1.0, 2.0, 3.0])
 
-		actual = solute._combine_nitrate_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard)
+		actual = solute._combine_solute_reaching_water_table_array_from_this_run_and_historical_run_tons_per_day(blackboard)
 
 		expected = np.array([11.0, 22.0, 33.0])
 		np.testing.assert_array_almost_equal(expected, actual)
@@ -492,14 +492,14 @@ class Test_Nitrate(unittest.TestCase):
 			"smd" : np.array([20.0, -4.0]),
 			"p_smd" : np.array([-4.0, 0.0]),
 			"tawtew": np.array([0.0, 6.0]),
-			"historical_nitrate_reaching_water_table_array_tons_per_day": np.array([100.0, 200.0])
+			"historical_solute_reaching_water_table_array_tons_per_day": np.array([100.0, 200.0])
 		}
 		node = 7
 		return data, output, node
 
-	def test_calculate_nitrate(self):
+	def test_calculate_solute(self):
 		data, output, node = self.make_data_output_and_node()
-		actual = solute.calculate_nitrate(data, output, node, logging = DummyLogger())
+		actual = solute.calculate_solute(data, output, node, logging = DummyLogger())
 		np.testing.assert_array_almost_equal(np.array([80.0, 80.0]), actual["her_array_mm_per_day"])
 		np.testing.assert_array_almost_equal(np.array([100.0, 100.0]), actual["m0_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([75.0, 43.478261]), actual["m1_array_kg_per_day"])
@@ -510,15 +510,15 @@ class Test_Nitrate(unittest.TestCase):
 		np.testing.assert_array_almost_equal(np.array([25.0, 38.89441]), actual["mi_array_kg_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.6]), actual["proportion_reaching_water_table_array_per_day"])
 		np.testing.assert_array_almost_equal(np.array([0.0, 15.0]), actual["solute_reaching_water_table_array_from_this_run_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([100.0, 200.015]), actual["nitrate_reaching_water_table_array_tons_per_day"])
+		np.testing.assert_array_almost_equal(np.array([100.0, 200.015]), actual["solute_reaching_water_table_array_tons_per_day"])
 
-	def test_get_nitrate(self):
+	def test_get_solute(self):
 		data, output, node = self.make_data_output_and_node()
-		actual = solute.get_nitrate(data, output, node)
+		actual = solute.get_solute(data, output, node)
 		np.testing.assert_array_almost_equal(np.array([25.0, 38.89441]), actual["mi_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([100.0, 200.015]), actual["nitrate_reaching_water_table_array_tons_per_day"])
+		np.testing.assert_array_almost_equal(np.array([100.0, 200.015]), actual["solute_reaching_water_table_array_tons_per_day"])
 
-	def test_calculate_nitrate_when_disabled(self):
+	def test_calculate_solute_when_disabled(self):
 		max_load_per_year_kg_per_hectare = 1000
 		her_at_5_percent = 10
 		her_at_50_percent = 100
@@ -552,12 +552,12 @@ class Test_Nitrate(unittest.TestCase):
 			"tawtew": np.array([0.0, 6.0]),
 		}
 		node = 7
-		actual = solute.calculate_nitrate(data, output, node)
+		actual = solute.calculate_solute(data, output, node)
 		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["mi_array_kg_per_day"])
-		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["nitrate_reaching_water_table_array_tons_per_day"])
+		np.testing.assert_array_almost_equal(np.array([0.0, 0.0]), actual["solute_reaching_water_table_array_tons_per_day"])
 
 	def test_output_file_path(self):
-		expected_filename = "aardvark_nitrate.csv"
+		expected_filename = "aardvark_solute.csv"
 		make_filename_function = solute.make_output_filename
 		self.assert_output_file_path(expected_filename, make_filename_function)
 
@@ -566,9 +566,9 @@ class Test_Nitrate(unittest.TestCase):
 		make_filename_function = solute.make_mi_output_filename
 		self.assert_output_file_path(expected_filename, make_filename_function)
 
-	def test_nitrate_surface_flow_output_file_path(self):
-		expected_filename = "aardvark_stream_nitrate.csv"
-		make_filename_function = solute.make_nitrate_surface_flow_filename
+	def test_solute_surface_flow_output_file_path(self):
+		expected_filename = "aardvark_stream_solute.csv"
+		make_filename_function = solute.make_solute_surface_flow_filename
 		self.assert_output_file_path(expected_filename, make_filename_function)
 	
 	def test_convert_mm_to_m(self):

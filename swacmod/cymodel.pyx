@@ -1223,7 +1223,7 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(
         double[:] mi_array_kg_per_day):
     cdef:
         size_t length
-        size_t day_nitrate_was_leached
+        size_t day_solute_was_leached
         size_t result_end
         size_t i
         double[:] result_kg
@@ -1231,13 +1231,13 @@ def _calculate_mass_reaching_water_table_array_kg_per_day(
 
     length = proportion_reaching_water_table_array_per_day.size
     result_kg = np.zeros(length)
-    for day_nitrate_was_leached in range(length):
-        mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
+    for day_solute_was_leached in range(length):
+        mass_leached_on_day_kg = mi_array_kg_per_day[day_solute_was_leached]
         if mass_leached_on_day_kg == 0:
             continue
-        result_end = length - day_nitrate_was_leached
+        result_end = length - day_solute_was_leached
         for i in range(result_end):
-            result_kg[day_nitrate_was_leached + i] += proportion_reaching_water_table_array_per_day[i] * mass_leached_on_day_kg
+            result_kg[day_solute_was_leached + i] += proportion_reaching_water_table_array_per_day[i] * mass_leached_on_day_kg
 
     return np.array(result_kg)
 
@@ -1247,7 +1247,7 @@ def _calculate_historical_mass_reaching_water_table_array_kg_per_day(
         double[:] mi_array_kg_per_day):
     cdef:
         size_t days_count, historic_days_count
-        size_t day_nitrate_was_leached
+        size_t day_solute_was_leached
         size_t result_end
         size_t i
         double[:] result_kg
@@ -1257,12 +1257,12 @@ def _calculate_historical_mass_reaching_water_table_array_kg_per_day(
     historic_days_count = mi_array_kg_per_day.size
 
     result_kg = np.zeros(days_count)
-    for day_nitrate_was_leached in range(historic_days_count):
-        mass_leached_on_day_kg = mi_array_kg_per_day[day_nitrate_was_leached]
+    for day_solute_was_leached in range(historic_days_count):
+        mass_leached_on_day_kg = mi_array_kg_per_day[day_solute_was_leached]
         if mass_leached_on_day_kg == 0:
             continue
         for i in range(days_count):
-            proportion_index = historic_days_count - day_nitrate_was_leached + i
+            proportion_index = historic_days_count - day_solute_was_leached + i
             result_kg[i] += proportion_reaching_water_table_array_per_day[proportion_index] * mass_leached_on_day_kg
 
     return np.array(result_kg)
@@ -1319,42 +1319,42 @@ def _divide_2D_arrays(double[:,:] a, double[:,:] b):
             result[i,j] = a[i,j] / b[i,j]
     return result
 
-def _aggregate_nitrate(
+def _aggregate_solute(
             time_periods,
             size_t len_time_periods,
-            double[:] nitrate_reaching_water_table_array_tons_per_day,
+            double[:] solute_reaching_water_table_array_tons_per_day,
             double[:] combined_recharge_m_cubed,
             double[:,:] aggregation,
             size_t node,
             node_areas):
     cdef:
         size_t time_period_index, first_day_index, last_day_index, i
-        double sum_of_nitrate_tons, sum_of_recharge_m_cubed, sum_of_recharge_mm, stored_mass_tons
+        double sum_of_solute_tons, sum_of_recharge_m_cubed, sum_of_recharge_mm, stored_mass_tons
 
     stored_mass_tons = 0
     for time_period_index in range(len_time_periods):
         time_period = time_periods[time_period_index]
         first_day_index = time_period[0] - 1
         last_day_index = time_period[1] - 1
-        sum_of_nitrate_tons = 0.0
+        sum_of_solute_tons = 0.0
         sum_of_recharge_m_cubed = 0.0
         for i in range(first_day_index, last_day_index):
-            sum_of_nitrate_tons += nitrate_reaching_water_table_array_tons_per_day[i]
+            sum_of_solute_tons += solute_reaching_water_table_array_tons_per_day[i]
             sum_of_recharge_m_cubed += combined_recharge_m_cubed[i]
         sum_of_recharge_mm = 1000 * sum_of_recharge_m_cubed / node_areas[node]
         if sum_of_recharge_mm > 1:
-            aggregation[time_period_index, node] += (stored_mass_tons + sum_of_nitrate_tons) / sum_of_recharge_m_cubed
+            aggregation[time_period_index, node] += (stored_mass_tons + sum_of_solute_tons) / sum_of_recharge_m_cubed
             stored_mass_tons = 0
         else:
-            stored_mass_tons += sum_of_nitrate_tons
+            stored_mass_tons += sum_of_solute_tons
             aggregation[time_period_index, node] = 0
 
     return aggregation
 
-def _aggregate_surface_water_nitrate(
+def _aggregate_surface_water_solute(
             time_periods,
             size_t len_time_periods,
-            double[:] nitrate_to_surface_water_array_tons_per_day,
+            double[:] solute_to_surface_water_array_tons_per_day,
             double[:,:] aggregation,
             size_t node):
     cdef:
@@ -1365,7 +1365,7 @@ def _aggregate_surface_water_nitrate(
         first_day_index = time_period[0] - 1
         last_day_index = time_period[1] - 1
         for i in range(first_day_index, last_day_index):
-            aggregation[time_period_index, node] += nitrate_to_surface_water_array_tons_per_day[i]
+            aggregation[time_period_index, node] += solute_to_surface_water_array_tons_per_day[i]
         aggregation[time_period_index, node] = aggregation[time_period_index, node] / (last_day_index - first_day_index + 1)
 
     return aggregation
@@ -1389,7 +1389,7 @@ def aggregate_mi(
 
 def _calculate_aggregate_mi_unpacking(blackboard):
     cdef:
-        size_t length = len(blackboard.historical_nitrate_days)
+        size_t length = len(blackboard.historical_solute_days)
         double[:] historical_mi_array_kg_per_day = np.zeros(length)
         size_t time_period_index, start_day, end_day, days_in_time_period
         double total_mi_for_time_period_kg, historical_mi_kg_per_day
@@ -1407,9 +1407,9 @@ def _calculate_aggregate_mi_unpacking(blackboard):
             historical_mi_array_kg_per_day[day] = historical_mi_kg_per_day
     return historical_mi_array_kg_per_day
 
-def write_nitrate_csv(filename, nitrate_aggregation, header_row):
-    stress_period_count = nitrate_aggregation.shape[0]
-    node_count = nitrate_aggregation.shape[1]
+def write_solute_csv(filename, solute_aggregation, header_row):
+    stress_period_count = solute_aggregation.shape[0]
+    node_count = solute_aggregation.shape[1]
 
     int_to_bytes = []
     for i in range(1, 1 + max(stress_period_count, node_count)):
@@ -1421,7 +1421,7 @@ def write_nitrate_csv(filename, nitrate_aggregation, header_row):
             stress_period_bytes = int_to_bytes[stress_period_index]
             for node_index in range(node_count):
                 node = node_index + 1
-                concentration = nitrate_aggregation[stress_period_index, node_index]
+                concentration = solute_aggregation[stress_period_index, node_index]
                 line = b"%b,%i,%g\r\n" % (stress_period_bytes, node, concentration)
                 f.write(line)
 
@@ -1499,13 +1499,13 @@ def get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg
             result[per, iseg] = result_A[iseg] + result_B[iseg]
     return result
 
-def get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic):
+def get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_solute_aggregation, swac_seg_dic):
     nper = extract_nper(data)
     nodes = extract_node_count(data)
-    description = "Accumulating nitrate mass to surface water  "
+    description = "Accumulating solute mass to surface water  "
     result = np.zeros((nper, nss))
     for per in tqdm(range(nper), desc=description):
-        result_A, result_B = get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, per, nodes, nss)
+        result_A, result_B = get_sfr_flows_solute(sorted_by_ca, swac_seg_dic, stream_solute_aggregation, per, nodes, nss)
         for iseg in range(nss):
             result[per, iseg] = result_A[iseg] + result_B[iseg]
     return result
@@ -1517,10 +1517,10 @@ def get_sfr_flows(sorted_by_ca, runoff, swac_seg_dic, nodes_per, nodes, nss):
     index_offset = nodes_per + 1
     return get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
 
-def get_sfr_flows_nitrate(sorted_by_ca, swac_seg_dic, stream_nitrate_aggregation, period, nodes, nss):
-    """get flows and nitrate masses for one period"""
+def get_sfr_flows_solute(sorted_by_ca, swac_seg_dic, stream_solute_aggregation, period, nodes, nss):
+    """get flows and solute masses for one period"""
 
-    source = stream_nitrate_aggregation[period,:]
+    source = stream_solute_aggregation[period,:]
     index_offset = 0
     return get_flows(sorted_by_ca, swac_seg_dic, nodes, nss, source, index_offset)
 
@@ -2020,8 +2020,8 @@ def combine_runoff_with_area(data, runoff):
             runoff[i] = runoff[i] * areas[node] * fac
     return runoff
 
-def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
-    """integrate flows and nitrate mass in stream cells"""
+def get_str_solute(data, runoff, stream_solute_aggregation):
+    """integrate flows and solute mass in stream cells"""
 
     cdef:
         double[:,:] stream_conc
@@ -2032,7 +2032,7 @@ def get_str_nitrate(data, runoff, stream_nitrate_aggregation):
     swac_seg_dic = make_swac_seg_dic(sorted_by_ca)
     runoff_with_area = combine_runoff_with_area(data, runoff)
     str_flow_array = get_aggregated_sfr_flows(data, nss, sorted_by_ca, runoff_with_area, swac_seg_dic)
-    stream_mass_array = get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_nitrate_aggregation, swac_seg_dic)
+    stream_mass_array = get_aggregated_stream_mass(data, nss, sorted_by_ca, stream_solute_aggregation, swac_seg_dic)
     stream_conc = _divide_2D_arrays(stream_mass_array, str_flow_array)
     return stream_conc
 

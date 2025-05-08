@@ -19,14 +19,14 @@ class Test_Write_Csv_File(unittest.TestCase):
 			pathlib.Path(f).unlink()
 		pathlib.Path(self.tempdir).rmdir()
 
-	def test_writing_a_nitrate_csv_file_produces_a_file_with_the_expected_contents(self):
+	def test_writing_a_solute_csv_file_produces_a_file_with_the_expected_contents(self):
 		filename = self.write_csv_return_filename()
 		actual = slurp(filename)
 		expected = '"Stress Period","Node","Recharge Concentration (metric tons/m3)"\r\n1,1,2.1\r\n1,2,3\r\n1,3,5\r\n2,1,7\r\n2,2,11\r\n2,3,13\r\n'
 		self.assertEqual(expected, actual)
 
 	def write_csv_return_filename(self):
-		nitrate_aggregation = np.array([
+		solute_aggregation = np.array([
 			[2.1, 3.0, 5.0],
 			[7.0, 11.0, 13.0],
 		])
@@ -37,18 +37,18 @@ class Test_Write_Csv_File(unittest.TestCase):
 			}
 		}
 
-		filename = solute.write_nitrate_csv(data, nitrate_aggregation)
+		filename = solute.write_solute_csv(data, solute_aggregation)
 		self.files_to_delete.append(filename)
 		return filename
 
-	def test_writing_a_stream_nitrate_csv_file_produces_a_file_with_the_expected_contents(self):
-		filename = self.write_stream_nitrate_csv_return_filename()
+	def test_writing_a_stream_solute_csv_file_produces_a_file_with_the_expected_contents(self):
+		filename = self.write_stream_solute_csv_return_filename()
 		actual = slurp(filename)
 		expected = '"Stress Period","Reach","Stream Concentration (metric tons/m3)"\r\n1,1,2.1\r\n1,2,3\r\n1,3,5\r\n2,1,7\r\n2,2,11\r\n2,3,13\r\n'
 		self.assertEqual(expected, actual)
 
-	def write_stream_nitrate_csv_return_filename(self):
-		nitrate_aggregation = np.array([
+	def write_stream_solute_csv_return_filename(self):
+		solute_aggregation = np.array([
 			[2.1, 3.0, 5.0],
 			[7.0, 11.0, 13.0],
 		])
@@ -59,7 +59,7 @@ class Test_Write_Csv_File(unittest.TestCase):
 			}
 		}
 
-		filename = solute.write_stream_nitrate_csv(data, nitrate_aggregation)
+		filename = solute.write_stream_solute_csv(data, solute_aggregation)
 		self.files_to_delete.append(filename)
 		return filename
 
@@ -84,7 +84,7 @@ class Test_Write_Csv_File(unittest.TestCase):
 		np.testing.assert_allclose(expected, file_contents)
 
 	def write_mi_csv_return_filename(self):
-		nitrate_mi_aggregation = np.array([
+		solute_mi_aggregation = np.array([
 			[2.1, 3.0, 5.0],
 			[7.0, 11.0, 13.0],
 		])
@@ -95,7 +95,7 @@ class Test_Write_Csv_File(unittest.TestCase):
 			}
 		}
 
-		filename = solute.write_mi_csv(data, nitrate_mi_aggregation)
+		filename = solute.write_mi_csv(data, solute_mi_aggregation)
 		self.files_to_delete.append(filename)
 		return filename
 

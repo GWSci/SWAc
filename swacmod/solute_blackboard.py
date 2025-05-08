@@ -10,7 +10,7 @@ class NitrateBlackboard:
 		self.dSMD_array_mm_per_day = None
 		self.effective_porosity = None
 		self.her_array_mm_per_day = None
-		self.historical_nitrate_reaching_water_table_array_tons_per_day = None
+		self.historical_solute_reaching_water_table_array_tons_per_day = None
 		self.infiltration_recharge = None
 		self.interflow_to_rivers = None
 		self.interflow_volume = None
@@ -31,8 +31,8 @@ class NitrateBlackboard:
 		self.solute_depth_to_water = None
 		self.solute_loading = None
 		self.solute_reaching_water_table_array_from_this_run_kg_per_day = None
-		self.nitrate_reaching_water_table_array_from_this_run_tons_per_day = None
-		self.nitrate_reaching_water_table_array_tons_per_day = None
+		self.solute_reaching_water_table_array_from_this_run_tons_per_day = None
+		self.solute_reaching_water_table_array_tons_per_day = None
 		self.node = None
 		self.p_non = None
 		self.p_smd = None
@@ -86,4 +86,4 @@ class NitrateBlackboard:
 		self.interflow_to_rivers = output["interflow_to_rivers"]
 		self.precip_to_ground = output["precip_to_ground"]
 		self.ae = output["ae"]
-		self.historical_nitrate_reaching_water_table_array_tons_per_day = output["historical_nitrate_reaching_water_table_array_tons_per_day"]
+		self.historical_solute_reaching_water_table_array_tons_per_day = output["historical_solute_reaching_water_table_array_tons_per_day"]
