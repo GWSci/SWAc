@@ -2,7 +2,7 @@ import numpy as np
 import swacmod.solute as solute
 import unittest
 
-class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
+class Test_Solute_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 	def setUp(self):
 		self.set_values_from_spreadsheet()
 		self.set_input_parameters()
@@ -58,7 +58,7 @@ class Test_Nitrate_Mass_Balance_Using_Worked_Example(unittest.TestCase):
 		self.p_non_array = np.array([self.Pnon])
 		self.Pro_array = np.array([self.Pro])
 
-		self.blackboard = solute.NitrateBlackboard()
+		self.blackboard = solute.SoluteBlackboard()
 		self.blackboard.precip_to_ground = np.array([self.Precipitation])
 		self.blackboard.ae = np.array([self.AE])
 		self.blackboard.perc_through_root_mm_per_day = np.array([self.Percolation_through_root_zone])
