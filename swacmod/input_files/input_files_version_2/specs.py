@@ -139,7 +139,7 @@ def make_specs():
         Input_Parameter('historical_mi_array_kg_per_time_period', required=False, alt_format=['yml', 'csv'], type=[float], constraints=None),
         Input_Parameter('historical_start_date', required=False, alt_format=[], type=[datetime], constraints=None),
         Input_Parameter('historical_time_periods', required=False, alt_format=['yml', 'csv'], type=[list, list, int], constraints=None),
-        Input_Parameter('nitrate_process', required=True, alt_format=[], type=[str], constraints=['enabled', 'disabled']),
+        Input_Parameter('solute_process', required=True, alt_format=[], type=[str], constraints=['enabled', 'disabled']),
         Input_Parameter('nitrate_calibration_a', required=False, alt_format=[], type=[float], constraints=None),
         Input_Parameter('nitrate_calibration_mu', required=False, alt_format=['yml', 'csv'], type=[dict, float], constraints=None),
         Input_Parameter('nitrate_calibration_sigma', required=False, alt_format=[], type=[float], constraints=None),
