@@ -2,7 +2,7 @@ import logging
 import numpy as np
 import os
 import swacmod.feature_flags as ff
-from swacmod.nitrate_blackboard import NitrateBlackboard
+from swacmod.solute_blackboard import NitrateBlackboard
 import swacmod.utils as utils
 import swacmod.model as m
 import swacmod.nitrate_proportion_reaching_water_table as nitrate_proportion
