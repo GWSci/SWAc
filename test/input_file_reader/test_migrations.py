@@ -67,3 +67,8 @@ class Test_Migrations(unittest.TestCase):
         data = {'params':{'nitrate_depth_to_water': 'sausage'}}
         actual = input_file_reader.migrate_v1_to_v2(data)
         self.assertIn('solute_depth_to_water', actual['params'])
+    
+    def test_migtating_from_nitrate_loading_to_solute_loading(self):
+        data = {'params':{'nitrate_loading': 'sausage'}}
+        actual = input_file_reader.migrate_v1_to_v2(data)
+        self.assertIn('solute_loading', actual['params'])

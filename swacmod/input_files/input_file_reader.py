@@ -50,7 +50,8 @@ def migrate_v1_to_v2(data):
              ('nitrate_calibration_sigma', 'solute_calibration_sigma'),
              ('nitrate_calibration_alpha', 'solute_calibration_alpha'),
              ('nitrate_calibration_effective_porosity', 'solute_calibration_effective_porosity'),
-             ('nitrate_depth_to_water', 'solute_depth_to_water')]
+             ('nitrate_depth_to_water', 'solute_depth_to_water'),
+             ('nitrate_loading', 'solute_loading')]
     for pair in pairs:
         old, new = pair[0] , pair[1]
         if 'params' in result: 
