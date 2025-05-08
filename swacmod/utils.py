@@ -74,9 +74,9 @@ def area_fn():
 
     # not in list above
     result['k_slope'] = full_area
-    result['historical_nitrate_reaching_water_table_array_tons_per_day'] = full_area
-    result['nitrate_reaching_water_table_array_tons_per_day'] = full_area
-    result['nitrate_to_surface_water_array_tons_per_day'] = full_area
+    result['historical_solute_reaching_water_table_array_tons_per_day'] = full_area
+    result['solute_reaching_water_table_array_tons_per_day'] = full_area
+    result['solute_to_surface_water_array_tons_per_day'] = full_area
     result['mi_array_kg_per_day'] = full_area
     result['rapid_runoff_c'] = not_ponded_area
 
