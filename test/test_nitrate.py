@@ -472,7 +472,7 @@ class Test_Nitrate(unittest.TestCase):
 				"nitrate_calibration_effective_porosity": {7: [1.0 / 0.0029]},
 				"nitrate_depth_to_water": {7: [0.00205411]},
 				"nitrate_loading": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
-				"nitrate_process": "enabled",
+				"solute_process": "enabled",
 			}, "series" : {
 				"date": [date(2023, 1, 1), date(2023, 1, 2), ]
 			},
@@ -530,7 +530,7 @@ class Test_Nitrate(unittest.TestCase):
 				"node_areas": {7: 2500.0},
 				"nitrate_depth_to_water": {7: [0.00205411]},
 				"nitrate_loading": {7: [0, 0, 0, max_load_per_year_kg_per_hectare, her_at_5_percent, her_at_50_percent, her_at_95_percent]},
-				"nitrate_process": "disabled",
+				"solute_process": "disabled",
 			}, "series" : {
 				"date": [date(2023, 1, 1), date(2023, 1, 2), ]
 			},
