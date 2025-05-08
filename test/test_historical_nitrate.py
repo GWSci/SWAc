@@ -319,7 +319,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 				"historical_mi_array_kg_per_time_period" : {7 : np.array([10.0, 20.0])},
 				"historical_solute_process": "enabled",
 				"historical_time_periods" : [[1, 2], [2, 3]],
-				"nitrate_calibration_a": 10.0,
+				"solute_calibration_a": 10.0,
 				"nitrate_depth_to_water": {7: np.array([10.0])},
 				"nitrate_calibration_alpha" : 1.0,
 				"nitrate_calibration_effective_porosity" : {7: np.array([1.0])},

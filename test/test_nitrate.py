@@ -465,7 +465,7 @@ class Test_Nitrate(unittest.TestCase):
 			"time_switcher": timer.make_time_switcher(),
 			"params": {
 				"node_areas": {7: 2500.0},
-				"nitrate_calibration_a": 1.38,
+				"solute_calibration_a": 1.38,
 				"nitrate_calibration_mu": {7: [1.58]},
 				"nitrate_calibration_sigma": 3.96,
 				"nitrate_calibration_alpha": 1.7,

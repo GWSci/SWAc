@@ -684,7 +684,7 @@ historical_solute_process: disabled
 # Solute process: can be either "enabled" or "disabled"
 # This parameter is required
 # If enabled, entries required for all subsequent parameters
-solute_process: enabled
+solute_process: disabled
 
 # Floating-point value, representing logarithm base in cumulative distribution function of unsaturated zone K, where F(K) = 0.5*[1+erf(-(loga(K)-mu)/(sigma*SQRT(2)))]
 solute_calibration_a: 1.38
