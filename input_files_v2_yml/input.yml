@@ -118,7 +118,7 @@ nodes_per_line: 5
 # file is in the format SWAcNode,MFNode
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: MF node number (integer, number of entries = num_nodes)
-recharge_node_mapping: rch_nodes.csv
+recharge_node_mapping: rch_nodes.yml
 
 # Output unit conversion factor
 # This parameter is a positive float.
