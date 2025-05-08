@@ -4,7 +4,7 @@ import swacmod.historical_solute as historical_solute
 import swacmod.solute as solute
 import unittest
 
-class Test_Historical_Nitrate(unittest.TestCase):
+class Test_Historical_Solute(unittest.TestCase):
 	def test_historical_solute_returns_zeros_when_disabled(self):
 		input_process_enabled = "disabled"
 		input_days = [date(2023, 1, 1), date(2023, 1, 2), ]
@@ -34,7 +34,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assert_calculate_truncated_historical_solute_days([], [], [])
 
 	def assert_calculate_truncated_historical_solute_days(self, expected, input_historical_solute_days, input_days):
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 		blackboard.historical_solute_days = input_historical_solute_days
 		blackboard.days = input_days
 
@@ -93,7 +93,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		self.assertIsNotNone(actual.historical_solute_reaching_water_table_array_tons_per_day)
 
 	def make_sample_blackboard(self):
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 		blackboard.days = [date(2023, 1, 3), date(2023, 1, 4), ]
 		blackboard.historical_mi_array_kg_per_day = np.array([10.0, 20.0])
 		blackboard.historical_mi_array_kg_per_time_period = np.array([10.0, 20.0])
@@ -141,7 +141,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			input_truncated_historical_solute_days,
 			input_historical_mi_array_kg_per_day
 	):
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 		blackboard.truncated_historical_solute_days = input_truncated_historical_solute_days
 		blackboard.historical_mi_array_kg_per_day = np.array(input_historical_mi_array_kg_per_day)
 
@@ -159,7 +159,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			date(2023, 1, 4), date(2023, 1, 5), date(2023, 1, 6),
 			date(2023, 1, 7), date(2023, 1, 8), date(2023, 1, 9), date(2023, 1, 10)]
 		
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 		self.assign_common_blackboard_inputs_for_proportion_reaching_water_table(blackboard)
 		blackboard.days = new_days
 		blackboard.truncated_historical_solute_days = historic_days
@@ -179,7 +179,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 			date(2023, 1, 4), date(2023, 1, 5), date(2023, 1, 6),
 			date(2023, 1, 7), date(2023, 1, 8), date(2023, 1, 9), date(2023, 1, 10)]
 		
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 		self.assign_common_blackboard_inputs_for_proportion_reaching_water_table(blackboard)
 		blackboard.days = new_days
 		blackboard.truncated_historical_solute_days = historic_days
@@ -242,7 +242,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		blackboard.σ = 1.0
 
 	def make_reference_proportion_reaching_water_table_for_combined_historic_and_new_periods(self, combined_days):
-		solute_blackboard = solute.NitrateBlackboard()
+		solute_blackboard = solute.SoluteBlackboard()
 		self.assign_common_blackboard_inputs_for_proportion_reaching_water_table(solute_blackboard)
 		solute_blackboard.days = combined_days
 		cumulative_proportion_for_the_entire_period = solute._calculate_proportion_reaching_water_table_array_per_day(solute_blackboard)
@@ -253,7 +253,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		return cumulative_proportion_for_the_entire_period
 
 	def test_calculate_historical_mass_reaching_water_table_array_kg_per_day(self):
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 		blackboard.days = [date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3)]
 		blackboard.historic_proportion_reaching_water_table_array_per_day = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
 		blackboard.truncated_historical_mi_array_kg_per_day = np.array([10.0, 100.0, 1000.0])
@@ -264,7 +264,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		np.testing.assert_allclose(expected, actual)
 
 	def test_calculate_historical_mass_reaching_water_table_array_kg_per_day_when_there_are_fewer_days_in_the_historical_run(self):
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 		blackboard.days = [date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3)]
 		blackboard.historic_proportion_reaching_water_table_array_per_day = np.array([0.1, 0.2, 0.3, 0.4, 0.5])
 		blackboard.truncated_historical_mi_array_kg_per_day = np.array([10.0, 100.0])
@@ -275,7 +275,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		np.testing.assert_allclose(expected, actual)
 
 	def test_calculate_historical_mass_reaching_water_table_array_kg_per_day_when_there_are_more_days_in_the_historical_run(self):
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 		blackboard.days = [date(2023, 1, 1), date(2023, 1, 2), date(2023, 1, 3)]
 		blackboard.historic_proportion_reaching_water_table_array_per_day = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7])
 		blackboard.truncated_historical_mi_array_kg_per_day = np.array([10.0, 100.0, 1000.0, 10000.0])
@@ -286,7 +286,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 		np.testing.assert_allclose(expected, actual)
 
 	def test_convert_kg_to_tons_array(self):
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 		blackboard.historical_mass_reaching_water_table_array_kg_per_day = np.array([1000.0, 2000.0, 3000.0])
 
 		actual = historical_solute._convert_kg_to_tons_array(blackboard)
@@ -296,7 +296,7 @@ class Test_Historical_Nitrate(unittest.TestCase):
 
 	def test_historical_solute_initialise_blackboard(self):
 		data, output, node = self.make_sample_data_output_node()
-		blackboard = historical_solute.HistoricalNitrateBlackboard()
+		blackboard = historical_solute.HistoricalSoluteBlackboard()
 
 		actual = blackboard.initialise_blackboard(data, output, node)
 

@@ -2,7 +2,7 @@ import numpy as np
 import swacmod.model as m
 import swacmod.solute_proportion_reaching_water_table as solute_proportion
 
-class HistoricalNitrateBlackboard():
+class HistoricalSoluteBlackboard():
 	def __init__(self):
 		self.a = None
 		self.alpha = None
@@ -50,7 +50,7 @@ def calculate_total_days_count_upper_bound(data):
 
 def get_historical_solute(data, output, node):
 	if (data["params"]["historical_solute_process"] == "enabled"):
-		blackboard = HistoricalNitrateBlackboard()
+		blackboard = HistoricalSoluteBlackboard()
 		blackboard = blackboard.initialise_blackboard(data, output, node)
 		blackboard = _calculate_historical_solute(blackboard)
 		return {
