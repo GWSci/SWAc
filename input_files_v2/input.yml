@@ -701,7 +701,7 @@ solute_calibration_alpha: 3906.25
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: effective porosity
-nitrate_calibration_effective_porosity: effective_porosity.csv
+solute_calibration_effective_porosity: effective_porosity.csv
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: depth to water in m (floating point, number of entries = num_nodes) [L]
