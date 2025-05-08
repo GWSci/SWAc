@@ -71,7 +71,7 @@ node_areas: node_areas.yml
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: X coordinate (floating point) [L]
 # col #3: Y coordinate (floating point) [L]
-node_xy: node_xy.csv
+node_xy: node_xy.yml
 
 # Start date for the time series. Has to be in format "YYYY-MM-DD".
 # This parameter is required.
@@ -83,7 +83,7 @@ start_date: 1980-01-01
 # col #1: first day of this time period (integer, number of entries = number of time periods) [T]
 # col #2: first day of next time period (integer, number of entries = number of time periods) [T]
 # (seconds, hours or other can be entered if used as standard unit of time in all files)
-time_periods: time_periods.csv
+time_periods: time_periods.yml
 
 # Number of cores to be used
 # This parameter is optional.
@@ -691,7 +691,7 @@ solute_calibration_a: 1.38
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: fitting parameter mu in above equation (floating point, number of entries = num_nodes) [L] 
-solute_calibration_mu: mu.csv
+solute_calibration_mu: mu.yml
 
 # Floating-point value, fitting parameter sigma in above equation
 solute_calibration_sigma: 3.96
@@ -701,11 +701,11 @@ solute_calibration_alpha: 3906.25
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: effective porosity
-solute_calibration_effective_porosity: effective_porosity.csv
+solute_calibration_effective_porosity: effective_porosity.yml
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: depth to water in m (floating point, number of entries = num_nodes) [L]
-solute_depth_to_water: Average_DTW.csv
+solute_depth_to_water: Average_DTW.yml
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: UNIQUE (not used in SWAcMod)
@@ -718,7 +718,7 @@ solute_depth_to_water: Average_DTW.csv
 # Column 9: 5PercLoadM (not used in SWAcMod)
 # Column 10: 50PercLoad (not used in SWAcMod)
 # Column 11: 95PercLoad (not used in SWAcMod)
-solute_loading: NO3_loading.csv
+solute_loading: NO3_loading.yml
 
 #######################
 # Process: SW Release #
@@ -832,7 +832,7 @@ routing_process: enabled
 # col #9: STRHC1 - the modflow SFR variable STRHC1
 # col #10: DEPTH2 - the modflow SFR variable DEPTH2
 # col #11: WIDTH2 - the modflow SFR variable WIDTH2
-routing_topology: routing_parameters.csv
+routing_topology: routing_parameters.yml
 
 # Output modflow sfr2 file switch
 # Can be either true or false
@@ -851,7 +851,7 @@ attenuate_sfr_flows: false
 # Column 2 is the zone number
 # Rows only need to be supplied for nodes that are part of a stream. There is no need to cover the whole model.
 # This parameter is optional.
-# sfr_flow_zones: sfr_flow_zones.csv
+# sfr_flow_zones: sfr_flow_zones.yml
 
 # Release proportions for each zone and month.
 # Column 1 is the month number (January is 1)
@@ -877,7 +877,7 @@ istcb2: 55
 # This parameter can accept a path to YAML or CSV
 # One column for each SW discharge location in swdis_locs
 # SW discharge rate in m3/day (or other user-defined time unit) (floating point, number of rows = maximum value in time_periods)
-swdis_ts: swdis_ts.csv
+swdis_ts: swdis_ts.yml
 
 # Surface water discharges points
 # This parameter can accept a path to YAML or CSV
@@ -896,7 +896,7 @@ swdis_locs: swdis_locs.yml
 # This parameter can accept a path to YAML or CSV
 # One column for each SW abstraction location in swabs_locs
 # SW abstraction rate in m3/day (or other user-defined time unit) (floating point, number of rows = maximum value in time_periods)
-swabs_ts: swabs_ts.csv
+swabs_ts: swabs_ts.yml
 
 # swabs_f
 # Surface water abstractions time-series frequency
@@ -909,7 +909,7 @@ swabs_ts: swabs_ts.csv
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = number of nodes with SW abstractions)
 # col #2: Index number of abstraction from 1 to number of nodes with SW abstractions (integer, number of entries = number of nodes with SW abstractions)
-swabs_locs: swabs_locs.csv
+swabs_locs: swabs_locs.yml
 
 
 ###############
@@ -990,7 +990,7 @@ excess_sw_process: disabled
 # col #2: MF node number (integer, number of entries = number of nodes subject to EVT)
 # col #3: Elevation of the ET surface in m (floating point, number of entries = number of nodes subject to EVT) [L]
 # col #4: ET extinction depth in m (floating point, number of entries = number of nodes subject to EVT) [L]
-evt_parameters: evt_params.csv
+evt_parameters: evt_params.yml
 
 # ievtcb (unit number in MODFLOW evt file for output to cell-by-cell file)
 # This parameter is an integer.
