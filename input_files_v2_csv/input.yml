@@ -357,7 +357,7 @@ snow_process_simple: enabled
 # col #2: Starting snow pack in mm (integer, number of entries = num_nodes) [L]
 # col #3: Max air temperature for snowfall in degrees C (integer, number of entries = num_nodes) [oC]
 # col #4: Min air temperature for snowmelt in degrees C (integer, number of entries = num_nodes) [oC]
-snow_params_simple: snow_params.yml
+snow_params_simple: snow_params.csv
 
 # Complex snow process: can be either "enabled" or "disabled"
 # This parameter is required
