@@ -477,7 +477,7 @@ macropore_activation: macropore_activation.csv
 # col #1: Month number (integer, number of entries = 12)
 # col #2: Proportion of rainfall assigned to macropore recharge in zone 1 (floating point, number of entries = 12) [-]
 # Additional cols: Proportion of rainfall assigned to macropore recharge in zones 2 to n, where n is number of entries in macropore_zone_names (floating point, number of entries = 12) [-]
-macropore_recharge: macropore_recharge.yml
+macropore_recharge: macropore_recharge.csv
 
 # MacroPore Activation Option
 # This parameter is optional. If not specified, it will be set to SMD.
