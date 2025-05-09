@@ -83,6 +83,7 @@ def _make_no_list(params):
         "init_interflow_store",
         "interflow_store_bypass",
         "infiltration_limit",
+        "interflow_decay",
     ] + [i for i in params if "zone_names" in i] + [
         i for i in params if ("zone_mapping" in i or "_locs" in i) and i not in
         ["rainfall_zone_mapping", "pe_zone_mapping", "subroot_zone_mapping"]
