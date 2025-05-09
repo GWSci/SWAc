@@ -450,7 +450,7 @@ macropore_process: enabled
 # col #1: Month number (integer, number of entries = 12)
 # col #2: Proportion of rainfall as macropore recharge in zone 1 (floating point, number of entries = 12) [-]
 # Additional cols: Proportion of rainfall as macropore recharge in zones 2 to n, where n is number of entries in macropore_zone_names (floating point, number of entries = 12) [-]
-macropore_proportion: macropore_proportion.yml
+macropore_proportion: macropore_proportion.csv
 
 # MacroPore Bypass Limit [mm]
 # This parameter is optional
