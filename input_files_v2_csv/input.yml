@@ -633,7 +633,7 @@ interflow_store_bypass: interflow_store_bypass.csv
 
 # col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
 # col #2: Maximum infiltration to groundwater from interflow store in mm (floating point, number of entries = max zone number in interflow_zone_mapping) [L]
-infiltration_limit: infiltration_limit.yml
+infiltration_limit: infiltration_limit.csv
 
 # col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
 # col #2: Proportion of interflow store in each day (or user-defined time unit) released to surface water (floating point, number of entries = max zone number in interflow_zone_mapping) [-]
