@@ -10,6 +10,7 @@ deploy.py
 output_files/
 output_files_v2/
 output_files_v2_yml/
+output_files_v2_csv/
 output_files_mfusg/
 output_files_natproc/
 swacmod/deploy.py
