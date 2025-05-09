@@ -670,7 +670,7 @@ recharge_attenuation_process: enabled
 # col #2: Initial recharge store in mm (floating point, number of entries = num_nodes) [L]
 # col #3: Proportion of recharge store released each day (or user-defined time unit) (floating point, number of entries = num_nodes) [-]
 # col #4: Maximum rate of release in mm (floating point, number of entries = num_nodes) [L]
-recharge_attenuation_params: recharge_attenuation_params.yml
+recharge_attenuation_params: recharge_attenuation_params.csv
 
 #######################
 # Process: Solute #
