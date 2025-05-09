@@ -649,11 +649,11 @@ interflow_decay_use_timeseries: true
 
 # row #1: infiltration_limit_ts: keyword
 # 1 additional row for each day (or user-defined time unit) in time_periods, followed by infiltration limit in mm for each interflow zone (floating point, 1 column for each entry in interflow_zone_names) [L]
-infiltration_limit_ts: infiltration_limit_ts.yml
+infiltration_limit_ts: infiltration_limit_ts.csv
 
 # row #1: interflow_decay_ts: keyword
 # 1 additional row for each day (or user-defined time unit) in time_periods, followed by interflow decay proportion for each interflow zone (floating point, 1 column for each entry in interflow_zone_names) [-]
-interflow_decay_ts: interflow_decay_ts.yml
+interflow_decay_ts: interflow_decay_ts.csv
 
 ###############################################
 # Process: Recharge Release to Saturated Zone #
