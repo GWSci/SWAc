@@ -63,7 +63,7 @@ num_nodes: 10
 # This parameter can accept a path to YAML or CSV
 # col #1: node number (integer, number of entries = num_nodes)
 # col #2: node area (floating point) [L2]
-node_areas: node_areas.yml
+node_areas: node_areas.csv
 
 # X,Y of each node [L]
 # This parameter is optional.
