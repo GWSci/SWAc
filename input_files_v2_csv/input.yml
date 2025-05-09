@@ -920,49 +920,49 @@ swabs_locs: swabs_locs.csv
 # This parameter can accept a path to YAML or CSV
 # One column for each entry in rainfall_zone_names
 # Rainfall in mm (floating point, number of rows = maximum value in time_periods) [L]
-rainfall_ts: rainfall_ts.yml
+rainfall_ts: rainfall_ts.csv
 
 # This parameter is optional.
 # This parameter is required only if the FAO or the Canopy process is enabled.
 # This parameter can accept a path to YAML or CSV
 # One column for each entry in pe_zone_names
 # Rainfall in mm (floating point, number of rows = maximum value in time_periods) [L]
-pe_ts: pe_ts.yml
+pe_ts: pe_ts.csv
 
 # This parameter is optional.
 # This parameter is required only if the Snow process is enabled.
 # This parameter can accept a path to YAML or CSV
 # One column for each entry in temperature_zone_names
 # Temperature in C (floating point, number of rows = maximum value in time_periods) [C]
-temperature_ts: temperature_ts.yml
+temperature_ts: temperature_ts.csv
 
 # This parameter is optional.
 # This parameter is required only if the Snow process is enabled.
 # This parameter can accept a path to YAML or CSV
 # One column for each entry in tmax_c_zone_names
 # Max temperature in C (floating point, number of rows = maximum value in time_periods) [C]
-tmax_c_ts: tmax_c_ts.yml
+tmax_c_ts: tmax_c_ts.csv
 
 # This parameter is optional.
 # This parameter is required only if the Snow process is enabled.
 # This parameter can accept a path to YAML or CSV
 # One column for each entry in tmin_c_zone_names
 # Min temperature in C (floating point, number of rows = maximum value in time_periods) [C]
-tmin_c_ts: tmin_c_ts.yml
+tmin_c_ts: tmin_c_ts.csv
 
 # This parameter is optional.
 # This parameter is required only if the Snow process is enabled.
 # This parameter can accept a path to YAML or CSV
 # One column for each entry in windsp_zone_names
 # Wind speed in m/s (floating point, number of rows = maximum value in time_periods) [L/T]
-windsp_ts: windsp_ts.yml
+windsp_ts: windsp_ts.csv
 
 # This parameter is optional.
 # This parameter is required only if the Leakage process is enabled.
 # This parameter can accept a path to YAML or CSV
 # One column for each entry in subroot_zone_names 
 # Maximum subroot leakage rate in mm (floating point, number of rows = maximum value in time_periods) [L]
-subroot_leakage_ts: subroot_leakage_ts.yml
+subroot_leakage_ts: subroot_leakage_ts.csv
 
 # Single keyword: mf6, mf96 or mfusg 
 gwmodel_type: mf6
