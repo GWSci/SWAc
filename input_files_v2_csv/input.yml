@@ -376,7 +376,7 @@ snow_process_complex: disabled
 # col #9: Proportion of tree cover (floating point, number of entries = num_nodes) [-]
 # col #10: Starting snow depth in m (floating point, number of entries = num_nodes) [L]
 # col #11: Starting snow density in kg/m3 (floating point, number of entries = num_nodes) [M/L3]
-snow_params_complex: snow_params_complex.yml
+snow_params_complex: snow_params_complex.csv
 
 #######################################################
 # Process: Proportion of rainfall converted to Runoff #
