@@ -7,29 +7,25 @@ import swacmod.input_files.input_files_version_2.loader as loader
 
 class Test_CSVs_Are_Not_Read_As_lists(unittest.TestCase):
     def test_init_interflow_store_csv_returns_floats(self):
-        filename = "potato.csv"
         param = 'init_interflow_store'
-        file_contents = "1,1.0\n2,2.0\n3,3.0"
-        params = {param: filename}
-        no_list = _make_no_list(params)
-        file_opener = make_mock_csv_loader({filename: file_contents})
-        loader.load_csv_alt_format(params, no_list, param, filename, file_opener)
+        params = get_params(param)
         for val in params[param].values():
             self.assertIsInstance(val, float)
 
-    def test_init_interflow_store_csv_returns_floats(self):
-        filename = "potato.csv"
+    def test_interflow_store_bypass_csv_returns_floats(self):
         param = 'interflow_store_bypass'
-        file_contents = "1,1.0\n2,2.0\n3,3.0"
-        params = {param: filename}
-        no_list = _make_no_list(params)
-        file_opener = make_mock_csv_loader({filename: file_contents})
-        loader.load_csv_alt_format(params, no_list, param, filename, file_opener)
+        params = get_params(param)
         for val in params[param].values():
             self.assertIsInstance(val, float)
 
-
-
+def get_params(param):
+    filename = "potato.csv"
+    file_contents = "1,1.0\n2,2.0\n3,3.0"
+    params = {param: filename}
+    no_list = _make_no_list(params)
+    file_opener = make_mock_csv_loader({filename: file_contents})
+    loader.load_csv_alt_format(params, no_list, param, filename, file_opener)
+    return params
 
 def make_mock_csv_loader(file_contents):
     @contextmanager
