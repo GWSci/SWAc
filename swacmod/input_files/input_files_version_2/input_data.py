@@ -80,6 +80,7 @@ def _make_no_list(params):
         "free_throughfall",
         "max_canopy_storage",
         "subroot_leakage_fraction",
+        "init_interflow_store",
     ] + [i for i in params if "zone_names" in i] + [
         i for i in params if ("zone_mapping" in i or "_locs" in i) and i not in
         ["rainfall_zone_mapping", "pe_zone_mapping", "subroot_zone_mapping"]
