@@ -595,7 +595,7 @@ subroot_leakage_process: enabled
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Proportion of subsoilzone leakage permitted in each cell, linked to maximum rate listed in subroot_leakage_ts (floating point, number of entries = num_nodes) [-]
-subroot_leakage_fraction: subroot_leakage_fraction.yml
+subroot_leakage_fraction: subroot_leakage_fraction.csv
 
 
 ######################
