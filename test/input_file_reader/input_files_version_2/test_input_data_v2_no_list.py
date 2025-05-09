@@ -17,6 +17,12 @@ class Test_CSVs_Are_Not_Read_As_lists(unittest.TestCase):
         params = get_params(param)
         for val in params[param].values():
             self.assertIsInstance(val, float)
+    
+    def test_infiltration_limit_csv_returns_floats(self):
+        param = 'infiltration_limit'
+        params = get_params(param)
+        for val in params[param].values():
+            self.assertIsInstance(val, float)
 
 def get_params(param):
     filename = "potato.csv"
