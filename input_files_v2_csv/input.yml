@@ -734,7 +734,7 @@ sw_process: enabled
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: Intial SW store in mm (floating point, number of entries = num_nodes) [L]
 # Column 3: Proportion of SW store released each day (or user-defined time unit) (floating point, number of entries = num_nodes) [-]
-sw_params: sw_params.yml
+sw_params: sw_params.csv
 
 ###############################
 # Process: SW Ponding #
