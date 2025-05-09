@@ -743,7 +743,7 @@ sw_params: sw_params.csv
 # SW release process: can be either "enabled" or "disabled"
 # This parameter is required
 # If enabled all FAO inputs should reflect open water
-sw_ponding_process: disabled
+sw_ponding_process: enabled
 
 # SW Release Zone Mapping
 # This parameter is optional
@@ -766,7 +766,7 @@ sw_zone_names: sw_zone_names.yml
 # row #1: sw_downstream: keyword
 # col #1: Month number (integer, number of entries = 12)
 # Additional cols: Proportion of ponded water released in each time unit (floating point, 1 column for each entry in sw_zone_names) [-]
-sw_downstream: sw_downstream.yml
+sw_downstream: sw_downstream.csv
 
 # SW Release Activation threshold [mm]
 # This parameter is optional
@@ -775,28 +775,28 @@ sw_downstream: sw_downstream.yml
 # row #1: sw_activation: keyword
 # col #1: Month number (integer, number of entries = 12)
 # Additional cols: Minimum water depth in mm before bed infiltration can occur (floating point, 1 column for each entry in sw_zone_names) [L]
-sw_activation: sw_activation.yml
+sw_activation: sw_activation.csv
 
 # SW Release Proportion Bed Infiltration
 # Number of cols defined by number of entries in sw_zone_names
 # row #1: sw_bed_infiltration: keyword
 # col #1: Month number (integer, number of entries = 12)
 # Additional cols: Proportion of ponded water infiltrating through bed to recharge attenuation store (floating point, 1 column for each entry in sw_zone_names) [-]
-sw_bed_infiltration: sw_bed_infiltration.yml
+sw_bed_infiltration: sw_bed_infiltration.csv
 
 # SW Release Proportion Direct Recharge
 # Number of cols defined by number of entries in sw_zone_names
 # row #1: sw_direct_recharge: keyword
 # col #1: Month number (integer, number of entries = 12)
 # Additional cols: Proportion of ponded water leaving bed and bypassing recharge attenuation store (floating point, 1 column for each entry in sw_zone_names) [-]
-sw_direct_recharge: sw_direct_recharge.yml
+sw_direct_recharge: sw_direct_recharge.csv
 
 # SW Release PE to open water
 # Number of cols defined by number of entries in sw_zone_names
 # row #1: sw_pe_to_open_water: keyword
 # col #1: Month number (integer, number of entries = 12)
 # Additional cols: Open water evaporation coefficient for each zone (floating point, 1 column for each entry in sw_zone_names) [-]
-sw_pe_to_open_water: sw_pe_to_open_water.yml
+sw_pe_to_open_water: sw_pe_to_open_water.csv
 
 # # SW Release Initial ponding depth [mm]
 sw_init_ponding: 5.0
