@@ -29,6 +29,12 @@ class Test_CSVs_Are_Not_Read_As_lists(unittest.TestCase):
         params = get_params(param)
         for val in params[param].values():
             self.assertIsInstance(val, float)
+    
+    def test_sw_ponding_area_csv_input_returns_floats(self):
+        param = 'sw_ponding_area'
+        params = get_params(param)
+        for val in params[param].values():
+            self.assertIsInstance(val, float)
 
 def get_params(param):
     filename = "potato.csv"
