@@ -1,0 +1,15 @@
+# Columns are
+# 1) starting_snow_pack
+# 2) snowfall_degrees
+# 3) snowmelt_degrees
+snow_params_simple:
+    1: [100, 1, -2]
+    2: [100, 1, -2]
+    4: [100, 1, -2]
+    5: [100, 1, -2]
+    6: [100, 1, -2]
+    7: [100, 1, -2]
+    8: [100, 1, -2]
+    9: [100, 1, -2]
+    10: [100, 1, -2]
+    3: [100, 1, -2]
