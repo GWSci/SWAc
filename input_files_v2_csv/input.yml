@@ -572,7 +572,7 @@ raw: raw.csv
 # This parameter is optional.
 # This parameter can accept a path to YAML or CSV
 # Single column: percolation_rejection keyword, followed by percolation limit in mm for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [L]
-percolation_rejection: percolation_rejection.yml
+percolation_rejection: percolation_rejection.csv
 
 # Assign percolation rejection as time series
 # Can be either true or false
@@ -580,7 +580,7 @@ percolation_rejection_use_timeseries: true
 
 # row #1: percolation_rejection_ts: keyword
 # 1 additional row for each day (or user-defined time unit) in time_periods, followed by percolation limit in mm for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [L]
-percolation_rejection_ts: percolation_rejection_ts.yml
+percolation_rejection_ts: percolation_rejection_ts.csv
 
 ############################################
 # Process: Subroot Leakage #
