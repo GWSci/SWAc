@@ -142,7 +142,7 @@ spatial_output_date: 1980-01-01
 # Nodes not assigned to a zone, will by default be assigned to zone 0 and will not be calculated
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-reporting_zone_mapping: reporting_zone_mapping.yml
+reporting_zone_mapping: reporting_zone_mapping.csv
 
 # Reporting zone names.
 # This parameter is optional
@@ -157,7 +157,7 @@ reporting_zone_names: reporting_zone_names.yml
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
 # col #3: Proportion of node area covered by zone (floating point, number of entries = num_nodes) [-]
-rainfall_zone_mapping: rainfall_zone_mapping.yml
+rainfall_zone_mapping: rainfall_zone_mapping.csv
 
 # Rainfall zone names.
 # This parameter is optional
@@ -172,7 +172,7 @@ rainfall_zone_names: rainfall_zone_names.yml
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
 # col #3: Proportion of node area covered by zone (floating point, number of entries = num_nodes) [-]
-pe_zone_mapping: pe_zone_mapping.yml
+pe_zone_mapping: pe_zone_mapping.csv
 
 # PE zone names.
 # This parameter is optional.
@@ -186,7 +186,7 @@ pe_zone_names: pe_zone_names.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-temperature_zone_mapping: temperature_zone_mapping.yml
+temperature_zone_mapping: temperature_zone_mapping.csv
 
 # Temperature zone names.
 # This parameter is optional
@@ -200,7 +200,7 @@ temperature_zone_names: temperature_zone_names.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-tmax_c_zone_mapping: tmax_c_zone_mapping.yml
+tmax_c_zone_mapping: tmax_c_zone_mapping.csv
 
 # Tmax_C zone names.
 # This parameter is optional
@@ -214,7 +214,7 @@ tmax_c_zone_names: tmax_c_zone_names.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-tmin_c_zone_mapping: tmin_c_zone_mapping.yml
+tmin_c_zone_mapping: tmin_c_zone_mapping.csv
 
 # Tmin_C zone names.
 # This parameter is optional
@@ -228,7 +228,7 @@ tmin_c_zone_names: tmin_c_zone_names.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-windsp_zone_mapping: windsp_zone_mapping.yml
+windsp_zone_mapping: windsp_zone_mapping.csv
 
 # windSp zone names.
 # This parameter is optional
@@ -243,7 +243,7 @@ windsp_zone_names: windsp_zone_names.yml
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
 # col #3: Proportion of node area covered by zone (floating point, number of entries = num_nodes) [-]
-subroot_zone_mapping: subroot_zone_mapping.yml
+subroot_zone_mapping: subroot_zone_mapping.csv
 
 # Subroot zone names.
 # This parameter is optional
@@ -257,7 +257,7 @@ subroot_zone_names: subroot_zone_names.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-rapid_runoff_zone_mapping: rapid_runoff_zone_mapping.yml
+rapid_runoff_zone_mapping: rapid_runoff_zone_mapping.csv
 
 # Rapid runoff zone names.
 # This parameter is optional
@@ -271,7 +271,7 @@ rapid_runoff_zone_names: rapid_runoff_zone_names.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-swrecharge_zone_mapping: swrecharge_zone_mapping.yml
+swrecharge_zone_mapping: swrecharge_zone_mapping.csv
 
 # Runoff recharge zone names.
 # This parameter is optional
@@ -285,7 +285,7 @@ swrecharge_zone_names: swrecharge_zone_names.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-macropore_zone_mapping: macropore_zone_mapping.yml
+macropore_zone_mapping: macropore_zone_mapping.csv
 
 # Macropore zone names.
 # This parameter is optional
@@ -321,7 +321,7 @@ canopy_process: enabled
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-canopy_zone_mapping: canopy_zone_mapping.yml
+canopy_zone_mapping: canopy_zone_mapping.csv
 
 # Canopy zone names.
 # This parameter is optional
@@ -614,7 +614,7 @@ interflow_process: enabled
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-interflow_zone_mapping: interflow_zone_mapping.yml
+interflow_zone_mapping: interflow_zone_mapping.csv
 
 # Runoff recharge zone names.
 # This parameter is optional
@@ -750,7 +750,7 @@ sw_ponding_process: disabled
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # col #2: Zone number (integer, number of entries = num_nodes)
-sw_zone_mapping: sw_zone_mapping.yml
+sw_zone_mapping: sw_zone_mapping.csv
 
 # SW release zone names.
 # This parameter is optional
