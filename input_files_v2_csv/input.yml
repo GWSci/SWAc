@@ -629,7 +629,7 @@ init_interflow_store: init_interflow_store.csv
 
 # col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
 # col #2: Proportion of water from root zone percolation and subrootzone leakage bypassing the interflow store (floating point, number of entries = max zone number in interflow_zone_mapping) [L]
-interflow_store_bypass: interflow_store_bypass.yml
+interflow_store_bypass: interflow_store_bypass.csv
 
 # col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
 # col #2: Maximum infiltration to groundwater from interflow store in mm (floating point, number of entries = max zone number in interflow_zone_mapping) [L]
