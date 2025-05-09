@@ -808,7 +808,7 @@ sw_max_ponding: 300.0
 # row #1: sw_ponding_area:: keyword
 # col #1: Zone number (integer, number of entries = max zone number in sw_zone_mapping)
 # col #2: Proportion of cell subject to ponding (floating point, 1 column for each entry in sw_zone_names) [-]
-sw_ponding_area: sw_ponding_area.yml
+sw_ponding_area: sw_ponding_area.csv
 
 ############################################
 # Process: Routed Runoff                   #
