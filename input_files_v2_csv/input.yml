@@ -334,7 +334,7 @@ canopy_zone_names: canopy_zone_names.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: Zone number (integer, number of entries = max zone number in canopy_zone_mapping)
 # col #2: Free throughfall proportion (floating point, number of entries = max zone number in canopy_zone_mapping)
-free_throughfall: free_throughfall.yml
+free_throughfall: free_throughfall.csv
 
 # This parameter is optional
 # This parameter can accept a path to YAML or CSV
