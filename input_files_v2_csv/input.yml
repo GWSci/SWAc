@@ -422,7 +422,7 @@ swrecharge_proportion: swrecharge_proportion.csv
 # col #1: Month number (integer, number of entries = 12)
 # col #2: Maximum runoff recharge in mm for this cell in zone 1 (floating point, number of entries = 12) [L]
 # Additional cols: Maximum runoff recharge in mm for this cell in zones 2 to n, where n is number of entries in swrecharge_zone_names (floating point, number of entries = 12) [L]
-swrecharge_limit: swrecharge_limit.yml
+swrecharge_limit: swrecharge_limit.csv
 
 ################################################
 # Process: Single Cell Runoff Recharge         #
