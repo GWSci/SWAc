@@ -637,7 +637,7 @@ infiltration_limit: infiltration_limit.csv
 
 # col #1: Zone number (integer, number of entries = max zone number in interflow_zone_mapping)
 # col #2: Proportion of interflow store in each day (or user-defined time unit) released to surface water (floating point, number of entries = max zone number in interflow_zone_mapping) [-]
-interflow_decay: interflow_decay.yml
+interflow_decay: interflow_decay.csv
 
 # Assign infiltration limit as time series
 # Can be either true or false
