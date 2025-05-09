@@ -774,7 +774,7 @@ def fin_percolation_rejection_use_timeseries(data, name):
         logging.info('\t\tSwitched "percolation_rejection_use_timeseries" to "false"')
 
 def fin_subroot_leakage_fraction(data, name):
-    """Finalize the "subsoilzone_leakage_fraction" parameter.
+    """Finalize the "subroot_leakage_fraction" parameter.
 
     1) if not provided, set it to all 0s.
     """
