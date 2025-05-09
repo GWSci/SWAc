@@ -539,7 +539,7 @@ lu_spatial: lu_spatial.csv
 # Number of cols defined by number of entries in landuse_zone_names
 # col #1: Month number (integer, number of entries = 12)
 # Additional cols: Rooting depth in m for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [L]
-zr: zr.yml
+zr: zr.csv
 
 # LU Time Variant: Kc
 # This parameter is optional.
@@ -548,7 +548,7 @@ zr: zr.yml
 # Number of cols defined by number of entries in landuse_zone_names
 # col #1: Month number (integer, number of entries = 12)
 # Additional cols: Crop coefficient for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [-]
-kc: kc.yml
+kc: kc.csv
 
 # TAW
 # This parameter is optional.
@@ -557,7 +557,7 @@ kc: kc.yml
 # Number of cols defined by number of entries in landuse_zone_names
 # col #1: Month number (integer, number of entries = 12)
 # Additional cols: Total Available soil Water in mm for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [-]
-taw: taw.yml
+taw: taw.csv
 
 # RAW
 # This parameter is optional.
@@ -566,7 +566,7 @@ taw: taw.yml
 # Number of cols defined by number of entries in landuse_zone_names
 # col #1: Month number (integer, number of entries = 12)
 # Additional cols: Readily Available soil Water in mm for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [-]
-raw: raw.yml
+raw: raw.csv
 
 # Percolation Limit (Rejected Recharge initiation)
 # This parameter is optional.
