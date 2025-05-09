@@ -504,7 +504,7 @@ fao_input: 'l'
 # row #1: 'WP' followed by wilting point in m3/m3 for each soil zone (floating point, 1 column for each entry in soil_zone_names) [L3/L3]
 # row #2: 'p' followed by RAW as a fraction TAW for each soil zone (floating point, 1 column for each entry in soil_zone_names) [-]
 # row #3: 'FC' followed by field capacity in m3/m3 for each soil zone (floating point, 1 column for each entry in soil_zone_names) [L3/L3]
-soil_static_params: soil_static_params.yml
+soil_static_params: soil_static_params.csv
 
 # SMD Properties (starting SMD)
 # This parameter is optional.
@@ -512,7 +512,7 @@ soil_static_params: soil_static_params.yml
 # "disabled"
 # This parameter can accept a path to YAML or CSV
 # row #1: 'starting_SMD' followed by initial SMD in mm for each soil zone (integer, 1 column for each entry in soil_zone_names) [L]
-smd: smd.yml
+smd: smd.csv
 
 # Soil Spatial
 # This parameter is optional.
@@ -521,7 +521,7 @@ smd: smd.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # Additional cols: Proportion of this node in each soil zone (floating point, 1 column for each entry in soil_zone_names)
-soil_spatial: soil_spatial.yml
+soil_spatial: soil_spatial.csv
 
 # LU Spatial
 # This parameter is optional.
@@ -529,7 +529,7 @@ soil_spatial: soil_spatial.yml
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = num_nodes)
 # Additional cols: Proportion of this node in each soil zone (floating point, 1 column for each entry in landuse_zone_names) [-]
-lu_spatial: lu_spatial.yml
+lu_spatial: lu_spatial.csv
 
 # LU Time Variant: Zr
 # This parameter is optional.
