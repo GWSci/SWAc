@@ -25,6 +25,9 @@ from tqdm import tqdm
 def _default_file_open(filename):
     return open(filename, "r")
 
+def _default_csv_open(filename):
+    return csv_resource.reader_for(filename)
+
 def load_yaml(filein, file_opener=_default_file_open):
     """Load a YAML file, lowercase its keys."""
     logging.debug("\t\tLoading %s", filein)
@@ -48,9 +51,9 @@ def load_temp_file_backed_array(params, param, absolute, ext):
     base_path = params["temp_file_backed_array_directory"]
     params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
 
-def load_csv_alt_format(params, no_list, param, absolute):
+def load_csv_alt_format(params, no_list, param, filein, file_opener=_default_csv_open):
     try:
-        with csv_resource.reader_for(absolute) as reader:
+        with file_opener(filein) as reader:
             rows = [[ast.literal_eval(j) for j in row]
                                 for row in reader]
     except Exception as err:
