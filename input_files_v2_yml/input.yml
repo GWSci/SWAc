@@ -691,7 +691,7 @@ solute_calibration_a: 1.38
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: fitting parameter mu in above equation (floating point, number of entries = num_nodes) [L] 
-solute_calibration_mu: mu.yml
+solute_calibration_mu: solute_mu.yml
 
 # Floating-point value, fitting parameter sigma in above equation
 solute_calibration_sigma: 3.96
@@ -701,11 +701,11 @@ solute_calibration_alpha: 3906.25
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: effective porosity
-solute_calibration_effective_porosity: effective_porosity.yml
+solute_calibration_effective_porosity: solute_effective_porosity.yml
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: depth to water in m (floating point, number of entries = num_nodes) [L]
-solute_depth_to_water: Average_DTW.yml
+solute_depth_to_water: solute_average_DTW.yml
 
 # Column 1: SWAc node number (integer, number of entries = num_nodes)
 # Column 2: UNIQUE (not used in SWAcMod)
@@ -718,7 +718,7 @@ solute_depth_to_water: Average_DTW.yml
 # Column 9: 5PercLoadM (not used in SWAcMod)
 # Column 10: 50PercLoad (not used in SWAcMod)
 # Column 11: 95PercLoad (not used in SWAcMod)
-solute_loading: NO3_loading.yml
+solute_loading: solute_loading.yml
 
 #######################
 # Process: SW Release #
