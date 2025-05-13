@@ -17,7 +17,7 @@ def validate_filenames(params, input_dir, is_alt_format, filename_exists):
         if is_alt_format[param]:
             absolute = os.path.join(input_dir, params[param])
             if not filename_exists(absolute):
-                errors.append(f'Error: The file "{params[param]}" was not found.')
+                errors.append(f'Error: Unknown file name: "{params[param]}"')
     return ParsedInputData(params, errors, warnings)
 
 def validate_required_fields(params, input_file):
