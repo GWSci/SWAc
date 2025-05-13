@@ -3,13 +3,14 @@ import io
 import swacmod.input_files.input_files_version_2.validator as validator
 import swacmod.input_files.input_files_version_2.input_data as input_data
 import swacmod.input_files.input_files_version_2.loader as loader
+from test.input_file_reader.input_files_version_2.mock_file_resource import MockFileResource
 
 class Test_Input_Files_v2(unittest.TestCase):
     def test_load_yaml_reads_empty_yaml_file(self):
         self.assert_load_yaml("", None)
 
     def assert_load_yaml(self, input_file_contents, expected):
-        file_opener = make_mock_file_opener({
+        file_opener = MockFileResource.make_mock_file_opener({
             "aardvark.yaml": input_file_contents,
         })
         actual = loader.load_yaml("aardvark.yaml", file_opener=file_opener)
@@ -82,7 +83,7 @@ elephant: fox
             actual.errors)
 
 def load_alt_yaml_adaptor(param, external_file_contents):
-    file_opener = make_mock_file_opener({
+    file_opener = MockFileResource.make_mock_file_opener({
         "aardvark.yaml": external_file_contents,
     })
     params = {param: "aardvark.yaml"}
@@ -90,5 +91,3 @@ def load_alt_yaml_adaptor(param, external_file_contents):
     input_data.load_yml_alt_format(params, param, absolute, file_opener)
     return params
 
-def make_mock_file_opener(filenames_to_contents):
-    return lambda filename: io.StringIO(filenames_to_contents[filename])
