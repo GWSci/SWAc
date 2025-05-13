@@ -4,6 +4,7 @@ import swacmod.input_files.input_files_version_2.input_data as input_data
 import swacmod.input_files.input_files_version_2.validator as validator
 import swacmod.input_files.input_files_version_2.specs as specs_module
 import swacmod.input_files.input_file_reader as input_file_reader
+from test.input_file_reader.input_files_version_2.mock_file_resource import MockFileResource
 
 class Printer_Spy:
     def __init__(self):
@@ -21,7 +22,7 @@ class Test_Input_Data_v2_Validation_Through_Input_File_Reader(unittest.TestCase)
         input_file_contents = ""
         for k, v in params.items():
             input_file_contents += f"{k}: {v}\n"
-        file_opener = make_mock_file_opener({input_file: input_file_contents})
+        file_opener = MockFileResource.make_mock_file_opener({input_file: input_file_contents})
         printer = lambda x: None
         with self.assertRaisesRegex(Exception, "Run has exited with errors."):
             input_file_reader.read_inputs(None, input_file, input_dir, file_opener = file_opener, printer=printer)
@@ -34,7 +35,7 @@ class Test_Input_Data_v2_Validation_Through_Input_File_Reader(unittest.TestCase)
         input_file_contents = ""
         for k, v in params.items():
             input_file_contents += f"{k}: {v}\n"
-        file_opener = make_mock_file_opener({input_file: input_file_contents})
+        file_opener = MockFileResource.make_mock_file_opener({input_file: input_file_contents})
         printer_spy = Printer_Spy()
         try:
             input_file_reader.read_inputs(None, input_file, input_dir, file_opener=file_opener, printer=printer_spy.do_print)
@@ -49,11 +50,11 @@ class Test_Input_Data_v2_Validation_Through_Input_File_Reader(unittest.TestCase)
         input_file_contents = ""
         for k, v in params.items():
             input_file_contents += f"{k}: {v}\n"
-        file_opener = make_mock_file_opener({input_file: input_file_contents})
+        file_opener = MockFileResource.make_mock_file_opener({input_file: input_file_contents})
         printer = lambda x: None
         mock_dir = make_sample_input_directory()
         mock_dir.remove("time_periods.csv")
-        filename_exists = make_mock_filename_exists(mock_dir)
+        filename_exists = MockFileResource.make_mock_filename_exists(mock_dir)
         with self.assertRaisesRegex(Exception, "Run has exited with errors."):
             input_file_reader.read_inputs(None, input_file, input_dir, file_opener = file_opener, printer=printer, filename_exists=filename_exists)
 
@@ -65,21 +66,15 @@ class Test_Input_Data_v2_Validation_Through_Input_File_Reader(unittest.TestCase)
         input_file_contents = ""
         for k, v in params.items():
             input_file_contents += f"{k}: {v}\n"
-        file_opener = make_mock_file_opener({input_file: input_file_contents})
+        file_opener = MockFileResource.make_mock_file_opener({input_file: input_file_contents})
         printer_spy = Printer_Spy()
         mock_dir = make_sample_input_directory()
-        filename_exists = make_mock_filename_exists(mock_dir)
+        filename_exists = MockFileResource.make_mock_filename_exists(mock_dir)
         try:
             input_file_reader.read_inputs(None, input_file, input_dir, file_opener=file_opener, printer=printer_spy.do_print, filename_exists=filename_exists)
         except:
             pass
         self.assertEqual('Error: Unknown file name: "potato.csv"', printer_spy.result)
-
-def make_mock_filename_exists(directory):
-    return lambda filename: filename in directory
-
-def make_mock_file_opener(filenames_to_contents):
-    return lambda filename: io.StringIO(filenames_to_contents[filename])
 
 class Test_Input_Data_v2_Validation(unittest.TestCase):
     def test_a_valid_file_has_no_errors(self):
