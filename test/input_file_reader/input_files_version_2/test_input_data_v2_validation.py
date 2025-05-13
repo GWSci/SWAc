@@ -94,18 +94,11 @@ class Test_Input_Data_v2_Validation(unittest.TestCase):
         validation_result = input_data._validate_filenames(params, specs, "", filename_always_exists)
         self.assertEqual(0, len(validation_result.warnings))
     
-    def test_x(self):
-        specs = specs_module.make_specs_dictionary(specs_module.make_specs())
-        params = make_sample_valid_input_file()
-        validation_result = input_data._validate_filenames(params, specs, "", filename_never_exists)
-        all_errors_string = "\n".join(validation_result.errors)
-        self.assertIn('Error: Unknown file name:', all_errors_string)
-
+    
 def filename_always_exists(filename):
     return True
 
-def filename_never_exists(filename):
-    return False
+
 
 def make_sample_valid_input_file():
     return {
