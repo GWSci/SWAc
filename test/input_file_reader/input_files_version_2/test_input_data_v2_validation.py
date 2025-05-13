@@ -54,8 +54,8 @@ class Test_Input_Data_v2_Validation_Through_Input_File_Reader(unittest.TestCase)
         mock_dir = make_sample_input_directory()
         mock_dir.remove("time_periods.csv")
         filename_exists = make_mock_filename_exists(mock_dir)
-        # with self.assertRaisesRegex(Exception, "Run has exited with errors."):
-        input_file_reader.read_inputs(None, input_file, input_dir, file_opener = file_opener, printer=printer, filename_exists=filename_exists)
+        with self.assertRaisesRegex(Exception, "Run has exited with errors."):
+            input_file_reader.read_inputs(None, input_file, input_dir, file_opener = file_opener, printer=printer, filename_exists=filename_exists)
 
 def make_mock_filename_exists(directory):
     return lambda filename: filename in directory
