@@ -1,8 +1,21 @@
 import io
+from contextlib import contextmanager
+import csv
 
 class MockFileResource:
     def make_mock_file_opener(filenames_to_contents):
         return lambda filename: io.StringIO(filenames_to_contents[filename])
+    
+    def make_mock_csv_loader(file_contents):
+        @contextmanager
+        def mock_loader(filename):
+            try:
+                with io.StringIO(file_contents[filename]) as csv_file:
+                    reader =  csv.reader(csv_file)
+                    yield reader
+            finally:
+                pass
+        return mock_loader
 
     def make_mock_filename_exists(directory):
         return lambda filename: filename in directory
