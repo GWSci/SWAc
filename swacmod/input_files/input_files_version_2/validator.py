@@ -2,12 +2,23 @@ from __future__ import print_function
 
 import swacmod.input_files.input_files_version_2.specs as specs_module
 from swacmod.input_files.parsed_input_data import ParsedInputData
+import os
 
 def validate_keys(specs, params, input_file):
     result = ParsedInputData(params, [], [])
     result.update(validate_required_fields(params, input_file))
     result.update(validate_no_extra_params(specs_module.make_specs_dictionary(specs), params, input_file))
     return result
+
+def validate_filenames(params, input_dir, is_alt_format, filename_exists):
+    errors = []
+    warnings = []
+    for param in params:
+        if is_alt_format[param]:
+            absolute = os.path.join(input_dir, params[param])
+            if not filename_exists(absolute):
+                errors.append(f'Error: The file "{params[param]}" was not found.')
+    return ParsedInputData(params, errors, warnings)
 
 def validate_required_fields(params, input_file):
     errors = []

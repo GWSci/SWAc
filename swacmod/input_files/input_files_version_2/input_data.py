@@ -17,7 +17,10 @@ from swacmod.input_files.parsed_input_data import ParsedInputData
 def _default_file_open(filename):
     return open(filename, "r")
 
-def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
+def _default_filename_exists(filename):
+    return os.path.exists(filename)
+
+def load_and_validate(input_file, input_dir, file_opener=_default_file_open, filename_exists=_default_filename_exists):
     """Load, finalize and validate model parameters and time series."""
     logging.info("\tLoading parameters and time series")
     specs_object = specs_module.make_specs()
@@ -32,6 +35,11 @@ def load_and_validate(input_file, input_dir, file_opener=_default_file_open):
 
     _supply_null_values_for_missing_fields(specs, params)
     validation_result.update(validation_new.validate_2(params, specs))
+
+    if validation_result.has_errors():
+        return validation_result
+
+    validation_result.update(_validate_filenames(params, specs, input_dir, filename_exists))
 
     if validation_result.has_errors():
         return validation_result
@@ -65,6 +73,12 @@ def _supply_null_values_for_missing_fields(specs, params):
     for key in specs:
         if key not in params:
             params[key] = None
+
+def _validate_filenames(params, specs, input_dir, filename_exists):
+    is_alt_format = {}
+    for param in params:
+        is_alt_format[param] = f_is_alt_format(specs, params, param)
+    return validator.validate_filenames(params, input_dir, is_alt_format, filename_exists)
 
 def _get_series_from_params(params):
     """Get the params dictionary and separate it into series and params"""
