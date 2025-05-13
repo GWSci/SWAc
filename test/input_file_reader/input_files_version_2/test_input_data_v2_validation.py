@@ -1,5 +1,4 @@
 import unittest
-import io
 import swacmod.input_files.input_files_version_2.input_data as input_data
 import swacmod.input_files.input_files_version_2.validator as validator
 import swacmod.input_files.input_files_version_2.specs as specs_module
