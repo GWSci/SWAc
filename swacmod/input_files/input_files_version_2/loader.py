@@ -14,7 +14,7 @@ import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.validation as v
 import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
-import swacmod.csv_resource as csv_resource
+from swacmod.input_files.input_files_version_2.default_file_resource import DefaultFileResource
 
 try:
     from yaml import CLoader as Loader
@@ -22,13 +22,7 @@ except ImportError:
     from yaml import Loader
 from tqdm import tqdm
 
-def _default_file_open(filename):
-    return open(filename, "r")
-
-def _default_csv_open(filename):
-    return csv_resource.reader_for(filename)
-
-def load_yaml(filein, file_opener=_default_file_open):
+def load_yaml(filein, file_opener=DefaultFileResource._default_file_open):
     """Load a YAML file, lowercase its keys."""
     logging.debug("\t\tLoading %s", filein)
 
@@ -51,7 +45,7 @@ def load_temp_file_backed_array(params, param, absolute, ext):
     base_path = params["temp_file_backed_array_directory"]
     params[param] = time_series_data.load_time_series_data(base_path, param, absolute, ext)
 
-def load_csv_alt_format(params, no_list, param, filein, file_opener=_default_csv_open):
+def load_csv_alt_format(params, no_list, param, filein, file_opener=DefaultFileResource._default_csv_open):
     try:
         with file_opener(filein) as reader:
             rows = [[ast.literal_eval(j) for j in row]

@@ -13,14 +13,9 @@ import swacmod.input_files.input_files_version_2.validation_new as validation_ne
 import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.specs as specs_module
 from swacmod.input_files.parsed_input_data import ParsedInputData
+from swacmod.input_files.input_files_version_2.default_file_resource import DefaultFileResource
 
-def _default_file_open(filename):
-    return open(filename, "r")
-
-def _default_filename_exists(filename):
-    return os.path.exists(filename)
-
-def load_and_validate(input_file, input_dir, file_opener=_default_file_open, filename_exists=_default_filename_exists):
+def load_and_validate(input_file, input_dir, file_opener=DefaultFileResource._default_file_open, filename_exists=DefaultFileResource._default_filename_exists):
     """Load, finalize and validate model parameters and time series."""
     logging.info("\tLoading parameters and time series")
     specs_object = specs_module.make_specs()
