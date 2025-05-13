@@ -57,6 +57,24 @@ class Test_Input_Data_v2_Validation_Through_Input_File_Reader(unittest.TestCase)
         with self.assertRaisesRegex(Exception, "Run has exited with errors."):
             input_file_reader.read_inputs(None, input_file, input_dir, file_opener = file_opener, printer=printer, filename_exists=filename_exists)
 
+    def test_reading_a_file_when_a_filename_doesnt_exist_records_the_error(self):
+        input_file = "some_file.yml"
+        input_dir = ""
+        params = make_sample_valid_input_file()
+        input_file_contents = ""
+        for k, v in params.items():
+            input_file_contents += f"{k}: {v}\n"
+        file_opener = make_mock_file_opener({input_file: input_file_contents})
+        printer_spy = Printer_Spy()
+        mock_dir = make_sample_input_directory()
+        mock_dir.remove("time_periods.csv")
+        filename_exists = make_mock_filename_exists(mock_dir)
+        try:
+            input_file_reader.read_inputs(None, input_file, input_dir, file_opener=file_opener, printer=printer_spy.do_print, filename_exists=filename_exists)
+        except:
+            pass
+        self.assertEqual('Error: Unknown file name: "time_periods.csv"', printer_spy.result)
+
 def make_mock_filename_exists(directory):
     return lambda filename: filename in directory
 
