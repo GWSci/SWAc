@@ -424,9 +424,9 @@ swrecharge_proportion: swrecharge_proportion.yml
 # Additional cols: Maximum runoff recharge in mm for this cell in zones 2 to n, where n is number of entries in swrecharge_zone_names (floating point, number of entries = 12) [L]
 swrecharge_limit: swrecharge_limit.yml
 
-################################################
-# Process: Single Cell Runoff Recharge         #
-################################################
+########################################
+# Process: Single Cell Runoff Recharge #
+########################################
 
 # Runoff Recharge in single cells process:
 # Set to "disabled"
@@ -582,9 +582,9 @@ percolation_rejection_use_timeseries: true
 # 1 additional row for each day (or user-defined time unit) in time_periods, followed by percolation limit in mm for each land use zone (floating point, 1 column for each entry in landuse_zone_names) [L]
 percolation_rejection_ts: percolation_rejection_ts.yml
 
-############################################
+############################
 # Process: Subroot Leakage #
-############################################
+############################
 
 # Leakage process: can be either "enabled" or "disabled"
 # This parameter is required
@@ -672,9 +672,9 @@ recharge_attenuation_process: enabled
 # col #4: Maximum rate of release in mm (floating point, number of entries = num_nodes) [L]
 recharge_attenuation_params: recharge_attenuation_params.yml
 
-#######################
+###################
 # Process: Solute #
-#######################
+###################
 
 # historical solute process: can be either "enabled" or "disabled"
 # This parameter is required
@@ -736,9 +736,9 @@ sw_process: enabled
 # Column 3: Proportion of SW store released each day (or user-defined time unit) (floating point, number of entries = num_nodes) [-]
 sw_params: sw_params.yml
 
-###############################
+#######################
 # Process: SW Ponding #
-###############################
+#######################
 
 # SW release process: can be either "enabled" or "disabled"
 # This parameter is required
@@ -810,9 +810,9 @@ sw_max_ponding: 300.0
 # col #2: Proportion of cell subject to ponding (floating point, 1 column for each entry in sw_zone_names) [-]
 sw_ponding_area: sw_ponding_area.yml
 
-############################################
-# Process: Routed Runoff                   #
-############################################
+##################################
+# Process: Surface Water Routing #
+##################################
 
 # Routing process: can be either "enabled" or "disabled"
 # This parameter is required
