@@ -1,6 +1,7 @@
 import swacmod.input_files.input_files_version_1.input_data as input_data_v1
 import swacmod.input_files.input_files_version_2.input_data as input_data_v2
 from swacmod.input_files.input_files_version_2.loader import load_yaml
+import os
 
 def scrape_run_name(input_file):
     params = input_data_v1.load_yaml(input_file)
@@ -10,13 +11,16 @@ def scrape_run_name(input_file):
 def _default_file_open(filename):
     return open(filename, "r")
 
-def read_inputs(specs_file, input_file, input_dir, file_opener=_default_file_open, printer=print):
+def _default_filename_exists(filename):
+    return os.path.exists(filename)
+
+def read_inputs(specs_file, input_file, input_dir, file_opener=_default_file_open, printer=print, filename_exists=_default_filename_exists):
     version = detect_version(input_file, file_opener)
     if (version == 1):
         parsed_input_data = input_data_v1.load_and_validate(specs_file, input_file, input_dir)
         parsed_input_data.data = migrate(parsed_input_data.data)
     elif (version == 2):
-        parsed_input_data = input_data_v2.load_and_validate(input_file, input_dir, file_opener)
+        parsed_input_data = input_data_v2.load_and_validate(input_file, input_dir, file_opener, filename_exists)
     else:
         raise Exception(f"Unknown version: '{version}'.")
 
