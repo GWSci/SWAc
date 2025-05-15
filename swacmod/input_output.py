@@ -16,7 +16,7 @@ import numpy
 from . import utils as u
 from . import feature_flags as ff
 import swacmod.h5py_adaptor as h5py_adaptor
-import swacmod.print_version_information as print_version_information
+import swacmod.version_information as version_information
 
 def start_logging(env, level=logging.INFO, path=None, run_name=None):
     """Start logging output.
@@ -44,7 +44,7 @@ def start_logging(env, level=logging.INFO, path=None, run_name=None):
         name = "%s_%s.log" % (run_name, now)
         path = os.path.join(u.CONSTANTS["OUTPUT_DIR"], name)
         env.set_up_logging(path, "%(message)s", level)
-        logging.info(print_version_information.format_version_information())
+        logging.info(version_information.format_version_information())
         logging.info(disc)
 
     for handler in logging.root.handlers[:]:
