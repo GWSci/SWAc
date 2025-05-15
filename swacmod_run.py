@@ -44,6 +44,7 @@ import swacmod.historical_solute as historical_solute
 import swacmod.solute as solute
 import swacmod.solute_proportion_reaching_water_table as solute_proportion
 from swacmod.environment import Environment
+import swacmod.print_version_information as print_version_information
 
 # win fix
 sys.maxint = 2**63 - 1
@@ -381,6 +382,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         input_file = u.CONSTANTS["INPUT_FILE"]
         input_dir = u.CONSTANTS["INPUT_DIR"]
 
+    env.print(print_version_information.format_version_information())
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (loading data)")
     level, log_path = scrape_run_name_and_start_logging(debug, env, input_file)
