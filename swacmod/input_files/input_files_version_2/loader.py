@@ -25,12 +25,14 @@ from tqdm import tqdm
 def load_yaml(filein, file_opener=DefaultFileResource._default_file_open):
     """Load a YAML file, lowercase its keys."""
     logging.debug("\t\tLoading %s", filein)
+
     try:
         with file_opener(filein) as fp:
             yml = yaml.load(fp, Loader=Loader)
     except yaml.YAMLError as err:
         msg = "Could not import %s: %s. Please see guidelines for the YAML syntax here: https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html" % (filein, err)
         raise u.InputOutputError(msg)
+    
     try:
         keys = list(yml.keys())
     except AttributeError:

@@ -4,8 +4,15 @@ from test.input_file_reader.input_files_version_2.mock_file_resource import Mock
 
 class Test_YAML_Parser_Error(unittest.TestCase):
     def test_yaml_file_with_misaligned_keys(self):
-        filename = 'recipe.csv'
+        filename = 'recipe.yml'
         file_contents = 'ingredients:\n   sausage: 1\n  potato: 2\n' # missing one space before potato
+        mock_file_opener = MockFileResource.make_mock_file_opener({filename: file_contents})
+        with self.assertRaisesRegex(Exception, 'Please see guidelines for the YAML syntax'):
+            load_yaml(filename, mock_file_opener)
+    
+    def test_yaml_file_missing_space_between_key_and_value(self):
+        filename = 'recipe.yml'
+        file_contents = 'ingredients:\n   sausage:1\n   potato: 2\n' # missing one space between potato and 1
         mock_file_opener = MockFileResource.make_mock_file_opener({filename: file_contents})
         with self.assertRaisesRegex(Exception, 'Please see guidelines for the YAML syntax'):
             load_yaml(filename, mock_file_opener)
