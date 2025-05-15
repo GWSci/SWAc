@@ -32,6 +32,11 @@ class Test_Migrations(unittest.TestCase):
         data = {'params':{'historical_nitrate_process': 'sausage'}}
         actual = input_file_reader.migrate_v1_to_v2(data)
         self.assertIn('historical_solute_process', actual['params'])
+    
+    def test_migtating_from_historical_nitrate_days_to_historical_solute_days(self):
+        data = {'params':{'historical_nitrate_days': 'sausage'}}
+        actual = input_file_reader.migrate_v1_to_v2(data)
+        self.assertIn('historical_solute_days', actual['params'])
 
     def test_migtating_from_nitrate_process_to_solute_process(self):
         data = {'params':{'nitrate_process': 'sausage'}}
