@@ -23,3 +23,19 @@ class Test_YAML_Errors_In_Input_Files(unittest.TestCase):
         mock_file_opener = MockFileResource.make_mock_file_opener({filename: file_contents})
         with self.assertRaisesRegex(Exception, 'Please see guidelines for the YAML syntax'):
             load_yaml(filename, mock_file_opener)
+
+class Test_YAML_Errors_In_Main_Input_File(unittest.TestCase):
+    def test_main_yaml_input_file_with_misaligned_keys(self):
+        filename = 'cheesecake.yml'
+        params = MockFileResource.make_sample_valid_input_file()
+        file_contents = ""
+        for k, v in params.items():
+            if k == "num_nodes":
+                file_contents += f" {k}: {v}\n" # one space before the key
+            else:
+                file_contents += f"{k}: {v}\n"
+        mock_file_opener = MockFileResource.make_mock_file_opener({filename: file_contents})
+        with self.assertRaisesRegex(Exception, 'Please see guidelines for the YAML syntax'):
+            load_yaml(filename, mock_file_opener)
+
+
