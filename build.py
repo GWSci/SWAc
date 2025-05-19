@@ -20,6 +20,15 @@ def get_old_version(filename = '_version.py', file_open = _default_file_open):
     old_version = ast.literal_eval(old_version)
     return old_version
 
+def update_version(old_version):
+    new_version = old_version.copy()
+    new_version[-1] += 1
+    return new_version
+
+def write_new_version(new_version, filename = '_version.py', file_open = _default_file_open):
+    with file_open(filename, 'w') as file:
+        file.write(f'version = {new_version}')
+
 def main(args):
     if (os.path.exists("build/")):
         shutil.rmtree("build/")

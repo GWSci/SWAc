@@ -22,6 +22,14 @@ class Test_Version_Information(unittest.TestCase):
         file_open = make_mock_file_opener({filename: contents})
         old_version = build.get_old_version(filename, file_open)
         self.assertIn(str(old_version), contents)
+    
+    def test_build_script_updates_the_version(self):
+        filename = 'mock_version.py'
+        contents = 'version = [1, 0, 0]'
+        file_open = make_mock_file_opener({filename: contents})
+        old_version = build.get_old_version(filename, file_open)
+        new_version = build.update_version(old_version)
+        self.assertEqual([1, 0, 1], new_version)
 
 
 
