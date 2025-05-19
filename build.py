@@ -6,8 +6,8 @@ from _version import version
 import ast
 import git
 import os
+import argparse
 
-args = sys.argv[1:]
 version_filename = '_version.py'
 commit_id_filename = '_commit_id.py'
 
@@ -72,6 +72,12 @@ def build():
 
     subprocess.run(zip_input_files_command, shell=True)
 
+def parse_arguments():
+    PARSER = argparse.ArgumentParser
+    PARSER.add_argument('--final', default=None)
+
+    return PARSER.parse_args
+
 def main(args):
     if args[0] == '--final':
         old_version = get_old_version()
@@ -84,19 +90,20 @@ def main(args):
 
         sha = repo.head.object.hexsha
         write_new_commit_id(sha)
+
         try:
             build()
+            repo.git.restore(commit_id_filename)
+            # push
+
         except Exception as err:
             repo.git.reset('HEAD~')
             repo.git.restore(version_filename)
             repo.git.restore(commit_id_filename)
             raise Exception(err)
-
-        
-
-
-
-    
+    else:
+        build()
 
 if __name__ == '__main__':
+    args = parse_arguments()
     main(args)
