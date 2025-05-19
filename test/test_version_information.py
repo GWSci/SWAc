@@ -27,7 +27,7 @@ class Test_Version_Information(unittest.TestCase):
 
 
 
-def make_mock_file_opener(contents):
-        return lambda filename: io.StringIO(contents[filename])
+def make_mock_file_opener(filename_contents):
+        return lambda filename, how : io.StringIO(filename_contents[filename])
 
 
