@@ -9,6 +9,7 @@ import os
 
 args = sys.argv[1:]
 version_filename = '_version.py'
+commit_id_filename = '_commit_id.py'
 
 def _default_file_open(filename, how='r'):
         return open(filename, how)
@@ -32,15 +33,9 @@ def write_new_version(new_version, filename=version_filename, file_open=_default
     with file_open(filename, 'w') as file:
         file.write(f'version = {new_version}')
 
-def update_version():
-    old_version = get_old_version()
-    new_version = update_version(old_version)
-    write_new_version(new_version)
-
-def commit_version_change():
-    repo = git.Repo(os.getcwd())
-    repo.git.add(version_filename)
-    repo.git.commit('-m', 'updated version number')
+def write_new_commit_id(sha, filename=commit_id_filename, file_open=_default_file_open):
+    with file_open(filename, 'w') as file:
+        file.write(f'commit_id = {sha}')
 
 def build():
     if (os.path.exists("build/")):
@@ -79,8 +74,16 @@ def build():
 
 def main(args):
     if args[0] == '--final':
-        update_version()
-        commit_version_change()
+        old_version = get_old_version()
+        new_version = get_new_version(old_version)
+        write_new_version(new_version)
+
+        repo = git.Repo(os.getcwd())
+        repo.git.add(version_filename)
+        repo.git.commit('-m', 'updated version number')
+        
+        sha = repo.head.object.hexsha
+        write_new_commit_id(sha)
         build()
 
         
