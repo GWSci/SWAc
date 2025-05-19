@@ -73,13 +73,13 @@ def build():
     subprocess.run(zip_input_files_command, shell=True)
 
 def parse_arguments():
-    PARSER = argparse.ArgumentParser
-    PARSER.add_argument('--final', default=None)
+    PARSER = argparse.ArgumentParser()
+    PARSER.add_argument('-f', '--flag', type=str, default=None)
 
-    return PARSER.parse_args
+    return PARSER.parse_args()
 
 def main(args):
-    if args[0] == '--final':
+    if args.flag == '--final':
         old_version = get_old_version()
         new_version = get_new_version(old_version)
         write_new_version(new_version)
