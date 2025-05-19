@@ -23,9 +23,6 @@ def update_version(filename = '_version.py', file_open = _default_file_open):
     old_version = ast.literal_eval(old_version)
     new_version = old_version.copy()
     new_version[-1] += 1
-    with file_write as file:
-         file.write(f'version = {version}')
-         return file
 
 def main(args):
     if (os.path.exists("build/")):

@@ -20,9 +20,7 @@ class Test_Version_Information(unittest.TestCase):
         filename = 'mock_version.py'
         contents = 'version = [1,0,0]'
         file_open = make_mock_file_opener({filename: contents})
-        file_write = make_mock_file_write(filename)
-        f = update_version(filename=filename, file_open=file_open, file_write=file_write)
-        print(f.getvalue())
+        update_version(filename=filename, file_open=file_open)
 
 
 
@@ -32,5 +30,4 @@ class Test_Version_Information(unittest.TestCase):
 def make_mock_file_opener(contents):
         return lambda filename: io.StringIO(contents[filename])
 
-def make_mock_file_write(filename):
-        return lambda filename: io.StringIO(filename)
+
