@@ -35,7 +35,7 @@ def write_new_version(new_version, filename=version_filename, file_open=_default
 
 def write_new_commit_id(sha, filename=commit_id_filename, file_open=_default_file_open):
     with file_open(filename, 'w') as file:
-        file.write(f'commit_id = {sha}')
+        file.write(f'commit_id = "{sha}"')
 
 def build():
     if (os.path.exists("build/")):
@@ -81,10 +81,16 @@ def main(args):
         repo = git.Repo(os.getcwd())
         repo.git.add(version_filename)
         repo.git.commit('-m', 'updated version number')
-        
+
         sha = repo.head.object.hexsha
         write_new_commit_id(sha)
-        build()
+        try:
+            build()
+        except Exception as err:
+            repo.git.reset('HEAD~')
+            repo.git.restore(version_filename)
+            repo.git.restore(commit_id_filename)
+            raise Exception(err)
 
         
 
