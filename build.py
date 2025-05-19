@@ -13,7 +13,7 @@ def _default_file_open(filename):
 def _default_file_write(filename):
         return open(filename, "w")
 
-def update_version(filename = '_version.py', file_open = _default_file_open, file_write=_default_file_write):
+def update_version(filename = '_version.py', file_open = _default_file_open):
     with file_open(filename) as file:
         old_version = file.readlines()[0]
     old_version = old_version.replace('\n', '')
@@ -23,6 +23,9 @@ def update_version(filename = '_version.py', file_open = _default_file_open, fil
     old_version = ast.literal_eval(old_version)
     new_version = old_version.copy()
     new_version[-1] += 1
+    with file_write as file:
+         file.write(f'version = {version}')
+         return file
 
 def main(args):
     if (os.path.exists("build/")):

@@ -17,11 +17,13 @@ class Test_Version_Information(unittest.TestCase):
         self.assertIn(expected, actual)
     
     def test_build_script_updates_the_version(self):
-         filename = 'mock_version.py'
-         contents = 'version = [1,0,0]'
-         file_open = make_mock_file_opener({filename: contents})
-         file_write = make_mock_file_write(filename)
-         update_version(filename=filename, file_open=file_open, file_write=file_write)
+        filename = 'mock_version.py'
+        contents = 'version = [1,0,0]'
+        file_open = make_mock_file_opener({filename: contents})
+        file_write = make_mock_file_write(filename)
+        f = update_version(filename=filename, file_open=file_open, file_write=file_write)
+        print(f.getvalue())
+
 
 
 
