@@ -20,7 +20,7 @@ def get_old_version(filename='_version.py', file_open=_default_file_open):
     old_version = ast.literal_eval(old_version)
     return old_version
 
-def update_version(old_version):
+def get_new_version(old_version):
     new_version = old_version.copy()
     new_version[-1] += 1
     return new_version
@@ -29,7 +29,17 @@ def write_new_version(new_version, filename='_version.py', file_open=_default_fi
     with file_open(filename, 'w') as file:
         file.write(f'version = {new_version}')
 
+def update_version():
+    old_version = get_old_version()
+    new_version = update_version(old_version)
+    write_new_version(new_version)
+
 def main(args):
+    if args[0] == '--final':
+        update_version()
+
+
+
     if (os.path.exists("build/")):
         shutil.rmtree("build/")
     if (os.path.exists("dist/")):
