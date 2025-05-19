@@ -4,13 +4,16 @@ import os.path
 import subprocess
 from _version import version
 import ast
+import git
+import os
 
 args = sys.argv[1:]
+version_filename = '_version.py'
 
 def _default_file_open(filename, how='r'):
         return open(filename, how)
 
-def get_old_version(filename='_version.py', file_open=_default_file_open):
+def get_old_version(filename=version_filename, file_open=_default_file_open):
     with file_open(filename, 'r') as file:
         old_version = file.readlines()[0]
     old_version = old_version.replace('\n', '')
@@ -25,7 +28,7 @@ def get_new_version(old_version):
     new_version[-1] += 1
     return new_version
 
-def write_new_version(new_version, filename='_version.py', file_open=_default_file_open):
+def write_new_version(new_version, filename=version_filename, file_open=_default_file_open):
     with file_open(filename, 'w') as file:
         file.write(f'version = {new_version}')
 
@@ -37,6 +40,10 @@ def update_version():
 def main(args):
     if args[0] == '--final':
         update_version()
+
+        repo = git.Repo(os.getcwd())
+        repo.git.add(version_filename)
+        repo.git.commit('-m', 'updated version number')
 
 
 
