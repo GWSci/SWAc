@@ -37,16 +37,12 @@ def update_version():
     new_version = update_version(old_version)
     write_new_version(new_version)
 
-def main(args):
-    if args[0] == '--final':
-        update_version()
+def commit_version_change():
+    repo = git.Repo(os.getcwd())
+    repo.git.add(version_filename)
+    repo.git.commit('-m', 'updated version number')
 
-        repo = git.Repo(os.getcwd())
-        repo.git.add(version_filename)
-        repo.git.commit('-m', 'updated version number')
-
-
-
+def build():
     if (os.path.exists("build/")):
         shutil.rmtree("build/")
     if (os.path.exists("dist/")):
@@ -80,6 +76,18 @@ def main(args):
     subprocess.run(["pandoc", "doc/getting-started.md", "-o", "dist/getting-started.html"])
 
     subprocess.run(zip_input_files_command, shell=True)
+
+def main(args):
+    if args[0] == '--final':
+        update_version()
+        commit_version_change()
+        build()
+
+        
+
+
+
+    
 
 if __name__ == '__main__':
     main(args)
