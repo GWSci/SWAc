@@ -95,7 +95,7 @@ def main(args):
         try:
             build()
             repo.git.restore(commit_id_filename)
-            # push
+            repo.git.push()
 
         except Exception as err:
             repo.git.reset('HEAD~')
