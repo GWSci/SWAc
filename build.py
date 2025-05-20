@@ -7,6 +7,7 @@ import ast
 import git
 import os
 import argparse
+import datetime
 
 version_filename = '_version.py'
 commit_id_filename = '_commit_id.py'
@@ -36,6 +37,9 @@ def write_new_version(new_version, filename=version_filename, file_open=_default
 def write_new_commit_id(sha, filename=commit_id_filename, file_open=_default_file_open):
     with file_open(filename, 'w') as file:
         file.write(f'commit_id = "{sha}"')
+
+def format_daytime(date):
+    return date.strftime("%d %b %Y %H:%M:%S")
 
 def build():
     if (os.path.exists("build/")):
@@ -92,10 +96,13 @@ def main(args):
         sha = repo.head.object.hexsha
         write_new_commit_id(sha)
 
+        date = datetime.datetime.now()
+        formated_daytime = format_daytime(date)
+
         try:
             build()
             repo.git.restore(commit_id_filename)
-            repo.git.push()
+            # repo.git.push()
 
         except Exception as err:
             repo.git.reset('HEAD~')
