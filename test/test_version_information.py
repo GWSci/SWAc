@@ -2,6 +2,7 @@ import unittest
 import swacmod.version_information as version_information
 from _version import version
 from _commit_id import commit_id
+from _build_time import build_time
 import io
 import build
 
@@ -15,6 +16,11 @@ class Test_Version_Information(unittest.TestCase):
         expected = str(commit_id)
         actual = version_information.format_version_information()
         self.assertIn(expected, actual)
+    
+    def test_version_information_has_the_correct_build_time(self):
+         expected = str(build_time)
+         actual = version_information.format_version_information()
+         self.assertIn(expected, actual)
     
     def test_build_script_gets_the_old_version(self):
         filename = 'mock_version.py'
