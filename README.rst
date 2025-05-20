@@ -143,6 +143,7 @@ To see the optional arguments run the model with the -h argument
       -o, --output_dir      path to output directory
       -f, --format          output file format, choose between ``hdf5`` (or ``h5``) and ``csv``
       -s, --skip_prompt     skip user prompts and warnings
+      -v, --version         display the current version
 
 For example,
 
