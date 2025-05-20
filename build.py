@@ -75,7 +75,7 @@ def build():
 def parse_arguments():
     PARSER = argparse.ArgumentParser()
     PARSER.add_argument('-f', '--final', action='store_true', 
-                        help='Should the build script update the version number and push the change to GitHub?')
+                        help='The build script will update the version number and push the change to GitHub?')
 
     return PARSER.parse_args()
 
