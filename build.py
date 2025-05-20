@@ -11,6 +11,7 @@ import datetime
 
 version_filename = '_version.py'
 commit_id_filename = '_commit_id.py'
+build_time_filename = '_build_time.py'
 
 def _default_file_open(filename, how='r'):
         return open(filename, how)
@@ -40,6 +41,10 @@ def write_new_commit_id(sha, filename=commit_id_filename, file_open=_default_fil
 
 def format_daytime(date):
     return date.strftime("%d %b %Y %H:%M:%S")
+
+def write_new_build_time(formated_datetime, filename=build_time_filename, file_open=_default_file_open):
+    with file_open(filename, 'w') as file:
+        file.write(f'build_time = "{formated_datetime}"')
 
 def build():
     if (os.path.exists("build/")):
@@ -97,17 +102,21 @@ def main(args):
         write_new_commit_id(sha)
 
         date = datetime.datetime.now()
-        formated_daytime = format_daytime(date)
+        formated_datetime = format_daytime(date)
+        write_new_build_time(formated_datetime)
 
         try:
             build()
             repo.git.restore(commit_id_filename)
+            repo.git.restore(build_time_filename)
+            
             # repo.git.push()
 
         except Exception as err:
             repo.git.reset('HEAD~')
             repo.git.restore(version_filename)
             repo.git.restore(commit_id_filename)
+            repo.git.restore(build_time_filename)
             raise Exception(err)
     else:
         build()
