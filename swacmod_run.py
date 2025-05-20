@@ -36,6 +36,7 @@ from swacmod import input_output as io
 import swacmod.input_files.input_file_reader as input_file_reader
 import swacmod.flopy_adaptor as flopy_adaptor
 import swacmod.version_information as version_information
+from swacmod.input_files.input_files_version_2.default_file_resource import DefaultFileResource
 
 # Compile and import model
 from swacmod import model as m
@@ -351,7 +352,7 @@ def listener(q, total):
         pbar.update()
     pbar.close()
 
-def run(test=False, debug=False, file_format=None, reduced=False, skip=False, env=Environment()):
+def run(test=False, debug=False, file_format=None, reduced=False, skip=False, env=Environment(), file_opener=DefaultFileResource._default_file_open):
     """Run model for all nodes."""
     total_timer_switcher_for_run = timer.make_time_switcher()
     timer.switch_to(total_timer_switcher_for_run, "run_main > run")
@@ -387,7 +388,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_to(timer_switcher_for_run, "run_main > run (loading data)")
     level, log_path = scrape_run_name_and_start_logging(debug, env, input_file)
 
-    data = input_file_reader.read_inputs(specs_file, input_file, input_dir)
+    data = input_file_reader.read_inputs(specs_file, input_file, input_dir, file_opener)
     params = data["params"]
 
     if not skip:
