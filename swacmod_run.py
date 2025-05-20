@@ -35,6 +35,7 @@ from swacmod import utils as u
 from swacmod import input_output as io
 import swacmod.input_files.input_file_reader as input_file_reader
 import swacmod.flopy_adaptor as flopy_adaptor
+import swacmod.version_information as version_information
 
 # Compile and import model
 from swacmod import model as m
@@ -44,7 +45,6 @@ import swacmod.historical_solute as historical_solute
 import swacmod.solute as solute
 import swacmod.solute_proportion_reaching_water_table as solute_proportion
 from swacmod.environment import Environment
-import swacmod.version_information as version_information
 
 # win fix
 sys.maxint = 2**63 - 1
@@ -893,6 +893,10 @@ def run_main():
         help="skip user prompts and warnings",
         action="store_true",
     )
+    PARSER.add_argument("-v",
+                        "--version",
+                        action="version",
+                        version=version_information.format_version_information())
 
     ARGS = PARSER.parse_args()
     if ARGS.input_yml:
