@@ -150,8 +150,8 @@ class Test_Validation_New(unittest.TestCase):
             "sw_zone_mapping": {"a": "b", "c": "d"},
             "gwmodel_type": 5,
             "solute_calibration_a": "x",
-            "solute_calibration_sigma": "x",# TODO no validation
-            # "solute_calibration_alpha": "x",# TODO no validation
+            "solute_calibration_sigma": "x",
+            "solute_calibration_alpha": "x",
             # "sw_init_ponding": "x", # TODO validation not called
             # "sw_max_ponding": "x", # TODO validation not called
             "output_sfr": "x",

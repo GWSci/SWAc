@@ -2007,6 +2007,9 @@ def val_solute_calibration_a(data, name):
 def val_solute_calibration_sigma(data, name):
     c.validate_type(data, name)
 
+def val_solute_calibration_alpha(data, name):
+    c.validate_type(data, name)
+
 FUNC_PARAMS = [
     val_run_name,
     val_num_cores,
@@ -2093,6 +2096,7 @@ FUNC_PARAMS = [
     val_solute_process,
     val_solute_calibration_a,
     val_solute_calibration_sigma,
+    val_solute_calibration_alpha,
     val_sw_ponding_process,
     # val_sw_downstream,
     # val_sw_activation,
