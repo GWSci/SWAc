@@ -255,7 +255,9 @@ class Test_Validation_New(unittest.TestCase):
             # "percolation_rejetion": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
             # "percolation_rejection_ts": #TODO timeseries
             "subroot_leakage_fraction": 5,
-            "subroot_leakage_fraction": "x"
+            "subroot_leakage_fraction": "x",
+            "init_interflow_store": 5,
+            "init_interflow_store": "x"
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -371,8 +373,8 @@ def make_valid_params():
         "percolation_rejection_ts": "percolation_rejection_ts.yml", #TODO timeseries
         
         "subroot_leakage_fraction": {1:0.5,2:0.5,3:0.5},
+        "init_interflow_store": {1:10.0,2:10.0},
 
-        "init_interflow_store": "init_interflow_store.yml",
         "interflow_store_bypass": "interflow_store_bypass.yml",
         "infiltration_limit": "infiltration_limit.yml",
         "interflow_decay": "interflow_decay.yml",
