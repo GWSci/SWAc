@@ -10,18 +10,16 @@ class Test_Inmput_File_With_Missing_SMD(unittest.TestCase):
         input_filename = 'aaa.yml'
         input_dir = ''
         input_file = make_input_file()
-        input_file['smd'] = None
+        del input_file['smd']
         input_file_contents = ""
         for k, v in input_file.items():
             input_file_contents += f"{k}: {v}\n"
         mock_file_open = MockFileResource.make_mock_file_opener({input_filename: input_file_contents})
         parsed_input_data = input_data_v2.load_and_validate(input_filename, input_dir, mock_file_open)
-        print(parsed_input_data)
         data = parsed_input_data.data
-        print(data['params']['smd'])
-        # expected = [0. for zone,smd in enumerate(data['params']['smd']['starting_SMD'])]
-        # actual = data['params']['smd']['starting_SMD']
-        # self.assertEqual(expected,actual)
+        expected = [0. for zone,smd in enumerate(data['params']['smd']['starting_SMD'])]
+        actual = data['params']['smd']['starting_SMD']
+        self.assertEqual(expected,actual)
 
 
 
