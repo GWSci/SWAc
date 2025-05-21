@@ -2085,7 +2085,7 @@ FUNC_PARAMS = [
     # val_raw,
     # val_percolation_rejection,
     val_subroot_leakage_process,
-    # val_subroot_leakage_fraction,
+    val_subroot_leakage_fraction,
     val_interflow_process,
     # val_init_interflow_store,
     # val_interflow_store_bypass,

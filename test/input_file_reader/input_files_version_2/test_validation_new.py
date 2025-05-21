@@ -211,9 +211,7 @@ class Test_Validation_New(unittest.TestCase):
             "macropore_recharge": "x",
             "macropore_recharge": [],
             "macropore_recharge": {"a":"b","c":"d","e":"f"},
-            "macropore_recharge": {1:[],2:[],3:[]},
-
-            
+            "macropore_recharge": {1:[],2:[],3:[]},            
             # "soil_static_params": 5, #TODO validation only runs if fao_process=enabled
             # "soil_static_params": "x", #TODO validation only runs if fao_process=enabled
             # "soil_static_params": [], #TODO validation only runs if fao_process=enabled
@@ -256,7 +254,8 @@ class Test_Validation_New(unittest.TestCase):
             # "percolation_rejetion": "x", #TODO validation only runs if fao_process=enabled
             # "percolation_rejetion": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
             # "percolation_rejection_ts": #TODO timeseries
-
+            "subroot_leakage_fraction": 5,
+            "subroot_leakage_fraction": "x"
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -371,7 +370,8 @@ def make_valid_params():
 
         "percolation_rejection_ts": "percolation_rejection_ts.yml", #TODO timeseries
         
-        "subroot_leakage_fraction": "subroot_leakage_fraction.yml",
+        "subroot_leakage_fraction": {1:0.5,2:0.5,3:0.5},
+
         "init_interflow_store": "init_interflow_store.yml",
         "interflow_store_bypass": "interflow_store_bypass.yml",
         "infiltration_limit": "infiltration_limit.yml",
