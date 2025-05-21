@@ -29,7 +29,6 @@ class Test_Inmput_File_With_Missing_SMD(unittest.TestCase):
         for k, v in input_file.items():
             input_file_contents += f"{k}: {v}\n"
         mock_file_open = MockFileResource.make_mock_file_opener({filename: input_file_contents})
-
         default_input_file = u.CONSTANTS["INPUT_FILE"]
         try:
             u.CONSTANTS["INPUT_FILE"] = filename
