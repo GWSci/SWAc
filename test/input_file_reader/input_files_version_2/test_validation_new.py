@@ -259,7 +259,9 @@ class Test_Validation_New(unittest.TestCase):
             "init_interflow_store": 5,
             "init_interflow_store": "x",
             "interflow_store_bypass": 5,
-            "interflow_store_bypass": "x"
+            "interflow_store_bypass": "x",
+            "infiltration_limit": 5,
+            "infiltration_limit": "x"
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -377,8 +379,8 @@ def make_valid_params():
         "subroot_leakage_fraction": {1:0.5,2:0.5,3:0.5},
         "init_interflow_store": {1:10.0,2:10.0},
         "interflow_store_bypass": {1:0.05,2:0.05},
+        "infiltration_limit": {1:0.7,2:0.7},
 
-        "infiltration_limit": "infiltration_limit.yml",
         "interflow_decay": "interflow_decay.yml",
         "infiltration_limit_ts": "infiltration_limit_ts.yml",
         "interflow_decay_ts": "interflow_decay_ts.yml",
