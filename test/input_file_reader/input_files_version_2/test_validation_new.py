@@ -166,7 +166,9 @@ class Test_Validation_New(unittest.TestCase):
             "fao_input": 5,
             "fao_input": "x",
             "free_throughfall": "x",
-            "free_throughfall": 5
+            "free_throughfall": 5,
+            "max_canopy_storage": "x",
+            "max_canopy_storage": 5
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -259,8 +261,8 @@ def make_valid_params():
         "interflow_decay_use_timeseries": True,
         "fao_input": 'l',
         "free_throughfall": {1: 0.99, 2: 0.99},
+        "max_canopy_storage": {1: 1.0, 2: 1.0},
 
-        "max_canopy_storage": "max_canopy_storage.yml",
         "snow_params_simple": "snow_params.yml",
         "snow_params_complex": "snow_params_complex.yml",
         "rapid_runoff_params": "rapid_runoff_params.yml",
