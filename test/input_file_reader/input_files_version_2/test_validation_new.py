@@ -201,7 +201,12 @@ class Test_Validation_New(unittest.TestCase):
             "macropore_limit": "x",
             "macropore_limit": [],
             "macropore_limit": {"a":"b","c":"d","e":"f"},
-            "macropore_limit": {1:[],2:[],3:[]}
+            "macropore_limit": {1:[],2:[],3:[]},
+            "macropore_activation": 5,
+            "macropore_activation": "x",
+            "macropore_activation": [],
+            "macropore_activation": {"a":"b","c":"d","e":"f"},
+            "macropore_activation": {1:[],2:[],3:[]}
 
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
@@ -303,8 +308,8 @@ def make_valid_params():
         "swrecharge_limit": {1:[0.,2.],2:[0.,2.],3:[0.,2.],4:[0.,2.],5:[0.,2.],6:[0.,2.],7:[0.,2.],8:[0.,2.],9:[0.,2.],10:[0.,2.],11:[0.,2.],12:[0.,2.]},
         "macropore_proportion": {1:[0.05,0.05],2:[0.05,0.05],3:[0.05,0.05],4:[0.05,0.05],5:[0.05,0.05],6:[0.05,0.05],7:[0.05,0.05],8:[0.05,0.05],9:[0.05,0.05],10:[0.05,0.05],11:[0.05,0.05],12:[0.05,0.05]},
         "macropore_limit": {1:[0.05,0.05],2:[0.05,0.05],3:[0.05,0.05],4:[0.05,0.05],5:[0.05,0.05],6:[0.05,0.05],7:[0.05,0.05],8:[0.05,0.05],9:[0.05,0.05],10:[0.05,0.05],11:[0.05,0.05],12:[0.05,0.05]},
+        "macropore_activation": {1:[0.1,0.1],2:[0.1,0.1],3:[0.1,0.1],4:[0.1,0.1],5:[0.1,0.1],6:[0.1,0.1],7:[0.1,0.1],8:[0.1,0.1],9:[0.1,0.1],10:[0.1,0.1],11:[0.1,0.1],12:[0.1,0.1]},
 
-        "macropore_activation": "macropore_activation.yml",
         "macropore_recharge": "macropore_recharge.yml",
         "soil_static_params": "soil_static_params.yml",
         "smd": "smd.yml",
