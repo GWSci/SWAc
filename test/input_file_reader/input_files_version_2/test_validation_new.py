@@ -118,8 +118,8 @@ class Test_Validation_New(unittest.TestCase):
             "excess_sw_process": "x",
             "excess_sw_process": 5,
             "excess_sw_process": "enabled",
-            # "recharge_node_mapping": "x", # TODO: Validation not called
-            # "recharge_node_mapping": {"a": "b", "c": "d"}, # TODO: Validation not called
+            "recharge_node_mapping": "x",
+            "recharge_node_mapping": {"a": "b", "c": "d"},
             "reporting_zone_mapping": "x",
             "reporting_zone_mapping": {"a": "b", "c": "d"},
             "rainfall_zone_mapping": "x",

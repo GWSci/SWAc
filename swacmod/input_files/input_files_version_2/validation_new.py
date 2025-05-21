@@ -2040,6 +2040,7 @@ FUNC_PARAMS = [
     val_sw_zone_mapping,
     val_macropore_zone_names,
     val_macropore_zone_mapping,
+    val_recharge_node_mapping,
     # val_macropore_activation_option,
     val_soil_zone_names,
     val_landuse_zone_names,
