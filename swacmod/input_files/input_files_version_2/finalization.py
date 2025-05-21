@@ -651,6 +651,18 @@ def fin_soil_static_params(data, name):
         logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
                      name)
 
+def fin_smd(data, name):
+    """Finalize the "smd" parameter.
+    1) if not provided, set "smd" to "0.0".
+    """
+    params = data["params"]
+    if params[name] is None:
+        zones = max(1,
+                    len(params["soil_zone_names"].values()), 
+                    len(list(params["soil_spatial"].items())[0][1]))
+        params[name] = {'starting_SMD': [0. for zone in range(zones)]}
+        logging.info('\t\tDefaulted "%s" to 0.0', name)
+
 def fin_soil_spatial(data, name):
     """Finalize the "soil_spatial" parameter.
 
@@ -1391,6 +1403,7 @@ FUNC_PARAMS = [
     fin_macropore_recharge,
     fin_macropore_activation_option,
     fin_soil_static_params,
+    #fin_smd
     fin_soil_spatial,
     fin_lu_spatial,
     fin_taw_and_raw,
