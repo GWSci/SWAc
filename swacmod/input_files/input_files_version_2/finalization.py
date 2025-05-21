@@ -677,6 +677,15 @@ def fin_soil_spatial(data, name):
         params["fao_process"] = "disabled"
         logging.info('\t\tSwitched "fao_process" to "disabled", missing %s',
                      name)
+    
+    if params[name] is None:
+        zones = max(1,
+                    len(params["soil_zone_names"].values()))
+        params[name] = {}
+        for node in range(1, params['num_nodes'] + 1):
+            params[name][node] = [1./zones for z in range(zones)]
+        logging.info('\t\tMissing %s, distributed nodes equally to %i zones',
+                     name, zones)
 
 def fin_lu_spatial(data, name):
     """Finalize the "lu_spatial" parameter.
