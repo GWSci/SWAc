@@ -2067,7 +2067,7 @@ FUNC_PARAMS = [
     val_rapid_runoff_params,
     val_swrecharge_process,
     val_swrecharge_proportion,
-    # val_swrecharge_limit,
+    val_swrecharge_limit,
     val_macropore_process,
     # val_macropore_proportion,
     # val_macropore_limit,

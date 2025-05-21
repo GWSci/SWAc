@@ -186,7 +186,12 @@ class Test_Validation_New(unittest.TestCase):
             "swrecharge_proportion": "x",
             "swrecharge_proportion": [],
             "swrecharge_proportion": {"a":"b","c":"d","e":"f"},
-            "swrecharge_proportion": {1:[],2:[],3:[]}
+            "swrecharge_proportion": {1:[],2:[],3:[]},
+            "swrecharge_limit": 5,
+            "swrecharge_limit": "x",
+            "swrecharge_limit": [],
+            "swrecharge_limit": {"a":"b","c":"d","e":"f"},
+            "swrecharge_limit": {1:[],2:[],3:[]}
 
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
@@ -285,8 +290,8 @@ def make_valid_params():
         "snow_params_complex": {1:[7.55, 0.05, 4.79, 20.0, 100.0, 0.25, 0.95, 1.0, 0.0, 450.0],2:[7.55, 0.05, 4.79, 20.0, 100.0, 0.25, 0.95, 1.0, 0.0, 450.0],3:[7.55, 0.05, 4.79, 20.0, 100.0, 0.25, 0.95, 1.0, 0.0, 450.0]},
         "rapid_runoff_params": [{'class_smd':[5],'class_ri':[5],'values':[[0.16]]},{'class_smd':[5],'class_ri':[5],'values':[[0.16]]}],
         "swrecharge_proportion": {1:[0.1,0.],2:[0.1,0.],3:[0.1,0.],4:[0.1,0.],5:[0.1,0.],6:[0.1,0.],7:[0.1,0.],8:[0.1,0.],9:[0.1,0.],10:[0.1,0.],11:[0.1,0.],12:[0.1,0.]},
+        "swrecharge_limit": {1:[0.,2.],2:[0.,2.],3:[0.,2.],4:[0.,2.],5:[0.,2.],6:[0.,2.],7:[0.,2.],8:[0.,2.],9:[0.,2.],10:[0.,2.],11:[0.,2.],12:[0.,2.]},
 
-        "swrecharge_limit": "swrecharge_limit.yml",
         "macropore_proportion": "macropore_proportion.yml",
         "macropore_limit": "macropore_limit.yml",
         "macropore_activation": "macropore_activation.yml",
