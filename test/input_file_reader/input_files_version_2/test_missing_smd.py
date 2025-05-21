@@ -16,7 +16,6 @@ class Test_Inmput_File_With_Missing_SMD(unittest.TestCase):
 
         default_input_file = u.CONSTANTS["INPUT_FILE"]
         default_input_dir = u.CONSTANTS["INPUT_DIR"]
-        default_output_dir = u.CONSTANTS["OUTPUT_DIR"]
         try:
             u.CONSTANTS["INPUT_FILE"] = filename
             u.CONSTANTS["INPUT_DIR"] = input_dir
