@@ -263,7 +263,16 @@ class Test_Validation_New(unittest.TestCase):
             "infiltration_limit": 5,
             "infiltration_limit": "x",
             "interflow_decay": 5,
-            "interflow_decay": "x"
+            "interflow_decay": "x",
+            # "infiltration_limit_ts": #TODO timeseries
+            # "interflow_decay_ts": #TODO timeseries
+            "recharge_attenuation_params": 5,
+            "recharge_attenuation_params": "x",
+            "recharge_attenuation_params": [],
+            "recharge_attenuation_params": {"a":"b","c":"d","e":"f"},
+            "recharge_attenuation_params": {1:[],2:[],3:[]},
+            "solute_calibration_mu": 5,
+            "solute_calibration_mu": "x"
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -383,11 +392,11 @@ def make_valid_params():
         "interflow_store_bypass": {1:0.05,2:0.05},
         "infiltration_limit": {1:0.7,2:0.7},
         "interflow_decay": {1:0.05,2:0.05},
+        "infiltration_limit_ts": "infiltration_limit_ts.yml", #TODO timeseries
+        "interflow_decay_ts": "interflow_decay_ts.yml", #TODO timeseries
+        "recharge_attenuation_params": {1:[1.0,0.05,2.0],2:[1.0,0.05,2.0],3:[1.0,0.05,2.0]},
+        "solute_calibration_mu": {1:1.58,2:1.58,3:1.58},
 
-        "infiltration_limit_ts": "infiltration_limit_ts.yml",
-        "interflow_decay_ts": "interflow_decay_ts.yml",
-        "recharge_attenuation_params": "recharge_attenuation_params.yml",
-        "solute_calibration_mu": "mu.csv",
         "solute_calibration_effective_porosity": "effective_porosity.csv",
         "solute_depth_to_water": "Average_DTW.csv",
         "solute_loading": "NO3_loading.csv",
@@ -400,16 +409,16 @@ def make_valid_params():
         "sw_ponding_area": "sw_ponding_area.yml",
         "routing_topology": "routing_parameters.csv",
         "sfr_obs": "gauges_sfr.obs",
-        "swdis_ts": "swdis_ts.csv",
+        "swdis_ts": "swdis_ts.csv", #TODO timeseries
         "swdis_locs": "swdis_locs.yml",
         "swabs_ts": "swabs_ts.csv",
         "swabs_locs": "swabs_locs.csv",
-        "rainfall_ts": "rainfall_ts.yml",
-        "pe_ts": "pe_ts.yml",
-        "temperature_ts": "temperature_ts.yml",
-        "tmax_c_ts": "tmax_c_ts.yml",
-        "tmin_c_ts": "tmin_c_ts.yml",
-        "windsp_ts": "windsp_ts.yml",
-        "subroot_leakage_ts": "subroot_leakage_ts.yml",
+        "rainfall_ts": "rainfall_ts.yml", #TODO timeseries
+        "pe_ts": "pe_ts.yml", #TODO timeseries
+        "temperature_ts": "temperature_ts.yml", #TODO timeseries
+        "tmax_c_ts": "tmax_c_ts.yml", #TODO timeseries
+        "tmin_c_ts": "tmin_c_ts.yml", #TODO timeseries
+        "windsp_ts": "windsp_ts.yml", #TODO timeseries
+        "subroot_leakage_ts": "subroot_leakage_ts.yml", #TODO timeseries
         "evt_parameters": "evt_params.csv",
     }
