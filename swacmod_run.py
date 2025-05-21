@@ -386,7 +386,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     env.print(version_information.format_version_information())
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (loading data)")
-    level, log_path = scrape_run_name_and_start_logging(debug, env, input_file)
+    level, log_path = scrape_run_name_and_start_logging(debug, env, input_file, file_opener)
 
     data = input_file_reader.read_inputs(specs_file, input_file, input_dir, file_opener)
     params = data["params"]
@@ -848,9 +848,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
 
-def scrape_run_name_and_start_logging(debug, env, input_file):
+def scrape_run_name_and_start_logging(debug, env, input_file, file_opener=DefaultFileResource._default_file_open):
     level = logging.DEBUG if debug else logging.INFO
-    run_name = input_file_reader.scrape_run_name(input_file)
+    run_name = input_file_reader.scrape_run_name(input_file, file_opener)
     log_path = io.start_logging(env, level=level, run_name=run_name)
 
     env.print('\nStart "%s"' % run_name)

@@ -4,8 +4,8 @@ from swacmod.input_files.input_files_version_2.loader import load_yaml
 from swacmod.input_files.input_files_version_2.default_file_resource import DefaultFileResource
 import os
 
-def scrape_run_name(input_file):
-    params = load_yaml(input_file)
+def scrape_run_name(input_file, file_opener=DefaultFileResource._default_file_open):
+    params = load_yaml(input_file, file_opener)
     run_name = params["run_name"]
     return run_name
 
