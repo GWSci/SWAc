@@ -274,7 +274,9 @@ class Test_Validation_New(unittest.TestCase):
             "solute_calibration_mu": 5,
             "solute_calibration_mu": "x",
             "solute_calibration_effective_porosity": 5,
-            "solute_calibration_effective_porosity": "x"
+            "solute_calibration_effective_porosity": "x",
+            "solute_depth_to_water": 5,
+            "solute_depth_to_water": "x"
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -399,8 +401,8 @@ def make_valid_params():
         "recharge_attenuation_params": {1:[1.0,0.05,2.0],2:[1.0,0.05,2.0],3:[1.0,0.05,2.0]},
         "solute_calibration_mu": {1:1.58,2:1.58,3:1.58},
         "solute_calibration_effective_porosity": {1:0.15,2:0.15,3:0.15},
+        "solute_depth_to_water": {1:10.0,2:10.0,3:10.0},
 
-        "solute_depth_to_water": "Average_DTW.csv",
         "solute_loading": "NO3_loading.csv",
         "sw_params": "sw_params.yml",
         "sw_downstream": "sw_downstream.yml",
