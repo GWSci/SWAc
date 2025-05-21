@@ -14,4 +14,4 @@ class Test_Input_File_With_Missing_Soil_Spatial(unittest.TestCase):
         mock_file_open = MockFileResource.make_mock_file_opener({input_filename: input_file_contents})
         parsed_input_data = input_data_v2.load_and_validate(input_filename, input_dir, mock_file_open)
         data = parsed_input_data.data
-        self.assertIsNot(data['params']['soil_spatial'], int)
+        self.assertIsNot(data['params']['soil_spatial'], None)
