@@ -211,7 +211,51 @@ class Test_Validation_New(unittest.TestCase):
             "macropore_recharge": "x",
             "macropore_recharge": [],
             "macropore_recharge": {"a":"b","c":"d","e":"f"},
-            "macropore_recharge": {1:[],2:[],3:[]}
+            "macropore_recharge": {1:[],2:[],3:[]},
+
+            
+            # "soil_static_params": 5, #TODO validation only runs if fao_process=enabled
+            # "soil_static_params": "x", #TODO validation only runs if fao_process=enabled
+            # "soil_static_params": [], #TODO validation only runs if fao_process=enabled
+            # "soil_static_params": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            # "soil_static_params": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            # "smd": 5, #TODO validation only runs if fao_process=enabled
+            # "smd": "x", #TODO validation only runs if fao_process=enabled
+            # "smd": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            # "soil_spatial": 5, #TODO validation only runs if fao_process=enabled
+            # "soil_spatial": "x", #TODO validation only runs if fao_process=enabled
+            # "soil_spatial": [], #TODO validation only runs if fao_process=enabled
+            # "soil_spatial": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            # "soil_spatial": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            # "lu_spatial": 5, #TODO validation only runs if fao_process=enabled
+            # "lu_spatial": "x", #TODO validation only runs if fao_process=enabled
+            # "lu_spatial": [], #TODO validation only runs if fao_process=enabled
+            # "lu_spatial": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            # "lu_spatial": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            # "zr": 5, #TODO validation only runs if fao_process=enabled
+            # "zr": "x", #TODO validation only runs if fao_process=enabled
+            # "zr": [], #TODO validation only runs if fao_process=enabled
+            # "zr": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            # "zr": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            # "kc": 5, #TODO validation only runs if fao_process=enabled
+            # "kc": "x", #TODO validation only runs if fao_process=enabled
+            # "kc": [], #TODO validation only runs if fao_process=enabled
+            # "kc": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            # "kc": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            # "taw": 5, #TODO validation only runs if fao_process=enabled
+            # "taw": "x", #TODO validation only runs if fao_process=enabled
+            # "taw": [], #TODO validation only runs if fao_process=enabled
+            # "taw": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            # "taw": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            # "raw": 5, #TODO validation only runs if fao_process=enabled
+            # "raw": "x", #TODO validation only runs if fao_process=enabled
+            # "raw": [], #TODO validation only runs if fao_process=enabled
+            # "raw": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            # "raw": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            # "percolation_rejetion": 5, #TODO validation only runs if fao_process=enabled
+            # "percolation_rejetion": "x", #TODO validation only runs if fao_process=enabled
+            # "percolation_rejetion": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            # "percolation_rejection_ts": #TODO timeseries
 
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
@@ -315,17 +359,18 @@ def make_valid_params():
         "macropore_limit": {1:[0.05,0.05],2:[0.05,0.05],3:[0.05,0.05],4:[0.05,0.05],5:[0.05,0.05],6:[0.05,0.05],7:[0.05,0.05],8:[0.05,0.05],9:[0.05,0.05],10:[0.05,0.05],11:[0.05,0.05],12:[0.05,0.05]},
         "macropore_activation": {1:[0.1,0.1],2:[0.1,0.1],3:[0.1,0.1],4:[0.1,0.1],5:[0.1,0.1],6:[0.1,0.1],7:[0.1,0.1],8:[0.1,0.1],9:[0.1,0.1],10:[0.1,0.1],11:[0.1,0.1],12:[0.1,0.1]},
         "macropore_recharge": {1:[0.4,0.4],2:[0.4,0.4],3:[0.4,0.4],4:[0.4,0.4],5:[0.4,0.4],6:[0.4,0.4],7:[0.4,0.4],8:[0.4,0.4],9:[0.4,0.4],10:[0.4,0.4],11:[0.4,0.4],12:[0.4,0.4]},
+        "soil_static_params": {'FC':[0.36,0.36],'WP':[0.15,0.15],'p':[0.55,0.55]},
+        "smd": {'starting_SMD':[100,100]},
+        "soil_spatial": {1:[0.5, 0.5],2:[0.5, 0.5],3:[0.5, 0.5]},
+        "lu_spatial": {1:[0.5, 0.5],2:[0.5, 0.5],3:[0.5, 0.5]},
+        "zr": {1:[0.4,0.4],2:[0.4,0.4],3:[0.4,0.4],4:[0.4,0.4],5:[0.4,0.4],6:[0.4,0.4],7:[0.4,0.4],8:[0.4,0.4],9:[0.4,0.4],10:[0.4,0.4],11:[0.4,0.4],12:[0.4,0.4]},
+        "kc": {1:[0.4,0.4],2:[0.4,0.4],3:[0.4,0.4],4:[0.4,0.4],5:[0.4,0.4],6:[0.4,0.4],7:[0.4,0.4],8:[0.4,0.4],9:[0.4,0.4],10:[0.4,0.4],11:[0.4,0.4],12:[0.4,0.4]},
+        "taw": {1:[231,231],2:[231,231],3:[231,231],4:[231,231],5:[231,231],6:[231,231],7:[231,231],8:[231,231],9:[231,231],10:[231,231],11:[231,231],12:[231,231]},
+        "raw": {1:[127.05,127.05],2:[127.05,127.05],3:[127.05,127.05],4:[127.05,127.05],5:[127.05,127.05],6:[127.05,127.05],7:[127.05,127.05],8:[127.05,127.05],9:[127.05,127.05],10:[127.05,127.05],11:[127.05,127.05],12:[127.05,127.05]},
+        "percolation_rejection": {'percolation_rejection': [10.0, 10.0]},
 
-        "soil_static_params": "soil_static_params.yml",
-        "smd": "smd.yml",
-        "soil_spatial": "soil_spatial.yml",
-        "lu_spatial": "lu_spatial.yml",
-        "zr": "zr.yml",
-        "kc": "kc.yml",
-        "taw": "taw.yml",
-        "raw": "raw.yml",
-        "percolation_rejection": "percolation_rejection.yml",
-        "percolation_rejection_ts": "percolation_rejection_ts.yml",
+        "percolation_rejection_ts": "percolation_rejection_ts.yml", #TODO timeseries
+        
         "subroot_leakage_fraction": "subroot_leakage_fraction.yml",
         "init_interflow_store": "init_interflow_store.yml",
         "interflow_store_bypass": "interflow_store_bypass.yml",
