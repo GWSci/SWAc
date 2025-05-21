@@ -107,8 +107,8 @@ class Test_Validation_New(unittest.TestCase):
             "recharge_attenuation_process": 5,
             "historical_solute_process": "x",
             "historical_solute_process": 5,
-            # "solute_process": "x", # TODO: Needs a validation
-            # "solute_process": 5, # TODO: Needs a validation
+            "solute_process": "x",
+            "solute_process": 5,
             "sw_process": "x",
             "sw_process": 5,
             "sw_ponding_process": "x",
