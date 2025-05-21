@@ -2090,7 +2090,7 @@ FUNC_PARAMS = [
     val_init_interflow_store,
     val_interflow_store_bypass,
     val_infiltration_limit,
-    # val_interflow_decay,
+    val_interflow_decay,
     val_infiltration_limit_use_timeseries,
     val_interflow_decay_use_timeseries,
     val_recharge_attenuation_process,
