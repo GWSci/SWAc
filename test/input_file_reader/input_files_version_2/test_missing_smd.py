@@ -5,7 +5,7 @@ import swacmod.input_files.input_files_version_2.input_data as input_data_v2
 from test.input_file_reader.input_files_version_2.mock_file_resource import MockFileResource
 from test.dummy_environment import Dummy_Environment
 
-class Test_Inmput_File_With_Missing_SMD(unittest.TestCase):
+class Test_Input_File_With_Missing_SMD(unittest.TestCase):
     def test_smd_is_missing_and_is_finalised_successfully_as_0(self):
         input_filename = 'potato.yml'
         input_dir = ''
