@@ -88,6 +88,7 @@ def val_output_recharge(data, name):
 
 def val_routing_process(data, name):
     c.validate_type(data, name)
+    c.validate_enum(data, name)
 
 def val_output_sfr(data, name):
     c.validate_type(data, name)
@@ -2097,6 +2098,7 @@ FUNC_PARAMS = [
     # val_sfr_obs,
     val_istcb1,
     val_istcb2,
+    val_routing_process,
     # val_routing_topology,
     # val_swdis_f,
     # val_swabs_f,

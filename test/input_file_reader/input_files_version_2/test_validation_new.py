@@ -113,8 +113,8 @@ class Test_Validation_New(unittest.TestCase):
             "sw_process": 5,
             "sw_ponding_process": "x",
             "sw_ponding_process": 5,
-            # "routing_process": "x", # TODO: Validation not called
-            # "routing_process": 5, # TODO: Validation not called
+            "routing_process": "x",
+            "routing_process": 5,
             "excess_sw_process": "x",
             "excess_sw_process": 5,
             "excess_sw_process": "enabled",
