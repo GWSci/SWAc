@@ -170,6 +170,7 @@ class Test_Validation_New(unittest.TestCase):
             "max_canopy_storage": "x",
             "max_canopy_storage": 5,
             "snow_params_simple": 5,
+            "snow_params_complex": "x",
             "snow_params_simple": {"a":"b","c":"d"},
             "snow_params_simple": {1:[],2:[],3:[]},
             "snow_params_complex": 5,
