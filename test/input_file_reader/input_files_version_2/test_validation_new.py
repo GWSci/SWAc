@@ -155,7 +155,7 @@ class Test_Validation_New(unittest.TestCase):
             "sw_init_ponding": "x",
             "sw_max_ponding": "x",
             "output_sfr": "x",
-            # "attenuate_sfr_flows": "x", # TODO no validation
+            "attenuate_sfr_flows": "x",
             "istcb1": "x",
             "istcb2": "x",
             # "mf96_lrc": "x", # TODO no validation

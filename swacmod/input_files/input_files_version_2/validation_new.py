@@ -2010,6 +2010,9 @@ def val_solute_calibration_sigma(data, name):
 def val_solute_calibration_alpha(data, name):
     c.validate_type(data, name)
 
+def val_attenuate_sfr_flows(data, name):
+    c.validate_type(data, name)
+
 FUNC_PARAMS = [
     val_run_name,
     val_num_cores,
@@ -2114,6 +2117,7 @@ FUNC_PARAMS = [
     val_istcb1,
     val_istcb2,
     val_routing_process,
+    val_attenuate_sfr_flows,
     # val_routing_topology,
     # val_swdis_f,
     # val_swabs_f,
