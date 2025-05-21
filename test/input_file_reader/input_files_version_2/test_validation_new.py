@@ -168,7 +168,12 @@ class Test_Validation_New(unittest.TestCase):
             "free_throughfall": "x",
             "free_throughfall": 5,
             "max_canopy_storage": "x",
-            "max_canopy_storage": 5
+            "max_canopy_storage": 5,
+            "snow_params_simple": 5,
+            "snow_params_simple": {"a":"b","c":"d"},
+            "snow_params_simple": {1:[],2:[],3:[]}
+
+
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -260,10 +265,10 @@ def make_valid_params():
         "infiltration_limit_use_timeseries": True,
         "interflow_decay_use_timeseries": True,
         "fao_input": 'l',
-        "free_throughfall": {1: 0.99, 2: 0.99},
-        "max_canopy_storage": {1: 1.0, 2: 1.0},
+        "free_throughfall": {1:0.99,2: 0.99},
+        "max_canopy_storage": {1:1.0,2: 1.0},
+        "snow_params_simple": {1:[100, 1, -2], 2:[100, 1, -2], 3:[100, 1, -2]},
 
-        "snow_params_simple": "snow_params.yml",
         "snow_params_complex": "snow_params_complex.yml",
         "rapid_runoff_params": "rapid_runoff_params.yml",
         "swrecharge_proportion": "swrecharge_proportion.yml",

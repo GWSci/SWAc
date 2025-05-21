@@ -2060,7 +2060,7 @@ FUNC_PARAMS = [
     val_free_throughfall,
     val_max_canopy_storage,
     val_snow_process_simple,
-    # val_snow_params_simple,
+    val_snow_params_simple,
     val_snow_process_complex,
     # val_snow_params_complex,
     val_rapid_runoff_process,
