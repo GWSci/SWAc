@@ -504,6 +504,7 @@ soil_static_params: soil_static_params.yml
 
 # SMD Properties (starting SMD)
 # This parameter is optional.
+# If not specified, it will be set to 0.0
 # If not specified and "fao_input" is "ls", "fao_process" will be set to
 # "disabled"
 # This parameter can accept a path to YAML or CSV
