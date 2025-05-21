@@ -2001,6 +2001,9 @@ def val_gwmodel_type(data, name):
     c.validate_type(data, name)
     c.validate_enum(data, name)
 
+def val_solute_calibration_a(data, name):
+    c.validate_type(data, name)
+
 FUNC_PARAMS = [
     val_run_name,
     val_num_cores,
@@ -2085,6 +2088,7 @@ FUNC_PARAMS = [
     # val_recharge_attenuation_params,
     val_historical_solute_process,
     val_solute_process,
+    val_solute_calibration_a,
     val_sw_ponding_process,
     # val_sw_downstream,
     # val_sw_activation,
