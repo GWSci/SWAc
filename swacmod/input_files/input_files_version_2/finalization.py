@@ -1403,7 +1403,7 @@ FUNC_PARAMS = [
     fin_macropore_recharge,
     fin_macropore_activation_option,
     fin_soil_static_params,
-    #fin_smd
+    fin_smd,
     fin_soil_spatial,
     fin_lu_spatial,
     fin_taw_and_raw,
