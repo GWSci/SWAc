@@ -2072,7 +2072,7 @@ FUNC_PARAMS = [
     val_macropore_proportion,
     val_macropore_limit,
     val_macropore_activation,
-    # val_macropore_recharge,
+    val_macropore_recharge,
     val_fao_process,
     val_fao_input,
     # val_soil_static_params,
