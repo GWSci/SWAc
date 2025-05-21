@@ -2070,7 +2070,7 @@ FUNC_PARAMS = [
     val_swrecharge_limit,
     val_macropore_process,
     val_macropore_proportion,
-    # val_macropore_limit,
+    val_macropore_limit,
     # val_macropore_activation,
     # val_macropore_recharge,
     val_fao_process,
