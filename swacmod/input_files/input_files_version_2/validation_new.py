@@ -2064,7 +2064,7 @@ FUNC_PARAMS = [
     val_snow_process_complex,
     val_snow_params_complex,
     val_rapid_runoff_process,
-    # val_rapid_runoff_params,
+    val_rapid_runoff_params,
     val_swrecharge_process,
     # val_swrecharge_proportion,
     # val_swrecharge_limit,

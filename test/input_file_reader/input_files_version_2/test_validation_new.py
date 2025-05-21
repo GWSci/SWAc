@@ -171,12 +171,17 @@ class Test_Validation_New(unittest.TestCase):
             "max_canopy_storage": 5,
             "snow_params_simple": 5,
             "snow_params_complex": "x",
-            "snow_params_simple": {"a":"b","c":"d"},
+            "snow_params_simple": {"a":"b","c":"d","e":"f"},
             "snow_params_simple": {1:[],2:[],3:[]},
             "snow_params_complex": 5,
             "snow_params_complex": "x",
-            "snow_params_simple": {"a":"b","c":"d"},
-            "snow_params_simple": {1:[],2:[],3:[]}
+            "snow_params_simple": {"a":"b","c":"d","e":"f"},
+            "snow_params_simple": {1:[],2:[],3:[]},
+            "rapid_runoff_params": "x",
+            "rapid_runoff_params": 5,
+            "rapid_runoff_params": {"a":"b","c":"d","e":"f"},
+            "rapid_runoff_params": {1:[],2:[],3:[]},
+            "rapid_runoff_params": [{"a":"b","c":"d","e":"f"}]
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -272,8 +277,8 @@ def make_valid_params():
         "max_canopy_storage": {1:1.0,2: 1.0},
         "snow_params_simple": {1:[100, 1, -2], 2:[100, 1, -2], 3:[100, 1, -2]},
         "snow_params_complex": {1:[7.55, 0.05, 4.79, 20.0, 100.0, 0.25, 0.95, 1.0, 0.0, 450.0],2:[7.55, 0.05, 4.79, 20.0, 100.0, 0.25, 0.95, 1.0, 0.0, 450.0],3:[7.55, 0.05, 4.79, 20.0, 100.0, 0.25, 0.95, 1.0, 0.0, 450.0]},
+        "rapid_runoff_params": [{'class_smd':[5],'class_ri':[5],'values':[[0.16]]},{'class_smd':[5],'class_ri':[5],'values':[[0.16]]}],
 
-        "rapid_runoff_params": "rapid_runoff_params.yml",
         "swrecharge_proportion": "swrecharge_proportion.yml",
         "swrecharge_limit": "swrecharge_limit.yml",
         "macropore_proportion": "macropore_proportion.yml",

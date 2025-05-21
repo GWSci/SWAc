@@ -263,6 +263,8 @@ class MockFileResource:
             "reporting_zone_names": {1:'name'},
             "rainfall_zone_mapping": {1: [1, 1.0], 2: [1, 1.0]},
             "rainfall_zone_names": {1: 'name'},
+            "rapid_runoff_zone_mapping": {1: 1, 2: 1},
+            "rapid_runoff_zone_names": {1:'name'},
             "pe_zone_mapping": {1: [1, 1.0], 2: [1, 1.0]},
             "pe_zone_names": {1: 'name'},
             "soil_zone_names": {1: 'name'},
