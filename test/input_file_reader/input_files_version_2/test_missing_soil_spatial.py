@@ -1,8 +1,20 @@
 import unittest
 import swacmod.input_files.input_files_version_2.input_data as input_data_v2
 from test.input_file_reader.input_files_version_2.mock_file_resource import MockFileResource
+import swacmod.input_files.input_files_version_2.finalization as f
 
 class Test_Input_File_With_Missing_Soil_Spatial(unittest.TestCase):
+    def test_is_missing_and_is_finalised_correctly(self):
+        params = {'fao_process': 'disabled',
+                  'soil_zone_names': {1: 'zone1', 2: 'zone2'}, 
+                  'soil_spatial': None,
+                  'num_nodes': 2}
+        data = {'params': params}
+        f.fin_soil_spatial(data, 'soil_spatial')
+        expected = {1: [0.5, 0.5], 2: [0.5, 0.5]}
+        actual = data['params']['soil_spatial']
+        self.assertEqual(expected, actual)
+
     def test_is_missing_and_is_finalised_successfully(self):
         input_filename = 'potato.yml'
         input_dir = ''
