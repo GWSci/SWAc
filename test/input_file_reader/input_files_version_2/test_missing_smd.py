@@ -7,7 +7,7 @@ from test.dummy_environment import Dummy_Environment
 
 class Test_Inmput_File_With_Missing_SMD(unittest.TestCase):
     def test_smd_is_missing_and_is_finalised_successfully_as_0(self):
-        input_filename = 'aaa.yml'
+        input_filename = 'potato.yml'
         input_dir = ''
         input_file = make_input_file()
         del input_file['smd']
@@ -21,24 +21,21 @@ class Test_Inmput_File_With_Missing_SMD(unittest.TestCase):
         actual = data['params']['smd']['starting_SMD']
         self.assertEqual(expected,actual)
 
+    def test_smd_is_missing_and_model_runs(self):
+        filename = 'potato.yml'
+        input_file = make_input_file()
+        del input_file['smd']
+        input_file_contents = ""
+        for k, v in input_file.items():
+            input_file_contents += f"{k}: {v}\n"
+        mock_file_open = MockFileResource.make_mock_file_opener({filename: input_file_contents})
 
-
-    # def test_x(self):
-    #     filename = 'aaa.yml'
-    #     input_dir = ''
-    #     input_file = make_input_file()
-    #     input_file_contents = ""
-    #     for k, v in input_file.items():
-    #         input_file_contents += f"{k}: {v}\n"
-    #     mock_file_open = MockFileResource.make_mock_file_opener({filename: input_file_contents})
-
-    #     default_input_file = u.CONSTANTS["INPUT_FILE"]
-    #     try:
-    #         u.CONSTANTS["INPUT_FILE"] = filename
-    #         u.CONSTANTS["INPUT_DIR"] = input_dir
-    #         run(test=False, skip=True, env=Dummy_Environment(), file_opener=mock_file_open)
-    #     finally:
-    #          u.CONSTANTS["INPUT_FILE"] = default_input_file
+        default_input_file = u.CONSTANTS["INPUT_FILE"]
+        try:
+            u.CONSTANTS["INPUT_FILE"] = filename
+            run(test=False, skip=True, env=Dummy_Environment(), file_opener=mock_file_open)
+        finally:
+             u.CONSTANTS["INPUT_FILE"] = default_input_file
 
 def make_input_file():
         return {
@@ -76,10 +73,8 @@ def make_input_file():
             "taw": {1: [231], 2: [231], 3: [231], 4: [231], 5: [231], 6: [231], 7: [231], 8: [231], 9: [231], 10: [231], 11: [231], 12: [231]},
             "raw": {1: [127.05], 2: [127.05], 3: [127.05], 4: [127.05], 5: [127.05], 6: [127.05], 7: [127.05], 8: [127.05], 9: [127.05], 10: [127.05], 11: [127.05], 12: [127.05]},
             "kc": {1: [0.4], 2: [0.4], 3: [0.4], 4: [0.4], 5: [0.4], 6: [0.4], 7: [0.4], 8: [0.4], 9: [0.4], 10: [0.4], 11: [0.4], 12: [0.4]},
-            
             "smd": {'starting_SMD': [100]},
             "soil_spatial": {1: [1], 2: [1]},
-
             "lu_spatial": {1: [1], 2: [1]},
             "subroot_leakage_process": "disabled",
             "interflow_process": "disabled",
