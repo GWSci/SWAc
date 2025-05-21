@@ -2098,6 +2098,7 @@ FUNC_PARAMS = [
     val_solute_calibration_sigma,
     val_solute_calibration_alpha,
     val_sw_ponding_process,
+    val_sw_init_ponding,
     # val_sw_downstream,
     # val_sw_activation,
     # val_sw_bed_infiltration,

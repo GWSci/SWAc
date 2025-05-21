@@ -152,7 +152,7 @@ class Test_Validation_New(unittest.TestCase):
             "solute_calibration_a": "x",
             "solute_calibration_sigma": "x",
             "solute_calibration_alpha": "x",
-            # "sw_init_ponding": "x", # TODO validation not called
+            "sw_init_ponding": "x",
             # "sw_max_ponding": "x", # TODO validation not called
             "output_sfr": "x",
             # "attenuate_sfr_flows": "x", # TODO no validation
