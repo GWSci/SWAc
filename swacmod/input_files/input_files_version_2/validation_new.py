@@ -2057,7 +2057,7 @@ FUNC_PARAMS = [
     val_soil_zone_names,
     val_landuse_zone_names,
     val_canopy_process,
-    # val_free_throughfall,
+    val_free_throughfall,
     # val_max_canopy_storage,
     val_snow_process_simple,
     # val_snow_params_simple,
