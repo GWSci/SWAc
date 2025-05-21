@@ -1615,6 +1615,10 @@ def val_recharge_attenuation_process(data, name):
     c.validate_type(data, name)
     c.validate_enum(data, name)
 
+def val_historical_solute_process(data, name):
+    c.validate_type(data, name)
+    c.validate_enum(data, name)
+
 def val_recharge_attenuation_params(data, name):
     """Validate recharge_attenuation_params.
 
@@ -2073,6 +2077,7 @@ FUNC_PARAMS = [
     val_interflow_decay_use_timeseries,
     val_recharge_attenuation_process,
     # val_recharge_attenuation_params,
+    val_historical_solute_process,
     val_sw_ponding_process,
     # val_sw_downstream,
     # val_sw_activation,

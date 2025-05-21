@@ -105,8 +105,8 @@ class Test_Validation_New(unittest.TestCase):
             "interflow_process": 5,
             "recharge_attenuation_process": "x",
             "recharge_attenuation_process": 5,
-            # "historical_solute_process": "x", # TODO: Needs a validation
-            # "historical_solute_process": 5, # TODO: Needs a validation
+            "historical_solute_process": "x",
+            "historical_solute_process": 5,
             # "solute_process": "x", # TODO: Needs a validation
             # "solute_process": 5, # TODO: Needs a validation
             "sw_process": "x",
