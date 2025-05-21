@@ -272,7 +272,9 @@ class Test_Validation_New(unittest.TestCase):
             "recharge_attenuation_params": {"a":"b","c":"d","e":"f"},
             "recharge_attenuation_params": {1:[],2:[],3:[]},
             "solute_calibration_mu": 5,
-            "solute_calibration_mu": "x"
+            "solute_calibration_mu": "x",
+            "solute_calibration_effective_porosity": 5,
+            "solute_calibration_effective_porosity": "x"
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -396,8 +398,8 @@ def make_valid_params():
         "interflow_decay_ts": "interflow_decay_ts.yml", #TODO timeseries
         "recharge_attenuation_params": {1:[1.0,0.05,2.0],2:[1.0,0.05,2.0],3:[1.0,0.05,2.0]},
         "solute_calibration_mu": {1:1.58,2:1.58,3:1.58},
+        "solute_calibration_effective_porosity": {1:0.15,2:0.15,3:0.15},
 
-        "solute_calibration_effective_porosity": "effective_porosity.csv",
         "solute_depth_to_water": "Average_DTW.csv",
         "solute_loading": "NO3_loading.csv",
         "sw_params": "sw_params.yml",

@@ -2016,6 +2016,9 @@ def val_attenuate_sfr_flows(data, name):
 def val_solute_calibration_mu(data, name):
     c.validate_type(data, name)
 
+def val_solute_calibration_effective_porosity(data, name):
+    c.validate_type(data, name)
+
 FUNC_PARAMS = [
     val_run_name,
     val_num_cores,
@@ -2104,6 +2107,7 @@ FUNC_PARAMS = [
     val_solute_calibration_sigma,
     val_solute_calibration_alpha,
     val_solute_calibration_mu,
+    val_solute_calibration_effective_porosity,
     val_sw_ponding_process,
     val_sw_init_ponding,
     val_sw_max_ponding,
