@@ -403,20 +403,20 @@ def make_valid_params():
         "solute_calibration_effective_porosity": {1:0.15,2:0.15,3:0.15},
         "solute_depth_to_water": {1:10.0,2:10.0,3:10.0},
 
-        "solute_loading": "NO3_loading.csv",
-        "sw_params": "sw_params.yml",
-        "sw_downstream": "sw_downstream.yml",
-        "sw_activation": "sw_activation.yml",
-        "sw_bed_infiltration": "sw_bed_infiltration.yml",
-        "sw_direct_recharge": "sw_direct_recharge.yml",
-        "sw_pe_to_open_water": "sw_pe_to_open_water.yml",
-        "sw_ponding_area": "sw_ponding_area.yml",
-        "routing_topology": "routing_parameters.csv",
-        "sfr_obs": "gauges_sfr.obs",
+        "solute_loading": "NO3_loading.csv", #TODO
+        "sw_params": "sw_params.yml", #TODO
+        "sw_downstream": "sw_downstream.yml", #TODO
+        "sw_activation": "sw_activation.yml", #TODO
+        "sw_bed_infiltration": "sw_bed_infiltration.yml", #TODO
+        "sw_direct_recharge": "sw_direct_recharge.yml", #TODO
+        "sw_pe_to_open_water": "sw_pe_to_open_water.yml", #TODO
+        "sw_ponding_area": "sw_ponding_area.yml", #TODO
+        "routing_topology": "routing_parameters.csv", #TODO
+        "sfr_obs": "gauges_sfr.obs", #TODO
         "swdis_ts": "swdis_ts.csv", #TODO timeseries
-        "swdis_locs": "swdis_locs.yml",
-        "swabs_ts": "swabs_ts.csv",
-        "swabs_locs": "swabs_locs.csv",
+        "swdis_locs": "swdis_locs.yml", #TODO
+        "swabs_ts": "swabs_ts.csv", #TODO
+        "swabs_locs": "swabs_locs.csv", #TODO
         "rainfall_ts": "rainfall_ts.yml", #TODO timeseries
         "pe_ts": "pe_ts.yml", #TODO timeseries
         "temperature_ts": "temperature_ts.yml", #TODO timeseries
@@ -424,5 +424,5 @@ def make_valid_params():
         "tmin_c_ts": "tmin_c_ts.yml", #TODO timeseries
         "windsp_ts": "windsp_ts.yml", #TODO timeseries
         "subroot_leakage_ts": "subroot_leakage_ts.yml", #TODO timeseries
-        "evt_parameters": "evt_params.csv",
+        "evt_parameters": "evt_params.csv", #TODO
     }
