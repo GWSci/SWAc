@@ -366,7 +366,10 @@ class Test_Validation_New(unittest.TestCase):
             "tmin_c_ts": "x",
             "tmin_c_ts": [],
             "tmin_c_ts": {"a":"b","c":"d","e":"f"},
-            # "windsp_ts":  #TODO timeseries
+            "windsp_ts": 5,
+            "windsp_ts": "x",
+            "windsp_ts": [],
+            "windsp_ts": {"a":"b","c":"d","e":"f"},
             # "subroot_leakage_ts":  #TODO timeseries
             "evt_parameters": 5,
             "evt_parameters": "x",
@@ -524,7 +527,7 @@ def make_valid_params():
         "temperature_ts": [[0.1,0.1],[0.1,0.1],[0.1,0.1]],
         "tmax_c_ts": [[1.0,1.0],[1.0,1.0],[1.0,1.0]],
         "tmin_c_ts": [[-1.0,-1.0],[-1.0,-1.0],[-1.0,-1.0]],
-        "windsp_ts": "windsp_ts.yml", #TODO timeseries
+        "windsp_ts": [[1.0,1.0],[1.0,1.0],[1.0,1.0]],
         "subroot_leakage_ts": "subroot_leakage_ts.yml", #TODO timeseries
         "evt_parameters": {1:[1, 10.0, 0.1],2:[2, 10.0, 0.1],3:[3, 10.0, 0.1]},
         "ievtcb": 50,
