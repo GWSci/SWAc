@@ -1572,17 +1572,21 @@ def val_infiltration_limit_ts(data, name):
     if not data["params"]['infiltration_limit_use_timeseries']:
         return
 
-    per = data["series"][name]
-    lzn = data["params"]["interflow_zone_names"]
-    c.check_type(
-        param=per,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(data["series"]["date"]), len(lzn)],
-        keys=["infiltration_limit_ts"]
-    )
-    c.check_values_limits(values=per[0], name=name, low_l=0.0,
-                          include_low=True)
+    tmp = data["params"][name]
+    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
+
+    # TODO: Validation needs to be done post-finalization
+    # per = data["series"][name]
+    # lzn = data["params"]["interflow_zone_names"]
+    # c.check_type(
+    #     param=per,
+    #     name=name,
+    #     t_types=data["specs"][name]["type"],
+    #     len_list=[len(data["series"]["date"]), len(lzn)],
+    #     keys=["infiltration_limit_ts"]
+    # )
+    # c.check_values_limits(values=per[0], name=name, low_l=0.0,
+    #                       include_low=True)
 
 def val_infiltration_limit_use_timeseries(data, name):
     c.validate_type(data, name)
@@ -2165,7 +2169,7 @@ FUNC_SERIES = [
     # val_swdis_ts,
     # val_swabs_ts,
     val_percolation_rejection_ts,
-    # val_infiltration_limit_ts,
+    val_infiltration_limit_ts,
     # val_interflow_decay_ts,
 ]
 

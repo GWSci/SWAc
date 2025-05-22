@@ -270,7 +270,9 @@ class Test_Validation_New(unittest.TestCase):
             "infiltration_limit": "x",
             "interflow_decay": 5,
             "interflow_decay": "x",
-            # "infiltration_limit_ts": #TODO timeseries
+            "infiltration_limit_ts": 5,
+            "infiltration_limit_ts": "x",
+            "infiltration_limit_ts": {"a":"b","c":"d","e":"f"},
             # "interflow_decay_ts": #TODO timeseries
             "recharge_attenuation_params": 5,
             "recharge_attenuation_params": "x",
@@ -464,15 +466,13 @@ def make_valid_params():
         "taw": {1:[231,231],2:[231,231],3:[231,231],4:[231,231],5:[231,231],6:[231,231],7:[231,231],8:[231,231],9:[231,231],10:[231,231],11:[231,231],12:[231,231]},
         "raw": {1:[127.05,127.05],2:[127.05,127.05],3:[127.05,127.05],4:[127.05,127.05],5:[127.05,127.05],6:[127.05,127.05],7:[127.05,127.05],8:[127.05,127.05],9:[127.05,127.05],10:[127.05,127.05],11:[127.05,127.05],12:[127.05,127.05]},
         "percolation_rejection": {'percolation_rejection': [10.0, 10.0]},
-
         "percolation_rejection_ts": [[10.0,10.0],[10.0,10.0],[10.0,10.0]],
-        
         "subroot_leakage_fraction": {1:0.5,2:0.5,3:0.5},
         "init_interflow_store": {1:10.0,2:10.0},
         "interflow_store_bypass": {1:0.05,2:0.05},
         "infiltration_limit": {1:0.7,2:0.7},
         "interflow_decay": {1:0.05,2:0.05},
-        "infiltration_limit_ts": "infiltration_limit_ts.yml", #TODO timeseries
+        "infiltration_limit_ts": [[0.7,0.7],[0.7,0.7],[0.7,0.7]],
         "interflow_decay_ts": "interflow_decay_ts.yml", #TODO timeseries
         "recharge_attenuation_params": {1:[1.0,0.05,2.0],2:[1.0,0.05,2.0],3:[1.0,0.05,2.0]},
         "solute_calibration_mu": {1:1.58,2:1.58,3:1.58},
