@@ -2139,7 +2139,7 @@ FUNC_PARAMS = [
     # val_swdis_f,
     # val_swabs_f,
     val_output_evt,
-    # val_evt_parameters,
+    val_evt_parameters,
     # val_ievtcb,
     # val_nevtopt,
     val_gwmodel_type,

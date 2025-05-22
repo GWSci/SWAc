@@ -326,6 +326,18 @@ class Test_Validation_New(unittest.TestCase):
             # "swabs_ts":  #TODO timeseries
             "swabs_locs": 5,
             "swabs_locs": "x",
+            # "rainfall_ts":  #TODO timeseries
+            # "pe_ts":  #TODO timeseries
+            # "temperature_ts":  #TODO timeseries
+            # "tmax_c_ts":  #TODO timeseries
+            # "tmin_c_ts":  #TODO timeseries
+            # "windsp_ts":  #TODO timeseries
+            # "subroot_leakage_ts":  #TODO timeseries
+            "evt_parameters": 5,
+            "evt_parameters": "x",
+            "evt_parameters": [],
+            "evt_parameters": {"a":"b","c":"d","e":"f"},
+            "evt_parameters": {1:[],2:[],3:[]},
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -474,5 +486,5 @@ def make_valid_params():
         "tmin_c_ts": "tmin_c_ts.yml", #TODO timeseries
         "windsp_ts": "windsp_ts.yml", #TODO timeseries
         "subroot_leakage_ts": "subroot_leakage_ts.yml", #TODO timeseries
-        "evt_parameters": "evt_params.csv", #TODO
+        "evt_parameters": {1:[1, 10.0, 0.1],2:[2, 10.0, 0.1],3:[3, 10.0, 0.1]}
     }
