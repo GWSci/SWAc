@@ -369,7 +369,7 @@ def make_valid_params():
         "node_areas": {1: 11, 2: 13, 3: 17},
         "node_xy": "node_xy.csv",
         "start_date": datetime.datetime(1980, 1, 1),
-        "time_periods": [[1, 2], [3, 4], [5, 6]],
+        "time_periods": [[1, 2], [2, 3], [3, 4]],
         "num_cores": 1,
         "output_recharge": True,
         "irchcb": 50,
