@@ -211,7 +211,9 @@ class Test_Validation_New(unittest.TestCase):
             "macropore_recharge": "x",
             "macropore_recharge": [],
             "macropore_recharge": {"a":"b","c":"d","e":"f"},
-            "macropore_recharge": {1:[],2:[],3:[]},            
+            "macropore_recharge": {1:[],2:[],3:[]},
+            "macropore_activation_option": "x",
+            "macropore_activation_option": 5,
             # "soil_static_params": 5, #TODO validation only runs if fao_process=enabled
             # "soil_static_params": "x", #TODO validation only runs if fao_process=enabled
             # "soil_static_params": [], #TODO validation only runs if fao_process=enabled
@@ -440,6 +442,7 @@ def make_valid_params():
         "macropore_limit": {1:[0.05,0.05],2:[0.05,0.05],3:[0.05,0.05],4:[0.05,0.05],5:[0.05,0.05],6:[0.05,0.05],7:[0.05,0.05],8:[0.05,0.05],9:[0.05,0.05],10:[0.05,0.05],11:[0.05,0.05],12:[0.05,0.05]},
         "macropore_activation": {1:[0.1,0.1],2:[0.1,0.1],3:[0.1,0.1],4:[0.1,0.1],5:[0.1,0.1],6:[0.1,0.1],7:[0.1,0.1],8:[0.1,0.1],9:[0.1,0.1],10:[0.1,0.1],11:[0.1,0.1],12:[0.1,0.1]},
         "macropore_recharge": {1:[0.4,0.4],2:[0.4,0.4],3:[0.4,0.4],4:[0.4,0.4],5:[0.4,0.4],6:[0.4,0.4],7:[0.4,0.4],8:[0.4,0.4],9:[0.4,0.4],10:[0.4,0.4],11:[0.4,0.4],12:[0.4,0.4]},
+        "macropore_activation_option": "SMD",
         "soil_static_params": {'FC':[0.36,0.36],'WP':[0.15,0.15],'p':[0.55,0.55]},
         "smd": {'starting_SMD':[100,100]},
         "soil_spatial": {1:[0.5, 0.5],2:[0.5, 0.5],3:[0.5, 0.5]},
