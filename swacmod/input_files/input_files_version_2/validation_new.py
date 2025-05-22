@@ -257,27 +257,30 @@ def val_swdis_ts(data, name):
     2) list length has to be equal to the number of days/weeks/months
     x number of zones
     """
+    tmp = data["params"][name]
+    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
 
-    from swacmod.utils import monthdelta, weekdelta
+    # TODO: Validation needs to be done post-finalization
+    # from swacmod.utils import monthdelta, weekdelta
 
-    swdists = data["series"][name]
+    # swdists = data["series"][name]
 
-    swdisn = data["params"]["swdis_locs"]
-    dates = data["series"]["date"]
+    # swdisn = data["params"]["swdis_locs"]
+    # dates = data["series"]["date"]
 
-    freq_flag = data["params"]["swdis_f"]
-    ndays = len(dates)
-    nweeks = weekdelta(dates[0], dates[-1]) + 1
-    nmonths = monthdelta(dates[0], dates[-1]) + 1
+    # freq_flag = data["params"]["swdis_f"]
+    # ndays = len(dates)
+    # nweeks = weekdelta(dates[0], dates[-1]) + 1
+    # nmonths = monthdelta(dates[0], dates[-1]) + 1
 
-    length = [ndays, nweeks, nmonths]
-    if swdisn != {0: 0}:
-        c.check_type(
-            param=swdists,
-            name=name,
-            t_types=data["specs"][name]["type"],
-            len_list=[length[freq_flag], len(swdisn)],
-        )
+    # length = [ndays, nweeks, nmonths]
+    # if swdisn != {0: 0}:
+    #     c.check_type(
+    #         param=swdists,
+    #         name=name,
+    #         t_types=data["specs"][name]["type"],
+    #         len_list=[length[freq_flag], len(swdisn)],
+    #     )
 
 def val_swabs_ts(data, name):
     """Validate swabs_ts.
@@ -2170,7 +2173,7 @@ FUNC_SERIES = [
     # val_tmin_c_ts,
     # val_windsp_ts,
     # val_subroot_leakage_ts,
-    # val_swdis_ts,
+    val_swdis_ts,
     # val_swabs_ts,
     val_percolation_rejection_ts,
     val_infiltration_limit_ts,

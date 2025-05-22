@@ -330,7 +330,10 @@ class Test_Validation_New(unittest.TestCase):
             "routing_topology": {1:[],2:[],3:[]},
             "sfr_obs": 5,
             "sfr_obs": [],
-            # "swdis_ts":  #TODO timeseries
+            "swdis_ts": 5,
+            "swdis_ts": "x",
+            "swdis_ts": [],
+            "swdis_ts": {"a":"b","c":"d","e":"f"},
             "swdis_locs": 5,
             "swdis_locs": "x",
             "swdis_f": 5,
@@ -492,7 +495,7 @@ def make_valid_params():
         "sw_ponding_area": {1:0.5,2:0.5,3:0.5},
         "routing_topology": {1:[2,0,6,25.679,74.8,23.3400002,0.4,0.1,0.5,2],2:[3,0,7,32.0371,82.47,23.8999996,0.4,1.1,0.5,2],3:[4,0,8,23.3751,164.64,22.2700005,0.4,2.1,0.5,2]},
         "sfr_obs": "gauges_sfr.obs",
-        "swdis_ts": "swdis_ts.csv", #TODO timeseries
+        "swdis_ts": [[100]],
         "swdis_locs": {1:1},
         "swdis_f": 0,
         "swabs_ts": "swabs_ts.csv", #TODO timeseries
