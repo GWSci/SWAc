@@ -2123,7 +2123,7 @@ FUNC_PARAMS = [
     val_sw_activation,
     val_sw_bed_infiltration,
     val_sw_direct_recharge,
-    # val_sw_pe_to_open_water,
+    val_sw_pe_to_open_water,
     val_sw_process,
     val_sw_params,
     # val_swdis_locs,
