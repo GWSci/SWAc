@@ -49,6 +49,8 @@ class Test_Validation_New(unittest.TestCase):
             "nodes_per_line": -5,
             "output_fac": "x",
             "output_fac": -5,
+            "spatial_output_date": "x", #TODO validation doesn't work
+            "spatial_output_date": 5, #TODO validation doesn't work
             "reporting_zone_names": "x",
             "reporting_zone_names": {1:2, 3:4},
             "rainfall_zone_names": "x",
