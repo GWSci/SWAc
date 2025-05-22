@@ -273,7 +273,9 @@ class Test_Validation_New(unittest.TestCase):
             "infiltration_limit_ts": 5,
             "infiltration_limit_ts": "x",
             "infiltration_limit_ts": {"a":"b","c":"d","e":"f"},
-            # "interflow_decay_ts": #TODO timeseries
+            "interflow_decay_ts": 5,
+            "interflow_decay_ts": "x",
+            "interflow_decay_ts": {"a":"b","c":"d","e":"f"},
             "recharge_attenuation_params": 5,
             "recharge_attenuation_params": "x",
             "recharge_attenuation_params": [],
@@ -473,7 +475,7 @@ def make_valid_params():
         "infiltration_limit": {1:0.7,2:0.7},
         "interflow_decay": {1:0.05,2:0.05},
         "infiltration_limit_ts": [[0.7,0.7],[0.7,0.7],[0.7,0.7]],
-        "interflow_decay_ts": "interflow_decay_ts.yml", #TODO timeseries
+        "interflow_decay_ts": [[0.07,0.07],[0.07,0.07],[0.07,0.07]],
         "recharge_attenuation_params": {1:[1.0,0.05,2.0],2:[1.0,0.05,2.0],3:[1.0,0.05,2.0]},
         "solute_calibration_mu": {1:1.58,2:1.58,3:1.58},
         "solute_calibration_effective_porosity": {1:0.15,2:0.15,3:0.15},
