@@ -281,6 +281,11 @@ class Test_Validation_New(unittest.TestCase):
             "solute_loading": "x",
             "solute_loading": [],
             "solute_loading": {"a":"b","c":"d","e":"f"},
+            "sw_params": 5,
+            "sw_params": "x",
+            "sw_params": [],
+            "sw_params": {"a":"b","c":"d","e":"f"},
+            "sw_params": {1:[],2:[],3:[]},
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -409,8 +414,8 @@ def make_valid_params():
         "solute_loading": {1:[156132,200000,118000,361.4217178,11.75727306,146.4513318,351.6890755,18.07108589,180.7108589,343.350632,90.35542945],
                            2:[156132,200000,119000,361.4217178,11.75727306,146.4513318,351.6890755,18.07108589,180.7108589,343.350632,90.35542945],
                            3:[156132,200000,120000,361.4217178,11.75727306,146.4513318,351.6890755,18.07108589,180.7108589,343.350632,90.35542945]},
+        "sw_params": {1:[1.0,0.7],2:[1.0,0.7],3:[1.0,0.7]},
 
-        "sw_params": "sw_params.yml", #TODO
         "sw_downstream": "sw_downstream.yml", #TODO
         "sw_activation": "sw_activation.yml", #TODO
         "sw_bed_infiltration": "sw_bed_infiltration.yml", #TODO

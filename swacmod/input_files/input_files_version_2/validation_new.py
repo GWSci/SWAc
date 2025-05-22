@@ -2125,7 +2125,7 @@ FUNC_PARAMS = [
     # val_sw_direct_recharge,
     # val_sw_pe_to_open_water,
     val_sw_process,
-    # val_sw_params,
+    val_sw_params,
     # val_swdis_locs,
     # val_swabs_locs,
     val_output_sfr,
