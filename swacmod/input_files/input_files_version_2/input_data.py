@@ -39,8 +39,8 @@ def load_and_validate(input_file, input_dir, file_opener=DefaultFileResource._de
     if validation_result.has_errors():
         return validation_result
 
-    data = convert_params_and_specs_into_data(specs, params)
-    f.finalize_required_params(data)
+    # data = convert_params_and_specs_into_data(specs, params)
+    # f.finalize_required_params(data)
 
     load_alt_formats(input_dir, file_opener, specs, params)
 

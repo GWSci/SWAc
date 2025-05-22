@@ -1502,11 +1502,3 @@ def finalize_series(data):
         logging.debug('\t\t"%s" finalized', series)
 
     logging.info("\tDone.")
-
-def finalize_required_params(data):
-    for function in FUNC_PARAMS:
-        param = function.__name__.replace("fin_", "")
-        if param in data['specs']:
-            if data['specs'][param]['required']:
-                function(data, param)
-        
