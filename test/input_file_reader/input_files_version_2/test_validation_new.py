@@ -219,9 +219,9 @@ class Test_Validation_New(unittest.TestCase):
             "soil_static_params": [], 
             "soil_static_params": {"a":"b","c":"d","e":"f"}, 
             "soil_static_params": {1:[],2:[],3:[]}, 
-            # "smd": 5, #TODO validation only runs if fao_process=enabled
-            # "smd": "x", #TODO validation only runs if fao_process=enabled
-            # "smd": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            "smd": 5,
+            "smd": "x",
+            "smd": {"a":"b","c":"d","e":"f"},
             # "soil_spatial": 5, #TODO validation only runs if fao_process=enabled
             # "soil_spatial": "x", #TODO validation only runs if fao_process=enabled
             # "soil_spatial": [], #TODO validation only runs if fao_process=enabled
