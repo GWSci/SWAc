@@ -222,11 +222,11 @@ class Test_Validation_New(unittest.TestCase):
             "smd": 5,
             "smd": "x",
             "smd": {"a":"b","c":"d","e":"f"},
-            # "soil_spatial": 5, #TODO validation only runs if fao_process=enabled
-            # "soil_spatial": "x", #TODO validation only runs if fao_process=enabled
-            # "soil_spatial": [], #TODO validation only runs if fao_process=enabled
-            # "soil_spatial": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
-            # "soil_spatial": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            "soil_spatial": 5, 
+            "soil_spatial": "x", 
+            "soil_spatial": [], 
+            "soil_spatial": {"a":"b","c":"d","e":"f"}, 
+            "soil_spatial": {1:[],2:[],3:[]}, 
             # "lu_spatial": 5, #TODO validation only runs if fao_process=enabled
             # "lu_spatial": "x", #TODO validation only runs if fao_process=enabled
             # "lu_spatial": [], #TODO validation only runs if fao_process=enabled
