@@ -242,11 +242,11 @@ class Test_Validation_New(unittest.TestCase):
             "kc": [], 
             "kc": {"a":"b","c":"d","e":"f"}, 
             "kc": {1:[],2:[],3:[]}, 
-            # "taw": 5, #TODO validation only runs if fao_process=enabled
-            # "taw": "x", #TODO validation only runs if fao_process=enabled
-            # "taw": [], #TODO validation only runs if fao_process=enabled
-            # "taw": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
-            # "taw": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            "taw": 5, #TODO validation only runs if fao_process=enabled
+            "taw": "x", #TODO validation only runs if fao_process=enabled
+            "taw": [], #TODO validation only runs if fao_process=enabled
+            "taw": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            "taw": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
             # "raw": 5, #TODO validation only runs if fao_process=enabled
             # "raw": "x", #TODO validation only runs if fao_process=enabled
             # "raw": [], #TODO validation only runs if fao_process=enabled
