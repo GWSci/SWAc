@@ -205,15 +205,19 @@ def val_tmax_c_ts(data, name):
     1) type has to be a dictionary of lists of floats
     2) list length has to be equal to the number of days x number of zones
     """
-    tts = data["series"][name]
-    tzn = set(data["params"]["tmax_c_zone_mapping"].values())
+    tmp = data["params"][name]
+    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
 
-    c.check_type(
-        param=tts,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(data["series"]["date"]), len(tzn)],
-    )
+    # TODO: Validation needs to be done post-finalization
+    # tts = data["series"][name]
+    # tzn = set(data["params"]["tmax_c_zone_mapping"].values())
+
+    # c.check_type(
+    #     param=tts,
+    #     name=name,
+    #     t_types=data["specs"][name]["type"],
+    #     len_list=[len(data["series"]["date"]), len(tzn)],
+    # )
 
 def val_tmin_c_ts(data, name):
     """Validate tmin_c_ts.
@@ -2185,7 +2189,7 @@ FUNC_SERIES = [
     val_rainfall_ts,
     val_pe_ts,
     val_temperature_ts,
-    # val_tmax_c_ts,
+    val_tmax_c_ts,
     # val_tmin_c_ts,
     # val_windsp_ts,
     # val_subroot_leakage_ts,
