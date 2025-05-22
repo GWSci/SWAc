@@ -276,7 +276,11 @@ class Test_Validation_New(unittest.TestCase):
             "solute_calibration_effective_porosity": 5,
             "solute_calibration_effective_porosity": "x",
             "solute_depth_to_water": 5,
-            "solute_depth_to_water": "x"
+            "solute_depth_to_water": "x",
+            "solute_loading": 5,
+            "solute_loading": "x",
+            "solute_loading": [],
+            "solute_loading": {"a":"b","c":"d","e":"f"},
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -402,8 +406,10 @@ def make_valid_params():
         "solute_calibration_mu": {1:1.58,2:1.58,3:1.58},
         "solute_calibration_effective_porosity": {1:0.15,2:0.15,3:0.15},
         "solute_depth_to_water": {1:10.0,2:10.0,3:10.0},
+        "solute_loading": {1:[156132,200000,118000,361.4217178,11.75727306,146.4513318,351.6890755,18.07108589,180.7108589,343.350632,90.35542945],
+                           2:[156132,200000,119000,361.4217178,11.75727306,146.4513318,351.6890755,18.07108589,180.7108589,343.350632,90.35542945],
+                           3:[156132,200000,120000,361.4217178,11.75727306,146.4513318,351.6890755,18.07108589,180.7108589,343.350632,90.35542945]},
 
-        "solute_loading": "NO3_loading.csv", #TODO
         "sw_params": "sw_params.yml", #TODO
         "sw_downstream": "sw_downstream.yml", #TODO
         "sw_activation": "sw_activation.yml", #TODO
