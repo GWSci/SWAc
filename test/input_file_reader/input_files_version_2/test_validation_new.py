@@ -295,7 +295,12 @@ class Test_Validation_New(unittest.TestCase):
             "sw_activation": "x",
             "sw_activation": [],
             "sw_activation": {"a":"b","c":"d","e":"f"},
-            "sw_activation": {1:[],2:[],3:[]}
+            "sw_activation": {1:[],2:[],3:[]},
+            "sw_bed_infiltration": 5,
+            "sw_bed_infiltration": "x",
+            "sw_bed_infiltration": [],
+            "sw_bed_infiltration": {"a":"b","c":"d","e":"f"},
+            "sw_bed_infiltration": {1:[],2:[],3:[]}
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -427,8 +432,8 @@ def make_valid_params():
         "sw_params": {1:[1.0,0.7],2:[1.0,0.7],3:[1.0,0.7]},
         "sw_downstream": {1:[0.4,0.4],2:[0.4,0.4],3:[0.4,0.4],4:[0.4,0.4],5:[0.4,0.4],6:[0.4,0.4],7:[0.4,0.4],8:[0.4,0.4],9:[0.4,0.4],10:[0.4,0.4],11:[0.4,0.4],12:[0.4,0.4]},
         "sw_activation": {1:[1.0,1.0],2:[1.0,1.0],3:[1.0,1.0],4:[1.0,1.0],5:[1.0,1.0],6:[1.0,1.0],7:[1.0,1.0],8:[1.0,1.0],9:[1.0,1.0],10:[1.0,1.0],11:[1.0,1.0],12:[1.0,1.0]},
+        "sw_bed_infiltration": {1:[0.4,0.4],2:[0.4,0.4],3:[0.4,0.4],4:[0.4,0.4],5:[0.4,0.4],6:[0.4,0.4],7:[0.4,0.4],8:[0.4,0.4],9:[0.4,0.4],10:[0.4,0.4],11:[0.4,0.4],12:[0.4,0.4]},
 
-        "sw_bed_infiltration": "sw_bed_infiltration.yml", #TODO
         "sw_direct_recharge": "sw_direct_recharge.yml", #TODO
         "sw_pe_to_open_water": "sw_pe_to_open_water.yml", #TODO
         "sw_ponding_area": "sw_ponding_area.yml", #TODO
