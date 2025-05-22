@@ -2130,7 +2130,7 @@ FUNC_PARAMS = [
     # val_swdis_locs,
     # val_swabs_locs,
     val_output_sfr,
-    # val_sfr_obs,
+    val_sfr_obs,
     val_istcb1,
     val_istcb2,
     val_routing_process,

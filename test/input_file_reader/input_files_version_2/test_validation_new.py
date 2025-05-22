@@ -318,6 +318,8 @@ class Test_Validation_New(unittest.TestCase):
             "routing_topology": [],
             "routing_topology": {"a":"b","c":"d","e":"f"},
             "routing_topology": {1:[],2:[],3:[]},
+            "sfr_obs": 5,
+            "sfr_obs": []
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -454,8 +456,8 @@ def make_valid_params():
         "sw_pe_to_open_water": {1:[0.0,1.0],2:[0.0,1.0],3:[0.0,1.0],4:[0.0,1.0],5:[0.0,1.0],6:[0.0,1.0],7:[0.0,1.0],8:[0.0,1.0],9:[0.0,1.0],10:[0.0,1.0],11:[0.0,1.0],12:[0.0,1.0]},
         "sw_ponding_area": {1:0.5,2:0.5,3:0.5},
         "routing_topology": {1:[2,0,6,25.679,74.8,23.3400002,0.4,0.1,0.5,2],2:[3,0,7,32.0371,82.47,23.8999996,0.4,1.1,0.5,2],3:[4,0,8,23.3751,164.64,22.2700005,0.4,2.1,0.5,2]},
-
         "sfr_obs": "gauges_sfr.obs", #TODO
+
         "swdis_ts": "swdis_ts.csv", #TODO timeseries
         "swdis_locs": "swdis_locs.yml", #TODO
         "swabs_ts": "swabs_ts.csv", #TODO
