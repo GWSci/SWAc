@@ -257,7 +257,9 @@ class Test_Validation_New(unittest.TestCase):
             "percolation_rejection": 5,
             "percolation_rejection": "x",
             "percolation_rejection": {"a":"b","c":"d","e":"f"},
-            # "percolation_rejection_ts": #TODO timeseries
+            "percolation_rejection_ts": 5,
+            "percolation_rejection_ts": "x",
+            "percolation_rejection_ts": {"a":"b","c":"d","e":"f"},
             "subroot_leakage_fraction": 5,
             "subroot_leakage_fraction": "x",
             "init_interflow_store": 5,
@@ -463,7 +465,7 @@ def make_valid_params():
         "raw": {1:[127.05,127.05],2:[127.05,127.05],3:[127.05,127.05],4:[127.05,127.05],5:[127.05,127.05],6:[127.05,127.05],7:[127.05,127.05],8:[127.05,127.05],9:[127.05,127.05],10:[127.05,127.05],11:[127.05,127.05],12:[127.05,127.05]},
         "percolation_rejection": {'percolation_rejection': [10.0, 10.0]},
 
-        "percolation_rejection_ts": "percolation_rejection_ts.yml", #TODO timeseries
+        "percolation_rejection_ts": [[10.0,10.0],[10.0,10.0],[10.0,10.0]],
         
         "subroot_leakage_fraction": {1:0.5,2:0.5,3:0.5},
         "init_interflow_store": {1:10.0,2:10.0},
