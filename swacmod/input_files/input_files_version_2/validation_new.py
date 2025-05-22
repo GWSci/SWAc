@@ -2088,7 +2088,7 @@ FUNC_PARAMS = [
     val_soil_static_params,
     val_smd,
     val_soil_spatial,
-    # val_lu_spatial,
+    val_lu_spatial,
     # val_zr,
     # val_kc,
     # val_taw,
