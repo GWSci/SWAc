@@ -286,6 +286,11 @@ class Test_Validation_New(unittest.TestCase):
             "sw_params": [],
             "sw_params": {"a":"b","c":"d","e":"f"},
             "sw_params": {1:[],2:[],3:[]},
+            "sw_downstream": 5,
+            "sw_downstream": "x",
+            "sw_downstream": [],
+            "sw_downstream": {"a":"b","c":"d","e":"f"},
+            "sw_downstream": {1:[],2:[],3:[]}
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -415,8 +420,8 @@ def make_valid_params():
                            2:[156132,200000,119000,361.4217178,11.75727306,146.4513318,351.6890755,18.07108589,180.7108589,343.350632,90.35542945],
                            3:[156132,200000,120000,361.4217178,11.75727306,146.4513318,351.6890755,18.07108589,180.7108589,343.350632,90.35542945]},
         "sw_params": {1:[1.0,0.7],2:[1.0,0.7],3:[1.0,0.7]},
+        "sw_downstream": {1:[0.4,0.4],2:[0.4,0.4],3:[0.4,0.4],4:[0.4,0.4],5:[0.4,0.4],6:[0.4,0.4],7:[0.4,0.4],8:[0.4,0.4],9:[0.4,0.4],10:[0.4,0.4],11:[0.4,0.4],12:[0.4,0.4]},
 
-        "sw_downstream": "sw_downstream.yml", #TODO
         "sw_activation": "sw_activation.yml", #TODO
         "sw_bed_infiltration": "sw_bed_infiltration.yml", #TODO
         "sw_direct_recharge": "sw_direct_recharge.yml", #TODO
