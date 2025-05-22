@@ -340,6 +340,10 @@ class Test_Validation_New(unittest.TestCase):
             "evt_parameters": [],
             "evt_parameters": {"a":"b","c":"d","e":"f"},
             "evt_parameters": {1:[],2:[],3:[]},
+            "ievtcb": "x",
+            "ievtcb": 1.0,
+            "nevtopt": 5.0,
+            "nevtopt": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -489,5 +493,7 @@ def make_valid_params():
         "tmin_c_ts": "tmin_c_ts.yml", #TODO timeseries
         "windsp_ts": "windsp_ts.yml", #TODO timeseries
         "subroot_leakage_ts": "subroot_leakage_ts.yml", #TODO timeseries
-        "evt_parameters": {1:[1, 10.0, 0.1],2:[2, 10.0, 0.1],3:[3, 10.0, 0.1]}
+        "evt_parameters": {1:[1, 10.0, 0.1],2:[2, 10.0, 0.1],3:[3, 10.0, 0.1]},
+        "ievtcb": 50,
+        "nevtopt": 2
     }
