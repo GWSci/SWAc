@@ -2120,7 +2120,7 @@ FUNC_PARAMS = [
     val_sw_init_ponding,
     val_sw_max_ponding,
     val_sw_downstream,
-    # val_sw_activation,
+    val_sw_activation,
     # val_sw_bed_infiltration,
     # val_sw_direct_recharge,
     # val_sw_pe_to_open_water,
