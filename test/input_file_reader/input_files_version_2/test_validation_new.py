@@ -232,11 +232,11 @@ class Test_Validation_New(unittest.TestCase):
             "lu_spatial": [],
             "lu_spatial": {"a":"b","c":"d","e":"f"},
             "lu_spatial": {1:[],2:[],3:[]},
-            # "zr": 5, #TODO validation only runs if fao_process=enabled
-            # "zr": "x", #TODO validation only runs if fao_process=enabled
-            # "zr": [], #TODO validation only runs if fao_process=enabled
-            # "zr": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
-            # "zr": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            "zr": 5,
+            "zr": "x",
+            "zr": [],
+            "zr": {"a":"b","c":"d","e":"f"},
+            "zr": {1:[],2:[],3:[]},
             # "kc": 5, #TODO validation only runs if fao_process=enabled
             # "kc": "x", #TODO validation only runs if fao_process=enabled
             # "kc": [], #TODO validation only runs if fao_process=enabled

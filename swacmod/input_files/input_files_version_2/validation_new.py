@@ -2089,7 +2089,7 @@ FUNC_PARAMS = [
     val_smd,
     val_soil_spatial,
     val_lu_spatial,
-    # val_zr,
+    val_zr,
     # val_kc,
     # val_taw,
     # val_raw,
