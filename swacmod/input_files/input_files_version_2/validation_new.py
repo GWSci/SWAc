@@ -2093,7 +2093,7 @@ FUNC_PARAMS = [
     val_kc,
     val_taw,
     val_raw,
-    # val_percolation_rejection,
+    val_percolation_rejection,
     val_subroot_leakage_process,
     val_subroot_leakage_fraction,
     val_interflow_process,

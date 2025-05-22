@@ -252,9 +252,9 @@ class Test_Validation_New(unittest.TestCase):
             "raw": [],
             "raw": {"a":"b","c":"d","e":"f"},
             "raw": {1:[],2:[],3:[]},
-            # "percolation_rejetion": 5, #TODO validation only runs if fao_process=enabled
-            # "percolation_rejetion": "x", #TODO validation only runs if fao_process=enabled
-            # "percolation_rejetion": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
+            "percolation_rejection": 5,
+            "percolation_rejection": "x",
+            "percolation_rejection": {"a":"b","c":"d","e":"f"},
             # "percolation_rejection_ts": #TODO timeseries
             "subroot_leakage_fraction": 5,
             "subroot_leakage_fraction": "x",
