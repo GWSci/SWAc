@@ -242,16 +242,16 @@ class Test_Validation_New(unittest.TestCase):
             "kc": [], 
             "kc": {"a":"b","c":"d","e":"f"}, 
             "kc": {1:[],2:[],3:[]}, 
-            "taw": 5, #TODO validation only runs if fao_process=enabled
-            "taw": "x", #TODO validation only runs if fao_process=enabled
-            "taw": [], #TODO validation only runs if fao_process=enabled
-            "taw": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
-            "taw": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
-            "raw": 5, #TODO validation only runs if fao_process=enabled
-            "raw": "x", #TODO validation only runs if fao_process=enabled
-            "raw": [], #TODO validation only runs if fao_process=enabled
-            "raw": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
-            "raw": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            "taw": 5,
+            "taw": "x",
+            "taw": [],
+            "taw": {"a":"b","c":"d","e":"f"},
+            "taw": {1:[],2:[],3:[]},
+            "raw": 5,
+            "raw": "x",
+            "raw": [],
+            "raw": {"a":"b","c":"d","e":"f"},
+            "raw": {1:[],2:[],3:[]},
             # "percolation_rejetion": 5, #TODO validation only runs if fao_process=enabled
             # "percolation_rejetion": "x", #TODO validation only runs if fao_process=enabled
             # "percolation_rejetion": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
