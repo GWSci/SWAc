@@ -338,7 +338,10 @@ class Test_Validation_New(unittest.TestCase):
             "swdis_locs": "x",
             "swdis_f": 5,
             "swdis_f": "x",
-            # "swabs_ts":  #TODO timeseries
+            "swabs_ts": 5,
+            "swabs_ts": "x",
+            "swabs_ts": [],
+            "swabs_ts": {"a":"b","c":"d","e":"f"},
             "swabs_locs": 5,
             "swabs_locs": "x",
             "swabs_f": 0,
@@ -498,7 +501,7 @@ def make_valid_params():
         "swdis_ts": [[100]],
         "swdis_locs": {1:1},
         "swdis_f": 0,
-        "swabs_ts": "swabs_ts.csv", #TODO timeseries
+        "swabs_ts": [[100]],
         "swabs_locs": {1:1},
         "swabs_f": 0,
         "rainfall_ts": "rainfall_ts.yml", #TODO timeseries
