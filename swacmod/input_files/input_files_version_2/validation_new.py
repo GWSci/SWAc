@@ -2128,7 +2128,7 @@ FUNC_PARAMS = [
     val_sw_params,
     val_sw_ponding_area,
     val_swdis_locs,
-    # val_swabs_locs,
+    val_swabs_locs,
     val_output_sfr,
     val_sfr_obs,
     val_istcb1,

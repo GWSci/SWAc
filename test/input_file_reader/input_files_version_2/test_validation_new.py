@@ -323,6 +323,9 @@ class Test_Validation_New(unittest.TestCase):
             # "swdis_ts":  #TODO timeseries
             "swdis_locs": 5,
             "swdis_locs": "x",
+            # "swabs_ts":  #TODO timeseries
+            "swabs_locs": 5,
+            "swabs_locs": "x",
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -462,8 +465,8 @@ def make_valid_params():
         "sfr_obs": "gauges_sfr.obs",
         "swdis_ts": "swdis_ts.csv", #TODO timeseries
         "swdis_locs": {1:1},
-        "swabs_ts": "swabs_ts.csv", #TODO
-        "swabs_locs": "swabs_locs.csv", #TODO
+        "swabs_ts": "swabs_ts.csv", #TODO timeseries
+        "swabs_locs": {1:1},
         "rainfall_ts": "rainfall_ts.yml", #TODO timeseries
         "pe_ts": "pe_ts.yml", #TODO timeseries
         "temperature_ts": "temperature_ts.yml", #TODO timeseries
