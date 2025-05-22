@@ -2135,7 +2135,7 @@ FUNC_PARAMS = [
     val_istcb2,
     val_routing_process,
     val_attenuate_sfr_flows,
-    # val_routing_topology,
+    val_routing_topology,
     # val_swdis_f,
     # val_swabs_f,
     val_output_evt,
