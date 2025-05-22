@@ -1846,7 +1846,7 @@ def val_sw_ponding_area(data, name):
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
         c.check_values_limits(
-            values=[num],
+            values=[i for i in num.values()],
             name=name,
             low_l=0.0,
             high_l=1.0,
@@ -2126,6 +2126,7 @@ FUNC_PARAMS = [
     val_sw_pe_to_open_water,
     val_sw_process,
     val_sw_params,
+    val_sw_ponding_area,
     # val_swdis_locs,
     # val_swabs_locs,
     val_output_sfr,

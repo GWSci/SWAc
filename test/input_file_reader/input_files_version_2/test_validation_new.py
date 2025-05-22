@@ -310,7 +310,9 @@ class Test_Validation_New(unittest.TestCase):
             "sw_pe_to_open_water": "x",
             "sw_pe_to_open_water": [],
             "sw_pe_to_open_water": {"a":"b","c":"d","e":"f"},
-            "sw_pe_to_open_water": {1:[],2:[],3:[]}
+            "sw_pe_to_open_water": {1:[],2:[],3:[]},
+            "sw_ponding_area": 5,
+            "sw_ponding_area": "x"
         }
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         for k, v in invalid_pairs.items():
@@ -445,8 +447,8 @@ def make_valid_params():
         "sw_bed_infiltration": {1:[0.4,0.4],2:[0.4,0.4],3:[0.4,0.4],4:[0.4,0.4],5:[0.4,0.4],6:[0.4,0.4],7:[0.4,0.4],8:[0.4,0.4],9:[0.4,0.4],10:[0.4,0.4],11:[0.4,0.4],12:[0.4,0.4]},
         "sw_direct_recharge": {1:[0.4,0.4],2:[0.4,0.4],3:[0.4,0.4],4:[0.4,0.4],5:[0.4,0.4],6:[0.4,0.4],7:[0.4,0.4],8:[0.4,0.4],9:[0.4,0.4],10:[0.4,0.4],11:[0.4,0.4],12:[0.4,0.4]},
         "sw_pe_to_open_water": {1:[0.0,1.0],2:[0.0,1.0],3:[0.0,1.0],4:[0.0,1.0],5:[0.0,1.0],6:[0.0,1.0],7:[0.0,1.0],8:[0.0,1.0],9:[0.0,1.0],10:[0.0,1.0],11:[0.0,1.0],12:[0.0,1.0]},
+        "sw_ponding_area": {1:0.5,2:0.5,3:0.5},
 
-        "sw_ponding_area": "sw_ponding_area.yml", #TODO
         "routing_topology": "routing_parameters.csv", #TODO
         "sfr_obs": "gauges_sfr.obs", #TODO
         "swdis_ts": "swdis_ts.csv", #TODO timeseries
