@@ -214,11 +214,11 @@ class Test_Validation_New(unittest.TestCase):
             "macropore_recharge": {1:[],2:[],3:[]},
             "macropore_activation_option": "x",
             "macropore_activation_option": 5,
-            # "soil_static_params": 5, #TODO validation only runs if fao_process=enabled
-            # "soil_static_params": "x", #TODO validation only runs if fao_process=enabled
-            # "soil_static_params": [], #TODO validation only runs if fao_process=enabled
-            # "soil_static_params": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
-            # "soil_static_params": {1:[],2:[],3:[]}, #TODO validation only runs if fao_process=enabled
+            "soil_static_params": 5,
+            "soil_static_params": "x", 
+            "soil_static_params": [], 
+            "soil_static_params": {"a":"b","c":"d","e":"f"}, 
+            "soil_static_params": {1:[],2:[],3:[]}, 
             # "smd": 5, #TODO validation only runs if fao_process=enabled
             # "smd": "x", #TODO validation only runs if fao_process=enabled
             # "smd": {"a":"b","c":"d","e":"f"}, #TODO validation only runs if fao_process=enabled
@@ -438,7 +438,7 @@ def make_valid_params():
         "percolation_rejection_use_timeseries": True,
         "infiltration_limit_use_timeseries": True,
         "interflow_decay_use_timeseries": True,
-        "fao_input": 'l',
+        "fao_input": 'ls',
         "free_throughfall": {1:0.99,2: 0.99},
         "max_canopy_storage": {1:1.0,2: 1.0},
         "snow_params_simple": {1:[100, 1, -2], 2:[100, 1, -2], 3:[100, 1, -2]},

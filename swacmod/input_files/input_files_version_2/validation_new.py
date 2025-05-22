@@ -2085,7 +2085,7 @@ FUNC_PARAMS = [
     val_macropore_recharge,
     val_fao_process,
     val_fao_input,
-    # val_soil_static_params,
+    val_soil_static_params,
     # val_smd,
     # val_soil_spatial,
     # val_lu_spatial,
