@@ -325,9 +325,13 @@ class Test_Validation_New(unittest.TestCase):
             # "swdis_ts":  #TODO timeseries
             "swdis_locs": 5,
             "swdis_locs": "x",
+            "swdis_f": 5,
+            "swdis_f": "x",
             # "swabs_ts":  #TODO timeseries
             "swabs_locs": 5,
             "swabs_locs": "x",
+            "swabs_f": 0,
+            "swabs_f": "x",
             # "rainfall_ts":  #TODO timeseries
             # "pe_ts":  #TODO timeseries
             # "temperature_ts":  #TODO timeseries
@@ -484,8 +488,10 @@ def make_valid_params():
         "sfr_obs": "gauges_sfr.obs",
         "swdis_ts": "swdis_ts.csv", #TODO timeseries
         "swdis_locs": {1:1},
+        "swdis_f": 0,
         "swabs_ts": "swabs_ts.csv", #TODO timeseries
         "swabs_locs": {1:1},
+        "swabs_f": 0,
         "rainfall_ts": "rainfall_ts.yml", #TODO timeseries
         "pe_ts": "pe_ts.yml", #TODO timeseries
         "temperature_ts": "temperature_ts.yml", #TODO timeseries
