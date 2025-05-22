@@ -350,7 +350,10 @@ class Test_Validation_New(unittest.TestCase):
             "rainfall_ts": "x",
             "rainfall_ts": [],
             "rainfall_ts": {"a":"b","c":"d","e":"f"},
-            # "pe_ts":  #TODO timeseries
+            "pe_ts": 5,
+            "pe_ts": "x",
+            "pe_ts": [],
+            "pe_ts": {"a":"b","c":"d","e":"f"},
             # "temperature_ts":  #TODO timeseries
             # "tmax_c_ts":  #TODO timeseries
             # "tmin_c_ts":  #TODO timeseries
@@ -508,7 +511,7 @@ def make_valid_params():
         "swabs_locs": {1:1},
         "swabs_f": 0,
         "rainfall_ts": [[10.0,10.0],[10.0,10.0],[10.0,10.0]],
-        "pe_ts": "pe_ts.yml", #TODO timeseries
+        "pe_ts": [[1.0,1.0],[1.0,1.0],[1.0,1.0]],
         "temperature_ts": "temperature_ts.yml", #TODO timeseries
         "tmax_c_ts": "tmax_c_ts.yml", #TODO timeseries
         "tmin_c_ts": "tmin_c_ts.yml", #TODO timeseries

@@ -164,15 +164,20 @@ def val_pe_ts(data, name):
     1) type has to be a dictionary of lists of floats
     2) list length has to be equal to the number of days x number of zones
     """
-    pts = data["series"][name]
-    pzn = data["params"]["pe_zone_names"]
 
-    c.check_type(
-        param=pts,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(data["series"]["date"]), len(pzn)],
-    )
+    tmp = data["params"][name]
+    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
+
+    # TODO: Validation needs to be done post-finalization
+    # pts = data["series"][name]
+    # pzn = data["params"]["pe_zone_names"]
+
+    # c.check_type(
+    #     param=pts,
+    #     name=name,
+    #     t_types=data["specs"][name]["type"],
+    #     len_list=[len(data["series"]["date"]), len(pzn)],
+    # )
 
 def val_temperature_ts(data, name):
     """Validate temperature_ts.
@@ -2174,7 +2179,7 @@ FUNC_PARAMS = [
 
 FUNC_SERIES = [
     val_rainfall_ts,
-    # val_pe_ts,
+    val_pe_ts,
     # val_temperature_ts,
     # val_tmax_c_ts,
     # val_tmin_c_ts,
