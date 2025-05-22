@@ -265,15 +265,19 @@ def val_subroot_leakage_ts(data, name):
     1) type has to be a dictionary of lists of floats
     2) list length has to be equal to the number of days x number of zones
     """
-    sts = data["series"][name]
-    szn = data["params"]["subroot_zone_names"]
+    tmp = data["params"][name]
+    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
 
-    c.check_type(
-        param=sts,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(data["series"]["date"]), len(szn)],
-    )
+    # TODO: Validation needs to be done post-finalization
+    # sts = data["series"][name]
+    # szn = data["params"]["subroot_zone_names"]
+
+    # c.check_type(
+    #     param=sts,
+    #     name=name,
+    #     t_types=data["specs"][name]["type"],
+    #     len_list=[len(data["series"]["date"]), len(szn)],
+    # )
 
 def val_swdis_ts(data, name):
     """Validate swdis_ts.
@@ -2200,7 +2204,7 @@ FUNC_SERIES = [
     val_tmax_c_ts,
     val_tmin_c_ts,
     val_windsp_ts,
-    # val_subroot_leakage_ts,
+    val_subroot_leakage_ts,
     val_swdis_ts,
     val_swabs_ts,
     val_percolation_rejection_ts,

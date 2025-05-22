@@ -370,7 +370,10 @@ class Test_Validation_New(unittest.TestCase):
             "windsp_ts": "x",
             "windsp_ts": [],
             "windsp_ts": {"a":"b","c":"d","e":"f"},
-            # "subroot_leakage_ts":  #TODO timeseries
+            "subroot_leakage_ts": 5,
+            "subroot_leakage_ts": "x",
+            "subroot_leakage_ts": [],
+            "subroot_leakage_ts": {"a":"b","c":"d","e":"f"},
             "evt_parameters": 5,
             "evt_parameters": "x",
             "evt_parameters": [],
@@ -528,7 +531,7 @@ def make_valid_params():
         "tmax_c_ts": [[1.0,1.0],[1.0,1.0],[1.0,1.0]],
         "tmin_c_ts": [[-1.0,-1.0],[-1.0,-1.0],[-1.0,-1.0]],
         "windsp_ts": [[1.0,1.0],[1.0,1.0],[1.0,1.0]],
-        "subroot_leakage_ts": "subroot_leakage_ts.yml", #TODO timeseries
+        "subroot_leakage_ts": [[1.0,1.0],[1.0,1.0],[1.0,1.0]],
         "evt_parameters": {1:[1, 10.0, 0.1],2:[2, 10.0, 0.1],3:[3, 10.0, 0.1]},
         "ievtcb": 50,
         "nevtopt": 2
