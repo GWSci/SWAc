@@ -1387,14 +1387,14 @@ def val_raw(data, name):
         return
 
     raw = data["params"][name]
-    tot = data["params"]["num_nodes"]
+    lzn = data["params"]["landuse_zone_names"]
 
     c.check_type(
         param=raw,
         name=name,
         t_types=data["specs"][name]["type"],
-        len_list=[12],
-        keys=range(1, tot + 1),
+        len_list=[len(lzn)],
+        keys=range(1, 13),
     )
 
 def val_percolation_rejection(data, name):
@@ -2092,7 +2092,7 @@ FUNC_PARAMS = [
     val_zr,
     val_kc,
     val_taw,
-    # val_raw,
+    val_raw,
     # val_percolation_rejection,
     val_subroot_leakage_process,
     val_subroot_leakage_fraction,
