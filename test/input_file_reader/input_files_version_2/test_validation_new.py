@@ -411,7 +411,7 @@ def make_valid_params():
         "spatial_output_date": "1980-01-01",
         "reporting_zone_names": {1:"b", 2:"d"},
         "rainfall_zone_names": {1:"b", 2:"d"},
-        "recharge_node_mapping": "rch_nodes.csv",
+        "recharge_node_mapping": {1:[1], 2:[2], 3:[3]},
         "reporting_zone_mapping": {1:1, 2:1, 3:2},
         "rainfall_zone_mapping": {1:[1], 2:[1], 3:[2]},
         "pe_zone_mapping": {1:[1], 2:[1], 3:[2]},

@@ -134,7 +134,7 @@ def make_specs():
         Input_Parameter('interflow_decay_ts', required=False, alt_format=['yml', 'csv'], type=[list, list, float], constraints=None),
         Input_Parameter('recharge_attenuation_process', required=True, alt_format=[], type=[str], constraints=['enabled', 'disabled']),
         Input_Parameter('recharge_attenuation_params', required=False, alt_format=['yml', 'csv'], type=[dict, list, float], constraints=None),
-        Input_Parameter('recharge_node_mapping', required=False, alt_format=['yml', 'csv'], type=[dict, int], constraints=None),
+        Input_Parameter('recharge_node_mapping', required=False, alt_format=['yml', 'csv'], type=[dict, list, int], constraints=None),
         Input_Parameter('historical_solute_process', required=True, alt_format=[], type=[str], constraints=['enabled', 'disabled']),
         Input_Parameter('historical_mi_array_kg_per_time_period', required=False, alt_format=['yml', 'csv'], type=[float], constraints=None),
         Input_Parameter('historical_start_date', required=False, alt_format=[], type=[datetime], constraints=None),
