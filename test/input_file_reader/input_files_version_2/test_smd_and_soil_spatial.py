@@ -81,6 +81,20 @@ class Test_Always_Validate_SMD(unittest.TestCase):
         with self.assertRaises(Exception):
             validation.val_smd(data, 'smd')
 
+    def test_smd_is_validated_when_fao_process_is_disabled(self):
+        filename = 'potato.yml'
+        input_file = MockFileResource.make_sample_input_file_with_data()
+        input_file['fao_process'] = 'disabled'
+        input_file['smd'] = 'sausage'
+        mock_file_open = make_mock_file_open_and_contents(filename, input_file)
+        params = loader.load_yaml(filename, mock_file_open)
+        specs = specs_module.make_specs_dictionary(specs_module.make_specs())
+        data = {'params':params, 'specs':specs}
+        with self.assertRaises(Exception):
+            validation.val_smd(data, 'smd')
+
+
+
 def make_mock_file_open_and_contents(filename, input_file):
     input_file_contents = ""
     for k, v in input_file.items():

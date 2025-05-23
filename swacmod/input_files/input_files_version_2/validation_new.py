@@ -1273,9 +1273,6 @@ def val_smd(data, name):
     2) values have to be lists with length equal to the number of zones
     3) dictionary needs 1 key: starting_SMD
     """
-    if data["params"]["fao_process"] == "disabled":
-        return
-
     smd = data["params"][name]
     szn = data["params"]["soil_zone_names"]
 
