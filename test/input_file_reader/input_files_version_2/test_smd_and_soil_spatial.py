@@ -5,6 +5,9 @@ import swacmod.input_files.input_files_version_2.input_data as input_data_v2
 from test.input_file_reader.input_files_version_2.mock_file_resource import MockFileResource
 from test.dummy_environment import Dummy_Environment
 import swacmod.input_files.input_files_version_2.finalization as f
+import swacmod.input_files.input_files_version_2.validation_new as validation
+import swacmod.input_files.input_files_version_2.loader as loader
+import swacmod.input_files.input_files_version_2.specs as specs_module
 
 class Test_Input_File_With_Missing_SMD(unittest.TestCase):
     def test_smd_is_missing_and_is_finalised_successfully_as_0(self):
@@ -76,3 +79,19 @@ class Test_Input_File_With_Missing_Soil_Spatial(unittest.TestCase):
             run(test=False, skip=True, env=Dummy_Environment(), file_opener=mock_file_open)
         finally:
              u.CONSTANTS["INPUT_FILE"] = default_input_file
+
+class Test_Always_Validate_SMD(unittest.TestCase):
+    def test_smd_is_validated_when_fao_process_is_enabled(self):
+        filename = 'potato.yml'
+        input_file = MockFileResource.make_sample_input_file_with_data()
+        input_file['fao_process'] = 'enabled'
+        input_file['smd'] = 'sausage'
+        input_file_contents = ""
+        for k, v in input_file.items():
+            input_file_contents += f"{k}: {v}\n"
+        mock_file_open = MockFileResource.make_mock_file_opener({filename: input_file_contents})
+        params = loader.load_yaml(filename, mock_file_open)
+        specs = specs_module.make_specs_dictionary(specs_module.make_specs())
+        data = {'params':params, 'specs':specs}
+        with self.assertRaises(Exception):
+            validation.val_smd(data, 'smd')
