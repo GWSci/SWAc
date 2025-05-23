@@ -110,7 +110,7 @@ def main(args):
             repo.git.restore(commit_id_filename)
             repo.git.restore(build_time_filename)
             
-            # repo.git.push()
+            repo.git.push()
 
         except Exception as err:
             repo.git.reset('HEAD~')
