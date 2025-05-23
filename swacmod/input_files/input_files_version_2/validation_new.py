@@ -1292,11 +1292,6 @@ def val_soil_spatial(data, name):
     3) values have to be lists with length equal to the number of zones
     4) the sum of each row has to be 1.0
     """
-    if (
-        data["params"]["fao_process"] == "disabled"
-    ):
-        return
-
     sos = data["params"][name]
     soz = data["params"]["soil_zone_names"]
     tot = data["params"]["num_nodes"]
