@@ -23,23 +23,24 @@ def load_and_validate(input_file, input_dir, file_opener=DefaultFileResource._de
 
     params = loader.load_yaml(input_file, file_opener)
     validation_result = ParsedInputData(params, [], [])
-    validation_result.update(validator.validate_keys(specs_object, params, input_file))
 
+    validation_result.update(validator.validate_keys(specs_object, params, input_file))
     if validation_result.has_errors():
         return validation_result
 
     _supply_null_values_for_missing_fields(specs, params)
     validation_result.update(validation_new.validate_2(params, specs))
-
     if validation_result.has_errors():
         return validation_result
 
     validation_result.update(_validate_filenames(params, specs, input_dir, filename_exists))
-
     if validation_result.has_errors():
         return validation_result
 
     load_alt_formats(input_dir, file_opener, specs, params)
+    validation_result.update(validation_new.validate_2(params, specs))
+    if validation_result.has_errors():
+        return validation_result
 
     data = convert_params_and_specs_into_data(specs, params)
 
