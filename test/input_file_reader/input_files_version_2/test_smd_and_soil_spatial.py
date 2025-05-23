@@ -72,26 +72,23 @@ class Test_Always_Validate_SMD(unittest.TestCase):
     def test_smd_is_validated_when_fao_process_is_enabled(self):
         input_file = MockFileResource.make_sample_input_file_with_data()
         input_file['fao_process'] = 'enabled'
-        input_file['smd'] = 'sausage'
-        mock_file_open = make_mock_file_open_and_contents('potato.yml', input_file)
-        params = loader.load_yaml('potato.yml', mock_file_open)
-        specs = specs_module.make_specs_dictionary(specs_module.make_specs())
-        data = {'params':params, 'specs':specs}
+        data = mess_up_parameter_and_make_data(input_file, 'smd')
         with self.assertRaises(Exception):
             validation.val_smd(data, 'smd')
 
     def test_smd_is_validated_when_fao_process_is_disabled(self):
         input_file = MockFileResource.make_sample_input_file_with_data()
         input_file['fao_process'] = 'disabled'
-        input_file['smd'] = 'sausage'
-        mock_file_open = make_mock_file_open_and_contents('potato.yml', input_file)
-        params = loader.load_yaml('potato.yml', mock_file_open)
-        specs = specs_module.make_specs_dictionary(specs_module.make_specs())
-        data = {'params':params, 'specs':specs}
+        data = mess_up_parameter_and_make_data(input_file, 'smd')
         with self.assertRaises(Exception):
             validation.val_smd(data, 'smd')
 
-
+def mess_up_parameter_and_make_data(input_file, param):
+    input_file[param] = 'sausage'
+    mock_file_open = make_mock_file_open_and_contents('potato.yml', input_file)
+    params = loader.load_yaml('potato.yml', mock_file_open)
+    specs = specs_module.make_specs_dictionary(specs_module.make_specs())
+    data = {'params':params, 'specs':specs}
 
 def make_mock_file_open_and_contents(filename, input_file):
     input_file_contents = ""
