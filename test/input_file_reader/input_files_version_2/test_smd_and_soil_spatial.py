@@ -108,9 +108,13 @@ class Test_Always_Validate_Soil_Spatial(unittest.TestCase):
         with self.assertRaisesRegex(u.ValidationError, 'soil_spatial'):
             validation.val_soil_spatial(data, 'soil_spatial')
 
-
-
-
+    def test_soil_spatal_is_validated_when_fao_process_is_enabled_and_fao_input_is_l(self):
+        input_file = MockFileResource.make_sample_input_file_with_data()
+        input_file['fao_process'] = 'disabled'
+        input_file['fao_input'] = 'l'
+        data = mess_up_parameter_and_make_data(input_file, 'soil_spatial')
+        with self.assertRaisesRegex(u.ValidationError, 'soil_spatial'):
+            validation.val_soil_spatial(data, 'soil_spatial')
 
 def mess_up_parameter_and_make_data(input_file, param):
     input_file[param] = 'sausage'
