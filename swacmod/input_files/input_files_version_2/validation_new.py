@@ -1294,7 +1294,6 @@ def val_soil_spatial(data, name):
     """
     if (
         data["params"]["fao_process"] == "disabled"
-        or data["params"]["fao_input"] == "l"
     ):
         return
 
