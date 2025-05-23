@@ -11,15 +11,12 @@ import swacmod.input_files.input_files_version_2.specs as specs_module
 
 class Test_Input_File_With_Missing_SMD(unittest.TestCase):
     def test_smd_is_missing_and_is_finalised_successfully_as_0(self):
-        input_filename = 'potato.yml'
+        filename = 'potato.yml'
         input_dir = ''
         input_file = MockFileResource.make_sample_input_file_with_data()
         del input_file['smd']
-        input_file_contents = ""
-        for k, v in input_file.items():
-            input_file_contents += f"{k}: {v}\n"
-        mock_file_open = MockFileResource.make_mock_file_opener({input_filename: input_file_contents})
-        parsed_input_data = input_data_v2.load_and_validate(input_filename, input_dir, mock_file_open)
+        mock_file_open = make_mock_file_open_and_contents(filename, input_file)
+        parsed_input_data = input_data_v2.load_and_validate(filename, input_dir, mock_file_open)
         data = parsed_input_data.data
         expected = [0. for zone,smd in enumerate(data['params']['smd']['starting_SMD'])]
         actual = data['params']['smd']['starting_SMD']
@@ -29,10 +26,7 @@ class Test_Input_File_With_Missing_SMD(unittest.TestCase):
         filename = 'potato.yml'
         input_file = MockFileResource.make_sample_input_file_with_data()
         del input_file['smd']
-        input_file_contents = ""
-        for k, v in input_file.items():
-            input_file_contents += f"{k}: {v}\n"
-        mock_file_open = MockFileResource.make_mock_file_opener({filename: input_file_contents})
+        mock_file_open = make_mock_file_open_and_contents(filename, input_file)
         default_input_file = u.CONSTANTS["INPUT_FILE"]
         try:
             u.CONSTANTS["INPUT_FILE"] = filename
@@ -53,15 +47,12 @@ class Test_Input_File_With_Missing_Soil_Spatial(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_soil_spatial_is_missing_and_is_finalised_successfully(self):
-        input_filename = 'potato.yml'
+        filename = 'potato.yml'
         input_dir = ''
         input_file = MockFileResource.make_sample_input_file_with_data()
         del input_file['soil_spatial']
-        input_file_contents = ""
-        for k, v in input_file.items():
-            input_file_contents += f"{k}: {v}\n"
-        mock_file_open = MockFileResource.make_mock_file_opener({input_filename: input_file_contents})
-        parsed_input_data = input_data_v2.load_and_validate(input_filename, input_dir, mock_file_open)
+        mock_file_open = make_mock_file_open_and_contents(filename, input_file)
+        parsed_input_data = input_data_v2.load_and_validate(filename, input_dir, mock_file_open)
         data = parsed_input_data.data
         self.assertIsNot(data['params']['soil_spatial'], None)
     
@@ -69,10 +60,7 @@ class Test_Input_File_With_Missing_Soil_Spatial(unittest.TestCase):
         filename = 'potato.yml'
         input_file = MockFileResource.make_sample_input_file_with_data()
         del input_file['smd']
-        input_file_contents = ""
-        for k, v in input_file.items():
-            input_file_contents += f"{k}: {v}\n"
-        mock_file_open = MockFileResource.make_mock_file_opener({filename: input_file_contents})
+        mock_file_open = make_mock_file_open_and_contents(filename, input_file)
         default_input_file = u.CONSTANTS["INPUT_FILE"]
         try:
             u.CONSTANTS["INPUT_FILE"] = filename
@@ -86,12 +74,15 @@ class Test_Always_Validate_SMD(unittest.TestCase):
         input_file = MockFileResource.make_sample_input_file_with_data()
         input_file['fao_process'] = 'enabled'
         input_file['smd'] = 'sausage'
-        input_file_contents = ""
-        for k, v in input_file.items():
-            input_file_contents += f"{k}: {v}\n"
-        mock_file_open = MockFileResource.make_mock_file_opener({filename: input_file_contents})
+        mock_file_open = make_mock_file_open_and_contents(filename, input_file)
         params = loader.load_yaml(filename, mock_file_open)
         specs = specs_module.make_specs_dictionary(specs_module.make_specs())
         data = {'params':params, 'specs':specs}
         with self.assertRaises(Exception):
             validation.val_smd(data, 'smd')
+
+def make_mock_file_open_and_contents(filename, input_file):
+    input_file_contents = ""
+    for k, v in input_file.items():
+        input_file_contents += f"{k}: {v}\n"
+    return MockFileResource.make_mock_file_opener({filename: input_file_contents})
