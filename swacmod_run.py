@@ -902,7 +902,8 @@ def parse_arguments():
     return PARSER.parse_args()
 
 def check_arguments(ARGS):
-    return
+    if not ARGS.input_yml:
+        raise u.ArgumentError('No input file specified. Use "-i" or "--input_yml" to specify the path to "input.yml"\n')
 
 def run_main():
     ARGS = parse_arguments()
