@@ -857,7 +857,7 @@ def scrape_run_name_and_start_logging(debug, env, input_file, file_opener=Defaul
     logging.info("Start SWAcMod run")
     return level,log_path
 
-def run_main():
+def parse_arguments():
     # Parser for command line arguments
     DESCRIPTION = """
     Invoke this script to run SWAcMod.
@@ -899,7 +899,11 @@ def run_main():
                         action="version",
                         version=version_information.format_version_information())
 
-    ARGS = PARSER.parse_args()
+    return PARSER.parse_args()
+
+def run_main():
+    ARGS = parse_arguments()
+    
     if ARGS.input_yml:
         if not ARGS.input_yml.endswith(".yml"):
             print('\nError: use "-i" or "--input_yml" to specify the path '
