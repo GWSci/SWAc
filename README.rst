@@ -134,12 +134,14 @@ To see the optional arguments run the model with the -h argument
     usage: swacmod_run.py [-h] [-t] [-d] [-r] [-i INPUT_YML] [-o OUTPUT_DIR]
                       [-f {hdf5,h5,csv}] [-s]
 
+    required arguments:
+      -i, --input_yml       path to input yaml file inside input directory
+
     optional arguments:
       -h, --help            show this help message and exit
       -t, --test            run the whole model, but do not output any file
       -d, --debug           verbose logging
       -r, --reduced         output reduced format files
-      -i, --input_yml       path to input yaml file inside input directory
       -o, --output_dir      path to output directory
       -f, --format          output file format, choose between ``hdf5`` (or ``h5``) and ``csv``
       -s, --skip_prompt     skip user prompts and warnings
