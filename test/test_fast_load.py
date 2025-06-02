@@ -43,5 +43,5 @@ def remove_random_required_param(data):
     return data
 
 def load_test_data():
-        data = fast_load(u.CONSTANTS["SPECS_FILE"], u.CONSTANTS["TEST_INPUT_FILE"])
+        data = fast_load(u.CONSTANTS["SPECS_FILE"], "input_files/input.yml")
         return data    
