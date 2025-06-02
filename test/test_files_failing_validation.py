@@ -1,23 +1,16 @@
 import unittest
-from swacmod.input_files.input_files_version_1.input_data import load_params_from_yaml
-import tempfile
-import shutil
-import swacmod.utils as u
-import os
-from tqdm import tqdm
+from test.input_file_reader.input_files_version_2.mock_file_resource import MockFileResource
+from swacmod.input_files.input_files_version_2.input_data import load_and_validate
 
 class Test_Files_Failing_Validation(unittest.TestCase):
     def test_load_and_validate_a_model_with_a_jumbled_up_file(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            shutil.copytree(u.CONSTANTS['TEST_INPUT_DIR'], temp_dir, dirs_exist_ok=True)
-            with open(os.path.join(temp_dir, 'time_periods.csv'), 'r') as file:
-                lines = file.readlines()
-            lines[0] += '043.das'
-            with open(os.path.join(temp_dir, 'time_periods.csv'), 'w') as file:
-                file.writelines(lines)
-            with self.assertRaisesRegex(Exception, 'time_periods'):
-                load_params_from_yaml(
-                    specs_file=u.CONSTANTS["SPECS_FILE"],
-                    input_file=os.path.join(temp_dir, 'input.yml'),
-                    input_dir=temp_dir,
-                    tqdm=tqdm)
+        input_file = MockFileResource.make_sample_input_file_with_data()
+        input_file['time_periods'][-1][-1] = '043.potato'
+        input_file_contents = ""
+        for k, v in input_file.items():
+            input_file_contents += f"{k}: {v}\n"
+        mock_file_open = MockFileResource.make_mock_file_opener({'input.yml': input_file_contents})
+        mock_input_directory = MockFileResource.make_sample_input_directory()
+        mock_filename_exists = MockFileResource.make_mock_filename_exists(mock_input_directory)        
+        parsed_input_data = load_and_validate(input_file='input.yml', input_dir='', file_opener=mock_file_open, filename_exists=mock_filename_exists)
+        self.assertIn('time_periods', '\n'.join(parsed_input_data.errors))
