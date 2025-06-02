@@ -23,8 +23,7 @@ CONSTANTS['INPUT_FILE'] = None
 CONSTANTS['SPECS_FILE'] = os.path.join(CONSTANTS['CODE_DIR'], 'input_files', 'input_files_version_1', 'specs.yml')
 
 CONSTANTS['TEST_DIR'] = os.path.join(CONSTANTS['ROOT_DIR'], 'test/tests')
-CONSTANTS['TEST_INPUT_DIR'] = os.path.join(CONSTANTS['TEST_DIR'],
-                                           'input_files')
+
 
 def col_order():
     if ff.use_natproc:
