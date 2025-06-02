@@ -1210,8 +1210,7 @@ def fin_pe_ts(data, name):
     fao = params["fao_process"]
     canopy = params["canopy_process"]
     if fao != "enabled" and canopy != "enabled":
-        zones = max(len(params["pe_zone_mapping"].values()), 
-                    len(params["pe_zone_names"].values()))
+        zones = len(params["pe_zone_names"].values())
         series[name] = np.zeros([len(series["date"]), zones])
         logging.info('\t\tDefaulted "%s" to 0.0', name)
     elif not specs[name]["required"]:
