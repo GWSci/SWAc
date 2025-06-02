@@ -909,13 +909,9 @@ def run_main():
     ARGS = parse_arguments()
     check_arguments(ARGS)
 
-    if ARGS.input_yml:
-        if not ARGS.input_yml.endswith(".yml"):
-            print('\nError: use "-i" or "--input_yml" to specify the path '
-                  'to "input.yml"\n')
-            sys.exit()
-        u.CONSTANTS["INPUT_FILE"] = ARGS.input_yml
-        u.CONSTANTS["INPUT_DIR"] = os.path.dirname(ARGS.input_yml)
+    u.CONSTANTS["INPUT_FILE"] = ARGS.input_yml
+    u.CONSTANTS["INPUT_DIR"] = os.path.dirname(ARGS.input_yml)
+    
     if ARGS.output_dir:
         u.CONSTANTS["OUTPUT_DIR"] = ARGS.output_dir
     if not os.path.exists(u.CONSTANTS["OUTPUT_DIR"]):
