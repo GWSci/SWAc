@@ -877,20 +877,18 @@ def parse_arguments():
     PARSER.add_argument("-i",
                         "--input_yml",
                         help="path to input yaml file inside input directory")
-    PARSER.add_argument("-o", "--output_dir", help="path to output directory")
-    PARSER.add_argument(
-        "-f",
-        "--format",
-        help="output file format",
-        choices=["hdf5", "h5", "csv"],
-        default="csv",
-    )
-    PARSER.add_argument(
-        "-s",
-        "--skip_prompt",
-        help="skip user prompts and warnings",
-        action="store_true",
-    )
+    PARSER.add_argument("-o", 
+                        "--output_dir", 
+                        help="path to output directory - default: 'ouput_files/'")
+    PARSER.add_argument("-f",
+                        "--format",
+                        help="output file format",
+                        choices=["hdf5", "h5", "csv"],
+                        default="csv")
+    PARSER.add_argument("-s",
+                        "--skip_prompt",
+                        help="skip user prompts and warnings",
+                        action="store_true")
     PARSER.add_argument("-v",
                         "--version",
                         action="version",

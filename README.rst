@@ -142,7 +142,7 @@ To see the optional arguments run the model with the -h argument
       -t, --test            run the whole model, but do not output any file
       -d, --debug           verbose logging
       -r, --reduced         output reduced format files
-      -o, --output_dir      path to output directory
+      -o, --output_dir      path to output directory - default: 'ouput_files/'
       -f, --format          output file format, choose between ``hdf5`` (or ``h5``) and ``csv``
       -s, --skip_prompt     skip user prompts and warnings
       -v, --version         display the current version
