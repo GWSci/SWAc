@@ -375,13 +375,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         spatial = manager.dict()
 
         single_node_output = manager.dict()
+
     specs_file = u.CONSTANTS["SPECS_FILE"]
-    if test:
-        input_file = u.CONSTANTS["TEST_INPUT_FILE"]
-        input_dir = u.CONSTANTS["TEST_INPUT_DIR"]
-    else:
-        input_file = u.CONSTANTS["INPUT_FILE"]
-        input_dir = u.CONSTANTS["INPUT_DIR"]
+    input_file = u.CONSTANTS["INPUT_FILE"]
+    input_dir = u.CONSTANTS["INPUT_DIR"]
 
     env.print(version_information.format_version_information())
 
