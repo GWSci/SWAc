@@ -901,9 +901,13 @@ def parse_arguments():
 
     return PARSER.parse_args()
 
+def check_arguments(ARGS):
+    return
+
 def run_main():
     ARGS = parse_arguments()
-    
+    check_arguments(ARGS)
+
     if ARGS.input_yml:
         if not ARGS.input_yml.endswith(".yml"):
             print('\nError: use "-i" or "--input_yml" to specify the path '
