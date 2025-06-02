@@ -20,7 +20,7 @@ CONSTANTS['ROOT_DIR'] = os.path.join(CONSTANTS['CODE_DIR'], '../')
 CONSTANTS['INPUT_DIR'] = None
 CONSTANTS['OUTPUT_DIR'] = os.path.join(CONSTANTS['ROOT_DIR'], 'output_files')
 CONSTANTS['INPUT_FILE'] = None
-CONSTANTS['SPECS_FILE'] = os.path.join(CONSTANTS['CODE_DIR'], 'specs.yml')
+CONSTANTS['SPECS_FILE'] = os.path.join(CONSTANTS['CODE_DIR'], 'input_files', 'input_files_version_1', 'specs.yml')
 
 CONSTANTS['TEST_DIR'] = os.path.join(CONSTANTS['ROOT_DIR'], 'test/tests')
 CONSTANTS['TEST_INPUT_DIR'] = os.path.join(CONSTANTS['TEST_DIR'],
