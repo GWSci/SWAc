@@ -153,6 +153,11 @@ def balance_conversions():
             ('BALANCE', True, False)
         ]
 
+class ArgumentError(Exception):
+    """General exception for runtime argument errors"""
+    def __init__(self, msg):
+        Exception.__init__(self, msg)
+
 class ValidationError(Exception):
     """General exception for validation errors."""
     def __init__(self, msg):
