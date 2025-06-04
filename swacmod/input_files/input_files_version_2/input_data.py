@@ -50,7 +50,7 @@ def load_and_validate(input_file, input_dir, file_opener=DefaultFileResource._de
     v.validate_params(data)
     v.validate_series(data)
 
-    # data = ensure_precision(data)
+    data = ensure_precision(data)
     return validation_result.update(ParsedInputData(data, [], []))
 
 def ensure_precision(data):
