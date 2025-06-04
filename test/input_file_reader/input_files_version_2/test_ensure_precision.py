@@ -20,6 +20,12 @@ class Test_Precision_Is_Converted_To_64bit(unittest.TestCase):
         data = ensure_precision(data)
         for key in data['params'].keys():
             self.assertTrue(check_type(data['params'], key, bool))
+    
+    def test_strings_are_not_converted(self):
+        data = make_data(str)
+        data = ensure_precision(data)
+        for key in data['params'].keys():
+            self.assertTrue(check_type(data['params'], key, str))
 
 def make_data(t_type):
     return {'params': {'number': t_type(1.),
@@ -38,8 +44,12 @@ def check_type(params, key, t_type):
         return all([isinstance(val, t_type) for val in params[key]])
     elif key == 'array':
         if t_type == float:
-            return params[key].dtype == 'float64'
-        if t_type == int:
-            return params[key].dtype == 'int64'
-        if t_type == bool:
-            return params[key].dtype == 'bool'
+            return params[key].dtype.type == np.float64
+        elif t_type == int:
+            return params[key].dtype.type == np.int64
+        elif t_type == bool:
+            return params[key].dtype.type == np.bool
+        elif t_type == str:
+            return params[key].dtype.type == np.str_
+    else:
+        return isinstance(params[key], t_type)

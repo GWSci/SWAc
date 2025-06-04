@@ -67,9 +67,9 @@ def ensure_precision(data):
     elif isinstance(data, set):
         return set(ensure_precision(value) for value in data)
     elif isinstance(data, np.ndarray):
-        if data.dtype == 'int64' or data.dtype == 'int32':
+        if data.dtype.type == np.int64 or data.dtype.type == np.int32:
             return np.array(data, dtype=np.int64)
-        elif data.dtype == 'float64' or data.dtype == 'float32':
+        elif data.dtype.type == np.float64 or data.dtype.type == np.float32:
             return np.array(data, dtype=np.float64)
         else:
             return data
