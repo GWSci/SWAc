@@ -15,6 +15,12 @@ class Test_Precision_Is_Converted_To_64bit(unittest.TestCase):
         for key in data['params'].keys():
             self.assertTrue(check_type(data['params'], key, int))
 
+    def test_booleans_are_not_converted(self):
+        data = make_data(bool)
+        data = ensure_precision(data)
+        for key in data['params'].keys():
+            self.assertTrue(check_type(data['params'], key, bool))
+
 def make_data(t_type):
     return {'params': {'number': t_type(1.),
                        'list': [t_type(1.), t_type(2.), t_type(3.)],
@@ -35,3 +41,5 @@ def check_type(params, key, t_type):
             return params[key].dtype == 'float64'
         if t_type == int:
             return params[key].dtype == 'int64'
+        if t_type == bool:
+            return params[key].dtype == 'bool'
