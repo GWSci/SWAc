@@ -9,8 +9,11 @@ class Test_Precision_Is_Converted_To_64bit(unittest.TestCase):
         for key in data['params'].keys():
             self.assertTrue(check_type(data['params'], key, float))
         
-
-
+    def test_integers_are_converted_to_64bit(self):
+        data = make_data(np.int32)
+        data = ensure_precision(data)
+        for key in data['params'].keys():
+            self.assertTrue(check_type(data['params'], key, int))
 
 def make_data(t_type):
     return {'params': {'number': t_type(1.),
@@ -28,4 +31,7 @@ def check_type(params, key, t_type):
     elif key == 'list' or key == 'dict' or key == 'tuple' or key == 'set':
         return all([isinstance(val, t_type) for val in params[key]])
     elif key == 'array':
-        return params[key].dtype == 'float64'
+        if t_type == float:
+            return params[key].dtype == 'float64'
+        if t_type == int:
+            return params[key].dtype == 'int64'
