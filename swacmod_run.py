@@ -724,14 +724,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
             del runoff_recharge, tmp, runoff, recharge
             gc.collect()
         timer.switch_to(output_timer_token, "output_recharge")
-        if data["params"]["output_recharge"]:
-            env.print("\t- Recharge file")
-            if data['params']['gwmodel_type'] == 'mfusg':
-                io.dump_recharge_file(data, recharge_agg)
-            elif data['params']['gwmodel_type'] == 'mf6':
-                flopy_adaptor.write_mf_gwf_rch(m.get_mf6rch_file(data, recharge_agg))
-            elif data['params']['gwmodel_type'] == 'mf96':
-                io.dump_mf96_recharge_file(data, recharge_agg)
+        output_recharge(env, data, recharge_agg)
 
         timer.switch_to(output_timer_token, "spatial_output_date")
         output_spatial_output_date(reduced, env, spatial, data)
@@ -780,6 +773,16 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def output_recharge(env, data, recharge_agg):
+    if data["params"]["output_recharge"]:
+        env.print("\t- Recharge file")
+        if data['params']['gwmodel_type'] == 'mfusg':
+            io.dump_recharge_file(data, recharge_agg)
+        elif data['params']['gwmodel_type'] == 'mf6':
+            flopy_adaptor.write_mf_gwf_rch(m.get_mf6rch_file(data, recharge_agg))
+        elif data['params']['gwmodel_type'] == 'mf96':
+            io.dump_mf96_recharge_file(data, recharge_agg)
 
 def output_spatial_output_date(reduced, env, spatial, data):
     if data["params"]["spatial_output_date"]:
