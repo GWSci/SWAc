@@ -473,93 +473,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 
     workers = []
     if ff.disable_multiprocessing:
-        q = queue.Queue()
-        pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
-
-        timer.switch_to(timer_switcher_for_run, "run_main > run (multiprocessing)")
-
-        for process, chunk in enumerate(chunks):
-
-            if chunk.size == 0:
-                continue
-
-            run_process(
-                env,
-                process,
-                chunk,
-                data,
-                test,
-                reporting_agg,
-                recharge_agg,
-                runoff_agg,
-                evtr_agg,
-                solute_aggregation,
-                stream_solute_aggregation,
-                solute_mi_aggregation,
-                recharge,
-                runoff,
-                log_path,
-                level,
-                spatial,
-                spatial_index,
-                reporting,
-                single_node_output,
-                q,
-                pbar
-            )
-
-        q.put(None)
-        pbar.close()
-
+        run_single_threaded(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
     else:
-        q = mp.Queue()
-        lproc = mp.Process(target=listener, args=(q, nnodes))
-        lproc.start()
-
-        for process, chunk in enumerate(chunks):
-
-            if chunk.size == 0:
-                continue
-
-            proc = mp.Process(
-                target=run_process,
-                args=(
-                    env,
-                    process,
-                    chunk,
-                    data,
-                    test,
-                    reporting_agg,
-                    recharge_agg,
-                    runoff_agg,
-                    evtr_agg,
-                    solute_aggregation,
-                    stream_solute_aggregation,
-                    solute_mi_aggregation,
-                    recharge,
-                    runoff,
-                    log_path,
-                    level,
-                    spatial,
-                    spatial_index,
-                    reporting,
-                    single_node_output,
-                    q,
-                ),
-            )
-
-            workers.append(Worker("worker%d" % process, q, proc, verbose=False))
-
-        timer.switch_to(timer_switcher_for_run, "run_main > run (multiprocessing)")
-
-        for p in workers:
-            p.start()
-
-        for p in workers:
-            p.join()
-
-        q.put(None)
-        lproc.join()
+        run_multiprocessing(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index, workers)
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (output)")
     output_timer_token = timer.make_time_switcher()
@@ -753,6 +669,93 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def run_single_threaded(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
+    q = queue.Queue()
+    pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
+
+    timer.switch_to(timer_switcher_for_run, "run_main > run (multiprocessing)")
+
+    for process, chunk in enumerate(chunks):
+        if chunk.size == 0:
+            continue
+
+        run_process(
+                env,
+                process,
+                chunk,
+                data,
+                test,
+                reporting_agg,
+                recharge_agg,
+                runoff_agg,
+                evtr_agg,
+                solute_aggregation,
+                stream_solute_aggregation,
+                solute_mi_aggregation,
+                recharge,
+                runoff,
+                log_path,
+                level,
+                spatial,
+                spatial_index,
+                reporting,
+                single_node_output,
+                q,
+                pbar
+            )
+
+    q.put(None)
+    pbar.close()
+
+def run_multiprocessing(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index, workers):
+    q = mp.Queue()
+    lproc = mp.Process(target=listener, args=(q, nnodes))
+    lproc.start()
+
+    for process, chunk in enumerate(chunks):
+        if chunk.size == 0:
+            continue
+
+        proc = mp.Process(
+                target=run_process,
+                args=(
+                    env,
+                    process,
+                    chunk,
+                    data,
+                    test,
+                    reporting_agg,
+                    recharge_agg,
+                    runoff_agg,
+                    evtr_agg,
+                    solute_aggregation,
+                    stream_solute_aggregation,
+                    solute_mi_aggregation,
+                    recharge,
+                    runoff,
+                    log_path,
+                    level,
+                    spatial,
+                    spatial_index,
+                    reporting,
+                    single_node_output,
+                    q,
+                ),
+            )
+
+        workers.append(Worker("worker%d" % process, q, proc, verbose=False))
+
+    timer.switch_to(timer_switcher_for_run, "run_main > run (multiprocessing)")
+
+    for p in workers:
+        p.start()
+
+    for p in workers:
+        p.join()
+
+    q.put(None)
+    lproc.join()
 
 def check_open_files(file_format, skip, data):
     if not skip:
