@@ -364,8 +364,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     if ff.disable_multiprocessing:
         stuff = stuff_module.make_single_threaded_stuff()
     else:
-        manager = mp.Manager()
-        stuff = stuff_module.make_multiprocessing_stuff(manager)
+        stuff = stuff_module.make_multiprocessing_stuff()
 
     specs_file = u.CONSTANTS["SPECS_FILE"]
     input_file = u.CONSTANTS["INPUT_FILE"]

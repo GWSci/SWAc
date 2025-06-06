@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import multiprocessing as mp
 
 # TODO We need a better name for this stuff.
 
@@ -13,5 +14,12 @@ class Some_Stuff:
 def make_single_threaded_stuff():
     return Some_Stuff({}, {}, {}, {}, {})
 
-def make_multiprocessing_stuff(manager):
-    return Some_Stuff(manager.dict(), manager.dict(), manager.dict(), manager.dict(), manager.dict())
+def make_multiprocessing_stuff():
+    manager = mp.Manager()
+    return Some_Stuff(
+        manager.dict(),
+        manager.dict(),
+        manager.dict(),
+        manager.dict(),
+        manager.dict())
+
