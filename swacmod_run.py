@@ -388,8 +388,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     data = input_file_reader.read_inputs(specs_file, input_file, input_dir, file_opener)
     params = data["params"]
 
-    if not skip:
-        io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
+    check_open_files(file_format, skip, data)
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (getting ready for multiprocessing)")
 
