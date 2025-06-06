@@ -458,9 +458,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
             recharge = np.zeros(len_rch, dtype=np.single)
             runoff = np.zeros(len_rch, dtype=np.single)
 
-    ids = range(1, nnodes + 1)
-    random.shuffle(list(ids))
-    chunks = np.array_split(ids, data["params"]["num_cores"])
+    chunks = extract_random_chunks_of_ids(data, nnodes)
     times["end_of_input"] = time.time()
     spatial_index = make_spatial_index(data, days)
 
@@ -661,6 +659,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def extract_random_chunks_of_ids(data, nnodes):
+    ids = range(1, nnodes + 1)
+    random.shuffle(list(ids))
+    chunks = np.array_split(ids, data["params"]["num_cores"])
+    return chunks
 
 def make_spatial_index(data, days):
     if data["params"]["spatial_output_date"] == "mean":
