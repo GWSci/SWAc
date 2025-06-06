@@ -234,7 +234,7 @@ def run_process(
 
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
-                aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, stuff, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, spatial_index, pond_area)
+                aggregate_output(time_switcher, node, data, output, num, rep_zone, stuff, recharge_agg, nnodes, recharge, runoff, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, spatial_index, pond_area)
 
     logging.info("mp.Process %d ended", num)
 
@@ -270,7 +270,7 @@ def compare_lambdas(name, time_switcher, unoptimised, optimised):
 
     return optimised_result
 
-def aggregate_output(time_switcher, node, data, output, single_node_output, num, rep_zone, stuff, reporting_agg, recharge_agg, nnodes, recharge, runoff, runoff_agg, spatial, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, spatial_index, pond_area):
+def aggregate_output(time_switcher, node, data, output, num, rep_zone, stuff, recharge_agg, nnodes, recharge, runoff, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, spatial_index, pond_area):
     if node in data["params"]["output_individual"]:
         timer.switch_to(time_switcher, "aggregate_output (output_individual)")
         # if this node for individual output then preserve
