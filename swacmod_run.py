@@ -691,8 +691,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 
         env.print("\nWriting output files:")
         timer.switch_to(output_timer_token, "checking open files")
-        if not skip:
-            io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
+        check_open_files(file_format, skip, data)
 
         timer.switch_to(output_timer_token, "reporting agg loop")
         output_water_balance(file_format, reduced, env, reporting_agg, data)
@@ -754,6 +753,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def check_open_files(file_format, skip, data):
+    if not skip:
+        io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
 def output_water_balance(file_format, reduced, env, reporting_agg, data):
     for num, key in enumerate(reporting_agg.keys()):
