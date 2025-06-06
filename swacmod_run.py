@@ -437,9 +437,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     spatial_index = make_spatial_index(data, days)
 
     if ff.disable_multiprocessing:
-        run_single_threaded(test, env, timer_switcher_for_run, stuff, stuff.reporting_agg, stuff.reporting, stuff.spatial, stuff.single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
+        run_single_threaded(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
     else:
-        run_multiprocessing(test, env, timer_switcher_for_run, stuff, stuff.reporting_agg, stuff.reporting, stuff.spatial, stuff.single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
+        run_multiprocessing(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (output)")
     output_timer_token = timer.make_time_switcher()
@@ -649,7 +649,7 @@ def make_spatial_index(data, days):
         spatial_index = None
     return spatial_index
 
-def run_single_threaded(test, env, timer_switcher_for_run, stuff, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
+def run_single_threaded(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
     q = queue.Queue()
     pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
 
@@ -684,7 +684,7 @@ def run_single_threaded(test, env, timer_switcher_for_run, stuff, reporting_agg,
     q.put(None)
     pbar.close()
 
-def run_multiprocessing(test, env, timer_switcher_for_run, stuff, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
+def run_multiprocessing(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
     workers = []
     q = mp.Queue()
     lproc = mp.Process(target=listener, args=(q, nnodes))
