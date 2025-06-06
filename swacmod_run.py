@@ -37,6 +37,7 @@ import swacmod.input_files.input_file_reader as input_file_reader
 import swacmod.flopy_adaptor as flopy_adaptor
 import swacmod.version_information as version_information
 from swacmod.input_files.input_files_version_2.default_file_resource import DefaultFileResource
+import swacmod.stuff_to_be_named_later as stuff_module
 
 # Compile and import model
 from swacmod import model as m
@@ -361,20 +362,17 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     times = {"start_of_run": time.time()}
 
     if ff.disable_multiprocessing:
-        reporting_agg = {}
-        reporting_agg2 = {}
-        reporting = {}
-        spatial = {}
-
-        single_node_output = {}
+        stuff = stuff_module.make_single_threaded_stuff()
     else:
         manager = mp.Manager()
-        reporting_agg = manager.dict()
-        reporting_agg2 = {}
-        reporting = manager.dict()
-        spatial = manager.dict()
+        stuff = stuff_module.make_multiprocessing_stuff(manager)
+    
+    reporting_agg = stuff.reporting_agg
+    reporting_agg2 = stuff.reporting_agg2
+    reporting = stuff.reporting
+    spatial = stuff.spatial
+    single_node_output = stuff.single_node_output
 
-        single_node_output = manager.dict()
 
     specs_file = u.CONSTANTS["SPECS_FILE"]
     input_file = u.CONSTANTS["INPUT_FILE"]
