@@ -734,13 +734,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
                 io.dump_mf96_recharge_file(data, recharge_agg)
 
         timer.switch_to(output_timer_token, "spatial_output_date")
-        if data["params"]["spatial_output_date"]:
-            env.print("\t- Spatial file")
-            io.dump_spatial_output(env,
-                                   data,
-                                   spatial,
-                                   u.CONSTANTS["OUTPUT_DIR"],
-                                   reduced=reduced)
+        output_spatial_output_date(reduced, env, spatial, data)
 
         timer.switch_to(output_timer_token, "output_sfr")
         roff_agg = output_sfr(env, data, runoff_agg)
@@ -786,6 +780,15 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def output_spatial_output_date(reduced, env, spatial, data):
+    if data["params"]["spatial_output_date"]:
+        env.print("\t- Spatial file")
+        io.dump_spatial_output(env,
+                                   data,
+                                   spatial,
+                                   u.CONSTANTS["OUTPUT_DIR"],
+                                   reduced=reduced)
 
 def output_sfr(env, data, runoff_agg):
     roff_agg = None
