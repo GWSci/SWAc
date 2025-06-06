@@ -743,29 +743,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
                                    reduced=reduced)
 
         timer.switch_to(output_timer_token, "output_sfr")
-        roff_agg = None
-        if data["params"]["output_sfr"]:
-            env.print("\t- SFR file")
-            if data['params']['gwmodel_type'] == 'mf96':
-                roff_agg = np.copy(np.array(runoff_agg))
-                strm = m.get_str_file(data, np.copy(np.array(runoff_agg)))
-                strm.write_file()
-                # remove header from str file
-                with open(strm.file_name[0], 'r') as fin:
-                    #data = fin.read().splitlines(True)
-                    lst_strm = fin.readlines()
-                with open(strm.file_name[0], 'w') as fout:
-                    fout.write(lst_strm[1].rstrip() + "        -1\n")
-                    fout.writelines(lst_strm[2:])
-                del strm
-            else:
-                sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
-                if data['params']['gwmodel_type'] == 'mfusg':
-                    io.dump_sfr_output(sfr)
-                elif data['params']['gwmodel_type'] == 'mf6':
-                    sfr.write()
-                del sfr
-                gc.collect()
+        roff_agg = output_sfr(env, data, runoff_agg)
 
         timer.switch_to(output_timer_token, "output_evt")
         output_evt(env, data, runoff_agg, evtr_agg, output_timer_token)
@@ -808,6 +786,32 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def output_sfr(env, data, runoff_agg):
+    roff_agg = None
+    if data["params"]["output_sfr"]:
+        env.print("\t- SFR file")
+        if data['params']['gwmodel_type'] == 'mf96':
+            roff_agg = np.copy(np.array(runoff_agg))
+            strm = m.get_str_file(data, np.copy(np.array(runoff_agg)))
+            strm.write_file()
+                # remove header from str file
+            with open(strm.file_name[0], 'r') as fin:
+                    #data = fin.read().splitlines(True)
+                lst_strm = fin.readlines()
+            with open(strm.file_name[0], 'w') as fout:
+                fout.write(lst_strm[1].rstrip() + "        -1\n")
+                fout.writelines(lst_strm[2:])
+            del strm
+        else:
+            sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
+            if data['params']['gwmodel_type'] == 'mfusg':
+                io.dump_sfr_output(sfr)
+            elif data['params']['gwmodel_type'] == 'mf6':
+                sfr.write()
+            del sfr
+            gc.collect()
+    return roff_agg
 
 def output_evt(env, data, runoff_agg, evtr_agg, output_timer_token):
     if data["params"]["output_evt"]:
