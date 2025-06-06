@@ -462,14 +462,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     random.shuffle(list(ids))
     chunks = np.array_split(ids, data["params"]["num_cores"])
     times["end_of_input"] = time.time()
-    if data["params"]["spatial_output_date"] == "mean":
-        spatial_index = [range(days)] + [u.month_indices(i+1, data)
-                                         for i in range(12)]
-    elif data["params"]["spatial_output_date"] is not None:
-        spatial_index = [(data["params"]["spatial_output_date"] -
-                         data["params"]["start_date"]).days]
-    else:
-        spatial_index = None
+    spatial_index = make_spatial_index(data, days)
 
     if ff.disable_multiprocessing:
         run_single_threaded(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
@@ -668,6 +661,17 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def make_spatial_index(data, days):
+    if data["params"]["spatial_output_date"] == "mean":
+        spatial_index = [range(days)] + [u.month_indices(i+1, data)
+                                         for i in range(12)]
+    elif data["params"]["spatial_output_date"] is not None:
+        spatial_index = [(data["params"]["spatial_output_date"] -
+                         data["params"]["start_date"]).days]
+    else:
+        spatial_index = None
+    return spatial_index
 
 def run_single_threaded(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
     q = queue.Queue()
