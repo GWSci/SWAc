@@ -367,7 +367,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         manager = mp.Manager()
         stuff = stuff_module.make_multiprocessing_stuff(manager)
     
-    spatial = stuff.spatial
     single_node_output = stuff.single_node_output
 
 
@@ -457,9 +456,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     spatial_index = make_spatial_index(data, days)
 
     if ff.disable_multiprocessing:
-        run_single_threaded(test, env, timer_switcher_for_run, stuff.reporting_agg, stuff.reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
+        run_single_threaded(test, env, timer_switcher_for_run, stuff.reporting_agg, stuff.reporting, stuff.spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
     else:
-        run_multiprocessing(test, env, timer_switcher_for_run, stuff.reporting_agg, stuff.reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
+        run_multiprocessing(test, env, timer_switcher_for_run, stuff.reporting_agg, stuff.reporting, stuff.spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (output)")
     output_timer_token = timer.make_time_switcher()
@@ -607,7 +606,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         output_recharge(env, data, recharge_agg)
 
         timer.switch_to(output_timer_token, "spatial_output_date")
-        output_spatial_output_date(reduced, env, spatial, data)
+        output_spatial_output_date(reduced, env, stuff.spatial, data)
 
         timer.switch_to(output_timer_token, "output_sfr")
         roff_agg = output_sfr(env, data, runoff_agg)
@@ -644,8 +643,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     env.print("")
 
     logging.info("End SWAcMod run")
-
-    del spatial
 
     gc.collect()
 
