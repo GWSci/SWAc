@@ -805,12 +805,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         timer.print_time_switcher_report(output_timer_token)
 
         timer.switch_to(output_timer_token, "output_solute")
-        if data["params"]["solute_process"] == "enabled":
-            if data['params']['gwmodel_type'] == 'mf96':
-                stream_conc = m.get_str_solute(data, roff_agg, stream_solute_aggregation)
-                solute.write_stream_solute_csv(data, stream_conc)
-            solute.write_solute_csv(data, solute_aggregation)
-            solute.write_mi_csv(data, solute_mi_aggregation)
+        output_solute(data, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, roff_agg)
 
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
@@ -844,6 +839,14 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def output_solute(data, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, roff_agg):
+    if data["params"]["solute_process"] == "enabled":
+        if data['params']['gwmodel_type'] == 'mf96':
+            stream_conc = m.get_str_solute(data, roff_agg, stream_solute_aggregation)
+            solute.write_stream_solute_csv(data, stream_conc)
+        solute.write_solute_csv(data, solute_aggregation)
+        solute.write_mi_csv(data, solute_mi_aggregation)
 
 def scrape_run_name_and_start_logging(debug, env, input_file, file_opener=DefaultFileResource._default_file_open):
     level = logging.DEBUG if debug else logging.INFO
