@@ -38,6 +38,7 @@ import swacmod.flopy_adaptor as flopy_adaptor
 import swacmod.version_information as version_information
 from swacmod.input_files.input_files_version_2.default_file_resource import DefaultFileResource
 import swacmod.stuff_to_be_named_later as stuff_module
+import swacmod.output_functions as output_functions
 
 # Compile and import model
 from swacmod import model as m
@@ -574,32 +575,32 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         check_open_files(file_format, skip, data)
 
         timer.switch_to(output_timer_token, "reporting agg loop")
-        output_water_balance(file_format, reduced, env, stuff.reporting_agg, data)
+        output_functions.output_water_balance(file_format, reduced, env, stuff.reporting_agg, data)
 
         timer.switch_to(output_timer_token, "output_individual")
-        output_individual(file_format, reduced, env, stuff.single_node_output, data)
+        output_functions.output_individual(file_format, reduced, env, stuff.single_node_output, data)
 
         timer.switch_to(output_timer_token, "swrecharge_process")
         if params["swrecharge_process"] == "enabled":
             del runoff_recharge, tmp, runoff, recharge
             gc.collect()
         timer.switch_to(output_timer_token, "output_recharge")
-        output_recharge(env, data, recharge_agg)
+        output_functions.output_recharge(env, data, recharge_agg)
 
         timer.switch_to(output_timer_token, "spatial_output_date")
-        output_spatial_output_date(reduced, env, stuff.spatial, data)
+        output_functions.output_spatial_output_date(reduced, env, stuff.spatial, data)
 
         timer.switch_to(output_timer_token, "output_sfr")
-        roff_agg = output_sfr(env, data, runoff_agg)
+        roff_agg = output_functions.output_sfr(env, data, runoff_agg)
 
         timer.switch_to(output_timer_token, "output_evt")
-        output_evt(env, data, runoff_agg, evtr_agg, output_timer_token)
+        output_functions.output_evt(env, data, runoff_agg, evtr_agg, output_timer_token)
 
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
 
         timer.switch_to(output_timer_token, "output_solute")
-        output_solute(data, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, roff_agg)
+        output_functions.output_solute(data, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, roff_agg)
 
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
@@ -734,118 +735,6 @@ def run_multiprocessing(test, env, timer_switcher_for_run, stuff, level, log_pat
 def check_open_files(file_format, skip, data):
     if not skip:
         io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
-
-def output_water_balance(file_format, reduced, env, reporting_agg, data):
-    for num, key in enumerate(reporting_agg.keys()):
-        env.print("\t- Report file (%d of %d)" %
-                (num + 1, len(reporting_agg.keys())))
-        io.dump_water_balance(
-                data,
-                reporting_agg[key],
-                file_format,
-                u.CONSTANTS["OUTPUT_DIR"],
-                zone=key,
-                reduced=reduced,
-            )
-
-def output_individual(file_format, reduced, env, single_node_output, data):
-    for node in list(data["params"]["output_individual"]):
-        env.print("\t- Node output file")
-        io.dump_water_balance(
-                data,
-                single_node_output[node],
-                file_format,
-                u.CONSTANTS["OUTPUT_DIR"],
-                node=node,
-                reduced=reduced,
-            )
-
-def output_recharge(env, data, recharge_agg):
-    if data["params"]["output_recharge"]:
-        env.print("\t- Recharge file")
-        if data['params']['gwmodel_type'] == 'mfusg':
-            io.dump_recharge_file(data, recharge_agg)
-        elif data['params']['gwmodel_type'] == 'mf6':
-            flopy_adaptor.write_mf_gwf_rch(m.get_mf6rch_file(data, recharge_agg))
-        elif data['params']['gwmodel_type'] == 'mf96':
-            io.dump_mf96_recharge_file(data, recharge_agg)
-
-def output_spatial_output_date(reduced, env, spatial, data):
-    if data["params"]["spatial_output_date"]:
-        env.print("\t- Spatial file")
-        io.dump_spatial_output(env,
-                                   data,
-                                   spatial,
-                                   u.CONSTANTS["OUTPUT_DIR"],
-                                   reduced=reduced)
-
-def output_sfr(env, data, runoff_agg):
-    roff_agg = None
-    if data["params"]["output_sfr"]:
-        env.print("\t- SFR file")
-        if data['params']['gwmodel_type'] == 'mf96':
-            roff_agg = np.copy(np.array(runoff_agg))
-            strm = m.get_str_file(data, np.copy(np.array(runoff_agg)))
-            strm.write_file()
-                # remove header from str file
-            with open(strm.file_name[0], 'r') as fin:
-                    #data = fin.read().splitlines(True)
-                lst_strm = fin.readlines()
-            with open(strm.file_name[0], 'w') as fout:
-                fout.write(lst_strm[1].rstrip() + "        -1\n")
-                fout.writelines(lst_strm[2:])
-            del strm
-        else:
-            sfr = m.get_sfr_file(data, np.copy(np.array(runoff_agg)))
-            if data['params']['gwmodel_type'] == 'mfusg':
-                io.dump_sfr_output(sfr)
-            elif data['params']['gwmodel_type'] == 'mf6':
-                sfr.write()
-            del sfr
-            gc.collect()
-    return roff_agg
-
-def output_evt(env, data, runoff_agg, evtr_agg, output_timer_token):
-    if data["params"]["output_evt"]:
-        env.print("\t- EVT file")
-
-        if data["params"]["excess_sw_process"] != "disabled":
-            timer.switch_to(output_timer_token, "output_evt (copying arrays)")
-            tmp = (np.copy(np.array(evtr_agg)) -
-                       np.copy(np.array(runoff_agg)))
-            if data["params"]["excess_sw_process"] == "sw_rip":
-                timer.switch_to(output_timer_token, "output_evt (sw_rip)")
-                evt = m.get_evt_file(data, tmp)
-            elif data["params"]["excess_sw_process"] == "sw_ow_evap":
-                timer.switch_to(output_timer_token, "output_evt (sw_ow_evap)")
-                evt = m.get_evt_file(data, np.where(tmp > 0.0, 0.0, tmp))
-            elif data["params"]["excess_sw_process"] == "sw_only":
-                timer.switch_to(output_timer_token, "output_evt (sw_only)")
-                evt = m.get_evt_file(data, -np.copy(np.array(runoff_agg)))
-            else:
-                raise Exception("Could not determine evt.")
-        else:
-            timer.switch_to(output_timer_token, "output_evt (else)")
-            evt = m.get_evt_file(data, evtr_agg)
-
-        if data['params']['gwmodel_type'] == 'mfusg':
-            timer.switch_to(output_timer_token, "output_evt (mfusg)")
-            io.dump_evt_output(evt)
-        elif data['params']['gwmodel_type'] == 'mf6':
-            timer.switch_to(output_timer_token, "output_evt (mf6)")
-            evt.write()
-        timer.switch_to(output_timer_token, "output_evt (cleaning up)")
-        evt, tmp = None, None
-        del evt, tmp
-        gc.collect()
-
-def output_solute(data, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, roff_agg):
-    if data["params"]["solute_process"] == "enabled":
-        if data['params']['gwmodel_type'] == 'mf96':
-            stream_conc = m.get_str_solute(data, roff_agg, stream_solute_aggregation)
-            solute.write_stream_solute_csv(data, stream_conc)
-        solute.write_solute_csv(data, solute_aggregation)
-        solute.write_mi_csv(data, solute_mi_aggregation)
 
 def scrape_run_name_and_start_logging(debug, env, input_file, file_opener=DefaultFileResource._default_file_open):
     level = logging.DEBUG if debug else logging.INFO
