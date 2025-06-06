@@ -366,9 +366,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     else:
         manager = mp.Manager()
         stuff = stuff_module.make_multiprocessing_stuff(manager)
-    
-    single_node_output = stuff.single_node_output
-
 
     specs_file = u.CONSTANTS["SPECS_FILE"]
     input_file = u.CONSTANTS["INPUT_FILE"]
@@ -456,9 +453,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     spatial_index = make_spatial_index(data, days)
 
     if ff.disable_multiprocessing:
-        run_single_threaded(test, env, timer_switcher_for_run, stuff.reporting_agg, stuff.reporting, stuff.spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
+        run_single_threaded(test, env, timer_switcher_for_run, stuff.reporting_agg, stuff.reporting, stuff.spatial, stuff.single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
     else:
-        run_multiprocessing(test, env, timer_switcher_for_run, stuff.reporting_agg, stuff.reporting, stuff.spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
+        run_multiprocessing(test, env, timer_switcher_for_run, stuff.reporting_agg, stuff.reporting, stuff.spatial, stuff.single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (output)")
     output_timer_token = timer.make_time_switcher()
@@ -571,11 +568,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
                 if node in data["params"]["output_individual"]:
                     # amend single_node_output with ror values
                     # this method required due to upstream bug
-                    tmp_node = single_node_output[node]
+                    tmp_node = stuff.single_node_output[node]
                     tmp_node["runoff_recharge"] = ror_array.copy()
                     tmp_node["combined_recharge"] = np.copy(rch_array)
                     tmp_node["combined_str"] = np.copy(ro_array)
-                    single_node_output[node] = tmp_node
+                    stuff.single_node_output[node] = tmp_node
 
             # copy new bits into cat output
             term = "runoff_recharge"
@@ -596,7 +593,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         output_water_balance(file_format, reduced, env, stuff.reporting_agg, data)
 
         timer.switch_to(output_timer_token, "output_individual")
-        output_individual(file_format, reduced, env, single_node_output, data)
+        output_individual(file_format, reduced, env, stuff.single_node_output, data)
 
         timer.switch_to(output_timer_token, "swrecharge_process")
         if params["swrecharge_process"] == "enabled":
