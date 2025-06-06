@@ -274,15 +274,15 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
     if node in data["params"]["output_individual"]:
         timer.switch_to(time_switcher, "aggregate_output (output_individual)")
         # if this node for individual output then preserve
-        single_node_output[node] = output.copy()
+        stuff.single_node_output[node] = output.copy()
     timer.switch_to(time_switcher, "aggregate_output > (call m.aggregate)")
     key = (num, rep_zone)
     area = data["params"]["node_areas"][node]
-    if key not in reporting_agg:
-        reporting_agg[key] = m.aggregate(output, area, pond_area)
+    if key not in stuff.reporting_agg:
+        stuff.reporting_agg[key] = m.aggregate(output, area, pond_area)
     else:
-        reporting_agg[key] = m.aggregate(
-            output, area, pond_area, reporting=reporting_agg[key])
+        stuff.reporting_agg[key] = m.aggregate(
+            output, area, pond_area, reporting=stuff.reporting_agg[key])
 
     timer.switch_to(time_switcher, "aggregate_output > (output_recharge)")
     if data["params"]["output_recharge"]:
@@ -339,7 +339,7 @@ def aggregate_output(time_switcher, node, data, output, single_node_output, num,
 
     timer.switch_to(time_switcher, "aggregate_output > (spatial_output_date)")
     if data["params"]["spatial_output_date"]:
-        spatial[node] = m.aggregate(output,
+        stuff.spatial[node] = m.aggregate(output,
                                     area,
                                     pond_area,
                                     index=spatial_index)
