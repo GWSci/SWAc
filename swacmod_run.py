@@ -180,7 +180,6 @@ def run_process(
         data,
         test,
         stuff,
-        reporting_agg,
         recharge_agg,
         runoff_agg,
         evtr_agg,
@@ -191,10 +190,7 @@ def run_process(
         runoff,
         log_path,
         level,
-        spatial,
         spatial_index,
-        reporting,
-        single_node_output,
         q,
         pbar=None
 ):
@@ -244,18 +240,6 @@ def run_process(
     timer.print_time_switcher_report(time_switcher)
     timer.print_time_switcher_report(comparison_time_switcher)
     timer.print_time_switcher_report(timer_token_run_process)
-
-    return (
-        reporting_agg,
-        recharge_agg,
-        spatial,
-        runoff_agg,
-        evtr_agg,
-        recharge,
-        runoff,
-        reporting,
-        single_node_output,
-    )
 
 def compare_lambdas(name, time_switcher, unoptimised, optimised):
 
@@ -682,7 +666,6 @@ def run_single_threaded(test, env, timer_switcher_for_run, stuff, reporting_agg,
                 data,
                 test,
                 stuff,
-                reporting_agg,
                 recharge_agg,
                 runoff_agg,
                 evtr_agg,
@@ -693,10 +676,7 @@ def run_single_threaded(test, env, timer_switcher_for_run, stuff, reporting_agg,
                 runoff,
                 log_path,
                 level,
-                spatial,
                 spatial_index,
-                reporting,
-                single_node_output,
                 q,
                 pbar
             )
@@ -723,7 +703,6 @@ def run_multiprocessing(test, env, timer_switcher_for_run, stuff, reporting_agg,
                     data,
                     test,
                     stuff,
-                    reporting_agg,
                     recharge_agg,
                     runoff_agg,
                     evtr_agg,
@@ -734,10 +713,7 @@ def run_multiprocessing(test, env, timer_switcher_for_run, stuff, reporting_agg,
                     runoff,
                     log_path,
                     level,
-                    spatial,
                     spatial_index,
-                    reporting,
-                    single_node_output,
                     q,
                 ),
             )
