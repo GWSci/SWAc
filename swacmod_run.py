@@ -768,38 +768,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
                 gc.collect()
 
         timer.switch_to(output_timer_token, "output_evt")
-        if data["params"]["output_evt"]:
-            env.print("\t- EVT file")
-
-            if data["params"]["excess_sw_process"] != "disabled":
-                timer.switch_to(output_timer_token, "output_evt (copying arrays)")
-                tmp = (np.copy(np.array(evtr_agg)) -
-                       np.copy(np.array(runoff_agg)))
-                if data["params"]["excess_sw_process"] == "sw_rip":
-                    timer.switch_to(output_timer_token, "output_evt (sw_rip)")
-                    evt = m.get_evt_file(data, tmp)
-                elif data["params"]["excess_sw_process"] == "sw_ow_evap":
-                    timer.switch_to(output_timer_token, "output_evt (sw_ow_evap)")
-                    evt = m.get_evt_file(data, np.where(tmp > 0.0, 0.0, tmp))
-                elif data["params"]["excess_sw_process"] == "sw_only":
-                    timer.switch_to(output_timer_token, "output_evt (sw_only)")
-                    evt = m.get_evt_file(data, -np.copy(np.array(runoff_agg)))
-                else:
-                    raise Exception("Could not determine evt.")
-            else:
-                timer.switch_to(output_timer_token, "output_evt (else)")
-                evt = m.get_evt_file(data, evtr_agg)
-
-            if data['params']['gwmodel_type'] == 'mfusg':
-                timer.switch_to(output_timer_token, "output_evt (mfusg)")
-                io.dump_evt_output(evt)
-            elif data['params']['gwmodel_type'] == 'mf6':
-                timer.switch_to(output_timer_token, "output_evt (mf6)")
-                evt.write()
-            timer.switch_to(output_timer_token, "output_evt (cleaning up)")
-            evt, tmp = None, None
-            del evt, tmp
-            gc.collect()
+        output_evt(env, data, runoff_agg, evtr_agg, output_timer_token)
 
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
@@ -839,6 +808,40 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def output_evt(env, data, runoff_agg, evtr_agg, output_timer_token):
+    if data["params"]["output_evt"]:
+        env.print("\t- EVT file")
+
+        if data["params"]["excess_sw_process"] != "disabled":
+            timer.switch_to(output_timer_token, "output_evt (copying arrays)")
+            tmp = (np.copy(np.array(evtr_agg)) -
+                       np.copy(np.array(runoff_agg)))
+            if data["params"]["excess_sw_process"] == "sw_rip":
+                timer.switch_to(output_timer_token, "output_evt (sw_rip)")
+                evt = m.get_evt_file(data, tmp)
+            elif data["params"]["excess_sw_process"] == "sw_ow_evap":
+                timer.switch_to(output_timer_token, "output_evt (sw_ow_evap)")
+                evt = m.get_evt_file(data, np.where(tmp > 0.0, 0.0, tmp))
+            elif data["params"]["excess_sw_process"] == "sw_only":
+                timer.switch_to(output_timer_token, "output_evt (sw_only)")
+                evt = m.get_evt_file(data, -np.copy(np.array(runoff_agg)))
+            else:
+                raise Exception("Could not determine evt.")
+        else:
+            timer.switch_to(output_timer_token, "output_evt (else)")
+            evt = m.get_evt_file(data, evtr_agg)
+
+        if data['params']['gwmodel_type'] == 'mfusg':
+            timer.switch_to(output_timer_token, "output_evt (mfusg)")
+            io.dump_evt_output(evt)
+        elif data['params']['gwmodel_type'] == 'mf6':
+            timer.switch_to(output_timer_token, "output_evt (mf6)")
+            evt.write()
+        timer.switch_to(output_timer_token, "output_evt (cleaning up)")
+        evt, tmp = None, None
+        del evt, tmp
+        gc.collect()
 
 def output_solute(data, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, roff_agg):
     if data["params"]["solute_process"] == "enabled":
