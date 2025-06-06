@@ -471,11 +471,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     else:
         spatial_index = None
 
-    workers = []
     if ff.disable_multiprocessing:
         run_single_threaded(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
     else:
-        run_multiprocessing(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index, workers)
+        run_multiprocessing(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (output)")
     output_timer_token = timer.make_time_switcher()
@@ -708,7 +707,8 @@ def run_single_threaded(test, env, timer_switcher_for_run, reporting_agg, report
     q.put(None)
     pbar.close()
 
-def run_multiprocessing(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index, workers):
+def run_multiprocessing(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
+    workers = []
     q = mp.Queue()
     lproc = mp.Process(target=listener, args=(q, nnodes))
     lproc.start()
