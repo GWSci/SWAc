@@ -695,17 +695,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
             io.check_open_files(data, file_format, u.CONSTANTS["OUTPUT_DIR"])
 
         timer.switch_to(output_timer_token, "reporting agg loop")
-        for num, key in enumerate(reporting_agg.keys()):
-            env.print("\t- Report file (%d of %d)" %
-                (num + 1, len(reporting_agg.keys())))
-            io.dump_water_balance(
-                data,
-                reporting_agg[key],
-                file_format,
-                u.CONSTANTS["OUTPUT_DIR"],
-                zone=key,
-                reduced=reduced,
-            )
+        output_water_balance(file_format, reduced, env, reporting_agg, data)
 
         timer.switch_to(output_timer_token, "output_individual")
         output_individual(file_format, reduced, env, single_node_output, data)
@@ -764,6 +754,19 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def output_water_balance(file_format, reduced, env, reporting_agg, data):
+    for num, key in enumerate(reporting_agg.keys()):
+        env.print("\t- Report file (%d of %d)" %
+                (num + 1, len(reporting_agg.keys())))
+        io.dump_water_balance(
+                data,
+                reporting_agg[key],
+                file_format,
+                u.CONSTANTS["OUTPUT_DIR"],
+                zone=key,
+                reduced=reduced,
+            )
 
 def output_individual(file_format, reduced, env, single_node_output, data):
     for node in list(data["params"]["output_individual"]):
