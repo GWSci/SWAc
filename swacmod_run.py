@@ -708,16 +708,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
             )
 
         timer.switch_to(output_timer_token, "output_individual")
-        for node in list(data["params"]["output_individual"]):
-            env.print("\t- Node output file")
-            io.dump_water_balance(
-                data,
-                single_node_output[node],
-                file_format,
-                u.CONSTANTS["OUTPUT_DIR"],
-                node=node,
-                reduced=reduced,
-            )
+        output_individual(file_format, reduced, env, single_node_output, data)
 
         timer.switch_to(output_timer_token, "swrecharge_process")
         if params["swrecharge_process"] == "enabled":
@@ -773,6 +764,18 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     timer.switch_off(total_timer_switcher_for_run)
     timer.print_time_switcher_report(timer_switcher_for_run)
     timer.print_time_switcher_report(total_timer_switcher_for_run)
+
+def output_individual(file_format, reduced, env, single_node_output, data):
+    for node in list(data["params"]["output_individual"]):
+        env.print("\t- Node output file")
+        io.dump_water_balance(
+                data,
+                single_node_output[node],
+                file_format,
+                u.CONSTANTS["OUTPUT_DIR"],
+                node=node,
+                reduced=reduced,
+            )
 
 def output_recharge(env, data, recharge_agg):
     if data["params"]["output_recharge"]:
