@@ -367,9 +367,6 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         manager = mp.Manager()
         stuff = stuff_module.make_multiprocessing_stuff(manager)
     
-    reporting_agg = stuff.reporting_agg
-    reporting_agg2 = stuff.reporting_agg2
-    reporting = stuff.reporting
     spatial = stuff.spatial
     single_node_output = stuff.single_node_output
 
@@ -460,9 +457,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     spatial_index = make_spatial_index(data, days)
 
     if ff.disable_multiprocessing:
-        run_single_threaded(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
+        run_single_threaded(test, env, timer_switcher_for_run, stuff.reporting_agg, stuff.reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
     else:
-        run_multiprocessing(test, env, timer_switcher_for_run, reporting_agg, reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
+        run_multiprocessing(test, env, timer_switcher_for_run, stuff.reporting_agg, stuff.reporting, spatial, single_node_output, level, log_path, data, nnodes, recharge_agg, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (output)")
     output_timer_token = timer.make_time_switcher()
@@ -474,12 +471,12 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 
         # aggregate over processes
         timer.switch_to(output_timer_token, "reporting_agg")
-        reporting_agg = aggregate_reporting(reporting_agg)
+        stuff.reporting_agg = aggregate_reporting(stuff.reporting_agg)
         timer.switch_to(output_timer_token, "swrecharge_process")
         if params["swrecharge_process"] == "enabled":
 
             for cat in data["params"]["reporting_zone_mapping"].values():
-                reporting_agg2[cat] = {}
+                stuff.reporting_agg2[cat] = {}
 
             # ended up needing this for catchment output - bit silly
             if ff.disable_multiprocessing:
@@ -561,15 +558,15 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
                     area = data["params"]["node_areas"][node]
                     ror = {"runoff_recharge": ror_array}
 
-                    if "runoff_recharge" not in reporting_agg2[rep_zone]:
-                        reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+                    if "runoff_recharge" not in stuff.reporting_agg2[rep_zone]:
+                        stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
                             ror, area, pond_area)
                     else:
-                        reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+                        stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
                             ror,
                             area,
                             pond_area,
-                            reporting=reporting_agg2[rep_zone]["runoff_recharge"])
+                            reporting=stuff.reporting_agg2[rep_zone]["runoff_recharge"])
 
                 # check for single node
                 if node in data["params"]["output_individual"]:
@@ -583,13 +580,13 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 
             # copy new bits into cat output
             term = "runoff_recharge"
-            for cat in reporting_agg2:
-                if "runoff_recharge" in reporting_agg2[cat]:
-                    reporting_agg[cat]["combined_recharge"] += reporting_agg2[
+            for cat in stuff.reporting_agg2:
+                if "runoff_recharge" in stuff.reporting_agg2[cat]:
+                    stuff.reporting_agg[cat]["combined_recharge"] += stuff.reporting_agg2[
                         cat][term][term]
-                    reporting_agg[cat]["combined_str"] -= reporting_agg2[cat][
+                    stuff.reporting_agg[cat]["combined_str"] -= stuff.reporting_agg2[cat][
                         term][term]
-                    reporting_agg[cat]["runoff_recharge"] = reporting_agg2[
+                    stuff.reporting_agg[cat]["runoff_recharge"] = stuff.reporting_agg2[
                         cat][term][term]
 
         env.print("\nWriting output files:")
@@ -597,7 +594,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         check_open_files(file_format, skip, data)
 
         timer.switch_to(output_timer_token, "reporting agg loop")
-        output_water_balance(file_format, reduced, env, reporting_agg, data)
+        output_water_balance(file_format, reduced, env, stuff.reporting_agg, data)
 
         timer.switch_to(output_timer_token, "output_individual")
         output_individual(file_format, reduced, env, single_node_output, data)
@@ -648,7 +645,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 
     logging.info("End SWAcMod run")
 
-    del reporting, spatial, reporting_agg, reporting_agg2
+    del spatial
 
     gc.collect()
 
