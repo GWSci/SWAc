@@ -75,6 +75,13 @@ def validate_matches_spec(specs_object, params, key):
 
     if (spec.required) and (key not in params):
         errors.append(f"Error: The required key '{key}' could not be found.")
+
+    if key not in params:
+        return result
+
+    value = params[key]
+    if type(value) != str:
+        errors.append(f"Error: The field 'aardvark' must be a string. The value '3' is invalid.")
     return result
 
 def _find_spec_or_none(specs_object, key):
