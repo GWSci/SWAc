@@ -63,3 +63,6 @@ def extract_keys_or_empty_list(something_that_might_have_keys):
         return something_that_might_have_keys.keys()
     except Exception:
         return []
+
+def validate_matches_spec(specs, params, key):
+    pass
