@@ -65,7 +65,6 @@ def extract_keys_or_empty_list(something_that_might_have_keys):
         return []
 
 def validate_matches_spec(specs, params, key):
-    params = None
     errors = None
     warnings = None
     return ParsedInputData(params, errors, warnings)
