@@ -65,5 +65,5 @@ def extract_keys_or_empty_list(something_that_might_have_keys):
         return []
 
 def validate_matches_spec(specs, params, key):
-    errors = ["Error: No spec was found for the key 'aardvark'. Please contact support."]
+    errors = [f"Error: No spec was found for the key '{key}'. Please contact support."]
     return ParsedInputData(params, errors, [])

@@ -11,6 +11,15 @@ class Test_Specs(unittest.TestCase):
             params,
             "Error: No spec was found for the key 'aardvark'. Please contact support.")
 
+    def test_validate_matches_spec_returns_error_when_key_is_not_in_spec_2(self):
+        params = {}
+        specs = {}
+        actual = validator.validate_matches_spec(specs, params, "bat")
+        self.assert_one_error(
+            actual,
+            params,
+            "Error: No spec was found for the key 'bat'. Please contact support.")
+
     def assert_one_error(self, actual, params, expected_error):
         self.assertEqual(params, actual.data)
         self.assertEqual([], actual.warnings)
