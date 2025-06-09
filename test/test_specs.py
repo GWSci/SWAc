@@ -78,17 +78,17 @@ class Test_Specs(unittest.TestCase):
         actual = validator.validate_matches_spec(specs_object, params, "bat")
         self.assert_one_error(actual, params, "Error: The field 'bat' must be a string. The value '5.7' is invalid.")
 
-    def test_validate_matches_spec_returns_error_when_int_type_does_not_match(self):
-        params = {"aardvark": "bat"}
-        specs_object = [Input_Parameter("aardvark", required=True, alt_format=[], type=[int], constraints=None)]
-        actual = validator.validate_matches_spec(specs_object, params, "aardvark")
-        self.assert_one_error(actual, params, "Error: The field 'aardvark' must be an integer. The value 'bat' is invalid.")
-
     def test_validate_matches_spec_returns_no_error_when_string_type_matches(self):
         params = {"aardvark": "bat"}
         specs_object = [Input_Parameter("aardvark", required=True, alt_format=[], type=[str], constraints=None)]
         actual = validator.validate_matches_spec(specs_object, params, "aardvark")
         self.assert_no_errors(actual, params)
+
+    def test_validate_matches_spec_returns_error_when_int_type_does_not_match(self):
+        params = {"aardvark": "bat"}
+        specs_object = [Input_Parameter("aardvark", required=True, alt_format=[], type=[int], constraints=None)]
+        actual = validator.validate_matches_spec(specs_object, params, "aardvark")
+        self.assert_one_error(actual, params, "Error: The field 'aardvark' must be an integer. The value 'bat' is invalid.")
 
     def assert_one_error(self, actual, params, expected_error):
         self.assertEqual(params, actual.data)
