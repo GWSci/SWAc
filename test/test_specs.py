@@ -54,6 +54,12 @@ class Test_Specs(unittest.TestCase):
         actual = validator.validate_matches_spec(specs_object, params, "aardvark")
         self.assert_no_errors(actual, params)
 
+    def test_validate_matches_spec_returns_no_errors_when_a_non_required_field_is_present(self):
+        params = {"aardvark": "bat"}
+        specs_object = [Input_Parameter("aardvark", required=False, alt_format=[], type=[str], constraints=None)]
+        actual = validator.validate_matches_spec(specs_object, params, "aardvark")
+        self.assert_no_errors(actual, params)
+
     def assert_one_error(self, actual, params, expected_error):
         self.assertEqual(params, actual.data)
         self.assertEqual([], actual.warnings)
