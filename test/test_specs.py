@@ -96,6 +96,12 @@ class Test_Specs(unittest.TestCase):
         actual = validator.validate_matches_spec(specs_object, params, "aardvark")
         self.assert_one_error(actual, params, "Error: The field 'aardvark' must be an integer. The value '3.5' is invalid.")
 
+    def test_validate_matches_spec_returns_error_when_int_type_matches(self):
+        params = {"aardvark": 3}
+        specs_object = [Input_Parameter("aardvark", required=True, alt_format=[], type=[int], constraints=None)]
+        actual = validator.validate_matches_spec(specs_object, params, "aardvark")
+        self.assert_no_errors(actual, params)
+
     def assert_one_error(self, actual, params, expected_error):
         self.assertEqual(params, actual.data)
         self.assertEqual([], actual.warnings)
