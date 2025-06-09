@@ -10,3 +10,4 @@ class Test_Specs(unittest.TestCase):
 
     def assert_one_error(self, actual, params, expected_error):
         self.assertEqual(params, actual.data)
+        self.assertEqual([], actual.warnings)
