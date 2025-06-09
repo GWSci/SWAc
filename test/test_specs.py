@@ -4,8 +4,8 @@ import swacmod.input_files.input_files_version_2.validator as validator
 class Test_Specs(unittest.TestCase):
     def test_validate_matches_spec_returns_error_when_key_is_not_in_spec(self):
         params = {}
-        specs = {}
-        actual = validator.validate_matches_spec(specs, params, "aardvark")
+        specs_object = []
+        actual = validator.validate_matches_spec(specs_object, params, "aardvark")
         self.assert_one_error(
             actual,
             params,
@@ -13,8 +13,8 @@ class Test_Specs(unittest.TestCase):
 
     def test_validate_matches_spec_returns_error_when_key_is_not_in_spec_2(self):
         params = {}
-        specs = {}
-        actual = validator.validate_matches_spec(specs, params, "bat")
+        specs_object = []
+        actual = validator.validate_matches_spec(specs_object, params, "bat")
         self.assert_one_error(
             actual,
             params,
