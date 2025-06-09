@@ -30,6 +30,15 @@ class Test_Specs(unittest.TestCase):
             params,
             "Error: The required key 'aardvark' could not be found.")
 
+    def test_validate_matches_spec_returns_error_when_required_key_is_missing_2(self):
+        params = {}
+        specs_object = [Input_Parameter("bat", required=True, alt_format=[], type=[str], constraints=None)]
+        actual = validator.validate_matches_spec(specs_object, params, "bat")
+        self.assert_one_error(
+            actual,
+            params,
+            "Error: The required key 'bat' could not be found.")
+
     def assert_one_error(self, actual, params, expected_error):
         self.assertEqual(params, actual.data)
         self.assertEqual([], actual.warnings)

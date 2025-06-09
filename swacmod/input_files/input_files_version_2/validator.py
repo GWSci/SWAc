@@ -68,5 +68,5 @@ def validate_matches_spec(specs_object, params, key):
     if len(specs_object) == 0:
         errors = [f"Error: No spec was found for the key '{key}'. Please contact support."]
     else:
-        errors = [f"Error: The required key 'aardvark' could not be found."]
+        errors = [f"Error: The required key '{key}' could not be found."]
     return ParsedInputData(params, errors, [])
