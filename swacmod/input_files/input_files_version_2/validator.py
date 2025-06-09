@@ -81,7 +81,7 @@ def validate_matches_spec(specs_object, params, key):
 
     value = params[key]
     if type(value) != str:
-        errors.append(f"Error: The field 'aardvark' must be a string. The value '3' is invalid.")
+        errors.append(f"Error: The field '{key}' must be a string. The value '{value}' is invalid.")
     return result
 
 def _find_spec_or_none(specs_object, key):

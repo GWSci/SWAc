@@ -76,7 +76,7 @@ class Test_Specs(unittest.TestCase):
         params = {"bat": 5.7}
         specs_object = [Input_Parameter("bat", required=True, alt_format=[], type=[str], constraints=None)]
         actual = validator.validate_matches_spec(specs_object, params, "bat")
-        self.assert_one_error(actual, params, "Error: The field 'aardvark' must be a string. The value '3' is invalid.")
+        self.assert_one_error(actual, params, "Error: The field 'bat' must be a string. The value '5.7' is invalid.")
 
     def assert_one_error(self, actual, params, expected_error):
         self.assertEqual(params, actual.data)
