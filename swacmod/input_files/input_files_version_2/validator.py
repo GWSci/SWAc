@@ -65,8 +65,12 @@ def extract_keys_or_empty_list(something_that_might_have_keys):
         return []
 
 def validate_matches_spec(specs_object, params, key):
-    if len(specs_object) == 0:
+    is_spec_found = False
+    for spec in specs_object:
+        if key == spec.name:
+            is_spec_found = True
+            errors = [f"Error: The required key '{key}' could not be found."]
+            break
+    if not is_spec_found:
         errors = [f"Error: No spec was found for the key '{key}'. Please contact support."]
-    else:
-        errors = [f"Error: The required key '{key}' could not be found."]
     return ParsedInputData(params, errors, [])
