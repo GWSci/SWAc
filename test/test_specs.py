@@ -6,8 +6,12 @@ class Test_Specs(unittest.TestCase):
         params = {}
         specs = {}
         actual = validator.validate_matches_spec(specs, params, "aardvark")
-        self.assert_one_error(actual, params, "some error")
+        self.assert_one_error(
+            actual,
+            params,
+            "Error: No spec was found for the key 'aardvark'. Please contact support.")
 
     def assert_one_error(self, actual, params, expected_error):
         self.assertEqual(params, actual.data)
         self.assertEqual([], actual.warnings)
+        self.assertEqual([expected_error], actual.errors)
