@@ -68,7 +68,8 @@ def validate_matches_spec(specs_object, params, key):
     spec = _find_spec_or_none(specs_object, key)
 
     if spec == None:
-        return ParsedInputData(params, [f"Error: No spec was found for the key '{key}'. Please contact support."], [])
+        message = f"Error: No spec was found for the key '{key}'. Please contact support."
+        return ParsedInputData(params, [message], [])
 
     errors = []
     errors.append(f"Error: The required key '{key}' could not be found.")
