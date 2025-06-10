@@ -70,13 +70,19 @@ class Test_Specs(unittest.TestCase):
         params = {"aardvark": 3}
         specs_object = [Input_Parameter("aardvark", True, [], [str], None)]
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
-        self.assert_one_error(actual, params, "Error: The field 'aardvark' must be a string. The value '3' is invalid.")
+        self.assert_one_error(
+            actual,
+            params,
+            "Error: The field 'aardvark' must be a string. The value '3' is invalid.")
 
     def test_validate_spec_returns_error_when_string_type_does_not_match(self):
         params = {"bat": 5.7}
         specs_object = [Input_Parameter("bat", True, [], [str], None)]
         actual = matches_spec_adaptor(specs_object, params, "bat")
-        self.assert_one_error(actual, params, "Error: The field 'bat' must be a string. The value '5.7' is invalid.")
+        self.assert_one_error(
+            actual,
+            params,
+            "Error: The field 'bat' must be a string. The value '5.7' is invalid.")
 
     def test_validate_spec_returns_no_error_when_string_type_matches(self):
         params = {"aardvark": "bat"}
@@ -88,13 +94,19 @@ class Test_Specs(unittest.TestCase):
         params = {"aardvark": "bat"}
         specs_object = [Input_Parameter("aardvark", True, [], [int], None)]
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
-        self.assert_one_error(actual, params, "Error: The field 'aardvark' must be an integer. The value 'bat' is invalid.")
+        self.assert_one_error(
+            actual,
+            params,
+            "Error: The field 'aardvark' must be an integer. The value 'bat' is invalid.")
 
     def test_validate_spec_returns_error_when_int_type_does_not_match_float(self):
         params = {"aardvark": 3.5}
         specs_object = [Input_Parameter("aardvark", True, [], [int], None)]
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
-        self.assert_one_error(actual, params, "Error: The field 'aardvark' must be an integer. The value '3.5' is invalid.")
+        self.assert_one_error(
+            actual,
+            params,
+            "Error: The field 'aardvark' must be an integer. The value '3.5' is invalid.")
 
     def test_validate_spec_returns_error_when_int_type_matches(self):
         params = {"aardvark": 3}
