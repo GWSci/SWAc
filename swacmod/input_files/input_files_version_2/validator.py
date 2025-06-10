@@ -85,11 +85,14 @@ def validate_matches_spec(specs_object, params, key):
         errors.append(f"Error: The field '{key}' must be {type_string}. The value '{value}' is invalid.")
     return result
 
-def _convert_type_to_string(type):
-    if type[0] == str:
+def _convert_type_to_string(spec_type):
+    if spec_type[0] == str:
         return "a string"
-    if type[0] == int:
+    if spec_type[0] == int:
         return "an integer"
+    if spec_type[0] == bool:
+        return "a boolean"
+    return f"{type(spec_type[0])}"
 
 def _find_spec_or_none(specs_object, key):
     for spec in specs_object:
