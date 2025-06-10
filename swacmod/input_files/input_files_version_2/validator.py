@@ -102,11 +102,19 @@ def _convert_type_to_string(spec_type):
     article = find_article(word)
 
     if spec_type[0] == set:
-        suffix = " of integers"
+        suffix = f" of {convert_type_to_english(spec_type[1])}s"
     else:
         suffix = ""
 
     return f"{article} {word}{suffix}"
+
+def convert_type_to_english(t):
+    type_to_english = {
+        str: "string",
+        int: "integer",
+        bool: "boolean",
+    }
+    return type_to_english.get(t, t.__name__)
 
 def find_article(word):
     if word[0] in ["a", "e", "i", "o", "u"]:
