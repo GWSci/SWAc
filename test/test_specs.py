@@ -109,6 +109,12 @@ class Test_Specs(unittest.TestCase):
             "x",
             "Error: The field 'aardvark' must be a date. The value 'x' is invalid.")
 
+    def test_validate_spec_returns_error_when_datetime_type_does_not_match(self):
+        self._test_error_message_when_type_of_value_is_not_ok(
+            [datetime],
+            "x",
+            "Error: The field 'aardvark' must be a datetime. The value 'x' is invalid.")
+
     def _test_error_message_when_type_of_value_is_not_ok(
             self, spec_type, value, expected_error_message):
         params = {"aardvark": value}
