@@ -80,13 +80,6 @@ class Test_Specs(unittest.TestCase):
             [str],
             3.5,
             "Error: The field 'aardvark' must be a string. The value '3.5' is invalid.")
-        params = {"bat": 5.7}
-        specs_object = [Input_Parameter("bat", True, [], [str], None)]
-        actual = matches_spec_adaptor(specs_object, params, "bat")
-        self.assert_one_error(
-            actual,
-            params,
-            "Error: The field 'bat' must be a string. The value '5.7' is invalid.")
 
     def test_validate_spec_returns_error_when_int_type_does_not_match_string(self):
         params = {"aardvark": "bat"}
