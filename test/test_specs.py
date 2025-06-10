@@ -148,13 +148,16 @@ class Test_Specs(unittest.TestCase):
         self._test_no_error_when_type_of_value_is_ok(
             [datetime], datetime(2025, 12, 30))
 
+    def test_validate_spec_returns_no_error_when_set_of_ints_matches(self):
+        self._test_no_error_when_type_of_value_is_ok(
+            [set, int], {3, 5, 7})
+
     def _test_no_error_when_type_of_value_is_ok(self, spec_type, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], spec_type, None)]
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
         self.assert_no_errors(actual, params)
 
-    # TODO Test type=[datetime]
     # TODO Test type=[dict, float]
     # TODO Test type=[dict, int]
     # TODO Test type=[dict, list, float]
