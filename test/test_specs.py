@@ -108,6 +108,12 @@ class Test_Specs(unittest.TestCase):
             params,
             "Error: The field 'aardvark' must be an integer. The value '3.5' is invalid.")
 
+    def test_validate_spec_returns_no_error_when_int_type_matches(self):
+        params = {"aardvark": 7}
+        specs_object = [Input_Parameter("aardvark", True, [], [int], None)]
+        actual = matches_spec_adaptor(specs_object, params, "aardvark")
+        self.assert_no_errors(actual, params)
+
     def test_validate_spec_returns_error_when_int_type_matches(self):
         params = {"aardvark": 3}
         specs_object = [Input_Parameter("aardvark", True, [], [int], None)]
