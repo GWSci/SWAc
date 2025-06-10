@@ -99,6 +99,22 @@ def _convert_type_to_string(spec_type):
         float: "a float",
         date: "a date",
     }
+    word = f"{type(spec_type[0])}"
+    if spec_type[0] == str:
+        word = "string"
+    if spec_type[0] == int:
+        word = "integer"
+    if spec_type[0] == bool:
+        word = "boolean"
+    if spec_type[0] == float:
+        word = "float"
+    if spec_type[0] == date:
+        word = "date"
+    if spec_type[0] == datetime:
+        word = "datetime"
+
+    article = find_article(word)
+
     if spec_type[0] == str:
         return "a string"
     if spec_type[0] == int:
@@ -111,7 +127,12 @@ def _convert_type_to_string(spec_type):
         return "a date"
     if spec_type[0] == datetime:
         return "a datetime"
-    return f"{type(spec_type[0])}"
+    return f"{article} {word}"
+
+def find_article(word):
+    if word[0] in ["a", "e", "i", "o", "u"]:
+        return "an"
+    return "a"
 
 def _find_spec_or_none(specs_object, key):
     for spec in specs_object:
