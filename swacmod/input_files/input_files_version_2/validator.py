@@ -98,7 +98,6 @@ def _convert_type_to_string(spec_type):
         bool: "boolean",
         float: "float",
         date: "date",
-        datetime: "datetime",
     }
     word = type_to_english.get(spec_type[0], spec_type[0].__name__)
 
