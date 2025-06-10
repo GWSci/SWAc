@@ -99,7 +99,8 @@ class Test_Specs(unittest.TestCase):
             3.5,
             "Error: The field 'aardvark' must be an integer. The value '3.5' is invalid.")
 
-    def _test_error_message_when_type_of_value_is_not_ok(self, spec_type, value, expected_error_message):
+    def _test_error_message_when_type_of_value_is_not_ok(
+            self, spec_type, value, expected_error_message):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], spec_type, None)]
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
