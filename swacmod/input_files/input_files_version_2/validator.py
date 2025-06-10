@@ -3,6 +3,7 @@ from __future__ import print_function
 import swacmod.input_files.input_files_version_2.specs as specs_module
 from swacmod.input_files.parsed_input_data import ParsedInputData
 import os
+from datetime import date
 
 def validate_keys(specs, params, input_file):
     result = ParsedInputData(params, [], [])
@@ -99,6 +100,8 @@ def _convert_type_to_string(spec_type):
         return "a boolean"
     if spec_type[0] == float:
         return "a float"
+    if spec_type[0] == date:
+        return "a date"
     return f"{type(spec_type[0])}"
 
 def _find_spec_or_none(specs_object, key):
