@@ -93,12 +93,13 @@ def validate_matches_spec(specs_object, params, key):
 
 def _convert_type_to_string(spec_type):
     type_to_english = {
-        str: "a string",
-        int: "an integer",
-        bool: "a boolean",
-        float: "a float",
-        date: "a date",
+        str: "string",
+        int: "integer",
+        bool: "boolean",
+        float: "float",
+        date: "date",
     }
+    word = type_to_english.get(spec_type[0], f"{type(spec_type[0])}")
     word = f"{type(spec_type[0])}"
     if spec_type[0] == str:
         word = "string"
