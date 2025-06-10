@@ -94,10 +94,10 @@ class Test_Specs(unittest.TestCase):
             "Error: The field 'aardvark' must be an integer. The value 'bat' is invalid.")
 
     def test_validate_spec_returns_error_when_int_type_does_not_match_float(self):
-        spec_type = [int]
-        value = 3.5
-        expected_error_message = "Error: The field 'aardvark' must be an integer. The value '3.5' is invalid."
-        self._test_error_message_when_type_of_value_is_not_ok(spec_type, value, expected_error_message)
+        self._test_error_message_when_type_of_value_is_not_ok(
+            [int],
+            3.5,
+            "Error: The field 'aardvark' must be an integer. The value '3.5' is invalid.")
 
     def _test_error_message_when_type_of_value_is_not_ok(self, spec_type, value, expected_error_message):
         params = {"aardvark": value}
