@@ -101,7 +101,12 @@ def _convert_type_to_string(spec_type):
 
     article = find_article(word)
 
-    return f"{article} {word}"
+    if spec_type[0] == set:
+        suffix = " of integers"
+    else:
+        suffix = ""
+
+    return f"{article} {word}{suffix}"
 
 def find_article(word):
     if word[0] in ["a", "e", "i", "o", "u"]:
