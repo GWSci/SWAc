@@ -97,6 +97,8 @@ def _convert_type_to_string(spec_type):
         return "an integer"
     if spec_type[0] == bool:
         return "a boolean"
+    if spec_type[0] == float:
+        return "a float"
     return f"{type(spec_type[0])}"
 
 def _find_spec_or_none(specs_object, key):
