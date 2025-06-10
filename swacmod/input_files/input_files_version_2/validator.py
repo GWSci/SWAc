@@ -92,12 +92,7 @@ def validate_matches_spec(specs_object, params, key):
     return result
 
 def _convert_type_to_string(spec_type):
-    type_to_english = {
-        str: "string",
-        int: "integer",
-        bool: "boolean",
-    }
-    word = type_to_english.get(spec_type[0], spec_type[0].__name__)
+    word = convert_type_to_english(spec_type[0])
 
     article = find_article(word)
 
