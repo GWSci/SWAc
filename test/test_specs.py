@@ -115,8 +115,15 @@ class Test_Specs(unittest.TestCase):
         self.assert_no_errors(actual, params)
 
     def test_validate_spec_returns_error_when_int_type_matches(self):
+        self._test_no_error_when_type_of_value_is_ok([int], 3)
         params = {"aardvark": 3}
         specs_object = [Input_Parameter("aardvark", True, [], [int], None)]
+        actual = matches_spec_adaptor(specs_object, params, "aardvark")
+        self.assert_no_errors(actual, params)
+
+    def _test_no_error_when_type_of_value_is_ok(self, spec_type, value):
+        params = {"aardvark": value}
+        specs_object = [Input_Parameter("aardvark", True, [], spec_type, None)]
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
         self.assert_no_errors(actual, params)
 
