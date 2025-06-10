@@ -115,12 +115,6 @@ def _convert_type_to_string(spec_type):
 
     article = find_article(word)
 
-    if spec_type[0] == str:
-        return "a string"
-    if spec_type[0] == int:
-        return "an integer"
-    if spec_type[0] == bool:
-        return "a boolean"
     return f"{article} {word}"
 
 def find_article(word):
