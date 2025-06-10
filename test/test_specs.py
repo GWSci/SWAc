@@ -103,7 +103,7 @@ class Test_Specs(unittest.TestCase):
             "x",
             "Error: The field 'aardvark' must be a float. The value 'x' is invalid.")
 
-    def test_validate_spec_returns_error_when_float_type_does_not_match(self):
+    def test_validate_spec_returns_error_when_date_type_does_not_match(self):
         self._test_error_message_when_type_of_value_is_not_ok(
             [date],
             "x",
@@ -139,7 +139,8 @@ class Test_Specs(unittest.TestCase):
         self._test_no_error_when_type_of_value_is_ok([date], date(2025, 12, 30))
 
     def test_validate_spec_returns_no_error_when_datetime_type_matches(self):
-        self._test_no_error_when_type_of_value_is_ok([datetime], datetime(2025, 12, 30))
+        self._test_no_error_when_type_of_value_is_ok(
+            [datetime], datetime(2025, 12, 30))
 
     def _test_no_error_when_type_of_value_is_ok(self, spec_type, value):
         params = {"aardvark": value}
