@@ -142,7 +142,6 @@ class Test_Specs(unittest.TestCase):
     # TODO Test type=[dict, list, int]
     # TODO Test type=[dict, list]
     # TODO Test type=[dict, str]
-    # TODO Test type=[float]
     # TODO Test type=[list, dict, list]
     # TODO Test type=[list, list, float]
     # TODO Test type=[list, list, int]
