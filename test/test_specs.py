@@ -122,7 +122,6 @@ class Test_Specs(unittest.TestCase):
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
         self.assert_no_errors(actual, params)
 
-    # TODO Test type=[bool]
     # TODO Test type=[date]
     # TODO Test type=[datetime]
     # TODO Test type=[dict, float]
