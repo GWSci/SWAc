@@ -125,8 +125,6 @@ def _convert_type_to_string(spec_type):
         return "a float"
     if spec_type[0] == date:
         return "a date"
-    if spec_type[0] == datetime:
-        return "a datetime"
     return f"{article} {word}"
 
 def find_article(word):
