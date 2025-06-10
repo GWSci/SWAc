@@ -98,21 +98,9 @@ def _convert_type_to_string(spec_type):
         bool: "boolean",
         float: "float",
         date: "date",
+        datetime: "datetime",
     }
     word = type_to_english.get(spec_type[0], f"{type(spec_type[0])}")
-    word = f"{type(spec_type[0])}"
-    if spec_type[0] == str:
-        word = "string"
-    if spec_type[0] == int:
-        word = "integer"
-    if spec_type[0] == bool:
-        word = "boolean"
-    if spec_type[0] == float:
-        word = "float"
-    if spec_type[0] == date:
-        word = "date"
-    if spec_type[0] == datetime:
-        word = "datetime"
 
     article = find_article(word)
 
