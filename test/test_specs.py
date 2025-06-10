@@ -84,9 +84,6 @@ class Test_Specs(unittest.TestCase):
             params,
             "Error: The field 'bat' must be a string. The value '5.7' is invalid.")
 
-    def test_validate_spec_returns_no_error_when_string_type_matches(self):
-        self._test_no_error_when_type_of_value_is_ok([str], "bat")
-
     def test_validate_spec_returns_error_when_int_type_does_not_match_string(self):
         params = {"aardvark": "bat"}
         specs_object = [Input_Parameter("aardvark", True, [], [int], None)]
@@ -104,6 +101,9 @@ class Test_Specs(unittest.TestCase):
             actual,
             params,
             "Error: The field 'aardvark' must be an integer. The value '3.5' is invalid.")
+
+    def test_validate_spec_returns_no_error_when_string_type_matches(self):
+        self._test_no_error_when_type_of_value_is_ok([str], "bat")
 
     def test_validate_spec_returns_no_error_when_int_type_matches(self):
         self._test_no_error_when_type_of_value_is_ok([int], 7)
