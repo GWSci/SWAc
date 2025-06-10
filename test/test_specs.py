@@ -152,6 +152,10 @@ class Test_Specs(unittest.TestCase):
         self._test_no_error_when_type_of_value_is_ok(
             [set, int], {3, 5, 7})
 
+    def test_validate_spec_returns_no_error_when_set_of_strings_matches(self):
+        self._test_no_error_when_type_of_value_is_ok(
+            [set, str], {"a", "b", "c"})
+
     def _test_no_error_when_type_of_value_is_ok(self, spec_type, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], spec_type, None)]
