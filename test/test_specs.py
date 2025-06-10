@@ -1,7 +1,7 @@
 import unittest
 import swacmod.input_files.input_files_version_2.validator as validator
 from swacmod.input_files.input_files_version_2.specs import Input_Parameter
-from datetime import date
+from datetime import date, datetime
 
 class Test_Specs(unittest.TestCase):
     def test_validate_spec_returns_error_when_key_is_not_in_spec(self):
@@ -138,13 +138,15 @@ class Test_Specs(unittest.TestCase):
     def test_validate_spec_returns_no_error_when_date_type_matches(self):
         self._test_no_error_when_type_of_value_is_ok([date], date(2025, 12, 30))
 
+    def test_validate_spec_returns_no_error_when_datetime_type_matches(self):
+        self._test_no_error_when_type_of_value_is_ok([datetime], datetime(2025, 12, 30))
+
     def _test_no_error_when_type_of_value_is_ok(self, spec_type, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], spec_type, None)]
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
         self.assert_no_errors(actual, params)
 
-    # TODO Test type=[date]
     # TODO Test type=[datetime]
     # TODO Test type=[dict, float]
     # TODO Test type=[dict, int]

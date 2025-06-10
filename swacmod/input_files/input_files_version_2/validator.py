@@ -92,6 +92,13 @@ def validate_matches_spec(specs_object, params, key):
     return result
 
 def _convert_type_to_string(spec_type):
+    type_to_english = {
+        str: "a string",
+        int: "an integer",
+        bool: "a boolean",
+        float: "a float",
+        date: "a date",
+    }
     if spec_type[0] == str:
         return "a string"
     if spec_type[0] == int:
