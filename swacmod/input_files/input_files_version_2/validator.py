@@ -3,6 +3,7 @@ from __future__ import print_function
 import swacmod.input_files.input_files_version_2.specs as specs_module
 from swacmod.input_files.parsed_input_data import ParsedInputData
 import os
+from dataclasses import dataclass
 
 def validate_keys(specs, params, input_file):
     result = ParsedInputData(params, [], [])
@@ -63,6 +64,13 @@ def extract_keys_or_empty_list(something_that_might_have_keys):
         return something_that_might_have_keys.keys()
     except Exception:
         return []
+
+@dataclass
+class Spec_Validation_Params:
+    spec: specs_module.Input_Parameter
+    errors: list
+    key: str
+    value: object
 
 def validate_matches_spec(specs_object, params, key):
     errors = []
