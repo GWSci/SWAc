@@ -124,11 +124,12 @@ def _validate_member_types(
         iterate_members,
         member_description,
         expected_member_type):
-    is_collection_type = (
-        (type(config.value) == collection_type) 
+
+    is_collection_type = ((type(config.value) == collection_type) 
         and (config.spec.type[0] == collection_type))
     if not is_collection_type:
         return
+
     acceptable_types = find_type_synonyms(expected_member_type())
     for m in iterate_members():
         if type(m) not in acceptable_types:
