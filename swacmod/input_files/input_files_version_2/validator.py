@@ -106,6 +106,9 @@ def validate_set_member_types(spec, errors, key, value):
     iterate_members = lambda: value
     member_description = "member"
     expected_member_type = lambda: spec.type[1]
+    return _validate_member_types(spec, errors, key, value, collection_type, iterate_members, member_description, expected_member_type)
+
+def _validate_member_types(spec, errors, key, value, collection_type, iterate_members, member_description, expected_member_type):
     if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
     acceptable_types = find_type_synonyms(expected_member_type())
