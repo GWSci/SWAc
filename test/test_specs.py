@@ -296,7 +296,6 @@ class Test_Specs(unittest.TestCase):
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
         self.assert_no_errors(actual, params)
 
-    # TODO Test type=[dict, list]
     # TODO Test type=[list, dict, list]
     # TODO Test type=[list, list, float]
     # TODO Test type=[list, list, int]
