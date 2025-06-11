@@ -90,6 +90,7 @@ def validate_matches_spec(specs_object, params, key):
     validate_type(config)
     validate_set_member_types(config)
     validate_list_member_types(config)
+    validate_list_inner_types(config)
     validate_dictionary_key_types(config)
     validate_dictionary_value_types(config)
     validate_dictionary_value_inner_types(config)
@@ -185,6 +186,31 @@ def validate_dictionary_value_inner_types(config):
 
     is_collection_type = ((type(config.value) == dict) 
         and (config.spec.type[0] == dict))
+    if not is_collection_type:
+        return
+
+    acceptable_types = find_type_synonyms(expected_member_type())
+    for m in iterate_members():
+        if type(m) not in [list, np.ndarray]:
+            continue
+        for x in m:
+            if type(x) not in acceptable_types:
+                type_string = _convert_type_to_string(config.spec.type)
+                config.errors.append(
+                    f"Error: The field '{config.key}' must be {type_string}. "
+                    + f"The {member_description} '{x}' is invalid.")
+                return
+
+def validate_list_inner_types(config):
+    if len(config.spec.type) < 3:
+        return
+
+    iterate_members = lambda: config.value
+    expected_member_type = lambda: config.spec.type[2]
+    member_description = "inner list value"
+
+    is_collection_type = ((type(config.value) == list) 
+        and (config.spec.type[0] == list))
     if not is_collection_type:
         return
 
