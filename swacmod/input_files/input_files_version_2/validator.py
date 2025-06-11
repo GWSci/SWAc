@@ -170,24 +170,6 @@ def validate_list_inner_types(config):
     _validate_inner_type(
         config,list,iterate_members,"inner list value",expected_member_type)
 
-def validate_dictionary_key_types(config):
-    iterate_members = lambda: config.value.keys()
-    expected_member_type = lambda: int
-    _validate_member_types(
-        config, dict, iterate_members, "dictionary key", expected_member_type)
-
-def validate_dictionary_value_types(config):
-    iterate_members = lambda: config.value.values()
-    expected_member_type = lambda: config.spec.type[1]
-    _validate_member_types(
-        config, dict, iterate_members, "dictionary value", expected_member_type)
-
-def validate_dictionary_value_inner_types(config):
-    iterate_members = lambda: config.value.values()
-    expected_member_type = lambda: config.spec.type[2]
-    _validate_inner_type(
-        config,dict,iterate_members,"inner list value",expected_member_type)
-
 def _validate_inner_type(
         config,
         collection_type,
@@ -213,6 +195,24 @@ def _validate_inner_type(
                     f"Error: The field '{config.key}' must be {type_string}. "
                     + f"The {member_description} '{x}' is invalid.")
                 return
+
+def validate_dictionary_key_types(config):
+    iterate_members = lambda: config.value.keys()
+    expected_member_type = lambda: int
+    _validate_member_types(
+        config, dict, iterate_members, "dictionary key", expected_member_type)
+
+def validate_dictionary_value_types(config):
+    iterate_members = lambda: config.value.values()
+    expected_member_type = lambda: config.spec.type[1]
+    _validate_member_types(
+        config, dict, iterate_members, "dictionary value", expected_member_type)
+
+def validate_dictionary_value_inner_types(config):
+    iterate_members = lambda: config.value.values()
+    expected_member_type = lambda: config.spec.type[2]
+    _validate_inner_type(
+        config,dict,iterate_members,"inner list value",expected_member_type)
 
 def _convert_type_to_string(spec_type):
     word = convert_type_to_english(spec_type[0])
