@@ -94,6 +94,8 @@ def validate_matches_spec(specs_object, params, key):
     return result
 
 def validate_set_members(spec, errors, key, value):
+    if (type(value) != set) or (spec.type[0] != set):
+        return
     if (type(value) == set) and (spec.type[0] == set):
         for m in value:
             if type(m) != spec.type[1]:
