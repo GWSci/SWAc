@@ -85,6 +85,7 @@ def validate_matches_spec(specs_object, params, key):
     validate_type(key, errors, spec, value)
     validate_set_member_types(spec, errors, key, value)
     validate_dictionary_key_types(spec, errors, key, value)
+    validate_dictionary_value_types(spec, errors, key, value)
     return result
 
 def validate_type(key, errors, spec, value):
@@ -118,6 +119,16 @@ def validate_dictionary_key_types(spec, errors, key, value):
         if type(m) not in acceptable_types:
             type_string = _convert_type_to_string(spec.type)
             errors.append(f"Error: The field '{key}' must be {type_string}. The dictionary key '{m}' is invalid.")
+            break
+
+def validate_dictionary_value_types(spec, errors, key, value):
+    if (type(value) != dict) or (spec.type[0] != dict):
+        return
+    acceptable_types = find_type_synonyms(int)
+    for m in value.values():
+        if type(m) not in acceptable_types:
+            type_string = _convert_type_to_string(spec.type)
+            errors.append(f"Error: The field '{key}' must be {type_string}. The dictionary value '{m}' is invalid.")
             break
 
 def _convert_type_to_string(spec_type):
