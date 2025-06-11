@@ -94,7 +94,7 @@ def validate_matches_spec(specs_object, params, key):
     validate_type(config)
     validate_set_member_types(config)
     validate_dictionary_key_types(config)
-    validate_dictionary_value_types(config, spec, errors, key, value)
+    validate_dictionary_value_types(config)
     return result
 
 def validate_type(config):
@@ -130,9 +130,9 @@ def validate_dictionary_key_types(config):
     expected_member_type = lambda: int
     _validate_member_types(config, dict, iterate_members, "dictionary key", expected_member_type)
 
-def validate_dictionary_value_types(config, spec, errors, key, value):
-    iterate_members = lambda: value.values()
-    expected_member_type = lambda: spec.type[1]
+def validate_dictionary_value_types(config):
+    iterate_members = lambda: config.value.values()
+    expected_member_type = lambda: config.spec.type[1]
     _validate_member_types(config, dict, iterate_members, "dictionary value", expected_member_type)
 
 def _convert_type_to_string(spec_type):
