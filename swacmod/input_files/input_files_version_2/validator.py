@@ -82,8 +82,7 @@ def validate_matches_spec(specs_object, params, key):
 
     value = params[key]
 
-    t = spec.type[0]
-    acceptable_types = find_type_synonyms(t)
+    acceptable_types = find_type_synonyms(spec.type[0])
     if type(value) not in acceptable_types:
         type_string = _convert_type_to_string(spec.type)
         errors.append(f"Error: The field '{key}' must be {type_string}. The value '{value}' is invalid.")
