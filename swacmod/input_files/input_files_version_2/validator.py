@@ -82,13 +82,15 @@ def validate_matches_spec(specs_object, params, key):
 
     value = params[key]
 
+    validate_type(key, errors, spec, value)
+    validate_set_member_types(spec, errors, key, value)
+    return result
+
+def validate_type(key, errors, spec, value):
     acceptable_types = find_type_synonyms(spec.type[0])
     if type(value) not in acceptable_types:
         type_string = _convert_type_to_string(spec.type)
         errors.append(f"Error: The field '{key}' must be {type_string}. The value '{value}' is invalid.")
-
-    validate_set_member_types(spec, errors, key, value)
-    return result
 
 def find_type_synonyms(t):
     type_synonyms = {
