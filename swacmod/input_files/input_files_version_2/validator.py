@@ -172,7 +172,6 @@ def validate_dictionary_value_inner_types(config):
     expected_member_type = lambda: config.spec.type[2]
     member_description = "inner list value"
 
-
     is_collection_type = ((type(config.value) == dict) 
         and (config.spec.type[0] == dict))
     if not is_collection_type:
