@@ -113,9 +113,9 @@ def find_type_synonyms(t):
 def validate_set_member_types(config, spec, errors, key, value):
     iterate_members = lambda: value
     expected_member_type = lambda: spec.type[1]
-    _validate_member_types(config, spec, errors, key, value, set, iterate_members, "member", expected_member_type)
+    _validate_member_types(config, set, iterate_members, "member", expected_member_type)
 
-def _validate_member_types(config, spec, errors, key, value, collection_type, iterate_members, member_description, expected_member_type):
+def _validate_member_types(config, collection_type, iterate_members, member_description, expected_member_type):
     if (type(config.value) != collection_type) or (config.spec.type[0] != collection_type):
         return
     acceptable_types = find_type_synonyms(expected_member_type())
@@ -128,12 +128,12 @@ def _validate_member_types(config, spec, errors, key, value, collection_type, it
 def validate_dictionary_key_types(config, spec, errors, key, value):
     iterate_members = lambda: value.keys()
     expected_member_type = lambda: int
-    _validate_member_types(config, spec, errors, key, value, dict, iterate_members, "dictionary key", expected_member_type)
+    _validate_member_types(config, dict, iterate_members, "dictionary key", expected_member_type)
 
 def validate_dictionary_value_types(config, spec, errors, key, value):
     iterate_members = lambda: value.values()
     expected_member_type = lambda: spec.type[1]
-    _validate_member_types(config, spec, errors, key, value, dict, iterate_members, "dictionary value", expected_member_type)
+    _validate_member_types(config, dict, iterate_members, "dictionary value", expected_member_type)
 
 def _convert_type_to_string(spec_type):
     word = convert_type_to_english(spec_type[0])
