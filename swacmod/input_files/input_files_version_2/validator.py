@@ -133,8 +133,10 @@ def _validate_member_types(
     for m in iterate_members():
         if type(m) not in acceptable_types:
             type_string = _convert_type_to_string(config.spec.type)
-            config.errors.append(f"Error: The field '{config.key}' must be {type_string}. The {member_description} '{m}' is invalid.")
-            break
+            config.errors.append(
+                f"Error: The field '{config.key}' must be {type_string}. "
+                + f"The {member_description} '{m}' is invalid.")
+            return
 
 def validate_dictionary_key_types(config):
     iterate_members = lambda: config.value.keys()
