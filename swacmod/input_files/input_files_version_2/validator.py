@@ -87,7 +87,7 @@ def validate_matches_spec(specs_object, params, key):
         type_string = _convert_type_to_string(spec.type)
         errors.append(f"Error: The field '{key}' must be {type_string}. The value '{value}' is invalid.")
 
-    validate_set_members(spec, errors, key, value)
+    validate_set_member_types(spec, errors, key, value)
     return result
 
 def find_type_synonyms(t):
@@ -97,7 +97,7 @@ def find_type_synonyms(t):
     acceptable_types = type_synonyms.get(t, [t])
     return acceptable_types
 
-def validate_set_members(spec, errors, key, value):
+def validate_set_member_types(spec, errors, key, value):
     if (type(value) != set) or (spec.type[0] != set):
         return
     acceptable_types = find_type_synonyms(spec.type[1])
