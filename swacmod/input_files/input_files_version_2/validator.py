@@ -3,7 +3,6 @@ from __future__ import print_function
 import swacmod.input_files.input_files_version_2.specs as specs_module
 from swacmod.input_files.parsed_input_data import ParsedInputData
 import os
-from datetime import date, datetime
 
 def validate_keys(specs, params, input_file):
     result = ParsedInputData(params, [], [])
