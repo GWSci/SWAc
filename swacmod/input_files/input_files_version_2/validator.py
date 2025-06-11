@@ -87,7 +87,7 @@ def validate_matches_spec(specs_object, params, key):
     if key not in params:
         return result
 
-    value = params[key]
+    value = params.get(key, None)
 
     config = Validation_Config(spec, errors, key, value)
 
