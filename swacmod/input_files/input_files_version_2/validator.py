@@ -208,6 +208,19 @@ def validate_list_inner_types(config):
     expected_member_type = lambda: config.spec.type[2]
     member_description = "inner list value"
 
+    _validate_inner_type(
+            config,
+            collection_type,
+            iterate_members,
+            member_description,
+            expected_member_type)
+
+def _validate_inner_type(
+        config,
+        collection_type,
+        iterate_members,
+        member_description,
+        expected_member_type):
     if len(config.spec.type) < 3:
         return
 
