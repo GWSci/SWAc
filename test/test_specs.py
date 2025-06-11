@@ -222,6 +222,10 @@ class Test_Specs(unittest.TestCase):
         self._test_no_error_when_type_of_value_is_ok(
             [dict, float], {1: 11.1, 2: 13.3, 3: 17})
 
+    def test_validate_spec_returns_no_error_when_dict_list_int_matches(self):
+        self._test_no_error_when_type_of_value_is_ok(
+            [dict, list, int], {1: [11], 2: [13], 3: [17]})
+
     def _test_no_error_when_type_of_value_is_ok(self, spec_type, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], spec_type, None)]
