@@ -79,16 +79,15 @@ def validate_matches_spec(specs_object, params, key):
     value = params.get(key, None)
     config = Validation_Config(spec, errors, key, value)
 
-    if spec == None:
-        errors.append(f"Error: No spec was found for the key '{key}'. Please contact support.")
+    if config.spec == None:
+        config.errors.append(f"Error: No spec was found for the key '{config.key}'. Please contact support.")
         return result
 
-    if (spec.required) and (key not in params):
-        errors.append(f"Error: The required key '{key}' could not be found.")
+    if (config.spec.required) and (key not in params):
+        config.errors.append(f"Error: The required key '{config.key}' could not be found.")
 
     if key not in params:
         return result
-
 
     validate_type(config)
     validate_set_member_types(config)
