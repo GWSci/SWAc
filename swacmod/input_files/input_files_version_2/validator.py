@@ -179,6 +179,8 @@ def validate_dictionary_value_inner_types(config):
 
     acceptable_types = find_type_synonyms(expected_member_type())
     for m in iterate_members():
+        if type(m) not in [list]:
+            continue
         for x in m:
             if type(x) not in acceptable_types:
                 type_string = _convert_type_to_string(config.spec.type)
