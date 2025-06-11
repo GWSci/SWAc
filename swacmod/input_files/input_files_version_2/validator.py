@@ -66,7 +66,7 @@ def extract_keys_or_empty_list(something_that_might_have_keys):
         return []
 
 @dataclass
-class Spec_Validation_Params:
+class Validation_Config:
     spec: specs_module.Input_Parameter
     errors: list
     key: str
@@ -89,13 +89,15 @@ def validate_matches_spec(specs_object, params, key):
 
     value = params[key]
 
-    validate_type(key, errors, spec, value)
-    validate_set_member_types(spec, errors, key, value)
-    validate_dictionary_key_types(spec, errors, key, value)
-    validate_dictionary_value_types(spec, errors, key, value)
+    config = Validation_Config(spec, errors, key, value)
+
+    validate_type(config, key, errors, spec, value)
+    validate_set_member_types(config, spec, errors, key, value)
+    validate_dictionary_key_types(config, spec, errors, key, value)
+    validate_dictionary_value_types(config, spec, errors, key, value)
     return result
 
-def validate_type(key, errors, spec, value):
+def validate_type(config, key, errors, spec, value):
     acceptable_types = find_type_synonyms(spec.type[0])
     if type(value) not in acceptable_types:
         type_string = _convert_type_to_string(spec.type)
@@ -108,7 +110,7 @@ def find_type_synonyms(t):
     acceptable_types = type_synonyms.get(t, [t])
     return acceptable_types
 
-def validate_set_member_types(spec, errors, key, value):
+def validate_set_member_types(config, spec, errors, key, value):
     iterate_members = lambda: value
     expected_member_type = lambda: spec.type[1]
     _validate_member_types(spec, errors, key, value, set, iterate_members, "member", expected_member_type)
@@ -123,12 +125,12 @@ def _validate_member_types(spec, errors, key, value, collection_type, iterate_me
             errors.append(f"Error: The field '{key}' must be {type_string}. The {member_description} '{m}' is invalid.")
             break
 
-def validate_dictionary_key_types(spec, errors, key, value):
+def validate_dictionary_key_types(config, spec, errors, key, value):
     iterate_members = lambda: value.keys()
     expected_member_type = lambda: int
     _validate_member_types(spec, errors, key, value, dict, iterate_members, "dictionary key", expected_member_type)
 
-def validate_dictionary_value_types(spec, errors, key, value):
+def validate_dictionary_value_types(config, spec, errors, key, value):
     iterate_members = lambda: value.values()
     expected_member_type = lambda: spec.type[1]
     _validate_member_types(spec, errors, key, value, dict, iterate_members, "dictionary value", expected_member_type)
