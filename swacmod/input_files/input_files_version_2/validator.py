@@ -89,6 +89,7 @@ def validate_matches_spec(specs_object, params, key):
     validate_set_member_types(config)
     validate_dictionary_key_types(config)
     validate_dictionary_value_types(config)
+    validate_dictionary_value_inner_types(config)
     return config.result
 
 def make_validation_config(specs_object, params, key):
@@ -162,6 +163,30 @@ def validate_dictionary_value_types(config):
     expected_member_type = lambda: config.spec.type[1]
     _validate_member_types(
         config, dict, iterate_members, "dictionary value", expected_member_type)
+
+def validate_dictionary_value_inner_types(config):
+    if len(config.spec.type) < 3:
+        return
+
+    iterate_members = lambda: config.value.values()
+    expected_member_type = lambda: config.spec.type[2]
+    member_description = "inner list value"
+
+
+    is_collection_type = ((type(config.value) == dict) 
+        and (config.spec.type[0] == dict))
+    if not is_collection_type:
+        return
+
+    acceptable_types = find_type_synonyms(expected_member_type())
+    for m in iterate_members():
+        for x in m:
+            if type(x) not in acceptable_types:
+                type_string = _convert_type_to_string(config.spec.type)
+                config.errors.append(
+                    f"Error: The field '{config.key}' must be {type_string}. "
+                    + f"The {member_description} '{x}' is invalid.")
+                return
 
 def _convert_type_to_string(spec_type):
     word = convert_type_to_english(spec_type[0])
