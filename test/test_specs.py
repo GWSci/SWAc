@@ -206,6 +206,12 @@ class Test_Specs(unittest.TestCase):
             {1: [11], 2: ["cat"], 3: 13},
             "Error: The field 'aardvark' must be a dictionary mapping integers to lists. The dictionary value '13' is invalid.")
 
+    def test_validate_spec_returns_error_when_list_list_int_does_not_match(self):
+        self._test_error_message_when_type_of_value_is_not_ok(
+            [list, list, int],
+            "cat",
+            "Error: The field 'aardvark' must be a list of list of integers. The value 'cat' is invalid.")
+
     def _test_error_message_when_type_of_value_is_not_ok(
             self, spec_type, value, expected_error_message):
         params = {"aardvark": value}
