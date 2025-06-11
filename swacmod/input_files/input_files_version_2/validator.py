@@ -91,13 +91,13 @@ def validate_matches_spec(specs_object, params, key):
 
     config = Validation_Config(spec, errors, key, value)
 
-    validate_type(config, key, errors, spec, value)
+    validate_type(config)
     validate_set_member_types(config, spec, errors, key, value)
     validate_dictionary_key_types(config, spec, errors, key, value)
     validate_dictionary_value_types(config, spec, errors, key, value)
     return result
 
-def validate_type(config, key, errors, spec, value):
+def validate_type(config):
     acceptable_types = find_type_synonyms(config.spec.type[0])
     if type(config.value) not in acceptable_types:
         type_string = _convert_type_to_string(config.spec.type)
