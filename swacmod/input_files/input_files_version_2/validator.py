@@ -84,8 +84,7 @@ def validate_matches_spec(specs_object, params, key):
         config.errors.append(f"Error: No spec was found for the key '{config.key}'. Please contact support.")
         return result
 
-    if (config.spec.required) and (config.key not in config.params):
-        config.errors.append(f"Error: The required key '{config.key}' could not be found.")
+    validate_required_key(config)
 
     if key not in config.params:
         return result
@@ -95,6 +94,10 @@ def validate_matches_spec(specs_object, params, key):
     validate_dictionary_key_types(config)
     validate_dictionary_value_types(config)
     return result
+
+def validate_required_key(config):
+    if (config.spec.required) and (config.key not in config.params):
+        config.errors.append(f"Error: The required key '{config.key}' could not be found.")
 
 def validate_type(config):
     acceptable_types = find_type_synonyms(config.spec.type[0])
