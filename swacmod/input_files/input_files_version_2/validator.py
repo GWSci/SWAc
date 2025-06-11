@@ -92,7 +92,7 @@ def validate_matches_spec(specs_object, params, key):
     config = Validation_Config(spec, errors, key, value)
 
     validate_type(config)
-    validate_set_member_types(config, spec, errors, key, value)
+    validate_set_member_types(config)
     validate_dictionary_key_types(config, spec, errors, key, value)
     validate_dictionary_value_types(config, spec, errors, key, value)
     return result
@@ -110,7 +110,7 @@ def find_type_synonyms(t):
     acceptable_types = type_synonyms.get(t, [t])
     return acceptable_types
 
-def validate_set_member_types(config, spec, errors, key, value):
+def validate_set_member_types(config):
     iterate_members = lambda: config.value
     expected_member_type = lambda: config.spec.type[1]
     _validate_member_types(config, set, iterate_members, "member", expected_member_type)
