@@ -123,7 +123,7 @@ def validate_type(config):
 def find_type_synonyms(t):
     type_synonyms = {
         int: [int, np.int64],
-        float: [float, int, np.float64],
+        float: [float, int, np.float64, np.int64],
         list: [list, np.ndarray, time_series_data.TimeSeriesData],
     }
     acceptable_types = type_synonyms.get(t, [t])
