@@ -89,6 +89,7 @@ def validate_matches_spec(specs_object, params, key):
 
     validate_type(config)
     validate_set_member_types(config)
+    validate_list_member_types(config)
     validate_dictionary_key_types(config)
     validate_dictionary_value_types(config)
     validate_dictionary_value_inner_types(config)
@@ -134,6 +135,12 @@ def validate_set_member_types(config):
     expected_member_type = lambda: config.spec.type[1]
     _validate_member_types(
         config, set, iterate_members, "member", expected_member_type)
+
+def validate_list_member_types(config):
+    iterate_members = lambda: config.value
+    expected_member_type = lambda: config.spec.type[1]
+    _validate_member_types(
+        config, list, iterate_members, "member", expected_member_type)
 
 def _validate_member_types(
         config,
