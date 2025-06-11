@@ -224,6 +224,12 @@ class Test_Specs(unittest.TestCase):
             [[1, 2], [3, 5], [7, "dog"]],
             "Error: The field 'aardvark' must be a list of list of integers. The inner list value 'dog' is invalid.")
 
+    def test_validate_spec_returns_error_when_list_list_float_does_not_match_member(self):
+        self._test_error_message_when_type_of_value_is_not_ok(
+            [list, list, float],
+            [[1, 2], [3.4, 5.6], [7.0, "dog"]],
+            "Error: The field 'aardvark' must be a list of list of floats. The inner list value 'dog' is invalid.")
+
     def _test_error_message_when_type_of_value_is_not_ok(
             self, spec_type, value, expected_error_message):
         params = {"aardvark": value}
