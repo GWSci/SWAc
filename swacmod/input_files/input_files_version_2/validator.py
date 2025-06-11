@@ -121,6 +121,7 @@ def validate_type(config):
 
 def find_type_synonyms(t):
     type_synonyms = {
+        int: [int, np.int64],
         float: [float, int],
         list: [list, np.ndarray],
     }
@@ -181,7 +182,7 @@ def validate_dictionary_value_inner_types(config):
 
     acceptable_types = find_type_synonyms(expected_member_type())
     for m in iterate_members():
-        if type(m) not in [list]:
+        if type(m) not in [list, np.ndarray]:
             continue
         for x in m:
             if type(x) not in acceptable_types:
