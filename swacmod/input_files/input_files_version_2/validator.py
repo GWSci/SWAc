@@ -103,7 +103,7 @@ def validate_set_members(spec, errors, key, value):
     type_synonyms = {
         float: [float, int]
     }
-    acceptable_types = type_synonyms.get(spec.type[1], [spec.type[1]])
+    acceptable_types = find_type_synonyms(spec.type[1])
     for m in value:
         if type(m) not in acceptable_types:
             type_string = _convert_type_to_string(spec.type)
