@@ -190,6 +190,8 @@ def _validate_inner_type(
             inner_iterator = m
         elif type(m) in [dict]:
             inner_iterator = m.values()
+        else:
+            continue
         if type(m) not in [list, np.ndarray, dict]:
             continue
         for x in inner_iterator:
