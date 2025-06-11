@@ -72,13 +72,14 @@ class Validation_Config:
     errors: list
     key: str
     value: object
+    result: ParsedInputData
 
 def validate_matches_spec(specs_object, params, key):
     errors = []
     result = ParsedInputData(params, errors, [])
     spec = _find_spec_or_none(specs_object, key)
     value = params.get(key, None)
-    config = Validation_Config(spec, params, errors, key, value)
+    config = Validation_Config(spec, params, errors, key, value, result)
 
     if not validate_spec_present_for_key(config):
         return result
