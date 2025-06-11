@@ -186,9 +186,13 @@ def _validate_inner_type(
 
     acceptable_types = find_type_synonyms(expected_member_type())
     for m in iterate_members():
-        if type(m) not in [list, np.ndarray]:
+        if type(m) in [list, np.ndarray]:
+            inner_iterator = m
+        elif type(m) in [dict]:
+            inner_iterator = m.values()
+        if type(m) not in [list, np.ndarray, dict]:
             continue
-        for x in m:
+        for x in inner_iterator:
             if type(x) not in acceptable_types:
                 type_string = _convert_type_to_string(config.spec.type)
                 config.errors.append(
