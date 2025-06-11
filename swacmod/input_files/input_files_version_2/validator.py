@@ -116,13 +116,13 @@ def validate_set_member_types(config, spec, errors, key, value):
     _validate_member_types(config, spec, errors, key, value, set, iterate_members, "member", expected_member_type)
 
 def _validate_member_types(config, spec, errors, key, value, collection_type, iterate_members, member_description, expected_member_type):
-    if (type(value) != collection_type) or (spec.type[0] != collection_type):
+    if (type(config.value) != collection_type) or (config.spec.type[0] != collection_type):
         return
     acceptable_types = find_type_synonyms(expected_member_type())
     for m in iterate_members():
         if type(m) not in acceptable_types:
-            type_string = _convert_type_to_string(spec.type)
-            errors.append(f"Error: The field '{key}' must be {type_string}. The {member_description} '{m}' is invalid.")
+            type_string = _convert_type_to_string(config.spec.type)
+            config.errors.append(f"Error: The field '{config.key}' must be {type_string}. The {member_description} '{m}' is invalid.")
             break
 
 def validate_dictionary_key_types(config, spec, errors, key, value):
