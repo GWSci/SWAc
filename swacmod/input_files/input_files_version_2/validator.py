@@ -115,7 +115,8 @@ def find_type_synonyms(t):
 def validate_set_member_types(config):
     iterate_members = lambda: config.value
     expected_member_type = lambda: config.spec.type[1]
-    _validate_member_types(config, set, iterate_members, "member", expected_member_type)
+    _validate_member_types(
+        config, set, iterate_members, "member", expected_member_type)
 
 def _validate_member_types(config, collection_type, iterate_members, member_description, expected_member_type):
     if (type(config.value) != collection_type) or (config.spec.type[0] != collection_type):
