@@ -5,6 +5,7 @@ from swacmod.input_files.parsed_input_data import ParsedInputData
 import os
 from dataclasses import dataclass
 import numpy as np
+import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 
 def validate_keys(specs, params, input_file):
     result = ParsedInputData(params, [], [])
@@ -123,7 +124,7 @@ def find_type_synonyms(t):
     type_synonyms = {
         int: [int, np.int64],
         float: [float, int],
-        list: [list, np.ndarray],
+        list: [list, np.ndarray, time_series_data.TimeSeriesData],
     }
     acceptable_types = type_synonyms.get(t, [t])
     return acceptable_types
