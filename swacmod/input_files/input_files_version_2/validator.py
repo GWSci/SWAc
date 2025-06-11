@@ -123,28 +123,14 @@ def validate_dictionary_key_types(spec, errors, key, value):
     iterate_members = lambda: value.keys()
     member_description = "dictionary key"
     expected_member_type = lambda: int
-    if (type(value) != collection_type) or (spec.type[0] != collection_type):
-        return
-    acceptable_types = find_type_synonyms(expected_member_type())
-    for m in iterate_members():
-        if type(m) not in acceptable_types:
-            type_string = _convert_type_to_string(spec.type)
-            errors.append(f"Error: The field '{key}' must be {type_string}. The {member_description} '{m}' is invalid.")
-            break
+    _validate_member_types(spec, errors, key, value, collection_type, iterate_members, member_description, expected_member_type)
 
 def validate_dictionary_value_types(spec, errors, key, value):
     collection_type = dict
     iterate_members = lambda: value.values()
     member_description = "dictionary value"
     expected_member_type = lambda: spec.type[1]
-    if (type(value) != collection_type) or (spec.type[0] != collection_type):
-        return
-    acceptable_types = find_type_synonyms(expected_member_type())
-    for m in iterate_members():
-        if type(m) not in acceptable_types:
-            type_string = _convert_type_to_string(spec.type)
-            errors.append(f"Error: The field '{key}' must be {type_string}. The {member_description} '{m}' is invalid.")
-            break
+    _validate_member_types(spec, errors, key, value, collection_type, iterate_members, member_description, expected_member_type)
 
 def _convert_type_to_string(spec_type):
     word = convert_type_to_english(spec_type[0])
