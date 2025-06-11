@@ -98,10 +98,10 @@ def validate_matches_spec(specs_object, params, key):
     return result
 
 def validate_type(config, key, errors, spec, value):
-    acceptable_types = find_type_synonyms(spec.type[0])
-    if type(value) not in acceptable_types:
-        type_string = _convert_type_to_string(spec.type)
-        errors.append(f"Error: The field '{key}' must be {type_string}. The value '{value}' is invalid.")
+    acceptable_types = find_type_synonyms(config.spec.type[0])
+    if type(config.value) not in acceptable_types:
+        type_string = _convert_type_to_string(config.spec.type)
+        config.errors.append(f"Error: The field '{config.key}' must be {type_string}. The value '{config.value}' is invalid.")
 
 def find_type_synonyms(t):
     type_synonyms = {
