@@ -182,25 +182,12 @@ def validate_dictionary_value_inner_types(config):
     expected_member_type = lambda: config.spec.type[2]
     member_description = "inner list value"
 
-    if len(config.spec.type) < 3:
-        return
-
-    is_collection_type = ((type(config.value) == collection_type) 
-        and (config.spec.type[0] == collection_type))
-    if not is_collection_type:
-        return
-
-    acceptable_types = find_type_synonyms(expected_member_type())
-    for m in iterate_members():
-        if type(m) not in [list, np.ndarray]:
-            continue
-        for x in m:
-            if type(x) not in acceptable_types:
-                type_string = _convert_type_to_string(config.spec.type)
-                config.errors.append(
-                    f"Error: The field '{config.key}' must be {type_string}. "
-                    + f"The {member_description} '{x}' is invalid.")
-                return
+    _validate_inner_type(
+            config,
+            collection_type,
+            iterate_members,
+            member_description,
+            expected_member_type)
 
 def validate_list_inner_types(config):
     collection_type = list
