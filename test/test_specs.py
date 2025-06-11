@@ -219,11 +219,9 @@ class Test_Specs(unittest.TestCase):
         self.assert_no_errors(actual, params)
 
     # TODO Test type=[dict, float]
-    # TODO Test type=[dict, int]
     # TODO Test type=[dict, list, float]
     # TODO Test type=[dict, list, int]
     # TODO Test type=[dict, list]
-    # TODO Test type=[dict, str]
     # TODO Test type=[list, dict, list]
     # TODO Test type=[list, list, float]
     # TODO Test type=[list, list, int]
