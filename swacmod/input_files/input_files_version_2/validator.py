@@ -137,12 +137,6 @@ def validate_set_member_types(config):
     _validate_member_types(
         config, set, iterate_members, "member", expected_member_type)
 
-def validate_list_member_types(config):
-    iterate_members = lambda: config.value
-    expected_member_type = lambda: config.spec.type[1]
-    _validate_member_types(
-        config, list, iterate_members, "member", expected_member_type)
-
 def _validate_member_types(
         config,
         collection_type,
@@ -164,6 +158,18 @@ def _validate_member_types(
                 + f"The {member_description} '{m}' is invalid.")
             return
 
+def validate_list_member_types(config):
+    iterate_members = lambda: config.value
+    expected_member_type = lambda: config.spec.type[1]
+    _validate_member_types(
+        config, list, iterate_members, "member", expected_member_type)
+
+def validate_list_inner_types(config):
+    iterate_members = lambda: config.value
+    expected_member_type = lambda: config.spec.type[2]
+    _validate_inner_type(
+        config,list,iterate_members,"inner list value",expected_member_type)
+
 def validate_dictionary_key_types(config):
     iterate_members = lambda: config.value.keys()
     expected_member_type = lambda: int
@@ -181,12 +187,6 @@ def validate_dictionary_value_inner_types(config):
     expected_member_type = lambda: config.spec.type[2]
     _validate_inner_type(
         config,dict,iterate_members,"inner list value",expected_member_type)
-
-def validate_list_inner_types(config):
-    iterate_members = lambda: config.value
-    expected_member_type = lambda: config.spec.type[2]
-    _validate_inner_type(
-        config,list,iterate_members,"inner list value",expected_member_type)
 
 def _validate_inner_type(
         config,
