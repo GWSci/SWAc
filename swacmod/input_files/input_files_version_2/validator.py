@@ -93,7 +93,7 @@ def validate_matches_spec(specs_object, params, key):
 
     validate_type(config)
     validate_set_member_types(config)
-    validate_dictionary_key_types(config, spec, errors, key, value)
+    validate_dictionary_key_types(config)
     validate_dictionary_value_types(config, spec, errors, key, value)
     return result
 
@@ -125,8 +125,8 @@ def _validate_member_types(config, collection_type, iterate_members, member_desc
             config.errors.append(f"Error: The field '{config.key}' must be {type_string}. The {member_description} '{m}' is invalid.")
             break
 
-def validate_dictionary_key_types(config, spec, errors, key, value):
-    iterate_members = lambda: value.keys()
+def validate_dictionary_key_types(config):
+    iterate_members = lambda: config.value.keys()
     expected_member_type = lambda: int
     _validate_member_types(config, dict, iterate_members, "dictionary key", expected_member_type)
 
