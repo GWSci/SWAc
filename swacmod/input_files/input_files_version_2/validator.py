@@ -102,7 +102,8 @@ def find_type_synonyms(t):
     return acceptable_types
 
 def validate_set_member_types(spec, errors, key, value):
-    if (type(value) != set) or (spec.type[0] != set):
+    collection_type = set
+    if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
     acceptable_types = find_type_synonyms(spec.type[1])
     for m in value:
@@ -112,7 +113,8 @@ def validate_set_member_types(spec, errors, key, value):
             break
 
 def validate_dictionary_key_types(spec, errors, key, value):
-    if (type(value) != dict) or (spec.type[0] != dict):
+    collection_type = dict
+    if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
     acceptable_types = find_type_synonyms(int)
     for m in value.keys():
@@ -122,7 +124,8 @@ def validate_dictionary_key_types(spec, errors, key, value):
             break
 
 def validate_dictionary_value_types(spec, errors, key, value):
-    if (type(value) != dict) or (spec.type[0] != dict):
+    collection_type = dict
+    if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
     acceptable_types = find_type_synonyms(int)
     for m in value.values():
