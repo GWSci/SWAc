@@ -173,7 +173,9 @@ def _convert_type_to_string(spec_type):
     elif spec_type[0] == dict and len(spec_type) == 2:
         suffix = f" mapping integers to {convert_type_to_english(spec_type[1])}s"
     elif spec_type[0] == dict and len(spec_type) == 3:
-        suffix = f" mapping integers to {convert_type_to_english(spec_type[1])} of {convert_type_to_english(spec_type[2])}s"
+        suffix = (f" mapping integers "
+            + f"to {convert_type_to_english(spec_type[1])} " 
+            + f"of {convert_type_to_english(spec_type[2])}s")
     else:
         suffix = ""
 
