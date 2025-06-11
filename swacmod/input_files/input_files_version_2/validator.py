@@ -75,10 +75,10 @@ class Validation_Config:
     result: ParsedInputData
 
 def validate_matches_spec(specs_object, params, key):
-    errors = []
-    result = ParsedInputData(params, errors, [])
     spec = _find_spec_or_none(specs_object, key)
+    errors = []
     value = params.get(key, None)
+    result = ParsedInputData(params, errors, [])
     config = Validation_Config(spec, params, errors, key, value, result)
 
     if not validate_spec_present_for_key(config):
