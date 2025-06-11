@@ -89,6 +89,13 @@ def validate_matches_spec(specs_object, params, key):
     if type(value) not in acceptable_types:
         type_string = _convert_type_to_string(spec.type)
         errors.append(f"Error: The field '{key}' must be {type_string}. The value '{value}' is invalid.")
+
+    if (type(value) == set) and (spec.type[0] == set):
+        for m in value:
+            if type(m) != spec.type[1]:
+                type_string = _convert_type_to_string(spec.type)
+                errors.append(f"Error: The field '{key}' must be {type_string}. The member '{m}' is invalid.")
+                break
     return result
 
 def _convert_type_to_string(spec_type):
