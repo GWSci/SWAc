@@ -82,6 +82,8 @@ def validate_matches_spec(specs_object, params, key):
 
     if config.spec == None:
         config.errors.append(f"Error: No spec was found for the key '{config.key}'. Please contact support.")
+
+    if config.spec == None:
         return result
 
     validate_required_key(config)
