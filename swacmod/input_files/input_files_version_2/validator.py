@@ -105,9 +105,10 @@ def validate_set_member_types(spec, errors, key, value):
     collection_type = set
     iterate_members = lambda: value
     member_description = "member"
+    expected_member_type = lambda: spec.type[1]
     if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
-    acceptable_types = find_type_synonyms(spec.type[1])
+    acceptable_types = find_type_synonyms(expected_member_type())
     for m in iterate_members():
         if type(m) not in acceptable_types:
             type_string = _convert_type_to_string(spec.type)
@@ -118,9 +119,10 @@ def validate_dictionary_key_types(spec, errors, key, value):
     collection_type = dict
     iterate_members = lambda: value.keys()
     member_description = "dictionary key"
+    expected_member_type = lambda: int
     if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
-    acceptable_types = find_type_synonyms(int)
+    acceptable_types = find_type_synonyms(expected_member_type())
     for m in iterate_members():
         if type(m) not in acceptable_types:
             type_string = _convert_type_to_string(spec.type)
@@ -131,9 +133,10 @@ def validate_dictionary_value_types(spec, errors, key, value):
     collection_type = dict
     iterate_members = lambda: value.values()
     member_description = "dictionary value"
+    expected_member_type = lambda: spec.type[1]
     if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
-    acceptable_types = find_type_synonyms(spec.type[1])
+    acceptable_types = find_type_synonyms(expected_member_type())
     for m in iterate_members():
         if type(m) not in acceptable_types:
             type_string = _convert_type_to_string(spec.type)
