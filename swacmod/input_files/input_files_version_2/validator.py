@@ -133,7 +133,7 @@ def validate_dictionary_value_types(spec, errors, key, value):
     member_description = "dictionary value"
     if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
-    acceptable_types = find_type_synonyms(int)
+    acceptable_types = find_type_synonyms(spec.type[1])
     for m in iterate_members():
         if type(m) not in acceptable_types:
             type_string = _convert_type_to_string(spec.type)
