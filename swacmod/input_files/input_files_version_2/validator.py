@@ -103,10 +103,11 @@ def find_type_synonyms(t):
 
 def validate_set_member_types(spec, errors, key, value):
     collection_type = set
+    iterate_members = lambda: value
     if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
     acceptable_types = find_type_synonyms(spec.type[1])
-    for m in value:
+    for m in iterate_members():
         if type(m) not in acceptable_types:
             type_string = _convert_type_to_string(spec.type)
             errors.append(f"Error: The field '{key}' must be {type_string}. The member '{m}' is invalid.")
@@ -114,10 +115,11 @@ def validate_set_member_types(spec, errors, key, value):
 
 def validate_dictionary_key_types(spec, errors, key, value):
     collection_type = dict
+    iterate_members = lambda: value.keys()
     if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
     acceptable_types = find_type_synonyms(int)
-    for m in value.keys():
+    for m in iterate_members():
         if type(m) not in acceptable_types:
             type_string = _convert_type_to_string(spec.type)
             errors.append(f"Error: The field '{key}' must be {type_string}. The dictionary key '{m}' is invalid.")
@@ -125,10 +127,11 @@ def validate_dictionary_key_types(spec, errors, key, value):
 
 def validate_dictionary_value_types(spec, errors, key, value):
     collection_type = dict
+    iterate_members = lambda: value.values()
     if (type(value) != collection_type) or (spec.type[0] != collection_type):
         return
     acceptable_types = find_type_synonyms(int)
-    for m in value.values():
+    for m in iterate_members():
         if type(m) not in acceptable_types:
             type_string = _convert_type_to_string(spec.type)
             errors.append(f"Error: The field '{key}' must be {type_string}. The dictionary value '{m}' is invalid.")
