@@ -96,12 +96,11 @@ def validate_matches_spec(specs_object, params, key):
 def validate_set_members(spec, errors, key, value):
     if (type(value) != set) or (spec.type[0] != set):
         return
-    if (type(value) == set) and (spec.type[0] == set):
-        for m in value:
-            if type(m) != spec.type[1]:
-                type_string = _convert_type_to_string(spec.type)
-                errors.append(f"Error: The field '{key}' must be {type_string}. The member '{m}' is invalid.")
-                break
+    for m in value:
+        if type(m) != spec.type[1]:
+            type_string = _convert_type_to_string(spec.type)
+            errors.append(f"Error: The field '{key}' must be {type_string}. The member '{m}' is invalid.")
+            break
 
 def _convert_type_to_string(spec_type):
     word = convert_type_to_english(spec_type[0])
