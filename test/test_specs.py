@@ -184,6 +184,10 @@ class Test_Specs(unittest.TestCase):
         self._test_no_error_when_type_of_value_is_ok(
             [set, float], {1.1, 2, 3.3})
 
+    def test_validate_spec_returns_no_error_when_dict_of_ints_matches(self):
+        self._test_no_error_when_type_of_value_is_ok(
+            [dict, int], {1: 11, 2: 13, 3: 17})
+
     def _test_no_error_when_type_of_value_is_ok(self, spec_type, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], spec_type, None)]
@@ -199,7 +203,6 @@ class Test_Specs(unittest.TestCase):
     # TODO Test type=[list, dict, list]
     # TODO Test type=[list, list, float]
     # TODO Test type=[list, list, int]
-    # TODO Test type=[set, int]
     # TODO Test type=None
 
     def assert_one_error(self, actual, params, expected_error):
