@@ -180,6 +180,10 @@ class Test_Specs(unittest.TestCase):
         self._test_no_error_when_type_of_value_is_ok(
             [set, str], {"a", "b", "c"})
 
+    def test_validate_spec_returns_no_error_when_set_of_floats_matches_floats_and_integers(self):
+        self._test_no_error_when_type_of_value_is_ok(
+            [set, float], {1.1, 2, 3.3})
+
     def _test_no_error_when_type_of_value_is_ok(self, spec_type, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], spec_type, None)]
