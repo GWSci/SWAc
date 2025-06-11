@@ -177,30 +177,16 @@ def validate_dictionary_value_types(config):
         config, dict, iterate_members, "dictionary value", expected_member_type)
 
 def validate_dictionary_value_inner_types(config):
-    collection_type = dict
     iterate_members = lambda: config.value.values()
     expected_member_type = lambda: config.spec.type[2]
-    member_description = "inner list value"
-
     _validate_inner_type(
-            config,
-            collection_type,
-            iterate_members,
-            member_description,
-            expected_member_type)
+        config,dict,iterate_members,"inner list value",expected_member_type)
 
 def validate_list_inner_types(config):
-    collection_type = list
     iterate_members = lambda: config.value
     expected_member_type = lambda: config.spec.type[2]
-    member_description = "inner list value"
-
     _validate_inner_type(
-            config,
-            collection_type,
-            iterate_members,
-            member_description,
-            expected_member_type)
+        config,list,iterate_members,"inner list value",expected_member_type)
 
 def _validate_inner_type(
         config,
