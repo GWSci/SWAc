@@ -76,6 +76,8 @@ def validate_matches_spec(specs_object, params, key):
     errors = []
     result = ParsedInputData(params, errors, [])
     spec = _find_spec_or_none(specs_object, key)
+    value = params.get(key, None)
+    config = Validation_Config(spec, errors, key, value)
 
     if spec == None:
         errors.append(f"Error: No spec was found for the key '{key}'. Please contact support.")
@@ -87,9 +89,6 @@ def validate_matches_spec(specs_object, params, key):
     if key not in params:
         return result
 
-    value = params.get(key, None)
-
-    config = Validation_Config(spec, errors, key, value)
 
     validate_type(config)
     validate_set_member_types(config)
