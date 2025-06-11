@@ -142,12 +142,14 @@ def _validate_member_types(
 def validate_dictionary_key_types(config):
     iterate_members = lambda: config.value.keys()
     expected_member_type = lambda: int
-    _validate_member_types(config, dict, iterate_members, "dictionary key", expected_member_type)
+    _validate_member_types(
+        config, dict, iterate_members, "dictionary key", expected_member_type)
 
 def validate_dictionary_value_types(config):
     iterate_members = lambda: config.value.values()
     expected_member_type = lambda: config.spec.type[1]
-    _validate_member_types(config, dict, iterate_members, "dictionary value", expected_member_type)
+    _validate_member_types(
+        config, dict, iterate_members, "dictionary value", expected_member_type)
 
 def _convert_type_to_string(spec_type):
     word = convert_type_to_english(spec_type[0])
