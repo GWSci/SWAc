@@ -207,8 +207,7 @@ def _convert_type_to_string(spec_type):
             + f" to {convert_type_to_english(spec_type[1])}" 
             + f" of {convert_type_to_english(spec_type[2])}s")
     elif spec_type[0] == list and len(spec_type) == 3:
-        suffix = (f""
-            + f" of {convert_type_to_english(spec_type[1])}" 
+        suffix = (f" of {convert_type_to_english(spec_type[1])}" 
             + f" of {convert_type_to_english(spec_type[2])}s")
     else:
         suffix = ""
