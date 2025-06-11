@@ -192,8 +192,6 @@ def _validate_inner_type(
             inner_iterator = m.values()
         else:
             continue
-        if type(m) not in [list, np.ndarray, dict]:
-            continue
         for x in inner_iterator:
             if type(x) not in acceptable_types:
                 type_string = _convert_type_to_string(config.spec.type)
