@@ -100,9 +100,6 @@ def find_type_synonyms(t):
 def validate_set_members(spec, errors, key, value):
     if (type(value) != set) or (spec.type[0] != set):
         return
-    type_synonyms = {
-        float: [float, int]
-    }
     acceptable_types = find_type_synonyms(spec.type[1])
     for m in value:
         if type(m) not in acceptable_types:
