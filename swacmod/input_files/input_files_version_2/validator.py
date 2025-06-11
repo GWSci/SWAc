@@ -68,6 +68,7 @@ def extract_keys_or_empty_list(something_that_might_have_keys):
 @dataclass
 class Validation_Config:
     spec: specs_module.Input_Parameter
+    params: dict
     errors: list
     key: str
     value: object
@@ -77,7 +78,7 @@ def validate_matches_spec(specs_object, params, key):
     result = ParsedInputData(params, errors, [])
     spec = _find_spec_or_none(specs_object, key)
     value = params.get(key, None)
-    config = Validation_Config(spec, errors, key, value)
+    config = Validation_Config(spec, params, errors, key, value)
 
     if config.spec == None:
         config.errors.append(f"Error: No spec was found for the key '{config.key}'. Please contact support.")
