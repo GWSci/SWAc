@@ -4,6 +4,7 @@ import swacmod.input_files.input_files_version_2.specs as specs_module
 from swacmod.input_files.parsed_input_data import ParsedInputData
 import os
 from dataclasses import dataclass
+import numpy as np
 
 def validate_keys(specs, params, input_file):
     result = ParsedInputData(params, [], [])
@@ -120,7 +121,8 @@ def validate_type(config):
 
 def find_type_synonyms(t):
     type_synonyms = {
-        float: [float, int]
+        float: [float, int],
+        list: [list, np.ndarray],
     }
     acceptable_types = type_synonyms.get(t, [t])
     return acceptable_types
