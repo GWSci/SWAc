@@ -163,6 +163,12 @@ class Test_Specs(unittest.TestCase):
             {1: "a", 2: 7, 3: "c"},
             "Error: The field 'aardvark' must be a dictionary mapping integers to strings. The dictionary value '7' is invalid.")
 
+    def test_validate_spec_returns_error_when_dict_float_type_value_does_not_match(self):
+        self._test_error_message_when_type_of_value_is_not_ok(
+            [dict, float],
+            {1: 11.5, 2: 17, 3: "cat"},
+            "Error: The field 'aardvark' must be a dictionary mapping integers to floats. The dictionary value 'cat' is invalid.")
+
     def _test_error_message_when_type_of_value_is_not_ok(
             self, spec_type, value, expected_error_message):
         params = {"aardvark": value}
