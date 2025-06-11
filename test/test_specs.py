@@ -338,6 +338,11 @@ class Test_Specs(unittest.TestCase):
         self._test_no_error_when_type_of_value_is_ok(
             [list, list, float], np.array([[1, 2], [3, 5], [7, 11]]))
 
+    def test_validate_spec_returns_no_error_when_list_dict_list_matches_(self):
+        self._test_no_error_when_type_of_value_is_ok(
+            [list, dict, list],
+            [{"a": [1, "a"]}, {"a": [2, "b"]}, {"c": [3, "c"]}])
+
     def _test_no_error_when_type_of_value_is_ok(self, spec_type, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], spec_type, None)]
@@ -345,7 +350,6 @@ class Test_Specs(unittest.TestCase):
         self.assert_no_errors(actual, params)
 
     # TODO Test type=[list, dict, list]
-    # TODO Test type=[list, list, float]
     # TODO Test type=None
 
     def assert_one_error(self, actual, params, expected_error):
