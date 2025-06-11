@@ -177,13 +177,13 @@ def validate_dictionary_value_types(config):
         config, dict, iterate_members, "dictionary value", expected_member_type)
 
 def validate_dictionary_value_inner_types(config):
-    if len(config.spec.type) < 3:
-        return
-
     collection_type = dict
     iterate_members = lambda: config.value.values()
     expected_member_type = lambda: config.spec.type[2]
     member_description = "inner list value"
+
+    if len(config.spec.type) < 3:
+        return
 
     is_collection_type = ((type(config.value) == collection_type) 
         and (config.spec.type[0] == collection_type))
@@ -203,13 +203,13 @@ def validate_dictionary_value_inner_types(config):
                 return
 
 def validate_list_inner_types(config):
-    if len(config.spec.type) < 3:
-        return
-
     collection_type = list
     iterate_members = lambda: config.value
     expected_member_type = lambda: config.spec.type[2]
     member_description = "inner list value"
+
+    if len(config.spec.type) < 3:
+        return
 
     is_collection_type = ((type(config.value) == collection_type) 
         and (config.spec.type[0] == collection_type))
