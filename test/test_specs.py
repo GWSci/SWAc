@@ -367,9 +367,6 @@ class Test_Specs(unittest.TestCase):
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
         self.assert_no_errors(actual, params)
 
-    # TODO Test type=[list, dict, list]
-    # TODO Test type=None
-
     def assert_one_error(self, actual, params, expected_error):
         self.assertEqual(params, actual.data)
         self.assertEqual([], actual.warnings)

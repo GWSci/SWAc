@@ -174,8 +174,8 @@ def make_specs():
         Input_Parameter('swdis_f', required=False, alt_format=[], type=[int], constraints=[0, 1, 2]),
         Input_Parameter('swabs_f', required=False, alt_format=[], type=[int], constraints=[0, 1, 2]),
         Input_Parameter('gwmodel_type', required=False, alt_format=[], type=[str], constraints=['mf6', 'mfusg', 'mf96']),
-        Input_Parameter('mf96_lrc', required=False, alt_format=[], type=None, constraints=None),
-        Input_Parameter('version', required=True, alt_format=[], type=None, constraints=None),
+        Input_Parameter('mf96_lrc', required=False, alt_format=[], type=[list, int], constraints=None),
+        Input_Parameter('version', required=True, alt_format=[], type=[int], constraints=None),
         Input_Parameter('node_xy', required=False, alt_format=['yml', 'csv'], type=[dict, list, float], constraints=None),
         Input_Parameter('disv', required=False, alt_format=[], type=[bool], constraints=None),
     ]
