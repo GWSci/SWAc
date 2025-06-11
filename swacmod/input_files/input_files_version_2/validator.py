@@ -82,18 +82,18 @@ def validate_matches_spec(specs_object, params, key):
     config = Validation_Config(spec, params, errors, key, value, result)
 
     if not validate_spec_present_for_key(config):
-        return result
+        return config.result
 
     validate_required_key(config)
 
     if key not in config.params:
-        return result
+        return config.result
 
     validate_type(config)
     validate_set_member_types(config)
     validate_dictionary_key_types(config)
     validate_dictionary_value_types(config)
-    return result
+    return config.result
 
 def validate_spec_present_for_key(config):
     if config.spec == None:
