@@ -75,11 +75,7 @@ class Validation_Config:
     result: ParsedInputData
 
 def validate_matches_spec(specs_object, params, key):
-    spec = _find_spec_or_none(specs_object, key)
-    errors = []
-    value = params.get(key, None)
-    result = ParsedInputData(params, errors, [])
-    config = Validation_Config(spec, params, errors, key, value, result)
+    config = make_validation_config(specs_object, params, key)
 
     if not validate_spec_present_for_key(config):
         return config.result
@@ -94,6 +90,14 @@ def validate_matches_spec(specs_object, params, key):
     validate_dictionary_key_types(config)
     validate_dictionary_value_types(config)
     return config.result
+
+def make_validation_config(specs_object, params, key):
+    spec = _find_spec_or_none(specs_object, key)
+    errors = []
+    value = params.get(key, None)
+    result = ParsedInputData(params, errors, [])
+    config = Validation_Config(spec, params, errors, key, value, result)
+    return config
 
 def validate_spec_present_for_key(config):
     if config.spec == None:
