@@ -41,8 +41,8 @@ def load_and_validate(input_file, input_dir, file_opener=DefaultFileResource._de
 
     load_alt_formats(input_dir, file_opener, specs, params)
     validation_result.update(validation_new.validate_2(params, specs))
-    validation_result.update(
-        validator.validate_all_match_spec(specs_object, params))
+    # validation_result.update(
+    #     validator.validate_all_match_spec(specs_object, params))
     if validation_result.has_errors():
         return validation_result
 
