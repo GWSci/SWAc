@@ -60,7 +60,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             msg = 'Parameter "%s" has to be a list of length %d, found %d'
             raise u.ValidationError(msg % (name, new_len, len(param)))
 
-        if t_type == dict and keys:
+        if t_type == dict and (type(param) == dict) and keys:
             set_keys = set(keys)
             param_keys = set(param.keys())
             if set_keys != param_keys and len(set_keys) > len(param_keys):
