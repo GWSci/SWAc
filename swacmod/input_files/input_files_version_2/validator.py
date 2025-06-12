@@ -125,7 +125,7 @@ def validate_required_key(config):
 def validate_type(config):
     acceptable_types = find_type_synonyms(config.spec.type[0])
     if type(config.value) not in acceptable_types:
-        type_string = english.convert_type_to_string(config.spec.type)
+        type_string = english.format_type_list(config.spec.type)
         config.errors.append(
             f"Error: The field '{config.key}' must be {type_string}. "
             + f"The value '{config.value}' is invalid.")
@@ -160,7 +160,7 @@ def _validate_member_types(
     acceptable_types = find_type_synonyms(expected_member_type())
     for m in iterate_members():
         if type(m) not in acceptable_types:
-            type_string = english.convert_type_to_string(config.spec.type)
+            type_string = english.format_type_list(config.spec.type)
             config.errors.append(
                 f"Error: The field '{config.key}' must be {type_string}. "
                 + f"The {member_description} '{m}' is invalid.")
@@ -202,7 +202,7 @@ def _validate_inner_type(
             continue
         for x in inner_iterator:
             if type(x) not in acceptable_types:
-                type_string = english.convert_type_to_string(config.spec.type)
+                type_string = english.format_type_list(config.spec.type)
                 config.errors.append(
                     f"Error: The field '{config.key}' must be {type_string}. "
                     + f"The {member_description} '{x}' is invalid.")

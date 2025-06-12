@@ -10,7 +10,7 @@ def format_list(a_list):
         result += f" or {quoted_list[-1]}"
     return result
 
-def convert_type_to_string(spec_type):
+def format_type_list(spec_type):
     word = format_type(spec_type[0])
 
     article = find_article(word)
