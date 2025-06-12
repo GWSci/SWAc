@@ -93,11 +93,9 @@ def validate_all_match_spec_allowing_alt(specs_object, params):
 def is_alt(spec, params):
     value = params[spec.name]
 
-    if not isinstance(value, str):
+    if (spec.alt_format == None) or (not isinstance(value, str)):
         return False
 
-    if spec.alt_format == None:
-        return False
     alt_formats = spec.alt_format
     for alt in alt_formats:
         suffix = f".{alt}"
