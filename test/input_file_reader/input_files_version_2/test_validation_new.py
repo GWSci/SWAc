@@ -268,8 +268,6 @@ class Test_Validation_New(unittest.TestCase):
             "solute_calibration_mu": "x",
             "solute_calibration_effective_porosity": 5,
             "solute_calibration_effective_porosity": "x",
-            "solute_depth_to_water": 5,
-            "solute_depth_to_water": "x",
             "sw_params": 5,
             "sw_params": "x",
             "sw_params": [],
