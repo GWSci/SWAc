@@ -814,7 +814,6 @@ def val_landuse_zone_names(data, name):
 
 def val_canopy_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_canopy_zone_names(data, name):
     c.validate_type(data, name)
