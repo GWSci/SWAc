@@ -36,9 +36,16 @@ def format_type(t):
         str: "string",
         int: "integer",
         bool: "boolean",
-        dict: "dictionary"
+        dict: "dictionary",
+        "spatial_output_date": "date or the string 'none'",
     }
-    return type_to_english.get(t, t.__name__)
+
+    if isinstance(t, str):
+        default_value = t
+    else:
+        default_value = t.__name__
+
+    return type_to_english.get(t, default_value)
 
 def find_article(word):
     if word[0] in ["a", "e", "i", "o", "u"]:

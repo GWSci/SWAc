@@ -53,7 +53,7 @@ def make_specs():
         Input_Parameter('irchcb', required=False, alt_format=[], type=[int], constraints=None),
         Input_Parameter('nodes_per_line', required=False, alt_format=[], type=[int], constraints=None),
         Input_Parameter('output_fac', required=False, alt_format=[], type=[float], constraints=None),
-        Input_Parameter('spatial_output_date', required=False, alt_format=[], type=[str], constraints=None),
+        Input_Parameter('spatial_output_date', required=False, alt_format=[], type=["spatial_output_date"], constraints=None),
         Input_Parameter('reporting_zone_names', required=False, alt_format=['yml'], type=[dict, str], constraints=None),
         Input_Parameter('reporting_zone_mapping', required=False, alt_format=['yml', 'csv'], type=[dict, int], constraints=None),
         Input_Parameter('rainfall_zone_names', required=False, alt_format=['yml'], type=[dict, str], constraints=None),

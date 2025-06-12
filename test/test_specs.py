@@ -412,13 +412,17 @@ class Test_Specs(unittest.TestCase):
         params, actual = self.validate_spatial_output_date("mean")
         actual = self.assert_no_errors(actual, params)
 
+    def test_validate_spatial_output_date_is_date(self):
+        params, actual = self.validate_spatial_output_date(date(2025, 12, 30))
+        actual = self.assert_no_errors(actual, params)
+
     def validate_spatial_output_date(self, value):
         params = {"spatial_output_date": value}
         specs_object = [Input_Parameter(
                 'spatial_output_date',
                 required=False,
                 alt_format=[],
-                type=[str],
+                type=["spatial_output_date"],
                 constraints=None)]
         actual = matches_spec_adaptor(
             specs_object, params, "spatial_output_date")

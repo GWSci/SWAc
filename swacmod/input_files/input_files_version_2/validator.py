@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import numpy as np
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 import swacmod.input_files.input_files_version_2.english as english
+from datetime import date
 
 def validate_keys(specs, params, input_file):
     result = ParsedInputData(params, [], [])
@@ -139,6 +140,7 @@ def validate_type(config):
 
 def find_type_synonyms(t):
     type_synonyms = {
+        "spatial_output_date": [str, date],
         int: [int, np.int64],
         float: [float, int, np.float64, np.int64],
         list: [list, np.ndarray, time_series_data.TimeSeriesData],
