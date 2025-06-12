@@ -150,7 +150,7 @@ def is_type_matching(value, value_type, acceptable_types):
     for t in acceptable_types:
         if isinstance(value, t):
             return True
-    return value_type in acceptable_types
+    return False
 
 def validate_set_member_types(config):
     iterate_members = lambda: config.value
