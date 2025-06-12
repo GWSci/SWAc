@@ -2005,27 +2005,6 @@ def val_nevtopt(data, name):
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-def val_gwmodel_type(data, name):
-    c.validate_type(data, name)
-
-def val_solute_calibration_a(data, name):
-    c.validate_type(data, name)
-
-def val_solute_calibration_sigma(data, name):
-    c.validate_type(data, name)
-
-def val_solute_calibration_alpha(data, name):
-    c.validate_type(data, name)
-
-def val_attenuate_sfr_flows(data, name):
-    c.validate_type(data, name)
-
-def val_solute_calibration_mu(data, name):
-    c.validate_type(data, name)
-
-def val_solute_calibration_effective_porosity(data, name):
-    c.validate_type(data, name)
-
 FUNC_PARAMS = [
     val_num_cores,
     val_num_nodes,
@@ -2106,11 +2085,6 @@ FUNC_PARAMS = [
     val_recharge_attenuation_params,
     val_historical_solute_process,
     val_solute_process,
-    val_solute_calibration_a,
-    val_solute_calibration_sigma,
-    val_solute_calibration_alpha,
-    val_solute_calibration_mu,
-    val_solute_calibration_effective_porosity,
     val_sw_ponding_process,
     val_sw_init_ponding,
     val_sw_max_ponding,
@@ -2128,7 +2102,6 @@ FUNC_PARAMS = [
     val_sfr_obs,
     val_istcb1,
     val_istcb2,
-    val_attenuate_sfr_flows,
     val_routing_topology,
     val_swdis_f,
     val_swabs_f,
@@ -2136,7 +2109,6 @@ FUNC_PARAMS = [
     val_evt_parameters,
     val_ievtcb,
     val_nevtopt,
-    val_gwmodel_type,
     val_excess_sw_process,
     val_percolation_rejection_use_timeseries,
     val_interflow_zone_mapping,
