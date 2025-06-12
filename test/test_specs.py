@@ -362,9 +362,7 @@ class Test_Specs(unittest.TestCase):
             [{"a": [1, "a"]}, {"a": [2, "b"]}, {"c": [3, "c"]}])
 
     def test_validate_spec_no_error_when_constraints_are_none(self):
-        constraints = None
-        value = "bat"
-        params, actual = self.validate_constraints(constraints, value)
+        params, actual = self.validate_constraints(None, "bat")
         self.assert_no_errors(actual, params)
 
     def validate_constraints(self, constraints, value):
