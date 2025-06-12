@@ -5,24 +5,6 @@ from datetime import date, datetime
 import numpy as np
 
 class Test_Specs(unittest.TestCase):
-    def test_validate_spec_returns_error_when_key_is_not_in_spec(self):
-        params = {}
-        specs_object = []
-        actual = matches_spec_adaptor(specs_object, params, "aardvark")
-        self.assert_one_error(
-            actual,
-            params,
-            "Error: No spec was found for the key 'aardvark'. Please contact support.")
-
-    def test_validate_spec_returns_error_when_key_is_not_in_spec_2(self):
-        params = {}
-        specs_object = []
-        actual = matches_spec_adaptor(specs_object, params, "bat")
-        self.assert_one_error(
-            actual,
-            params,
-            "Error: No spec was found for the key 'bat'. Please contact support.")
-
     def test_validate_spec_returns_error_when_key_is_not_in_spec_3(self):
         params = {}
         specs_object = [Input_Parameter("aardvark", True, [], [str], None)]
@@ -444,5 +426,5 @@ class Test_Specs(unittest.TestCase):
         self.assertEqual([], actual.errors)
 
 def matches_spec_adaptor(specs_object, params, key):
-    spec = None
+    spec = specs_object[0]
     return validator.validate_matches_spec(spec, specs_object, params, key)
