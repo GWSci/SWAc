@@ -83,6 +83,28 @@ def validate_all_match_spec(specs_object, params):
         result.update(validate_matches_spec(specs_object, params, spec.name))
     return result
 
+def validate_all_match_spec_allowing_alt(specs_object, params):
+    result = ParsedInputData(params, [], [])
+    for spec in specs_object:
+        if not is_alt(spec, params, spec.name):
+            result.update(validate_matches_spec(specs_object, params, spec.name))
+    return result
+
+def is_alt(spec, params, param):
+    value = params[param]
+
+    if not isinstance(value, str):
+        return False
+
+    if spec.alt_format == None:
+        return False
+    alt_formats = spec.alt_format
+    for alt in alt_formats:
+        suffix = f".{alt}"
+        if value.endswith(suffix):
+            return True
+    return False
+
 def validate_matches_spec(specs_object, params, key):
     config = make_validation_config(specs_object, params, key)
 

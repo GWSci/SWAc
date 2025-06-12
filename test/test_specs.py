@@ -404,6 +404,23 @@ class Test_Specs(unittest.TestCase):
         ]
         self.assertEqual(expected, actual.errors)
 
+    def test_validate_all_fields_allowing_alt(self):
+        params = {
+            "aardvark": 1,
+            "bat": "dog.csv",
+            "cat": "elephant"
+        }
+        specs_object = [
+            Input_Parameter("aardvark", True, ['yml', 'csv'], [int], None),
+            Input_Parameter("bat", True, ['yml', 'csv'], [int], None),
+            Input_Parameter("cat", True, ['yml', 'csv'], [int], None),
+        ]
+        actual = validator.validate_all_match_spec_allowing_alt(specs_object, params)
+        expected = [
+            "Error: The field 'cat' must be an integer. The value 'elephant' is invalid.",
+        ]
+        self.assertEqual(expected, actual.errors)
+
     def validate_constraints(self, constraints, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], [str], constraints)]
