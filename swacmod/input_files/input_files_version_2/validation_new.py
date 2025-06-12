@@ -64,7 +64,10 @@ def val_time_periods(data, name):
         if len(time_range) != 2:
             msg = 'Parameter "%s" requires arrays of length 2'
             raise u.ValidationError(msg % name)
-        if isinstance(time_range[0], int) and isinstance(time_range[1], int) and (not time_range[0] < time_range[1]):
+        is_range_ints = isinstance(time_range[0], int) and isinstance(time_range[1], int)
+        if not is_range_ints:
+            continue
+        if not time_range[0] < time_range[1]:
             msg = 'Parameter "%s" requires start_date < end_date'
             raise u.ValidationError(msg % name)
         all_days += range(time_range[0], time_range[1])
