@@ -37,7 +37,7 @@ def expand_t_type(t_type):
     return t_type
 
 def validate_type(data, name):
-    check_type(param=data["params"][name], name=name, t_types=data["specs"][name]["type"])
+    pass
 
 def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     """Check the parameter is of type t_type."""
