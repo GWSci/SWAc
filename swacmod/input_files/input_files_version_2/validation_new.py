@@ -11,9 +11,6 @@ import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
 
-def val_run_name(data, name):
-    c.validate_type(data, name)
-
 def val_num_cores(data, name):
     c.validate_type(data, name)
     c.check_values_limits(
@@ -2064,7 +2061,6 @@ def val_solute_loading(data, name):
     c.validate_type(data, name)
 
 FUNC_PARAMS = [
-    val_run_name,
     val_num_cores,
     val_num_nodes,
     val_node_areas,

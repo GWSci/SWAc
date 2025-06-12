@@ -4,15 +4,6 @@ import swacmod.input_files.input_files_version_2.specs as specs_module
 import datetime
 
 class Test_Validation_New(unittest.TestCase):
-    def test_validation_converts_exceptions_to_error_list(self):
-        spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
-        params = make_valid_params()
-        params["run_name"] = 5
-        actual = validation_new.validate_2(params, spec_maps).errors
-        self.assertEqual(
-            "---> Validation failed: Parameter \"run_name\" has to be a string, found a <class 'int'> instead",
-            actual[0])
-
     def test_validations_skipped_for_alt_files(self):
         spec_maps = specs_module.make_specs_dictionary(specs_module.make_specs())
         params = make_valid_params()
@@ -28,7 +19,6 @@ class Test_Validation_New(unittest.TestCase):
 
     def test_invalid_values_record_errors(self):
         invalid_pairs = {
-            "run_name": 5,
             "num_cores": "x",
             "num_cores": 1000,
             "num_nodes": "x",
