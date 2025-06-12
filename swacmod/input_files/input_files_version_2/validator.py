@@ -123,7 +123,6 @@ def validate_matches_spec(spec, specs_object, params, key):
     return config.result
 
 def make_validation_config(spec, specs_object, params, key):
-    spec = _find_spec_or_none(specs_object, key)
     errors = []
     value = params.get(key, None)
     result = ParsedInputData(params, errors, [])

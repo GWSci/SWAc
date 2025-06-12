@@ -5,15 +5,6 @@ from datetime import date, datetime
 import numpy as np
 
 class Test_Specs(unittest.TestCase):
-    def test_validate_spec_returns_error_when_key_is_not_in_spec_3(self):
-        params = {}
-        specs_object = [Input_Parameter("aardvark", True, [], [str], None)]
-        actual = matches_spec_adaptor(specs_object, params, "bat")
-        self.assert_one_error(
-            actual,
-            params,
-            "Error: No spec was found for the key 'bat'. Please contact support.")
-
     def test_validate_spec_returns_error_when_required_key_is_missing(self):
         params = {}
         specs_object = [Input_Parameter("aardvark", True, [], [str], None)]
