@@ -3,6 +3,4 @@ def format_list(a_list):
     result = ""
     if len(a_list) > 0:
         result += quoted_list[0]
-    if len(a_list) == 0:
-        return ""
-    return quoted_list[-1]
+    return result
