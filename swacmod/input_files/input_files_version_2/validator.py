@@ -106,6 +106,12 @@ def make_validation_config(specs_object, params, key):
     config = Validation_Config(spec, params, errors, key, value, result)
     return config
 
+def _find_spec_or_none(specs_object, key):
+    for spec in specs_object:
+        if key == spec.name:
+            return spec
+    return None
+
 def validate_spec_present_for_key(config):
     if config.spec == None:
         config.errors.append(f"Error: No spec was found for the key '{config.key}'. Please contact support.")
@@ -264,9 +270,3 @@ def find_article(word):
     if word[0] in ["a", "e", "i", "o", "u"]:
         return "an"
     return "a"
-
-def _find_spec_or_none(specs_object, key):
-    for spec in specs_object:
-        if key == spec.name:
-            return spec
-    return None
