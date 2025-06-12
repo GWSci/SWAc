@@ -68,7 +68,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
                 diff = set_keys - param_keys
                 raise u.ValidationError(msg % (name, diff))
 
-        if len(types) > 0 and t_type == dict:
+        if len(types) > 0 and t_type == dict and (type(param) == dict):
             for value in param.values():
                 copy_t = [i for i in types]
                 copy_l = []
