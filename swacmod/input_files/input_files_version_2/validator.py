@@ -77,6 +77,12 @@ class Validation_Config:
     value: object
     result: ParsedInputData
 
+def validate_all_match_spec(specs_object, params):
+    result = ParsedInputData(params, [], [])
+    for spec in specs_object:
+        result.update(validate_matches_spec(specs_object, params, spec.name))
+    return result
+
 def validate_matches_spec(specs_object, params, key):
     config = make_validation_config(specs_object, params, key)
 

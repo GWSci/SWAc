@@ -387,6 +387,23 @@ class Test_Specs(unittest.TestCase):
             params,
             "Error: The field 'aardvark' has the invalid value 'dog'. It must be one of: 'fox' or 'goat'.")
 
+    def test_validate_all_fields(self):
+        params = {
+            "aardvark": 1,
+            "cat": "x",
+        }
+        specs_object = [
+            Input_Parameter("aardvark", True, [], [str], None),
+            Input_Parameter("bat", True, [], [str], None),
+            Input_Parameter("cat", True, [], [str], None),
+        ]
+        actual = validator.validate_all_match_spec(specs_object, params)
+        expected = [
+            "Error: The field 'aardvark' must be a string. The value '1' is invalid.",
+            "Error: The required key 'bat' could not be found."
+        ]
+        self.assertEqual(expected, actual.errors)
+
     def validate_constraints(self, constraints, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], [str], constraints)]
