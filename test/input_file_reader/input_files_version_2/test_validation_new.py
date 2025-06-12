@@ -26,7 +26,6 @@ class Test_Validation_New(unittest.TestCase):
             "node_areas": {},
             "node_areas": {1: "x", 2: "x", 3: "x"},
             "node_areas": {1: -11, 2: -13, 3: -17},
-            "start_date": "x",
             "time_periods": "x",
             "time_periods": [[], [], []],
             "time_periods": [["x", "x"], ["x", "x"], ["x", "x"]],
