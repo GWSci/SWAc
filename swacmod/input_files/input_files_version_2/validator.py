@@ -126,18 +126,6 @@ def make_validation_config(spec, specs_object, params, key):
     config = Validation_Config(spec, params, errors, key, value, result)
     return config
 
-def _find_spec_or_none(specs_object, key):
-    for spec in specs_object:
-        if key == spec.name:
-            return spec
-    return None
-
-def validate_spec_present_for_key(config):
-    if config.spec == None:
-        config.errors.append(f"Error: No spec was found for the key '{config.key}'. Please contact support.")
-        return False
-    return True
-
 def validate_required_key(config):
     if (config.spec.required) and (config.key not in config.params):
         config.errors.append(f"Error: The required key '{config.key}' could not be found.")
