@@ -362,8 +362,10 @@ class Test_Specs(unittest.TestCase):
             [{"a": [1, "a"]}, {"a": [2, "b"]}, {"c": [3, "c"]}])
 
     def test_validate_spec_no_error_when_constraints_are_none(self):
-        params = {"aardvark": "bat"}
-        specs_object = [Input_Parameter("aardvark", True, [], [str], None)]
+        constraints = None
+        value = "bat"
+        params = {"aardvark": value}
+        specs_object = [Input_Parameter("aardvark", True, [], [str], constraints)]
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
         self.assert_no_errors(actual, params)
 
