@@ -84,6 +84,9 @@ def validate_all_match_spec(specs_object, params):
     return result
 
 def validate_all_match_spec_allowing_alt(specs_object, params):
+    spec_non_alt = filter(
+        lambda spec: not is_alt(spec, params),
+        specs_object)
     result = ParsedInputData(params, [], [])
     for spec in specs_object:
         if not is_alt(spec, params):
