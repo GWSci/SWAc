@@ -444,4 +444,5 @@ class Test_Specs(unittest.TestCase):
         self.assertEqual([], actual.errors)
 
 def matches_spec_adaptor(specs_object, params, key):
-    return validator.validate_matches_spec(specs_object, params, key)
+    spec = None
+    return validator.validate_matches_spec(spec, specs_object, params, key)
