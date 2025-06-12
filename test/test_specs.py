@@ -412,7 +412,8 @@ class Test_Specs(unittest.TestCase):
                 alt_format=[],
                 type=[str],
                 constraints=None)]
-        actual = matches_spec_adaptor(specs_object, params, "spatial_output_date")
+        actual = matches_spec_adaptor(
+            specs_object, params, "spatial_output_date")
         actual = self.assert_no_errors(actual, params)
 
     def validate_constraints(self, constraints, value):
