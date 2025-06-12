@@ -94,6 +94,7 @@ def validate_matches_spec(specs_object, params, key):
     validate_dictionary_key_types(config)
     validate_dictionary_value_types(config)
     validate_dictionary_value_inner_types(config)
+    validate_constraints(config)
     return config.result
 
 def make_validation_config(specs_object, params, key):
@@ -217,6 +218,14 @@ def validate_dictionary_value_inner_types(config):
     expected_member_type = lambda: config.spec.type[2]
     _validate_inner_type(
         config,dict,iterate_members,"inner list value",expected_member_type)
+
+def validate_constraints(config):
+    if config.spec.constraints == None:
+        return
+    if config.value in config.spec.constraints:
+        return
+    message = f"Error: The field '{config.key}' has the invalid value '{config.value}'. It must be one of: 'bat' or 'cat'."
+    config.errors.append(message)
 
 def _convert_type_to_string(spec_type):
     word = convert_type_to_english(spec_type[0])
