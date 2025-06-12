@@ -95,8 +95,7 @@ def is_alt(spec, params):
     if (spec.alt_format == None) or (not isinstance(value, str)):
         return False
 
-    alt_formats = spec.alt_format
-    for alt in alt_formats:
+    for alt in spec.alt_format:
         suffix = f".{alt}"
         if value.endswith(suffix):
             return True
