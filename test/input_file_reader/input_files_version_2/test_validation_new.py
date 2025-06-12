@@ -20,9 +20,7 @@ class Test_Validation_New(unittest.TestCase):
 
     def test_invalid_values_record_errors(self):
         invalid_pairs = {
-            "num_cores": "x",
             "num_cores": 1000,
-            "num_nodes": "x",
             "num_nodes": -1,
             "node_areas": "x",
             "node_areas": {},
