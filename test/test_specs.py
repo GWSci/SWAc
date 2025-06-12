@@ -404,6 +404,17 @@ class Test_Specs(unittest.TestCase):
         ]
         self.assertEqual(expected, actual.errors)
 
+    def test_validate_all_fields_spatial_output_date_is_None(self):
+        params = {"spatial_output_date": None}
+        specs_object = [Input_Parameter(
+                'spatial_output_date',
+                required=False,
+                alt_format=[],
+                type=[str],
+                constraints=None)]
+        actual = matches_spec_adaptor(specs_object, params, "spatial_output_date")
+        actual = self.assert_no_errors(actual, params)
+
     def validate_constraints(self, constraints, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], [str], constraints)]
