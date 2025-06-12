@@ -6,6 +6,7 @@ import os
 from dataclasses import dataclass
 import numpy as np
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
+import swacmod.input_files.input_files_version_2.english as english
 
 def validate_keys(specs, params, input_file):
     result = ParsedInputData(params, [], [])
@@ -223,9 +224,10 @@ def validate_constraints(config):
     constraints = config.spec.constraints
     if (constraints == None) or (config.value in constraints):
         return
+    allowed_values = english.format_list(constraints)
     message = (f"Error: The field '{config.key}'"
         + f" has the invalid value '{config.value}'."
-        + f" It must be one of: 'bat' or 'cat'.")
+        + f" It must be one of: {allowed_values}.")
     config.errors.append(message)
 
 def _convert_type_to_string(spec_type):

@@ -380,6 +380,13 @@ class Test_Specs(unittest.TestCase):
             params,
             "Error: The field 'aardvark' has the invalid value 'dog'. It must be one of: 'bat' or 'cat'.")
 
+    def test_validate_spec_error_when_value_does_not_match_constraints2(self):
+        params, actual = self.validate_constraints(["fox", "goat"], "dog")
+        self.assert_one_error(
+            actual,
+            params,
+            "Error: The field 'aardvark' has the invalid value 'dog'. It must be one of: 'fox' or 'goat'.")
+
     def validate_constraints(self, constraints, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], [str], constraints)]
