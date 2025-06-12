@@ -2029,9 +2029,6 @@ def val_solute_calibration_effective_porosity(data, name):
 def val_solute_depth_to_water(data, name):
     c.validate_type(data, name)
 
-def val_solute_loading(data, name):
-    c.validate_type(data, name)
-
 FUNC_PARAMS = [
     val_num_cores,
     val_num_nodes,
@@ -2118,7 +2115,6 @@ FUNC_PARAMS = [
     val_solute_calibration_mu,
     val_solute_calibration_effective_porosity,
     val_solute_depth_to_water,
-    val_solute_loading,
     val_sw_ponding_process,
     val_sw_init_ponding,
     val_sw_max_ponding,
