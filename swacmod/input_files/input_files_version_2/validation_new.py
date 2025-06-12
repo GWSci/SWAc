@@ -77,9 +77,6 @@ def val_time_periods(data, name):
     #     )
     #     raise u.ValidationError(msg % name)
 
-def val_output_sfr(data, name):
-    c.validate_type(data, name)
-
 def val_sfr_obs(data, name):
     """Validate sfr_obs.
 
@@ -91,8 +88,6 @@ def val_sfr_obs(data, name):
 def val_output_individual(data, name):
     oin = data["params"][name]
 
-    c.validate_type(data, name)
-
     ids = set(range(1, data["params"]["num_nodes"] + 1))
 
     if not all(i in ids for i in oin):
@@ -100,15 +95,10 @@ def val_output_individual(data, name):
                + '1 <= x <= ' "num_nodes")
         raise u.ValidationError(msg % name)
 
-def val_irchcb(data, name):
-    c.validate_type(data, name)
-
 def val_nodes_per_line(data, name):
-    c.validate_type(data, name)
     c.check_values_limits(values=[data["params"][name]], name=name, low_l=0)
 
 def val_output_fac(data, name):
-    c.validate_type(data, name)
     c.check_values_limits(values=[data["params"][name]], name=name, low_l=0.0)
 
 def val_spatial_output_date(data, name):
@@ -2012,7 +2002,6 @@ FUNC_PARAMS = [
     val_start_date,
     val_time_periods,
     val_output_individual,
-    val_irchcb,
     val_nodes_per_line,
     val_output_fac,
     # val_spatial_output_date,
@@ -2098,7 +2087,6 @@ FUNC_PARAMS = [
     val_sw_ponding_area,
     val_swdis_locs,
     val_swabs_locs,
-    val_output_sfr,
     val_sfr_obs,
     val_istcb1,
     val_istcb2,
