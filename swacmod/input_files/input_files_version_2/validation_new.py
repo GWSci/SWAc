@@ -403,9 +403,6 @@ def val_node_areas(data, name):
 
     c.check_values_limits(values=data["params"][name].values(), name=name, low_l=0, include_low=True)
 
-def val_reporting_zone_names(data, name):
-    c.validate_type(data, name)
-
 def val_reporting_zone_mapping(data, name):
     tot_name = "num_nodes"
     zone_name = "reporting_zone_names"
@@ -429,9 +426,6 @@ def val_reporting_zone_mapping(data, name):
         include_high=True,
     )
 
-def val_rainfall_zone_names(data, name):
-    c.validate_type(data, name)
-
 def val_rainfall_zone_mapping(data, name):
     tot_name = "num_nodes"
     zone_name = "rainfall_zone_names"
@@ -454,9 +448,6 @@ def val_rainfall_zone_mapping(data, name):
         high_l=len(rzn),
         include_high=True,
     )
-
-def val_pe_zone_names(data, name):
-    c.validate_type(data, name)
 
 def val_pe_zone_mapping(data, name):
     """Validate pe_zone_mapping.
@@ -512,9 +503,6 @@ def val_tmax_c_zone_mapping(data, name):
         include_high=True,
     )
 
-def val_tmax_c_zone_names(data, name):
-    c.validate_type(data, name)
-
 def val_tmin_c_zone_mapping(data, name):
     """Validate tmin_c_zone_mapping.
 
@@ -541,9 +529,6 @@ def val_tmin_c_zone_mapping(data, name):
         high_l=len(tzn),
         include_high=True,
     )
-
-def val_tmin_c_zone_names(data, name):
-    c.validate_type(data, name)
 
 def val_windsp_zone_mapping(data, name):
     """Validate windsp_zone_mapping.
@@ -572,12 +557,6 @@ def val_windsp_zone_mapping(data, name):
         include_high=True,
     )
 
-def val_windsp_zone_names(data, name):
-    c.validate_type(data, name)
-
-def val_temperature_zone_names(data, name):
-    c.validate_type(data, name)
-
 def val_temperature_zone_mapping(data, name):
     """Validate temperature_zone_mapping.
 
@@ -604,9 +583,6 @@ def val_temperature_zone_mapping(data, name):
         high_l=len(tzn),
         include_high=True,
     )
-
-def val_subroot_zone_names(data, name):
-    c.validate_type(data, name)
 
 def val_subroot_zone_mapping(data, name):
     """Validate subroot_zone_mapping.
@@ -635,9 +611,6 @@ def val_subroot_zone_mapping(data, name):
         include_high=True,
     )
 
-def val_rapid_runoff_zone_names(data, name):
-    c.validate_type(data, name)
-
 def val_rapid_runoff_zone_mapping(data, name):
     """Validate rapid_runoff_zone_mapping.
 
@@ -664,9 +637,6 @@ def val_rapid_runoff_zone_mapping(data, name):
         high_l=len(rzn),
         include_high=True,
     )
-
-def val_interflow_zone_names(data, name):
-    c.validate_type(data, name)
 
 def val_interflow_zone_mapping(data, name):
     """Validate interflow_zone_mapping.
@@ -2005,23 +1975,14 @@ FUNC_PARAMS = [
     val_nodes_per_line,
     val_output_fac,
     # val_spatial_output_date,
-    val_reporting_zone_names,
     val_reporting_zone_mapping,
-    val_rainfall_zone_names,
     val_rainfall_zone_mapping,
-    val_rapid_runoff_zone_names,
     val_rapid_runoff_zone_mapping,
-    val_pe_zone_names,
     val_pe_zone_mapping,
-    val_temperature_zone_names,
     val_temperature_zone_mapping,
-    val_tmax_c_zone_names,
     val_tmax_c_zone_mapping,
-    val_tmin_c_zone_names,
     val_tmin_c_zone_mapping,
-    val_windsp_zone_names,
     val_windsp_zone_mapping,
-    val_subroot_zone_names,
     val_subroot_zone_mapping,
     val_swrecharge_zone_names,
     val_swrecharge_zone_mapping,
@@ -2100,7 +2061,6 @@ FUNC_PARAMS = [
     val_excess_sw_process,
     val_percolation_rejection_use_timeseries,
     val_interflow_zone_mapping,
-    val_interflow_zone_names,
     val_canopy_zone_mapping,
     val_canopy_zone_names
     
