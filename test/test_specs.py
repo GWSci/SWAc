@@ -405,8 +405,7 @@ class Test_Specs(unittest.TestCase):
         self.assertEqual(expected, actual.errors)
 
     def test_validate_spatial_output_date_is_None(self):
-        value = None
-        params, actual = self.validate_spatial_output_date(value)
+        params, actual = self.validate_spatial_output_date(None)
         actual = self.assert_no_errors(actual, params)
 
     def validate_spatial_output_date(self, value):
