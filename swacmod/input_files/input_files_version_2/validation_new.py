@@ -83,7 +83,6 @@ def val_sfr_obs(data, name):
     1) type has to be string
     """
     obs = data["params"][name]
-    c.check_type(param=obs, name=name, t_types=data["specs"][name]["type"])
 
 def val_output_individual(data, name):
     oin = data["params"][name]
@@ -113,8 +112,6 @@ def val_spatial_output_date(data, name):
     if dat is None or dat != "mean":
         return
 
-    c.check_type(param=dat, name=name, t_types=data["specs"][name]["type"])
-
 def val_rainfall_ts(data, name):
     """Validate rainfall_ts.
 
@@ -122,8 +119,6 @@ def val_rainfall_ts(data, name):
     2) list length has to be equal to the number of days x number of zones
     """
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # rts = data["series"][name]
     # rzn = data["params"]["rainfall_zone_names"]
@@ -143,8 +138,6 @@ def val_pe_ts(data, name):
     """
 
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # pts = data["series"][name]
     # pzn = data["params"]["pe_zone_names"]
@@ -163,8 +156,6 @@ def val_temperature_ts(data, name):
     2) list length has to be equal to the number of days x number of zones
     """
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
     # tzn = set(data["params"]["temperature_zone_mapping"].values())
@@ -183,8 +174,6 @@ def val_tmax_c_ts(data, name):
     2) list length has to be equal to the number of days x number of zones
     """
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
     # tzn = set(data["params"]["tmax_c_zone_mapping"].values())
@@ -203,8 +192,6 @@ def val_tmin_c_ts(data, name):
     2) list length has to be equal to the number of days x number of zones
     """
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
     # tzn = set(data["params"]["tmin_c_zone_mapping"].values())
@@ -223,8 +210,6 @@ def val_windsp_ts(data, name):
     2) list length has to be equal to the number of days x number of zones
     """
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
     # tzn = set(data["params"]["windsp_zone_mapping"].values())
@@ -243,8 +228,6 @@ def val_subroot_leakage_ts(data, name):
     2) list length has to be equal to the number of days x number of zones
     """
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # sts = data["series"][name]
     # szn = data["params"]["subroot_zone_names"]
@@ -264,8 +247,6 @@ def val_swdis_ts(data, name):
     x number of zones
     """
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # from swacmod.utils import monthdelta, weekdelta
 
@@ -296,8 +277,6 @@ def val_swabs_ts(data, name):
     x number of zones
     """
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # from swacmod.utils import monthdelta, weekdelta
 
@@ -1355,8 +1334,6 @@ def val_percolation_rejection_ts(data, name):
         return
 
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # per = data["series"][name]
     # lzn = data["params"]["landuse_zone_names"]
@@ -1481,8 +1458,6 @@ def val_infiltration_limit_ts(data, name):
         return
 
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # per = data["series"][name]
     # lzn = data["params"]["interflow_zone_names"]
@@ -1511,8 +1486,6 @@ def val_interflow_decay_ts(data, name):
         return
 
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
     # TODO: Validation needs to be done post-finalization
     # per = data["series"][name]
     # lzn = data["params"]["interflow_zone_names"]
@@ -1819,8 +1792,6 @@ def val_swdis_f(data, name):
     """
     x = data["params"][name]
 
-    c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
-
     c.check_values_limits(
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
@@ -1831,8 +1802,6 @@ def val_swabs_f(data, name):
     1) type has to be an integer
     """
     x = data["params"][name]
-
-    c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
 
     c.check_values_limits(
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
@@ -1855,15 +1824,6 @@ def val_evt_parameters(data, name):
         # keys=range(1, tot + 1),
         len_list=[3],
     )
-
-def val_ievtcb(data, name):
-    """Validate ievtcb.
-
-    1) type has to be an integer
-    """
-    x = data["params"][name]
-
-    c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
 
 def val_nevtopt(data, name):
     """Validate nevtopt.
@@ -1947,7 +1907,6 @@ FUNC_PARAMS = [
     val_swdis_f,
     val_swabs_f,
     val_evt_parameters,
-    val_ievtcb,
     val_nevtopt,
     val_interflow_zone_mapping,
     val_canopy_zone_mapping,
