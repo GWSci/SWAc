@@ -893,11 +893,9 @@ def val_max_canopy_storage(data, name):
 
 def val_snow_process_simple(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_snow_process_complex(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_snow_params_simple(data, name):
     """Validate snow_params_simple.
@@ -959,7 +957,6 @@ def val_snow_params_complex(data, name):
 
 def val_rapid_runoff_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_rapid_runoff_params(data, name):
     """Validate rapid_runoff_params.
@@ -1007,7 +1004,6 @@ def val_rorecharge_process(data, name):
         raise u.ValidationError(msg % (name, 'rapid_runoff_process'))
 
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_single_cell_swrecharge_proportion(data, name):
     """Validate single_cell_swrecharge_proportion.
@@ -1070,7 +1066,6 @@ def val_swrecharge_process(data, name):
         raise u.ValidationError(msg % (name, "rapid_runoff_process"))
 
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_swrecharge_proportion(data, name):
     """Validate swrecharge_proportion.
@@ -1126,7 +1121,6 @@ def val_macropore_process(data, name):
         raise u.ValidationError(msg % (name, "rapid_runoff_process"))
 
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_macropore_proportion(data, name):
     """Validate macropore_proportion.
@@ -1222,11 +1216,9 @@ def val_macropore_recharge(data, name):
 
 def val_fao_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_fao_input(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_soil_static_params(data, name):
     """Validate soil_static_params.
@@ -1468,7 +1460,6 @@ def val_percolation_rejection_use_timeseries(data, name):
 
 def val_subroot_leakage_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_subroot_leakage_fraction(data, name):
     """Validate subroot_leakage_fraction.
@@ -1488,7 +1479,6 @@ def val_subroot_leakage_fraction(data, name):
 
 def val_interflow_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_init_interflow_store(data, name):
     """init_interflow_store.
@@ -1638,15 +1628,12 @@ def val_interflow_decay_use_timeseries(data, name):
 
 def val_recharge_attenuation_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_historical_solute_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_solute_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_recharge_attenuation_params(data, name):
     """Validate recharge_attenuation_params.
@@ -1678,7 +1665,6 @@ def val_recharge_attenuation_params(data, name):
 
 def val_sw_ponding_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_sw_zone_names(data, name):
     """Validate sw_zone_names.
@@ -1879,7 +1865,6 @@ def val_sw_ponding_area(data, name):
 
 def val_sw_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_sw_params(data, name):
     """Validate sw_params.
@@ -1979,7 +1964,6 @@ def val_output_evt(data, name):
 
 def val_excess_sw_process(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_evt_parameters(data, name):
     """Validate evt parameters .
@@ -2023,7 +2007,6 @@ def val_nevtopt(data, name):
 
 def val_gwmodel_type(data, name):
     c.validate_type(data, name)
-    c.validate_enum(data, name)
 
 def val_solute_calibration_a(data, name):
     c.validate_type(data, name)
