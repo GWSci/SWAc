@@ -11,27 +11,27 @@ def format_list(a_list):
     return result
 
 def convert_type_to_string(spec_type):
-    word = convert_type_to_english(spec_type[0])
+    word = format_type(spec_type[0])
 
     article = find_article(word)
 
     if spec_type[0] == set:
-        suffix = f" of {convert_type_to_english(spec_type[1])}s"
+        suffix = f" of {format_type(spec_type[1])}s"
     elif spec_type[0] == dict and len(spec_type) == 2:
-        suffix = f" mapping integers to {convert_type_to_english(spec_type[1])}s"
+        suffix = f" mapping integers to {format_type(spec_type[1])}s"
     elif spec_type[0] == dict and len(spec_type) == 3:
         suffix = (f" mapping integers"
-            + f" to {convert_type_to_english(spec_type[1])}" 
-            + f" of {convert_type_to_english(spec_type[2])}s")
+            + f" to {format_type(spec_type[1])}" 
+            + f" of {format_type(spec_type[2])}s")
     elif spec_type[0] == list and len(spec_type) == 3:
-        suffix = (f" of {convert_type_to_english(spec_type[1])}" 
-            + f" of {convert_type_to_english(spec_type[2])}s")
+        suffix = (f" of {format_type(spec_type[1])}" 
+            + f" of {format_type(spec_type[2])}s")
     else:
         suffix = ""
 
     return f"{article} {word}{suffix}"
 
-def convert_type_to_english(t):
+def format_type(t):
     type_to_english = {
         str: "string",
         int: "integer",
