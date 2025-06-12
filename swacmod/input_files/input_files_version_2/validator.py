@@ -238,17 +238,3 @@ def validate_constraints(config):
 
 def _convert_type_to_string(spec_type):
     return english.convert_type_to_string(spec_type)
-
-def convert_type_to_english(t):
-    type_to_english = {
-        str: "string",
-        int: "integer",
-        bool: "boolean",
-        dict: "dictionary"
-    }
-    return type_to_english.get(t, t.__name__)
-
-def find_article(word):
-    if word[0] in ["a", "e", "i", "o", "u"]:
-        return "an"
-    return "a"
