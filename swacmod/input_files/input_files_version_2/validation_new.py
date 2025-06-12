@@ -12,7 +12,6 @@ import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
 
 def val_num_cores(data, name):
-    c.validate_type(data, name)
     c.check_values_limits(
         values=[data["params"][name]],
         name=name,
