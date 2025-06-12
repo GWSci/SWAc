@@ -131,7 +131,7 @@ def validate_required_key(config):
 
 def validate_type(config):
     acceptable_types = find_type_synonyms(config.spec.type[0])
-    if not is_type_matching(type(config.value), acceptable_types):
+    if not is_type_matching(config.value, type(config.value), acceptable_types):
         type_string = english.format_type_list(config.spec.type)
         config.errors.append(
             f"Error: The field '{config.key}' must be {type_string}. "
@@ -146,8 +146,8 @@ def find_type_synonyms(t):
     acceptable_types = type_synonyms.get(t, [t])
     return acceptable_types
 
-def is_type_matching(value, acceptable_types):
-    return value in acceptable_types
+def is_type_matching(value, value_type, acceptable_types):
+    return value_type in acceptable_types
 
 def validate_set_member_types(config):
     iterate_members = lambda: config.value
@@ -169,7 +169,7 @@ def _validate_member_types(
 
     acceptable_types = find_type_synonyms(expected_member_type())
     for m in iterate_members():
-        if not is_type_matching(type(m), acceptable_types):
+        if not is_type_matching(m, type(m), acceptable_types):
             type_string = english.format_type_list(config.spec.type)
             config.errors.append(
                 f"Error: The field '{config.key}' must be {type_string}. "
@@ -211,7 +211,7 @@ def _validate_inner_type(
         else:
             continue
         for x in inner_iterator:
-            if not is_type_matching(type(x), acceptable_types):
+            if not is_type_matching(x, type(x), acceptable_types):
                 type_string = english.format_type_list(config.spec.type)
                 config.errors.append(
                     f"Error: The field '{config.key}' must be {type_string}. "
