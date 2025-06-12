@@ -221,7 +221,7 @@ def validate_dictionary_value_inner_types(config):
 
 def validate_constraints(config):
     constraints = config.spec.constraints
-    if constraints == None:
+    if (constraints == None) or (config.value in constraints):
         return
     if config.value in constraints:
         return
