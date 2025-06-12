@@ -224,7 +224,9 @@ def validate_constraints(config):
         return
     if config.value in config.spec.constraints:
         return
-    message = f"Error: The field '{config.key}' has the invalid value '{config.value}'. It must be one of: 'bat' or 'cat'."
+    message = (f"Error: The field '{config.key}'"
+        + f" has the invalid value '{config.value}'."
+        + f" It must be one of: 'bat' or 'cat'.")
     config.errors.append(message)
 
 def _convert_type_to_string(spec_type):
