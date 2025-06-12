@@ -4,6 +4,8 @@ def format_list(a_list):
     count = len(quoted_list)
     if count > 0:
         result += quoted_list[0]
+    for x in quoted_list[1:-1]:
+        result += f", {x}"
     if count > 1:
         result += f" or {quoted_list[-1]}"
     return result

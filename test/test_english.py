@@ -6,3 +6,4 @@ class Test_English(unittest.TestCase):
         self.assertEqual("", english.format_list([]))
         self.assertEqual("'1'", english.format_list([1]))
         self.assertEqual("'1' or 'a'", english.format_list([1, "a"]))
+        self.assertEqual("'1', 'a' or '5'", english.format_list([1, "a", 5]))
