@@ -418,4 +418,4 @@ class Test_Specs(unittest.TestCase):
 
 def matches_spec_adaptor(specs_object, params, key):
     spec = specs_object[0]
-    return validator.validate_matches_spec(spec, specs_object, params, key)
+    return validator.validate_matches_spec(spec, params, key)
