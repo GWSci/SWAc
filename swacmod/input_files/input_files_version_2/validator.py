@@ -102,7 +102,7 @@ def is_alt(spec, params):
     return False
 
 def validate_matches_spec(spec, specs_object, params, key):
-    config = make_validation_config(specs_object, params, key)
+    config = make_validation_config(spec, specs_object, params, key)
 
     if not validate_spec_present_for_key(config):
         return config.result
@@ -122,7 +122,7 @@ def validate_matches_spec(spec, specs_object, params, key):
     validate_constraints(config)
     return config.result
 
-def make_validation_config(specs_object, params, key):
+def make_validation_config(spec, specs_object, params, key):
     spec = _find_spec_or_none(specs_object, key)
     errors = []
     value = params.get(key, None)
