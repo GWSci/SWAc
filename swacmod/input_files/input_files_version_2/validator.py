@@ -86,11 +86,11 @@ def validate_all_match_spec(specs_object, params):
 def validate_all_match_spec_allowing_alt(specs_object, params):
     result = ParsedInputData(params, [], [])
     for spec in specs_object:
-        if not is_alt(spec, params, spec.name):
+        if not is_alt(spec, params):
             result.update(validate_matches_spec(specs_object, params, spec.name))
     return result
 
-def is_alt(spec, params, param):
+def is_alt(spec, params):
     value = params[spec.name]
 
     if not isinstance(value, str):
