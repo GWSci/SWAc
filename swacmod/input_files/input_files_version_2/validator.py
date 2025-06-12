@@ -223,8 +223,6 @@ def validate_constraints(config):
     constraints = config.spec.constraints
     if (constraints == None) or (config.value in constraints):
         return
-    if config.value in constraints:
-        return
     message = (f"Error: The field '{config.key}'"
         + f" has the invalid value '{config.value}'."
         + f" It must be one of: 'bat' or 'cat'.")
