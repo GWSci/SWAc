@@ -91,7 +91,7 @@ def validate_all_match_spec_allowing_alt(specs_object, params):
     return result
 
 def is_alt(spec, params, param):
-    value = params[param]
+    value = params[spec.name]
 
     if not isinstance(value, str):
         return False
