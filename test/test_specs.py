@@ -29,6 +29,12 @@ class Test_Specs(unittest.TestCase):
         actual = matches_spec_adaptor(specs_object, params, "aardvark")
         self.assert_no_errors(actual, params)
 
+    def test_validate_spec_returns_no_errors_when_a_non_required_field_is_None(self):
+        params = {"aardvark": None}
+        specs_object = [Input_Parameter("aardvark", False, [], [str], None)]
+        actual = matches_spec_adaptor(specs_object, params, "aardvark")
+        self.assert_no_errors(actual, params)
+
     def test_validate_spec_returns_no_errors_when_a_non_required_field_is_present(self):
         params = {"aardvark": "bat"}
         specs_object = [Input_Parameter("aardvark", False, [], [str], None)]

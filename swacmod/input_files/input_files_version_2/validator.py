@@ -105,7 +105,7 @@ def validate_matches_spec(spec, params, key):
 
     validate_required_key(config)
 
-    if key not in config.params:
+    if (key not in config.params) or (config.value is None):
         return config.result
 
     validate_type(config)
