@@ -104,9 +104,6 @@ def is_alt(spec, params):
 def validate_matches_spec(spec, specs_object, params, key):
     config = make_validation_config(spec, specs_object, params, key)
 
-    if not validate_spec_present_for_key(config):
-        return config.result
-
     validate_required_key(config)
 
     if key not in config.params:
