@@ -77,13 +77,6 @@ def val_time_periods(data, name):
     #     )
     #     raise u.ValidationError(msg % name)
 
-def val_output_recharge(data, name):
-    c.validate_type(data, name)
-
-def val_routing_process(data, name):
-    c.validate_type(data, name)
-    c.validate_enum(data, name)
-
 def val_output_sfr(data, name):
     c.validate_type(data, name)
 
@@ -2063,7 +2056,6 @@ FUNC_PARAMS = [
     val_node_areas,
     val_start_date,
     val_time_periods,
-    val_output_recharge,
     val_output_individual,
     val_irchcb,
     val_nodes_per_line,
@@ -2162,7 +2154,6 @@ FUNC_PARAMS = [
     val_sfr_obs,
     val_istcb1,
     val_istcb2,
-    val_routing_process,
     val_attenuate_sfr_flows,
     val_routing_topology,
     val_swdis_f,
