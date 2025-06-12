@@ -211,7 +211,7 @@ def _validate_inner_type(
         else:
             continue
         for x in inner_iterator:
-            if type(x) not in acceptable_types:
+            if not is_type_matching(type(x), acceptable_types):
                 type_string = english.format_type_list(config.spec.type)
                 config.errors.append(
                     f"Error: The field '{config.key}' must be {type_string}. "
