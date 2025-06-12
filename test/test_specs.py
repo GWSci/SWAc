@@ -369,6 +369,10 @@ class Test_Specs(unittest.TestCase):
         params, actual = self.validate_constraints(["bat", "cat"], "bat")
         self.assert_no_errors(actual, params)
 
+    def test_validate_spec_no_error_when_value_matches_constraints_2(self):
+        params, actual = self.validate_constraints(["bat", "cat"], "cat")
+        self.assert_no_errors(actual, params)
+
     def validate_constraints(self, constraints, value):
         params = {"aardvark": value}
         specs_object = [Input_Parameter("aardvark", True, [], [str], constraints)]
