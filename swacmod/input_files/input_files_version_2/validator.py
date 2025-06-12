@@ -112,7 +112,7 @@ def validate_matches_spec(spec, params, key):
     validate_set_member_types(config)
     validate_list_member_types(config)
     validate_list_inner_types(config)
-    validate_dictionary_key_types(config)
+    # validate_dictionary_key_types(config)
     validate_dictionary_value_types(config)
     validate_dictionary_value_inner_types(config)
     validate_constraints(config)

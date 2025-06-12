@@ -9,21 +9,24 @@ class Test_pe_ts_Finalisation(unittest.TestCase):
         input_file['fao_process'] = 'disabled'
         input_file['canopy_process'] = 'disabled'
         parsed_input_data = make_parsed_data(input_file)
-        self.assertFalse(parsed_input_data.has_errors())
+        message = make_failure_message(parsed_input_data)
+        self.assertFalse(parsed_input_data.has_errors(), message)
 
     def test_canopy_is_disabled_and_fao_is_enabled(self):
         input_file = MockFileResource.make_sample_input_file_with_data()
         input_file['fao_process'] = 'enabled'
         input_file['canopy_process'] = 'disabled'
         parsed_input_data = make_parsed_data(input_file)
-        self.assertFalse(parsed_input_data.has_errors())
+        message = make_failure_message(parsed_input_data)
+        self.assertFalse(parsed_input_data.has_errors(), message)
 
     def test_canopy_is_enabled_and_fao_is_disabled(self):
         input_file = MockFileResource.make_sample_input_file_with_data()
         input_file['fao_process'] = 'disabled'
         input_file['canopy_process'] = 'enabled'
         parsed_input_data = make_parsed_data(input_file)
-        self.assertFalse(parsed_input_data.has_errors())
+        message = make_failure_message(parsed_input_data)
+        self.assertFalse(parsed_input_data.has_errors(), message)
 
 def make_parsed_data(input_file):
     input_file_contents = ""
@@ -34,3 +37,6 @@ def make_parsed_data(input_file):
     mock_filename_exists = MockFileResource.make_mock_filename_exists(mock_input_directory)
     parsed_input_data = load_and_validate(input_file='input.yml', input_dir='', file_opener=mock_file_open, filename_exists=mock_filename_exists)
     return parsed_input_data
+
+def make_failure_message(parsed_input_data):
+    return ", ".join(parsed_input_data.errors)

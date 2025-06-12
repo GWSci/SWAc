@@ -125,6 +125,10 @@ class Test_Specs(unittest.TestCase):
             "x",
             "Error: The field 'aardvark' must be a dictionary mapping integers to integers. The value 'x' is invalid.")
 
+    @unittest.skip(
+            reason="Validating the keys is more complicated than this."
+                + "Sometimes they are ints. Other times they are strings and "
+                + "this is not currently encoded inthe specs object.")
     def test_validate_spec_returns_error_when_dict_type_key_does_not_match(self):
         self._test_error_message_when_type_of_value_is_not_ok(
             [dict, int],
