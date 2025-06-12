@@ -423,6 +423,16 @@ class Test_Specs(unittest.TestCase):
             params,
             "Error: The field 'spatial_output_date' must be a date or the string 'none'. The value '123' is invalid.")
 
+    @unittest.skip(
+        reason="This check is currently done in the old validations and it is "
+        + "not clear how to incorporate it into the new validations.")
+    def test_validate_spatial_output_date_is_mean(self):
+        params, actual = self.validate_spatial_output_date("aardvark")
+        actual = self.assert_one_error(
+            actual,
+            params,
+            "Error: The field 'spatial_output_date' must be a date or the string 'none'. The value 'aardvark' is invalid.")
+
     def validate_spatial_output_date(self, value):
         params = {"spatial_output_date": value}
         specs_object = [Input_Parameter(
