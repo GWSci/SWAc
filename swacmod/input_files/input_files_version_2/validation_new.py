@@ -665,9 +665,6 @@ def val_interflow_zone_mapping(data, name):
         include_high=True,
     )
 
-def val_swrecharge_zone_names(data, name):
-    c.validate_type(data, name)
-
 def val_swrecharge_zone_mapping(data, name):
     """Validate swrecharge_zone_mapping.
 
@@ -695,9 +692,6 @@ def val_swrecharge_zone_mapping(data, name):
         include_high=True,
     )
 
-def val_rorecharge_zone_names(data, name):
-    c.validate_type(data, name)
-
 def val_single_cell_swrecharge_zone_mapping(data, name):
     """Validate single_cell_swrecharge_zone_mapping.
     1) type has to be a dictionary of integers
@@ -719,12 +713,6 @@ def val_single_cell_swrecharge_zone_mapping(data, name):
                           include_low=True,
                           high_l=len(rzn),
                           include_high=True)
-
-def val_single_cell_swrecharge_zone_names(data, name):
-    c.validate_type(data, name)
-
-def val_macropore_zone_names(data, name):
-    c.validate_type(data, name)
 
 def val_macropore_zone_mapping(data, name):
     """Validate macropore_zone_mapping.
@@ -765,18 +753,6 @@ def val_macropore_activation_option(data, name):
     c.check_values_limits(
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
-
-def val_soil_zone_names(data, name):
-    c.validate_type(data, name)
-
-def val_landuse_zone_names(data, name):
-    c.validate_type(data, name)
-
-def val_canopy_process(data, name):
-    c.validate_type(data, name)
-
-def val_canopy_zone_names(data, name):
-    c.validate_type(data, name)
 
 def val_canopy_zone_mapping(data, name):
     """Validate canopy_zone_mapping.
@@ -851,12 +827,6 @@ def val_max_canopy_storage(data, name):
     c.check_values_limits(values=mcs.values(), name=name, low_l=0,
                           include_low=True)
 
-def val_snow_process_simple(data, name):
-    c.validate_type(data, name)
-
-def val_snow_process_complex(data, name):
-    c.validate_type(data, name)
-
 def val_snow_params_simple(data, name):
     """Validate snow_params_simple.
 
@@ -915,9 +885,6 @@ def val_snow_params_complex(data, name):
         include_low=True,
     )
 
-def val_rapid_runoff_process(data, name):
-    c.validate_type(data, name)
-
 def val_rapid_runoff_params(data, name):
     """Validate rapid_runoff_params.
 
@@ -962,8 +929,6 @@ def val_rorecharge_process(data, name):
     if rop == 'enabled' and rrp == 'disabled':
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
         raise u.ValidationError(msg % (name, 'rapid_runoff_process'))
-
-    c.validate_type(data, name)
 
 def val_single_cell_swrecharge_proportion(data, name):
     """Validate single_cell_swrecharge_proportion.
@@ -1025,8 +990,6 @@ def val_swrecharge_process(data, name):
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
         raise u.ValidationError(msg % (name, "rapid_runoff_process"))
 
-    c.validate_type(data, name)
-
 def val_swrecharge_proportion(data, name):
     """Validate swrecharge_proportion.
 
@@ -1079,8 +1042,6 @@ def val_macropore_process(data, name):
     if mpp == "enabled" and rrp == "disabled":
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
         raise u.ValidationError(msg % (name, "rapid_runoff_process"))
-
-    c.validate_type(data, name)
 
 def val_macropore_proportion(data, name):
     """Validate macropore_proportion.
@@ -1173,12 +1134,6 @@ def val_macropore_recharge(data, name):
         include_low=True,
         include_high=True,
     )
-
-def val_fao_process(data, name):
-    c.validate_type(data, name)
-
-def val_fao_input(data, name):
-    c.validate_type(data, name)
 
 def val_soil_static_params(data, name):
     """Validate soil_static_params.
@@ -1415,12 +1370,6 @@ def val_percolation_rejection_ts(data, name):
     # c.check_values_limits(values=per[0], name=name, low_l=0.0,
     #                       include_low=True)
 
-def val_percolation_rejection_use_timeseries(data, name):
-    c.validate_type(data, name)
-
-def val_subroot_leakage_process(data, name):
-    c.validate_type(data, name)
-
 def val_subroot_leakage_fraction(data, name):
     """Validate subroot_leakage_fraction.
 
@@ -1436,9 +1385,6 @@ def val_subroot_leakage_fraction(data, name):
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
-def val_interflow_process(data, name):
-    c.validate_type(data, name)
 
 def val_init_interflow_store(data, name):
     """init_interflow_store.
@@ -1550,9 +1496,6 @@ def val_infiltration_limit_ts(data, name):
     # c.check_values_limits(values=per[0], name=name, low_l=0.0,
     #                       include_low=True)
 
-def val_infiltration_limit_use_timeseries(data, name):
-    c.validate_type(data, name)
-
 def val_interflow_decay_ts(data, name):
     """Validate interflow_decay_ts.
 
@@ -1583,18 +1526,6 @@ def val_interflow_decay_ts(data, name):
     # c.check_values_limits(values=per[0], name=name, low_l=0.0,
     #                       include_low=True)
 
-def val_interflow_decay_use_timeseries(data, name):
-    c.validate_type(data, name)
-
-def val_recharge_attenuation_process(data, name):
-    c.validate_type(data, name)
-
-def val_historical_solute_process(data, name):
-    c.validate_type(data, name)
-
-def val_solute_process(data, name):
-    c.validate_type(data, name)
-
 def val_recharge_attenuation_params(data, name):
     """Validate recharge_attenuation_params.
 
@@ -1622,9 +1553,6 @@ def val_recharge_attenuation_params(data, name):
         high_l=1.0,
         include_high=True,
     )
-
-def val_sw_ponding_process(data, name):
-    c.validate_type(data, name)
 
 def val_sw_zone_names(data, name):
     """Validate sw_zone_names.
@@ -1823,9 +1751,6 @@ def val_sw_ponding_area(data, name):
             include_high=True,
         )
 
-def val_sw_process(data, name):
-    c.validate_type(data, name)
-
 def val_sw_params(data, name):
     """Validate sw_params.
 
@@ -1887,12 +1812,6 @@ def val_recharge_node_mapping(data, name):
         len_list=[1],
     )
 
-def val_istcb1(data, name):
-    c.validate_type(data, name)
-
-def val_istcb2(data, name):
-    c.validate_type(data, name)
-
 def val_swdis_f(data, name):
     """Validate swdis_f.
 
@@ -1918,12 +1837,6 @@ def val_swabs_f(data, name):
     c.check_values_limits(
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
-
-def val_output_evt(data, name):
-    c.validate_type(data, name)
-
-def val_excess_sw_process(data, name):
-    c.validate_type(data, name)
 
 def val_evt_parameters(data, name):
     """Validate evt parameters .
@@ -1984,24 +1897,16 @@ FUNC_PARAMS = [
     val_tmin_c_zone_mapping,
     val_windsp_zone_mapping,
     val_subroot_zone_mapping,
-    val_swrecharge_zone_names,
     val_swrecharge_zone_mapping,
     val_sw_zone_names,
     val_sw_zone_mapping,
-    val_macropore_zone_names,
     val_macropore_zone_mapping,
     val_recharge_node_mapping,
     val_macropore_activation_option,
-    val_soil_zone_names,
-    val_landuse_zone_names,
-    val_canopy_process,
     val_free_throughfall,
     val_max_canopy_storage,
-    val_snow_process_simple,
     val_snow_params_simple,
-    val_snow_process_complex,
     val_snow_params_complex,
-    val_rapid_runoff_process,
     val_rapid_runoff_params,
     val_swrecharge_process,
     val_swrecharge_proportion,
@@ -2011,8 +1916,6 @@ FUNC_PARAMS = [
     val_macropore_limit,
     val_macropore_activation,
     val_macropore_recharge,
-    val_fao_process,
-    val_fao_input,
     val_soil_static_params,
     val_smd,
     val_soil_spatial,
@@ -2022,20 +1925,12 @@ FUNC_PARAMS = [
     val_taw,
     val_raw,
     val_percolation_rejection,
-    val_subroot_leakage_process,
     val_subroot_leakage_fraction,
-    val_interflow_process,
     val_init_interflow_store,
     val_interflow_store_bypass,
     val_infiltration_limit,
     val_interflow_decay,
-    val_infiltration_limit_use_timeseries,
-    val_interflow_decay_use_timeseries,
-    val_recharge_attenuation_process,
     val_recharge_attenuation_params,
-    val_historical_solute_process,
-    val_solute_process,
-    val_sw_ponding_process,
     val_sw_init_ponding,
     val_sw_max_ponding,
     val_sw_downstream,
@@ -2043,27 +1938,19 @@ FUNC_PARAMS = [
     val_sw_bed_infiltration,
     val_sw_direct_recharge,
     val_sw_pe_to_open_water,
-    val_sw_process,
     val_sw_params,
     val_sw_ponding_area,
     val_swdis_locs,
     val_swabs_locs,
     val_sfr_obs,
-    val_istcb1,
-    val_istcb2,
     val_routing_topology,
     val_swdis_f,
     val_swabs_f,
-    val_output_evt,
     val_evt_parameters,
     val_ievtcb,
     val_nevtopt,
-    val_excess_sw_process,
-    val_percolation_rejection_use_timeseries,
     val_interflow_zone_mapping,
     val_canopy_zone_mapping,
-    val_canopy_zone_names
-    
 ]
 
 FUNC_SERIES = [
