@@ -220,9 +220,10 @@ def validate_dictionary_value_inner_types(config):
         config,dict,iterate_members,"inner list value",expected_member_type)
 
 def validate_constraints(config):
-    if config.spec.constraints == None:
+    constraints = config.spec.constraints
+    if constraints == None:
         return
-    if config.value in config.spec.constraints:
+    if config.value in constraints:
         return
     message = (f"Error: The field '{config.key}'"
         + f" has the invalid value '{config.value}'."
