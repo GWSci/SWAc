@@ -416,6 +416,10 @@ class Test_Specs(unittest.TestCase):
         params, actual = self.validate_spatial_output_date(date(2025, 12, 30))
         actual = self.assert_no_errors(actual, params)
 
+    def test_validate_spatial_output_date_is_mean(self):
+        params, actual = self.validate_spatial_output_date(123)
+        actual = self.assert_one_error(actual, params, "Error: The field 'spatial_output_date' must be a date or the string 'none'. The value '123' is invalid.")
+
     def validate_spatial_output_date(self, value):
         params = {"spatial_output_date": value}
         specs_object = [Input_Parameter(
