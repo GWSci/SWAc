@@ -408,6 +408,10 @@ class Test_Specs(unittest.TestCase):
         params, actual = self.validate_spatial_output_date(None)
         actual = self.assert_no_errors(actual, params)
 
+    def test_validate_spatial_output_date_is_mean(self):
+        params, actual = self.validate_spatial_output_date("mean")
+        actual = self.assert_no_errors(actual, params)
+
     def validate_spatial_output_date(self, value):
         params = {"spatial_output_date": value}
         specs_object = [Input_Parameter(
