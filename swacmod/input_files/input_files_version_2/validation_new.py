@@ -21,7 +21,6 @@ def val_num_cores(data, name):
     )
 
 def val_num_nodes(data, name):
-    c.validate_type(data, name)
     c.check_values_limits(values=[data["params"][name]], name=name, low_l=0)
 
 def val_start_date(data, name):
