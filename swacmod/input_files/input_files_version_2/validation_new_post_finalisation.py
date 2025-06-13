@@ -12,19 +12,8 @@ import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
 
 def val_time_periods(data, name):
-    """Validate time_periods.
-
-    1) type has to be a list of lists of integers
-    2) start and end times have to be positive and less than the # of days
-    3) time periods need to be lists of length 2
-    4) start time has to be smaller than end time
-    5) end time is not inclusive
-    6) all days are assigned to a time period
-    """
-    tmp = data["params"][name]
-
     c.check_values_limits(
-        values=[i for j in tmp for i in j],
+        values=[i for j in (data["params"][name]) for i in j],
         name=name,
         low_l=0,
         high_l=len(data["series"]["date"]) + 1,
@@ -32,7 +21,7 @@ def val_time_periods(data, name):
     )
 
     all_days = []
-    for time_range in tmp:
+    for time_range in data["params"][name]:
         all_days += range(time_range[0], time_range[1])
 
     if set(all_days) != set(range(1, len(data["series"]["date"]) + 1)):

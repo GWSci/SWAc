@@ -26,20 +26,9 @@ def val_start_date(data, name):
         raise
 
 def val_time_periods(data, name):
-    """Validate time_periods.
+    c.check_type(param=(data["params"][name]), name=name, t_types=data["specs"][name]["type"])
 
-    1) type has to be a list of lists of integers
-    2) start and end times have to be positive and less than the # of days
-    3) time periods need to be lists of length 2
-    4) start time has to be smaller than end time
-    5) end time is not inclusive
-    6) all days are assigned to a time period
-    """
-    tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
-
-    all_days = []
-    for time_range in tmp:
+    for time_range in data["params"][name]:
         if len(time_range) != 2:
             msg = 'Parameter "%s" requires arrays of length 2'
             raise u.ValidationError(msg % name)
@@ -50,7 +39,6 @@ def val_time_periods(data, name):
         if not time_range[0] < time_range[1]:
             msg = 'Parameter "%s" requires start_date < end_date'
             raise u.ValidationError(msg % name)
-        all_days += range(time_range[0], time_range[1])
 
 def val_output_individual(data, name):
     oin = data["params"][name]
