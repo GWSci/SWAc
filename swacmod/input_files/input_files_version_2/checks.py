@@ -119,7 +119,7 @@ def check_values_limits(
             msg = 'Parameter "%s" requires to be one in %s'
             raise u.ValidationError(msg % (name, constraints))
 
-def check_values_limits_min_inclusive(values, name, low_l=None):
+def check_values_limits_min_inclusive(values, name, low_l):
     validate_min_inclusive(values, name, low_l)
 
 def validate_min_exclusive(values, name, low_l):
