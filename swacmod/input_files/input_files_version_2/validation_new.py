@@ -1842,9 +1842,6 @@ def val_nevtopt(data, name):
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-FUNC_PARAMS = [
-]
-
 FUNC_SERIES = [
     val_rainfall_ts,
     val_pe_ts,
@@ -1945,7 +1942,7 @@ def validate(params, specs):
     do_validation(errors, specs, data, val_interflow_zone_mapping, "interflow_zone_mapping")
     do_validation(errors, specs, data, val_canopy_zone_mapping, "canopy_zone_mapping")
 
-    for function in FUNC_PARAMS + FUNC_SERIES:
+    for function in FUNC_SERIES:
         param = function.__name__.replace("val_", "")
         do_validation(errors, specs, data, function, param)
 
