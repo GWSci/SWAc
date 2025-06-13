@@ -1843,14 +1843,6 @@ def val_nevtopt(data, name):
     )
 
 FUNC_PARAMS = [
-    val_tmax_c_zone_mapping,
-    val_tmin_c_zone_mapping,
-    val_windsp_zone_mapping,
-    val_subroot_zone_mapping,
-    val_swrecharge_zone_mapping,
-    val_sw_zone_names,
-    val_sw_zone_mapping,
-    val_macropore_zone_mapping,
     val_recharge_node_mapping,
     val_macropore_activation_option,
     val_free_throughfall,
@@ -1944,6 +1936,15 @@ def validate(params, specs):
     do_validation(errors, specs, data, val_rapid_runoff_zone_mapping, "rapid_runoff_zone_mapping")
     do_validation(errors, specs, data, val_pe_zone_mapping, "pe_zone_mapping")
     do_validation(errors, specs, data, val_temperature_zone_mapping, "temperature_zone_mapping")
+    do_validation(errors, specs, data, val_tmax_c_zone_mapping, "tmax_c_zone_mapping")
+    do_validation(errors, specs, data, val_tmin_c_zone_mapping, "tmin_c_zone_mapping")
+    do_validation(errors, specs, data, val_windsp_zone_mapping, "windsp_zone_mapping")
+    do_validation(errors, specs, data, val_subroot_zone_mapping, "subroot_zone_mapping")
+    do_validation(errors, specs, data, val_swrecharge_zone_mapping, "swrecharge_zone_mapping")
+    do_validation(errors, specs, data, val_sw_zone_names, "sw_zone_names")
+    do_validation(errors, specs, data, val_sw_zone_mapping, "sw_zone_mapping")
+    do_validation(errors, specs, data, val_macropore_zone_mapping, "macropore_zone_mapping")
+
 
     for function in FUNC_PARAMS + FUNC_SERIES:
         param = function.__name__.replace("val_", "")
