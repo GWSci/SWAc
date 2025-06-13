@@ -885,7 +885,7 @@ def val_max_canopy_storage(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(values=mcs.values(), name=name, low_l=0,
+    c.check_values_limits_min_inclusive(values=mcs.values(), name=name, low_l=0,
                           include_low=True)
 
 def val_snow_params_simple(data, name):
@@ -910,7 +910,7 @@ def val_snow_params_simple(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=[i[0] for i in snp.values()],
         name="starting_snow_pack in %s" % name,
         low_l=0,
@@ -939,7 +939,7 @@ def val_snow_params_complex(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=[i[0] for i in snp.values()],
         name="starting_snow_pack in %s" % name,
         low_l=0,
@@ -975,12 +975,16 @@ def val_rapid_runoff_params(data, name):
             len_list=[len(zone["class_ri"]), len(zone["class_smd"])],
         )
 
-        c.check_values_limits(
+        c.check_values_limits_min_inclusive(
             values=[i for j in zone["values"] for i in j],
             name='"values" in "%s"' % name,
             low_l=0,
-            high_l=1,
             include_low=True,
+        )
+        c.check_values_limits(
+            values=[i for j in zone["values"] for i in j],
+            name='"values" in "%s"' % name,
+            high_l=1,
             include_high=True,
         )
 
@@ -1007,11 +1011,13 @@ def val_single_cell_swrecharge_proportion(data, name):
                  len_list=[len(rzn)],
                  keys=range(1, 13))
 
-    c.check_values_limits(values=[j for i in rrp.values() for j in i],
+    c.check_values_limits_min_inclusive(values=[j for i in rrp.values() for j in i],
                           name=name,
                           low_l=0,
+                          include_low=True)
+    c.check_values_limits(values=[j for i in rrp.values() for j in i],
+                          name=name,
                           high_l=1.0,
-                          include_low=True,
                           include_high=True)
 
 def val_single_cell_swrecharge_limit(data, name):
@@ -1070,12 +1076,15 @@ def val_swrecharge_proportion(data, name):
         keys=range(1, 13),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=[j for i in rrp.values() for j in i],
         name=name,
         low_l=0,
+    )
+    c.check_values_limits(
+        values=[j for i in rrp.values() for j in i],
+        name=name,
         high_l=1.0,
-        include_low=True,
         include_high=True,
     )
 
@@ -1123,12 +1132,15 @@ def val_macropore_proportion(data, name):
         keys=range(1, 13),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=[j for i in mpp.values() for j in i],
         name=name,
         low_l=0,
+    )
+    c.check_values_limits(
+        values=[j for i in mpp.values() for j in i],
+        name=name,
         high_l=1.0,
-        include_low=True,
         include_high=True,
     )
 
@@ -1187,12 +1199,15 @@ def val_macropore_recharge(data, name):
         keys=range(1, 13),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=[j for i in mpr.values() for j in i],
         name=name,
         low_l=0,
+    )
+    c.check_values_limits(
+        values=[j for i in mpr.values() for j in i],
+        name=name,
         high_l=1.0,
-        include_low=True,
         include_high=True,
     )
 
@@ -1398,9 +1413,7 @@ def val_percolation_rejection(data, name):
         len_list=[len(lzn)],
         keys=["percolation_rejection"],
     )
-    c.check_values_limits(values=list(per.values())[0], name=name, low_l=0.0,
-                          include_low=True)
-
+    c.check_values_limits_min_inclusive(values=list(per.values())[0], name=name, low_l=0.0)
 def val_percolation_rejection_ts(data, name):
     """Validate percolation_rejection_ts.
 
@@ -1426,8 +1439,7 @@ def val_percolation_rejection_ts(data, name):
     #     len_list=[len(data["series"]["date"]), len(lzn)],
     #     keys=["percolation_rejection_ts"]
     # )
-    # c.check_values_limits(values=per[0], name=name, low_l=0.0,
-    #                       include_low=True)
+    # c.check_values_limits_min_inclusive(values=per[0], name=name, low_l=0.0)
 
 def val_subroot_leakage_fraction(data, name):
     """Validate subroot_leakage_fraction.
