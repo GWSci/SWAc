@@ -15,6 +15,10 @@ class MyTestCase(unittest.TestCase):
         self.assert_validate_keys_passes({"a":1}, [dict], ["a"])
         self.assert_validate_keys_passes({"a":1, "b": 2}, [dict], ["a", "b"])
 
+    def test_validating_keys_when_one_key_missing(self):
+        self.assert_validate_keys_fails({}, [dict], ["a"])
+        # self.assert_validate_keys_passes({"a":1, "b": 2}, [dict], ["a", "b"])
+
     def assert_validate_keys_passes(self, param, t_types, keys):
         checks.check_type(param=param, name="cat", t_types=t_types, len_list=None, keys=keys)
 
