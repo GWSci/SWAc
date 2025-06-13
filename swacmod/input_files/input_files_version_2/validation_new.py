@@ -1843,19 +1843,6 @@ def val_nevtopt(data, name):
     )
 
 FUNC_PARAMS = [
-    val_recharge_node_mapping,
-    val_macropore_activation_option,
-    val_free_throughfall,
-    val_max_canopy_storage,
-    val_snow_params_simple,
-    val_snow_params_complex,
-    val_rapid_runoff_params,
-    val_swrecharge_process,
-    val_swrecharge_proportion,
-    val_swrecharge_limit,
-    val_macropore_process,
-    val_macropore_proportion,
-    val_macropore_limit,
     val_macropore_activation,
     val_macropore_recharge,
     val_soil_static_params,
@@ -1944,7 +1931,19 @@ def validate(params, specs):
     do_validation(errors, specs, data, val_sw_zone_names, "sw_zone_names")
     do_validation(errors, specs, data, val_sw_zone_mapping, "sw_zone_mapping")
     do_validation(errors, specs, data, val_macropore_zone_mapping, "macropore_zone_mapping")
-
+    do_validation(errors, specs, data, val_recharge_node_mapping, "recharge_node_mapping")
+    do_validation(errors, specs, data, val_macropore_activation_option, "macropore_activation_option")
+    do_validation(errors, specs, data, val_free_throughfall, "free_throughfall")
+    do_validation(errors, specs, data, val_max_canopy_storage, "max_canopy_storage")
+    do_validation(errors, specs, data, val_snow_params_simple, "snow_params_simple")
+    do_validation(errors, specs, data, val_snow_params_complex, "snow_params_complex")
+    do_validation(errors, specs, data, val_rapid_runoff_params, "rapid_runoff_params")
+    do_validation(errors, specs, data, val_swrecharge_process, "swrecharge_process")
+    do_validation(errors, specs, data, val_swrecharge_proportion, "swrecharge_proportion")
+    do_validation(errors, specs, data, val_swrecharge_limit, "swrecharge_limit")
+    do_validation(errors, specs, data, val_macropore_process, "macropore_process")
+    do_validation(errors, specs, data, val_macropore_proportion, "macropore_proportion")
+    do_validation(errors, specs, data, val_macropore_limit, "macropore_limit")
 
     for function in FUNC_PARAMS + FUNC_SERIES:
         param = function.__name__.replace("val_", "")
