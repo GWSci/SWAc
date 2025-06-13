@@ -107,26 +107,26 @@ def val_subroot_leakage_ts(data, name):
 def val_swdis_ts(data, name):
     pass
     # TODO: Validation needs to be done post-finalization
-    # from swacmod.utils import monthdelta, weekdelta
+    from swacmod.utils import monthdelta, weekdelta
 
-    # swdists = data["series"][name]
+    swdists = data["series"][name]
 
-    # swdisn = data["params"]["swdis_locs"]
-    # dates = data["series"]["date"]
+    swdisn = data["params"]["swdis_locs"]
+    dates = data["series"]["date"]
 
-    # freq_flag = data["params"]["swdis_f"]
-    # ndays = len(dates)
-    # nweeks = weekdelta(dates[0], dates[-1]) + 1
-    # nmonths = monthdelta(dates[0], dates[-1]) + 1
+    freq_flag = data["params"]["swdis_f"]
+    ndays = len(dates)
+    nweeks = weekdelta(dates[0], dates[-1]) + 1
+    nmonths = monthdelta(dates[0], dates[-1]) + 1
 
-    # length = [ndays, nweeks, nmonths]
-    # if swdisn != {0: 0}:
-    #     c.check_type(
-    #         param=swdists,
-    #         name=name,
-    #         t_types=data["specs"][name]["type"],
-    #         len_list=[length[freq_flag], len(swdisn)],
-    #     )
+    length = [ndays, nweeks, nmonths]
+    if swdisn != {0: 0}:
+        c.check_type(
+            param=swdists,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[length[freq_flag], len(swdisn)],
+        )
 
 def val_swabs_ts(data, name):
     pass
