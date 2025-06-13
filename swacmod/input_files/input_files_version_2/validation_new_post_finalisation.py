@@ -94,15 +94,15 @@ def val_windsp_ts(data, name):
 def val_subroot_leakage_ts(data, name):
     pass
     # TODO: Validation needs to be done post-finalization
-    # sts = data["series"][name]
-    # szn = data["params"]["subroot_zone_names"]
+    sts = data["series"][name]
+    szn = data["params"]["subroot_zone_names"]
 
-    # c.check_type(
-    #     param=sts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(szn)],
-    # )
+    c.check_type(
+        param=sts,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(szn)],
+    )
 
 def val_swdis_ts(data, name):
     pass
