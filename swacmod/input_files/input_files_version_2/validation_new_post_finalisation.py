@@ -1,11 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""SWAcMod validation functions."""
-
-# Standard Library
 import logging
-
-# Internal modules
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
