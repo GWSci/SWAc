@@ -61,71 +61,6 @@ def val_spatial_output_date(data, name):
     if dat is None or dat != "mean":
         return
 
-def val_pe_ts(data, name):
-    tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
-    # pts = data["series"][name]
-    # pzn = data["params"]["pe_zone_names"]
-
-    # c.check_type(
-    #     param=pts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(pzn)],
-    # )
-
-def val_temperature_ts(data, name):
-    tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
-    # tts = data["series"][name]
-    # tzn = set(data["params"]["temperature_zone_mapping"].values())
-
-    # c.check_type(
-    #     param=tts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(tzn)],
-    # )
-
-def val_tmax_c_ts(data, name):
-    tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
-    # tts = data["series"][name]
-    # tzn = set(data["params"]["tmax_c_zone_mapping"].values())
-
-    # c.check_type(
-    #     param=tts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(tzn)],
-    # )
-
-def val_tmin_c_ts(data, name):
-    tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
-    # tts = data["series"][name]
-    # tzn = set(data["params"]["tmin_c_zone_mapping"].values())
-
-    # c.check_type(
-    #     param=tts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(tzn)],
-    # )
-
-def val_windsp_ts(data, name):
-    tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
-    # tts = data["series"][name]
-    # tzn = set(data["params"]["windsp_zone_mapping"].values())
-
-    # c.check_type(
-    #     param=tts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(tzn)],
-    # )
-
 def val_subroot_leakage_ts(data, name):
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
@@ -1117,11 +1052,6 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_canopy_zone_mapping, "canopy_zone_mapping")
 
 def _validate_series(errors, specs, data):
-    do_validation(errors, data, val_pe_ts, "pe_ts")
-    do_validation(errors, data, val_temperature_ts, "temperature_ts")
-    do_validation(errors, data, val_tmax_c_ts, "tmax_c_ts")
-    do_validation(errors, data, val_tmin_c_ts, "tmin_c_ts")
-    do_validation(errors, data, val_windsp_ts, "windsp_ts")
     do_validation(errors, data, val_subroot_leakage_ts, "subroot_leakage_ts")
     do_validation(errors, data, val_swdis_ts, "swdis_ts")
     do_validation(errors, data, val_swabs_ts, "swabs_ts")
