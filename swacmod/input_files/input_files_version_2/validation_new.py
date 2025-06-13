@@ -1725,7 +1725,6 @@ def val_sw_ponding_area(data, name):
         c.check_values_limits(
             values=values,
             name=name,
-            low_l=0.0,
             high_l=1.0,
             include_high=True,
         )
