@@ -1721,13 +1721,15 @@ def val_sw_ponding_area(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
+        values = [i for i in num.values()]
         c.check_values_limits(
-            values=[i for i in num.values()],
+            values=values,
             name=name,
             low_l=0.0,
             high_l=1.0,
             include_high=True,
         )
+        c.validate_min_exclusive(values, name, 0)
 
 def val_sw_params(data, name):
     """Validate sw_params.
