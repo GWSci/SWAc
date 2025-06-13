@@ -11,20 +11,6 @@ import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
 
-def val_num_cores(data, name):
-    c.validate_min_exclusive([data["params"][name]], name, 0)
-    c.validate_max_inclusive([data["params"][name]], name, multiprocessing.cpu_count())
-
-def val_num_nodes(data, name):
-    c.validate_min_exclusive([data["params"][name]], name, 0)
-
-def val_start_date(data, name):
-    dat = data["params"][name]
-    try:
-        x = dat.strftime('%d/%m/%Y')
-    except:
-        raise
-
 def val_time_periods(data, name):
     """Validate time_periods.
 
@@ -1087,10 +1073,7 @@ def validate(params, specs):
     return errors
 
 def _validate_params(errors, specs, data):
-    do_validation(errors, data, val_num_cores, "num_cores")
-    do_validation(errors, data, val_num_nodes, "num_nodes")
     do_validation(errors, data, val_node_areas, "node_areas")
-    do_validation(errors, data, val_start_date, "start_date")
     do_validation(errors, data, val_time_periods, "time_periods")
     do_validation(errors, data, val_output_individual, "output_individual")
     do_validation(errors, data, val_nodes_per_line, "nodes_per_line")
