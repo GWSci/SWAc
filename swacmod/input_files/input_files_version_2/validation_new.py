@@ -428,110 +428,64 @@ def val_single_cell_swrecharge_zone_mapping(data, name):
     c.validate_max_inclusive(rorzm.values(), name, len(rzn))
 
 def val_macropore_zone_mapping(data, name):
-    """Validate macropore_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     mzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     mzn = data["params"]["macropore_zone_names"]
-
     c.check_type(
         param=mzm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(mzm.values(), name, 0)
     c.validate_max_inclusive(mzm.values(), name, len(mzn))
 
 def val_macropore_activation_option(data, name):
-    """macropore_activation_option.
-
-    1) type has to be an string SMD or RI
-    """
     x = data["params"][name]
-
     c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
     c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
 def val_canopy_zone_mapping(data, name):
-    """Validate canopy_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     rrzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["canopy_zone_names"]
-
     c.check_type(
         param=rrzm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(rrzm.values(), name, 0)
     c.validate_max_inclusive(rrzm.values(), name, len(rzn))
 
 def val_free_throughfall(data, name):
-    """Validate free_throughfall.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values have to be 0 <= x <= 1
-    """
     fth = data["params"][name]
     tot = len(data["params"]["canopy_zone_names"])
-
     c.check_type(
         param=fth,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(fth.values(), name, 0)
     c.validate_max_inclusive(fth.values(), name, 1.0)
 
 def val_max_canopy_storage(data, name):
-    """Validate max_canopy_storage.
-
-    1) type has to be a dictionary of floats
-    2) all node ids have to be present
-    3) values have to be >= 0
-    """
     mcs = data["params"][name]
     tot = len(data["params"]["canopy_zone_names"])
-
     c.check_type(
         param=mcs,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(mcs.values(), name, 0)
 
 def val_snow_params_simple(data, name):
-    """Validate snow_params_simple.
-
-    1) type has to be a dictionary of lists of numbers
-    2) all node ids have to be present
-    3) values have to lists with 3 elements
-    4) the first element (starting_snow_pack) is a number >= 0
-    """
     if data["params"]["snow_process_simple"] == "disabled":
         return
-
     snp = data["params"][name]
     tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=snp,
         name=name,
@@ -539,23 +493,13 @@ def val_snow_params_simple(data, name):
         len_list=[3],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive([i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
 
 def val_snow_params_complex(data, name):
-    """Validate snow_params_complex.
-
-    1) type has to be a dictionary of lists of numbers
-    2) all node ids have to be present
-    3) values have to lists with 10 elements
-    4) the first element (starting_snow_pack) is a number >= 0
-    """
     if data["params"]["snow_process_complex"] == "disabled":
         return
-
     snp = data["params"][name]
     tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=snp,
         name=name,
@@ -563,38 +507,24 @@ def val_snow_params_complex(data, name):
         len_list=[10],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive([i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
 
 def val_rapid_runoff_params(data, name):
-    """Validate rapid_runoff_params.
-
-    1) type has to be a list of dictionaries of lists
-    2) list needs to have length equal to the number of zones
-    3) all dictionaries need 3 keys: class_smd, class_ri, values
-    4) all "values" has dimensions class_smd x class_ri
-    5) all values are floats between 0 <= x <= 1
-    """
     rrp = data["params"][name]
     rzn = data["params"]["rapid_runoff_zone_names"]
-
     c.check_type(
         param=rrp, name=name, t_types=data["specs"][name]["type"],
         len_list=[len(rzn)]
     )
-
     keys = ["class_smd", "class_ri", "values"]
     for zone in rrp:
-
         c.check_type(param=zone, name=name, t_types=[dict], keys=keys)
-
         c.check_type(
             param=zone["values"],
             name=name,
             t_types=[list, list],
             len_list=[len(zone["class_ri"]), len(zone["class_smd"])],
         )
-
         c.validate_min_inclusive([i for j in zone["values"] for i in j], '"values" in "%s"' % name, 0)
         c.validate_max_inclusive([i for j in zone["values"] for i in j], '"values" in "%s"' % name, 1)
 
@@ -606,15 +536,8 @@ def val_rorecharge_process(data, name):
         raise u.ValidationError(msg % (name, 'rapid_runoff_process'))
 
 def val_single_cell_swrecharge_proportion(data, name):
-    """Validate single_cell_swrecharge_proportion.
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    4) all elements of each list have to be 0 <= x <= 1
-    """
     rrp = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-
     c.check_type(param=rrp,
                  name=name,
                  t_types=data['specs'][name]['type'],
@@ -625,14 +548,8 @@ def val_single_cell_swrecharge_proportion(data, name):
     c.validate_max_inclusive([j for i in rrp.values() for j in i], name, 1.0)
 
 def val_single_cell_swrecharge_limit(data, name):
-    """Validate single_cell_swrecharge_limit.
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    """
     rrl = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-
     c.check_type(param=rrl,
                  name=name,
                  t_types=data['specs'][name]['type'],
@@ -640,14 +557,8 @@ def val_single_cell_swrecharge_limit(data, name):
                  keys=range(1, 13))
 
 def val_single_cell_swrecharge_activation(data, name):
-    """Validate single_cell_swrecharge_activation.
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    """
     rra = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-
     c.check_type(param=rra,
                  name=name,
                  t_types=data['specs'][name]['type'],
@@ -662,16 +573,8 @@ def val_swrecharge_process(data, name):
         raise u.ValidationError(msg % (name, "rapid_runoff_process"))
 
 def val_swrecharge_proportion(data, name):
-    """Validate swrecharge_proportion.
-
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    4) all elements of each list have to be 0 <= x <= 1
-    """
     rrp = data["params"][name]
     rzn = data["params"]["swrecharge_zone_names"]
-
     c.check_type(
         param=rrp,
         name=name,
@@ -679,20 +582,12 @@ def val_swrecharge_proportion(data, name):
         len_list=[len(rzn)],
         keys=range(1, 13),
     )
-
     c.validate_min_inclusive([j for i in rrp.values() for j in i], name, 0)
     c.validate_max_inclusive([j for i in rrp.values() for j in i], name, 1.0)
 
 def val_swrecharge_limit(data, name):
-    """Validate swrecharge_limit.
-
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    """
     rrl = data["params"][name]
     rzn = data["params"]["swrecharge_zone_names"]
-
     c.check_type(
         param=rrl,
         name=name,
@@ -709,16 +604,8 @@ def val_macropore_process(data, name):
         raise u.ValidationError(msg % (name, "rapid_runoff_process"))
 
 def val_macropore_proportion(data, name):
-    """Validate macropore_proportion.
-
-    1) type has to be a dict of lists
-    2) the dict requires length 12 (months)
-    3) the lists require lenght equal to the number of zones
-    4) all elements of each list have to be 0 <= x <= 1
-    """
     mpp = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-
     c.check_type(
         param=mpp,
         name=name,
@@ -731,15 +618,8 @@ def val_macropore_proportion(data, name):
     c.validate_max_inclusive([j for i in mpp.values() for j in i], name, 1.0)
 
 def val_macropore_limit(data, name):
-    """Validate macropore_limit.
-
-    1) type has to be a list of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    """
     mpl = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-
     c.check_type(
         param=mpl,
         name=name,
@@ -749,15 +629,8 @@ def val_macropore_limit(data, name):
     )
 
 def val_macropore_activation(data, name):
-    """Validate macropore_activation.
-
-    1) type has to be a list of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    """
     mpa = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-
     c.check_type(
         param=mpa,
         name=name,
@@ -767,16 +640,8 @@ def val_macropore_activation(data, name):
     )
 
 def val_macropore_recharge(data, name):
-    """Validate macropore_recharge.
-
-    1) type has to be a list of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    4) all elements of each list have to be 0 <= x <= 1
-    """
     mpr = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-
     c.check_type(
         param=mpr,
         name=name,
@@ -784,26 +649,17 @@ def val_macropore_recharge(data, name):
         len_list=[len(mzn)],
         keys=range(1, 13),
     )
-
     c.validate_min_inclusive([j for i in mpr.values() for j in i], name, 0)
     c.validate_max_inclusive([j for i in mpr.values() for j in i], name, 1.0)
 
 def val_soil_static_params(data, name):
-    """Validate soil_static_params.
-
-    1) type has to be a dictionary of lists of floats
-    2) values have to be lists with length equal to the number of zones
-    3) dictionary needs 4 keys: FC, WP, p
-    """
     if (
         data["params"]["fao_process"] == "disabled"
         or data["params"]["fao_input"] == "l"
     ):
         return
-
     ssp = data["params"][name]
     szn = data["params"]["soil_zone_names"]
-
     c.check_type(
         param=ssp,
         name=name,
