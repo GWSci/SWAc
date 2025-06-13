@@ -31,21 +31,9 @@ def val_time_periods(data, name):
         include_high=True,
     )
 
-    # TODO Block duplicated from pre-finalisation validations
     all_days = []
     for time_range in tmp:
-        if len(time_range) != 2:
-            msg = 'Parameter "%s" requires arrays of length 2'
-            raise u.ValidationError(msg % name)
-        is_range_ints = (
-            isinstance(time_range[0], int) and isinstance(time_range[1], int))
-        if not is_range_ints:
-            continue
-        if not time_range[0] < time_range[1]:
-            msg = 'Parameter "%s" requires start_date < end_date'
-            raise u.ValidationError(msg % name)
         all_days += range(time_range[0], time_range[1])
-    # TODO end of block from pre-finalisation validations
 
     if set(all_days) != set(range(1, len(data["series"]["date"]) + 1)):
         msg = (
