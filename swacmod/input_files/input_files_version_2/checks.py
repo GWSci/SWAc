@@ -131,3 +131,8 @@ def validate_min_inclusive(values, name, low_l):
     if not all(i >= low_l for i in values):
         msg = 'Parameter "%s" requires values >= %s'
         raise u.ValidationError(msg % (name, low_l))
+
+def validate_constraints(values, name, constraints):
+    if not all(i in constraints for i in values):
+        msg = 'Parameter "%s" requires to be one in %s'
+        raise u.ValidationError(msg % (name, constraints))

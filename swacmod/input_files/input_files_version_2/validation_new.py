@@ -720,7 +720,7 @@ def val_macropore_activation_option(data, name):
 
     c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
 
-    c.check_values_limits(
+    c.validate_constraints(
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
@@ -1753,7 +1753,7 @@ def val_swdis_f(data, name):
     """
     x = data["params"][name]
 
-    c.check_values_limits(
+    c.validate_constraints(
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
@@ -1764,7 +1764,7 @@ def val_swabs_f(data, name):
     """
     x = data["params"][name]
 
-    c.check_values_limits(
+    c.validate_constraints(
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
@@ -1795,7 +1795,7 @@ def val_nevtopt(data, name):
 
     c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
 
-    c.check_values_limits(
+    c.validate_constraints(
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
