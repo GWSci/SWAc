@@ -1843,8 +1843,6 @@ def val_nevtopt(data, name):
     )
 
 FUNC_PARAMS = [
-    val_num_nodes,
-    val_node_areas,
     val_start_date,
     val_time_periods,
     val_output_individual,
@@ -1944,6 +1942,8 @@ def validate(params, specs):
     errors = []
 
     do_validation(errors, specs, data, val_num_cores, "num_cores")
+    do_validation(errors, specs, data, val_num_nodes, "num_nodes")
+    do_validation(errors, specs, data, val_node_areas, "node_areas")
 
     for function in FUNC_PARAMS + FUNC_SERIES:
         param = function.__name__.replace("val_", "")
