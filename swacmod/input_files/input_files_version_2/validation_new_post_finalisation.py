@@ -31,27 +31,6 @@ def val_time_periods(data, name):
         )
         raise u.ValidationError(msg % name)
 
-def val_output_individual(data, name):
-    oin = data["params"][name]
-
-    ids = set(range(1, data["params"]["num_nodes"] + 1))
-
-    if not all(i in ids for i in oin):
-        msg = ('Parameter "%s" requires all node ids to be'
-               + '1 <= x <= ' "num_nodes")
-        raise u.ValidationError(msg % name)
-
-def val_nodes_per_line(data, name):
-    c.validate_min_exclusive([data["params"][name]], name, 0)
-
-def val_output_fac(data, name):
-    c.validate_min_exclusive([data["params"][name]], name, 0.0)
-
-def val_spatial_output_date(data, name):
-    dat = data["params"][name]
-    if dat is None or dat != "mean":
-        return
-
 def val_rainfall_ts(data, name):
     pass
     # tmp = data["params"][name]
@@ -1045,9 +1024,6 @@ def validate(data, specs):
 def _validate_params(errors, specs, data):
     do_validation(errors, data, val_node_areas, "node_areas")
     do_validation(errors, data, val_time_periods, "time_periods")
-    do_validation(errors, data, val_output_individual, "output_individual")
-    do_validation(errors, data, val_nodes_per_line, "nodes_per_line")
-    do_validation(errors, data, val_output_fac, "output_fac")
     # val_spatial_output_date,
     do_validation(errors, data, val_reporting_zone_mapping, "reporting_zone_mapping")
     do_validation(errors, data, val_rainfall_zone_mapping, "rainfall_zone_mapping")
