@@ -10,6 +10,7 @@ import swacmod.input_files.input_files_version_2.loader as loader
 import swacmod.input_files.input_files_version_2.validator as validator
 import swacmod.input_files.input_files_version_2.validation as v
 import swacmod.input_files.input_files_version_2.validation_new as validation_new
+import swacmod.input_files.input_files_version_2.validation_new_post_finalisation as validation_new_post_finalisation
 import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.specs as specs_module
 from swacmod.input_files.parsed_input_data import ParsedInputData
@@ -50,8 +51,10 @@ def load_and_validate(input_file, input_dir, file_opener=DefaultFileResource._de
 
     f.finalize_params(data)
     f.finalize_series(data)
+    validation_result.update(validation_new_post_finalisation.validate_2(params, specs))
     v.validate_params(data)
     v.validate_series(data)
+
 
     return validation_result.update(ParsedInputData(data, [], []))
 
