@@ -7,9 +7,9 @@ import logging
 import multiprocessing
 
 # Internal modules
-import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
+from swacmod.utils import monthdelta, weekdelta
 
 def val_time_periods(data, name):
     c.check_values_limits(
@@ -102,7 +102,6 @@ def val_subroot_leakage_ts(data, name):
     )
 
 def val_swdis_ts(data, name):
-    from swacmod.utils import monthdelta, weekdelta
     swdists = data["series"][name]
 
     swdisn = data["params"]["swdis_locs"]
@@ -123,8 +122,6 @@ def val_swdis_ts(data, name):
         )
 
 def val_swabs_ts(data, name):
-    from swacmod.utils import monthdelta, weekdelta
-
     swabsts = data["series"][name]
     swabsn = data["params"]["swabs_locs"]
     dates = data["series"]["date"]
