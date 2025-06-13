@@ -35,80 +35,80 @@ def val_rainfall_ts(data, name):
     pass
     # tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
-    # rts = data["series"][name]
-    # rzn = data["params"]["rainfall_zone_names"]
+    rts = data["series"][name]
+    rzn = data["params"]["rainfall_zone_names"]
 
-    # c.check_type(
-    #     param=rts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(rzn)],
-    # )
+    c.check_type(
+        param=rts,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(rzn)],
+    )
 
 def val_pe_ts(data, name):
     pass
     # TODO: Validation needs to be done post-finalization
-    # pts = data["series"][name]
-    # pzn = data["params"]["pe_zone_names"]
+    pts = data["series"][name]
+    pzn = data["params"]["pe_zone_names"]
 
-    # c.check_type(
-    #     param=pts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(pzn)],
-    # )
+    c.check_type(
+        param=pts,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(pzn)],
+    )
 
 def val_temperature_ts(data, name):
     pass
     # TODO: Validation needs to be done post-finalization
-    # tts = data["series"][name]
-    # tzn = set(data["params"]["temperature_zone_mapping"].values())
+    tts = data["series"][name]
+    tzn = set(data["params"]["temperature_zone_mapping"].values())
 
-    # c.check_type(
-    #     param=tts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(tzn)],
-    # )
+    c.check_type(
+        param=tts,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(tzn)],
+    )
 
 def val_tmax_c_ts(data, name):
     pass
     # TODO: Validation needs to be done post-finalization
-    # tts = data["series"][name]
-    # tzn = set(data["params"]["tmax_c_zone_mapping"].values())
+    tts = data["series"][name]
+    tzn = set(data["params"]["tmax_c_zone_mapping"].values())
 
-    # c.check_type(
-    #     param=tts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(tzn)],
-    # )
+    c.check_type(
+        param=tts,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(tzn)],
+    )
 
 def val_tmin_c_ts(data, name):
     pass
     # TODO: Validation needs to be done post-finalization
-    # tts = data["series"][name]
-    # tzn = set(data["params"]["tmin_c_zone_mapping"].values())
+    tts = data["series"][name]
+    tzn = set(data["params"]["tmin_c_zone_mapping"].values())
 
-    # c.check_type(
-    #     param=tts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(tzn)],
-    # )
+    c.check_type(
+        param=tts,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(tzn)],
+    )
 
 def val_windsp_ts(data, name):
     pass
     # TODO: Validation needs to be done post-finalization
-    # tts = data["series"][name]
-    # tzn = set(data["params"]["windsp_zone_mapping"].values())
+    tts = data["series"][name]
+    tzn = set(data["params"]["windsp_zone_mapping"].values())
 
-    # c.check_type(
-    #     param=tts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(tzn)],
-    # )
+    c.check_type(
+        param=tts,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(tzn)],
+    )
 
 def val_subroot_leakage_ts(data, name):
     pass
@@ -1024,7 +1024,6 @@ def validate(data, specs):
 def _validate_params(errors, specs, data):
     do_validation(errors, data, val_node_areas, "node_areas")
     do_validation(errors, data, val_time_periods, "time_periods")
-    # val_spatial_output_date,
     do_validation(errors, data, val_reporting_zone_mapping, "reporting_zone_mapping")
     do_validation(errors, data, val_rainfall_zone_mapping, "rainfall_zone_mapping")
     do_validation(errors, data, val_rapid_runoff_zone_mapping, "rapid_runoff_zone_mapping")
