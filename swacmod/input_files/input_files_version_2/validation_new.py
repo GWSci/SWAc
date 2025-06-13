@@ -1857,18 +1857,7 @@ def validate(params, specs):
 
     _validate_params(errors, specs, data)
 
-    do_validation(errors, specs, data, val_rainfall_ts, "rainfall_ts")
-    do_validation(errors, specs, data, val_pe_ts, "pe_ts")
-    do_validation(errors, specs, data, val_temperature_ts, "temperature_ts")
-    do_validation(errors, specs, data, val_tmax_c_ts, "tmax_c_ts")
-    do_validation(errors, specs, data, val_tmin_c_ts, "tmin_c_ts")
-    do_validation(errors, specs, data, val_windsp_ts, "windsp_ts")
-    do_validation(errors, specs, data, val_subroot_leakage_ts, "subroot_leakage_ts")
-    do_validation(errors, specs, data, val_swdis_ts, "swdis_ts")
-    do_validation(errors, specs, data, val_swabs_ts, "swabs_ts")
-    do_validation(errors, specs, data, val_percolation_rejection_ts, "percolation_rejection_ts")
-    do_validation(errors, specs, data, val_infiltration_limit_ts, "infiltration_limit_ts")
-    do_validation(errors, specs, data, val_interflow_decay_ts, "interflow_decay_ts")
+    _validate_series(data, errors, specs)
 
     return errors
 
@@ -1944,6 +1933,20 @@ def _validate_params(errors, specs, data):
     do_validation(errors, specs, data, val_nevtopt, "nevtopt")
     do_validation(errors, specs, data, val_interflow_zone_mapping, "interflow_zone_mapping")
     do_validation(errors, specs, data, val_canopy_zone_mapping, "canopy_zone_mapping")
+
+def _validate_series(data, errors, specs):
+    do_validation(errors, specs, data, val_rainfall_ts, "rainfall_ts")
+    do_validation(errors, specs, data, val_pe_ts, "pe_ts")
+    do_validation(errors, specs, data, val_temperature_ts, "temperature_ts")
+    do_validation(errors, specs, data, val_tmax_c_ts, "tmax_c_ts")
+    do_validation(errors, specs, data, val_tmin_c_ts, "tmin_c_ts")
+    do_validation(errors, specs, data, val_windsp_ts, "windsp_ts")
+    do_validation(errors, specs, data, val_subroot_leakage_ts, "subroot_leakage_ts")
+    do_validation(errors, specs, data, val_swdis_ts, "swdis_ts")
+    do_validation(errors, specs, data, val_swabs_ts, "swabs_ts")
+    do_validation(errors, specs, data, val_percolation_rejection_ts, "percolation_rejection_ts")
+    do_validation(errors, specs, data, val_infiltration_limit_ts, "infiltration_limit_ts")
+    do_validation(errors, specs, data, val_interflow_decay_ts, "interflow_decay_ts")
 
 def do_validation(errors, specs, data, function, param):
     params = data["params"]
