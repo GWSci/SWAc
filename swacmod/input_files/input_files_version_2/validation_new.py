@@ -100,10 +100,10 @@ def val_output_individual(data, name):
         raise u.ValidationError(msg % name)
 
 def val_nodes_per_line(data, name):
-    c.check_values_limits(values=[data["params"][name]], name=name, low_l=0)
+    c.validate_min_exclusive([data["params"][name]], name, 0)
 
 def val_output_fac(data, name):
-    c.check_values_limits(values=[data["params"][name]], name=name, low_l=0.0)
+    c.validate_min_exclusive([data["params"][name]], name, 0.0)
 
 def val_spatial_output_date(data, name):
     """Validate spatial_output_date.
