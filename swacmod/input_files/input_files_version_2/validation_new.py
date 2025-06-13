@@ -19,13 +19,6 @@ def val_num_nodes(data, name):
     c.validate_min_exclusive([data["params"][name]], name, 0)
 
 def val_start_date(data, name):
-    """Validate start_date.
-
-    NOTE: 1/12/70 is ambiguous
-          if Excel conversion I need the datemode of the file
-
-    1) type has to be datetime object (string is parsed in io module)
-    """
     dat = data["params"][name]
     try:
         x = dat.strftime('%d/%m/%Y')
@@ -76,13 +69,6 @@ def val_time_periods(data, name):
     #     )
     #     raise u.ValidationError(msg % name)
 
-def val_sfr_obs(data, name):
-    """Validate sfr_obs.
-
-    1) type has to be string
-    """
-    obs = data["params"][name]
-
 def val_output_individual(data, name):
     oin = data["params"][name]
 
@@ -100,23 +86,11 @@ def val_output_fac(data, name):
     c.validate_min_exclusive([data["params"][name]], name, 0.0)
 
 def val_spatial_output_date(data, name):
-    """Validate spatial_output_date.
-
-    NOTE: 1/12/70 is ambiguous
-          if Excel conversion I need the datemode of the file
-
-    1) type has to be datetime object (string is parsed in io module) or None
-    """
     dat = data["params"][name]
     if dat is None or dat != "mean":
         return
 
 def val_rainfall_ts(data, name):
-    """Validate rainfall_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of days x number of zones
-    """
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # rts = data["series"][name]
@@ -130,12 +104,6 @@ def val_rainfall_ts(data, name):
     # )
 
 def val_pe_ts(data, name):
-    """Validate pe_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of days x number of zones
-    """
-
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # pts = data["series"][name]
@@ -149,11 +117,6 @@ def val_pe_ts(data, name):
     # )
 
 def val_temperature_ts(data, name):
-    """Validate temperature_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of days x number of zones
-    """
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
@@ -167,11 +130,6 @@ def val_temperature_ts(data, name):
     # )
 
 def val_tmax_c_ts(data, name):
-    """Validate tmax_c_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of days x number of zones
-    """
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
@@ -185,11 +143,6 @@ def val_tmax_c_ts(data, name):
     # )
 
 def val_tmin_c_ts(data, name):
-    """Validate tmin_c_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of days x number of zones
-    """
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
@@ -203,11 +156,6 @@ def val_tmin_c_ts(data, name):
     # )
 
 def val_windsp_ts(data, name):
-    """Validate windsp_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of days x number of zones
-    """
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
@@ -221,11 +169,6 @@ def val_windsp_ts(data, name):
     # )
 
 def val_subroot_leakage_ts(data, name):
-    """Validate subroot_leakage_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of days x number of zones
-    """
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # sts = data["series"][name]
@@ -239,12 +182,6 @@ def val_subroot_leakage_ts(data, name):
     # )
 
 def val_swdis_ts(data, name):
-    """Validate swdis_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of days/weeks/months
-    x number of zones
-    """
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # from swacmod.utils import monthdelta, weekdelta
@@ -269,12 +206,6 @@ def val_swdis_ts(data, name):
     #     )
 
 def val_swabs_ts(data, name):
-    """Validate swabs_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) list length has to be equal to the number of days/weeks/months
-    x number of zones
-    """
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # from swacmod.utils import monthdelta, weekdelta
@@ -299,55 +230,32 @@ def val_swabs_ts(data, name):
     #     )
 
 def val_swdis_locs(data, name):
-    """Validate swdis_locs.
-
-    1) type has to be a dictionary of integers
-    2) all swabs ids have to be present
-    3) values (i.e. swabs ids) have to be > 1 and <= number of swabs
-    """
     swdisl = data["params"][name]
     swdisn = data["params"]["swdis_locs"]
     tot = len(data["params"]["swdis_locs"]) + 1
 
     if swdisn != {0: 0}:
-
         c.check_type(
             param=swdisl, name=name, t_types=data["specs"][name]["type"],
             keys=range(1, tot)
         )
-
         c.validate_min_inclusive(swdisl.values(), "zone in %s" % name, 1)
         c.validate_max_inclusive(swdisl.values(), "zone in %s" % name, tot)
-
         c.validate_min_inclusive(swdisl.keys(), "node in %s" % name, 1)
-
         c.validate_max_inclusive(swdisl.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
 def val_swabs_locs(data, name):
-    """Validate swabs_locs.
-
-    1) type has to be a dictionary of integers
-    2) all swabs ids have to be present
-    3) values (i.e. swabs ids) have to be > 1 and <= number of swabs
-    """
     swabsl = data["params"][name]
     swabsn = data["params"]["swabs_locs"]
-
     if swabsn != {0: 0}:
-
         tot = len(data["params"]["swabs_locs"]) + 1
-
         c.check_type(
             param=swabsl, name=name, t_types=data["specs"][name]["type"],
             keys=range(1, tot)
         )
-
         c.validate_min_inclusive(swabsl.values(), "zone in %s" % name, 1)
-
         c.validate_max_inclusive(swabsl.values(), "zone in %s" % name, tot)
-
         c.validate_min_inclusive(swabsl.keys(), "node in %s" % name, 1)
-
         c.validate_max_inclusive(swabsl.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
 def val_node_areas(data, name):
@@ -357,7 +265,6 @@ def val_node_areas(data, name):
         t_types=data["specs"][name]["type"],
         keys=range(1, data["params"]["num_nodes"] + 1),
     )
-
     c.validate_min_inclusive(data["params"][name].values(), name, 0)
 
 def val_reporting_zone_mapping(data, name):
@@ -366,16 +273,13 @@ def val_reporting_zone_mapping(data, name):
     rzm = data["params"][name]
     tot = data["params"][tot_name]
     rzn = data["params"][zone_name]
-
     c.check_type(
         param=rzm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(rzm.values(), "zone in %s" % name, 0)
-
     c.validate_max_inclusive(rzm.values(), "zone in %s" % name, len(rzn))
 
 def val_rainfall_zone_mapping(data, name):
@@ -384,171 +288,107 @@ def val_rainfall_zone_mapping(data, name):
     rzm = data["params"][name]
     tot = data["params"][tot_name]
     rzn = data["params"][zone_name]
-
     c.check_type(
         param=rzm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive([i[0] for i in rzm.values()], "zone in %s" % name, 1)
     c.validate_max_inclusive([i[0] for i in rzm.values()], "zone in %s" % name, len(rzn))
 
 def val_pe_zone_mapping(data, name):
-    """Validate pe_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     pzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     pzn = data["params"]["pe_zone_names"]
-
     c.check_type(
         param=pzm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive([i[0] for i in pzm.values()], "zone in %s" % name, 0)
     c.validate_max_inclusive([i[0] for i in pzm.values()], "zone in %s" % name, len(pzn))
 
 def val_tmax_c_zone_mapping(data, name):
-    """Validate tmax_c_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["tmax_c_zone_names"]
-
     c.check_type(
         param=tzm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(tzm.values(), name, 0)
     c.validate_max_inclusive(tzm.values(), name, len(tzn))
 
 def val_tmin_c_zone_mapping(data, name):
-    """Validate tmin_c_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["tmin_c_zone_names"]
-
     c.check_type(
         param=tzm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(tzm.values(), name, 0)
     c.validate_max_inclusive(tzm.values(), name, len(tzn))
 
 def val_windsp_zone_mapping(data, name):
-    """Validate windsp_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["tmin_c_zone_names"]
-
     c.check_type(
         param=tzm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(tzm.values(), name, 0)
     c.validate_max_inclusive(tzm.values(), name, len(tzn))
 
 def val_temperature_zone_mapping(data, name):
-    """Validate temperature_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["temperature_zone_names"]
-
     c.check_type(
         param=tzm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(tzm.values(), name, 0)
     c.validate_max_inclusive(tzm.values(), name, len(tzn))
 
 def val_subroot_zone_mapping(data, name):
-    """Validate subroot_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     szm = data["params"][name]
     tot = data["params"]["num_nodes"]
     szn = data["params"]["subroot_zone_names"]
-
     c.check_type(
         param=szm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive([i[0] for i in szm.values()], "zone in %s" % name, 0)
     c.validate_max_inclusive([i[0] for i in szm.values()], "zone in %s" % name, len(szn))
 
 def val_rapid_runoff_zone_mapping(data, name):
-    """Validate rapid_runoff_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     rrzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["rapid_runoff_zone_names"]
-
     c.check_type(
         param=rrzm,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(rrzm.values(), name, 0)
     c.validate_max_inclusive(rrzm.values(), name, len(rzn))
 
 def val_interflow_zone_mapping(data, name):
-    """Validate interflow_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     rrzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["interflow_zone_names"]
@@ -559,21 +399,13 @@ def val_interflow_zone_mapping(data, name):
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(rrzm.values(), name, 0)
     c.validate_max_inclusive(rrzm.values(), name, len(rzn))
 
 def val_swrecharge_zone_mapping(data, name):
-    """Validate swrecharge_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     rorzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["swrecharge_zone_names"]
-
     c.check_type(
         param=rorzm,
         name=name,
@@ -585,20 +417,13 @@ def val_swrecharge_zone_mapping(data, name):
     c.validate_max_inclusive(rorzm.values(), name, len(rzn))
 
 def val_single_cell_swrecharge_zone_mapping(data, name):
-    """Validate single_cell_swrecharge_zone_mapping.
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     rorzm = data['params'][name]
     tot = data['params']['num_nodes']
     rzn = data['params']['single_cell_swrecharge_zone_names']
-
     c.check_type(param=rorzm,
                  name=name,
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1))
-
     c.validate_min_inclusive(rorzm.values(), name, 0)
     c.validate_max_inclusive(rorzm.values(), name, len(rzn))
 
@@ -1712,7 +1537,6 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_sw_ponding_area, "sw_ponding_area")
     do_validation(errors, data, val_swdis_locs, "swdis_locs")
     do_validation(errors, data, val_swabs_locs, "swabs_locs")
-    do_validation(errors, data, val_sfr_obs, "sfr_obs")
     do_validation(errors, data, val_routing_topology, "routing_topology")
     do_validation(errors, data, val_swdis_f, "swdis_f")
     do_validation(errors, data, val_swabs_f, "swabs_f")
