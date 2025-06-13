@@ -12,14 +12,13 @@ import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
 
 def val_num_cores(data, name):
+    c.validate_min_exclusive([data["params"][name]], name, 0)
     c.check_values_limits(
         values=[data["params"][name]],
         name=name,
-        low_l=0,
         high_l=multiprocessing.cpu_count(),
         include_high=True,
     )
-    c.validate_min_exclusive([data["params"][name]], name, 0)
 
 def val_num_nodes(data, name):
     c.validate_min_exclusive([data["params"][name]], name, 0)
@@ -385,7 +384,7 @@ def val_node_areas(data, name):
         keys=range(1, data["params"]["num_nodes"] + 1),
     )
 
-    c.check_values_limits(values=data["params"][name].values(), name=name, low_l=0, include_low=True)
+    c.validate_min_inclusive(data["params"][name].values(), name, 0)
 
 def val_reporting_zone_mapping(data, name):
     tot_name = "num_nodes"

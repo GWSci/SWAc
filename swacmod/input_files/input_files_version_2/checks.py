@@ -123,3 +123,8 @@ def validate_min_exclusive(values, name, low_l):
     if not all(i > low_l for i in values):
         msg = 'Parameter "%s" requires values > %s'
         raise u.ValidationError(msg % (name, low_l))
+
+def validate_min_inclusive(values, name, low_l=None):
+    if not all(i >= low_l for i in values):
+        msg = 'Parameter "%s" requires values >= %s'
+        raise u.ValidationError(msg % (name, low_l))
