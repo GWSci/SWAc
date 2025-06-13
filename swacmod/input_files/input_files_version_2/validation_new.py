@@ -22,7 +22,7 @@ def val_num_cores(data, name):
     c.validate_min_exclusive([data["params"][name]], name, 0)
 
 def val_num_nodes(data, name):
-    c.check_values_limits(values=[data["params"][name]], name=name, low_l=0)
+    c.validate_min_exclusive([data["params"][name]], name, 0)
 
 def val_start_date(data, name):
     """Validate start_date.
