@@ -1870,6 +1870,15 @@ def validate(params, specs):
 
     errors = []
 
+    _validate_params(data, errors, specs)
+
+    for function in FUNC_SERIES:
+        param = function.__name__.replace("val_", "")
+        do_validation(errors, specs, data, function, param)
+
+    return errors
+
+def _validate_params(data, errors, specs):
     do_validation(errors, specs, data, val_num_cores, "num_cores")
     do_validation(errors, specs, data, val_num_nodes, "num_nodes")
     do_validation(errors, specs, data, val_node_areas, "node_areas")
@@ -1941,12 +1950,6 @@ def validate(params, specs):
     do_validation(errors, specs, data, val_nevtopt, "nevtopt")
     do_validation(errors, specs, data, val_interflow_zone_mapping, "interflow_zone_mapping")
     do_validation(errors, specs, data, val_canopy_zone_mapping, "canopy_zone_mapping")
-
-    for function in FUNC_SERIES:
-        param = function.__name__.replace("val_", "")
-        do_validation(errors, specs, data, function, param)
-
-    return errors
 
 def do_validation(errors, specs, data, function, param):
     params = data["params"]
