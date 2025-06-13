@@ -51,7 +51,7 @@ def load_and_validate(input_file, input_dir, file_opener=DefaultFileResource._de
 
     f.finalize_params(data)
     f.finalize_series(data)
-    validation_result.update(validation_new_post_finalisation.validate_2(params, specs))
+    validation_result.update(validation_new_post_finalisation.validate_2(data, specs))
     v.validate_params(data)
     v.validate_series(data)
 

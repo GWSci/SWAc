@@ -27,8 +27,8 @@ def val_time_periods(data, name):
     # c.check_values_limits(
     #     values=[i for j in tmp for i in j],
     #     name=name,
-    #     0,
-    #     len(data["series"]["date"]) + 1,
+    #     low_l=0,
+    #     high_l=len(data["series"]["date"]) + 1,
     #     include_high=True,
     # )
 
@@ -78,7 +78,8 @@ def val_spatial_output_date(data, name):
         return
 
 def val_rainfall_ts(data, name):
-    tmp = data["params"][name]
+    pass
+    # tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # rts = data["series"][name]
     # rzn = data["params"]["rainfall_zone_names"]
@@ -91,7 +92,7 @@ def val_rainfall_ts(data, name):
     # )
 
 def val_pe_ts(data, name):
-    tmp = data["params"][name]
+    pass
     # TODO: Validation needs to be done post-finalization
     # pts = data["series"][name]
     # pzn = data["params"]["pe_zone_names"]
@@ -104,7 +105,7 @@ def val_pe_ts(data, name):
     # )
 
 def val_temperature_ts(data, name):
-    tmp = data["params"][name]
+    pass
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
     # tzn = set(data["params"]["temperature_zone_mapping"].values())
@@ -117,7 +118,7 @@ def val_temperature_ts(data, name):
     # )
 
 def val_tmax_c_ts(data, name):
-    tmp = data["params"][name]
+    pass
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
     # tzn = set(data["params"]["tmax_c_zone_mapping"].values())
@@ -130,7 +131,7 @@ def val_tmax_c_ts(data, name):
     # )
 
 def val_tmin_c_ts(data, name):
-    tmp = data["params"][name]
+    pass
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
     # tzn = set(data["params"]["tmin_c_zone_mapping"].values())
@@ -143,7 +144,7 @@ def val_tmin_c_ts(data, name):
     # )
 
 def val_windsp_ts(data, name):
-    tmp = data["params"][name]
+    pass
     # TODO: Validation needs to be done post-finalization
     # tts = data["series"][name]
     # tzn = set(data["params"]["windsp_zone_mapping"].values())
@@ -156,7 +157,7 @@ def val_windsp_ts(data, name):
     # )
 
 def val_subroot_leakage_ts(data, name):
-    tmp = data["params"][name]
+    pass
     # TODO: Validation needs to be done post-finalization
     # sts = data["series"][name]
     # szn = data["params"]["subroot_zone_names"]
@@ -169,7 +170,7 @@ def val_subroot_leakage_ts(data, name):
     # )
 
 def val_swdis_ts(data, name):
-    tmp = data["params"][name]
+    pass
     # TODO: Validation needs to be done post-finalization
     # from swacmod.utils import monthdelta, weekdelta
 
@@ -193,7 +194,7 @@ def val_swdis_ts(data, name):
     #     )
 
 def val_swabs_ts(data, name):
-    tmp = data["params"][name]
+    pass
     # TODO: Validation needs to be done post-finalization
     # from swacmod.utils import monthdelta, weekdelta
 
@@ -779,7 +780,6 @@ def val_percolation_rejection_ts(data, name):
         return
     if not data["params"]['percolation_rejection_use_timeseries']:
         return
-    tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # per = data["series"][name]
     # lzn = data["params"]["landuse_zone_names"]
@@ -851,7 +851,6 @@ def val_infiltration_limit_ts(data, name):
         return
     if not data["params"]['infiltration_limit_use_timeseries']:
         return
-    tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # per = data["series"][name]
     # lzn = data["params"]["interflow_zone_names"]
@@ -870,7 +869,6 @@ def val_interflow_decay_ts(data, name):
         return
     if not data["params"]['interflow_decay_use_timeseries']:
         return
-    tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # per = data["series"][name]
     # lzn = data["params"]["interflow_zone_names"]
@@ -1058,16 +1056,12 @@ def val_nevtopt(data, name):
     c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
     c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
-def validate_2(params, specs):
-    errors = validate(params, specs)
+def validate_2(data, specs):
+    errors = validate(data, specs)
     warnings = []
-    return ParsedInputData(params, errors, warnings)
+    return ParsedInputData(data, errors, warnings)
 
-def validate(params, specs):
-    data = {
-        "params": params,
-        "specs": specs
-    }
+def validate(data, specs):
     errors = []
     _validate_params(errors, specs, data)
     _validate_series(errors, specs, data)
@@ -1114,8 +1108,8 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_lu_spatial, "lu_spatial")
     do_validation(errors, data, val_zr, "zr")
     do_validation(errors, data, val_kc, "kc")
-    do_validation(errors, data, val_taw, "taw")
-    do_validation(errors, data, val_raw, "raw")
+    # do_validation(errors, data, val_taw, "taw")
+    # do_validation(errors, data, val_raw, "raw")
     do_validation(errors, data, val_percolation_rejection, "percolation_rejection")
     do_validation(errors, data, val_subroot_leakage_fraction, "subroot_leakage_fraction")
     do_validation(errors, data, val_init_interflow_store, "init_interflow_store")
@@ -1158,7 +1152,10 @@ def _validate_series(errors, specs, data):
 
 def do_validation(errors, data, function, param):
     params = data["params"]
-    is_param_skipped = (params[param] == None)
+    series = data["series"]
+    is_param_skipped = (
+        ((param in params) and (params[param] == None))
+        or ((param in series) and (series[param] is None)))
     if not is_param_skipped:
         try:
             function(data, param)
