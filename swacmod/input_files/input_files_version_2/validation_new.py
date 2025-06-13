@@ -321,12 +321,7 @@ def val_swdis_locs(data, name):
             keys=range(1, tot)
         )
 
-        c.check_values_limits_min_inclusive(
-            values=swdisl.values(),
-            name="zone in %s" % name,
-            low_l=1,
-            include_low=True,
-        )
+        c.check_values_limits_min_inclusive(values=swdisl.values(), name="zone in %s" % name, low_l=1)
         c.check_values_limits(
             values=swdisl.values(),
             name="zone in %s" % name,
@@ -334,12 +329,7 @@ def val_swdis_locs(data, name):
             include_high=True,
         )
 
-        c.check_values_limits_min_inclusive(
-            values=swdisl.keys(),
-            name="node in %s" % name,
-            low_l=1,
-            include_low=True,
-        )
+        c.check_values_limits_min_inclusive(values=swdisl.keys(), name="node in %s" % name, low_l=1)
 
         c.check_values_limits(
             values=swdisl.keys(),
@@ -367,12 +357,7 @@ def val_swabs_locs(data, name):
             keys=range(1, tot)
         )
 
-        c.check_values_limits_min_inclusive(
-            values=swabsl.values(),
-            name="zone in %s" % name,
-            low_l=1,
-            include_low=True,
-        )
+        c.check_values_limits_min_inclusive(values=swabsl.values(), name="zone in %s" % name, low_l=1)
 
         c.check_values_limits(
             values=swabsl.values(),
@@ -381,12 +366,7 @@ def val_swabs_locs(data, name):
             include_high=True,
         )
 
-        c.check_values_limits_min_inclusive(
-            values=swabsl.keys(),
-            name="node in %s" % name,
-            low_l=1,
-            include_low=True,
-        )
+        c.check_values_limits_min_inclusive(values=swabsl.keys(), name="node in %s" % name, low_l=1)
 
         c.check_values_limits(
             values=swabsl.keys(),
@@ -419,12 +399,7 @@ def val_reporting_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=rzm.values(),
-        name="zone in %s" % name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=rzm.values(), name="zone in %s" % name, low_l=0)
 
     c.check_values_limits(
         values=rzm.values(),
@@ -447,12 +422,7 @@ def val_rainfall_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=[i[0] for i in rzm.values()],
-        name="zone in %s" % name,
-        low_l=1,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=[i[0] for i in rzm.values()], name="zone in %s" % name, low_l=1)
     c.check_values_limits(
         values=[i[0] for i in rzm.values()],
         name="zone in %s" % name,
@@ -478,12 +448,7 @@ def val_pe_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=[i[0] for i in pzm.values()],
-        name="zone in %s" % name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=[i[0] for i in pzm.values()], name="zone in %s" % name, low_l=0)
     c.check_values_limits(
         values=[i[0] for i in pzm.values()],
         name="zone in %s" % name,
@@ -509,12 +474,7 @@ def val_tmax_c_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=tzm.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=tzm.values(), name=name, low_l=0)
     c.check_values_limits(
         values=tzm.values(),
         name=name,
@@ -540,12 +500,7 @@ def val_tmin_c_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=tzm.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=tzm.values(), name=name, low_l=0)
     c.check_values_limits(
         values=tzm.values(),
         name=name,
@@ -571,12 +526,7 @@ def val_windsp_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=tzm.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=tzm.values(), name=name, low_l=0)
     c.check_values_limits(
         values=tzm.values(),
         name=name,
@@ -602,12 +552,7 @@ def val_temperature_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=tzm.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=tzm.values(), name=name, low_l=0)
     c.check_values_limits(
         values=tzm.values(),
         name=name,
@@ -633,12 +578,7 @@ def val_subroot_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=[i[0] for i in szm.values()],
-        name="zone in %s" % name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=[i[0] for i in szm.values()], name="zone in %s" % name, low_l=0)
     c.check_values_limits(
         values=[i[0] for i in szm.values()],
         name="zone in %s" % name,
@@ -664,12 +604,7 @@ def val_rapid_runoff_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=rrzm.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=rrzm.values(), name=name, low_l=0)
     c.check_values_limits(
         values=rrzm.values(),
         name=name,
@@ -695,12 +630,7 @@ def val_interflow_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=rrzm.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=rrzm.values(), name=name, low_l=0)
     c.check_values_limits(
         values=rrzm.values(),
         name=name,
@@ -726,12 +656,7 @@ def val_swrecharge_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=rorzm.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=rorzm.values(), name=name, low_l=0)
     c.check_values_limits(
         values=rorzm.values(),
         name=name,
@@ -754,10 +679,7 @@ def val_single_cell_swrecharge_zone_mapping(data, name):
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1))
 
-    c.check_values_limits_min_inclusive(values=rorzm.values(),
-                          name=name,
-                          low_l=0,
-                          include_low=True)
+    c.check_values_limits_min_inclusive(values=rorzm.values(), name=name, low_l=0)
     c.check_values_limits(values=rorzm.values(),
                           name=name,
                           high_l=len(rzn),
@@ -781,12 +703,7 @@ def val_macropore_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=mzm.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=mzm.values(), name=name, low_l=0)
     c.check_values_limits(
         values=mzm.values(),
         name=name,
@@ -825,12 +742,7 @@ def val_canopy_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=rrzm.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=rrzm.values(), name=name, low_l=0)
     c.check_values_limits(
         values=rrzm.values(),
         name=name,
@@ -855,12 +767,7 @@ def val_free_throughfall(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=fth.values(),
-        name=name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=fth.values(), name=name, low_l=0)
     c.check_values_limits(
         values=fth.values(),
         name=name,
@@ -885,8 +792,7 @@ def val_max_canopy_storage(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(values=mcs.values(), name=name, low_l=0,
-                          include_low=True)
+    c.check_values_limits_min_inclusive(values=mcs.values(), name=name, low_l=0)
 
 def val_snow_params_simple(data, name):
     """Validate snow_params_simple.
@@ -910,12 +816,7 @@ def val_snow_params_simple(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=[i[0] for i in snp.values()],
-        name="starting_snow_pack in %s" % name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=[i[0] for i in snp.values()], name="starting_snow_pack in %s" % name, low_l=0)
 
 def val_snow_params_complex(data, name):
     """Validate snow_params_complex.
@@ -939,12 +840,7 @@ def val_snow_params_complex(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=[i[0] for i in snp.values()],
-        name="starting_snow_pack in %s" % name,
-        low_l=0,
-        include_low=True,
-    )
+    c.check_values_limits_min_inclusive(values=[i[0] for i in snp.values()], name="starting_snow_pack in %s" % name, low_l=0)
 
 def val_rapid_runoff_params(data, name):
     """Validate rapid_runoff_params.
@@ -975,12 +871,7 @@ def val_rapid_runoff_params(data, name):
             len_list=[len(zone["class_ri"]), len(zone["class_smd"])],
         )
 
-        c.check_values_limits_min_inclusive(
-            values=[i for j in zone["values"] for i in j],
-            name='"values" in "%s"' % name,
-            low_l=0,
-            include_low=True,
-        )
+        c.check_values_limits_min_inclusive(values=[i for j in zone["values"] for i in j], name='"values" in "%s"' % name, low_l=0)
         c.check_values_limits(
             values=[i for j in zone["values"] for i in j],
             name='"values" in "%s"' % name,
@@ -1011,10 +902,7 @@ def val_single_cell_swrecharge_proportion(data, name):
                  len_list=[len(rzn)],
                  keys=range(1, 13))
 
-    c.check_values_limits_min_inclusive(values=[j for i in rrp.values() for j in i],
-                          name=name,
-                          low_l=0,
-                          include_low=True)
+    c.check_values_limits_min_inclusive(values=[j for i in rrp.values() for j in i], name=name, low_l=0)
     c.check_values_limits(values=[j for i in rrp.values() for j in i],
                           name=name,
                           high_l=1.0,
@@ -1076,11 +964,7 @@ def val_swrecharge_proportion(data, name):
         keys=range(1, 13),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=[j for i in rrp.values() for j in i],
-        name=name,
-        low_l=0,
-    )
+    c.check_values_limits_min_inclusive(values=[j for i in rrp.values() for j in i], name=name, low_l=0)
     c.check_values_limits(
         values=[j for i in rrp.values() for j in i],
         name=name,
@@ -1132,11 +1016,7 @@ def val_macropore_proportion(data, name):
         keys=range(1, 13),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=[j for i in mpp.values() for j in i],
-        name=name,
-        low_l=0,
-    )
+    c.check_values_limits_min_inclusive(values=[j for i in mpp.values() for j in i], name=name, low_l=0)
     c.check_values_limits(
         values=[j for i in mpp.values() for j in i],
         name=name,
@@ -1199,11 +1079,7 @@ def val_macropore_recharge(data, name):
         keys=range(1, 13),
     )
 
-    c.check_values_limits_min_inclusive(
-        values=[j for i in mpr.values() for j in i],
-        name=name,
-        low_l=0,
-    )
+    c.check_values_limits_min_inclusive(values=[j for i in mpr.values() for j in i], name=name, low_l=0)
     c.check_values_limits(
         values=[j for i in mpr.values() for j in i],
         name=name,
@@ -1474,8 +1350,7 @@ def val_init_interflow_store(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0,
-                          include_low=True)
+    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0)
 
 def val_interflow_store_bypass(data, name):
     """interflow_store_bypass.
@@ -1494,8 +1369,7 @@ def val_interflow_store_bypass(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0,
-                          include_low=True)
+    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0)
 
 def val_infiltration_limit(data, name):
     """infiltration_limit.
@@ -1514,8 +1388,7 @@ def val_infiltration_limit(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0,
-                          include_low=True)
+    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0)
 
 def val_interflow_decay(data, name):
     """interflow_decay.
@@ -1534,8 +1407,7 @@ def val_interflow_decay(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0,
-                          include_low=True)
+    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0)
 
 def val_infiltration_limit_ts(data, name):
     """Validate infiltration_limit_ts.
@@ -1612,11 +1484,7 @@ def val_recharge_attenuation_params(data, name):
         len_list=[3],
     )
 
-    c.check_values_limits_min_inclusive(
-        values=[i[1] for i in rpn.values()],
-        name="release_proportion in %s" % name,
-        low_l=0.0,
-    )
+    c.check_values_limits_min_inclusive(values=[i[1] for i in rpn.values()], name="release_proportion in %s" % name, low_l=0.0)
     c.check_values_limits(
         values=[i[1] for i in rpn.values()],
         name="release_proportion in %s" % name,
@@ -1652,11 +1520,7 @@ def val_sw_zone_mapping(data, name):
             keys=range(1, tot + 1),
         )
 
-        c.check_values_limits_min_inclusive(
-            values=rorzm.values(),
-            name=name,
-            low_l=0,
-        )
+        c.check_values_limits_min_inclusive(values=rorzm.values(), name=name, low_l=0)
         c.check_values_limits(
             values=rorzm.values(),
             name=name,
@@ -1684,12 +1548,7 @@ def val_sw_downstream(data, name):
             keys=range(1, 13),
         )
 
-        c.check_values_limits_min_inclusive(
-            values=[j for i in rrp.values() for j in i],
-            name=name,
-            low_l=0,
-            include_low=True,
-        )
+        c.check_values_limits_min_inclusive(values=[j for i in rrp.values() for j in i], name=name, low_l=0)
         c.check_values_limits(
             values=[j for i in rrp.values() for j in i],
             name=name,
@@ -1717,11 +1576,7 @@ def val_sw_bed_infiltration(data, name):
             keys=range(1, 13),
         )
 
-        c.check_values_limits_min_inclusive(
-            values=[j for i in rrp.values() for j in i],
-            name=name,
-            low_l=0,
-        )
+        c.check_values_limits_min_inclusive(values=[j for i in rrp.values() for j in i], name=name, low_l=0)
         c.check_values_limits(
             values=[j for i in rrp.values() for j in i],
             name=name,
@@ -1749,11 +1604,7 @@ def val_sw_direct_recharge(data, name):
             keys=range(1, 13),
         )
 
-        c.check_values_limits_min_inclusive(
-            values=[j for i in rrp.values() for j in i],
-            name=name,
-            low_l=0,
-        )
+        c.check_values_limits_min_inclusive(values=[j for i in rrp.values() for j in i], name=name, low_l=0)
         c.check_values_limits(
             values=[j for i in rrp.values() for j in i],
             name=name,
@@ -1854,11 +1705,7 @@ def val_sw_params(data, name):
         len_list=[2],
     )
 
-    c.check_values_limits_min_inclusive(
-        values=[i[1] for i in rpn.values()],
-        name="release_proportion in %s" % name,
-        low_l=0.0,
-    )
+    c.check_values_limits_min_inclusive(values=[i[1] for i in rpn.values()], name="release_proportion in %s" % name, low_l=0.0)
     c.check_values_limits(
         values=[i[1] for i in rpn.values()],
         name="release_proportion in %s" % name,
