@@ -367,20 +367,30 @@ def val_swabs_locs(data, name):
             keys=range(1, tot)
         )
 
-        c.check_values_limits(
+        c.check_values_limits_min_inclusive(
             values=swabsl.values(),
             name="zone in %s" % name,
             low_l=1,
             include_low=True,
+        )
+
+        c.check_values_limits(
+            values=swabsl.values(),
+            name="zone in %s" % name,
             high_l=tot,
             include_high=True,
+        )
+
+        c.check_values_limits_min_inclusive(
+            values=swabsl.keys(),
+            name="node in %s" % name,
+            low_l=1,
+            include_low=True,
         )
 
         c.check_values_limits(
             values=swabsl.keys(),
             name="node in %s" % name,
-            low_l=1,
-            include_low=True,
             high_l=data["params"]["num_nodes"],
             include_high=True,
         )
@@ -409,11 +419,16 @@ def val_reporting_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=rzm.values(),
         name="zone in %s" % name,
         low_l=0,
         include_low=True,
+    )
+
+    c.check_values_limits(
+        values=rzm.values(),
+        name="zone in %s" % name,
         high_l=len(rzn),
         include_high=True,
     )
@@ -432,11 +447,15 @@ def val_rainfall_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=[i[0] for i in rzm.values()],
         name="zone in %s" % name,
         low_l=1,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=[i[0] for i in rzm.values()],
+        name="zone in %s" % name,
         high_l=len(rzn),
         include_high=True,
     )
@@ -459,11 +478,15 @@ def val_pe_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=[i[0] for i in pzm.values()],
         name="zone in %s" % name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=[i[0] for i in pzm.values()],
+        name="zone in %s" % name,
         high_l=len(pzn),
         include_high=True,
     )
@@ -486,11 +509,15 @@ def val_tmax_c_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=tzm.values(),
         name=name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=tzm.values(),
+        name=name,
         high_l=len(tzn),
         include_high=True,
     )
@@ -513,11 +540,15 @@ def val_tmin_c_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=tzm.values(),
         name=name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=tzm.values(),
+        name=name,
         high_l=len(tzn),
         include_high=True,
     )
