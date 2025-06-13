@@ -1949,11 +1949,12 @@ def validate(params, specs):
         is_param_skipped = (params[param] == None) or is_alt(specs, params, param)
         if is_param_skipped:
             continue
-        try:
-            function(data, param)
-        except u.ValidationError as err:
-            errors.append(err.args[0])
-        logging.debug('\t\t"%s" validated', param)
+        if not is_param_skipped:
+            try:
+                function(data, param)
+            except u.ValidationError as err:
+                errors.append(err.args[0])
+            logging.debug('\t\t"%s" validated', param)
     
     return errors
 
