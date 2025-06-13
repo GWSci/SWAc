@@ -4,7 +4,6 @@
 
 # Standard Library
 import logging
-import multiprocessing
 
 # Internal modules
 import swacmod.utils as u
@@ -197,14 +196,7 @@ def validate_2(data, specs):
 
 def validate(data, specs):
     errors = []
-    _validate_params(errors, specs, data)
-    _validate_series(errors, specs, data)
-    return errors
-
-def _validate_params(errors, specs, data):
     do_validation(errors, data, val_time_periods, "time_periods")
-
-def _validate_series(errors, specs, data):
     do_validation(errors, data, val_rainfall_ts, "rainfall_ts")
     do_validation(errors, data, val_pe_ts, "pe_ts")
     do_validation(errors, data, val_temperature_ts, "temperature_ts")
@@ -217,6 +209,7 @@ def _validate_series(errors, specs, data):
     do_validation(errors, data, val_percolation_rejection_ts, "percolation_rejection_ts")
     do_validation(errors, data, val_infiltration_limit_ts, "infiltration_limit_ts")
     do_validation(errors, data, val_interflow_decay_ts, "interflow_decay_ts")
+    return errors
 
 def do_validation(errors, data, function, param):
     params = data["params"]
