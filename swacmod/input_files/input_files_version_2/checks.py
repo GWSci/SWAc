@@ -124,9 +124,6 @@ def validate_max_inclusive(values, name, high_l):
         msg = 'Parameter "%s" requires values <= %s'
         raise u.ValidationError(msg % (name, high_l))
 
-def check_values_limits_min_inclusive(values, name, low_l):
-    validate_min_inclusive(values, name, low_l)
-
 def validate_min_exclusive(values, name, low_l):
     if not all(i > low_l for i in values):
         msg = 'Parameter "%s" requires values > %s'
