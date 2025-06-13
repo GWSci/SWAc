@@ -181,17 +181,16 @@ def val_interflow_decay_ts(data, name):
     if not data["params"]['interflow_decay_use_timeseries']:
         return
     # TODO: Validation needs to be done post-finalization
-    # per = data["series"][name]
-    # lzn = data["params"]["interflow_zone_names"]
-    # c.check_type(
-    #     param=per,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(lzn)],
-    #     keys=["interflow_decay_ts"]
-    # )
-    # c.validate_min_inclusive(per[0], name, 0.0,
-    #                       include_low=True)
+    per = data["series"][name]
+    lzn = data["params"]["interflow_zone_names"]
+    c.check_type(
+        param=per,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(lzn)],
+        keys=["interflow_decay_ts"]
+    )
+    c.validate_min_inclusive(per[0], name, 0.0)
 
 def val_recharge_attenuation_params(data, name):
     rpn = data["params"][name]
