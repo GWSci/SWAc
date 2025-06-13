@@ -719,10 +719,7 @@ def val_macropore_activation_option(data, name):
     x = data["params"][name]
 
     c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
-
-    c.validate_constraints(
-        values=[x], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
 def val_canopy_zone_mapping(data, name):
     """Validate canopy_zone_mapping.
@@ -1753,9 +1750,7 @@ def val_swdis_f(data, name):
     """
     x = data["params"][name]
 
-    c.validate_constraints(
-        values=[x], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
 def val_swabs_f(data, name):
     """Validate swabs_f.
@@ -1764,9 +1759,7 @@ def val_swabs_f(data, name):
     """
     x = data["params"][name]
 
-    c.validate_constraints(
-        values=[x], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
 def val_evt_parameters(data, name):
     """Validate evt parameters .
@@ -1794,10 +1787,7 @@ def val_nevtopt(data, name):
     x = data["params"][name]
 
     c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
-
-    c.validate_constraints(
-        values=[x], name=name, constraints=data["specs"][name]["constraints"]
-    )
+    c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
 def validate_2(params, specs):
     errors = validate(params, specs)
