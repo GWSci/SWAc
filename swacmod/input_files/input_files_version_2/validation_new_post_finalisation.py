@@ -148,16 +148,16 @@ def val_percolation_rejection_ts(data, name):
     if not data["params"]['percolation_rejection_use_timeseries']:
         return
     # TODO: Validation needs to be done post-finalization
-    # per = data["series"][name]
-    # lzn = data["params"]["landuse_zone_names"]
-    # c.check_type(
-    #     param=per,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(lzn)],
-    #     keys=["percolation_rejection_ts"]
-    # )
-    # c.validate_min_inclusive(per[0], name=name, 0.0)
+    per = data["series"][name]
+    lzn = data["params"]["landuse_zone_names"]
+    c.check_type(
+        param=per,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        len_list=[len(data["series"]["date"]), len(lzn)],
+        keys=["percolation_rejection_ts"]
+    )
+    c.validate_min_inclusive(per[0], name, 0.0)
 
 def val_subroot_leakage_fraction(data, name):
     lea = data["params"][name]
