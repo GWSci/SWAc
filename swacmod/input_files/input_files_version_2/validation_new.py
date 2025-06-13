@@ -571,11 +571,15 @@ def val_windsp_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=tzm.values(),
         name=name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=tzm.values(),
+        name=name,
         high_l=len(tzn),
         include_high=True,
     )
@@ -598,11 +602,15 @@ def val_temperature_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=tzm.values(),
         name=name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=tzm.values(),
+        name=name,
         high_l=len(tzn),
         include_high=True,
     )
@@ -625,11 +633,15 @@ def val_subroot_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=[i[0] for i in szm.values()],
         name="zone in %s" % name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=[i[0] for i in szm.values()],
+        name="zone in %s" % name,
         high_l=len(szn),
         include_high=True,
     )
@@ -652,11 +664,15 @@ def val_rapid_runoff_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=rrzm.values(),
         name=name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=rrzm.values(),
+        name=name,
         high_l=len(rzn),
         include_high=True,
     )
@@ -679,11 +695,15 @@ def val_interflow_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=rrzm.values(),
         name=name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=rrzm.values(),
+        name=name,
         high_l=len(rzn),
         include_high=True,
     )
@@ -706,11 +726,15 @@ def val_swrecharge_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=rorzm.values(),
         name=name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=rorzm.values(),
+        name=name,
         high_l=len(rzn),
         include_high=True,
     )
@@ -730,10 +754,12 @@ def val_single_cell_swrecharge_zone_mapping(data, name):
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1))
 
-    c.check_values_limits(values=rorzm.values(),
+    c.check_values_limits_min_inclusive(values=rorzm.values(),
                           name=name,
                           low_l=0,
-                          include_low=True,
+                          include_low=True)
+    c.check_values_limits(values=rorzm.values(),
+                          name=name,
                           high_l=len(rzn),
                           include_high=True)
 
@@ -755,11 +781,15 @@ def val_macropore_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=mzm.values(),
         name=name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=mzm.values(),
+        name=name,
         high_l=len(mzn),
         include_high=True,
     )
@@ -795,11 +825,15 @@ def val_canopy_zone_mapping(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=rrzm.values(),
         name=name,
         low_l=0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=rrzm.values(),
+        name=name,
         high_l=len(rzn),
         include_high=True,
     )
@@ -821,12 +855,16 @@ def val_free_throughfall(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=fth.values(),
         name=name,
         low_l=0,
-        high_l=1.0,
         include_low=True,
+    )
+    c.check_values_limits(
+        values=fth.values(),
+        name=name,
+        high_l=1.0,
         include_high=True,
     )
 
