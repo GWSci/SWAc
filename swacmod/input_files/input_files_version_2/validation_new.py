@@ -1843,18 +1843,6 @@ def val_nevtopt(data, name):
     )
 
 FUNC_SERIES = [
-    val_rainfall_ts,
-    val_pe_ts,
-    val_temperature_ts,
-    val_tmax_c_ts,
-    val_tmin_c_ts,
-    val_windsp_ts,
-    val_subroot_leakage_ts,
-    val_swdis_ts,
-    val_swabs_ts,
-    val_percolation_rejection_ts,
-    val_infiltration_limit_ts,
-    val_interflow_decay_ts,
 ]
 
 def validate_2(params, specs):
@@ -1871,6 +1859,19 @@ def validate(params, specs):
     errors = []
 
     _validate_params(errors, specs, data)
+
+    do_validation(errors, specs, data, val_rainfall_ts, "rainfall_ts")
+    do_validation(errors, specs, data, val_pe_ts, "pe_ts")
+    do_validation(errors, specs, data, val_temperature_ts, "temperature_ts")
+    do_validation(errors, specs, data, val_tmax_c_ts, "tmax_c_ts")
+    do_validation(errors, specs, data, val_tmin_c_ts, "tmin_c_ts")
+    do_validation(errors, specs, data, val_windsp_ts, "windsp_ts")
+    do_validation(errors, specs, data, val_subroot_leakage_ts, "subroot_leakage_ts")
+    do_validation(errors, specs, data, val_swdis_ts, "swdis_ts")
+    do_validation(errors, specs, data, val_swabs_ts, "swabs_ts")
+    do_validation(errors, specs, data, val_percolation_rejection_ts, "percolation_rejection_ts")
+    do_validation(errors, specs, data, val_infiltration_limit_ts, "infiltration_limit_ts")
+    do_validation(errors, specs, data, val_interflow_decay_ts, "interflow_decay_ts")
 
     for function in FUNC_SERIES:
         param = function.__name__.replace("val_", "")
