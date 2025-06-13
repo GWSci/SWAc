@@ -1843,21 +1843,6 @@ def val_nevtopt(data, name):
     )
 
 FUNC_PARAMS = [
-    val_sw_bed_infiltration,
-    val_sw_direct_recharge,
-    val_sw_pe_to_open_water,
-    val_sw_params,
-    val_sw_ponding_area,
-    val_swdis_locs,
-    val_swabs_locs,
-    val_sfr_obs,
-    val_routing_topology,
-    val_swdis_f,
-    val_swabs_f,
-    val_evt_parameters,
-    val_nevtopt,
-    val_interflow_zone_mapping,
-    val_canopy_zone_mapping,
 ]
 
 FUNC_SERIES = [
@@ -1944,6 +1929,21 @@ def validate(params, specs):
     do_validation(errors, specs, data, val_sw_max_ponding, "sw_max_ponding")
     do_validation(errors, specs, data, val_sw_downstream, "sw_downstream")
     do_validation(errors, specs, data, val_sw_activation, "sw_activation")
+    do_validation(errors, specs, data, val_sw_bed_infiltration, "sw_bed_infiltration")
+    do_validation(errors, specs, data, val_sw_direct_recharge, "sw_direct_recharge")
+    do_validation(errors, specs, data, val_sw_pe_to_open_water, "sw_pe_to_open_water")
+    do_validation(errors, specs, data, val_sw_params, "sw_params")
+    do_validation(errors, specs, data, val_sw_ponding_area, "sw_ponding_area")
+    do_validation(errors, specs, data, val_swdis_locs, "swdis_locs")
+    do_validation(errors, specs, data, val_swabs_locs, "swabs_locs")
+    do_validation(errors, specs, data, val_sfr_obs, "sfr_obs")
+    do_validation(errors, specs, data, val_routing_topology, "routing_topology")
+    do_validation(errors, specs, data, val_swdis_f, "swdis_f")
+    do_validation(errors, specs, data, val_swabs_f, "swabs_f")
+    do_validation(errors, specs, data, val_evt_parameters, "evt_parameters")
+    do_validation(errors, specs, data, val_nevtopt, "nevtopt")
+    do_validation(errors, specs, data, val_interflow_zone_mapping, "interflow_zone_mapping")
+    do_validation(errors, specs, data, val_canopy_zone_mapping, "canopy_zone_mapping")
 
     for function in FUNC_PARAMS + FUNC_SERIES:
         param = function.__name__.replace("val_", "")
