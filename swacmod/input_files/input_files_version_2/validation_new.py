@@ -1870,7 +1870,7 @@ def validate(params, specs):
 
     errors = []
 
-    _validate_params(data, errors, specs)
+    _validate_params(errors, specs, data)
 
     for function in FUNC_SERIES:
         param = function.__name__.replace("val_", "")
@@ -1878,7 +1878,7 @@ def validate(params, specs):
 
     return errors
 
-def _validate_params(data, errors, specs):
+def _validate_params(errors, specs, data):
     do_validation(errors, specs, data, val_num_cores, "num_cores")
     do_validation(errors, specs, data, val_num_nodes, "num_nodes")
     do_validation(errors, specs, data, val_node_areas, "node_areas")
