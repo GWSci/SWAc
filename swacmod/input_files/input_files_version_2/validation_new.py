@@ -1946,6 +1946,7 @@ def _validate_series(errors, specs, data):
 
 def do_validation(errors, specs, data, function, param):
     params = data["params"]
+    specs = data["specs"]
     is_param_skipped = (params[param] == None) or is_alt(specs, params, param)
     if not is_param_skipped:
         try:
