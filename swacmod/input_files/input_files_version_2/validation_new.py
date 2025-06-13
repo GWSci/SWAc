@@ -1857,7 +1857,7 @@ def validate(params, specs):
 
     _validate_params(errors, specs, data)
 
-    _validate_series(data, errors, specs)
+    _validate_series(errors, specs, data)
 
     return errors
 
@@ -1934,7 +1934,7 @@ def _validate_params(errors, specs, data):
     do_validation(errors, specs, data, val_interflow_zone_mapping, "interflow_zone_mapping")
     do_validation(errors, specs, data, val_canopy_zone_mapping, "canopy_zone_mapping")
 
-def _validate_series(data, errors, specs):
+def _validate_series(errors, specs, data):
     do_validation(errors, specs, data, val_rainfall_ts, "rainfall_ts")
     do_validation(errors, specs, data, val_pe_ts, "pe_ts")
     do_validation(errors, specs, data, val_temperature_ts, "temperature_ts")
