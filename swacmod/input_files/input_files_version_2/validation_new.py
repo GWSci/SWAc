@@ -19,8 +19,6 @@ def val_start_date(data, name):
         raise
 
 def val_time_periods(data, name):
-    c.check_type(param=(data["params"][name]), name=name, t_types=data["specs"][name]["type"])
-
     for time_range in data["params"][name]:
         if len(time_range) != 2:
             msg = 'Parameter "%s" requires arrays of length 2'
