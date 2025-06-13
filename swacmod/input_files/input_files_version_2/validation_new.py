@@ -1014,16 +1014,8 @@ def val_sw_ponding_area(data, name):
         c.validate_min_exclusive(values, name, 0)
 
 def val_sw_params(data, name):
-    """Validate sw_params.
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    3) values have to be lists with length 2
-    4) the first element of each list has to be 0 <= x <= 1
-    """
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=rpn,
         name=name,
@@ -1031,20 +1023,12 @@ def val_sw_params(data, name):
         keys=range(1, tot + 1),
         len_list=[2],
     )
-
     c.validate_min_inclusive([i[1] for i in rpn.values()], "release_proportion in %s" % name, 0.0)
     c.validate_max_inclusive([i[1] for i in rpn.values()], "release_proportion in %s" % name, 1.0)
 
 def val_routing_topology(data, name):
-    """Validate routing .
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    3) values have to be lists with length 11
-    """
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=rpn,
         name=name,
@@ -1054,12 +1038,8 @@ def val_routing_topology(data, name):
     )
 
 def val_recharge_node_mapping(data, name):
-    """Validate recharge node .
-
-    """
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=rpn,
         name=name,
@@ -1069,33 +1049,15 @@ def val_recharge_node_mapping(data, name):
     )
 
 def val_swdis_f(data, name):
-    """Validate swdis_f.
-
-    1) type has to be an integer
-    """
     x = data["params"][name]
-
     c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
 def val_swabs_f(data, name):
-    """Validate swabs_f.
-
-    1) type has to be an integer
-    """
     x = data["params"][name]
-
     c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
 def val_evt_parameters(data, name):
-    """Validate evt parameters .
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    3) values have to be lists with length 3
-    """
     rpn = data["params"][name]
-    tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=rpn,
         name=name,
@@ -1105,12 +1067,7 @@ def val_evt_parameters(data, name):
     )
 
 def val_nevtopt(data, name):
-    """Validate nevtopt.
-
-    1) type has to be an integer 1, 2 or 3
-    """
     x = data["params"][name]
-
     c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
     c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
