@@ -22,7 +22,6 @@ def val_time_periods(data, name):
     6) all days are assigned to a time period
     """
     tmp = data["params"][name]
-    c.check_type(param=tmp, name=name, t_types=data["specs"][name]["type"])
 
     # TODO: Validation needs to be done post-finalization
     # c.check_values_limits(
@@ -33,6 +32,7 @@ def val_time_periods(data, name):
     #     include_high=True,
     # )
 
+    # TODO Block duplicated from pre-finalisation validations
     all_days = []
     for time_range in tmp:
         if len(time_range) != 2:
@@ -46,6 +46,7 @@ def val_time_periods(data, name):
             msg = 'Parameter "%s" requires start_date < end_date'
             raise u.ValidationError(msg % name)
         all_days += range(time_range[0], time_range[1])
+    # TODO end of block from pre-finalisation validations
 
     # TODO: Validation needs to be done post-finalization
     # if set(all_days) != set(range(1, len(data["series"]["date"]) + 1)):
