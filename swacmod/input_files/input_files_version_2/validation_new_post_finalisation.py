@@ -32,12 +32,8 @@ def val_time_periods(data, name):
         raise u.ValidationError(msg % name)
 
 def val_rainfall_ts(data, name):
-    pass
-    # tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
     rts = data["series"][name]
     rzn = data["params"]["rainfall_zone_names"]
-
     c.check_type(
         param=rts,
         name=name,
@@ -46,11 +42,8 @@ def val_rainfall_ts(data, name):
     )
 
 def val_pe_ts(data, name):
-    pass
-    # TODO: Validation needs to be done post-finalization
     pts = data["series"][name]
     pzn = data["params"]["pe_zone_names"]
-
     c.check_type(
         param=pts,
         name=name,
@@ -59,11 +52,8 @@ def val_pe_ts(data, name):
     )
 
 def val_temperature_ts(data, name):
-    pass
-    # TODO: Validation needs to be done post-finalization
     tts = data["series"][name]
     tzn = set(data["params"]["temperature_zone_mapping"].values())
-
     c.check_type(
         param=tts,
         name=name,
@@ -72,11 +62,8 @@ def val_temperature_ts(data, name):
     )
 
 def val_tmax_c_ts(data, name):
-    pass
-    # TODO: Validation needs to be done post-finalization
     tts = data["series"][name]
     tzn = set(data["params"]["tmax_c_zone_mapping"].values())
-
     c.check_type(
         param=tts,
         name=name,
@@ -85,11 +72,8 @@ def val_tmax_c_ts(data, name):
     )
 
 def val_tmin_c_ts(data, name):
-    pass
-    # TODO: Validation needs to be done post-finalization
     tts = data["series"][name]
     tzn = set(data["params"]["tmin_c_zone_mapping"].values())
-
     c.check_type(
         param=tts,
         name=name,
@@ -98,11 +82,8 @@ def val_tmin_c_ts(data, name):
     )
 
 def val_windsp_ts(data, name):
-    pass
-    # TODO: Validation needs to be done post-finalization
     tts = data["series"][name]
     tzn = set(data["params"]["windsp_zone_mapping"].values())
-
     c.check_type(
         param=tts,
         name=name,
