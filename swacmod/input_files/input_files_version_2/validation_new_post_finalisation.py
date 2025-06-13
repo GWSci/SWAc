@@ -163,7 +163,6 @@ def val_infiltration_limit_ts(data, name):
         return
     if not data["params"]['infiltration_limit_use_timeseries']:
         return
-    # TODO: Validation needs to be done post-finalization
     per = data["series"][name]
     lzn = data["params"]["interflow_zone_names"]
     c.check_type(
@@ -180,7 +179,6 @@ def val_interflow_decay_ts(data, name):
         return
     if not data["params"]['interflow_decay_use_timeseries']:
         return
-    # TODO: Validation needs to be done post-finalization
     per = data["series"][name]
     lzn = data["params"]["interflow_zone_names"]
     c.check_type(

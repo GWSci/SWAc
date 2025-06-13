@@ -673,44 +673,6 @@ def val_interflow_decay(data, name):
     )
     c.validate_min_inclusive(nda.values(), name, 0)
 
-def val_infiltration_limit_ts(data, name):
-    if data["params"]["interflow_process"] == "disabled":
-        return
-    if not data["params"]['infiltration_limit_use_timeseries']:
-        return
-    tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
-    # per = data["series"][name]
-    # lzn = data["params"]["interflow_zone_names"]
-    # c.check_type(
-    #     param=per,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(lzn)],
-    #     keys=["infiltration_limit_ts"]
-    # )
-    # c.validate_min_inclusive(per[0], name=name, 0.0,
-    #                       include_low=True)
-
-def val_interflow_decay_ts(data, name):
-    if data["params"]["interflow_process"] == "disabled":
-        return
-    if not data["params"]['interflow_decay_use_timeseries']:
-        return
-    tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
-    # per = data["series"][name]
-    # lzn = data["params"]["interflow_zone_names"]
-    # c.check_type(
-    #     param=per,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(lzn)],
-    #     keys=["interflow_decay_ts"]
-    # )
-    # c.validate_min_inclusive(per[0], name, 0.0,
-    #                       include_low=True)
-
 def val_recharge_attenuation_params(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
@@ -897,7 +859,6 @@ def validate(params, specs):
     }
     errors = []
     _validate_params(errors, specs, data)
-    _validate_series(errors, specs, data)
     return errors
 
 def _validate_params(errors, specs, data):
@@ -971,10 +932,6 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_nevtopt, "nevtopt")
     do_validation(errors, data, val_interflow_zone_mapping, "interflow_zone_mapping")
     do_validation(errors, data, val_canopy_zone_mapping, "canopy_zone_mapping")
-
-def _validate_series(errors, specs, data):
-    do_validation(errors, data, val_infiltration_limit_ts, "infiltration_limit_ts")
-    do_validation(errors, data, val_interflow_decay_ts, "interflow_decay_ts")
 
 def do_validation(errors, data, function, param):
     params = data["params"]
