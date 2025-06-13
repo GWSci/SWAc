@@ -61,67 +61,6 @@ def val_spatial_output_date(data, name):
     if dat is None or dat != "mean":
         return
 
-def val_subroot_leakage_ts(data, name):
-    tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
-    # sts = data["series"][name]
-    # szn = data["params"]["subroot_zone_names"]
-
-    # c.check_type(
-    #     param=sts,
-    #     name=name,
-    #     t_types=data["specs"][name]["type"],
-    #     len_list=[len(data["series"]["date"]), len(szn)],
-    # )
-
-def val_swdis_ts(data, name):
-    tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
-    # from swacmod.utils import monthdelta, weekdelta
-
-    # swdists = data["series"][name]
-
-    # swdisn = data["params"]["swdis_locs"]
-    # dates = data["series"]["date"]
-
-    # freq_flag = data["params"]["swdis_f"]
-    # ndays = len(dates)
-    # nweeks = weekdelta(dates[0], dates[-1]) + 1
-    # nmonths = monthdelta(dates[0], dates[-1]) + 1
-
-    # length = [ndays, nweeks, nmonths]
-    # if swdisn != {0: 0}:
-    #     c.check_type(
-    #         param=swdists,
-    #         name=name,
-    #         t_types=data["specs"][name]["type"],
-    #         len_list=[length[freq_flag], len(swdisn)],
-    #     )
-
-def val_swabs_ts(data, name):
-    tmp = data["params"][name]
-    # TODO: Validation needs to be done post-finalization
-    # from swacmod.utils import monthdelta, weekdelta
-
-    # swabsts = data["series"][name]
-    # swabsn = data["params"]["swabs_locs"]
-    # dates = data["series"]["date"]
-
-    # freq_flag = data["params"]["swabs_f"]
-    # ndays = len(dates)
-    # nweeks = weekdelta(dates[0], dates[-1]) + 1
-    # nmonths = monthdelta(dates[0], dates[-1]) + 1
-
-    # length = [ndays, nweeks, nmonths]
-
-    # if swabsn != {0: 0}:
-    #     c.check_type(
-    #         param=swabsts,
-    #         name=name,
-    #         t_types=data["specs"][name]["type"],
-    #         len_list=[length[freq_flag], len(swabsn)],
-    #     )
-
 def val_swdis_locs(data, name):
     swdisl = data["params"][name]
     swdisn = data["params"]["swdis_locs"]
@@ -1052,9 +991,6 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_canopy_zone_mapping, "canopy_zone_mapping")
 
 def _validate_series(errors, specs, data):
-    do_validation(errors, data, val_subroot_leakage_ts, "subroot_leakage_ts")
-    do_validation(errors, data, val_swdis_ts, "swdis_ts")
-    do_validation(errors, data, val_swabs_ts, "swabs_ts")
     do_validation(errors, data, val_percolation_rejection_ts, "percolation_rejection_ts")
     do_validation(errors, data, val_infiltration_limit_ts, "infiltration_limit_ts")
     do_validation(errors, data, val_interflow_decay_ts, "interflow_decay_ts")
