@@ -1946,11 +1946,12 @@ def validate(params, specs):
 
     for function in FUNC_PARAMS + FUNC_SERIES:
         param = function.__name__.replace("val_", "")
-        do_validation(data, errors, function, param, params, specs)
+        do_validation(errors, specs, data, function, param)
 
     return errors
 
-def do_validation(data, errors, function, param, params, specs):
+def do_validation(errors, specs, data, function, param):
+    params = data["params"]
     is_param_skipped = (params[param] == None) or is_alt(specs, params, param)
     if not is_param_skipped:
         try:
