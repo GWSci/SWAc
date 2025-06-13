@@ -131,26 +131,26 @@ def val_swdis_ts(data, name):
 def val_swabs_ts(data, name):
     pass
     # TODO: Validation needs to be done post-finalization
-    # from swacmod.utils import monthdelta, weekdelta
+    from swacmod.utils import monthdelta, weekdelta
 
-    # swabsts = data["series"][name]
-    # swabsn = data["params"]["swabs_locs"]
-    # dates = data["series"]["date"]
+    swabsts = data["series"][name]
+    swabsn = data["params"]["swabs_locs"]
+    dates = data["series"]["date"]
 
-    # freq_flag = data["params"]["swabs_f"]
-    # ndays = len(dates)
-    # nweeks = weekdelta(dates[0], dates[-1]) + 1
-    # nmonths = monthdelta(dates[0], dates[-1]) + 1
+    freq_flag = data["params"]["swabs_f"]
+    ndays = len(dates)
+    nweeks = weekdelta(dates[0], dates[-1]) + 1
+    nmonths = monthdelta(dates[0], dates[-1]) + 1
 
-    # length = [ndays, nweeks, nmonths]
+    length = [ndays, nweeks, nmonths]
 
-    # if swabsn != {0: 0}:
-    #     c.check_type(
-    #         param=swabsts,
-    #         name=name,
-    #         t_types=data["specs"][name]["type"],
-    #         len_list=[length[freq_flag], len(swabsn)],
-    #     )
+    if swabsn != {0: 0}:
+        c.check_type(
+            param=swabsts,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            len_list=[length[freq_flag], len(swabsn)],
+        )
 
 def val_swdis_locs(data, name):
     swdisl = data["params"][name]
