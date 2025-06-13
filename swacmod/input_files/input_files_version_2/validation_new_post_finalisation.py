@@ -158,60 +158,6 @@ def val_percolation_rejection_ts(data, name):
     )
     c.validate_min_inclusive(per[0], name, 0.0)
 
-def val_subroot_leakage_fraction(data, name):
-    lea = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    c.check_type(
-        param=lea,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        keys=range(1, tot + 1),
-    )
-
-def val_init_interflow_store(data, name):
-    nda = data["params"][name]
-    tot = len(data["params"]["interflow_zone_names"])
-    c.check_type(
-        param=nda,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        keys=range(1, tot + 1),
-    )
-    c.validate_min_inclusive(nda.values(), name, 0)
-
-def val_interflow_store_bypass(data, name):
-    nda = data["params"][name]
-    tot = len(data["params"]["interflow_zone_names"])
-    c.check_type(
-        param=nda,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        keys=range(1, tot + 1),
-    )
-    c.validate_min_inclusive(nda.values(), name, 0)
-
-def val_infiltration_limit(data, name):
-    nda = data["params"][name]
-    tot = len(data["params"]["interflow_zone_names"])
-    c.check_type(
-        param=nda,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        keys=range(1, tot + 1),
-    )
-    c.validate_min_inclusive(nda.values(), name, 0)
-
-def val_interflow_decay(data, name):
-    nda = data["params"][name]
-    tot = len(data["params"]["interflow_zone_names"])
-    c.check_type(
-        param=nda,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        keys=range(1, tot + 1),
-    )
-    c.validate_min_inclusive(nda.values(), name, 0)
-
 def val_infiltration_limit_ts(data, name):
     if data["params"]["interflow_process"] == "disabled":
         return
@@ -440,11 +386,6 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_recharge_node_mapping, "recharge_node_mapping")
     # do_validation(errors, data, val_taw, "taw")
     # do_validation(errors, data, val_raw, "raw")
-    do_validation(errors, data, val_subroot_leakage_fraction, "subroot_leakage_fraction")
-    do_validation(errors, data, val_init_interflow_store, "init_interflow_store")
-    do_validation(errors, data, val_interflow_store_bypass, "interflow_store_bypass")
-    do_validation(errors, data, val_infiltration_limit, "infiltration_limit")
-    do_validation(errors, data, val_interflow_decay, "interflow_decay")
     do_validation(errors, data, val_recharge_attenuation_params, "recharge_attenuation_params")
     do_validation(errors, data, val_sw_init_ponding, "sw_init_ponding")
     do_validation(errors, data, val_sw_max_ponding, "sw_max_ponding")
