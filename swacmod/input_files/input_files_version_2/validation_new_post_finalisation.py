@@ -147,7 +147,6 @@ def val_percolation_rejection_ts(data, name):
         return
     if not data["params"]['percolation_rejection_use_timeseries']:
         return
-    # TODO: Validation needs to be done post-finalization
     per = data["series"][name]
     lzn = data["params"]["landuse_zone_names"]
     c.check_type(
