@@ -1852,13 +1852,9 @@ def validate(params, specs):
         "params": params,
         "specs": specs
     }
-
     errors = []
-
     _validate_params(errors, specs, data)
-
     _validate_series(errors, specs, data)
-
     return errors
 
 def _validate_params(errors, specs, data):
