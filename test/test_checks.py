@@ -20,6 +20,10 @@ class MyTestCase(unittest.TestCase):
         self.assert_validate_keys_fails({"a":1,}, [dict], ["a", "b"])
         self.assert_validate_keys_fails({"b":1,}, [dict], ["a", "b"])
 
+    def test_validating_keys_when_extra_key(self):
+        self.assert_validate_keys_passes({"a":1, "b":2}, [dict], ["a"])
+        # self.assert_validate_keys_fails({"a":1,}, [dict], ["a", "b"])
+
     def assert_validate_keys_passes(self, param, t_types, keys):
         checks.check_type(param=param, name="cat", t_types=t_types, len_list=None, keys=keys)
 
