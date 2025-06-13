@@ -1843,27 +1843,6 @@ def val_nevtopt(data, name):
     )
 
 FUNC_PARAMS = [
-    val_macropore_activation,
-    val_macropore_recharge,
-    val_soil_static_params,
-    val_smd,
-    val_soil_spatial,
-    val_lu_spatial,
-    val_zr,
-    val_kc,
-    val_taw,
-    val_raw,
-    val_percolation_rejection,
-    val_subroot_leakage_fraction,
-    val_init_interflow_store,
-    val_interflow_store_bypass,
-    val_infiltration_limit,
-    val_interflow_decay,
-    val_recharge_attenuation_params,
-    val_sw_init_ponding,
-    val_sw_max_ponding,
-    val_sw_downstream,
-    val_sw_activation,
     val_sw_bed_infiltration,
     val_sw_direct_recharge,
     val_sw_pe_to_open_water,
@@ -1944,6 +1923,27 @@ def validate(params, specs):
     do_validation(errors, specs, data, val_macropore_process, "macropore_process")
     do_validation(errors, specs, data, val_macropore_proportion, "macropore_proportion")
     do_validation(errors, specs, data, val_macropore_limit, "macropore_limit")
+    do_validation(errors, specs, data, val_macropore_activation, "macropore_activation")
+    do_validation(errors, specs, data, val_macropore_recharge, "macropore_recharge")
+    do_validation(errors, specs, data, val_soil_static_params, "soil_static_params")
+    do_validation(errors, specs, data, val_smd, "smd")
+    do_validation(errors, specs, data, val_soil_spatial, "soil_spatial")
+    do_validation(errors, specs, data, val_lu_spatial, "lu_spatial")
+    do_validation(errors, specs, data, val_zr, "zr")
+    do_validation(errors, specs, data, val_kc, "kc")
+    do_validation(errors, specs, data, val_taw, "taw")
+    do_validation(errors, specs, data, val_raw, "raw")
+    do_validation(errors, specs, data, val_percolation_rejection, "percolation_rejection")
+    do_validation(errors, specs, data, val_subroot_leakage_fraction, "subroot_leakage_fraction")
+    do_validation(errors, specs, data, val_init_interflow_store, "init_interflow_store")
+    do_validation(errors, specs, data, val_interflow_store_bypass, "interflow_store_bypass")
+    do_validation(errors, specs, data, val_infiltration_limit, "infiltration_limit")
+    do_validation(errors, specs, data, val_interflow_decay, "interflow_decay")
+    do_validation(errors, specs, data, val_recharge_attenuation_params, "recharge_attenuation_params")
+    do_validation(errors, specs, data, val_sw_init_ponding, "sw_init_ponding")
+    do_validation(errors, specs, data, val_sw_max_ponding, "sw_max_ponding")
+    do_validation(errors, specs, data, val_sw_downstream, "sw_downstream")
+    do_validation(errors, specs, data, val_sw_activation, "sw_activation")
 
     for function in FUNC_PARAMS + FUNC_SERIES:
         param = function.__name__.replace("val_", "")
