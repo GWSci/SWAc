@@ -669,15 +669,8 @@ def val_soil_static_params(data, name):
     )
 
 def val_smd(data, name):
-    """Validate smd.
-
-    1) type has to be a dictionary of lists of floats
-    2) values have to be lists with length equal to the number of zones
-    3) dictionary needs 1 key: starting_SMD
-    """
     smd = data["params"][name]
     szn = data["params"]["soil_zone_names"]
-
     c.check_type(
         param=smd,
         name=name,
@@ -687,17 +680,9 @@ def val_smd(data, name):
     )
 
 def val_soil_spatial(data, name):
-    """Validate soil_spatial.
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    3) values have to be lists with length equal to the number of zones
-    4) the sum of each row has to be 1.0
-    """
     sos = data["params"][name]
     soz = data["params"]["soil_zone_names"]
     tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=sos,
         name=name,
@@ -705,26 +690,16 @@ def val_soil_spatial(data, name):
         keys=range(1, tot + 1),
         len_list=[len(soz)],
     )
-
     if not all(sum(i) == 1.0 for i in sos.values()):
         msg = 'Parameter "%s" requires the sum of its values to be 1.0'
         raise u.ValidationError(msg % name)
 
 def val_lu_spatial(data, name):
-    """Validate lu_spatial.
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    3) values have to be lists with length equal to the number of zones
-    4) the sum of each row has to be 1.0
-    """
     if data["params"]["fao_process"] == "disabled":
         return
-
     lus = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
     tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=lus,
         name=name,
@@ -732,28 +707,19 @@ def val_lu_spatial(data, name):
         keys=range(1, tot + 1),
         len_list=[len(lzn.values())],
     )
-
     if not all(abs(1 - sum(i)) < 1e-5 for i in lus.values()):
         msg = ('Parameter "%s" requires the sum of its values '
                'to be 1.0 within a tolerance of 1e-5')
         raise u.ValidationError(msg % name)
 
 def val_zr(data, name):
-    """Validate ZR.
-
-    1) type has to be a dict of lists of floats
-    2) dictionary needs to have integer keys, from 1 to 12
-    3) lists need to have length equal to the number of zones
-    """
     if (
         data["params"]["fao_process"] == "disabled"
         or data["params"]["fao_input"] == "l"
     ):
         return
-
     zrn = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-
     c.check_type(
         param=zrn,
         name=name,
@@ -763,18 +729,10 @@ def val_zr(data, name):
     )
 
 def val_kc(data, name):
-    """Validate KC.
-
-    1) type has to be a dict of lists of floats
-    2) dictionary needs to have integer keys, from 1 to 12
-    3) lists need to have length equal to the number of zones
-    """
     if data["params"]["fao_process"] == "disabled":
         return
-
     kcn = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-
     c.check_type(
         param=kcn,
         name=name,
@@ -784,12 +742,6 @@ def val_kc(data, name):
     )
 
 def val_taw(data, name):
-    """Validate TAW.
-
-    1) type has to be a dict of lists of floats
-    2) dictionary needs to have integer keys, from 1 to 12
-    3) lists need to have length equal to the number of months
-    """
     if data["params"]["fao_process"] == "disabled":
         return
 
@@ -805,12 +757,6 @@ def val_taw(data, name):
     )
 
 def val_raw(data, name):
-    """Validate RAW.
-
-    1) type has to be a dict of lists of floats
-    2) dictionary needs to have integer keys, from 1 to 12
-    3) lists need to have length equal to the number of zones
-    """
     if data["params"]["fao_process"] == "disabled":
         return
 
@@ -826,13 +772,6 @@ def val_raw(data, name):
     )
 
 def val_percolation_rejection(data, name):
-    """Validate percolation_rejection.
-
-    1) type has to be a dictionary of lists of floats
-    2) values have to be lists with length equal to the number of zones
-    3) dictionary needs 1 key: percolation_rejection
-    4) value should be >= 0.0
-    """
     if data["params"]["fao_process"] == "disabled":
         return
 
@@ -847,20 +786,12 @@ def val_percolation_rejection(data, name):
         keys=["percolation_rejection"],
     )
     c.validate_min_inclusive(list(per.values())[0], name, 0.0)
-def val_percolation_rejection_ts(data, name):
-    """Validate percolation_rejection_ts.
 
-    1) type has to be a dictionary of lists of floats
-    2) values have to be lists with length equal to the number of zones
-    3) dictionary needs 1 key: percolation_rejection
-    4) value should be >= 0.0
-    """
+def val_percolation_rejection_ts(data, name):
     if data["params"]["fao_process"] == "disabled":
         return
-
     if not data["params"]['percolation_rejection_use_timeseries']:
         return
-
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # per = data["series"][name]
@@ -875,14 +806,8 @@ def val_percolation_rejection_ts(data, name):
     # c.validate_min_inclusive(per[0], name=name, 0.0)
 
 def val_subroot_leakage_fraction(data, name):
-    """Validate subroot_leakage_fraction.
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    """
     lea = data["params"][name]
     tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=lea,
         name=name,
@@ -891,95 +816,54 @@ def val_subroot_leakage_fraction(data, name):
     )
 
 def val_init_interflow_store(data, name):
-    """init_interflow_store.
-
-    1) type has to be a dict of floats
-    2) all interflow zones to be present
-    3) values have to be >= 0.
-    """
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-
     c.check_type(
         param=nda,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(nda.values(), name, 0)
 
 def val_interflow_store_bypass(data, name):
-    """interflow_store_bypass.
-
-    1) type has to be a dict of floats
-    2) all interflow zones to be present
-    3) values have to be >= 0.
-    """
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-
     c.check_type(
         param=nda,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(nda.values(), name, 0)
 
 def val_infiltration_limit(data, name):
-    """infiltration_limit.
-
-    1) type has to be a dict of floats
-    2) all interflow zones to be present
-    3) values have to be >= 0.
-    """
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-
     c.check_type(
         param=nda,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(nda.values(), name, 0)
 
 def val_interflow_decay(data, name):
-    """interflow_decay.
-
-    1) type has to be a dict of floats
-    2) all interflow zones to be present
-    3) values have to be >= 0.
-    """
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-
     c.check_type(
         param=nda,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
     )
-
     c.validate_min_inclusive(nda.values(), name, 0)
 
 def val_infiltration_limit_ts(data, name):
-    """Validate infiltration_limit_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) values have to be lists with length equal to the number of zones
-    3) dictionary needs 1 key: infiltration_limit
-    4) value should be >= 0.0
-    """
     if data["params"]["interflow_process"] == "disabled":
         return
-
     if not data["params"]['infiltration_limit_use_timeseries']:
         return
-
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # per = data["series"][name]
@@ -995,19 +879,10 @@ def val_infiltration_limit_ts(data, name):
     #                       include_low=True)
 
 def val_interflow_decay_ts(data, name):
-    """Validate interflow_decay_ts.
-
-    1) type has to be a dictionary of lists of floats
-    2) values have to be lists with length equal to the number of zones
-    3) dictionary needs 1 key: infiltration_limit
-    4) value should be >= 0.0
-    """
     if data["params"]["interflow_process"] == "disabled":
         return
-
     if not data["params"]['interflow_decay_use_timeseries']:
         return
-
     tmp = data["params"][name]
     # TODO: Validation needs to be done post-finalization
     # per = data["series"][name]
@@ -1023,16 +898,8 @@ def val_interflow_decay_ts(data, name):
     #                       include_low=True)
 
 def val_recharge_attenuation_params(data, name):
-    """Validate recharge_attenuation_params.
-
-    1) type has to be a dictionary of lists of floats
-    2) all node ids have to be present
-    3) values have to be lists with length 3
-    4) the first element of each list has to be 0 <= x <= 1
-    """
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-
     c.check_type(
         param=rpn,
         name=name,
@@ -1040,53 +907,32 @@ def val_recharge_attenuation_params(data, name):
         keys=range(1, tot + 1),
         len_list=[3],
     )
-
     c.validate_min_inclusive([i[1] for i in rpn.values()], "release_proportion in %s" % name, 0.0)
     c.validate_max_inclusive([i[1] for i in rpn.values()], "release_proportion in %s" % name, 1.0)
 
 def val_sw_zone_names(data, name):
-    """Validate sw_zone_names.
-
-    1) type has to be a dictionary of strings
-    """
     if data["params"]['sw_ponding_process'] == "enabled":
         rrn = data["params"][name]
         c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
 
 def val_sw_zone_mapping(data, name):
-    """Validate sw_zone_mapping.
-
-    1) type has to be a dictionary of integers
-    2) all node ids have to be present
-    3) values (i.e. zone ids) have to be 0 <= x <= number of zones
-    """
     if data["params"]['sw_ponding_process'] == "enabled":
         rorzm = data["params"][name]
         tot = data["params"]["num_nodes"]
         rzn = data["params"]["sw_zone_names"]
-
         c.check_type(
             param=rorzm,
             name=name,
             t_types=data["specs"][name]["type"],
             keys=range(1, tot + 1),
         )
-
         c.validate_min_inclusive(rorzm.values(), name, 0)
         c.validate_max_inclusive(rorzm.values(), name, len(rzn))
 
 def val_sw_downstream(data, name):
-    """Validate sw_downstream.
-
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    4) all elements of each list have to be 0 <= x <= 1
-    """
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-
         c.check_type(
             param=rrp,
             name=name,
@@ -1094,22 +940,13 @@ def val_sw_downstream(data, name):
             len_list=[len(rzn)],
             keys=range(1, 13),
         )
-
         c.validate_min_inclusive([j for i in rrp.values() for j in i], name, 0)
         c.validate_max_inclusive([j for i in rrp.values() for j in i], name, 1.0)
 
 def val_sw_bed_infiltration(data, name):
-    """Validate bed_infiltration.
-
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    4) all elements of each list have to be 0 <= x <= 1
-    """
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-
         c.check_type(
             param=rrp,
             name=name,
@@ -1117,22 +954,13 @@ def val_sw_bed_infiltration(data, name):
             len_list=[len(rzn)],
             keys=range(1, 13),
         )
-
         c.validate_min_inclusive([j for i in rrp.values() for j in i], name, 0)
         c.validate_max_inclusive([j for i in rrp.values() for j in i], name, 1.0)
 
 def val_sw_direct_recharge(data, name):
-    """Validate direct_recharge.
-
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires lenght equal to the number of zones
-    4) all elements of each list have to be 0 <= x <= 1
-    """
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-
         c.check_type(
             param=rrp,
             name=name,
@@ -1140,21 +968,13 @@ def val_sw_direct_recharge(data, name):
             len_list=[len(rzn)],
             keys=range(1, 13),
         )
-
         c.validate_min_inclusive([j for i in rrp.values() for j in i], name, 0)
         c.validate_max_inclusive([j for i in rrp.values() for j in i], name, 1.0)
 
 def val_sw_activation(data, name):
-    """Validate sw_activation.
-
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires length equal to the number of zones
-    """
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-
         c.check_type(
             param=rrp,
             name=name,
@@ -1164,16 +984,9 @@ def val_sw_activation(data, name):
         )
 
 def val_sw_pe_to_open_water(data, name):
-    """Validate pe_to_open_water.
-
-    1) type has to be a dict of lists
-    2) the top list requires length 12 (months)
-    3) the bottom list requires length equal to the number of zones
-    """
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-
         c.check_type(
             param=rrp,
             name=name,
@@ -1183,29 +996,16 @@ def val_sw_pe_to_open_water(data, name):
         )
 
 def val_sw_init_ponding(data, name):
-    """Validate nsw_init_ponding.
-
-    1) type has to be a float
-    """
     if data["params"]['sw_ponding_process'] == "enabled":
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
 
 def val_sw_max_ponding(data, name):
-    """Validate sw_max_ponding.
-
-    1) type has to be float
-    """
     if data["params"]['sw_ponding_process'] == "enabled":
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
 
 def val_sw_ponding_area(data, name):
-    """Validate sw_ponding_area.
-
-    1) type has to be float
-    2) value has to be 0.0 < x <= 1.0
-    """
     if data["params"]['sw_ponding_process'] == "enabled":
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
