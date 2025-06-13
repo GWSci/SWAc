@@ -1842,9 +1842,6 @@ def val_nevtopt(data, name):
         values=[x], name=name, constraints=data["specs"][name]["constraints"]
     )
 
-FUNC_SERIES = [
-]
-
 def validate_2(params, specs):
     errors = validate(params, specs)
     warnings = []
@@ -1872,10 +1869,6 @@ def validate(params, specs):
     do_validation(errors, specs, data, val_percolation_rejection_ts, "percolation_rejection_ts")
     do_validation(errors, specs, data, val_infiltration_limit_ts, "infiltration_limit_ts")
     do_validation(errors, specs, data, val_interflow_decay_ts, "interflow_decay_ts")
-
-    for function in FUNC_SERIES:
-        param = function.__name__.replace("val_", "")
-        do_validation(errors, specs, data, function, param)
 
     return errors
 
