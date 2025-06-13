@@ -1474,7 +1474,7 @@ def val_init_interflow_store(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0,
                           include_low=True)
 
 def val_interflow_store_bypass(data, name):
@@ -1494,7 +1494,7 @@ def val_interflow_store_bypass(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0,
                           include_low=True)
 
 def val_infiltration_limit(data, name):
@@ -1514,7 +1514,7 @@ def val_infiltration_limit(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0,
                           include_low=True)
 
 def val_interflow_decay(data, name):
@@ -1534,7 +1534,7 @@ def val_interflow_decay(data, name):
         keys=range(1, tot + 1),
     )
 
-    c.check_values_limits(values=nda.values(), name=name, low_l=0,
+    c.check_values_limits_min_inclusive(values=nda.values(), name=name, low_l=0,
                           include_low=True)
 
 def val_infiltration_limit_ts(data, name):
@@ -1562,7 +1562,7 @@ def val_infiltration_limit_ts(data, name):
     #     len_list=[len(data["series"]["date"]), len(lzn)],
     #     keys=["infiltration_limit_ts"]
     # )
-    # c.check_values_limits(values=per[0], name=name, low_l=0.0,
+    # c.check_values_limits_min_inclusive(values=per[0], name=name, low_l=0.0,
     #                       include_low=True)
 
 def val_interflow_decay_ts(data, name):
@@ -1590,7 +1590,7 @@ def val_interflow_decay_ts(data, name):
     #     len_list=[len(data["series"]["date"]), len(lzn)],
     #     keys=["interflow_decay_ts"]
     # )
-    # c.check_values_limits(values=per[0], name=name, low_l=0.0,
+    # c.check_values_limits_min_inclusive(values=per[0], name=name, low_l=0.0,
     #                       include_low=True)
 
 def val_recharge_attenuation_params(data, name):
@@ -1612,11 +1612,14 @@ def val_recharge_attenuation_params(data, name):
         len_list=[3],
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=[i[1] for i in rpn.values()],
         name="release_proportion in %s" % name,
         low_l=0.0,
-        include_low=True,
+    )
+    c.check_values_limits(
+        values=[i[1] for i in rpn.values()],
+        name="release_proportion in %s" % name,
         high_l=1.0,
         include_high=True,
     )
@@ -1649,11 +1652,14 @@ def val_sw_zone_mapping(data, name):
             keys=range(1, tot + 1),
         )
 
-        c.check_values_limits(
+        c.check_values_limits_min_inclusive(
             values=rorzm.values(),
             name=name,
             low_l=0,
-            include_low=True,
+        )
+        c.check_values_limits(
+            values=rorzm.values(),
+            name=name,
             high_l=len(rzn),
             include_high=True,
         )
@@ -1678,12 +1684,16 @@ def val_sw_downstream(data, name):
             keys=range(1, 13),
         )
 
-        c.check_values_limits(
+        c.check_values_limits_min_inclusive(
             values=[j for i in rrp.values() for j in i],
             name=name,
             low_l=0,
-            high_l=1.0,
             include_low=True,
+        )
+        c.check_values_limits(
+            values=[j for i in rrp.values() for j in i],
+            name=name,
+            high_l=1.0,
             include_high=True,
         )
 
@@ -1707,12 +1717,15 @@ def val_sw_bed_infiltration(data, name):
             keys=range(1, 13),
         )
 
-        c.check_values_limits(
+        c.check_values_limits_min_inclusive(
             values=[j for i in rrp.values() for j in i],
             name=name,
             low_l=0,
+        )
+        c.check_values_limits(
+            values=[j for i in rrp.values() for j in i],
+            name=name,
             high_l=1.0,
-            include_low=True,
             include_high=True,
         )
 
@@ -1736,12 +1749,15 @@ def val_sw_direct_recharge(data, name):
             keys=range(1, 13),
         )
 
-        c.check_values_limits(
+        c.check_values_limits_min_inclusive(
             values=[j for i in rrp.values() for j in i],
             name=name,
             low_l=0,
+        )
+        c.check_values_limits(
+            values=[j for i in rrp.values() for j in i],
+            name=name,
             high_l=1.0,
-            include_low=True,
             include_high=True,
         )
 
@@ -1838,11 +1854,14 @@ def val_sw_params(data, name):
         len_list=[2],
     )
 
-    c.check_values_limits(
+    c.check_values_limits_min_inclusive(
         values=[i[1] for i in rpn.values()],
         name="release_proportion in %s" % name,
         low_l=0.0,
-        include_low=True,
+    )
+    c.check_values_limits(
+        values=[i[1] for i in rpn.values()],
+        name="release_proportion in %s" % name,
         high_l=1.0,
         include_high=True,
     )
