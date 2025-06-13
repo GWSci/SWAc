@@ -1174,24 +1174,10 @@ def _validate_series(errors, specs, data):
 
 def do_validation(errors, data, function, param):
     params = data["params"]
-    specs = data["specs"]
-    is_param_skipped = (params[param] == None) or is_alt(specs, params, param)
+    is_param_skipped = (params[param] == None)
     if not is_param_skipped:
         try:
             function(data, param)
         except u.ValidationError as err:
             errors.append(err.args[0])
         logging.debug('\t\t"%s" validated', param)
-
-def is_alt(specs, params, param):
-    value = params[param]
-
-    if not isinstance(value, str):
-        return False
-
-    alt_formats = specs[param].get("alt_format", [])
-    for alt in alt_formats:
-        suffix = f".{alt}"
-        if value.endswith(suffix):
-            return True
-    return False
