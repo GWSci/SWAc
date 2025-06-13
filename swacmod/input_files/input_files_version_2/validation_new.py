@@ -321,20 +321,29 @@ def val_swdis_locs(data, name):
             keys=range(1, tot)
         )
 
-        c.check_values_limits(
+        c.check_values_limits_min_inclusive(
             values=swdisl.values(),
             name="zone in %s" % name,
             low_l=1,
             include_low=True,
+        )
+        c.check_values_limits(
+            values=swdisl.values(),
+            name="zone in %s" % name,
             high_l=tot,
             include_high=True,
+        )
+
+        c.check_values_limits_min_inclusive(
+            values=swdisl.keys(),
+            name="node in %s" % name,
+            low_l=1,
+            include_low=True,
         )
 
         c.check_values_limits(
             values=swdisl.keys(),
             name="node in %s" % name,
-            low_l=1,
-            include_low=True,
             high_l=data["params"]["num_nodes"],
             include_high=True,
         )
