@@ -92,11 +92,8 @@ def val_windsp_ts(data, name):
     )
 
 def val_subroot_leakage_ts(data, name):
-    pass
-    # TODO: Validation needs to be done post-finalization
     sts = data["series"][name]
     szn = data["params"]["subroot_zone_names"]
-
     c.check_type(
         param=sts,
         name=name,
@@ -105,10 +102,7 @@ def val_subroot_leakage_ts(data, name):
     )
 
 def val_swdis_ts(data, name):
-    pass
-    # TODO: Validation needs to be done post-finalization
     from swacmod.utils import monthdelta, weekdelta
-
     swdists = data["series"][name]
 
     swdisn = data["params"]["swdis_locs"]
@@ -129,8 +123,6 @@ def val_swdis_ts(data, name):
         )
 
 def val_swabs_ts(data, name):
-    pass
-    # TODO: Validation needs to be done post-finalization
     from swacmod.utils import monthdelta, weekdelta
 
     swabsts = data["series"][name]
