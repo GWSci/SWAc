@@ -13,12 +13,7 @@ from swacmod.input_files.parsed_input_data import ParsedInputData
 
 def val_num_cores(data, name):
     c.validate_min_exclusive([data["params"][name]], name, 0)
-    c.validate_max_inclusive(
-        values=[data["params"][name]],
-        name=name,
-        high_l=multiprocessing.cpu_count(),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=[data["params"][name]], name=name, high_l=multiprocessing.cpu_count())
 
 def val_num_nodes(data, name):
     c.validate_min_exclusive([data["params"][name]], name, 0)
@@ -322,21 +317,11 @@ def val_swdis_locs(data, name):
         )
 
         c.validate_min_inclusive(values=swdisl.values(), name="zone in %s" % name, low_l=1)
-        c.validate_max_inclusive(
-            values=swdisl.values(),
-            name="zone in %s" % name,
-            high_l=tot,
-            include_high=True,
-        )
+        c.validate_max_inclusive(values=swdisl.values(), name="zone in %s" % name, high_l=tot)
 
         c.validate_min_inclusive(values=swdisl.keys(), name="node in %s" % name, low_l=1)
 
-        c.validate_max_inclusive(
-            values=swdisl.keys(),
-            name="node in %s" % name,
-            high_l=data["params"]["num_nodes"],
-            include_high=True,
-        )
+        c.validate_max_inclusive(values=swdisl.keys(), name="node in %s" % name, high_l=data["params"]["num_nodes"])
 
 def val_swabs_locs(data, name):
     """Validate swabs_locs.
@@ -359,21 +344,11 @@ def val_swabs_locs(data, name):
 
         c.validate_min_inclusive(values=swabsl.values(), name="zone in %s" % name, low_l=1)
 
-        c.validate_max_inclusive(
-            values=swabsl.values(),
-            name="zone in %s" % name,
-            high_l=tot,
-            include_high=True,
-        )
+        c.validate_max_inclusive(values=swabsl.values(), name="zone in %s" % name, high_l=tot)
 
         c.validate_min_inclusive(values=swabsl.keys(), name="node in %s" % name, low_l=1)
 
-        c.validate_max_inclusive(
-            values=swabsl.keys(),
-            name="node in %s" % name,
-            high_l=data["params"]["num_nodes"],
-            include_high=True,
-        )
+        c.validate_max_inclusive(values=swabsl.keys(), name="node in %s" % name, high_l=data["params"]["num_nodes"])
 
 def val_node_areas(data, name):
     c.check_type(
@@ -401,12 +376,7 @@ def val_reporting_zone_mapping(data, name):
 
     c.validate_min_inclusive(values=rzm.values(), name="zone in %s" % name, low_l=0)
 
-    c.validate_max_inclusive(
-        values=rzm.values(),
-        name="zone in %s" % name,
-        high_l=len(rzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=rzm.values(), name="zone in %s" % name, high_l=len(rzn))
 
 def val_rainfall_zone_mapping(data, name):
     tot_name = "num_nodes"
@@ -423,12 +393,7 @@ def val_rainfall_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=[i[0] for i in rzm.values()], name="zone in %s" % name, low_l=1)
-    c.validate_max_inclusive(
-        values=[i[0] for i in rzm.values()],
-        name="zone in %s" % name,
-        high_l=len(rzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=[i[0] for i in rzm.values()], name="zone in %s" % name, high_l=len(rzn))
 
 def val_pe_zone_mapping(data, name):
     """Validate pe_zone_mapping.
@@ -449,12 +414,7 @@ def val_pe_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=[i[0] for i in pzm.values()], name="zone in %s" % name, low_l=0)
-    c.validate_max_inclusive(
-        values=[i[0] for i in pzm.values()],
-        name="zone in %s" % name,
-        high_l=len(pzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=[i[0] for i in pzm.values()], name="zone in %s" % name, high_l=len(pzn))
 
 def val_tmax_c_zone_mapping(data, name):
     """Validate tmax_c_zone_mapping.
@@ -475,12 +435,7 @@ def val_tmax_c_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=tzm.values(), name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=tzm.values(),
-        name=name,
-        high_l=len(tzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=tzm.values(), name=name, high_l=len(tzn))
 
 def val_tmin_c_zone_mapping(data, name):
     """Validate tmin_c_zone_mapping.
@@ -501,12 +456,7 @@ def val_tmin_c_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=tzm.values(), name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=tzm.values(),
-        name=name,
-        high_l=len(tzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=tzm.values(), name=name, high_l=len(tzn))
 
 def val_windsp_zone_mapping(data, name):
     """Validate windsp_zone_mapping.
@@ -527,12 +477,7 @@ def val_windsp_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=tzm.values(), name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=tzm.values(),
-        name=name,
-        high_l=len(tzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=tzm.values(), name=name, high_l=len(tzn))
 
 def val_temperature_zone_mapping(data, name):
     """Validate temperature_zone_mapping.
@@ -553,12 +498,7 @@ def val_temperature_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=tzm.values(), name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=tzm.values(),
-        name=name,
-        high_l=len(tzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=tzm.values(), name=name, high_l=len(tzn))
 
 def val_subroot_zone_mapping(data, name):
     """Validate subroot_zone_mapping.
@@ -579,12 +519,7 @@ def val_subroot_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=[i[0] for i in szm.values()], name="zone in %s" % name, low_l=0)
-    c.validate_max_inclusive(
-        values=[i[0] for i in szm.values()],
-        name="zone in %s" % name,
-        high_l=len(szn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=[i[0] for i in szm.values()], name="zone in %s" % name, high_l=len(szn))
 
 def val_rapid_runoff_zone_mapping(data, name):
     """Validate rapid_runoff_zone_mapping.
@@ -605,12 +540,7 @@ def val_rapid_runoff_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=rrzm.values(), name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=rrzm.values(),
-        name=name,
-        high_l=len(rzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=rrzm.values(), name=name, high_l=len(rzn))
 
 def val_interflow_zone_mapping(data, name):
     """Validate interflow_zone_mapping.
@@ -631,12 +561,7 @@ def val_interflow_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=rrzm.values(), name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=rrzm.values(),
-        name=name,
-        high_l=len(rzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=rrzm.values(), name=name, high_l=len(rzn))
 
 def val_swrecharge_zone_mapping(data, name):
     """Validate swrecharge_zone_mapping.
@@ -657,12 +582,7 @@ def val_swrecharge_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=rorzm.values(), name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=rorzm.values(),
-        name=name,
-        high_l=len(rzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=rorzm.values(), name=name, high_l=len(rzn))
 
 def val_single_cell_swrecharge_zone_mapping(data, name):
     """Validate single_cell_swrecharge_zone_mapping.
@@ -680,10 +600,7 @@ def val_single_cell_swrecharge_zone_mapping(data, name):
                  keys=range(1, tot + 1))
 
     c.validate_min_inclusive(values=rorzm.values(), name=name, low_l=0)
-    c.validate_max_inclusive(values=rorzm.values(),
-                          name=name,
-                          high_l=len(rzn),
-                          include_high=True)
+    c.validate_max_inclusive(values=rorzm.values(), name=name, high_l=len(rzn))
 
 def val_macropore_zone_mapping(data, name):
     """Validate macropore_zone_mapping.
@@ -704,12 +621,7 @@ def val_macropore_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=mzm.values(), name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=mzm.values(),
-        name=name,
-        high_l=len(mzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=mzm.values(), name=name, high_l=len(mzn))
 
 def val_macropore_activation_option(data, name):
     """macropore_activation_option.
@@ -740,12 +652,7 @@ def val_canopy_zone_mapping(data, name):
     )
 
     c.validate_min_inclusive(values=rrzm.values(), name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=rrzm.values(),
-        name=name,
-        high_l=len(rzn),
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=rrzm.values(), name=name, high_l=len(rzn))
 
 def val_free_throughfall(data, name):
     """Validate free_throughfall.
@@ -765,12 +672,7 @@ def val_free_throughfall(data, name):
     )
 
     c.validate_min_inclusive(values=fth.values(), name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=fth.values(),
-        name=name,
-        high_l=1.0,
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=fth.values(), name=name, high_l=1.0)
 
 def val_max_canopy_storage(data, name):
     """Validate max_canopy_storage.
@@ -869,12 +771,7 @@ def val_rapid_runoff_params(data, name):
         )
 
         c.validate_min_inclusive(values=[i for j in zone["values"] for i in j], name='"values" in "%s"' % name, low_l=0)
-        c.validate_max_inclusive(
-            values=[i for j in zone["values"] for i in j],
-            name='"values" in "%s"' % name,
-            high_l=1,
-            include_high=True,
-        )
+        c.validate_max_inclusive(values=[i for j in zone["values"] for i in j], name='"values" in "%s"' % name, high_l=1)
 
 def val_rorecharge_process(data, name):
     rop = data['params'][name]
@@ -900,10 +797,7 @@ def val_single_cell_swrecharge_proportion(data, name):
                  keys=range(1, 13))
 
     c.validate_min_inclusive(values=[j for i in rrp.values() for j in i], name=name, low_l=0)
-    c.validate_max_inclusive(values=[j for i in rrp.values() for j in i],
-                          name=name,
-                          high_l=1.0,
-                          include_high=True)
+    c.validate_max_inclusive(values=[j for i in rrp.values() for j in i], name=name, high_l=1.0)
 
 def val_single_cell_swrecharge_limit(data, name):
     """Validate single_cell_swrecharge_limit.
@@ -962,12 +856,7 @@ def val_swrecharge_proportion(data, name):
     )
 
     c.validate_min_inclusive(values=[j for i in rrp.values() for j in i], name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=[j for i in rrp.values() for j in i],
-        name=name,
-        high_l=1.0,
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=[j for i in rrp.values() for j in i], name=name, high_l=1.0)
 
 def val_swrecharge_limit(data, name):
     """Validate swrecharge_limit.
@@ -1014,12 +903,7 @@ def val_macropore_proportion(data, name):
     )
 
     c.validate_min_inclusive(values=[j for i in mpp.values() for j in i], name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=[j for i in mpp.values() for j in i],
-        name=name,
-        high_l=1.0,
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=[j for i in mpp.values() for j in i], name=name, high_l=1.0)
 
 def val_macropore_limit(data, name):
     """Validate macropore_limit.
@@ -1077,12 +961,7 @@ def val_macropore_recharge(data, name):
     )
 
     c.validate_min_inclusive(values=[j for i in mpr.values() for j in i], name=name, low_l=0)
-    c.validate_max_inclusive(
-        values=[j for i in mpr.values() for j in i],
-        name=name,
-        high_l=1.0,
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=[j for i in mpr.values() for j in i], name=name, high_l=1.0)
 
 def val_soil_static_params(data, name):
     """Validate soil_static_params.
@@ -1482,12 +1361,7 @@ def val_recharge_attenuation_params(data, name):
     )
 
     c.validate_min_inclusive(values=[i[1] for i in rpn.values()], name="release_proportion in %s" % name, low_l=0.0)
-    c.validate_max_inclusive(
-        values=[i[1] for i in rpn.values()],
-        name="release_proportion in %s" % name,
-        high_l=1.0,
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=[i[1] for i in rpn.values()], name="release_proportion in %s" % name, high_l=1.0)
 
 def val_sw_zone_names(data, name):
     """Validate sw_zone_names.
@@ -1518,12 +1392,7 @@ def val_sw_zone_mapping(data, name):
         )
 
         c.validate_min_inclusive(values=rorzm.values(), name=name, low_l=0)
-        c.validate_max_inclusive(
-            values=rorzm.values(),
-            name=name,
-            high_l=len(rzn),
-            include_high=True,
-        )
+        c.validate_max_inclusive(values=rorzm.values(), name=name, high_l=len(rzn))
 
 def val_sw_downstream(data, name):
     """Validate sw_downstream.
@@ -1546,12 +1415,7 @@ def val_sw_downstream(data, name):
         )
 
         c.validate_min_inclusive(values=[j for i in rrp.values() for j in i], name=name, low_l=0)
-        c.validate_max_inclusive(
-            values=[j for i in rrp.values() for j in i],
-            name=name,
-            high_l=1.0,
-            include_high=True,
-        )
+        c.validate_max_inclusive(values=[j for i in rrp.values() for j in i], name=name, high_l=1.0)
 
 def val_sw_bed_infiltration(data, name):
     """Validate bed_infiltration.
@@ -1574,12 +1438,7 @@ def val_sw_bed_infiltration(data, name):
         )
 
         c.validate_min_inclusive(values=[j for i in rrp.values() for j in i], name=name, low_l=0)
-        c.validate_max_inclusive(
-            values=[j for i in rrp.values() for j in i],
-            name=name,
-            high_l=1.0,
-            include_high=True,
-        )
+        c.validate_max_inclusive(values=[j for i in rrp.values() for j in i], name=name, high_l=1.0)
 
 def val_sw_direct_recharge(data, name):
     """Validate direct_recharge.
@@ -1602,12 +1461,7 @@ def val_sw_direct_recharge(data, name):
         )
 
         c.validate_min_inclusive(values=[j for i in rrp.values() for j in i], name=name, low_l=0)
-        c.validate_max_inclusive(
-            values=[j for i in rrp.values() for j in i],
-            name=name,
-            high_l=1.0,
-            include_high=True,
-        )
+        c.validate_max_inclusive(values=[j for i in rrp.values() for j in i], name=name, high_l=1.0)
 
 def val_sw_activation(data, name):
     """Validate sw_activation.
@@ -1675,12 +1529,7 @@ def val_sw_ponding_area(data, name):
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
         values = [i for i in num.values()]
-        c.validate_max_inclusive(
-            values=values,
-            name=name,
-            high_l=1.0,
-            include_high=True,
-        )
+        c.validate_max_inclusive(values=values, name=name, high_l=1.0)
         c.validate_min_exclusive(values, name, 0)
 
 def val_sw_params(data, name):
@@ -1703,12 +1552,7 @@ def val_sw_params(data, name):
     )
 
     c.validate_min_inclusive(values=[i[1] for i in rpn.values()], name="release_proportion in %s" % name, low_l=0.0)
-    c.validate_max_inclusive(
-        values=[i[1] for i in rpn.values()],
-        name="release_proportion in %s" % name,
-        high_l=1.0,
-        include_high=True,
-    )
+    c.validate_max_inclusive(values=[i[1] for i in rpn.values()], name="release_proportion in %s" % name, high_l=1.0)
 
 def val_routing_topology(data, name):
     """Validate routing .
