@@ -11,6 +11,9 @@ class MyTestCase(unittest.TestCase):
         self.assert_validate_keys_passes({}, [dict], None)
         self.assert_validate_keys_passes({"a":1}, [dict], [])
 
+    def test_validating_keys_when_keys_matches_exactly(self):
+        self.assert_validate_keys_passes({"a":1}, [dict], ["a"])
+
     def assert_validate_keys_passes(self, param, t_types, keys):
         checks.check_type(param=param, name="cat", t_types=t_types, len_list=None, keys=keys)
 
