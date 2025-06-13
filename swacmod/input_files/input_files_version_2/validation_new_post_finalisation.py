@@ -23,14 +23,13 @@ def val_time_periods(data, name):
     """
     tmp = data["params"][name]
 
-    # TODO: Validation needs to be done post-finalization
-    # c.check_values_limits(
-    #     values=[i for j in tmp for i in j],
-    #     name=name,
-    #     low_l=0,
-    #     high_l=len(data["series"]["date"]) + 1,
-    #     include_high=True,
-    # )
+    c.check_values_limits(
+        values=[i for j in tmp for i in j],
+        name=name,
+        low_l=0,
+        high_l=len(data["series"]["date"]) + 1,
+        include_high=True,
+    )
 
     # TODO Block duplicated from pre-finalisation validations
     all_days = []
@@ -48,13 +47,12 @@ def val_time_periods(data, name):
         all_days += range(time_range[0], time_range[1])
     # TODO end of block from pre-finalisation validations
 
-    # TODO: Validation needs to be done post-finalization
-    # if set(all_days) != set(range(1, len(data["series"]["date"]) + 1)):
-    #     msg = (
-    #         'Parameter "%s" requires all days to be included'
-    #         " in one (and only one) of the periods"
-    #     )
-    #     raise u.ValidationError(msg % name)
+    if set(all_days) != set(range(1, len(data["series"]["date"]) + 1)):
+        msg = (
+            'Parameter "%s" requires all days to be included'
+            " in one (and only one) of the periods"
+        )
+        raise u.ValidationError(msg % name)
 
 def val_output_individual(data, name):
     oin = data["params"][name]
