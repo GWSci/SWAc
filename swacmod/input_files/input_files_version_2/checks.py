@@ -1,33 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""SWAcMod check functions."""
-
-# Standard Library
-import datetime
-
-# Third Party Libraries
 import numpy as np
-
-# Internal modules
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 
-basestring = str # TODO str should be inlined, but only when the surrounding code can be tested.
-
-MAPPING = {
-    (int, int): ["an integer", "integers"],
-    (float, int, int): ["a number", "numbers"],
-    str: ["a string", "strings"],
-    dict: ["a dictionary", "dictionaries"],
-    (list, np.ndarray): ["a list", "lists"],
-    set: ["a set", "sets"],
-    basestring: ["a string", "strings"],
-    datetime.datetime: ["a datetime", "datetimes"],
-    np.ndarray: ["a numpy array", "numpy arrays"],
-}
-
 def expand_t_type(t_type):
-    """Expand t_type to all allowed types."""
     if t_type == float:
         t_type = (float, int, int)
     elif t_type == int:
