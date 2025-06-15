@@ -170,6 +170,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_validating_list_length_and_keys_together_when_things_differ(self):
         self.assert_validate_list_length_and_keys_fails([{"a":1}, {"a":1}], [list, dict], [3], ["a"])
+        self.assert_validate_list_length_and_keys_fails([{"a":1}, {"b":1}], [list, dict], [2], ["a"])
 
     def assert_validate_list_length_and_keys_passes(self, param, t_types, list_lengths, keys):
         _validate_list_length_and_keys_adaptor(param, t_types, list_lengths, keys)
