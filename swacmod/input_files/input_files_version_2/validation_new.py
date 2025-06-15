@@ -669,7 +669,7 @@ def val_interflow_decay(data, name):
 def val_recharge_attenuation_params(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=rpn,
         name=name,
         t_types=data["specs"][name]["type"],
