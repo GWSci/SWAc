@@ -2430,8 +2430,8 @@ FUNC_PARAMS = [
     val_sw_pe_to_open_water,
     val_sw_process,
     val_sw_params,
-    val_swdis_locs,
-    val_swabs_locs,
+    # val_swdis_locs, # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
+    # val_swabs_locs, # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
     val_output_sfr,
     val_sfr_obs,
     val_istcb1,

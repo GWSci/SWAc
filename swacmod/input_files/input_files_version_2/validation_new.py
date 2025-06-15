@@ -58,10 +58,11 @@ def val_swdis_locs(data, name):
     tot = len(data["params"]["swdis_locs"]) + 1
 
     if swdisn != {0: 0}:
-        c.check_type(
-            param=swdisl, name=name, t_types=data["specs"][name]["type"],
-            keys=range(1, tot)
-        )
+        # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
+        # c.check_type(
+        #     param=swdisl, name=name, t_types=data["specs"][name]["type"],
+        #     keys=range(1, tot)
+        # )
         c.validate_min_inclusive(swdisl.values(), "zone in %s" % name, 1)
         c.validate_max_inclusive(swdisl.values(), "zone in %s" % name, tot)
         c.validate_min_inclusive(swdisl.keys(), "node in %s" % name, 1)
@@ -72,10 +73,11 @@ def val_swabs_locs(data, name):
     swabsn = data["params"]["swabs_locs"]
     if swabsn != {0: 0}:
         tot = len(data["params"]["swabs_locs"]) + 1
-        c.check_type(
-            param=swabsl, name=name, t_types=data["specs"][name]["type"],
-            keys=range(1, tot)
-        )
+        # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
+        # c.check_type(
+        #     param=swabsl, name=name, t_types=data["specs"][name]["type"],
+        #     keys=range(1, tot)
+        # )
         c.validate_min_inclusive(swabsl.values(), "zone in %s" % name, 1)
         c.validate_max_inclusive(swabsl.values(), "zone in %s" % name, tot)
         c.validate_min_inclusive(swabsl.keys(), "node in %s" % name, 1)
