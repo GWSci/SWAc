@@ -51,9 +51,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         next_len_list = len_list
 
     if t_type == expanded_list and new_len:
-        if len(param) != new_len:
-            msg = 'Parameter "%s" has to be a list of length %d, found %d'
-            raise u.ValidationError(msg % (name, new_len, len(param)))
+        _validate_list_length(param, name, new_len)
 
     if t_type == dict and (type(param) == dict) and keys:
         set_keys = set(keys)
@@ -71,6 +69,11 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
             check_type(param=value, name=name, t_types=t_types[1:], len_list=next_len_list, keys=keys)
     else:
         check_type(param=param, name=name, t_types=t_types[1:], len_list=len_list, keys=keys)
+
+def _validate_list_length(param, name, new_len):
+    if len(param) != new_len:
+        msg = 'Parameter "%s" has to be a list of length %d, found %d'
+        raise u.ValidationError(msg % (name, new_len, len(param)))
 
 def check_values_limits(
     values,
