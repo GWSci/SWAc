@@ -46,8 +46,8 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
 
     new_len = None
     if t_type == expanded_list and len_list:
-        new_len = len_list.pop(0)
-        next_len_list = len_list
+        new_len = len_list[0]
+        next_len_list = len_list[1:]
     else:
         next_len_list = len_list
 
