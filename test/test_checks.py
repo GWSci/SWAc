@@ -71,6 +71,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_list_length_when_len_list_length_differs(self):
         self.assert_validate_list_length_fails([], [list], [1])
+        self.assert_validate_list_length_fails(["a", "b"], [list], [1])
 
     def assert_validate_list_length_passes(self, param, t_types, list_lengths):
         _validate_list_length_adaptor(param, t_types, list_lengths)
