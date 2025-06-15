@@ -575,12 +575,17 @@ def val_raw(data, name):
     raw = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
 
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=raw,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, 13),
+    )
+    c.validate_list_length(
         param=raw,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(lzn)],
-        keys=range(1, 13),
     )
 
 def val_percolation_rejection(data, name):
