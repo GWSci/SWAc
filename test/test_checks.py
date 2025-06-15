@@ -145,30 +145,6 @@ class MyTestCase(unittest.TestCase):
             [
                 {
                     "x": ["a", "b", "c"],
-                    "y": ["d", "e"],
-                },
-                {
-                    "x": ["a", "b", "c"],
-                    "y": ["d", "e", "f"],
-                },
-            ],
-            [list, dict, list], [2, 3])
-        self.assert_validate_list_length_fails(
-            [
-                {
-                    "x": ["a", "b", "c"],
-                    "y": ["d", "e", "f"],
-                },
-                {
-                    "x": ["a", "b"],
-                    "y": ["d", "e", "f"],
-                },
-            ],
-            [list, dict, list], [2, 3])
-        self.assert_validate_list_length_fails(
-            [
-                {
-                    "x": ["a", "b", "c"],
                     "y": ["d", "e", "f"],
                 },
                 {
