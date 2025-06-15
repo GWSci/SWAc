@@ -153,6 +153,18 @@ class MyTestCase(unittest.TestCase):
                 },
             ],
             [list, dict, list], [2, 3])
+        self.assert_validate_list_length_fails(
+            [
+                {
+                    "x": ["a", "b", "c"],
+                    "y": ["d", "e", "f"],
+                },
+                {
+                    "x": ["a", "b"],
+                    "y": ["d", "e", "f"],
+                },
+            ],
+            [list, dict, list], [2, 3])
 
     def assert_validate_list_length_passes(self, param, t_types, list_lengths):
         _validate_list_length_adaptor(param, t_types, list_lengths)
