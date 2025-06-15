@@ -267,7 +267,6 @@ def val_macropore_zone_mapping(data, name):
 
 def val_macropore_activation_option(data, name):
     x = data["params"][name]
-    c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
     c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
 def val_canopy_zone_mapping(data, name):
