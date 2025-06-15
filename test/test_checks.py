@@ -52,6 +52,9 @@ class MyTestCase(unittest.TestCase):
         self.assert_validate_list_length_passes([], [list], None)
         self.assert_validate_list_length_passes(["a"], [list], None)
 
+    def test_list_length_when_len_list_is_empty(self):
+        self.assert_validate_list_length_passes([], [list], [])
+
     def assert_validate_list_length_passes(self, param, t_types, list_lengths):
         _validate_list_length_adaptor(param, t_types, list_lengths)
 
