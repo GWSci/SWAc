@@ -343,7 +343,7 @@ def val_rapid_runoff_params(data, name):
     )
     keys = ["class_smd", "class_ri", "values"]
     for zone in rrp:
-        c.check_type(param=zone, name=name, t_types=[dict], keys=keys)
+        c.validate_keys(param=zone, name=name, t_types=[dict], keys=keys)
         c.validate_list_length(
             param=zone["values"],
             name=name,
@@ -615,7 +615,7 @@ def val_percolation_rejection(data, name):
 def val_subroot_leakage_fraction(data, name):
     lea = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.check_type(
+    c.validate_keys(
         param=lea,
         name=name,
         t_types=data["specs"][name]["type"],
