@@ -571,22 +571,10 @@ def val_taw(data, name):
 def val_raw(data, name):
     if data["params"]["fao_process"] == "disabled":
         return
-
     raw = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-
-    c.validate_keys(
-        param=raw,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        keys=range(1, 13),
-    )
-    c.validate_list_length(
-        param=raw,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(lzn)],
-    )
+    c.validate_keys(raw,name,data["specs"][name]["type"],range(1, 13))
+    c.validate_list_length(raw,name,data["specs"][name]["type"],[len(lzn)])
 
 def val_percolation_rejection(data, name):
     if data["params"]["fao_process"] == "disabled":
