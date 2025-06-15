@@ -25,17 +25,9 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         _validate_keys(param, name, keys)
 
     if t_type == dict and (type(param) == dict):
-        if t_type == expanded_list:
-            next_len_list = tail(len_list)
-        else:
-            next_len_list = len_list
         for value in param.values():
             check_type(param=value, name=name, t_types=t_types[1:], len_list=len_list, keys=keys)
     elif t_type in [expanded_list]:
-        if t_type == expanded_list:
-            next_len_list = tail(len_list)
-        else:
-            next_len_list = len_list
         for value in param:
             check_type(param=value, name=name, t_types=t_types[1:], len_list=tail(len_list), keys=keys)
 
