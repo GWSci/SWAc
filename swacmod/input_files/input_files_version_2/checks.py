@@ -88,6 +88,8 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
                 )
             types = []
             len_list = []
+        else:
+            check_type(param=param, name=name, t_types=types, len_list=len_list, keys=keys)
 
 def check_values_limits(
     values,
