@@ -18,16 +18,16 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     t_type = expand_t_type(t_types[0])
     expanded_list = expand_t_type(list)
 
-    if t_type == expanded_list and len_list:
-        next_len_list = len_list[1:]
-    else:
-        next_len_list = len_list
-
     if t_type == expanded_list and type(param) in expanded_list and len_list:
         _validate_list_length(param, name, len_list[0])
 
     if t_type == dict and (type(param) == dict) and keys:
         _validate_keys(param, name, keys)
+
+    if t_type == expanded_list and len_list:
+        next_len_list = len_list[1:]
+    else:
+        next_len_list = len_list
 
     if t_type == dict and (type(param) == dict):
         for value in param.values():
