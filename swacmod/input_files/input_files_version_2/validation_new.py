@@ -692,12 +692,17 @@ def val_sw_downstream(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys_and_length(
+        c.validate_keys(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            keys=range(1, 13),
+        )
+        c.validate_list_length(
             param=rrp,
             name=name,
             t_types=data["specs"][name]["type"],
             len_list=[len(rzn)],
-            keys=range(1, 13),
         )
         c.validate_min_inclusive([j for i in rrp.values() for j in i], name, 0)
         c.validate_max_inclusive([j for i in rrp.values() for j in i], name, 1.0)
@@ -706,12 +711,17 @@ def val_sw_bed_infiltration(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys_and_length(
+        c.validate_keys(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            keys=range(1, 13),
+        )
+        c.validate_list_length(
             param=rrp,
             name=name,
             t_types=data["specs"][name]["type"],
             len_list=[len(rzn)],
-            keys=range(1, 13),
         )
         c.validate_min_inclusive([j for i in rrp.values() for j in i], name, 0)
         c.validate_max_inclusive([j for i in rrp.values() for j in i], name, 1.0)
@@ -720,12 +730,17 @@ def val_sw_direct_recharge(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys_and_length(
+        c.validate_keys(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            keys=range(1, 13),
+        )
+        c.validate_list_length(
             param=rrp,
             name=name,
             t_types=data["specs"][name]["type"],
             len_list=[len(rzn)],
-            keys=range(1, 13),
         )
         c.validate_min_inclusive([j for i in rrp.values() for j in i], name, 0)
         c.validate_max_inclusive([j for i in rrp.values() for j in i], name, 1.0)
@@ -746,12 +761,17 @@ def val_sw_pe_to_open_water(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys_and_length(
+        c.validate_keys(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            keys=range(1, 13),
+        )
+        c.validate_list_length(
             param=rrp,
             name=name,
             t_types=data["specs"][name]["type"],
             len_list=[len(rzn)],
-            keys=range(1, 13),
         )
 
 def val_sw_ponding_area(data, name):
@@ -764,11 +784,16 @@ def val_sw_ponding_area(data, name):
 def val_sw_params(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys_and_length(
+    c.validate_keys(
         param=rpn,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
+    )
+    c.validate_list_length(
+        param=rpn,
+        name=name,
+        t_types=data["specs"][name]["type"],
         len_list=[2],
     )
     c.validate_min_inclusive([i[1] for i in rpn.values()], "release_proportion in %s" % name, 0.0)
@@ -777,22 +802,32 @@ def val_sw_params(data, name):
 def val_routing_topology(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys_and_length(
+    c.validate_keys(
         param=rpn,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
+    )
+    c.validate_list_length(
+        param=rpn,
+        name=name,
+        t_types=data["specs"][name]["type"],
         len_list=[10],
     )
 
 def val_recharge_node_mapping(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys_and_length(
+    c.validate_keys(
         param=rpn,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
+    )
+    c.validate_list_length(
+        param=rpn,
+        name=name,
+        t_types=data["specs"][name]["type"],
         len_list=[1],
     )
 
