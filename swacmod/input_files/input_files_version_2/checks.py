@@ -25,7 +25,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         _validate_keys(param, name, keys)
 
     if t_type == expanded_list and len_list:
-        next_len_list = len_list[1:]
+        next_len_list = tail(len_list)
     else:
         next_len_list = len_list
 
@@ -35,6 +35,12 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     elif t_type in [expanded_list]:
         for value in param:
             check_type(param=value, name=name, t_types=t_types[1:], len_list=next_len_list, keys=keys)
+
+def tail(a_list):
+    if a_list and len(a_list) > 0:
+        return a_list[1:]
+    else:
+        return a_list
 
 def _validate_keys(param, name, keys):
     set_keys = set(keys)
