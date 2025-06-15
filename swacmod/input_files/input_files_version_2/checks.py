@@ -30,14 +30,14 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         else:
             next_len_list = len_list
         for value in param.values():
-            check_type(param=value, name=name, t_types=t_types[1:], len_list=next_len_list, keys=keys)
+            check_type(param=value, name=name, t_types=t_types[1:], len_list=len_list, keys=keys)
     elif t_type in [expanded_list]:
         if t_type == expanded_list:
             next_len_list = tail(len_list)
         else:
             next_len_list = len_list
         for value in param:
-            check_type(param=value, name=name, t_types=t_types[1:], len_list=next_len_list, keys=keys)
+            check_type(param=value, name=name, t_types=t_types[1:], len_list=tail(len_list), keys=keys)
 
 def tail(a_list):
     if a_list and len(a_list) > 0:
