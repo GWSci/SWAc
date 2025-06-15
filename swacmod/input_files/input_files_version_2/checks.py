@@ -23,22 +23,6 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     validate_keys(param, name, t_types, keys)
     validate_list_length(param, name, t_types, len_list)
 
-    t_type = expand_t_type(t_types[0])
-    expanded_list = expand_t_type(list)
-
-    if t_type == expanded_list and type(param) in expanded_list and len_list:
-        _validate_list_length(param, name, len_list[0])
-
-    if t_type == dict and (type(param) == dict) and keys:
-        _validate_keys(param, name, keys)
-
-    if t_type == dict and (type(param) == dict):
-        for value in param.values():
-            check_type(param=value, name=name, t_types=t_types[1:], len_list=len_list, keys=keys)
-    elif t_type in [expanded_list]:
-        for value in param:
-            check_type(param=value, name=name, t_types=t_types[1:], len_list=tail(len_list), keys=keys)
-
 def validate_keys(param, name, t_types, keys):
     if (t_types is None) or len(t_types) == 0:
         return
