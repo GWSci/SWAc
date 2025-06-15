@@ -25,7 +25,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         new_len = None
         next_len_list = len_list
 
-    if t_type == expanded_list and new_len:
+    if t_type == expanded_list and type(param) in expanded_list and new_len:
         _validate_list_length(param, name, new_len)
 
     if t_type == dict and (type(param) == dict) and keys:
