@@ -435,12 +435,17 @@ def val_swrecharge_proportion(data, name):
 def val_swrecharge_limit(data, name):
     rrl = data["params"][name]
     rzn = data["params"]["swrecharge_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=rrl,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, 13),
+    )
+    c.validate_list_length(
         param=rrl,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(rzn)],
-        keys=range(1, 13),
     )
 
 def val_macropore_process(data, name):
@@ -453,12 +458,17 @@ def val_macropore_process(data, name):
 def val_macropore_proportion(data, name):
     mpp = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=mpp,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, 13),
+    )
+    c.validate_list_length(
         param=mpp,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(mzn)],
-        keys=range(1, 13),
     )
 
     c.validate_min_inclusive([j for i in mpp.values() for j in i], name, 0)
@@ -467,23 +477,33 @@ def val_macropore_proportion(data, name):
 def val_macropore_limit(data, name):
     mpl = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=mpl,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, 13),
+    )
+    c.validate_list_length(
         param=mpl,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(mzn)],
-        keys=range(1, 13),
     )
 
 def val_macropore_activation(data, name):
     mpa = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=mpa,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, 13),
+    )
+    c.validate_list_length(
         param=mpa,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(mzn)],
-        keys=range(1, 13),
     )
 
 def val_macropore_recharge(data, name):
