@@ -745,7 +745,6 @@ def val_recharge_attenuation_params(data, name):
 def val_sw_zone_names(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrn = data["params"][name]
-        c.validate_keys_and_length(param=rrn, name=name, t_types=data["specs"][name]["type"])
 
 def val_sw_zone_mapping(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
