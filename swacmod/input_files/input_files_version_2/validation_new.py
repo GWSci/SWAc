@@ -777,7 +777,6 @@ def val_sw_max_ponding(data, name):
 def val_sw_ponding_area(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         num = data["params"][name]
-        c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
         values = [i for i in num.values()]
         c.validate_max_inclusive(values, name, 1.0)
         c.validate_min_exclusive(values, name, 0)

@@ -134,7 +134,7 @@ def val_percolation_rejection_ts(data, name):
         return
     per = data["series"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=per,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -150,7 +150,7 @@ def val_infiltration_limit_ts(data, name):
         return
     per = data["series"][name]
     lzn = data["params"]["interflow_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=per,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -166,7 +166,7 @@ def val_interflow_decay_ts(data, name):
         return
     per = data["series"][name]
     lzn = data["params"]["interflow_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=per,
         name=name,
         t_types=data["specs"][name]["type"],
