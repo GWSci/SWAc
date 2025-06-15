@@ -311,7 +311,7 @@ def val_snow_params_simple(data, name):
         return
     snp = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=snp,
         name=name,
         t_types=data["specs"][name]["type"],
