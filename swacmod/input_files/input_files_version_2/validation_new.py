@@ -102,12 +102,7 @@ def val_rainfall_zone_mapping(data, name):
     rzm = data["params"][name]
     tot = data["params"][tot_name]
     rzn = data["params"][zone_name]
-    c.validate_keys(
-        rzm,
-        name,
-        data["specs"][name]["type"],
-        range(1, tot + 1),
-    )
+    c.validate_keys(rzm, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive([i[0] for i in rzm.values()], "zone in %s" % name, 1)
     c.validate_max_inclusive([i[0] for i in rzm.values()], "zone in %s" % name, len(rzn))
 
@@ -115,12 +110,7 @@ def val_pe_zone_mapping(data, name):
     pzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     pzn = data["params"]["pe_zone_names"]
-    c.validate_keys(
-        pzm,
-        name,
-        data["specs"][name]["type"],
-        range(1, tot + 1),
-    )
+    c.validate_keys(pzm, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive([i[0] for i in pzm.values()], "zone in %s" % name, 0)
     c.validate_max_inclusive([i[0] for i in pzm.values()], "zone in %s" % name, len(pzn))
 
