@@ -563,17 +563,10 @@ def val_kc(data, name):
 def val_taw(data, name):
     if data["params"]["fao_process"] == "disabled":
         return
-
     taw = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-
-    c.validate_keys_and_length(
-        param=taw,
-        name=name,
-        t_types=data["specs"][name]["type"],
-        len_list=[len(lzn)],
-        keys=range(1, 13),
-    )
+    c.validate_keys(taw, name, data["specs"][name]["type"], range(1, 13),)
+    c.validate_list_length(taw, name, data["specs"][name]["type"], [len(lzn)],)
 
 def val_raw(data, name):
     if data["params"]["fao_process"] == "disabled":
