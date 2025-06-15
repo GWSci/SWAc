@@ -625,7 +625,7 @@ def val_subroot_leakage_fraction(data, name):
 def val_init_interflow_store(data, name):
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-    c.check_type(
+    c.validate_keys(
         param=nda,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -636,7 +636,7 @@ def val_init_interflow_store(data, name):
 def val_interflow_store_bypass(data, name):
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-    c.check_type(
+    c.validate_keys(
         param=nda,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -647,7 +647,7 @@ def val_interflow_store_bypass(data, name):
 def val_infiltration_limit(data, name):
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-    c.check_type(
+    c.validate_keys(
         param=nda,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -658,7 +658,7 @@ def val_infiltration_limit(data, name):
 def val_interflow_decay(data, name):
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-    c.check_type(
+    c.validate_keys(
         param=nda,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -689,7 +689,7 @@ def val_sw_zone_mapping(data, name):
         rorzm = data["params"][name]
         tot = data["params"]["num_nodes"]
         rzn = data["params"]["sw_zone_names"]
-        c.check_type(
+        c.validate_keys(
             param=rorzm,
             name=name,
             t_types=data["specs"][name]["type"],
