@@ -168,8 +168,15 @@ class MyTestCase(unittest.TestCase):
         self.assert_validate_list_length_and_keys_passes([{"a":1}, {"a":1}], [list, dict], [2], ["a"])
         self.assert_validate_list_length_and_keys_passes([{"a":1}, {"a":1}], [list, dict], [2], ["a"])
 
+    def test_validating_list_length_and_keys_together_when_things_differ(self):
+        self.assert_validate_list_length_and_keys_fails([{"a":1}, {"a":1}], [list, dict], [3], ["a"])
+
     def assert_validate_list_length_and_keys_passes(self, param, t_types, list_lengths, keys):
         _validate_list_length_and_keys_adaptor(param, t_types, list_lengths, keys)
+
+    def assert_validate_list_length_and_keys_fails(self, param, t_types, list_lengths, keys):
+        with self.assertRaises(u.ValidationError):
+            _validate_list_length_and_keys_adaptor(param, t_types, list_lengths, keys)
 
 def _validate_keys_adaptor(param, t_types, keys):
     checks.check_type(param=param, name="cat", t_types=t_types, len_list=None, keys=keys)
