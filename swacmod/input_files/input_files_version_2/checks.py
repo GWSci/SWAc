@@ -47,7 +47,7 @@ def _validate_keys(param, name, keys):
         raise u.ValidationError(msg % (name, diff))
 
 def _validate_list_length(param, name, length):
-    if len(param) != length:
+    if length and (len(param) != length):
         msg = 'Parameter "%s" has to be a list of length %d, found %d'
         raise u.ValidationError(msg % (name, length, len(param)))
 
