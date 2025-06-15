@@ -69,6 +69,9 @@ class MyTestCase(unittest.TestCase):
         #  length, or whether it is a bug.
         self.assert_validate_list_length_passes(["a"], [list], [0])
 
+    def test_list_length_when_len_list_length_differs(self):
+        self.assert_validate_list_length_fails([], [list], [1])
+
     def assert_validate_list_length_passes(self, param, t_types, list_lengths):
         _validate_list_length_adaptor(param, t_types, list_lengths)
 
