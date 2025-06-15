@@ -76,6 +76,9 @@ class MyTestCase(unittest.TestCase):
         self.assert_validate_list_length_fails(["a"], [list], [2])
         self.assert_validate_list_length_fails(["a", "b", "c"], [list], [2])
 
+    def test_list_length_when_len_list_length_matches_nested_lists(self):
+        self.assert_validate_list_length_passes([["a", "b", "c"], ["d", "e", "f"]], [list], [2, 3])
+
     def assert_validate_list_length_passes(self, param, t_types, list_lengths):
         _validate_list_length_adaptor(param, t_types, list_lengths)
 
