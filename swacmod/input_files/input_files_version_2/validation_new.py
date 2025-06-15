@@ -565,11 +565,16 @@ def val_soil_spatial(data, name):
     sos = data["params"][name]
     soz = data["params"]["soil_zone_names"]
     tot = data["params"]["num_nodes"]
-    c.validate_keys_and_length(
+    c.validate_keys(
         param=sos,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
+    )
+    c.validate_list_length(
+        param=sos,
+        name=name,
+        t_types=data["specs"][name]["type"],
         len_list=[len(soz)],
     )
     if not all(sum(i) == 1.0 for i in sos.values()):
@@ -582,11 +587,16 @@ def val_lu_spatial(data, name):
     lus = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
     tot = data["params"]["num_nodes"]
-    c.validate_keys_and_length(
+    c.validate_keys(
         param=lus,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
+    )
+    c.validate_list_length(
+        param=lus,
+        name=name,
+        t_types=data["specs"][name]["type"],
         len_list=[len(lzn.values())],
     )
     if not all(abs(1 - sum(i)) < 1e-5 for i in lus.values()):
@@ -602,12 +612,17 @@ def val_zr(data, name):
         return
     zrn = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=zrn,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, 13),
+    )
+    c.validate_list_length(
         param=zrn,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(lzn)],
-        keys=range(1, 13),
     )
 
 def val_kc(data, name):
