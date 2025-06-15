@@ -87,12 +87,7 @@ def val_reporting_zone_mapping(data, name):
     rzm = data["params"][name]
     tot = data["params"][tot_name]
     rzn = data["params"][zone_name]
-    c.validate_keys(
-        rzm,
-        name,
-        data["specs"][name]["type"],
-        range(1, tot + 1),
-    )
+    c.validate_keys(rzm,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(rzm.values(), "zone in %s" % name, 0)
     c.validate_max_inclusive(rzm.values(), "zone in %s" % name, len(rzn))
 
