@@ -769,11 +769,6 @@ def val_sw_init_ponding(data, name):
         num = data["params"][name]
         c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
 
-def val_sw_max_ponding(data, name):
-    if data["params"]['sw_ponding_process'] == "enabled":
-        num = data["params"][name]
-        c.check_type(param=num, name=name, t_types=data["specs"][name]["type"])
-
 def val_sw_ponding_area(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         num = data["params"][name]
@@ -906,7 +901,6 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_interflow_decay, "interflow_decay")
     do_validation(errors, data, val_recharge_attenuation_params, "recharge_attenuation_params")
     do_validation(errors, data, val_sw_init_ponding, "sw_init_ponding")
-    do_validation(errors, data, val_sw_max_ponding, "sw_max_ponding")
     do_validation(errors, data, val_sw_downstream, "sw_downstream")
     do_validation(errors, data, val_sw_activation, "sw_activation")
     do_validation(errors, data, val_sw_bed_infiltration, "sw_bed_infiltration")
