@@ -742,10 +742,6 @@ def val_recharge_attenuation_params(data, name):
     c.validate_min_inclusive([i[1] for i in rpn.values()], "release_proportion in %s" % name, 0.0)
     c.validate_max_inclusive([i[1] for i in rpn.values()], "release_proportion in %s" % name, 1.0)
 
-def val_sw_zone_names(data, name):
-    if data["params"]['sw_ponding_process'] == "enabled":
-        rrn = data["params"][name]
-
 def val_sw_zone_mapping(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rorzm = data["params"][name]
@@ -958,7 +954,6 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_windsp_zone_mapping, "windsp_zone_mapping")
     do_validation(errors, data, val_subroot_zone_mapping, "subroot_zone_mapping")
     do_validation(errors, data, val_swrecharge_zone_mapping, "swrecharge_zone_mapping")
-    do_validation(errors, data, val_sw_zone_names, "sw_zone_names")
     do_validation(errors, data, val_sw_zone_mapping, "sw_zone_mapping")
     do_validation(errors, data, val_macropore_zone_mapping, "macropore_zone_mapping")
     do_validation(errors, data, val_recharge_node_mapping, "recharge_node_mapping")
