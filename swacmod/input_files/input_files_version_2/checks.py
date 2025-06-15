@@ -39,9 +39,8 @@ def expand_t_type(t_type):
 def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     if (t_types is None) or len(t_types) == 0:
         return
-    types = [i for i in t_types]
 
-    t_type = types.pop(0)
+    t_type = t_types[0]
     t_type = expand_t_type(t_type)
 
     expanded_list = expand_t_type(list)
