@@ -583,12 +583,17 @@ def val_percolation_rejection(data, name):
     per = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
 
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=per,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=["percolation_rejection"],
+    )
+    c.validate_list_length(
         param=per,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(lzn)],
-        keys=["percolation_rejection"],
     )
     c.validate_min_inclusive(list(per.values())[0], name, 0.0)
 
