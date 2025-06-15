@@ -37,7 +37,8 @@ def expand_t_type(t_type):
     return t_type
 
 def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
-    """Check the parameter is of type t_type."""
+    if (t_types is None) or len(t_types) == 0:
+        return
     types = [i for i in t_types]
     while types:
 
