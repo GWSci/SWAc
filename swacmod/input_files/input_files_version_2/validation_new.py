@@ -817,12 +817,17 @@ def val_sw_activation(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys_and_length(
+        c.validate_keys(
+            param=rrp,
+            name=name,
+            t_types=data["specs"][name]["type"],
+            keys=range(1, 13),
+        )
+        c.validate_list_length(
             param=rrp,
             name=name,
             t_types=data["specs"][name]["type"],
             len_list=[len(rzn)],
-            keys=range(1, 13),
         )
 
 def val_sw_pe_to_open_water(data, name):
