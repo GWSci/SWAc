@@ -183,7 +183,7 @@ def _validate_keys_adaptor(param, t_types, keys):
     checks.validate_keys(param=param, name="cat", t_types=t_types, keys=keys)
 
 def _validate_list_length_adaptor(param, t_types, list_lengths):
-    checks.check_type(param=param, name="cat", t_types=t_types, len_list=list_lengths, keys=None)
+    checks.validate_list_length(param=param, name="cat", t_types=t_types, len_list=list_lengths)
 
 def _validate_list_length_and_keys_adaptor(param, t_types, list_lengths, keys):
     checks.check_type(param=param, name="cat", t_types=t_types, len_list=list_lengths, keys=keys)
