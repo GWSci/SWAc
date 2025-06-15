@@ -26,7 +26,7 @@ def val_time_periods(data, name):
 
 def val_rainfall_ts(data, name):
     rzn = data["params"]["rainfall_zone_names"]
-    c.check_type(
+    c.validate_list_length(
         param=(data["series"][name]),
         name=name,
         t_types=data["specs"][name]["type"],
@@ -35,7 +35,7 @@ def val_rainfall_ts(data, name):
 
 def val_pe_ts(data, name):
     pzn = data["params"]["pe_zone_names"]
-    c.check_type(
+    c.validate_list_length(
         param=(data["series"][name]),
         name=name,
         t_types=data["specs"][name]["type"],
@@ -44,7 +44,7 @@ def val_pe_ts(data, name):
 
 def val_temperature_ts(data, name):
     tzn = set(data["params"]["temperature_zone_mapping"].values())
-    c.check_type(
+    c.validate_list_length(
         param=(data["series"][name]),
         name=name,
         t_types=data["specs"][name]["type"],
@@ -53,7 +53,7 @@ def val_temperature_ts(data, name):
 
 def val_tmax_c_ts(data, name):
     tzn = set(data["params"]["tmax_c_zone_mapping"].values())
-    c.check_type(
+    c.validate_list_length(
         param=(data["series"][name]),
         name=name,
         t_types=data["specs"][name]["type"],
@@ -62,7 +62,7 @@ def val_tmax_c_ts(data, name):
 
 def val_tmin_c_ts(data, name):
     tzn = set(data["params"]["tmin_c_zone_mapping"].values())
-    c.check_type(
+    c.validate_list_length(
         param=(data["series"][name]),
         name=name,
         t_types=data["specs"][name]["type"],
@@ -71,7 +71,7 @@ def val_tmin_c_ts(data, name):
 
 def val_windsp_ts(data, name):
     tzn = set(data["params"]["windsp_zone_mapping"].values())
-    c.check_type(
+    c.validate_list_length(
         param=(data["series"][name]),
         name=name,
         t_types=data["specs"][name]["type"],
@@ -80,7 +80,7 @@ def val_windsp_ts(data, name):
 
 def val_subroot_leakage_ts(data, name):
     szn = data["params"]["subroot_zone_names"]
-    c.check_type(
+    c.validate_list_length(
         param=(data["series"][name]),
         name=name,
         t_types=data["specs"][name]["type"],
@@ -100,7 +100,7 @@ def val_swdis_ts(data, name):
 
     length = [ndays, nweeks, nmonths]
     if swdisn != {0: 0}:
-        c.check_type(
+        c.validate_list_length(
             param=swdists,
             name=name,
             t_types=data["specs"][name]["type"],
@@ -120,7 +120,7 @@ def val_swabs_ts(data, name):
     length = [ndays, nweeks, nmonths]
 
     if swabsn != {0: 0}:
-        c.check_type(
+        c.validate_list_length(
             param=swabsts,
             name=name,
             t_types=data["specs"][name]["type"],
