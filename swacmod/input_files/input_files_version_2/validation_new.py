@@ -59,10 +59,7 @@ def val_swdis_locs(data, name):
 
     if swdisn != {0: 0}:
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
-        # c.validate_keys(
-        #     param=swdisl, name=name, t_types=data["specs"][name]["type"],
-        #     keys=range(1, tot)
-        # )
+        # c.validate_keys(param=swdisl, name=name, t_types=data["specs"][name]["type"], keys=range(1, tot))
         c.validate_min_inclusive(swdisl.values(), "zone in %s" % name, 1)
         c.validate_max_inclusive(swdisl.values(), "zone in %s" % name, tot)
         c.validate_min_inclusive(swdisl.keys(), "node in %s" % name, 1)
@@ -74,22 +71,14 @@ def val_swabs_locs(data, name):
     if swabsn != {0: 0}:
         tot = len(data["params"]["swabs_locs"]) + 1
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
-        # c.validate_keys(
-        #     param=swabsl, name=name, t_types=data["specs"][name]["type"],
-        #     keys=range(1, tot)
-        # )
+        # c.validate_keys(param=swabsl, name=name, t_types=data["specs"][name]["type"], keys=range(1, tot))
         c.validate_min_inclusive(swabsl.values(), "zone in %s" % name, 1)
         c.validate_max_inclusive(swabsl.values(), "zone in %s" % name, tot)
         c.validate_min_inclusive(swabsl.keys(), "node in %s" % name, 1)
         c.validate_max_inclusive(swabsl.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
 def val_node_areas(data, name):
-    c.validate_keys(
-        param=data["params"][name],
-        name=name,
-        t_types=data["specs"][name]["type"],
-        keys=range(1, data["params"]["num_nodes"] + 1),
-    )
+    c.validate_keys(param=data["params"][name], name=name, t_types=data["specs"][name]["type"], keys=range(1, data["params"]["num_nodes"] + 1))
     c.validate_min_inclusive(data["params"][name].values(), name, 0)
 
 def val_reporting_zone_mapping(data, name):
