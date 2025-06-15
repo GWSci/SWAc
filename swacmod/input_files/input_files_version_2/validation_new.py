@@ -310,12 +310,17 @@ def val_snow_params_simple(data, name):
         return
     snp = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=snp,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+    c.validate_list_length(
         param=snp,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[3],
-        keys=range(1, tot + 1),
     )
     c.validate_min_inclusive([i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
 
@@ -324,12 +329,17 @@ def val_snow_params_complex(data, name):
         return
     snp = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=snp,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, tot + 1),
+    )
+    c.validate_list_length(
         param=snp,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[10],
-        keys=range(1, tot + 1),
     )
     c.validate_min_inclusive([i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
 
@@ -362,32 +372,40 @@ def val_rorecharge_process(data, name):
 def val_single_cell_swrecharge_proportion(data, name):
     rrp = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys_and_length(param=rrp,
+    c.validate_keys(param=rrp,
                  name=name,
                  t_types=data['specs'][name]['type'],
-                 len_list=[len(rzn)],
                  keys=range(1, 13))
-
+    c.validate_list_length(param=rrp,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(rzn)])
     c.validate_min_inclusive([j for i in rrp.values() for j in i], name, 0)
     c.validate_max_inclusive([j for i in rrp.values() for j in i], name, 1.0)
 
 def val_single_cell_swrecharge_limit(data, name):
     rrl = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys_and_length(param=rrl,
+    c.validate_keys(param=rrl,
                  name=name,
                  t_types=data['specs'][name]['type'],
-                 len_list=[len(rzn)],
                  keys=range(1, 13))
+    c.validate_list_length(param=rrl,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(rzn)])
 
 def val_single_cell_swrecharge_activation(data, name):
     rra = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys_and_length(param=rra,
+    c.validate_keys(param=rra,
                  name=name,
                  t_types=data['specs'][name]['type'],
-                 len_list=[len(rzn)],
                  keys=range(1, 13))
+    c.validate_list_length(param=rra,
+                 name=name,
+                 t_types=data['specs'][name]['type'],
+                 len_list=[len(rzn)])
 
 def val_swrecharge_process(data, name):
     rop = data["params"][name]
@@ -399,12 +417,17 @@ def val_swrecharge_process(data, name):
 def val_swrecharge_proportion(data, name):
     rrp = data["params"][name]
     rzn = data["params"]["swrecharge_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=rrp,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, 13),
+    )
+    c.validate_list_length(
         param=rrp,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(rzn)],
-        keys=range(1, 13),
     )
     c.validate_min_inclusive([j for i in rrp.values() for j in i], name, 0)
     c.validate_max_inclusive([j for i in rrp.values() for j in i], name, 1.0)
