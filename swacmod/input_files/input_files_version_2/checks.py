@@ -37,8 +37,6 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     elif t_type in [set, expanded_list]:
         for value in param:
             check_type(param=value, name=name, t_types=t_types[1:], len_list=next_len_list, keys=keys)
-    else:
-        check_type(param=param, name=name, t_types=t_types[1:], len_list=next_len_list, keys=keys)
 
 def _validate_keys(param, name, keys):
     set_keys = set(keys)
