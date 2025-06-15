@@ -654,11 +654,16 @@ def val_interflow_decay(data, name):
 def val_recharge_attenuation_params(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys_and_length(
+    c.validate_keys(
         param=rpn,
         name=name,
         t_types=data["specs"][name]["type"],
         keys=range(1, tot + 1),
+    )
+    c.validate_list_length(
+        param=rpn,
+        name=name,
+        t_types=data["specs"][name]["type"],
         len_list=[3],
     )
     c.validate_min_inclusive([i[1] for i in rpn.values()], "release_proportion in %s" % name, 0.0)
