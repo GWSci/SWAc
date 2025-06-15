@@ -75,7 +75,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
 
     elif t_type in [set, expanded_list]:
         for value in param:
-            copy_t = [i for i in types]
+            copy_t = t_types[1:]
             copy_l = []
             if len_list:
                 copy_l = [i for i in len_list]
@@ -84,7 +84,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
               keys=keys
             )
     else:
-        check_type(param=param, name=name, t_types=types, len_list=len_list, keys=keys)
+        check_type(param=param, name=name, t_types=t_types[1:], len_list=len_list, keys=keys)
 
 def check_values_limits(
     values,
