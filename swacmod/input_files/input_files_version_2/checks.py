@@ -70,10 +70,10 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     else:
         check_type(param=param, name=name, t_types=t_types[1:], len_list=len_list, keys=keys)
 
-def _validate_list_length(param, name, new_len):
-    if len(param) != new_len:
+def _validate_list_length(param, name, length):
+    if len(param) != length:
         msg = 'Parameter "%s" has to be a list of length %d, found %d'
-        raise u.ValidationError(msg % (name, new_len, len(param)))
+        raise u.ValidationError(msg % (name, length, len(param)))
 
 def check_values_limits(
     values,
