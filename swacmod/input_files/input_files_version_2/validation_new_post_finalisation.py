@@ -134,12 +134,17 @@ def val_percolation_rejection_ts(data, name):
         return
     per = data["series"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=per,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=["percolation_rejection_ts"]
+    )
+    c.validate_list_length(
         param=per,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(data["series"]["date"]), len(lzn)],
-        keys=["percolation_rejection_ts"]
     )
     c.validate_min_inclusive(per[0], name, 0.0)
 
@@ -150,12 +155,17 @@ def val_infiltration_limit_ts(data, name):
         return
     per = data["series"][name]
     lzn = data["params"]["interflow_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=per,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=["infiltration_limit_ts"]
+    )
+    c.validate_list_length(
         param=per,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(data["series"]["date"]), len(lzn)],
-        keys=["infiltration_limit_ts"]
     )
     c.validate_min_inclusive(per[0], name, 0.0)
 
@@ -166,12 +176,17 @@ def val_interflow_decay_ts(data, name):
         return
     per = data["series"][name]
     lzn = data["params"]["interflow_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=per,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=["interflow_decay_ts"]
+    )
+    c.validate_list_length(
         param=per,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(data["series"]["date"]), len(lzn)],
-        keys=["interflow_decay_ts"]
     )
     c.validate_min_inclusive(per[0], name, 0.0)
 
