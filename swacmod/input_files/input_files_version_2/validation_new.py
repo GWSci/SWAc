@@ -505,18 +505,8 @@ def val_sw_pe_to_open_water(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(
-            rrp,
-            name,
-            data["specs"][name]["type"],
-            range(1, 13),
-        )
-        c.validate_list_length(
-            rrp,
-            name,
-            data["specs"][name]["type"],
-            [len(rzn)],
-        )
+        c.validate_keys(rrp,name,data["specs"][name]["type"],range(1, 13),)
+        c.validate_list_length(rrp,name,data["specs"][name]["type"],[len(rzn)],)
 
 def val_sw_ponding_area(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
@@ -528,36 +518,16 @@ def val_sw_ponding_area(data, name):
 def val_sw_params(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(
-        rpn,
-        name,
-        data["specs"][name]["type"],
-        range(1, tot + 1),
-    )
-    c.validate_list_length(
-        rpn,
-        name,
-        data["specs"][name]["type"],
-        [2],
-    )
+    c.validate_keys(rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_list_length(rpn,name,data["specs"][name]["type"],[2],)
     c.validate_min_inclusive([i[1] for i in rpn.values()], "release_proportion in %s" % name, 0.0)
     c.validate_max_inclusive([i[1] for i in rpn.values()], "release_proportion in %s" % name, 1.0)
 
 def val_routing_topology(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(
-        rpn,
-        name,
-        data["specs"][name]["type"],
-        range(1, tot + 1),
-    )
-    c.validate_list_length(
-        rpn,
-        name,
-        data["specs"][name]["type"],
-        [10],
-    )
+    c.validate_keys(rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_list_length(rpn,name,data["specs"][name]["type"],[10],)
 
 def val_recharge_node_mapping(data, name):
     rpn = data["params"][name]
