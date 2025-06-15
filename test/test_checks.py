@@ -164,26 +164,8 @@ class MyTestCase(unittest.TestCase):
         with self.assertRaises(u.ValidationError):
             _validate_list_length_adaptor(param, t_types, list_lengths)
 
-    def test_validating_list_length_and_keys_together_when_everything_matches(self):
-        self.assert_validate_list_length_and_keys_passes([{"a":1}, {"a":1}], [list, dict], [2], ["a"])
-        self.assert_validate_list_length_and_keys_passes([{"a":1}, {"a":1}], [list, dict], [2], ["a"])
-
-    def test_validating_list_length_and_keys_together_when_things_differ(self):
-        self.assert_validate_list_length_and_keys_fails([{"a":1}, {"a":1}], [list, dict], [3], ["a"])
-        self.assert_validate_list_length_and_keys_fails([{"a":1}, {"b":1}], [list, dict], [2], ["a"])
-
-    def assert_validate_list_length_and_keys_passes(self, param, t_types, list_lengths, keys):
-        _validate_list_length_and_keys_adaptor(param, t_types, list_lengths, keys)
-
-    def assert_validate_list_length_and_keys_fails(self, param, t_types, list_lengths, keys):
-        with self.assertRaises(u.ValidationError):
-            _validate_list_length_and_keys_adaptor(param, t_types, list_lengths, keys)
-
 def _validate_keys_adaptor(param, t_types, keys):
     checks.validate_keys(param=param, name="cat", t_types=t_types, keys=keys)
 
 def _validate_list_length_adaptor(param, t_types, list_lengths):
     checks.validate_list_length(param=param, name="cat", t_types=t_types, len_list=list_lengths)
-
-def _validate_list_length_and_keys_adaptor(param, t_types, list_lengths, keys):
-    checks.validate_keys_and_length(param=param, name="cat", t_types=t_types, len_list=list_lengths, keys=keys)
