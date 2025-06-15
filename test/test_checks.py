@@ -88,7 +88,15 @@ class MyTestCase(unittest.TestCase):
         self.assert_validate_list_length_passes(
             {
                 "x": ["a", "b", "c"],
-                "y": ["d", "e", "f"]
+                "y": ["d", "e", "f"],
+            },
+            [dict, list], [3])
+
+    def test_list_length_when_len_list_length_differs_dict_list(self):
+        self.assert_validate_list_length_fails(
+            {
+                "x": ["a", "b"],
+                "y": ["d", "e", "f"],
             },
             [dict, list], [3])
 
