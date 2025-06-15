@@ -57,7 +57,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         if t_type == dict and (type(param) == dict) and keys:
             set_keys = set(keys)
             param_keys = set(param.keys())
-            if set_keys != param_keys and len(set_keys) > len(param_keys):
+            if not set_keys.issubset(param_keys):
                 msg = 'Parameter "%s" is missing the following keys: %s'
                 diff = set_keys - param_keys
                 raise u.ValidationError(msg % (name, diff))
