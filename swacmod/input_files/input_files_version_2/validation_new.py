@@ -59,7 +59,7 @@ def val_swdis_locs(data, name):
 
     if swdisn != {0: 0}:
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
-        # c.check_type(
+        # c.validate_keys(
         #     param=swdisl, name=name, t_types=data["specs"][name]["type"],
         #     keys=range(1, tot)
         # )
@@ -74,7 +74,7 @@ def val_swabs_locs(data, name):
     if swabsn != {0: 0}:
         tot = len(data["params"]["swabs_locs"]) + 1
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
-        # c.check_type(
+        # c.validate_keys(
         #     param=swabsl, name=name, t_types=data["specs"][name]["type"],
         #     keys=range(1, tot)
         # )
@@ -84,7 +84,7 @@ def val_swabs_locs(data, name):
         c.validate_max_inclusive(swabsl.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
 def val_node_areas(data, name):
-    c.check_type(
+    c.validate_keys(
         param=data["params"][name],
         name=name,
         t_types=data["specs"][name]["type"],
@@ -98,7 +98,7 @@ def val_reporting_zone_mapping(data, name):
     rzm = data["params"][name]
     tot = data["params"][tot_name]
     rzn = data["params"][zone_name]
-    c.check_type(
+    c.validate_keys(
         param=rzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -113,7 +113,7 @@ def val_rainfall_zone_mapping(data, name):
     rzm = data["params"][name]
     tot = data["params"][tot_name]
     rzn = data["params"][zone_name]
-    c.check_type(
+    c.validate_keys(
         param=rzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -126,7 +126,7 @@ def val_pe_zone_mapping(data, name):
     pzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     pzn = data["params"]["pe_zone_names"]
-    c.check_type(
+    c.validate_keys(
         param=pzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -139,7 +139,7 @@ def val_tmax_c_zone_mapping(data, name):
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["tmax_c_zone_names"]
-    c.check_type(
+    c.validate_keys(
         param=tzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -152,7 +152,7 @@ def val_tmin_c_zone_mapping(data, name):
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["tmin_c_zone_names"]
-    c.check_type(
+    c.validate_keys(
         param=tzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -165,7 +165,7 @@ def val_windsp_zone_mapping(data, name):
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["tmin_c_zone_names"]
-    c.check_type(
+    c.validate_keys(
         param=tzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -178,7 +178,7 @@ def val_temperature_zone_mapping(data, name):
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["temperature_zone_names"]
-    c.check_type(
+    c.validate_keys(
         param=tzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -191,7 +191,7 @@ def val_subroot_zone_mapping(data, name):
     szm = data["params"][name]
     tot = data["params"]["num_nodes"]
     szn = data["params"]["subroot_zone_names"]
-    c.check_type(
+    c.validate_keys(
         param=szm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -204,7 +204,7 @@ def val_rapid_runoff_zone_mapping(data, name):
     rrzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["rapid_runoff_zone_names"]
-    c.check_type(
+    c.validate_keys(
         param=rrzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -218,7 +218,7 @@ def val_interflow_zone_mapping(data, name):
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["interflow_zone_names"]
 
-    c.check_type(
+    c.validate_keys(
         param=rrzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -231,7 +231,7 @@ def val_swrecharge_zone_mapping(data, name):
     rorzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["swrecharge_zone_names"]
-    c.check_type(
+    c.validate_keys(
         param=rorzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -245,7 +245,7 @@ def val_single_cell_swrecharge_zone_mapping(data, name):
     rorzm = data['params'][name]
     tot = data['params']['num_nodes']
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.check_type(param=rorzm,
+    c.validate_keys(param=rorzm,
                  name=name,
                  t_types=data['specs'][name]['type'],
                  keys=range(1, tot + 1))
@@ -256,7 +256,7 @@ def val_macropore_zone_mapping(data, name):
     mzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     mzn = data["params"]["macropore_zone_names"]
-    c.check_type(
+    c.validate_keys(
         param=mzm,
         name=name,
         t_types=data["specs"][name]["type"],
