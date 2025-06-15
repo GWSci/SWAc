@@ -18,8 +18,6 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     if (len_list is not None) and (keys is None):
         validate_list_length(param, name, t_types, len_list)
         return
-    if (t_types is None) or len(t_types) == 0:
-        return
     validate_keys(param, name, t_types, keys)
     validate_list_length(param, name, t_types, len_list)
 
