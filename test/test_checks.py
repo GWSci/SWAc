@@ -38,6 +38,7 @@ class MyTestCase(unittest.TestCase):
     def test_validating_keys_when_dict_is_nested_in_list_deos_not_match(self):
         self.assert_validate_keys_fails([{}], [list, dict], ["a"])
         self.assert_validate_keys_fails([{"c":1}], [list, dict], ["a"])
+        self.assert_validate_keys_fails([{"c":1}, {"a":1}], [list, dict], ["a"])
 
     def assert_validate_keys_passes(self, param, t_types, keys):
         checks.check_type(param=param, name="cat", t_types=t_types, len_list=None, keys=keys)
