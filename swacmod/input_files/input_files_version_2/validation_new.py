@@ -825,7 +825,6 @@ def val_evt_parameters(data, name):
 
 def val_nevtopt(data, name):
     x = data["params"][name]
-    c.check_type(param=x, name=name, t_types=data["specs"][name]["type"])
     c.validate_constraints([x], name, data["specs"][name]["constraints"])
 
 def validate_2(params, specs):
