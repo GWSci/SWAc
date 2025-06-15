@@ -47,6 +47,9 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     new_len = None
     if t_type == expanded_list and len_list:
         new_len = len_list.pop(0)
+        next_len_list = len_list
+    else:
+        next_len_list = len_list
 
     if t_type == expanded_list and new_len and len(param) != new_len:
         msg = 'Parameter "%s" has to be a list of length %d, found %d'
@@ -64,13 +67,13 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         for value in param.values():
             copy_l = []
             if len_list:
-                copy_l = [i for i in len_list]
+                copy_l = [i for i in next_len_list]
             check_type(param=value, name=name, t_types=t_types[1:], len_list=copy_l, keys=keys)
     elif t_type in [set, expanded_list]:
         for value in param:
             copy_l = []
             if len_list:
-                copy_l = [i for i in len_list]
+                copy_l = [i for i in next_len_list]
             check_type(param=value, name=name, t_types=t_types[1:], len_list=copy_l, keys=keys)
     else:
         check_type(param=param, name=name, t_types=t_types[1:], len_list=len_list, keys=keys)
