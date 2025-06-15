@@ -64,7 +64,7 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
 
     if t_type == dict and (type(param) == dict):
         for value in param.values():
-            copy_t = [i for i in types]
+            copy_t = t_types[1:]
             copy_l = []
             if len_list:
                 copy_l = [i for i in len_list]
