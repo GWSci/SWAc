@@ -15,6 +15,9 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     if (len_list is None) and (keys is not None):
         validate_keys(param, name, t_types, keys)
         return
+    if (len_list is not None) and (keys is None):
+        validate_list_length(param, name, t_types, len_list)
+        return
     if (t_types is None) or len(t_types) == 0:
         return
 
@@ -50,6 +53,23 @@ def validate_keys(param, name, t_types, keys):
     elif t_type in [expanded_list]:
         for value in param:
             validate_keys(param=value, name=name, t_types=t_types[1:], keys=keys)
+
+def validate_list_length(param=None, name=None, t_types=None, len_list=None):
+    if (t_types is None) or len(t_types) == 0:
+        return
+
+    t_type = expand_t_type(t_types[0])
+    expanded_list = expand_t_type(list)
+
+    if t_type == expanded_list and type(param) in expanded_list and len_list:
+        _validate_list_length(param, name, len_list[0])
+
+    if t_type == dict and (type(param) == dict):
+        for value in param.values():
+            validate_list_length(value, name, t_types[1:], len_list)
+    elif t_type in [expanded_list]:
+        for value in param:
+            validate_list_length(value, name, t_types[1:], tail(len_list))
 
 def tail(a_list):
     if a_list and len(a_list) > 0:
