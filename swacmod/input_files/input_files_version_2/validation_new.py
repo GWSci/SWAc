@@ -509,12 +509,17 @@ def val_macropore_activation(data, name):
 def val_macropore_recharge(data, name):
     mpr = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=mpr,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=range(1, 13),
+    )
+    c.validate_list_length(
         param=mpr,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(mzn)],
-        keys=range(1, 13),
     )
     c.validate_min_inclusive([j for i in mpr.values() for j in i], name, 0)
     c.validate_max_inclusive([j for i in mpr.values() for j in i], name, 1.0)
@@ -527,23 +532,33 @@ def val_soil_static_params(data, name):
         return
     ssp = data["params"][name]
     szn = data["params"]["soil_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=ssp,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=["FC", "WP", "p"],
+    )
+    c.validate_list_length(
         param=ssp,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(szn)],
-        keys=["FC", "WP", "p"],
     )
 
 def val_smd(data, name):
     smd = data["params"][name]
     szn = data["params"]["soil_zone_names"]
-    c.validate_keys_and_length(
+    c.validate_keys(
+        param=smd,
+        name=name,
+        t_types=data["specs"][name]["type"],
+        keys=["starting_SMD"],
+    )
+    c.validate_list_length(
         param=smd,
         name=name,
         t_types=data["specs"][name]["type"],
         len_list=[len(szn)],
-        keys=["starting_SMD"],
     )
 
 def val_soil_spatial(data, name):
