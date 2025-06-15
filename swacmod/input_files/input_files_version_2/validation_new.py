@@ -274,7 +274,7 @@ def val_canopy_zone_mapping(data, name):
     rrzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["canopy_zone_names"]
-    c.check_type(
+    c.validate_keys(
         param=rrzm,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -286,7 +286,7 @@ def val_canopy_zone_mapping(data, name):
 def val_free_throughfall(data, name):
     fth = data["params"][name]
     tot = len(data["params"]["canopy_zone_names"])
-    c.check_type(
+    c.validate_keys(
         param=fth,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -298,7 +298,7 @@ def val_free_throughfall(data, name):
 def val_max_canopy_storage(data, name):
     mcs = data["params"][name]
     tot = len(data["params"]["canopy_zone_names"])
-    c.check_type(
+    c.validate_keys(
         param=mcs,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -337,14 +337,14 @@ def val_snow_params_complex(data, name):
 def val_rapid_runoff_params(data, name):
     rrp = data["params"][name]
     rzn = data["params"]["rapid_runoff_zone_names"]
-    c.check_type(
+    c.validate_list_length(
         param=rrp, name=name, t_types=data["specs"][name]["type"],
         len_list=[len(rzn)]
     )
     keys = ["class_smd", "class_ri", "values"]
     for zone in rrp:
         c.check_type(param=zone, name=name, t_types=[dict], keys=keys)
-        c.check_type(
+        c.validate_list_length(
             param=zone["values"],
             name=name,
             t_types=[list, list],
@@ -827,11 +827,10 @@ def val_swabs_f(data, name):
 
 def val_evt_parameters(data, name):
     rpn = data["params"][name]
-    c.check_type(
+    c.validate_list_length(
         param=rpn,
         name=name,
         t_types=data["specs"][name]["type"],
-        # keys=range(1, tot + 1),
         len_list=[3],
     )
 
