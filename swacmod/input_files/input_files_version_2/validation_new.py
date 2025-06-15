@@ -325,7 +325,7 @@ def val_snow_params_complex(data, name):
         return
     snp = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=snp,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -363,7 +363,7 @@ def val_rorecharge_process(data, name):
 def val_single_cell_swrecharge_proportion(data, name):
     rrp = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.check_type(param=rrp,
+    c.validate_keys_and_length(param=rrp,
                  name=name,
                  t_types=data['specs'][name]['type'],
                  len_list=[len(rzn)],
@@ -375,7 +375,7 @@ def val_single_cell_swrecharge_proportion(data, name):
 def val_single_cell_swrecharge_limit(data, name):
     rrl = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.check_type(param=rrl,
+    c.validate_keys_and_length(param=rrl,
                  name=name,
                  t_types=data['specs'][name]['type'],
                  len_list=[len(rzn)],
@@ -384,7 +384,7 @@ def val_single_cell_swrecharge_limit(data, name):
 def val_single_cell_swrecharge_activation(data, name):
     rra = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.check_type(param=rra,
+    c.validate_keys_and_length(param=rra,
                  name=name,
                  t_types=data['specs'][name]['type'],
                  len_list=[len(rzn)],
@@ -400,7 +400,7 @@ def val_swrecharge_process(data, name):
 def val_swrecharge_proportion(data, name):
     rrp = data["params"][name]
     rzn = data["params"]["swrecharge_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=rrp,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -413,7 +413,7 @@ def val_swrecharge_proportion(data, name):
 def val_swrecharge_limit(data, name):
     rrl = data["params"][name]
     rzn = data["params"]["swrecharge_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=rrl,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -431,7 +431,7 @@ def val_macropore_process(data, name):
 def val_macropore_proportion(data, name):
     mpp = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=mpp,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -445,7 +445,7 @@ def val_macropore_proportion(data, name):
 def val_macropore_limit(data, name):
     mpl = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=mpl,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -456,7 +456,7 @@ def val_macropore_limit(data, name):
 def val_macropore_activation(data, name):
     mpa = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=mpa,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -467,7 +467,7 @@ def val_macropore_activation(data, name):
 def val_macropore_recharge(data, name):
     mpr = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=mpr,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -485,7 +485,7 @@ def val_soil_static_params(data, name):
         return
     ssp = data["params"][name]
     szn = data["params"]["soil_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=ssp,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -496,7 +496,7 @@ def val_soil_static_params(data, name):
 def val_smd(data, name):
     smd = data["params"][name]
     szn = data["params"]["soil_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=smd,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -508,7 +508,7 @@ def val_soil_spatial(data, name):
     sos = data["params"][name]
     soz = data["params"]["soil_zone_names"]
     tot = data["params"]["num_nodes"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=sos,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -525,7 +525,7 @@ def val_lu_spatial(data, name):
     lus = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
     tot = data["params"]["num_nodes"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=lus,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -545,7 +545,7 @@ def val_zr(data, name):
         return
     zrn = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=zrn,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -558,7 +558,7 @@ def val_kc(data, name):
         return
     kcn = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=kcn,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -573,7 +573,7 @@ def val_taw(data, name):
     taw = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
 
-    c.check_type(
+    c.validate_keys_and_length(
         param=taw,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -588,7 +588,7 @@ def val_raw(data, name):
     raw = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
 
-    c.check_type(
+    c.validate_keys_and_length(
         param=raw,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -603,7 +603,7 @@ def val_percolation_rejection(data, name):
     per = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
 
-    c.check_type(
+    c.validate_keys_and_length(
         param=per,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -682,7 +682,7 @@ def val_recharge_attenuation_params(data, name):
 def val_sw_zone_names(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrn = data["params"][name]
-        c.check_type(param=rrn, name=name, t_types=data["specs"][name]["type"])
+        c.validate_keys_and_length(param=rrn, name=name, t_types=data["specs"][name]["type"])
 
 def val_sw_zone_mapping(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
@@ -702,7 +702,7 @@ def val_sw_downstream(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.check_type(
+        c.validate_keys_and_length(
             param=rrp,
             name=name,
             t_types=data["specs"][name]["type"],
@@ -716,7 +716,7 @@ def val_sw_bed_infiltration(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.check_type(
+        c.validate_keys_and_length(
             param=rrp,
             name=name,
             t_types=data["specs"][name]["type"],
@@ -730,7 +730,7 @@ def val_sw_direct_recharge(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.check_type(
+        c.validate_keys_and_length(
             param=rrp,
             name=name,
             t_types=data["specs"][name]["type"],
@@ -744,7 +744,7 @@ def val_sw_activation(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.check_type(
+        c.validate_keys_and_length(
             param=rrp,
             name=name,
             t_types=data["specs"][name]["type"],
@@ -756,7 +756,7 @@ def val_sw_pe_to_open_water(data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.check_type(
+        c.validate_keys_and_length(
             param=rrp,
             name=name,
             t_types=data["specs"][name]["type"],
@@ -785,7 +785,7 @@ def val_sw_ponding_area(data, name):
 def val_sw_params(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=rpn,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -798,7 +798,7 @@ def val_sw_params(data, name):
 def val_routing_topology(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=rpn,
         name=name,
         t_types=data["specs"][name]["type"],
@@ -809,7 +809,7 @@ def val_routing_topology(data, name):
 def val_recharge_node_mapping(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.check_type(
+    c.validate_keys_and_length(
         param=rpn,
         name=name,
         t_types=data["specs"][name]["type"],
