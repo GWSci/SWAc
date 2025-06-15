@@ -62,25 +62,16 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
 
     if t_type == dict and (type(param) == dict):
         for value in param.values():
-            copy_t = t_types[1:]
             copy_l = []
             if len_list:
                 copy_l = [i for i in len_list]
-            check_type(
-              param=value, name=name, t_types=copy_t, len_list=copy_l,
-              keys=keys
-            )
-
+            check_type(param=value, name=name, t_types=t_types[1:], len_list=copy_l, keys=keys)
     elif t_type in [set, expanded_list]:
         for value in param:
-            copy_t = t_types[1:]
             copy_l = []
             if len_list:
                 copy_l = [i for i in len_list]
-            check_type(
-              param=value, name=name, t_types=copy_t, len_list=copy_l,
-              keys=keys
-            )
+            check_type(param=value, name=name, t_types=t_types[1:], len_list=copy_l, keys=keys)
     else:
         check_type(param=param, name=name, t_types=t_types[1:], len_list=len_list, keys=keys)
 
