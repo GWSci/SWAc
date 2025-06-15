@@ -532,18 +532,8 @@ def val_routing_topology(data, name):
 def val_recharge_node_mapping(data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(
-        rpn,
-        name,
-        data["specs"][name]["type"],
-        range(1, tot + 1),
-    )
-    c.validate_list_length(
-        rpn,
-        name,
-        data["specs"][name]["type"],
-        [1],
-    )
+    c.validate_keys(rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_list_length(rpn,name,data["specs"][name]["type"],[1],)
 
 def val_swdis_f(data, name):
     x = data["params"][name]
@@ -555,12 +545,7 @@ def val_swabs_f(data, name):
 
 def val_evt_parameters(data, name):
     rpn = data["params"][name]
-    c.validate_list_length(
-        rpn,
-        name,
-        data["specs"][name]["type"],
-        [3],
-    )
+    c.validate_list_length(rpn,name,data["specs"][name]["type"],[3],)
 
 def val_nevtopt(data, name):
     x = data["params"][name]
