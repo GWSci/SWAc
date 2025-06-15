@@ -40,56 +40,55 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
     if (t_types is None) or len(t_types) == 0:
         return
     types = [i for i in t_types]
-    while types:
 
-        t_type = types.pop(0)
-        t_type = expand_t_type(t_type)
+    t_type = types.pop(0)
+    t_type = expand_t_type(t_type)
 
-        expanded_list = expand_t_type(list)
+    expanded_list = expand_t_type(list)
 
-        new_len = None
-        if t_type == expanded_list and len_list:
-            new_len = len_list.pop(0)
+    new_len = None
+    if t_type == expanded_list and len_list:
+        new_len = len_list.pop(0)
 
-        if t_type == expanded_list and new_len and len(param) != new_len:
-            msg = 'Parameter "%s" has to be a list of length %d, found %d'
-            raise u.ValidationError(msg % (name, new_len, len(param)))
+    if t_type == expanded_list and new_len and len(param) != new_len:
+        msg = 'Parameter "%s" has to be a list of length %d, found %d'
+        raise u.ValidationError(msg % (name, new_len, len(param)))
 
-        if t_type == dict and (type(param) == dict) and keys:
-            set_keys = set(keys)
-            param_keys = set(param.keys())
-            if not set_keys.issubset(param_keys):
-                msg = 'Parameter "%s" is missing the following keys: %s'
-                diff = set_keys - param_keys
-                raise u.ValidationError(msg % (name, diff))
+    if t_type == dict and (type(param) == dict) and keys:
+        set_keys = set(keys)
+        param_keys = set(param.keys())
+        if not set_keys.issubset(param_keys):
+            msg = 'Parameter "%s" is missing the following keys: %s'
+            diff = set_keys - param_keys
+            raise u.ValidationError(msg % (name, diff))
 
-        if len(types) > 0 and t_type == dict and (type(param) == dict):
-            for value in param.values():
-                copy_t = [i for i in types]
-                copy_l = []
-                if len_list:
-                    copy_l = [i for i in len_list]
-                check_type(
-                  param=value, name=name, t_types=copy_t, len_list=copy_l,
-                  keys=keys
-                )
-            types = []
-            len_list = []
+    if len(types) > 0 and t_type == dict and (type(param) == dict):
+        for value in param.values():
+            copy_t = [i for i in types]
+            copy_l = []
+            if len_list:
+                copy_l = [i for i in len_list]
+            check_type(
+              param=value, name=name, t_types=copy_t, len_list=copy_l,
+              keys=keys
+            )
+        types = []
+        len_list = []
 
-        elif len(types) > 0 and t_type in [set, expanded_list]:
-            for value in param:
-                copy_t = [i for i in types]
-                copy_l = []
-                if len_list:
-                    copy_l = [i for i in len_list]
-                check_type(
-                  param=value, name=name, t_types=copy_t, len_list=copy_l,
-                  keys=keys
-                )
-            types = []
-            len_list = []
-        else:
-            check_type(param=param, name=name, t_types=types, len_list=len_list, keys=keys)
+    elif len(types) > 0 and t_type in [set, expanded_list]:
+        for value in param:
+            copy_t = [i for i in types]
+            copy_l = []
+            if len_list:
+                copy_l = [i for i in len_list]
+            check_type(
+              param=value, name=name, t_types=copy_t, len_list=copy_l,
+              keys=keys
+            )
+        types = []
+        len_list = []
+    else:
+        check_type(param=param, name=name, t_types=types, len_list=len_list, keys=keys)
 
 def check_values_limits(
     values,
