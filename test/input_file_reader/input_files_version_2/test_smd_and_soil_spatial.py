@@ -116,7 +116,7 @@ class Test_Always_Validate_Soil_Spatial(unittest.TestCase):
         with self.assertRaisesRegex(u.ValidationError, 'soil_spatial'):
             validation.val_soil_spatial(data, 'soil_spatial')
 
-def mess_up_parameter_and_make_data(input_file, param, messed_up_value="sausage"):
+def mess_up_parameter_and_make_data(input_file, param, messed_up_value):
     input_file[param] = messed_up_value
     mock_file_open = make_mock_file_open_and_contents('potato.yml', input_file)
     params = loader.load_yaml('potato.yml', mock_file_open)
