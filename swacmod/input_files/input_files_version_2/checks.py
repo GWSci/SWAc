@@ -12,13 +12,11 @@ def expand_t_type(t_type):
     return t_type
 
 def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
-    if (len_list is None) and (keys is not None):
+    if keys is not None:
         validate_keys(param, name, t_types, keys)
-        return
     if (len_list is not None) and (keys is None):
         validate_list_length(param, name, t_types, len_list)
         return
-    validate_keys(param, name, t_types, keys)
     validate_list_length(param, name, t_types, len_list)
 
 def validate_keys(param, name, t_types, keys):
