@@ -62,6 +62,11 @@ class MyTestCase(unittest.TestCase):
         self.assert_validate_list_length_passes(["a", "b"], [list], [2])
 
     def test_list_length_when_len_list_length_differs_and_expected_length_is_zero(self):
+        # TODO Possible bug when expected list length is zero.
+        #  This test shows that if the value of expected length is zero,
+        #  then it will allow a list of non-zero length. This is surprising and
+        #  it is unclear whether this is to deliberately allow for any list
+        #  length, or whether it is a bug.
         self.assert_validate_list_length_passes(["a"], [list], [0])
 
     def assert_validate_list_length_passes(self, param, t_types, list_lengths):
