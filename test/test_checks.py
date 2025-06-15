@@ -164,8 +164,18 @@ class MyTestCase(unittest.TestCase):
         with self.assertRaises(u.ValidationError):
             _validate_list_length_adaptor(param, t_types, list_lengths)
 
+    def test_validating_list_length_and_keys_together_when_everything_matches(self):
+        self.assert_validate_list_length_and_keys_passes([{"a":1}, {"a":1}], [list, dict], [2], ["a"])
+        self.assert_validate_list_length_and_keys_passes([{"a":1}, {"a":1}], [list, dict], [2], ["a"])
+
+    def assert_validate_list_length_and_keys_passes(self, param, t_types, list_lengths, keys):
+        _validate_list_length_and_keys_adaptor(param, t_types, list_lengths, keys)
+
 def _validate_keys_adaptor(param, t_types, keys):
     checks.check_type(param=param, name="cat", t_types=t_types, len_list=None, keys=keys)
 
 def _validate_list_length_adaptor(param, t_types, list_lengths):
     checks.check_type(param=param, name="cat", t_types=t_types, len_list=list_lengths, keys=None)
+
+def _validate_list_length_and_keys_adaptor(param, t_types, list_lengths, keys):
+    checks.check_type(param=param, name="cat", t_types=t_types, len_list=list_lengths, keys=keys)
