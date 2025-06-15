@@ -50,6 +50,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_list_length_when_len_list_is_none(self):
         self.assert_validate_keys_passes([], [list], None)
+        self.assert_validate_keys_passes(["a"], [list], None)
 
 def _validate_keys_adaptor(param, t_types, keys):
     checks.check_type(param=param, name="cat", t_types=t_types, len_list=None, keys=keys)
