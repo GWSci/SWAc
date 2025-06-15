@@ -20,6 +20,8 @@ def check_type(param=None, name=None, t_types=None, len_list=None, keys=None):
         return
     if (t_types is None) or len(t_types) == 0:
         return
+    validate_keys(param, name, t_types, keys)
+    validate_list_length(param, name, t_types, len_list)
 
     t_type = expand_t_type(t_types[0])
     expanded_list = expand_t_type(list)
