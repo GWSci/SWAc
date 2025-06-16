@@ -14,10 +14,10 @@ def validate_keys(param, name, t_types, keys):
 
     if t_type == dict and (type(param) == dict):
         for value in param.values():
-            validate_keys(param=value, name=name, t_types=t_types[1:], keys=keys)
+            validate_keys(value, name, t_types[1:], keys)
     elif t_type in [expanded_list]:
         for value in param:
-            validate_keys(param=value, name=name, t_types=t_types[1:], keys=keys)
+            validate_keys(value, name, t_types[1:], keys)
 
 def _expand_t_type(t_type):
     if t_type == float:
