@@ -5,11 +5,11 @@ import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
 
 def val_num_cores(errors, data, name):
-    c.validate_min_exclusive([data["params"][name]], name, 0)
+    c.validate_min_exclusive(errors, [data["params"][name]], name, 0)
     c.validate_max_inclusive([data["params"][name]], name, multiprocessing.cpu_count())
 
 def val_num_nodes(errors, data, name):
-    c.validate_min_exclusive([data["params"][name]], name, 0)
+    c.validate_min_exclusive(errors, [data["params"][name]], name, 0)
 
 def val_start_date(errors, data, name):
     dat = data["params"][name]
@@ -40,10 +40,10 @@ def val_output_individual(errors, data, name):
         raise u.ValidationError(msg % name)
 
 def val_nodes_per_line(errors, data, name):
-    c.validate_min_exclusive([data["params"][name]], name, 0)
+    c.validate_min_exclusive(errors, [data["params"][name]], name, 0)
 
 def val_output_fac(errors, data, name):
-    c.validate_min_exclusive([data["params"][name]], name, 0.0)
+    c.validate_min_exclusive(errors, [data["params"][name]], name, 0.0)
 
 def val_spatial_output_date(errors, data, name):
     dat = data["params"][name]
@@ -502,7 +502,7 @@ def val_sw_ponding_area(errors, data, name):
         num = data["params"][name]
         values = [i for i in num.values()]
         c.validate_max_inclusive(values, name, 1.0)
-        c.validate_min_exclusive(values, name, 0)
+        c.validate_min_exclusive(errors, values, name, 0)
 
 def val_sw_params(errors, data, name):
     rpn = data["params"][name]
