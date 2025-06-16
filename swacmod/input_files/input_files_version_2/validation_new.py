@@ -89,61 +89,53 @@ def validate_zone_mapping_B(zone_name, errors, data, name):
     c.validate_min_inclusive(errors, param.values(), name, 0)
     c.validate_max_inclusive(errors, param.values(), name, len(tzn))
 
-def val_temperature_zone_mapping(errors, data, name):
-    tzm = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    tzn = data["params"]["temperature_zone_names"]
-    c.validate_keys(errors, tzm,name,data["specs"][name]["type"],range(1, tot + 1),)
-    c.validate_min_inclusive(errors, tzm.values(), name, 0)
-    c.validate_max_inclusive(errors, tzm.values(), name, len(tzn))
-
 def val_subroot_zone_mapping(errors, data, name):
-    szm = data["params"][name]
+    param = data["params"][name]
     tot = data["params"]["num_nodes"]
     szn = data["params"]["subroot_zone_names"]
-    c.validate_keys(errors, szm,name,data["specs"][name]["type"],range(1, tot + 1),)
-    c.validate_min_inclusive(errors, [i[0] for i in szm.values()], "zone in %s" % name, 0)
-    c.validate_max_inclusive(errors, [i[0] for i in szm.values()], "zone in %s" % name, len(szn))
+    c.validate_keys(errors, param,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, 0)
+    c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(szn))
 
 def val_rapid_runoff_zone_mapping(errors, data, name):
-    rrzm = data["params"][name]
+    param = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["rapid_runoff_zone_names"]
-    c.validate_keys(errors, rrzm,name,data["specs"][name]["type"],range(1, tot + 1),)
-    c.validate_min_inclusive(errors, rrzm.values(), name, 0)
-    c.validate_max_inclusive(errors, rrzm.values(), name, len(rzn))
+    c.validate_keys(errors, param,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_min_inclusive(errors, param.values(), name, 0)
+    c.validate_max_inclusive(errors, param.values(), name, len(rzn))
 
 def val_interflow_zone_mapping(errors, data, name):
-    rrzm = data["params"][name]
+    param = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["interflow_zone_names"]
-    c.validate_keys(errors, rrzm,name,data["specs"][name]["type"],range(1, tot + 1),)
-    c.validate_min_inclusive(errors, rrzm.values(), name, 0)
-    c.validate_max_inclusive(errors, rrzm.values(), name, len(rzn))
+    c.validate_keys(errors, param,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_min_inclusive(errors, param.values(), name, 0)
+    c.validate_max_inclusive(errors, param.values(), name, len(rzn))
 
 def val_swrecharge_zone_mapping(errors, data, name):
-    rorzm = data["params"][name]
+    param = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["swrecharge_zone_names"]
-    c.validate_keys(errors, rorzm,name,data["specs"][name]["type"],range(1, tot + 1),)
-    c.validate_min_inclusive(errors, rorzm.values(), name, 0)
-    c.validate_max_inclusive(errors, rorzm.values(), name, len(rzn))
+    c.validate_keys(errors, param,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_min_inclusive(errors, param.values(), name, 0)
+    c.validate_max_inclusive(errors, param.values(), name, len(rzn))
 
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
-    rorzm = data['params'][name]
+    param = data['params'][name]
     tot = data['params']['num_nodes']
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys(errors, rorzm,name,data['specs'][name]['type'],range(1, tot + 1))
-    c.validate_min_inclusive(errors, rorzm.values(), name, 0)
-    c.validate_max_inclusive(errors, rorzm.values(), name, len(rzn))
+    c.validate_keys(errors, param,name,data['specs'][name]['type'],range(1, tot + 1))
+    c.validate_min_inclusive(errors, param.values(), name, 0)
+    c.validate_max_inclusive(errors, param.values(), name, len(rzn))
 
 def val_macropore_zone_mapping(errors, data, name):
-    mzm = data["params"][name]
+    param = data["params"][name]
     tot = data["params"]["num_nodes"]
     mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(errors, mzm,name,data["specs"][name]["type"],range(1, tot + 1),)
-    c.validate_min_inclusive(errors, mzm.values(), name, 0)
-    c.validate_max_inclusive(errors, mzm.values(), name, len(mzn))
+    c.validate_keys(errors, param,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_min_inclusive(errors, param.values(), name, 0)
+    c.validate_max_inclusive(errors, param.values(), name, len(mzn))
 
 def validate_constraints(errors, data, name):
     x = data["params"][name]
@@ -514,7 +506,7 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, partial(validate_zone_mapping_A, "rainfall_zone_names", 1), "rainfall_zone_mapping")
     do_validation(errors, data, val_rapid_runoff_zone_mapping, "rapid_runoff_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_A, "pe_zone_names", 0), "pe_zone_mapping")
-    do_validation(errors, data, val_temperature_zone_mapping, "temperature_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_B, "temperature_zone_names"), "temperature_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "tmax_c_zone_names"), "tmax_c_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "tmin_c_zone_names"), "tmin_c_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "tmin_c_zone_names"), "windsp_zone_mapping")
