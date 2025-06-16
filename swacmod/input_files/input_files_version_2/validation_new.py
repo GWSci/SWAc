@@ -86,12 +86,8 @@ def _validate_zone_mapping_helper(zone_name, min_inclusive, message_format, para
 
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
-    param = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    tzn = data["params"]["single_cell_swrecharge_zone_names"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, param.values(), name, 0)
-    c.validate_max_inclusive(errors, param.values(), name, len(tzn))
+    param_values = data["params"][name].values()
+    _validate_zone_mapping_helper("single_cell_swrecharge_zone_names", 0, "%s", param_values, errors, data, name)
 
 def validate_constraints(errors, data, name):
     x = data["params"][name]
