@@ -44,11 +44,12 @@ class MyTestCase(unittest.TestCase):
     def assert_validate_keys_passes(self, param, t_types, keys):
         errors = []
         _validate_keys_adaptor(errors, param, t_types, keys)
+        self.assertEqual(0, len(errors))
 
     def assert_validate_keys_fails(self, param, t_types, keys):
         errors = []
-        with self.assertRaises(u.ValidationError):
-            _validate_keys_adaptor(errors, param, t_types, keys)
+        _validate_keys_adaptor(errors, param, t_types, keys)
+        self.assertEqual(1, len(errors))
 
     def test_list_length_when_len_list_is_none(self):
         self.assert_validate_list_length_passes([], [list], None)

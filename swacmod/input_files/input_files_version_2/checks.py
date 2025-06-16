@@ -10,7 +10,7 @@ def validate_keys(errors, param, name, t_types, keys):
     expanded_list = _expand_t_type(list)
 
     if t_type == dict and (type(param) == dict) and keys:
-        _validate_keys(param, name, keys)
+        _validate_keys(errors, param, name, keys)
 
     if t_type == dict and (type(param) == dict):
         for value in param.values():
@@ -28,13 +28,13 @@ def _expand_t_type(t_type):
         t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
     return t_type
 
-def _validate_keys(param, name, keys):
+def _validate_keys(errors, param, name, keys):
     set_keys = set(keys)
     param_keys = set(param.keys())
     if not set_keys.issubset(param_keys):
         msg = 'Parameter "%s" is missing the following keys: %s'
         diff = set_keys - param_keys
-        raise u.ValidationError(msg % (name, diff))
+        errors.append(msg % (name, diff))
 
 def validate_list_length(errors, param, name, t_types, len_list):
     if (t_types is None) or len(t_types) == 0:
@@ -65,9 +65,12 @@ def _tail(a_list):
         return a_list
 
 def validate_max_inclusive(errors, values, name, high_l):
-    if not all(i <= high_l for i in values):
-        msg = 'Parameter "%s" requires values <= %s'
-        raise u.ValidationError(msg % (name, high_l))
+    try:
+        if not all(i <= high_l for i in values):
+            msg = 'Parameter "%s" requires values <= %s'
+            raise u.ValidationError(msg % (name, high_l))
+    except TypeError:
+        pass
 
 def validate_min_exclusive(errors, values, name, low_l):
     if not all(i > low_l for i in values):
@@ -75,9 +78,12 @@ def validate_min_exclusive(errors, values, name, low_l):
         raise u.ValidationError(msg % (name, low_l))
 
 def validate_min_inclusive(errors, values, name, low_l):
-    if not all(i >= low_l for i in values):
-        msg = 'Parameter "%s" requires values >= %s'
-        raise u.ValidationError(msg % (name, low_l))
+    try:
+        if not all(i >= low_l for i in values):
+            msg = 'Parameter "%s" requires values >= %s'
+            raise u.ValidationError(msg % (name, low_l))
+    except TypeError:
+        pass
 
 def validate_constraints(errors, values, name, constraints):
     if not all(i in constraints for i in values):
