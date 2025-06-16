@@ -18,7 +18,7 @@ def val_time_periods(errors, data, name):
             'Parameter "%s" requires all days to be included'
             " in one (and only one) of the periods"
         )
-        raise u.ValidationError(msg % name)
+        errors.append(msg % name)
 
 def val_rainfall_ts(errors, data, name):
     rzn = data["params"]["rainfall_zone_names"]
