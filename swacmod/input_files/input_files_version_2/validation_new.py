@@ -56,7 +56,7 @@ def val_swdis_locs(errors, data, name):
     tot = len(data["params"]["swdis_locs"]) + 1
     if swdisn != {0: 0}:
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
-        # c.validate_keys(swdisl, name, data["specs"][name]["type"], range(1, tot))
+        # c.validate_keys(errors, swdisl, name, data["specs"][name]["type"], range(1, tot))
         c.validate_min_inclusive(errors, swdisl.values(), "zone in %s" % name, 1)
         c.validate_max_inclusive(errors, swdisl.values(), "zone in %s" % name, tot)
         c.validate_min_inclusive(errors, swdisl.keys(), "node in %s" % name, 1)
@@ -68,14 +68,14 @@ def val_swabs_locs(errors, data, name):
     if swabsn != {0: 0}:
         tot = len(data["params"]["swabs_locs"]) + 1
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
-        # c.validate_keys(swabsl, name, data["specs"][name]["type"], range(1, tot))
+        # c.validate_keys(errors, swabsl, name, data["specs"][name]["type"], range(1, tot))
         c.validate_min_inclusive(errors, swabsl.values(), "zone in %s" % name, 1)
         c.validate_max_inclusive(errors, swabsl.values(), "zone in %s" % name, tot)
         c.validate_min_inclusive(errors, swabsl.keys(), "node in %s" % name, 1)
         c.validate_max_inclusive(errors, swabsl.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
 def val_node_areas(errors, data, name):
-    c.validate_keys(data["params"][name], name, data["specs"][name]["type"], range(1, data["params"]["num_nodes"] + 1))
+    c.validate_keys(errors, data["params"][name], name, data["specs"][name]["type"], range(1, data["params"]["num_nodes"] + 1))
     c.validate_min_inclusive(errors, data["params"][name].values(), name, 0)
 
 def val_reporting_zone_mapping(errors, data, name):
@@ -84,7 +84,7 @@ def val_reporting_zone_mapping(errors, data, name):
     rzm = data["params"][name]
     tot = data["params"][tot_name]
     rzn = data["params"][zone_name]
-    c.validate_keys(rzm,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, rzm,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, rzm.values(), "zone in %s" % name, 0)
     c.validate_max_inclusive(errors, rzm.values(), "zone in %s" % name, len(rzn))
 
@@ -94,7 +94,7 @@ def val_rainfall_zone_mapping(errors, data, name):
     rzm = data["params"][name]
     tot = data["params"][tot_name]
     rzn = data["params"][zone_name]
-    c.validate_keys(rzm, name, data["specs"][name]["type"], range(1, tot + 1))
+    c.validate_keys(errors, rzm, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, [i[0] for i in rzm.values()], "zone in %s" % name, 1)
     c.validate_max_inclusive(errors, [i[0] for i in rzm.values()], "zone in %s" % name, len(rzn))
 
@@ -102,7 +102,7 @@ def val_pe_zone_mapping(errors, data, name):
     pzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     pzn = data["params"]["pe_zone_names"]
-    c.validate_keys(pzm, name, data["specs"][name]["type"], range(1, tot + 1))
+    c.validate_keys(errors, pzm, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, [i[0] for i in pzm.values()], "zone in %s" % name, 0)
     c.validate_max_inclusive(errors, [i[0] for i in pzm.values()], "zone in %s" % name, len(pzn))
 
@@ -110,7 +110,7 @@ def val_tmax_c_zone_mapping(errors, data, name):
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["tmax_c_zone_names"]
-    c.validate_keys(tzm, name, data["specs"][name]["type"], range(1, tot + 1))
+    c.validate_keys(errors, tzm, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, tzm.values(), name, 0)
     c.validate_max_inclusive(errors, tzm.values(), name, len(tzn))
 
@@ -118,7 +118,7 @@ def val_tmin_c_zone_mapping(errors, data, name):
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["tmin_c_zone_names"]
-    c.validate_keys(tzm, name, data["specs"][name]["type"], range(1, tot + 1))
+    c.validate_keys(errors, tzm, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, tzm.values(), name, 0)
     c.validate_max_inclusive(errors, tzm.values(), name, len(tzn))
 
@@ -126,7 +126,7 @@ def val_windsp_zone_mapping(errors, data, name):
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["tmin_c_zone_names"]
-    c.validate_keys(tzm, name, data["specs"][name]["type"], range(1, tot + 1))
+    c.validate_keys(errors, tzm, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, tzm.values(), name, 0)
     c.validate_max_inclusive(errors, tzm.values(), name, len(tzn))
 
@@ -134,7 +134,7 @@ def val_temperature_zone_mapping(errors, data, name):
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["temperature_zone_names"]
-    c.validate_keys(tzm,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, tzm,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, tzm.values(), name, 0)
     c.validate_max_inclusive(errors, tzm.values(), name, len(tzn))
 
@@ -142,7 +142,7 @@ def val_subroot_zone_mapping(errors, data, name):
     szm = data["params"][name]
     tot = data["params"]["num_nodes"]
     szn = data["params"]["subroot_zone_names"]
-    c.validate_keys(szm,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, szm,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, [i[0] for i in szm.values()], "zone in %s" % name, 0)
     c.validate_max_inclusive(errors, [i[0] for i in szm.values()], "zone in %s" % name, len(szn))
 
@@ -150,7 +150,7 @@ def val_rapid_runoff_zone_mapping(errors, data, name):
     rrzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["rapid_runoff_zone_names"]
-    c.validate_keys(rrzm,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, rrzm,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, rrzm.values(), name, 0)
     c.validate_max_inclusive(errors, rrzm.values(), name, len(rzn))
 
@@ -158,7 +158,7 @@ def val_interflow_zone_mapping(errors, data, name):
     rrzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["interflow_zone_names"]
-    c.validate_keys(rrzm,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, rrzm,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, rrzm.values(), name, 0)
     c.validate_max_inclusive(errors, rrzm.values(), name, len(rzn))
 
@@ -166,7 +166,7 @@ def val_swrecharge_zone_mapping(errors, data, name):
     rorzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["swrecharge_zone_names"]
-    c.validate_keys(rorzm,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, rorzm,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, rorzm.values(), name, 0)
     c.validate_max_inclusive(errors, rorzm.values(), name, len(rzn))
 
@@ -174,7 +174,7 @@ def val_single_cell_swrecharge_zone_mapping(errors, data, name):
     rorzm = data['params'][name]
     tot = data['params']['num_nodes']
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys(rorzm,name,data['specs'][name]['type'],range(1, tot + 1))
+    c.validate_keys(errors, rorzm,name,data['specs'][name]['type'],range(1, tot + 1))
     c.validate_min_inclusive(errors, rorzm.values(), name, 0)
     c.validate_max_inclusive(errors, rorzm.values(), name, len(rzn))
 
@@ -182,7 +182,7 @@ def val_macropore_zone_mapping(errors, data, name):
     mzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(mzm,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, mzm,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, mzm.values(), name, 0)
     c.validate_max_inclusive(errors, mzm.values(), name, len(mzn))
 
@@ -194,21 +194,21 @@ def val_canopy_zone_mapping(errors, data, name):
     rrzm = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"]["canopy_zone_names"]
-    c.validate_keys(rrzm,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, rrzm,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, rrzm.values(), name, 0)
     c.validate_max_inclusive(errors, rrzm.values(), name, len(rzn))
 
 def val_free_throughfall(errors, data, name):
     fth = data["params"][name]
     tot = len(data["params"]["canopy_zone_names"])
-    c.validate_keys(fth,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, fth,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, fth.values(), name, 0)
     c.validate_max_inclusive(errors, fth.values(), name, 1.0)
 
 def val_max_canopy_storage(errors, data, name):
     mcs = data["params"][name]
     tot = len(data["params"]["canopy_zone_names"])
-    c.validate_keys(mcs,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, mcs,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, mcs.values(), name, 0)
 
 def val_snow_params_simple(errors, data, name):
@@ -216,7 +216,7 @@ def val_snow_params_simple(errors, data, name):
         return
     snp = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(snp,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, snp,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(snp,name,data["specs"][name]["type"],[3],)
     c.validate_min_inclusive(errors, [i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
 
@@ -225,7 +225,7 @@ def val_snow_params_complex(errors, data, name):
         return
     snp = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(snp,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, snp,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(snp,name,data["specs"][name]["type"],[10],)
     c.validate_min_inclusive(errors, [i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
 
@@ -238,7 +238,7 @@ def val_rapid_runoff_params(errors, data, name):
     )
     keys = ["class_smd", "class_ri", "values"]
     for zone in rrp:
-        c.validate_keys(zone, name, [dict], keys)
+        c.validate_keys(errors, zone, name, [dict], keys)
         c.validate_list_length(zone["values"],name,[list, list],[len(zone["class_ri"]), len(zone["class_smd"])],)
         c.validate_min_inclusive(errors, [i for j in zone["values"] for i in j], '"values" in "%s"' % name, 0)
         c.validate_max_inclusive(errors, [i for j in zone["values"] for i in j], '"values" in "%s"' % name, 1)
@@ -253,7 +253,7 @@ def val_rorecharge_process(errors, data, name):
 def val_single_cell_swrecharge_proportion(errors, data, name):
     rrp = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys(rrp,name,data['specs'][name]['type'],range(1, 13))
+    c.validate_keys(errors, rrp,name,data['specs'][name]['type'],range(1, 13))
     c.validate_list_length(rrp,name,data['specs'][name]['type'],[len(rzn)])
     c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
@@ -261,13 +261,13 @@ def val_single_cell_swrecharge_proportion(errors, data, name):
 def val_single_cell_swrecharge_limit(errors, data, name):
     rrl = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys(rrl,name,data['specs'][name]['type'],range(1, 13))
+    c.validate_keys(errors, rrl,name,data['specs'][name]['type'],range(1, 13))
     c.validate_list_length(rrl,name,data['specs'][name]['type'],[len(rzn)])
 
 def val_single_cell_swrecharge_activation(errors, data, name):
     rra = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys(rra,name,data['specs'][name]['type'],range(1, 13))
+    c.validate_keys(errors, rra,name,data['specs'][name]['type'],range(1, 13))
     c.validate_list_length(rra,name,data['specs'][name]['type'],[len(rzn)])
 
 def val_swrecharge_process(errors, data, name):
@@ -280,7 +280,7 @@ def val_swrecharge_process(errors, data, name):
 def val_swrecharge_proportion(errors, data, name):
     rrp = data["params"][name]
     rzn = data["params"]["swrecharge_zone_names"]
-    c.validate_keys(rrp,name,data["specs"][name]["type"],range(1, 13),)
+    c.validate_keys(errors, rrp,name,data["specs"][name]["type"],range(1, 13),)
     c.validate_list_length(rrp,name,data["specs"][name]["type"],[len(rzn)],)
     c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
@@ -288,7 +288,7 @@ def val_swrecharge_proportion(errors, data, name):
 def val_swrecharge_limit(errors, data, name):
     rrl = data["params"][name]
     rzn = data["params"]["swrecharge_zone_names"]
-    c.validate_keys(rrl,name,data["specs"][name]["type"],range(1, 13),)
+    c.validate_keys(errors, rrl,name,data["specs"][name]["type"],range(1, 13),)
     c.validate_list_length(rrl,name,data["specs"][name]["type"],[len(rzn)],)
 
 def val_macropore_process(errors, data, name):
@@ -301,7 +301,7 @@ def val_macropore_process(errors, data, name):
 def val_macropore_proportion(errors, data, name):
     mpp = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(mpp,name,data["specs"][name]["type"],range(1, 13),)
+    c.validate_keys(errors, mpp,name,data["specs"][name]["type"],range(1, 13),)
     c.validate_list_length(mpp,name,data["specs"][name]["type"],[len(mzn)],)
     c.validate_min_inclusive(errors, [j for i in mpp.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in mpp.values() for j in i], name, 1.0)
@@ -309,19 +309,19 @@ def val_macropore_proportion(errors, data, name):
 def val_macropore_limit(errors, data, name):
     mpl = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(mpl,name,data["specs"][name]["type"],range(1, 13),)
+    c.validate_keys(errors, mpl,name,data["specs"][name]["type"],range(1, 13),)
     c.validate_list_length(mpl,name,data["specs"][name]["type"],[len(mzn)],)
 
 def val_macropore_activation(errors, data, name):
     mpa = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(mpa,name,data["specs"][name]["type"],range(1, 13),)
+    c.validate_keys(errors, mpa,name,data["specs"][name]["type"],range(1, 13),)
     c.validate_list_length(mpa,name,data["specs"][name]["type"],[len(mzn)],)
 
 def val_macropore_recharge(errors, data, name):
     mpr = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(mpr,name,data["specs"][name]["type"],range(1, 13),)
+    c.validate_keys(errors, mpr,name,data["specs"][name]["type"],range(1, 13),)
     c.validate_list_length(mpr,name,data["specs"][name]["type"],[len(mzn)],)
     c.validate_min_inclusive(errors, [j for i in mpr.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in mpr.values() for j in i], name, 1.0)
@@ -334,20 +334,20 @@ def val_soil_static_params(errors, data, name):
         return
     ssp = data["params"][name]
     szn = data["params"]["soil_zone_names"]
-    c.validate_keys(ssp,name,data["specs"][name]["type"],["FC", "WP", "p"],)
+    c.validate_keys(errors, ssp,name,data["specs"][name]["type"],["FC", "WP", "p"],)
     c.validate_list_length(ssp,name,data["specs"][name]["type"],[len(szn)],)
 
 def val_smd(errors, data, name):
     smd = data["params"][name]
     szn = data["params"]["soil_zone_names"]
-    c.validate_keys(smd,name,data["specs"][name]["type"],["starting_SMD"],)
+    c.validate_keys(errors, smd,name,data["specs"][name]["type"],["starting_SMD"],)
     c.validate_list_length(smd,name,data["specs"][name]["type"],[len(szn)],)
 
 def val_soil_spatial(errors, data, name):
     sos = data["params"][name]
     soz = data["params"]["soil_zone_names"]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(sos,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, sos,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(sos,name,data["specs"][name]["type"],[len(soz)],)
     if not all(sum(i) == 1.0 for i in sos.values()):
         msg = 'Parameter "%s" requires the sum of its values to be 1.0'
@@ -359,7 +359,7 @@ def val_lu_spatial(errors, data, name):
     lus = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(lus,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, lus,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(lus,name,data["specs"][name]["type"],[len(lzn.values())],)
     if not all(abs(1 - sum(i)) < 1e-5 for i in lus.values()):
         msg = ('Parameter "%s" requires the sum of its values '
@@ -374,7 +374,7 @@ def val_zr(errors, data, name):
         return
     zrn = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(zrn,name,data["specs"][name]["type"],range(1, 13),)
+    c.validate_keys(errors, zrn,name,data["specs"][name]["type"],range(1, 13),)
     c.validate_list_length(zrn,name,data["specs"][name]["type"],[len(lzn)],)
 
 def val_kc(errors, data, name):
@@ -382,7 +382,7 @@ def val_kc(errors, data, name):
         return
     kcn = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(kcn, name, data["specs"][name]["type"], range(1, 13),)
+    c.validate_keys(errors, kcn, name, data["specs"][name]["type"], range(1, 13),)
     c.validate_list_length(kcn, name, data["specs"][name]["type"], [len(lzn)])
 
 def val_taw(errors, data, name):
@@ -390,7 +390,7 @@ def val_taw(errors, data, name):
         return
     taw = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(taw, name, data["specs"][name]["type"], range(1, 13),)
+    c.validate_keys(errors, taw, name, data["specs"][name]["type"], range(1, 13),)
     c.validate_list_length(taw, name, data["specs"][name]["type"], [len(lzn)],)
 
 def val_raw(errors, data, name):
@@ -398,7 +398,7 @@ def val_raw(errors, data, name):
         return
     raw = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(raw,name,data["specs"][name]["type"],range(1, 13))
+    c.validate_keys(errors, raw,name,data["specs"][name]["type"],range(1, 13))
     c.validate_list_length(raw,name,data["specs"][name]["type"],[len(lzn)])
 
 def val_percolation_rejection(errors, data, name):
@@ -406,43 +406,43 @@ def val_percolation_rejection(errors, data, name):
         return
     per = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(per,name,data["specs"][name]["type"],["percolation_rejection"],)
+    c.validate_keys(errors, per,name,data["specs"][name]["type"],["percolation_rejection"],)
     c.validate_list_length(per,name,data["specs"][name]["type"],[len(lzn)],)
     c.validate_min_inclusive(errors, list(per.values())[0], name, 0.0)
 
 def val_subroot_leakage_fraction(errors, data, name):
     lea = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(lea,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, lea,name,data["specs"][name]["type"],range(1, tot + 1),)
 
 def val_init_interflow_store(errors, data, name):
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-    c.validate_keys(nda,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, nda,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, nda.values(), name, 0)
 
 def val_interflow_store_bypass(errors, data, name):
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-    c.validate_keys(nda,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, nda,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, nda.values(), name, 0)
 
 def val_infiltration_limit(errors, data, name):
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-    c.validate_keys(nda,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, nda,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, nda.values(), name, 0)
 
 def val_interflow_decay(errors, data, name):
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
-    c.validate_keys(nda,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, nda,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_min_inclusive(errors, nda.values(), name, 0)
 
 def val_recharge_attenuation_params(errors, data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(rpn,name,data["specs"][name]["type"],[3],)
     c.validate_min_inclusive(errors, [i[1] for i in rpn.values()], "release_proportion in %s" % name, 0.0)
     c.validate_max_inclusive(errors, [i[1] for i in rpn.values()], "release_proportion in %s" % name, 1.0)
@@ -452,7 +452,7 @@ def val_sw_zone_mapping(errors, data, name):
         rorzm = data["params"][name]
         tot = data["params"]["num_nodes"]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(rorzm,name,data["specs"][name]["type"],range(1, tot + 1),)
+        c.validate_keys(errors, rorzm,name,data["specs"][name]["type"],range(1, tot + 1),)
         c.validate_min_inclusive(errors, rorzm.values(), name, 0)
         c.validate_max_inclusive(errors, rorzm.values(), name, len(rzn))
 
@@ -460,7 +460,7 @@ def val_sw_downstream(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(rrp,name,data["specs"][name]["type"],range(1, 13),)
+        c.validate_keys(errors, rrp,name,data["specs"][name]["type"],range(1, 13),)
         c.validate_list_length(rrp,name,data["specs"][name]["type"],[len(rzn)],)
         c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
         c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
@@ -469,7 +469,7 @@ def val_sw_bed_infiltration(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(rrp,name,data["specs"][name]["type"],range(1, 13),)
+        c.validate_keys(errors, rrp,name,data["specs"][name]["type"],range(1, 13),)
         c.validate_list_length(rrp,name,data["specs"][name]["type"],[len(rzn)],)
         c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
         c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
@@ -478,7 +478,7 @@ def val_sw_direct_recharge(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(rrp,name,data["specs"][name]["type"],range(1, 13),)
+        c.validate_keys(errors, rrp,name,data["specs"][name]["type"],range(1, 13),)
         c.validate_list_length(rrp,name,data["specs"][name]["type"],[len(rzn)],)
         c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
         c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
@@ -487,14 +487,14 @@ def val_sw_activation(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(rrp,name,data["specs"][name]["type"],range(1, 13),)
+        c.validate_keys(errors, rrp,name,data["specs"][name]["type"],range(1, 13),)
         c.validate_list_length(rrp,name,data["specs"][name]["type"],[len(rzn)],)
 
 def val_sw_pe_to_open_water(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(rrp,name,data["specs"][name]["type"],range(1, 13),)
+        c.validate_keys(errors, rrp,name,data["specs"][name]["type"],range(1, 13),)
         c.validate_list_length(rrp,name,data["specs"][name]["type"],[len(rzn)],)
 
 def val_sw_ponding_area(errors, data, name):
@@ -507,7 +507,7 @@ def val_sw_ponding_area(errors, data, name):
 def val_sw_params(errors, data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(rpn,name,data["specs"][name]["type"],[2],)
     c.validate_min_inclusive(errors, [i[1] for i in rpn.values()], "release_proportion in %s" % name, 0.0)
     c.validate_max_inclusive(errors, [i[1] for i in rpn.values()], "release_proportion in %s" % name, 1.0)
@@ -515,13 +515,13 @@ def val_sw_params(errors, data, name):
 def val_routing_topology(errors, data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(rpn,name,data["specs"][name]["type"],[10],)
 
 def val_recharge_node_mapping(errors, data, name):
     rpn = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_keys(errors, rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(rpn,name,data["specs"][name]["type"],[1],)
 
 def val_swdis_f(errors, data, name):

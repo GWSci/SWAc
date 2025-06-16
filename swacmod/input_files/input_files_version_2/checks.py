@@ -2,7 +2,7 @@ import numpy as np
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 
-def validate_keys(param, name, t_types, keys):
+def validate_keys(errors, param, name, t_types, keys):
     if (t_types is None) or len(t_types) == 0:
         return
 
@@ -14,10 +14,10 @@ def validate_keys(param, name, t_types, keys):
 
     if t_type == dict and (type(param) == dict):
         for value in param.values():
-            validate_keys(value, name, t_types[1:], keys)
+            validate_keys(errors, value, name, t_types[1:], keys)
     elif t_type in [expanded_list]:
         for value in param:
-            validate_keys(value, name, t_types[1:], keys)
+            validate_keys(errors, value, name, t_types[1:], keys)
 
 def _expand_t_type(t_type):
     if t_type == float:
