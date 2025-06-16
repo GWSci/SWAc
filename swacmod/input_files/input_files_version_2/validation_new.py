@@ -535,10 +535,9 @@ def validate_2(params, specs):
         "params": params,
         "specs": specs
     }
-    errors1 = []
-    _validate_params(errors1, specs, data)
-    errors = errors1
+    errors = []
     warnings = []
+    _validate_params(errors, specs, data)
     return ParsedInputData(params, errors, warnings)
 
 def validate(params, specs):
