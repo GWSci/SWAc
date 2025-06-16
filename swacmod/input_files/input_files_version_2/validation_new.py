@@ -101,14 +101,6 @@ def validate_constraints(errors, data, name):
     x = data["params"][name]
     c.validate_constraints(errors, [x], name, data["specs"][name]["constraints"])
 
-def val_canopy_zone_mapping(errors, data, name):
-    rrzm = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    rzn = data["params"]["canopy_zone_names"]
-    c.validate_keys(errors, rrzm, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, rrzm.values(), name, 0)
-    c.validate_max_inclusive(errors, rrzm.values(), name, len(rzn))
-
 def val_free_throughfall(errors, data, name):
     fth = data["params"][name]
     tot = len(data["params"]["canopy_zone_names"])
@@ -519,7 +511,7 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_evt_parameters, "evt_parameters")
     do_validation(errors, data, validate_constraints, "nevtopt")
     do_validation(errors, data, partial(validate_zone_mapping_B, "interflow_zone_names"), "interflow_zone_mapping")
-    do_validation(errors, data, val_canopy_zone_mapping, "canopy_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_B, "canopy_zone_names"), "canopy_zone_mapping")
 
 def do_validation(errors, data, function, param):
     if not is_param_skipped(data, param):
