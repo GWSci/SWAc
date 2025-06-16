@@ -185,7 +185,7 @@ def val_macropore_zone_mapping(errors, data, name):
     c.validate_min_inclusive(errors, mzm.values(), name, 0)
     c.validate_max_inclusive(errors, mzm.values(), name, len(mzn))
 
-def val_macropore_activation_option(errors, data, name):
+def validate_constraints(errors, data, name):
     x = data["params"][name]
     c.validate_constraints(errors, [x], name, data["specs"][name]["constraints"])
 
@@ -526,21 +526,9 @@ def val_recharge_node_mapping(errors, data, name):
     c.validate_keys(errors, rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(errors, rpn,name,data["specs"][name]["type"],[1],)
 
-def val_swdis_f(errors, data, name):
-    x = data["params"][name]
-    c.validate_constraints(errors, [x], name, data["specs"][name]["constraints"])
-
-def val_swabs_f(errors, data, name):
-    x = data["params"][name]
-    c.validate_constraints(errors, [x], name, data["specs"][name]["constraints"])
-
 def val_evt_parameters(errors, data, name):
     rpn = data["params"][name]
     c.validate_list_length(errors, rpn,name,data["specs"][name]["type"],[3],)
-
-def val_nevtopt(errors, data, name):
-    x = data["params"][name]
-    c.validate_constraints(errors, [x], name, data["specs"][name]["constraints"])
 
 def validate_2(params, specs):
     errors = validate(params, specs)
@@ -579,7 +567,7 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_sw_zone_mapping, "sw_zone_mapping")
     do_validation(errors, data, val_macropore_zone_mapping, "macropore_zone_mapping")
     do_validation(errors, data, val_recharge_node_mapping, "recharge_node_mapping")
-    do_validation(errors, data, val_macropore_activation_option, "macropore_activation_option")
+    do_validation(errors, data, validate_constraints, "macropore_activation_option")
     do_validation(errors, data, val_free_throughfall, "free_throughfall")
     do_validation(errors, data, val_max_canopy_storage, "max_canopy_storage")
     do_validation(errors, data, val_snow_params_simple, "snow_params_simple")
@@ -618,10 +606,10 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_swdis_locs, "swdis_locs")
     do_validation(errors, data, val_swabs_locs, "swabs_locs")
     do_validation(errors, data, val_routing_topology, "routing_topology")
-    do_validation(errors, data, val_swdis_f, "swdis_f")
-    do_validation(errors, data, val_swabs_f, "swabs_f")
+    do_validation(errors, data, validate_constraints, "swdis_f")
+    do_validation(errors, data, validate_constraints, "swabs_f")
     do_validation(errors, data, val_evt_parameters, "evt_parameters")
-    do_validation(errors, data, val_nevtopt, "nevtopt")
+    do_validation(errors, data, validate_constraints, "nevtopt")
     do_validation(errors, data, val_interflow_zone_mapping, "interflow_zone_mapping")
     do_validation(errors, data, val_canopy_zone_mapping, "canopy_zone_mapping")
 
