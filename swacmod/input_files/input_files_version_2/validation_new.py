@@ -1,6 +1,7 @@
 import multiprocessing
 import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
+from functools import partial
 
 def val_num_cores(errors, data, name):
     c.validate_min_exclusive(errors, [data["params"][name]], name, 0)
@@ -75,12 +76,12 @@ def val_reporting_zone_mapping(errors, data, name):
 def val_rainfall_zone_mapping(errors, data, name):
     zone_name = "rainfall_zone_names"
     min_inclusive = 1
-    validate_zone_mapping_A(zone_name, min_inclusive, errors, data, name)
+    partial(validate_zone_mapping_A, zone_name, min_inclusive)(errors, data, name)
 
 def val_pe_zone_mapping(errors, data, name):
     zone_name = "pe_zone_names"
     min_inclusive = 0
-    validate_zone_mapping_A(zone_name, min_inclusive, errors, data, name)
+    partial(validate_zone_mapping_A, zone_name, min_inclusive)(errors, data, name)
 
 def validate_zone_mapping_A(zone_name, min_inclusive, errors, data, name):
     param = data["params"][name]
