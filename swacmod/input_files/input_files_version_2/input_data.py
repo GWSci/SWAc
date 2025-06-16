@@ -5,10 +5,8 @@ import logging
 
 from tqdm import tqdm
 
-import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.loader as loader
 import swacmod.input_files.input_files_version_2.validator as validator
-import swacmod.input_files.input_files_version_2.validation as v
 import swacmod.input_files.input_files_version_2.validation_new as validation_new
 import swacmod.input_files.input_files_version_2.validation_new_post_finalisation as validation_new_post_finalisation
 import swacmod.input_files.input_files_version_2.finalization as f

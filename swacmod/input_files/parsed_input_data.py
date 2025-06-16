@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class ParsedInputData:
-    data: map
+    data: dict
     errors: list
     warnings: list
 
