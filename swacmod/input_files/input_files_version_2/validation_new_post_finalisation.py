@@ -140,8 +140,5 @@ def do_validation(errors, data, function, param):
         ((param in params) and (params[param] == None))
         or ((param in series) and (series[param] is None)))
     if not is_param_skipped:
-        try:
-            function(errors, data, param)
-        except u.ValidationError as err:
-            errors.append(err.args[0])
+        function(errors, data, param)
         logging.debug('\t\t"%s" validated', param)
