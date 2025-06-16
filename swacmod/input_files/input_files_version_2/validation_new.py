@@ -355,12 +355,7 @@ def val_recharge_attenuation_params(errors, data, name):
 
 def val_sw_zone_mapping(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
-        rorzm = data["params"][name]
-        tot = data["params"]["num_nodes"]
-        rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(errors, rorzm, name, data["specs"][name]["type"], range(1, tot + 1))
-        c.validate_min_inclusive(errors, rorzm.values(), name, 0)
-        c.validate_max_inclusive(errors, rorzm.values(), name, len(rzn))
+        validate_zone_mapping_B("sw_zone_names", errors, data, name)
 
 def val_sw_downstream(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
