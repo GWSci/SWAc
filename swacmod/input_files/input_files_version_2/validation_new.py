@@ -106,14 +106,6 @@ def val_single_cell_swrecharge_zone_mapping(errors, data, name):
     c.validate_min_inclusive(errors, param.values(), name, 0)
     c.validate_max_inclusive(errors, param.values(), name, len(tzn))
 
-def val_macropore_zone_mapping(errors, data, name):
-    param = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    tzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, param.values(), name, 0)
-    c.validate_max_inclusive(errors, param.values(), name, len(tzn))
-
 def validate_constraints(errors, data, name):
     x = data["params"][name]
     c.validate_constraints(errors, [x], name, data["specs"][name]["constraints"])
@@ -490,7 +482,7 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_subroot_zone_mapping, "subroot_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "swrecharge_zone_names"), "swrecharge_zone_mapping")
     do_validation(errors, data, val_sw_zone_mapping, "sw_zone_mapping")
-    do_validation(errors, data, val_macropore_zone_mapping, "macropore_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_B, "macropore_zone_names"), "macropore_zone_mapping")
     do_validation(errors, data, val_recharge_node_mapping, "recharge_node_mapping")
     do_validation(errors, data, validate_constraints, "macropore_activation_option")
     do_validation(errors, data, val_free_throughfall, "free_throughfall")
