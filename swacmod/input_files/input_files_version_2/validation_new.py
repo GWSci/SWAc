@@ -217,7 +217,7 @@ def val_snow_params_simple(errors, data, name):
     tot = data["params"]["num_nodes"]
     c.validate_keys(errors, snp,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(errors, snp,name,data["specs"][name]["type"],[3],)
-    c.validate_min_inclusive(errors, [i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
+    c.validate_min_inclusive(errors, [i[0] for i in snp.values() if len(i) > 0], "starting_snow_pack in %s" % name, 0)
 
 def val_snow_params_complex(errors, data, name):
     if data["params"]["snow_process_complex"] == "disabled":
@@ -444,8 +444,8 @@ def val_recharge_attenuation_params(errors, data, name):
     tot = data["params"]["num_nodes"]
     c.validate_keys(errors, rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(errors, rpn,name,data["specs"][name]["type"],[3],)
-    c.validate_min_inclusive(errors, [i[1] for i in rpn.values()], "release_proportion in %s" % name, 0.0)
-    c.validate_max_inclusive(errors, [i[1] for i in rpn.values()], "release_proportion in %s" % name, 1.0)
+    c.validate_min_inclusive(errors, [i[1] for i in rpn.values() if len(i) > 1], "release_proportion in %s" % name, 0.0)
+    c.validate_max_inclusive(errors, [i[1] for i in rpn.values() if len(i) > 1], "release_proportion in %s" % name, 1.0)
 
 def val_sw_zone_mapping(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
@@ -509,8 +509,8 @@ def val_sw_params(errors, data, name):
     tot = data["params"]["num_nodes"]
     c.validate_keys(errors, rpn,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(errors, rpn,name,data["specs"][name]["type"],[2],)
-    c.validate_min_inclusive(errors, [i[1] for i in rpn.values()], "release_proportion in %s" % name, 0.0)
-    c.validate_max_inclusive(errors, [i[1] for i in rpn.values()], "release_proportion in %s" % name, 1.0)
+    c.validate_min_inclusive(errors, [i[1] for i in rpn.values() if len(i) > 1], "release_proportion in %s" % name, 0.0)
+    c.validate_max_inclusive(errors, [i[1] for i in rpn.values() if len(i) > 1], "release_proportion in %s" % name, 1.0)
 
 def val_routing_topology(errors, data, name):
     rpn = data["params"][name]
@@ -631,8 +631,6 @@ def do_validation(errors, data, function, param):
         try:
             function(errors, data, param)
         except AttributeError as err:
-            errors.append(err.args[0])
-        except IndexError as err:
             errors.append(err.args[0])
         logging.debug('\t\t"%s" validated', param)
 
