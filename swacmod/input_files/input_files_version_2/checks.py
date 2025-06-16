@@ -36,7 +36,7 @@ def _validate_keys(param, name, keys):
         diff = set_keys - param_keys
         raise u.ValidationError(msg % (name, diff))
 
-def validate_list_length(param=None, name=None, t_types=None, len_list=None):
+def validate_list_length(param, name, t_types, len_list):
     if (t_types is None) or len(t_types) == 0:
         return
 
