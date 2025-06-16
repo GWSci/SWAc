@@ -141,10 +141,11 @@ def val_single_cell_swrecharge_proportion(errors, data, name):
     c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
 
 def val_single_cell_swrecharge_limit(errors, data, name):
-    rrl = data['params'][name]
-    rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys(errors, rrl, name, data['specs'][name]['type'], range(1, 13))
-    c.validate_list_length(errors, rrl, name, data['specs'][name]['type'],[len(rzn)])
+    zone_name = 'single_cell_swrecharge_zone_names'
+    param = data['params'][name]
+    rzn = data['params'][zone_name]
+    c.validate_keys(errors, param, name, data['specs'][name]['type'], range(1, 13))
+    c.validate_list_length(errors, param, name, data['specs'][name]['type'],[len(rzn)])
 
 def val_single_cell_swrecharge_activation(errors, data, name):
     rra = data['params'][name]
