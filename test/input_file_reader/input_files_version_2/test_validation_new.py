@@ -454,11 +454,8 @@ class Test_Validation_New(unittest.TestCase):
             "sw_zone_mapping": {"a": "b", "c": "d"},
             # "mf96_lrc": "x", # TODO no validation
             "snow_params_simple": 5,
-            "snow_params_complex": "x",
             "snow_params_simple": {"a":"b","c":"d","e":"f"},
             "snow_params_simple": {1:[],2:[],3:[]},
-            "snow_params_complex": 5,
-            "snow_params_complex": "x",
             "snow_params_simple": {"a":"b","c":"d","e":"f"},
             "snow_params_simple": {1:[],2:[],3:[]},
             "rapid_runoff_params": "x",

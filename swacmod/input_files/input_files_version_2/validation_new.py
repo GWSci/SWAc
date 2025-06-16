@@ -217,7 +217,8 @@ def val_snow_params_simple(errors, data, name):
     tot = data["params"]["num_nodes"]
     c.validate_keys(errors, snp,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(errors, snp,name,data["specs"][name]["type"],[3],)
-    c.validate_min_inclusive(errors, [i[0] for i in snp.values() if len(i) > 0], "starting_snow_pack in %s" % name, 0)
+    if type(snp) == dict:
+        c.validate_min_inclusive(errors, [i[0] for i in snp.values() if len(i) > 0], "starting_snow_pack in %s" % name, 0)
 
 def val_snow_params_complex(errors, data, name):
     if data["params"]["snow_process_complex"] == "disabled":
@@ -226,7 +227,8 @@ def val_snow_params_complex(errors, data, name):
     tot = data["params"]["num_nodes"]
     c.validate_keys(errors, snp,name,data["specs"][name]["type"],range(1, tot + 1),)
     c.validate_list_length(errors, snp,name,data["specs"][name]["type"],[10],)
-    c.validate_min_inclusive(errors, [i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
+    if type(snp) == dict:
+        c.validate_min_inclusive(errors, [i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
 
 def val_rapid_runoff_params(errors, data, name):
     rrp = data["params"][name]
@@ -628,10 +630,7 @@ def do_validation(errors, data, function, param):
     specs = data["specs"]
     is_param_skipped = (params[param] == None) or is_alt(specs, params, param)
     if not is_param_skipped:
-        try:
-            function(errors, data, param)
-        except AttributeError as err:
-            errors.append(err.args[0])
+        function(errors, data, param)
         logging.debug('\t\t"%s" validated', param)
 
 def is_alt(specs, params, param):
