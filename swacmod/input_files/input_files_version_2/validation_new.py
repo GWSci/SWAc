@@ -238,9 +238,10 @@ def val_rapid_runoff_params(errors, data, name):
     keys = ["class_smd", "class_ri", "values"]
     for zone in rrp:
         c.validate_keys(errors, zone, name, [dict], keys)
-        c.validate_list_length(errors, zone["values"],name,[list, list],[len(zone["class_ri"]), len(zone["class_smd"])],)
-        c.validate_min_inclusive(errors, [i for j in zone["values"] for i in j], '"values" in "%s"' % name, 0)
-        c.validate_max_inclusive(errors, [i for j in zone["values"] for i in j], '"values" in "%s"' % name, 1)
+        if "values" in zone:
+            c.validate_list_length(errors, zone["values"],name,[list, list],[len(zone["class_ri"]), len(zone["class_smd"])],)
+            c.validate_min_inclusive(errors, [i for j in zone["values"] for i in j], '"values" in "%s"' % name, 0)
+            c.validate_max_inclusive(errors, [i for j in zone["values"] for i in j], '"values" in "%s"' % name, 1)
 
 def val_rorecharge_process(errors, data, name):
     rop = data['params'][name]
@@ -632,8 +633,6 @@ def do_validation(errors, data, function, param):
         except AttributeError as err:
             errors.append(err.args[0])
         except IndexError as err:
-            errors.append(err.args[0])
-        except KeyError as err:
             errors.append(err.args[0])
         logging.debug('\t\t"%s" validated', param)
 
