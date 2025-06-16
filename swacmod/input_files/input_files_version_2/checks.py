@@ -1,5 +1,4 @@
 import numpy as np
-import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 
 def validate_keys(errors, param, name, t_types, keys):
