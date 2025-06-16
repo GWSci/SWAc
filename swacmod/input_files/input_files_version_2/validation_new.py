@@ -98,10 +98,10 @@ def val_subroot_zone_mapping(errors, data, name):
     c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(szn))
 
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
-    param = data['params'][name]
-    tot = data['params']['num_nodes']
-    tzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys(errors, param, name, data['specs'][name]['type'], range(1, tot + 1))
+    param = data["params"][name]
+    tot = data["params"]["num_nodes"]
+    tzn = data["params"]["single_cell_swrecharge_zone_names"]
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, param.values(), name, 0)
     c.validate_max_inclusive(errors, param.values(), name, len(tzn))
 
