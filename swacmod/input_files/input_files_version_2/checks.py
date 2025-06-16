@@ -2,15 +2,6 @@ import numpy as np
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 
-def _expand_t_type(t_type):
-    if t_type == float:
-        t_type = (float, int, int)
-    elif t_type == int:
-        t_type = (int, int)
-    elif t_type == list:
-        t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
-    return t_type
-
 def validate_keys(param, name, t_types, keys):
     if (t_types is None) or len(t_types) == 0:
         return
@@ -27,6 +18,15 @@ def validate_keys(param, name, t_types, keys):
     elif t_type in [expanded_list]:
         for value in param:
             validate_keys(param=value, name=name, t_types=t_types[1:], keys=keys)
+
+def _expand_t_type(t_type):
+    if t_type == float:
+        t_type = (float, int, int)
+    elif t_type == int:
+        t_type = (int, int)
+    elif t_type == list:
+        t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
+    return t_type
 
 def validate_list_length(param=None, name=None, t_types=None, len_list=None):
     if (t_types is None) or len(t_types) == 0:
