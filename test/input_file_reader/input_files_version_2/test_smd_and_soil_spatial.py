@@ -73,15 +73,17 @@ class Test_Always_Validate_SMD(unittest.TestCase):
         input_file = MockFileResource.make_sample_input_file_with_data()
         input_file['fao_process'] = 'enabled'
         data = mess_up_parameter_and_make_data(input_file, 'smd')
+        errors = []
         with self.assertRaisesRegex(u.ValidationError, 'smd'):
-            validation.val_smd(data, 'smd')
+            validation.val_smd(errors, data, 'smd')
 
     def test_smd_is_validated_when_fao_process_is_disabled(self):
         input_file = MockFileResource.make_sample_input_file_with_data()
         input_file['fao_process'] = 'disabled'
         data = mess_up_parameter_and_make_data(input_file, 'smd')
+        errors = []
         with self.assertRaisesRegex(u.ValidationError, 'smd'):
-            validation.val_smd(data, 'smd')
+            validation.val_smd(errors, data, 'smd')
 
 class Test_Always_Validate_Soil_Spatial(unittest.TestCase):
     def test_soil_spatal_is_validated_when_fao_process_is_enabled_and_fao_input_is_ls(self):
@@ -89,32 +91,36 @@ class Test_Always_Validate_Soil_Spatial(unittest.TestCase):
         input_file['fao_process'] = 'enabled'
         input_file['fao_input'] = 'ls'
         data = mess_up_parameter_and_make_data(input_file, 'soil_spatial')
+        errors = []
         with self.assertRaisesRegex(u.ValidationError, 'soil_spatial'):
-            validation.val_soil_spatial(data, 'soil_spatial')
+            validation.val_soil_spatial(errors, data, 'soil_spatial')
     
     def test_soil_spatal_is_validated_when_fao_process_is_enabled_and_fao_input_is_l(self):
         input_file = MockFileResource.make_sample_input_file_with_data()
         input_file['fao_process'] = 'enabled'
         input_file['fao_input'] = 'l'
         data = mess_up_parameter_and_make_data(input_file, 'soil_spatial')
+        errors = []
         with self.assertRaisesRegex(u.ValidationError, 'soil_spatial'):
-            validation.val_soil_spatial(data, 'soil_spatial')
+            validation.val_soil_spatial(errors, data, 'soil_spatial')
     
     def test_soil_spatal_is_validated_when_fao_process_is_disabled_and_fao_input_is_ls(self):
         input_file = MockFileResource.make_sample_input_file_with_data()
         input_file['fao_process'] = 'disabled'
         input_file['fao_input'] = 'ls'
         data = mess_up_parameter_and_make_data(input_file, 'soil_spatial')
+        errors = []
         with self.assertRaisesRegex(u.ValidationError, 'soil_spatial'):
-            validation.val_soil_spatial(data, 'soil_spatial')
+            validation.val_soil_spatial(errors, data, 'soil_spatial')
 
     def test_soil_spatal_is_validated_when_fao_process_is_enabled_and_fao_input_is_l_2(self):
         input_file = MockFileResource.make_sample_input_file_with_data()
         input_file['fao_process'] = 'disabled'
         input_file['fao_input'] = 'l'
         data = mess_up_parameter_and_make_data(input_file, 'soil_spatial')
+        errors = []
         with self.assertRaisesRegex(u.ValidationError, 'soil_spatial'):
-            validation.val_soil_spatial(data, 'soil_spatial')
+            validation.val_soil_spatial(errors, data, 'soil_spatial')
 
 def mess_up_parameter_and_make_data(input_file, param):
     input_file[param] = {}
