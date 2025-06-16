@@ -64,14 +64,13 @@ def val_node_areas(errors, data, name):
     c.validate_min_inclusive(errors, data["params"][name].values(), name, 0)
 
 def val_reporting_zone_mapping(errors, data, name):
-    tot_name = "num_nodes"
     zone_name = "reporting_zone_names"
-    rzm = data["params"][name]
-    tot = data["params"][tot_name]
+    param = data["params"][name]
+    tot = data["params"]["num_nodes"]
     rzn = data["params"][zone_name]
-    c.validate_keys(errors, rzm,name,data["specs"][name]["type"],range(1, tot + 1),)
-    c.validate_min_inclusive(errors, rzm.values(), "zone in %s" % name, 0)
-    c.validate_max_inclusive(errors, rzm.values(), "zone in %s" % name, len(rzn))
+    c.validate_keys(errors, param,name,data["specs"][name]["type"],range(1, tot + 1),)
+    c.validate_min_inclusive(errors, param.values(), "zone in %s" % name, 0)
+    c.validate_max_inclusive(errors, param.values(), "zone in %s" % name, len(rzn))
 
 def val_rainfall_zone_mapping(errors, data, name):
     tot_name = "num_nodes"
