@@ -48,18 +48,7 @@ def val_spatial_output_date(errors, data, name):
     if dat is None or dat != "mean":
         return
 
-def val_swdis_locs(errors, data, name):
-    param = data["params"][name]
-    if param != {0: 0}:
-        tot = len(data["params"][name]) + 1
-        # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
-        # c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot))
-        c.validate_min_inclusive(errors, param.values(), "zone in %s" % name, 1)
-        c.validate_max_inclusive(errors, param.values(), "zone in %s" % name, tot)
-        c.validate_min_inclusive(errors, param.keys(), "node in %s" % name, 1)
-        c.validate_max_inclusive(errors, param.keys(), "node in %s" % name, data["params"]["num_nodes"])
-
-def val_swabs_locs(errors, data, name):
+def validate_locs(errors, data, name):
     param = data["params"][name]
     if param != {0: 0}:
         tot = len(data["params"][name]) + 1
@@ -596,8 +585,8 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_sw_pe_to_open_water, "sw_pe_to_open_water")
     do_validation(errors, data, val_sw_params, "sw_params")
     do_validation(errors, data, val_sw_ponding_area, "sw_ponding_area")
-    do_validation(errors, data, val_swdis_locs, "swdis_locs")
-    do_validation(errors, data, val_swabs_locs, "swabs_locs")
+    do_validation(errors, data, validate_locs, "swdis_locs")
+    do_validation(errors, data, validate_locs, "swabs_locs")
     do_validation(errors, data, val_routing_topology, "routing_topology")
     do_validation(errors, data, validate_constraints, "swdis_f")
     do_validation(errors, data, validate_constraints, "swabs_f")
