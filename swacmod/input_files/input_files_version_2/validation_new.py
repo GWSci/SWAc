@@ -14,7 +14,7 @@ def val_num_nodes(data, name):
 def val_start_date(data, name):
     dat = data["params"][name]
     try:
-        x = dat.strftime('%d/%m/%Y')
+        dat.strftime('%d/%m/%Y')
     except:
         raise
 
