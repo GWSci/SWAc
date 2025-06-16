@@ -64,7 +64,7 @@ def _tail(a_list):
     else:
         return a_list
 
-def validate_max_inclusive(values, name, high_l):
+def validate_max_inclusive(errors, values, name, high_l):
     if not all(i <= high_l for i in values):
         msg = 'Parameter "%s" requires values <= %s'
         raise u.ValidationError(msg % (name, high_l))
