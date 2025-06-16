@@ -97,14 +97,6 @@ def val_subroot_zone_mapping(errors, data, name):
     c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, 0)
     c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(szn))
 
-def val_interflow_zone_mapping(errors, data, name):
-    param = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    tzn = data["params"]["interflow_zone_names"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, param.values(), name, 0)
-    c.validate_max_inclusive(errors, param.values(), name, len(tzn))
-
 def val_swrecharge_zone_mapping(errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
@@ -550,7 +542,7 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, validate_constraints, "swabs_f")
     do_validation(errors, data, val_evt_parameters, "evt_parameters")
     do_validation(errors, data, validate_constraints, "nevtopt")
-    do_validation(errors, data, val_interflow_zone_mapping, "interflow_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_B, "interflow_zone_names"), "interflow_zone_mapping")
     do_validation(errors, data, val_canopy_zone_mapping, "canopy_zone_mapping")
 
 def do_validation(errors, data, function, param):
