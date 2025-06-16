@@ -33,9 +33,7 @@ def val_time_periods(data, name):
 
 def val_output_individual(data, name):
     oin = data["params"][name]
-
     ids = set(range(1, data["params"]["num_nodes"] + 1))
-
     if not all(i in ids for i in oin):
         msg = ('Parameter "%s" requires all node ids to be'
                + '1 <= x <= ' "num_nodes")
@@ -56,7 +54,6 @@ def val_swdis_locs(data, name):
     swdisl = data["params"][name]
     swdisn = data["params"]["swdis_locs"]
     tot = len(data["params"]["swdis_locs"]) + 1
-
     if swdisn != {0: 0}:
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
         # c.validate_keys(swdisl, name, data["specs"][name]["type"], range(1, tot))
@@ -306,7 +303,6 @@ def val_macropore_proportion(data, name):
     mzn = data["params"]["macropore_zone_names"]
     c.validate_keys(mpp,name,data["specs"][name]["type"],range(1, 13),)
     c.validate_list_length(mpp,name,data["specs"][name]["type"],[len(mzn)],)
-
     c.validate_min_inclusive([j for i in mpp.values() for j in i], name, 0)
     c.validate_max_inclusive([j for i in mpp.values() for j in i], name, 1.0)
 
@@ -408,10 +404,8 @@ def val_raw(data, name):
 def val_percolation_rejection(data, name):
     if data["params"]["fao_process"] == "disabled":
         return
-
     per = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-
     c.validate_keys(per,name,data["specs"][name]["type"],["percolation_rejection"],)
     c.validate_list_length(per,name,data["specs"][name]["type"],[len(lzn)],)
     c.validate_min_inclusive(list(per.values())[0], name, 0.0)
