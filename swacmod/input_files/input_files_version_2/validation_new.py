@@ -85,8 +85,8 @@ def validate_zone_mapping_B(zone_name, errors, data, name):
     tot = data["params"]["num_nodes"]
     tzn = data["params"][zone_name]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, param.values(), name, 0)
-    c.validate_max_inclusive(errors, param.values(), name, len(tzn))
+    c.validate_min_inclusive(errors, param.values(), "%s" % name, 0)
+    c.validate_max_inclusive(errors, param.values(), "%s" % name, len(tzn))
 
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
