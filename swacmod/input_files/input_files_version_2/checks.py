@@ -28,6 +28,14 @@ def _expand_t_type(t_type):
         t_type = (list, np.ndarray, time_series_data.TimeSeriesData)
     return t_type
 
+def _validate_keys(param, name, keys):
+    set_keys = set(keys)
+    param_keys = set(param.keys())
+    if not set_keys.issubset(param_keys):
+        msg = 'Parameter "%s" is missing the following keys: %s'
+        diff = set_keys - param_keys
+        raise u.ValidationError(msg % (name, diff))
+
 def validate_list_length(param=None, name=None, t_types=None, len_list=None):
     if (t_types is None) or len(t_types) == 0:
         return
@@ -45,24 +53,16 @@ def validate_list_length(param=None, name=None, t_types=None, len_list=None):
         for value in param:
             validate_list_length(value, name, t_types[1:], _tail(len_list))
 
+def _validate_list_length(param, name, length):
+    if length and (len(param) != length):
+        msg = 'Parameter "%s" has to be a list of length %d, found %d'
+        raise u.ValidationError(msg % (name, length, len(param)))
+
 def _tail(a_list):
     if a_list and len(a_list) > 0:
         return a_list[1:]
     else:
         return a_list
-
-def _validate_keys(param, name, keys):
-    set_keys = set(keys)
-    param_keys = set(param.keys())
-    if not set_keys.issubset(param_keys):
-        msg = 'Parameter "%s" is missing the following keys: %s'
-        diff = set_keys - param_keys
-        raise u.ValidationError(msg % (name, diff))
-
-def _validate_list_length(param, name, length):
-    if length and (len(param) != length):
-        msg = 'Parameter "%s" has to be a list of length %d, found %d'
-        raise u.ValidationError(msg % (name, length, len(param)))
 
 def validate_max_inclusive(values, name, high_l):
     if not all(i <= high_l for i in values):
