@@ -97,6 +97,7 @@ def val_subroot_zone_mapping(errors, data, name):
     c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, 0)
     c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(szn))
 
+# TODO This is never called. Should it be?
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
