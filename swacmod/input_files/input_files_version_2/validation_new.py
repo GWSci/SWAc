@@ -89,14 +89,6 @@ def validate_zone_mapping_B(zone_name, errors, data, name):
     c.validate_min_inclusive(errors, param.values(), name, 0)
     c.validate_max_inclusive(errors, param.values(), name, len(tzn))
 
-def val_windsp_zone_mapping(errors, data, name):
-    tzm = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    tzn = data["params"]["tmin_c_zone_names"]
-    c.validate_keys(errors, tzm, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, tzm.values(), name, 0)
-    c.validate_max_inclusive(errors, tzm.values(), name, len(tzn))
-
 def val_temperature_zone_mapping(errors, data, name):
     tzm = data["params"][name]
     tot = data["params"]["num_nodes"]
@@ -525,7 +517,7 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_temperature_zone_mapping, "temperature_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "tmax_c_zone_names"), "tmax_c_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "tmin_c_zone_names"), "tmin_c_zone_mapping")
-    do_validation(errors, data, val_windsp_zone_mapping, "windsp_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_B, "tmin_c_zone_names"), "windsp_zone_mapping")
     do_validation(errors, data, val_subroot_zone_mapping, "subroot_zone_mapping")
     do_validation(errors, data, val_swrecharge_zone_mapping, "swrecharge_zone_mapping")
     do_validation(errors, data, val_sw_zone_mapping, "sw_zone_mapping")
