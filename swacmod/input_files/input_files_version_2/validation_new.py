@@ -22,14 +22,14 @@ def val_time_periods(errors, data, name):
     for time_range in data["params"][name]:
         if len(time_range) != 2:
             msg = 'Parameter "%s" requires arrays of length 2'
-            raise u.ValidationError(msg % name)
+            errors.append(msg % name)
         is_range_ints = (
             isinstance(time_range[0], int) and isinstance(time_range[1], int))
         if not is_range_ints:
             continue
         if not time_range[0] < time_range[1]:
             msg = 'Parameter "%s" requires start_date < end_date'
-            raise u.ValidationError(msg % name)
+            errors.append(msg % name)
 
 def val_output_individual(errors, data, name):
     oin = data["params"][name]
@@ -37,7 +37,7 @@ def val_output_individual(errors, data, name):
     if not all(i in ids for i in oin):
         msg = ('Parameter "%s" requires all node ids to be'
                + '1 <= x <= ' "num_nodes")
-        raise u.ValidationError(msg % name)
+        errors.append(msg % name)
 
 def val_nodes_per_line(errors, data, name):
     c.validate_min_exclusive(errors, [data["params"][name]], name, 0)
@@ -248,7 +248,7 @@ def val_rorecharge_process(errors, data, name):
     rrp = data['params']['rapid_runoff_process']
     if rop == 'enabled' and rrp == 'disabled':
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
-        raise u.ValidationError(msg % (name, 'rapid_runoff_process'))
+        errors.append(msg % (name, 'rapid_runoff_process'))
 
 def val_single_cell_swrecharge_proportion(errors, data, name):
     rrp = data['params'][name]
@@ -275,7 +275,7 @@ def val_swrecharge_process(errors, data, name):
     rrp = data["params"]["rapid_runoff_process"]
     if rop == "enabled" and rrp == "disabled":
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
-        raise u.ValidationError(msg % (name, "rapid_runoff_process"))
+        errors.append(msg % (name, "rapid_runoff_process"))
 
 def val_swrecharge_proportion(errors, data, name):
     rrp = data["params"][name]
@@ -296,7 +296,7 @@ def val_macropore_process(errors, data, name):
     rrp = data["params"]["rapid_runoff_process"]
     if mpp == "enabled" and rrp == "disabled":
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
-        raise u.ValidationError(msg % (name, "rapid_runoff_process"))
+        errors.append(msg % (name, "rapid_runoff_process"))
 
 def val_macropore_proportion(errors, data, name):
     mpp = data["params"][name]
@@ -351,7 +351,7 @@ def val_soil_spatial(errors, data, name):
     c.validate_list_length(errors, sos,name,data["specs"][name]["type"],[len(soz)],)
     if not all(sum(i) == 1.0 for i in sos.values()):
         msg = 'Parameter "%s" requires the sum of its values to be 1.0'
-        raise u.ValidationError(msg % name)
+        errors.append(msg % name)
 
 def val_lu_spatial(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
@@ -364,7 +364,7 @@ def val_lu_spatial(errors, data, name):
     if not all(abs(1 - sum(i)) < 1e-5 for i in lus.values()):
         msg = ('Parameter "%s" requires the sum of its values '
                'to be 1.0 within a tolerance of 1e-5')
-        raise u.ValidationError(msg % name)
+        errors.append(msg % name)
 
 def val_zr(errors, data, name):
     if (
