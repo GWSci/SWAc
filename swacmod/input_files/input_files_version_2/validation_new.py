@@ -73,30 +73,30 @@ def val_reporting_zone_mapping(errors, data, name):
     c.validate_max_inclusive(errors, param.values(), "zone in %s" % name, len(rzn))
 
 def val_rainfall_zone_mapping(errors, data, name):
-    tot_name = "num_nodes"
     zone_name = "rainfall_zone_names"
-    rzm = data["params"][name]
-    tot = data["params"][tot_name]
+    param = data["params"][name]
+    tot = data["params"]["num_nodes"]
     rzn = data["params"][zone_name]
-    c.validate_keys(errors, rzm, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, [i[0] for i in rzm.values()], "zone in %s" % name, 1)
-    c.validate_max_inclusive(errors, [i[0] for i in rzm.values()], "zone in %s" % name, len(rzn))
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, 1)
+    c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(rzn))
 
 def val_pe_zone_mapping(errors, data, name):
-    pzm = data["params"][name]
+    zone_name = "pe_zone_names"
+    param = data["params"][name]
     tot = data["params"]["num_nodes"]
-    pzn = data["params"]["pe_zone_names"]
-    c.validate_keys(errors, pzm, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, [i[0] for i in pzm.values()], "zone in %s" % name, 0)
-    c.validate_max_inclusive(errors, [i[0] for i in pzm.values()], "zone in %s" % name, len(pzn))
+    rzn = data["params"][zone_name]
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, 0)
+    c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(rzn))
 
 def val_tmax_c_zone_mapping(errors, data, name):
-    tzm = data["params"][name]
+    param = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"]["tmax_c_zone_names"]
-    c.validate_keys(errors, tzm, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, tzm.values(), name, 0)
-    c.validate_max_inclusive(errors, tzm.values(), name, len(tzn))
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    c.validate_min_inclusive(errors, param.values(), name, 0)
+    c.validate_max_inclusive(errors, param.values(), name, len(tzn))
 
 def val_tmin_c_zone_mapping(errors, data, name):
     tzm = data["params"][name]
