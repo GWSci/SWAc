@@ -107,22 +107,26 @@ def val_max_canopy_storage(errors, data, name):
     c.validate_min_inclusive(errors, mcs.values(), name, 0)
 
 def val_snow_params_simple(errors, data, name):
-    if data["params"]["snow_process_simple"] == "disabled":
+    process_name = "snow_process_simple"
+    list_length = 3
+    if data["params"][process_name] == "disabled":
         return
     snp = data["params"][name]
     tot = data["params"]["num_nodes"]
     c.validate_keys(errors, snp, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_list_length(errors, snp, name, data["specs"][name]["type"],[3],)
+    c.validate_list_length(errors, snp, name, data["specs"][name]["type"], [list_length], )
     if type(snp) == dict:
         c.validate_min_inclusive(errors, [i[0] for i in snp.values() if len(i) > 0], "starting_snow_pack in %s" % name, 0)
 
 def val_snow_params_complex(errors, data, name):
-    if data["params"]["snow_process_complex"] == "disabled":
+    process_name = "snow_process_complex"
+    list_length = 10
+    if data["params"][process_name] == "disabled":
         return
     snp = data["params"][name]
     tot = data["params"]["num_nodes"]
     c.validate_keys(errors, snp, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_list_length(errors, snp, name, data["specs"][name]["type"],[10],)
+    c.validate_list_length(errors, snp, name, data["specs"][name]["type"], [list_length], )
     if type(snp) == dict:
         c.validate_min_inclusive(errors, [i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
 
