@@ -109,12 +109,12 @@ def val_max_canopy_storage(errors, data, name):
 def val_snow_params_simple(errors, data, name):
     process_name = "snow_process_simple"
     list_length = 3
-    validate_snow(process_name, list_length, errors, data, name)
+    partial(validate_snow, process_name, list_length)(errors, data, name)
 
 def val_snow_params_complex(errors, data, name):
     process_name = "snow_process_complex"
     list_length = 10
-    validate_snow(process_name, list_length, errors, data, name)
+    partial(validate_snow, process_name, list_length)(errors, data, name)
 
 def validate_snow(process_name, list_length, errors, data, name):
     if data["params"][process_name] == "disabled":
