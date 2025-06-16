@@ -2,7 +2,7 @@ import numpy as np
 import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 
-def expand_t_type(t_type):
+def _expand_t_type(t_type):
     if t_type == float:
         t_type = (float, int, int)
     elif t_type == int:
@@ -15,8 +15,8 @@ def validate_keys(param, name, t_types, keys):
     if (t_types is None) or len(t_types) == 0:
         return
 
-    t_type = expand_t_type(t_types[0])
-    expanded_list = expand_t_type(list)
+    t_type = _expand_t_type(t_types[0])
+    expanded_list = _expand_t_type(list)
 
     if t_type == dict and (type(param) == dict) and keys:
         _validate_keys(param, name, keys)
@@ -32,8 +32,8 @@ def validate_list_length(param=None, name=None, t_types=None, len_list=None):
     if (t_types is None) or len(t_types) == 0:
         return
 
-    t_type = expand_t_type(t_types[0])
-    expanded_list = expand_t_type(list)
+    t_type = _expand_t_type(t_types[0])
+    expanded_list = _expand_t_type(list)
 
     if t_type == expanded_list and type(param) in expanded_list and len_list:
         _validate_list_length(param, name, len_list[0])
