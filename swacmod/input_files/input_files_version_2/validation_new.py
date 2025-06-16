@@ -86,13 +86,14 @@ def validate_zone_mapping_A(zone_name, min_inclusive, errors, data, name):
     c.validate_max_inclusive(errors, param_values, message_format % name, len(tzn))
 
 def validate_zone_mapping_B(zone_name, errors, data, name):
+    min_inclusive = 0
     message_format = "%s"
     param = data["params"][name]
     param_values = param.values()
     tot = data["params"]["num_nodes"]
     tzn = data["params"][zone_name]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, param_values, message_format % name, 0)
+    c.validate_min_inclusive(errors, param_values, message_format % name, min_inclusive)
     c.validate_max_inclusive(errors, param_values, message_format % name, len(tzn))
 
 # TODO This is never called. Should it be?
