@@ -64,10 +64,6 @@ def val_node_areas(errors, data, name):
     c.validate_keys(errors, data["params"][name], name, data["specs"][name]["type"], range(1, data["params"]["num_nodes"] + 1))
     c.validate_min_inclusive(errors, data["params"][name].values(), name, 0)
 
-def val_reporting_zone_mapping(errors, data, name):
-    zone_name = "reporting_zone_names"
-    validate_zone_mapping_C(zone_name, errors, data, name)
-
 def validate_zone_mapping_C(zone_name, errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
@@ -91,14 +87,6 @@ def validate_zone_mapping_B(zone_name, errors, data, name):
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, param.values(), name, 0)
     c.validate_max_inclusive(errors, param.values(), name, len(tzn))
-
-def val_subroot_zone_mapping(errors, data, name):
-    param = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    szn = data["params"]["subroot_zone_names"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, 0)
-    c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(szn))
 
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
@@ -474,7 +462,7 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_nodes_per_line, "nodes_per_line")
     do_validation(errors, data, val_output_fac, "output_fac")
     # val_spatial_output_date,
-    do_validation(errors, data, val_reporting_zone_mapping, "reporting_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_C, "reporting_zone_names"), "reporting_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_A, "rainfall_zone_names", 1), "rainfall_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "rapid_runoff_zone_names"), "rapid_runoff_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_A, "pe_zone_names", 0), "pe_zone_mapping")
@@ -482,7 +470,7 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, partial(validate_zone_mapping_B, "tmax_c_zone_names"), "tmax_c_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "tmin_c_zone_names"), "tmin_c_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "tmin_c_zone_names"), "windsp_zone_mapping")
-    do_validation(errors, data, val_subroot_zone_mapping, "subroot_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_A, "subroot_zone_names", 0), "subroot_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "swrecharge_zone_names"), "swrecharge_zone_mapping")
     do_validation(errors, data, val_sw_zone_mapping, "sw_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "macropore_zone_names"), "macropore_zone_mapping")
