@@ -1,18 +1,7 @@
-from __future__ import print_function
-"""SWAcMod input/output functions."""
-
-# Standard Library
 import ast
 import logging
-from dataclasses import dataclass
-
-# Third Party Libraries
 import yaml
-
-# Internal modules
 import swacmod.utils as u
-import swacmod.input_files.input_files_version_2.validation as v
-import swacmod.input_files.input_files_version_2.finalization as f
 import swacmod.input_files.input_files_version_2.time_series_data as time_series_data
 from swacmod.input_files.input_files_version_2.default_file_resource import DefaultFileResource
 
@@ -20,7 +9,6 @@ try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-from tqdm import tqdm
 
 def load_yaml(filein, file_opener=DefaultFileResource._default_file_open):
     """Load a YAML file, lowercase its keys."""
