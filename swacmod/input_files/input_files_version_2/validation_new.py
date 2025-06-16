@@ -1,6 +1,5 @@
 import logging
 import multiprocessing
-import swacmod.utils as u
 import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
 
