@@ -22,31 +22,31 @@ def val_time_periods(errors, data, name):
 
 def val_rainfall_ts(errors, data, name):
     rzn = data["params"]["rainfall_zone_names"]
-    c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(rzn)])
+    c.validate_list_length(errors, (data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(rzn)])
 
 def val_pe_ts(errors, data, name):
     pzn = data["params"]["pe_zone_names"]
-    c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(pzn)])
+    c.validate_list_length(errors, (data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(pzn)])
 
 def val_temperature_ts(errors, data, name):
     tzn = set(data["params"]["temperature_zone_mapping"].values())
-    c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
+    c.validate_list_length(errors, (data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
 
 def val_tmax_c_ts(errors, data, name):
     tzn = set(data["params"]["tmax_c_zone_mapping"].values())
-    c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
+    c.validate_list_length(errors, (data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
 
 def val_tmin_c_ts(errors, data, name):
     tzn = set(data["params"]["tmin_c_zone_mapping"].values())
-    c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
+    c.validate_list_length(errors, (data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
 
 def val_windsp_ts(errors, data, name):
     tzn = set(data["params"]["windsp_zone_mapping"].values())
-    c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
+    c.validate_list_length(errors, (data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
 
 def val_subroot_leakage_ts(errors, data, name):
     szn = data["params"]["subroot_zone_names"]
-    c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(szn)])
+    c.validate_list_length(errors, (data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(szn)])
 
 def val_swdis_ts(errors, data, name):
     swdists = data["series"][name]
@@ -61,7 +61,7 @@ def val_swdis_ts(errors, data, name):
 
     length = [ndays, nweeks, nmonths]
     if swdisn != {0: 0}:
-        c.validate_list_length(swdists, name, data["specs"][name]["type"], [length[freq_flag], len(swdisn)])
+        c.validate_list_length(errors, swdists, name, data["specs"][name]["type"], [length[freq_flag], len(swdisn)])
 
 def val_swabs_ts(errors, data, name):
     swabsts = data["series"][name]
@@ -76,7 +76,7 @@ def val_swabs_ts(errors, data, name):
     length = [ndays, nweeks, nmonths]
 
     if swabsn != {0: 0}:
-        c.validate_list_length(swabsts, name, data["specs"][name]["type"], [length[freq_flag], len(swabsn)])
+        c.validate_list_length(errors, swabsts, name, data["specs"][name]["type"], [length[freq_flag], len(swabsn)])
 
 def val_percolation_rejection_ts(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
@@ -86,7 +86,7 @@ def val_percolation_rejection_ts(errors, data, name):
     per = data["series"][name]
     lzn = data["params"]["landuse_zone_names"]
     c.validate_keys(errors, per, name, data["specs"][name]["type"],keys=["percolation_rejection_ts"])
-    c.validate_list_length(per, name, data["specs"][name]["type"], [len(data["series"]["date"]), len(lzn)])
+    c.validate_list_length(errors, per, name, data["specs"][name]["type"], [len(data["series"]["date"]), len(lzn)])
     c.validate_min_inclusive(errors, per[0], name, 0.0)
 
 def val_infiltration_limit_ts(errors, data, name):
@@ -97,7 +97,7 @@ def val_infiltration_limit_ts(errors, data, name):
     per = data["series"][name]
     lzn = data["params"]["interflow_zone_names"]
     c.validate_keys(errors, per, name, data["specs"][name]["type"],keys=["infiltration_limit_ts"])
-    c.validate_list_length(per, name, data["specs"][name]["type"], [len(data["series"]["date"]), len(lzn)])
+    c.validate_list_length(errors, per, name, data["specs"][name]["type"], [len(data["series"]["date"]), len(lzn)])
     c.validate_min_inclusive(errors, per[0], name, 0.0)
 
 def val_interflow_decay_ts(errors, data, name):
@@ -108,7 +108,7 @@ def val_interflow_decay_ts(errors, data, name):
     per = data["series"][name]
     lzn = data["params"]["interflow_zone_names"]
     c.validate_keys(errors, per, name, data["specs"][name]["type"],keys=["interflow_decay_ts"])
-    c.validate_list_length(per, name, data["specs"][name]["type"], [len(data["series"]["date"]), len(lzn)])
+    c.validate_list_length(errors, per, name, data["specs"][name]["type"], [len(data["series"]["date"]), len(lzn)])
     c.validate_min_inclusive(errors, per[0], name, 0.0)
 
 def validate_2(data, specs):

@@ -36,7 +36,7 @@ def _validate_keys(param, name, keys):
         diff = set_keys - param_keys
         raise u.ValidationError(msg % (name, diff))
 
-def validate_list_length(param, name, t_types, len_list):
+def validate_list_length(errors, param, name, t_types, len_list):
     if (t_types is None) or len(t_types) == 0:
         return
 
@@ -48,10 +48,10 @@ def validate_list_length(param, name, t_types, len_list):
 
     if t_type == dict and (type(param) == dict):
         for value in param.values():
-            validate_list_length(value, name, t_types[1:], len_list)
+            validate_list_length(errors, value, name, t_types[1:], len_list)
     elif t_type in [expanded_list]:
         for value in param:
-            validate_list_length(value, name, t_types[1:], _tail(len_list))
+            validate_list_length(errors, value, name, t_types[1:], _tail(len_list))
 
 def _validate_list_length(param, name, length):
     if length and (len(param) != length):
