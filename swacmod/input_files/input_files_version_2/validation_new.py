@@ -540,15 +540,6 @@ def validate_2(params, specs):
     _validate_params(errors, specs, data)
     return ParsedInputData(params, errors, warnings)
 
-def validate(params, specs):
-    data = {
-        "params": params,
-        "specs": specs
-    }
-    errors = []
-    _validate_params(errors, specs, data)
-    return errors
-
 def _validate_params(errors, specs, data):
     do_validation(errors, data, val_num_cores, "num_cores")
     do_validation(errors, data, val_num_nodes, "num_nodes")
