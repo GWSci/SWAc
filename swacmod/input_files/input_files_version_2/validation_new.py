@@ -68,10 +68,10 @@ def val_reporting_zone_mapping(errors, data, name):
     zone_name = "reporting_zone_names"
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
-    rzn = data["params"][zone_name]
+    tzn = data["params"][zone_name]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, param.values(), "zone in %s" % name, 0)
-    c.validate_max_inclusive(errors, param.values(), "zone in %s" % name, len(rzn))
+    c.validate_max_inclusive(errors, param.values(), "zone in %s" % name, len(tzn))
 
 def validate_zone_mapping_A(zone_name, min_inclusive, errors, data, name):
     param = data["params"][name]
