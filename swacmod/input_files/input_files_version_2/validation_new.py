@@ -66,6 +66,9 @@ def val_node_areas(errors, data, name):
 
 def val_reporting_zone_mapping(errors, data, name):
     zone_name = "reporting_zone_names"
+    validate_zone_mapping_C(zone_name, errors, data, name)
+
+def validate_zone_mapping_C(zone_name, errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"][zone_name]
