@@ -128,7 +128,7 @@ def val_snow_params_complex(errors, data, name):
     c.validate_keys(errors, snp, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_list_length(errors, snp, name, data["specs"][name]["type"], [list_length], )
     if type(snp) == dict:
-        c.validate_min_inclusive(errors, [i[0] for i in snp.values()], "starting_snow_pack in %s" % name, 0)
+        c.validate_min_inclusive(errors, [i[0] for i in snp.values() if len(i) > 0], "starting_snow_pack in %s" % name, 0)
 
 def val_rapid_runoff_params(errors, data, name):
     rrp = data["params"][name]
