@@ -78,6 +78,7 @@ def validate_zone_mapping_B(zone_name, errors, data, name):
     _validate_zone_mapping_helper(zone_name, 0, "%s", param, param.values(), errors, data, name)
 
 def _validate_zone_mapping_helper(zone_name, min_inclusive, message_format, param, param_values, errors, data, name):
+    param = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"][zone_name]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
