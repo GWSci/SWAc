@@ -7,9 +7,6 @@ def val_num_cores(errors, data, name):
     c.validate_min_exclusive(errors, [data["params"][name]], name, 0)
     c.validate_max_inclusive(errors, [data["params"][name]], name, multiprocessing.cpu_count())
 
-def val_num_nodes(errors, data, name):
-    c.validate_min_exclusive(errors, [data["params"][name]], name, 0)
-
 def val_start_date(errors, data, name):
     dat = data["params"][name]
     try:
@@ -420,7 +417,7 @@ def validate_2(params, specs):
 
 def _validate_params(errors, specs, data):
     do_validation(errors, data, val_num_cores, "num_cores")
-    do_validation(errors, data, val_num_nodes, "num_nodes")
+    do_validation(errors, data, partial(validate_min_exclusive, 0), "num_nodes")
     do_validation(errors, data, val_node_areas, "node_areas")
     do_validation(errors, data, val_start_date, "start_date")
     do_validation(errors, data, val_time_periods, "time_periods")
