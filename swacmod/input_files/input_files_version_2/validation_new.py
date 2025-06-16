@@ -109,18 +109,14 @@ def val_max_canopy_storage(errors, data, name):
 def val_snow_params_simple(errors, data, name):
     process_name = "snow_process_simple"
     list_length = 3
-    if data["params"][process_name] == "disabled":
-        return
-    snp = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    c.validate_keys(errors, snp, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_list_length(errors, snp, name, data["specs"][name]["type"], [list_length], )
-    if type(snp) == dict:
-        c.validate_min_inclusive(errors, [i[0] for i in snp.values() if len(i) > 0], "starting_snow_pack in %s" % name, 0)
+    validate_snow(process_name, list_length, errors, data, name)
 
 def val_snow_params_complex(errors, data, name):
     process_name = "snow_process_complex"
     list_length = 10
+    validate_snow(process_name, list_length, errors, data, name)
+
+def validate_snow(process_name, list_length, errors, data, name):
     if data["params"][process_name] == "disabled":
         return
     snp = data["params"][name]
