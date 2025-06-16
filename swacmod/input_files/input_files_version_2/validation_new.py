@@ -65,24 +65,17 @@ def val_node_areas(errors, data, name):
     c.validate_min_inclusive(errors, data["params"][name].values(), name, 0)
 
 def validate_zone_mapping_C(zone_name, errors, data, name):
-    min_inclusive = 0
-    message_format = "zone in %s"
     param = data["params"][name]
-    param_values = param.values()
-    _validate_zone_mapping_helper(data, errors, message_format, min_inclusive, name, param, param_values, zone_name)
+    _validate_zone_mapping_helper(data, errors, "zone in %s", 0, name, param, param.values(), zone_name)
 
 def validate_zone_mapping_A(zone_name, min_inclusive, errors, data, name):
-    message_format = "zone in %s"
     param = data["params"][name]
     param_values = [i[0] for i in param.values()]
-    _validate_zone_mapping_helper(data, errors, message_format, min_inclusive, name, param, param_values, zone_name)
+    _validate_zone_mapping_helper(data, errors, "zone in %s", min_inclusive, name, param, param_values, zone_name)
 
 def validate_zone_mapping_B(zone_name, errors, data, name):
-    min_inclusive = 0
-    message_format = "%s"
     param = data["params"][name]
-    param_values = param.values()
-    _validate_zone_mapping_helper(data, errors, message_format, min_inclusive, name, param, param_values, zone_name)
+    _validate_zone_mapping_helper(data, errors, "%s", 0, name, param, param.values(), zone_name)
 
 def _validate_zone_mapping_helper(data, errors, message_format, min_inclusive, name, param, param_values, zone_name):
     tot = data["params"]["num_nodes"]
