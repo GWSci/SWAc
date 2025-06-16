@@ -630,8 +630,6 @@ def do_validation(errors, data, function, param):
     if not is_param_skipped:
         try:
             function(errors, data, param)
-        except u.ValidationError as err:
-            errors.append(err.args[0])
         except AttributeError as err:
             errors.append(err.args[0])
         except IndexError as err:
