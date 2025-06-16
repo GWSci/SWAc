@@ -49,28 +49,28 @@ def val_spatial_output_date(errors, data, name):
         return
 
 def val_swdis_locs(errors, data, name):
-    swdisl = data["params"][name]
+    param = data["params"][name]
     swdisn = data["params"]["swdis_locs"]
     if swdisn != {0: 0}:
         tot = len(data["params"]["swdis_locs"]) + 1
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
-        # c.validate_keys(errors, swdisl, name, data["specs"][name]["type"], range(1, tot))
-        c.validate_min_inclusive(errors, swdisl.values(), "zone in %s" % name, 1)
-        c.validate_max_inclusive(errors, swdisl.values(), "zone in %s" % name, tot)
-        c.validate_min_inclusive(errors, swdisl.keys(), "node in %s" % name, 1)
-        c.validate_max_inclusive(errors, swdisl.keys(), "node in %s" % name, data["params"]["num_nodes"])
+        # c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot))
+        c.validate_min_inclusive(errors, param.values(), "zone in %s" % name, 1)
+        c.validate_max_inclusive(errors, param.values(), "zone in %s" % name, tot)
+        c.validate_min_inclusive(errors, param.keys(), "node in %s" % name, 1)
+        c.validate_max_inclusive(errors, param.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
 def val_swabs_locs(errors, data, name):
-    swabsl = data["params"][name]
+    param = data["params"][name]
     swabsn = data["params"]["swabs_locs"]
     if swabsn != {0: 0}:
         tot = len(data["params"]["swabs_locs"]) + 1
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
-        # c.validate_keys(errors, swabsl, name, data["specs"][name]["type"], range(1, tot))
-        c.validate_min_inclusive(errors, swabsl.values(), "zone in %s" % name, 1)
-        c.validate_max_inclusive(errors, swabsl.values(), "zone in %s" % name, tot)
-        c.validate_min_inclusive(errors, swabsl.keys(), "node in %s" % name, 1)
-        c.validate_max_inclusive(errors, swabsl.keys(), "node in %s" % name, data["params"]["num_nodes"])
+        # c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot))
+        c.validate_min_inclusive(errors, param.values(), "zone in %s" % name, 1)
+        c.validate_max_inclusive(errors, param.values(), "zone in %s" % name, tot)
+        c.validate_min_inclusive(errors, param.keys(), "node in %s" % name, 1)
+        c.validate_max_inclusive(errors, param.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
 def val_node_areas(errors, data, name):
     c.validate_keys(errors, data["params"][name], name, data["specs"][name]["type"], range(1, data["params"]["num_nodes"] + 1))
