@@ -97,14 +97,6 @@ def val_subroot_zone_mapping(errors, data, name):
     c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, 0)
     c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(szn))
 
-def val_rapid_runoff_zone_mapping(errors, data, name):
-    param = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    rzn = data["params"]["rapid_runoff_zone_names"]
-    c.validate_keys(errors, param,name,data["specs"][name]["type"],range(1, tot + 1),)
-    c.validate_min_inclusive(errors, param.values(), name, 0)
-    c.validate_max_inclusive(errors, param.values(), name, len(rzn))
-
 def val_interflow_zone_mapping(errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
@@ -504,7 +496,7 @@ def _validate_params(errors, specs, data):
     # val_spatial_output_date,
     do_validation(errors, data, val_reporting_zone_mapping, "reporting_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_A, "rainfall_zone_names", 1), "rainfall_zone_mapping")
-    do_validation(errors, data, val_rapid_runoff_zone_mapping, "rapid_runoff_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_B, "rapid_runoff_zone_names"), "rapid_runoff_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_A, "pe_zone_names", 0), "pe_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "temperature_zone_names"), "temperature_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_B, "tmax_c_zone_names"), "tmax_c_zone_mapping")
