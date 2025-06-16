@@ -68,7 +68,7 @@ def validate_max_inclusive(errors, values, name, high_l):
     try:
         if not all(i <= high_l for i in values):
             msg = 'Parameter "%s" requires values <= %s'
-            raise u.ValidationError(msg % (name, high_l))
+            errors.append(msg % (name, high_l))
     except TypeError:
         pass
 
