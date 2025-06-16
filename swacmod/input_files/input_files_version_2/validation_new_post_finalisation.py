@@ -5,7 +5,9 @@ from swacmod.input_files.parsed_input_data import ParsedInputData
 from swacmod.utils import monthdelta, weekdelta
 
 def val_time_periods(data, name):
-    c.check_values_limits(values=[i for j in (data["params"][name]) for i in j],name=name,low_l=0,high_l=len(data["series"]["date"]) + 1,include_high=True,)
+    values = [i for j in (data["params"][name]) for i in j]
+    c.validate_min_exclusive(values, name, 0)
+    c.validate_max_inclusive(values, name, len(data["series"]["date"]) + 1)
 
     all_days = []
     for time_range in data["params"][name]:
