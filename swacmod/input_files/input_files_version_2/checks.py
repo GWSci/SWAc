@@ -44,7 +44,7 @@ def validate_list_length(errors, param, name, t_types, len_list):
     expanded_list = _expand_t_type(list)
 
     if t_type == expanded_list and type(param) in expanded_list and len_list:
-        _validate_list_length(param, name, len_list[0])
+        _validate_list_length(errors, param, name, len_list[0])
 
     if t_type == dict and (type(param) == dict):
         for value in param.values():
@@ -53,7 +53,7 @@ def validate_list_length(errors, param, name, t_types, len_list):
         for value in param:
             validate_list_length(errors, value, name, t_types[1:], _tail(len_list))
 
-def _validate_list_length(param, name, length):
+def _validate_list_length(errors, param, name, length):
     if length and (len(param) != length):
         msg = 'Parameter "%s" has to be a list of length %d, found %d'
         raise u.ValidationError(msg % (name, length, len(param)))
