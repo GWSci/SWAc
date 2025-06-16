@@ -140,13 +140,18 @@ def val_single_cell_swrecharge_proportion(errors, data, name):
     c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
 
+# TODO This is never called. Should it be?
 def val_single_cell_swrecharge_limit(errors, data, name):
-    zone_name = 'single_cell_swrecharge_zone_names'
+    validate_months_and_zones('single_cell_swrecharge_zone_names', errors, data, name)
+
+# TODO This is never called. Should it be?
+def validate_months_and_zones(zone_name, errors, data, name):
     param = data['params'][name]
     rzn = data['params'][zone_name]
     c.validate_keys(errors, param, name, data['specs'][name]['type'], range(1, 13))
-    c.validate_list_length(errors, param, name, data['specs'][name]['type'],[len(rzn)])
+    c.validate_list_length(errors, param, name, data['specs'][name]['type'], [len(rzn)])
 
+# TODO This is never called. Should it be?
 def val_single_cell_swrecharge_activation(errors, data, name):
     rra = data['params'][name]
     rzn = data['params']['single_cell_swrecharge_zone_names']
@@ -167,12 +172,6 @@ def val_swrecharge_proportion(errors, data, name):
     c.validate_list_length(errors, rrp, name, data["specs"][name]["type"],[len(rzn)],)
     c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
-
-def val_swrecharge_limit(errors, data, name):
-    rrl = data["params"][name]
-    rzn = data["params"]["swrecharge_zone_names"]
-    c.validate_keys(errors, rrl, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, rrl, name, data["specs"][name]["type"],[len(rzn)],)
 
 def val_macropore_process(errors, data, name):
     mpp = data["params"][name]
@@ -447,7 +446,7 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_rapid_runoff_params, "rapid_runoff_params")
     do_validation(errors, data, val_swrecharge_process, "swrecharge_process")
     do_validation(errors, data, val_swrecharge_proportion, "swrecharge_proportion")
-    do_validation(errors, data, val_swrecharge_limit, "swrecharge_limit")
+    do_validation(errors, data, partial(validate_months_and_zones, "swrecharge_zone_names"), "swrecharge_limit")
     do_validation(errors, data, val_macropore_process, "macropore_process")
     do_validation(errors, data, val_macropore_proportion, "macropore_proportion")
     do_validation(errors, data, val_macropore_limit, "macropore_limit")
