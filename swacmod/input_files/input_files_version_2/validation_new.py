@@ -81,15 +81,7 @@ def validate_zone_mapping_A(zone_name, min_inclusive, errors, data, name):
     c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, min_inclusive)
     c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(rzn))
 
-def val_tmax_c_zone_mapping(errors, data, name):
-    zone_name = "tmax_c_zone_names"
-    validate_zone_mapping_B(data, errors, name, zone_name)
-
-def val_tmin_c_zone_mapping(errors, data, name):
-    zone_name = "tmin_c_zone_names"
-    validate_zone_mapping_B(data, errors, name, zone_name)
-
-def validate_zone_mapping_B(data, errors, name, zone_name):
+def validate_zone_mapping_B(zone_name, errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
     tzn = data["params"][zone_name]
@@ -531,8 +523,8 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_rapid_runoff_zone_mapping, "rapid_runoff_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_A, "pe_zone_names", 0), "pe_zone_mapping")
     do_validation(errors, data, val_temperature_zone_mapping, "temperature_zone_mapping")
-    do_validation(errors, data, val_tmax_c_zone_mapping, "tmax_c_zone_mapping")
-    do_validation(errors, data, val_tmin_c_zone_mapping, "tmin_c_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_B, "tmax_c_zone_names"), "tmax_c_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_B, "tmin_c_zone_names"), "tmin_c_zone_mapping")
     do_validation(errors, data, val_windsp_zone_mapping, "windsp_zone_mapping")
     do_validation(errors, data, val_subroot_zone_mapping, "subroot_zone_mapping")
     do_validation(errors, data, val_swrecharge_zone_mapping, "swrecharge_zone_mapping")
