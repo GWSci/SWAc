@@ -73,12 +73,6 @@ def val_reporting_zone_mapping(errors, data, name):
     c.validate_min_inclusive(errors, param.values(), "zone in %s" % name, 0)
     c.validate_max_inclusive(errors, param.values(), "zone in %s" % name, len(rzn))
 
-def val_rainfall_zone_mapping(errors, data, name):
-    partial(validate_zone_mapping_A, "rainfall_zone_names", 1)(errors, data, name)
-
-def val_pe_zone_mapping(errors, data, name):
-    partial(validate_zone_mapping_A, "pe_zone_names", 0)(errors, data, name)
-
 def validate_zone_mapping_A(zone_name, min_inclusive, errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
