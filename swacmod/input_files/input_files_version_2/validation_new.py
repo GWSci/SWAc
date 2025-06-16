@@ -628,7 +628,6 @@ def _validate_params(errors, specs, data):
 def do_validation(errors, data, function, param):
     if not is_param_skipped(data, param):
         function(errors, data, param)
-        logging.debug('\t\t"%s" validated', param)
 
 def is_param_skipped(data, param):
     params = data["params"]
