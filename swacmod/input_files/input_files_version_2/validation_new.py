@@ -188,18 +188,6 @@ def val_macropore_proportion(errors, data, name):
     c.validate_min_inclusive(errors, [j for i in mpp.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in mpp.values() for j in i], name, 1.0)
 
-def val_macropore_limit(errors, data, name):
-    mpl = data["params"][name]
-    mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(errors, mpl, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, mpl, name, data["specs"][name]["type"],[len(mzn)],)
-
-def val_macropore_activation(errors, data, name):
-    mpa = data["params"][name]
-    mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(errors, mpa, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, mpa, name, data["specs"][name]["type"],[len(mzn)],)
-
 def val_macropore_recharge(errors, data, name):
     mpr = data["params"][name]
     mzn = data["params"]["macropore_zone_names"]
@@ -449,8 +437,8 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, partial(validate_months_and_zones, "swrecharge_zone_names"), "swrecharge_limit")
     do_validation(errors, data, val_macropore_process, "macropore_process")
     do_validation(errors, data, val_macropore_proportion, "macropore_proportion")
-    do_validation(errors, data, val_macropore_limit, "macropore_limit")
-    do_validation(errors, data, val_macropore_activation, "macropore_activation")
+    do_validation(errors, data, partial(validate_months_and_zones, "macropore_zone_names"), "macropore_limit")
+    do_validation(errors, data, partial(validate_months_and_zones, "macropore_zone_names"), "macropore_activation")
     do_validation(errors, data, val_macropore_recharge, "macropore_recharge")
     do_validation(errors, data, val_soil_static_params, "soil_static_params")
     do_validation(errors, data, val_smd, "smd")
