@@ -49,10 +49,11 @@ def val_spatial_output_date(errors, data, name):
         return
 
 def val_swdis_locs(errors, data, name):
+    locs_name = "swdis_locs"
     param = data["params"][name]
-    swdisn = data["params"]["swdis_locs"]
-    if swdisn != {0: 0}:
-        tot = len(data["params"]["swdis_locs"]) + 1
+    locs = data["params"][locs_name]
+    if locs != {0: 0}:
+        tot = len(data["params"][locs_name]) + 1
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
         # c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot))
         c.validate_min_inclusive(errors, param.values(), "zone in %s" % name, 1)
@@ -61,10 +62,11 @@ def val_swdis_locs(errors, data, name):
         c.validate_max_inclusive(errors, param.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
 def val_swabs_locs(errors, data, name):
+    locs_name = "swabs_locs"
     param = data["params"][name]
-    swabsn = data["params"]["swabs_locs"]
-    if swabsn != {0: 0}:
-        tot = len(data["params"]["swabs_locs"]) + 1
+    locs = data["params"][locs_name]
+    if locs != {0: 0}:
+        tot = len(data["params"][locs_name]) + 1
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
         # c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot))
         c.validate_min_inclusive(errors, param.values(), "zone in %s" % name, 1)
