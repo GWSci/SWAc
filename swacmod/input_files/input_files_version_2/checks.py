@@ -88,4 +88,4 @@ def validate_min_inclusive(errors, values, name, low_l):
 def validate_constraints(errors, values, name, constraints):
     if not all(i in constraints for i in values):
         msg = 'Parameter "%s" requires to be one in %s'
-        raise u.ValidationError(msg % (name, constraints))
+        errors.append(msg % (name, constraints))
