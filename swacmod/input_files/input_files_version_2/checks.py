@@ -56,7 +56,7 @@ def validate_list_length(errors, param, name, t_types, len_list):
 def _validate_list_length(errors, param, name, length):
     if length and (len(param) != length):
         msg = 'Parameter "%s" has to be a list of length %d, found %d'
-        raise u.ValidationError(msg % (name, length, len(param)))
+        errors.append(msg % (name, length, len(param)))
 
 def _tail(a_list):
     if a_list and len(a_list) > 0:

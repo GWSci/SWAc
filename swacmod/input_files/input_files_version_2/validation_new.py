@@ -634,6 +634,10 @@ def do_validation(errors, data, function, param):
             errors.append(err.args[0])
         except AttributeError as err:
             errors.append(err.args[0])
+        except IndexError as err:
+            errors.append(err.args[0])
+        except KeyError as err:
+            errors.append(err.args[0])
         logging.debug('\t\t"%s" validated', param)
 
 def is_alt(specs, params, param):

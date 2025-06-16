@@ -163,11 +163,12 @@ class MyTestCase(unittest.TestCase):
     def assert_validate_list_length_passes(self, param, t_types, list_lengths):
         errors = []
         _validate_list_length_adaptor(errors, param, t_types, list_lengths)
+        self.assertEqual(0, len(errors))
 
     def assert_validate_list_length_fails(self, param, t_types, list_lengths):
         errors = []
-        with self.assertRaises(u.ValidationError):
-            _validate_list_length_adaptor(errors, param, t_types, list_lengths)
+        _validate_list_length_adaptor(errors, param, t_types, list_lengths)
+        self.assertEqual(1, len(errors))
 
 def _validate_keys_adaptor(errors, param, t_types, keys):
     checks.validate_keys(errors, param=param, name="cat", t_types=t_types, keys=keys)
