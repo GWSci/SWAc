@@ -100,34 +100,34 @@ def val_subroot_zone_mapping(errors, data, name):
 def val_interflow_zone_mapping(errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
-    rzn = data["params"]["interflow_zone_names"]
+    tzn = data["params"]["interflow_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, param.values(), name, 0)
-    c.validate_max_inclusive(errors, param.values(), name, len(rzn))
+    c.validate_max_inclusive(errors, param.values(), name, len(tzn))
 
 def val_swrecharge_zone_mapping(errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
-    rzn = data["params"]["swrecharge_zone_names"]
+    tzn = data["params"]["swrecharge_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, param.values(), name, 0)
-    c.validate_max_inclusive(errors, param.values(), name, len(rzn))
+    c.validate_max_inclusive(errors, param.values(), name, len(tzn))
 
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
     param = data['params'][name]
     tot = data['params']['num_nodes']
-    rzn = data['params']['single_cell_swrecharge_zone_names']
+    tzn = data['params']['single_cell_swrecharge_zone_names']
     c.validate_keys(errors, param, name, data['specs'][name]['type'], range(1, tot + 1))
     c.validate_min_inclusive(errors, param.values(), name, 0)
-    c.validate_max_inclusive(errors, param.values(), name, len(rzn))
+    c.validate_max_inclusive(errors, param.values(), name, len(tzn))
 
 def val_macropore_zone_mapping(errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
-    mzn = data["params"]["macropore_zone_names"]
+    tzn = data["params"]["macropore_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, param.values(), name, 0)
-    c.validate_max_inclusive(errors, param.values(), name, len(mzn))
+    c.validate_max_inclusive(errors, param.values(), name, len(tzn))
 
 def validate_constraints(errors, data, name):
     x = data["params"][name]
