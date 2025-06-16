@@ -42,7 +42,11 @@ def val_nodes_per_line(errors, data, name):
     c.validate_min_exclusive(errors, [data["params"][name]], name, 0)
 
 def val_output_fac(errors, data, name):
-    c.validate_min_exclusive(errors, [data["params"][name]], name, 0.0)
+    min_exclusive = 0.0
+    validate_min_exclusive(min_exclusive, errors, data, name)
+
+def validate_min_exclusive(min_exclusive, errors, data, name):
+    c.validate_min_exclusive(errors, [data["params"][name]], name, min_exclusive)
 
 def val_spatial_output_date(errors, data, name):
     dat = data["params"][name]
