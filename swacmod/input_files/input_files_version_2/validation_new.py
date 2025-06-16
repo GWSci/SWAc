@@ -74,20 +74,22 @@ def val_reporting_zone_mapping(errors, data, name):
 
 def val_rainfall_zone_mapping(errors, data, name):
     zone_name = "rainfall_zone_names"
+    min_inclusive = 1
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"][zone_name]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, 1)
+    c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, min_inclusive)
     c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(rzn))
 
 def val_pe_zone_mapping(errors, data, name):
     zone_name = "pe_zone_names"
+    min_inclusive = 0
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
     rzn = data["params"][zone_name]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, 0)
+    c.validate_min_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, min_inclusive)
     c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(rzn))
 
 def val_tmax_c_zone_mapping(errors, data, name):
