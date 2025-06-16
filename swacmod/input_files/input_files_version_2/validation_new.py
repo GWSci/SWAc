@@ -38,13 +38,6 @@ def val_output_individual(errors, data, name):
                + '1 <= x <= ' "num_nodes")
         errors.append(msg % name)
 
-def val_nodes_per_line(errors, data, name):
-    c.validate_min_exclusive(errors, [data["params"][name]], name, 0)
-
-def val_output_fac(errors, data, name):
-    min_exclusive = 0.0
-    validate_min_exclusive(min_exclusive, errors, data, name)
-
 def validate_min_exclusive(min_exclusive, errors, data, name):
     c.validate_min_exclusive(errors, [data["params"][name]], name, min_exclusive)
 
@@ -432,8 +425,8 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_start_date, "start_date")
     do_validation(errors, data, val_time_periods, "time_periods")
     do_validation(errors, data, val_output_individual, "output_individual")
-    do_validation(errors, data, val_nodes_per_line, "nodes_per_line")
-    do_validation(errors, data, val_output_fac, "output_fac")
+    do_validation(errors, data, partial(validate_min_exclusive, 0), "nodes_per_line")
+    do_validation(errors, data, partial(validate_min_exclusive, 0.0), "output_fac")
     # val_spatial_output_date,
     do_validation(errors, data, partial(validate_zone_mapping_C, "reporting_zone_names"), "reporting_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_A, "rainfall_zone_names", 1), "rainfall_zone_mapping")
