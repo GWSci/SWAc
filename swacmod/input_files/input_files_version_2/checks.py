@@ -43,9 +43,9 @@ def validate_list_length(param=None, name=None, t_types=None, len_list=None):
             validate_list_length(value, name, t_types[1:], len_list)
     elif t_type in [expanded_list]:
         for value in param:
-            validate_list_length(value, name, t_types[1:], tail(len_list))
+            validate_list_length(value, name, t_types[1:], _tail(len_list))
 
-def tail(a_list):
+def _tail(a_list):
     if a_list and len(a_list) > 0:
         return a_list[1:]
     else:
