@@ -106,16 +106,6 @@ def val_max_canopy_storage(errors, data, name):
     c.validate_keys(errors, mcs, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, mcs.values(), name, 0)
 
-def val_snow_params_simple(errors, data, name):
-    process_name = "snow_process_simple"
-    list_length = 3
-    partial(validate_snow, process_name, list_length)(errors, data, name)
-
-def val_snow_params_complex(errors, data, name):
-    process_name = "snow_process_complex"
-    list_length = 10
-    partial(validate_snow, process_name, list_length)(errors, data, name)
-
 def validate_snow(process_name, list_length, errors, data, name):
     if data["params"][process_name] == "disabled":
         return
@@ -457,8 +447,8 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, validate_constraints, "macropore_activation_option")
     do_validation(errors, data, val_free_throughfall, "free_throughfall")
     do_validation(errors, data, val_max_canopy_storage, "max_canopy_storage")
-    do_validation(errors, data, val_snow_params_simple, "snow_params_simple")
-    do_validation(errors, data, val_snow_params_complex, "snow_params_complex")
+    do_validation(errors, data, partial(validate_snow, "snow_process_simple", 3), "snow_params_simple")
+    do_validation(errors, data, partial(validate_snow, "snow_process_complex", 10), "snow_params_complex")
     do_validation(errors, data, val_rapid_runoff_params, "rapid_runoff_params")
     do_validation(errors, data, val_swrecharge_process, "swrecharge_process")
     do_validation(errors, data, val_swrecharge_proportion, "swrecharge_proportion")
