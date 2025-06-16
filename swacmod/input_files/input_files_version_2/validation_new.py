@@ -82,20 +82,20 @@ def validate_zone_mapping_A(zone_name, min_inclusive, errors, data, name):
     c.validate_max_inclusive(errors, [i[0] for i in param.values()], "zone in %s" % name, len(rzn))
 
 def val_tmax_c_zone_mapping(errors, data, name):
+    zone_name = "tmax_c_zone_names"
+    validate_zone_mapping_B(data, errors, name, zone_name)
+
+def val_tmin_c_zone_mapping(errors, data, name):
+    zone_name = "tmin_c_zone_names"
+    validate_zone_mapping_B(data, errors, name, zone_name)
+
+def validate_zone_mapping_B(data, errors, name, zone_name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
-    tzn = data["params"]["tmax_c_zone_names"]
+    tzn = data["params"][zone_name]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
     c.validate_min_inclusive(errors, param.values(), name, 0)
     c.validate_max_inclusive(errors, param.values(), name, len(tzn))
-
-def val_tmin_c_zone_mapping(errors, data, name):
-    tzm = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    tzn = data["params"]["tmin_c_zone_names"]
-    c.validate_keys(errors, tzm, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, tzm.values(), name, 0)
-    c.validate_max_inclusive(errors, tzm.values(), name, len(tzn))
 
 def val_windsp_zone_mapping(errors, data, name):
     tzm = data["params"][name]
