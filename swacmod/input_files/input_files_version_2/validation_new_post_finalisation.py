@@ -4,7 +4,7 @@ import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
 from swacmod.utils import monthdelta, weekdelta
 
-def val_time_periods(data, name):
+def val_time_periods(errors, data, name):
     values = [i for j in (data["params"][name]) for i in j]
     c.validate_min_exclusive(values, name, 0)
     c.validate_max_inclusive(values, name, len(data["series"]["date"]) + 1)
@@ -20,35 +20,35 @@ def val_time_periods(data, name):
         )
         raise u.ValidationError(msg % name)
 
-def val_rainfall_ts(data, name):
+def val_rainfall_ts(errors, data, name):
     rzn = data["params"]["rainfall_zone_names"]
     c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(rzn)])
 
-def val_pe_ts(data, name):
+def val_pe_ts(errors, data, name):
     pzn = data["params"]["pe_zone_names"]
     c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(pzn)])
 
-def val_temperature_ts(data, name):
+def val_temperature_ts(errors, data, name):
     tzn = set(data["params"]["temperature_zone_mapping"].values())
     c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
 
-def val_tmax_c_ts(data, name):
+def val_tmax_c_ts(errors, data, name):
     tzn = set(data["params"]["tmax_c_zone_mapping"].values())
     c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
 
-def val_tmin_c_ts(data, name):
+def val_tmin_c_ts(errors, data, name):
     tzn = set(data["params"]["tmin_c_zone_mapping"].values())
     c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
 
-def val_windsp_ts(data, name):
+def val_windsp_ts(errors, data, name):
     tzn = set(data["params"]["windsp_zone_mapping"].values())
     c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(tzn)])
 
-def val_subroot_leakage_ts(data, name):
+def val_subroot_leakage_ts(errors, data, name):
     szn = data["params"]["subroot_zone_names"]
     c.validate_list_length((data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(szn)])
 
-def val_swdis_ts(data, name):
+def val_swdis_ts(errors, data, name):
     swdists = data["series"][name]
 
     swdisn = data["params"]["swdis_locs"]
@@ -63,7 +63,7 @@ def val_swdis_ts(data, name):
     if swdisn != {0: 0}:
         c.validate_list_length(swdists, name, data["specs"][name]["type"], [length[freq_flag], len(swdisn)])
 
-def val_swabs_ts(data, name):
+def val_swabs_ts(errors, data, name):
     swabsts = data["series"][name]
     swabsn = data["params"]["swabs_locs"]
     dates = data["series"]["date"]
@@ -78,7 +78,7 @@ def val_swabs_ts(data, name):
     if swabsn != {0: 0}:
         c.validate_list_length(swabsts, name, data["specs"][name]["type"], [length[freq_flag], len(swabsn)])
 
-def val_percolation_rejection_ts(data, name):
+def val_percolation_rejection_ts(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
         return
     if not data["params"]['percolation_rejection_use_timeseries']:
@@ -89,7 +89,7 @@ def val_percolation_rejection_ts(data, name):
     c.validate_list_length(per, name, data["specs"][name]["type"], [len(data["series"]["date"]), len(lzn)])
     c.validate_min_inclusive(per[0], name, 0.0)
 
-def val_infiltration_limit_ts(data, name):
+def val_infiltration_limit_ts(errors, data, name):
     if data["params"]["interflow_process"] == "disabled":
         return
     if not data["params"]['infiltration_limit_use_timeseries']:
@@ -100,7 +100,7 @@ def val_infiltration_limit_ts(data, name):
     c.validate_list_length(per, name, data["specs"][name]["type"], [len(data["series"]["date"]), len(lzn)])
     c.validate_min_inclusive(per[0], name, 0.0)
 
-def val_interflow_decay_ts(data, name):
+def val_interflow_decay_ts(errors, data, name):
     if data["params"]["interflow_process"] == "disabled":
         return
     if not data["params"]['interflow_decay_use_timeseries']:
@@ -141,7 +141,7 @@ def do_validation(errors, data, function, param):
         or ((param in series) and (series[param] is None)))
     if not is_param_skipped:
         try:
-            function(data, param)
+            function(errors, data, param)
         except u.ValidationError as err:
             errors.append(err.args[0])
         logging.debug('\t\t"%s" validated', param)
