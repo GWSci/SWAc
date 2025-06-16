@@ -188,7 +188,7 @@ def val_macropore_zone_mapping(errors, data, name):
 
 def val_macropore_activation_option(errors, data, name):
     x = data["params"][name]
-    c.validate_constraints([x], name, data["specs"][name]["constraints"])
+    c.validate_constraints(errors, [x], name, data["specs"][name]["constraints"])
 
 def val_canopy_zone_mapping(errors, data, name):
     rrzm = data["params"][name]
@@ -526,11 +526,11 @@ def val_recharge_node_mapping(errors, data, name):
 
 def val_swdis_f(errors, data, name):
     x = data["params"][name]
-    c.validate_constraints([x], name, data["specs"][name]["constraints"])
+    c.validate_constraints(errors, [x], name, data["specs"][name]["constraints"])
 
 def val_swabs_f(errors, data, name):
     x = data["params"][name]
-    c.validate_constraints([x], name, data["specs"][name]["constraints"])
+    c.validate_constraints(errors, [x], name, data["specs"][name]["constraints"])
 
 def val_evt_parameters(errors, data, name):
     rpn = data["params"][name]
@@ -538,7 +538,7 @@ def val_evt_parameters(errors, data, name):
 
 def val_nevtopt(errors, data, name):
     x = data["params"][name]
-    c.validate_constraints([x], name, data["specs"][name]["constraints"])
+    c.validate_constraints(errors, [x], name, data["specs"][name]["constraints"])
 
 def validate_2(params, specs):
     errors = validate(params, specs)
