@@ -531,7 +531,13 @@ def val_evt_parameters(errors, data, name):
     c.validate_list_length(errors, rpn,name,data["specs"][name]["type"],[3],)
 
 def validate_2(params, specs):
-    errors = validate(params, specs)
+    data = {
+        "params": params,
+        "specs": specs
+    }
+    errors1 = []
+    _validate_params(errors1, specs, data)
+    errors = errors1
     warnings = []
     return ParsedInputData(params, errors, warnings)
 
