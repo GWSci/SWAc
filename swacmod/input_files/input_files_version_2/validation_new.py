@@ -626,12 +626,15 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_canopy_zone_mapping, "canopy_zone_mapping")
 
 def do_validation(errors, data, function, param):
-    params = data["params"]
-    specs = data["specs"]
-    is_param_skipped = (params[param] == None) or is_alt(specs, params, param)
-    if not is_param_skipped:
+    if not is_param_skipped(data, param):
         function(errors, data, param)
         logging.debug('\t\t"%s" validated', param)
+
+def is_param_skipped(data, param):
+    params = data["params"]
+    specs = data["specs"]
+    is_skipped = (params[param] == None) or is_alt(specs, params, param)
+    return is_skipped
 
 def is_alt(specs, params, param):
     value = params[param]
