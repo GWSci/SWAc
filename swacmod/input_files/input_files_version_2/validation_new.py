@@ -283,7 +283,7 @@ def val_sw_zone_mapping(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         validate_zone_mapping_B("sw_zone_names", errors, data, name)
 
-def val_sw_downstream(errors, data, name):
+def validate_ponding_keys_length_range(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
@@ -292,32 +292,7 @@ def val_sw_downstream(errors, data, name):
         c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
         c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
 
-def val_sw_bed_infiltration(errors, data, name):
-    if data["params"]['sw_ponding_process'] == "enabled":
-        rrp = data["params"][name]
-        rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(errors, rrp, name, data["specs"][name]["type"], range(1, 13))
-        c.validate_list_length(errors, rrp, name, data["specs"][name]["type"],[len(rzn)],)
-        c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
-        c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
-
-def val_sw_direct_recharge(errors, data, name):
-    if data["params"]['sw_ponding_process'] == "enabled":
-        rrp = data["params"][name]
-        rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(errors, rrp, name, data["specs"][name]["type"], range(1, 13))
-        c.validate_list_length(errors, rrp, name, data["specs"][name]["type"],[len(rzn)],)
-        c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
-        c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
-
-def val_sw_activation(errors, data, name):
-    if data["params"]['sw_ponding_process'] == "enabled":
-        rrp = data["params"][name]
-        rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(errors, rrp, name, data["specs"][name]["type"], range(1, 13))
-        c.validate_list_length(errors, rrp, name, data["specs"][name]["type"],[len(rzn)],)
-
-def val_sw_pe_to_open_water(errors, data, name):
+def validate_ponding_keys_length(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
@@ -417,11 +392,11 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, validate_keys_and_min_values, "infiltration_limit")
     do_validation(errors, data, validate_keys_and_min_values, "interflow_decay")
     do_validation(errors, data, val_recharge_attenuation_params, "recharge_attenuation_params")
-    do_validation(errors, data, val_sw_downstream, "sw_downstream")
-    do_validation(errors, data, val_sw_activation, "sw_activation")
-    do_validation(errors, data, val_sw_bed_infiltration, "sw_bed_infiltration")
-    do_validation(errors, data, val_sw_direct_recharge, "sw_direct_recharge")
-    do_validation(errors, data, val_sw_pe_to_open_water, "sw_pe_to_open_water")
+    do_validation(errors, data, validate_ponding_keys_length_range, "sw_downstream")
+    do_validation(errors, data, validate_ponding_keys_length, "sw_activation")
+    do_validation(errors, data, validate_ponding_keys_length_range, "sw_bed_infiltration")
+    do_validation(errors, data, validate_ponding_keys_length_range, "sw_direct_recharge")
+    do_validation(errors, data, validate_ponding_keys_length, "sw_pe_to_open_water")
     do_validation(errors, data, val_sw_params, "sw_params")
     do_validation(errors, data, val_sw_ponding_area, "sw_ponding_area")
     do_validation(errors, data, validate_locs, "swdis_locs")
