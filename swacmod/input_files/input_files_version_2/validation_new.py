@@ -281,25 +281,7 @@ def val_subroot_leakage_fraction(errors, data, name):
     tot = data["params"]["num_nodes"]
     c.validate_keys(errors, lea, name, data["specs"][name]["type"], range(1, tot + 1))
 
-def val_init_interflow_store(errors, data, name):
-    nda = data["params"][name]
-    tot = len(data["params"]["interflow_zone_names"])
-    c.validate_keys(errors, nda, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, nda.values(), name, 0)
-
-def val_interflow_store_bypass(errors, data, name):
-    nda = data["params"][name]
-    tot = len(data["params"]["interflow_zone_names"])
-    c.validate_keys(errors, nda, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, nda.values(), name, 0)
-
-def val_infiltration_limit(errors, data, name):
-    nda = data["params"][name]
-    tot = len(data["params"]["interflow_zone_names"])
-    c.validate_keys(errors, nda, name, data["specs"][name]["type"], range(1, tot + 1))
-    c.validate_min_inclusive(errors, nda.values(), name, 0)
-
-def val_interflow_decay(errors, data, name):
+def validate_keys_and_min_values(errors, data, name):
     nda = data["params"][name]
     tot = len(data["params"]["interflow_zone_names"])
     c.validate_keys(errors, nda, name, data["specs"][name]["type"], range(1, tot + 1))
@@ -446,10 +428,10 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_raw, "raw")
     do_validation(errors, data, val_percolation_rejection, "percolation_rejection")
     do_validation(errors, data, val_subroot_leakage_fraction, "subroot_leakage_fraction")
-    do_validation(errors, data, val_init_interflow_store, "init_interflow_store")
-    do_validation(errors, data, val_interflow_store_bypass, "interflow_store_bypass")
-    do_validation(errors, data, val_infiltration_limit, "infiltration_limit")
-    do_validation(errors, data, val_interflow_decay, "interflow_decay")
+    do_validation(errors, data, validate_keys_and_min_values, "init_interflow_store")
+    do_validation(errors, data, validate_keys_and_min_values, "interflow_store_bypass")
+    do_validation(errors, data, validate_keys_and_min_values, "infiltration_limit")
+    do_validation(errors, data, validate_keys_and_min_values, "interflow_decay")
     do_validation(errors, data, val_recharge_attenuation_params, "recharge_attenuation_params")
     do_validation(errors, data, val_sw_downstream, "sw_downstream")
     do_validation(errors, data, val_sw_activation, "sw_activation")
