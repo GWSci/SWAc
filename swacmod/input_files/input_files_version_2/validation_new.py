@@ -246,26 +246,26 @@ def val_zr(errors, data, name):
 def val_kc(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
         return
-    kcn = data["params"][name]
+    param = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(errors, kcn, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, kcn, name, data["specs"][name]["type"], [len(lzn)])
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(lzn)])
 
 def val_taw(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
         return
-    taw = data["params"][name]
+    param = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(errors, taw, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, taw, name, data["specs"][name]["type"], [len(lzn)],)
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(lzn)],)
 
 def val_raw(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
         return
-    raw = data["params"][name]
+    param = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(errors, raw, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, raw, name, data["specs"][name]["type"],[len(lzn)])
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(lzn)])
 
 def val_percolation_rejection(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
