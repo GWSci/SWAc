@@ -316,10 +316,10 @@ def validate_2(params, specs):
     }
     errors = []
     warnings = []
-    _validate_params(errors, specs, data)
+    _validate_params(errors, data)
     return ParsedInputData(params, errors, warnings)
 
-def _validate_params(errors, specs, data):
+def _validate_params(errors, data):
     do_validation(errors, data, val_num_cores, "num_cores")
     do_validation(errors, data, partial(validate_min_exclusive, 0), "num_nodes")
     do_validation(errors, data, val_node_areas, "node_areas")
