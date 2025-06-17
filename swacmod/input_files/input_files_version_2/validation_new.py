@@ -269,12 +269,7 @@ def val_sw_zone_mapping(errors, data, name):
 
 def validate_ponding_keys_length_range(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
-        rrp = data["params"][name]
-        rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(errors, rrp, name, data["specs"][name]["type"], range(1, 13))
-        c.validate_list_length(errors, rrp, name, data["specs"][name]["type"],[len(rzn)],)
-        c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
-        c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
+        validate_keys_length_min_max("sw_zone_names", errors, data, name)
 
 def validate_ponding_keys_length(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
