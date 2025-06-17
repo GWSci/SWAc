@@ -1,0 +1,55 @@
+import unittest
+import numpy as np
+from swacmod.input_files.input_files_version_2.input_data import ensure_precision
+
+class Test_Precision_Is_Converted_To_64bit(unittest.TestCase):
+    def test_floats_are_converted_to_64bit(self):
+        data = make_data(np.float32)
+        data = ensure_precision(data)
+        for key in data['params'].keys():
+            self.assertTrue(check_type(data['params'], key, float))
+        
+    def test_integers_are_converted_to_64bit(self):
+        data = make_data(np.int32)
+        data = ensure_precision(data)
+        for key in data['params'].keys():
+            self.assertTrue(check_type(data['params'], key, int))
+
+    def test_booleans_are_not_converted(self):
+        data = make_data(bool)
+        data = ensure_precision(data)
+        for key in data['params'].keys():
+            self.assertTrue(check_type(data['params'], key, bool))
+    
+    def test_strings_are_not_converted(self):
+        data = make_data(str)
+        data = ensure_precision(data)
+        for key in data['params'].keys():
+            self.assertTrue(check_type(data['params'], key, str))
+
+def make_data(t_type):
+    return {'params': {'number': t_type(1.),
+                       'list': [t_type(1.), t_type(2.), t_type(3.)],
+                       'dict': {t_type(1.), t_type(2.), t_type(3.)},
+                       'tuple': (t_type(1.), t_type(2.), t_type(3.)),
+                       'set': set((t_type(1.), t_type(2.), t_type(3.))),
+                       'array': np.array([1., 2., 3.], dtype=t_type)
+                       }
+            }
+
+def check_type(params, key, t_type):
+    if key == 'number':
+        return isinstance(params[key], t_type)
+    elif key == 'list' or key == 'dict' or key == 'tuple' or key == 'set':
+        return all([isinstance(val, t_type) for val in params[key]])
+    elif key == 'array':
+        if t_type == float:
+            return params[key].dtype.type == np.float64
+        elif t_type == int:
+            return params[key].dtype.type == np.int64
+        elif t_type == bool:
+            return params[key].dtype.type == np.bool
+        elif t_type == str:
+            return params[key].dtype.type == np.str_
+    else:
+        return isinstance(params[key], t_type)

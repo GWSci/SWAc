@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import os
 import logging
+import numpy as np
 
 from tqdm import tqdm
 
@@ -51,7 +52,31 @@ def load_and_validate(input_file, input_dir, file_opener=DefaultFileResource._de
     f.finalize_series(data)
     validation_result.update(validation_new_post_finalisation.validate_2(data, specs))
 
+    data = ensure_precision(data)
     return validation_result.update(ParsedInputData(data, [], []))
+
+def ensure_precision(data):
+    if isinstance(data, (int, np.int32, np.int64)) and not isinstance(data, bool):
+        return int(data)
+    elif isinstance(data, (float, np.float32, np.float64)):
+        return float(data)
+    elif isinstance(data, list):
+        return [ensure_precision(value) for value in data]
+    elif isinstance(data, dict):
+        return {key:ensure_precision(value) for key,value in data.items()}
+    elif isinstance(data, tuple):
+        return tuple(ensure_precision(value) for value in data)
+    elif isinstance(data, set):
+        return set(ensure_precision(value) for value in data)
+    elif isinstance(data, np.ndarray):
+        if data.dtype.type == np.int64 or data.dtype.type == np.int32:
+            return np.array(data, dtype=np.int64)
+        elif data.dtype.type == np.float64 or data.dtype.type == np.float32:
+            return np.array(data, dtype=np.float64)
+        else:
+            return data
+    else:
+        return data
 
 def convert_params_and_specs_into_data(specs, params):
     specs_copy = dict(specs)
