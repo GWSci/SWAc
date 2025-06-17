@@ -176,15 +176,7 @@ def val_macropore_process(errors, data, name):
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
         errors.append(msg % (name, "rapid_runoff_process"))
 
-def val_macropore_proportion(errors, data, name):
-    param = data["params"][name]
-    zone_names = data["params"]["macropore_zone_names"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
-    c.validate_min_inclusive(errors, [j for i in param.values() for j in i], name, 0)
-    c.validate_max_inclusive(errors, [j for i in param.values() for j in i], name, 1.0)
-
-def val_macropore_recharge(errors, data, name):
+def validate_macropore_keys_length_min_max(errors, data, name):
     param = data["params"][name]
     zone_names = data["params"]["macropore_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
@@ -373,10 +365,10 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_swrecharge_proportion, "swrecharge_proportion")
     do_validation(errors, data, partial(validate_months_and_zones, "swrecharge_zone_names"), "swrecharge_limit")
     do_validation(errors, data, val_macropore_process, "macropore_process")
-    do_validation(errors, data, val_macropore_proportion, "macropore_proportion")
+    do_validation(errors, data, validate_macropore_keys_length_min_max, "macropore_proportion")
     do_validation(errors, data, partial(validate_months_and_zones, "macropore_zone_names"), "macropore_limit")
     do_validation(errors, data, partial(validate_months_and_zones, "macropore_zone_names"), "macropore_activation")
-    do_validation(errors, data, val_macropore_recharge, "macropore_recharge")
+    do_validation(errors, data, validate_macropore_keys_length_min_max, "macropore_recharge")
     do_validation(errors, data, val_soil_static_params, "soil_static_params")
     do_validation(errors, data, val_smd, "smd")
     do_validation(errors, data, val_soil_spatial, "soil_spatial")
