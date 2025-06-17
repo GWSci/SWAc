@@ -4,7 +4,7 @@ from swacmod.input_files.parsed_input_data import ParsedInputData
 from functools import partial
 
 def val_num_cores(errors, data, name):
-    c.validate_min_exclusive(errors, [data["params"][name]], name, 0)
+    validate_min_exclusive(0, errors, data, name)
     c.validate_max_inclusive(errors, [data["params"][name]], name, multiprocessing.cpu_count())
 
 def val_start_date(errors, data, name):
