@@ -161,20 +161,12 @@ def val_swrecharge_process(errors, data, name):
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
         errors.append(msg % (name, "rapid_runoff_process"))
 
-def val_swrecharge_proportion(errors, data, name):
-    zone_name_key = "swrecharge_zone_names"
-    partial(validate_keys_length_min_max, zone_name_key)(errors, data, name)
-
 def val_macropore_process(errors, data, name):
     mpp = data["params"][name]
     rrp = data["params"]["rapid_runoff_process"]
     if mpp == "enabled" and rrp == "disabled":
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
         errors.append(msg % (name, "rapid_runoff_process"))
-
-def validate_macropore_keys_length_min_max(errors, data, name):
-    zone_name_key = "macropore_zone_names"
-    partial(validate_keys_length_min_max, zone_name_key)(errors, data, name)
 
 def validate_keys_length_min_max(zone_name_key, errors, data, name):
     param = data["params"][name]
@@ -362,13 +354,13 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, partial(validate_snow, "snow_process_complex", 10), "snow_params_complex")
     do_validation(errors, data, val_rapid_runoff_params, "rapid_runoff_params")
     do_validation(errors, data, val_swrecharge_process, "swrecharge_process")
-    do_validation(errors, data, val_swrecharge_proportion, "swrecharge_proportion")
+    do_validation(errors, data, partial(validate_keys_length_min_max, "swrecharge_zone_names"), "swrecharge_proportion")
     do_validation(errors, data, partial(validate_months_and_zones, "swrecharge_zone_names"), "swrecharge_limit")
     do_validation(errors, data, val_macropore_process, "macropore_process")
-    do_validation(errors, data, validate_macropore_keys_length_min_max, "macropore_proportion")
+    do_validation(errors, data, partial(validate_keys_length_min_max, "macropore_zone_names"), "macropore_proportion")
     do_validation(errors, data, partial(validate_months_and_zones, "macropore_zone_names"), "macropore_limit")
     do_validation(errors, data, partial(validate_months_and_zones, "macropore_zone_names"), "macropore_activation")
-    do_validation(errors, data, validate_macropore_keys_length_min_max, "macropore_recharge")
+    do_validation(errors, data, partial(validate_keys_length_min_max, "macropore_zone_names"), "macropore_recharge")
     do_validation(errors, data, val_soil_static_params, "soil_static_params")
     do_validation(errors, data, val_smd, "smd")
     do_validation(errors, data, val_soil_spatial, "soil_spatial")
