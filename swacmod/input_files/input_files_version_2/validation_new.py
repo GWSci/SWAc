@@ -395,7 +395,7 @@ def do_validation(errors, data, function, param):
 def is_param_skipped(data, param):
     params = data["params"]
     specs = data["specs"]
-    is_skipped = (params[param] == None) or is_alt(specs, params, param)
+    is_skipped = (params[param] is None) or is_alt(specs, params, param)
     return is_skipped
 
 def is_alt(specs, params, param):
