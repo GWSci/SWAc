@@ -163,7 +163,7 @@ def val_swrecharge_process(errors, data, name):
 
 def val_swrecharge_proportion(errors, data, name):
     zone_name_key = "swrecharge_zone_names"
-    validate_keys_length_min_max(data, errors, name, zone_name_key)
+    partial(validate_keys_length_min_max, zone_name_key)(errors, data, name)
 
 def val_macropore_process(errors, data, name):
     mpp = data["params"][name]
@@ -174,9 +174,9 @@ def val_macropore_process(errors, data, name):
 
 def validate_macropore_keys_length_min_max(errors, data, name):
     zone_name_key = "macropore_zone_names"
-    validate_keys_length_min_max(data, errors, name, zone_name_key)
+    partial(validate_keys_length_min_max, zone_name_key)(errors, data, name)
 
-def validate_keys_length_min_max(data, errors, name, zone_name_key):
+def validate_keys_length_min_max(zone_name_key, errors, data, name):
     param = data["params"][name]
     zone_names = data["params"][zone_name_key]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
