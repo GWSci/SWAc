@@ -243,29 +243,13 @@ def val_zr(errors, data, name):
     c.validate_keys(errors, zrn, name, data["specs"][name]["type"], range(1, 13))
     c.validate_list_length(errors, zrn, name, data["specs"][name]["type"],[len(lzn)],)
 
-def val_kc(errors, data, name):
+def validate_fao_keys_and_list_length(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
         return
     param = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
     c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(lzn)])
-
-def val_taw(errors, data, name):
-    if data["params"]["fao_process"] == "disabled":
-        return
-    param = data["params"][name]
-    lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(lzn)],)
-
-def val_raw(errors, data, name):
-    if data["params"]["fao_process"] == "disabled":
-        return
-    param = data["params"][name]
-    lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(lzn)])
 
 def val_percolation_rejection(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
@@ -423,9 +407,9 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, val_soil_spatial, "soil_spatial")
     do_validation(errors, data, val_lu_spatial, "lu_spatial")
     do_validation(errors, data, val_zr, "zr")
-    do_validation(errors, data, val_kc, "kc")
-    do_validation(errors, data, val_taw, "taw")
-    do_validation(errors, data, val_raw, "raw")
+    do_validation(errors, data, validate_fao_keys_and_list_length, "kc")
+    do_validation(errors, data, validate_fao_keys_and_list_length, "taw")
+    do_validation(errors, data, validate_fao_keys_and_list_length, "raw")
     do_validation(errors, data, val_percolation_rejection, "percolation_rejection")
     do_validation(errors, data, val_subroot_leakage_fraction, "subroot_leakage_fraction")
     do_validation(errors, data, validate_keys_and_min_values, "init_interflow_store")
