@@ -58,15 +58,15 @@ def val_node_areas(errors, data, name):
     c.validate_keys(errors, data["params"][name], name, data["specs"][name]["type"], range(1, data["params"]["num_nodes"] + 1))
     c.validate_min_inclusive(errors, data["params"][name].values(), name, 0)
 
-def validate_zone_mapping_C(zone_name, errors, data, name):
+def validate_zone_mapping_c(zone_name, errors, data, name):
     param_values = data["params"][name].values()
     _validate_zone_mapping_helper(zone_name, 0, "zone in %s", param_values, errors, data, name)
 
-def validate_zone_mapping_A(zone_name, min_inclusive, errors, data, name):
+def validate_zone_mapping_a(zone_name, min_inclusive, errors, data, name):
     param_values = [i[0] for i in data["params"][name].values()]
     _validate_zone_mapping_helper(zone_name, min_inclusive, "zone in %s", param_values, errors, data, name)
 
-def validate_zone_mapping_B(zone_name, errors, data, name):
+def validate_zone_mapping_b(zone_name, errors, data, name):
     param_values = data["params"][name].values()
     _validate_zone_mapping_helper(zone_name, 0, "%s", param_values, errors, data, name)
 
@@ -265,7 +265,7 @@ def val_recharge_attenuation_params(errors, data, name):
 
 def val_sw_zone_mapping(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
-        validate_zone_mapping_B("sw_zone_names", errors, data, name)
+        validate_zone_mapping_b("sw_zone_names", errors, data, name)
 
 def validate_ponding_keys_length_range(errors, data, name):
     if data["params"]['sw_ponding_process'] == "enabled":
@@ -329,18 +329,18 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, partial(validate_min_exclusive, 0), "nodes_per_line")
     do_validation(errors, data, partial(validate_min_exclusive, 0.0), "output_fac")
     # val_spatial_output_date,
-    do_validation(errors, data, partial(validate_zone_mapping_C, "reporting_zone_names"), "reporting_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_A, "rainfall_zone_names", 1), "rainfall_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_B, "rapid_runoff_zone_names"), "rapid_runoff_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_A, "pe_zone_names", 0), "pe_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_B, "temperature_zone_names"), "temperature_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_B, "tmax_c_zone_names"), "tmax_c_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_B, "tmin_c_zone_names"), "tmin_c_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_B, "tmin_c_zone_names"), "windsp_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_A, "subroot_zone_names", 0), "subroot_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_B, "swrecharge_zone_names"), "swrecharge_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_c, "reporting_zone_names"), "reporting_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_a, "rainfall_zone_names", 1), "rainfall_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_b, "rapid_runoff_zone_names"), "rapid_runoff_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_a, "pe_zone_names", 0), "pe_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_b, "temperature_zone_names"), "temperature_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_b, "tmax_c_zone_names"), "tmax_c_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_b, "tmin_c_zone_names"), "tmin_c_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_b, "tmin_c_zone_names"), "windsp_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_a, "subroot_zone_names", 0), "subroot_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_b, "swrecharge_zone_names"), "swrecharge_zone_mapping")
     do_validation(errors, data, val_sw_zone_mapping, "sw_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_B, "macropore_zone_names"), "macropore_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_b, "macropore_zone_names"), "macropore_zone_mapping")
     do_validation(errors, data, val_recharge_node_mapping, "recharge_node_mapping")
     do_validation(errors, data, validate_constraints, "macropore_activation_option")
     do_validation(errors, data, val_free_throughfall, "free_throughfall")
@@ -385,8 +385,8 @@ def _validate_params(errors, specs, data):
     do_validation(errors, data, validate_constraints, "swabs_f")
     do_validation(errors, data, val_evt_parameters, "evt_parameters")
     do_validation(errors, data, validate_constraints, "nevtopt")
-    do_validation(errors, data, partial(validate_zone_mapping_B, "interflow_zone_names"), "interflow_zone_mapping")
-    do_validation(errors, data, partial(validate_zone_mapping_B, "canopy_zone_names"), "canopy_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_b, "interflow_zone_names"), "interflow_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_b, "canopy_zone_names"), "canopy_zone_mapping")
 
 def do_validation(errors, data, function, param):
     if not is_param_skipped(data, param):
