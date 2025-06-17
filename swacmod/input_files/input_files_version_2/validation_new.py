@@ -162,12 +162,12 @@ def val_swrecharge_process(errors, data, name):
         errors.append(msg % (name, "rapid_runoff_process"))
 
 def val_swrecharge_proportion(errors, data, name):
-    rrp = data["params"][name]
-    rzn = data["params"]["swrecharge_zone_names"]
-    c.validate_keys(errors, rrp, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, rrp, name, data["specs"][name]["type"],[len(rzn)],)
-    c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
-    c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
+    param = data["params"][name]
+    zone_names = data["params"]["swrecharge_zone_names"]
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
+    c.validate_min_inclusive(errors, [j for i in param.values() for j in i], name, 0)
+    c.validate_max_inclusive(errors, [j for i in param.values() for j in i], name, 1.0)
 
 def val_macropore_process(errors, data, name):
     mpp = data["params"][name]
@@ -177,20 +177,20 @@ def val_macropore_process(errors, data, name):
         errors.append(msg % (name, "rapid_runoff_process"))
 
 def val_macropore_proportion(errors, data, name):
-    mpp = data["params"][name]
-    mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(errors, mpp, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, mpp, name, data["specs"][name]["type"],[len(mzn)],)
-    c.validate_min_inclusive(errors, [j for i in mpp.values() for j in i], name, 0)
-    c.validate_max_inclusive(errors, [j for i in mpp.values() for j in i], name, 1.0)
+    param = data["params"][name]
+    zone_names = data["params"]["macropore_zone_names"]
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
+    c.validate_min_inclusive(errors, [j for i in param.values() for j in i], name, 0)
+    c.validate_max_inclusive(errors, [j for i in param.values() for j in i], name, 1.0)
 
 def val_macropore_recharge(errors, data, name):
-    mpr = data["params"][name]
-    mzn = data["params"]["macropore_zone_names"]
-    c.validate_keys(errors, mpr, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, mpr, name, data["specs"][name]["type"],[len(mzn)],)
-    c.validate_min_inclusive(errors, [j for i in mpr.values() for j in i], name, 0)
-    c.validate_max_inclusive(errors, [j for i in mpr.values() for j in i], name, 1.0)
+    param = data["params"][name]
+    zone_names = data["params"]["macropore_zone_names"]
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
+    c.validate_min_inclusive(errors, [j for i in param.values() for j in i], name, 0)
+    c.validate_max_inclusive(errors, [j for i in param.values() for j in i], name, 1.0)
 
 def val_soil_static_params(errors, data, name):
     if (
