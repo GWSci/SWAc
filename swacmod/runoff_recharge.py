@@ -5,7 +5,7 @@ from tqdm import tqdm
 from swacmod import utils as u
 from swacmod import model as m
 
-def calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_agg, runoff, runoff_agg, runoff_recharge_agg, stuff):
+def calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_aggregate, runoff, runoff_aggregate, runoff_recharge_aggregate, stuff):
     if params["swrecharge_process"] == "enabled":
 
         for catchment in data["params"]["reporting_zone_mapping"].values():
@@ -16,7 +16,7 @@ def calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_agg
         runoff_recharge = _get_runoff_recharge_for_cat_output_purposes(recharge, runoff, runoff_recharge)
 
         for node in tqdm(list(m.all_days_mask(data).nodes()), desc="Aggregating Fluxes      "):
-            _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, nnodes, node, params, recharge, recharge_agg, runoff, runoff_agg, runoff_recharge, runoff_recharge_agg, stuff)
+            _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, nnodes, node, params, recharge, recharge_aggregate, runoff, runoff_aggregate, runoff_recharge, runoff_recharge_aggregate, stuff)
 
         _copy_new_bits_into_cat_output(stuff)
 
@@ -50,32 +50,36 @@ def _get_runoff_recharge_for_cat_output_purposes(recharge, runoff, runoff_rechar
                                              dtype=np.float32)
     return runoff_recharge
 
-def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, nnodes, node, params, recharge, recharge_agg, runoff, runoff_agg, runoff_recharge, runoff_recharge_agg, stuff):
+def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, nnodes, node, params, recharge, recharge_aggregate, runoff, runoff_aggregate, runoff_recharge, runoff_recharge_aggregate, stuff):
     # get indices of output for this node
     idx = range(node, (nnodes * days) + 1, nnodes)
     pond_area = _lookup_pond_area(data, node, params)
+    recharge_array = _calculate_recharge_aggregate(data, idx, nnodes, node, recharge, recharge_aggregate)
+    runoff_array = _calculate_runoff_aggregate(data, idx, nnodes, node, runoff, runoff_aggregate)
+    runoff_recharge_array = _calculate_runoff_recharge_aggregate(data, idx, nnodes, node, runoff_recharge, runoff_recharge_aggregate)
+    _amend_catchment_output_values(data, node, pond_area, runoff_recharge_array, stuff)
+    _extract_node_for_output_individual(data, node, recharge_array, runoff_array, runoff_recharge_array, stuff)
 
-    rch_array = _extract_array_for_node(idx, recharge)
-    # aggregate single node of recharge array
-    rch_agg = u.aggregate_array(data, rch_array)
-    for period, val in enumerate(rch_agg):
-        recharge_agg[(nnodes * period) + int(node)] = val
+def _calculate_recharge_aggregate(data, idx, nnodes, node, recharge, recharge_aggregate):
+    recharge_array = _extract_array_for_node(idx, recharge)
+    recharge_aggregate_for_node = u.aggregate_array(data, recharge_array)
+    for period, val in enumerate(recharge_aggregate_for_node):
+        recharge_aggregate[(nnodes * period) + int(node)] = val
+    return recharge_array
 
-    ro_array = _extract_array_for_node(idx, runoff)
-    # aggregate single node of runoff array
-    ro_agg = u.aggregate_array(data, ro_array)
-    for period, val in enumerate(ro_agg):
-        runoff_agg[(nnodes * period) + int(node)] = val
+def _calculate_runoff_aggregate(data, idx, nnodes, node, runoff, runoff_aggregate):
+    runoff_array = _extract_array_for_node(idx, runoff)
+    runoff_aggregate_for_node = u.aggregate_array(data, runoff_array)
+    for period, val in enumerate(runoff_aggregate_for_node):
+        runoff_aggregate[(nnodes * period) + int(node)] = val
+    return runoff_array
 
-    ror_array = _extract_array_for_node_from_list(idx, runoff_recharge)
-    # aggregate single node of runoff rech array
-    ror_agg = u.aggregate_array(data, ror_array)
-    for period, val in enumerate(ror_agg):
-        runoff_recharge_agg[(nnodes * period) + int(node)] = val
-
-    _amend_catchment_output_values(data, node, pond_area, ror_array, stuff)
-
-    _extract_node_for_output_individual(data, node, rch_array, ro_array, ror_array, stuff)
+def _calculate_runoff_recharge_aggregate(data, idx, nnodes, node, runoff_recharge, runoff_recharge_aggregate):
+    runoff_recharge_array = _extract_array_for_node_from_list(idx, runoff_recharge)
+    runoff_recharge_aggregate_for_node = u.aggregate_array(data, runoff_recharge_array)
+    for period, val in enumerate(runoff_recharge_aggregate_for_node):
+        runoff_recharge_aggregate[(nnodes * period) + int(node)] = val
+    return runoff_recharge_array
 
 def _extract_node_for_output_individual(data, node, rch_array, ro_array, ror_array, stuff):
     if node in data["params"]["output_individual"]:
