@@ -1,53 +1,9 @@
-#!/usr/bin/env python
-"""SWAcMod main."""
-
-# -*- coding: utf-8 -*-
 from __future__ import print_function
-
 import swacmod.feature_flags as ff
-
-# Standard Library
-import os
-import sys
-import time
-import random
-import logging
-import argparse
-import multiprocessing as mp
-if not ff.disable_multiprocessing:
-    from multiprocessing.heap import Arena
-else:
-    import queue
-
-import swacmod.performance_logging as performance_logging
-
-import swacmod.timer as timer
-
-import mmap
-import gc
-
-# Third Party Libraries
 import numpy as np
 from tqdm import tqdm
-
-# Internal modules
 from swacmod import utils as u
-from swacmod import input_output as io
-import swacmod.input_files.input_file_reader as input_file_reader
-import swacmod.flopy_adaptor as flopy_adaptor
-import swacmod.version_information as version_information
-from swacmod.input_files.input_files_version_2.default_file_resource import DefaultFileResource
-import swacmod.stuff_to_be_named_later as stuff_module
-import swacmod.output_functions as output_functions
-
-# Compile and import model
 from swacmod import model as m
-import swacmod.model_numpy as model_numpy
-
-import swacmod.historical_solute as historical_solute
-import swacmod.solute as solute
-import swacmod.solute_proportion_reaching_water_table as solute_proportion
-from swacmod.environment import Environment
 
 def calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_agg, runoff, runoff_agg, runoff_recharge_agg, stuff):
     if params["swrecharge_process"] == "enabled":
