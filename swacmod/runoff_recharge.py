@@ -73,7 +73,19 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
     for period, val in enumerate(ror_agg):
         runoff_recharge_agg[(nnodes * period) + int(node)] = val
 
-    # amend catchment output values
+    _amend_catchment_output_values(data, node, pond_area, ror_array, stuff)
+
+    # check for single node
+    if node in data["params"]["output_individual"]:
+        # amend single_node_output with ror values
+        # this method required due to upstream bug
+        tmp_node = stuff.single_node_output[node]
+        tmp_node["runoff_recharge"] = ror_array.copy()
+        tmp_node["combined_recharge"] = np.copy(rch_array)
+        tmp_node["combined_str"] = np.copy(ro_array)
+        stuff.single_node_output[node] = tmp_node
+
+def _amend_catchment_output_values(data, node, pond_area, ror_array, stuff):
     rep_zone = data["params"]["reporting_zone_mapping"][node]
     if _do_we_do_this_bit(rep_zone):
         area = data["params"]["node_areas"][node]
@@ -86,16 +98,6 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
 
         stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
             ror, area, pond_area, reporting=reporting)
-
-    # check for single node
-    if node in data["params"]["output_individual"]:
-        # amend single_node_output with ror values
-        # this method required due to upstream bug
-        tmp_node = stuff.single_node_output[node]
-        tmp_node["runoff_recharge"] = ror_array.copy()
-        tmp_node["combined_recharge"] = np.copy(rch_array)
-        tmp_node["combined_str"] = np.copy(ro_array)
-        stuff.single_node_output[node] = tmp_node
 
 def _do_we_do_this_bit(rep_zone):
     if ff.use_natproc:
