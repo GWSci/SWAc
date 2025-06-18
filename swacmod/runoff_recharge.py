@@ -14,22 +14,11 @@ def calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_agg
         runoff_recharge = _make_runoff_recharge(recharge, runoff)
         runoff, recharge = m.do_swrecharge_mask(data, runoff, recharge)
         runoff_recharge = _get_runoff_recharge_for_cat_output_purposes(recharge, runoff, runoff_recharge)
-        # aggregate amended recharge & runoff arrays by output periods
-        for node in tqdm(list(m.all_days_mask(data).nodes()),
-                         desc="Aggregating Fluxes      "):
 
+        for node in tqdm(list(m.all_days_mask(data).nodes()), desc="Aggregating Fluxes      "):
             _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, nnodes, node, params, recharge, recharge_agg, runoff, runoff_agg, runoff_recharge, runoff_recharge_agg, stuff)
 
-        # copy new bits into cat output
-        term = "runoff_recharge"
-        for cat in stuff.reporting_agg2:
-            if "runoff_recharge" in stuff.reporting_agg2[cat]:
-                stuff.reporting_agg[cat]["combined_recharge"] += stuff.reporting_agg2[
-                    cat][term][term]
-                stuff.reporting_agg[cat]["combined_str"] -= stuff.reporting_agg2[cat][
-                    term][term]
-                stuff.reporting_agg[cat]["runoff_recharge"] = stuff.reporting_agg2[
-                    cat][term][term]
+        _copy_new_bits_into_cat_output(stuff)
 
 def _make_runoff_recharge(recharge, runoff):
     if ff.disable_multiprocessing:
@@ -122,3 +111,14 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
         tmp_node["combined_recharge"] = np.copy(rch_array)
         tmp_node["combined_str"] = np.copy(ro_array)
         stuff.single_node_output[node] = tmp_node
+
+def _copy_new_bits_into_cat_output(stuff):
+    term = "runoff_recharge"
+    for cat in stuff.reporting_agg2:
+        if "runoff_recharge" in stuff.reporting_agg2[cat]:
+            stuff.reporting_agg[cat]["combined_recharge"] += stuff.reporting_agg2[
+                cat][term][term]
+            stuff.reporting_agg[cat]["combined_str"] -= stuff.reporting_agg2[cat][
+                term][term]
+            stuff.reporting_agg[cat]["runoff_recharge"] = stuff.reporting_agg2[
+                cat][term][term]
