@@ -13,7 +13,7 @@ def calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_agg
 
         runoff_recharge = _make_runoff_recharge(recharge, runoff)
         runoff, recharge = m.do_swrecharge_mask(data, runoff, recharge)
-        runoff_recharge = _get_runoff_recharge_for_cat_output_purposes(recharge, runoff, runoff_recharge)
+        runoff_recharge = _get_runoff_recharge_for_catchment_output_purposes(recharge, runoff, runoff_recharge)
 
         for node in tqdm(list(m.all_days_mask(data).nodes()), desc="Aggregating Fluxes      "):
             # get indices of output for this node
@@ -42,7 +42,7 @@ def _make_runoff_recharge(recharge, runoff):
                                             dtype=np.float32).copy()
     return runoff_recharge
 
-def _get_runoff_recharge_for_cat_output_purposes(recharge, runoff, runoff_recharge):
+def _get_runoff_recharge_for_catchment_output_purposes(recharge, runoff, runoff_recharge):
     if ff.use_natproc:
         if ff.disable_multiprocessing:
             runoff_recharge = recharge
