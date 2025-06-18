@@ -8,8 +8,8 @@ from swacmod import model as m
 def calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_agg, runoff, runoff_agg, runoff_recharge_agg, stuff):
     if params["swrecharge_process"] == "enabled":
 
-        for cat in data["params"]["reporting_zone_mapping"].values():
-            stuff.reporting_agg2[cat] = {}
+        for catchment in data["params"]["reporting_zone_mapping"].values():
+            stuff.reporting_agg2[catchment] = {}
 
         runoff_recharge = _make_runoff_recharge(recharge, runoff)
         runoff, recharge = m.do_swrecharge_mask(data, runoff, recharge)
@@ -124,11 +124,11 @@ def _lookup_pond_area(data, node, params):
 
 def _copy_new_bits_into_cat_output(stuff):
     term = "runoff_recharge"
-    for cat in stuff.reporting_agg2:
-        if "runoff_recharge" in stuff.reporting_agg2[cat]:
-            stuff.reporting_agg[cat]["combined_recharge"] += stuff.reporting_agg2[
-                cat][term][term]
-            stuff.reporting_agg[cat]["combined_str"] -= stuff.reporting_agg2[cat][
+    for catchment in stuff.reporting_agg2:
+        if "runoff_recharge" in stuff.reporting_agg2[catchment]:
+            stuff.reporting_agg[catchment]["combined_recharge"] += stuff.reporting_agg2[
+                catchment][term][term]
+            stuff.reporting_agg[catchment]["combined_str"] -= stuff.reporting_agg2[catchment][
                 term][term]
-            stuff.reporting_agg[cat]["runoff_recharge"] = stuff.reporting_agg2[
-                cat][term][term]
+            stuff.reporting_agg[catchment]["runoff_recharge"] = stuff.reporting_agg2[
+                catchment][term][term]
