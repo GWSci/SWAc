@@ -53,21 +53,9 @@ def _get_runoff_recharge_for_cat_output_purposes(recharge, runoff, runoff_rechar
 def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, nnodes, node, params, recharge, recharge_agg, runoff, runoff_agg, runoff_recharge, runoff_recharge_agg, stuff):
     # get indices of output for this node
     idx = range(node, (nnodes * days) + 1, nnodes)
-    if params['sw_ponding_process'] == 'enabled':
-        zone_sw = data['params']['sw_zone_mapping'][node]
-        pond_area = data['params']['sw_ponding_area'][zone_sw]
-    else:
-        pond_area = 0.0
-    if ff.disable_multiprocessing:
-        tmp = recharge
-    else:
-        tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32)
-    rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-    if ff.disable_multiprocessing:
-        tmp = runoff
-    else:
-        tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
-    ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
+    pond_area = _lookup_pond_area(data, node, params)
+    rch_array = _extract_array_for_node(idx, recharge)
+    ro_array = _extract_array_for_node(idx, runoff)
     ror_array = np.array(runoff_recharge[idx],
                          dtype=np.float64,
                          copy=True)
@@ -111,6 +99,22 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
         tmp_node["combined_recharge"] = np.copy(rch_array)
         tmp_node["combined_str"] = np.copy(ro_array)
         stuff.single_node_output[node] = tmp_node
+
+def _extract_array_for_node(idx, runoff):
+    if ff.disable_multiprocessing:
+        tmp = runoff
+    else:
+        tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
+    ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
+    return ro_array
+
+def _lookup_pond_area(data, node, params):
+    if params['sw_ponding_process'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node]
+        pond_area = data['params']['sw_ponding_area'][zone_sw]
+    else:
+        pond_area = 0.0
+    return pond_area
 
 def _copy_new_bits_into_cat_output(stuff):
     term = "runoff_recharge"
