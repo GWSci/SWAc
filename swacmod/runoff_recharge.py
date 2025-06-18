@@ -56,15 +56,17 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
     pond_area = _lookup_pond_area(data, node, params)
 
     rch_array = _extract_array_for_node(idx, recharge)
-    ro_array = _extract_array_for_node(idx, runoff)
-    ror_array = _extract_array_for_node_from_list(idx, runoff_recharge)
-
     # aggregate single node of recharge array
     rch_agg = u.aggregate_array(data, rch_array)
+
+    ro_array = _extract_array_for_node(idx, runoff)
     # aggregate single node of runoff array
     ro_agg = u.aggregate_array(data, ro_array)
+
+    ror_array = _extract_array_for_node_from_list(idx, runoff_recharge)
     # aggregate single node of runoff rech array
     ror_agg = u.aggregate_array(data, ror_array)
+
     for period, val in enumerate(rch_agg):
         recharge_agg[(nnodes * period) + int(node)] = val
     for period, val in enumerate(ro_agg):
