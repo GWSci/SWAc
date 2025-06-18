@@ -54,11 +54,11 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
     # get indices of output for this node
     idx = range(node, (nnodes * days) + 1, nnodes)
     pond_area = _lookup_pond_area(data, node, params)
+
     rch_array = _extract_array_for_node(idx, recharge)
     ro_array = _extract_array_for_node(idx, runoff)
-    ror_array = np.array(runoff_recharge[idx],
-                         dtype=np.float64,
-                         copy=True)
+    ror_array = _extract_array_for_node_from_list(idx, runoff_recharge)
+
     # aggregate single node of recharge array
     rch_agg = u.aggregate_array(data, rch_array)
     # aggregate single node of runoff array
@@ -105,7 +105,10 @@ def _extract_array_for_node(idx, source_array):
         tmp = source_array
     else:
         tmp = np.frombuffer(source_array.get_obj(), dtype=np.float32)
-    return np.array(tmp[idx], dtype=np.float64, copy=True)
+    return _extract_array_for_node_from_list(idx, tmp)
+
+def _extract_array_for_node_from_list(idx, source_array):
+    return np.array(source_array[idx], dtype=np.float64, copy=True)
 
 def _lookup_pond_area(data, node, params):
     if params['sw_ponding_process'] == 'enabled':
