@@ -100,13 +100,12 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
         tmp_node["combined_str"] = np.copy(ro_array)
         stuff.single_node_output[node] = tmp_node
 
-def _extract_array_for_node(idx, runoff):
+def _extract_array_for_node(idx, source_array):
     if ff.disable_multiprocessing:
-        tmp = runoff
+        tmp = source_array
     else:
-        tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
-    ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-    return ro_array
+        tmp = np.frombuffer(source_array.get_obj(), dtype=np.float32)
+    return np.array(tmp[idx], dtype=np.float64, copy=True)
 
 def _lookup_pond_area(data, node, params):
     if params['sw_ponding_process'] == 'enabled':
