@@ -80,14 +80,13 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
         ror = {"runoff_recharge": ror_array}
 
         if "runoff_recharge" not in stuff.reporting_agg2[rep_zone]:
-            stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                ror, area, pond_area, reporting=None)
+            reporting = None
         else:
-            stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                ror,
-                area,
-                pond_area,
-                reporting=stuff.reporting_agg2[rep_zone]["runoff_recharge"])
+            reporting = stuff.reporting_agg2[rep_zone]["runoff_recharge"]
+
+        stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+            ror, area, pond_area, reporting=reporting)
+
     # check for single node
     if node in data["params"]["output_individual"]:
         # amend single_node_output with ror values
