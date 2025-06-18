@@ -18,72 +18,7 @@ def calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_agg
         for node in tqdm(list(m.all_days_mask(data).nodes()),
                          desc="Aggregating Fluxes      "):
 
-            # get indices of output for this node
-            idx = range(node, (nnodes * days) + 1, nnodes)
-
-            if params['sw_ponding_process'] == 'enabled':
-                zone_sw = data['params']['sw_zone_mapping'][node]
-                pond_area = data['params']['sw_ponding_area'][zone_sw]
-            else:
-                pond_area = 0.0
-
-            if ff.disable_multiprocessing:
-                tmp = recharge
-            else:
-                tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32)
-            rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-            if ff.disable_multiprocessing:
-                tmp = runoff
-            else:
-                tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
-            ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
-            ror_array = np.array(runoff_recharge[idx],
-                                 dtype=np.float64,
-                                 copy=True)
-
-            # aggregate single node of recharge array
-            rch_agg = u.aggregate_array(data, rch_array)
-            # aggregate single node of runoff array
-            ro_agg = u.aggregate_array(data, ro_array)
-            # aggregate single node of runoff rech array
-            ror_agg = u.aggregate_array(data, ror_array)
-
-            for period, val in enumerate(rch_agg):
-                recharge_agg[(nnodes * period) + int(node)] = val
-            for period, val in enumerate(ro_agg):
-                runoff_agg[(nnodes * period) + int(node)] = val
-            for period, val in enumerate(ror_agg):
-                runoff_recharge_agg[(nnodes * period) + int(node)] = val
-
-            # amend catchment output values
-            rep_zone = data["params"]["reporting_zone_mapping"][node]
-            if ff.use_natproc:
-                do_this_bit = rep_zone > 0
-            else:
-                do_this_bit = True
-            if do_this_bit:
-                area = data["params"]["node_areas"][node]
-                ror = {"runoff_recharge": ror_array}
-
-                if "runoff_recharge" not in stuff.reporting_agg2[rep_zone]:
-                    stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                        ror, area, pond_area)
-                else:
-                    stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                        ror,
-                        area,
-                        pond_area,
-                        reporting=stuff.reporting_agg2[rep_zone]["runoff_recharge"])
-
-            # check for single node
-            if node in data["params"]["output_individual"]:
-                # amend single_node_output with ror values
-                # this method required due to upstream bug
-                tmp_node = stuff.single_node_output[node]
-                tmp_node["runoff_recharge"] = ror_array.copy()
-                tmp_node["combined_recharge"] = np.copy(rch_array)
-                tmp_node["combined_str"] = np.copy(ro_array)
-                stuff.single_node_output[node] = tmp_node
+            _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, nnodes, node, params, recharge, recharge_agg, runoff, runoff_agg, runoff_recharge, runoff_recharge_agg, stuff)
 
         # copy new bits into cat output
         term = "runoff_recharge"
@@ -125,3 +60,65 @@ def _get_runoff_recharge_for_cat_output_purposes(recharge, runoff, runoff_rechar
             runoff_recharge -= np.frombuffer(runoff.get_obj(),
                                              dtype=np.float32)
     return runoff_recharge
+
+def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, nnodes, node, params, recharge, recharge_agg, runoff, runoff_agg, runoff_recharge, runoff_recharge_agg, stuff):
+    # get indices of output for this node
+    idx = range(node, (nnodes * days) + 1, nnodes)
+    if params['sw_ponding_process'] == 'enabled':
+        zone_sw = data['params']['sw_zone_mapping'][node]
+        pond_area = data['params']['sw_ponding_area'][zone_sw]
+    else:
+        pond_area = 0.0
+    if ff.disable_multiprocessing:
+        tmp = recharge
+    else:
+        tmp = np.frombuffer(recharge.get_obj(), dtype=np.float32)
+    rch_array = np.array(tmp[idx], dtype=np.float64, copy=True)
+    if ff.disable_multiprocessing:
+        tmp = runoff
+    else:
+        tmp = np.frombuffer(runoff.get_obj(), dtype=np.float32)
+    ro_array = np.array(tmp[idx], dtype=np.float64, copy=True)
+    ror_array = np.array(runoff_recharge[idx],
+                         dtype=np.float64,
+                         copy=True)
+    # aggregate single node of recharge array
+    rch_agg = u.aggregate_array(data, rch_array)
+    # aggregate single node of runoff array
+    ro_agg = u.aggregate_array(data, ro_array)
+    # aggregate single node of runoff rech array
+    ror_agg = u.aggregate_array(data, ror_array)
+    for period, val in enumerate(rch_agg):
+        recharge_agg[(nnodes * period) + int(node)] = val
+    for period, val in enumerate(ro_agg):
+        runoff_agg[(nnodes * period) + int(node)] = val
+    for period, val in enumerate(ror_agg):
+        runoff_recharge_agg[(nnodes * period) + int(node)] = val
+    # amend catchment output values
+    rep_zone = data["params"]["reporting_zone_mapping"][node]
+    if ff.use_natproc:
+        do_this_bit = rep_zone > 0
+    else:
+        do_this_bit = True
+    if do_this_bit:
+        area = data["params"]["node_areas"][node]
+        ror = {"runoff_recharge": ror_array}
+
+        if "runoff_recharge" not in stuff.reporting_agg2[rep_zone]:
+            stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+                ror, area, pond_area)
+        else:
+            stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
+                ror,
+                area,
+                pond_area,
+                reporting=stuff.reporting_agg2[rep_zone]["runoff_recharge"])
+    # check for single node
+    if node in data["params"]["output_individual"]:
+        # amend single_node_output with ror values
+        # this method required due to upstream bug
+        tmp_node = stuff.single_node_output[node]
+        tmp_node["runoff_recharge"] = ror_array.copy()
+        tmp_node["combined_recharge"] = np.copy(rch_array)
+        tmp_node["combined_str"] = np.copy(ro_array)
+        stuff.single_node_output[node] = tmp_node
