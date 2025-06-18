@@ -58,34 +58,30 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
     rch_array = _extract_array_for_node(idx, recharge)
     # aggregate single node of recharge array
     rch_agg = u.aggregate_array(data, rch_array)
+    for period, val in enumerate(rch_agg):
+        recharge_agg[(nnodes * period) + int(node)] = val
 
     ro_array = _extract_array_for_node(idx, runoff)
     # aggregate single node of runoff array
     ro_agg = u.aggregate_array(data, ro_array)
+    for period, val in enumerate(ro_agg):
+        runoff_agg[(nnodes * period) + int(node)] = val
 
     ror_array = _extract_array_for_node_from_list(idx, runoff_recharge)
     # aggregate single node of runoff rech array
     ror_agg = u.aggregate_array(data, ror_array)
-
-    for period, val in enumerate(rch_agg):
-        recharge_agg[(nnodes * period) + int(node)] = val
-    for period, val in enumerate(ro_agg):
-        runoff_agg[(nnodes * period) + int(node)] = val
     for period, val in enumerate(ror_agg):
         runoff_recharge_agg[(nnodes * period) + int(node)] = val
+
     # amend catchment output values
     rep_zone = data["params"]["reporting_zone_mapping"][node]
-    if ff.use_natproc:
-        do_this_bit = rep_zone > 0
-    else:
-        do_this_bit = True
-    if do_this_bit:
+    if _do_we_do_this_bit(rep_zone):
         area = data["params"]["node_areas"][node]
         ror = {"runoff_recharge": ror_array}
 
         if "runoff_recharge" not in stuff.reporting_agg2[rep_zone]:
             stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
-                ror, area, pond_area)
+                ror, area, pond_area, reporting=None)
         else:
             stuff.reporting_agg2[rep_zone]["runoff_recharge"] = m.aggregate(
                 ror,
@@ -101,6 +97,13 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
         tmp_node["combined_recharge"] = np.copy(rch_array)
         tmp_node["combined_str"] = np.copy(ro_array)
         stuff.single_node_output[node] = tmp_node
+
+def _do_we_do_this_bit(rep_zone):
+    if ff.use_natproc:
+        do_this_bit = rep_zone > 0
+    else:
+        do_this_bit = True
+    return do_this_bit
 
 def _extract_array_for_node(idx, source_array):
     if ff.disable_multiprocessing:
