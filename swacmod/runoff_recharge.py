@@ -11,35 +11,9 @@ def calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_agg
         for cat in data["params"]["reporting_zone_mapping"].values():
             stuff.reporting_agg2[cat] = {}
 
-        # ended up needing this for catchment output - bit silly
-        if ff.disable_multiprocessing:
-            if ff.use_natproc:
-                runoff_recharge = recharge.copy()
-            else:
-                runoff_recharge = runoff.copy()
-        else:
-            if ff.use_natproc:
-                runoff_recharge = np.frombuffer(recharge.get_obj(),
-                                                dtype=np.float32).copy()
-            else:
-                runoff_recharge = np.frombuffer(runoff.get_obj(),
-                                                dtype=np.float32).copy()
-
-        # do RoR
+        runoff_recharge = _make_runoff_recharge(recharge, runoff)
         runoff, recharge = m.do_swrecharge_mask(data, runoff, recharge)
-        # get RoR for cat output purposes
-        if ff.use_natproc:
-            if ff.disable_multiprocessing:
-                runoff_recharge = recharge
-            else:
-                runoff_recharge = np.frombuffer(recharge.get_obj(),
-                                                dtype=np.float32) - runoff_recharge
-        else:
-            if ff.disable_multiprocessing:
-                runoff_recharge -= runoff
-            else:
-                runoff_recharge -= np.frombuffer(runoff.get_obj(),
-                                                 dtype=np.float32)
+        runoff_recharge = _get_runoff_recharge_for_cat_output_purposes(recharge, runoff, runoff_recharge)
         # aggregate amended recharge & runoff arrays by output periods
         for node in tqdm(list(m.all_days_mask(data).nodes()),
                          desc="Aggregating Fluxes      "):
@@ -121,3 +95,33 @@ def calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_agg
                     term][term]
                 stuff.reporting_agg[cat]["runoff_recharge"] = stuff.reporting_agg2[
                     cat][term][term]
+
+def _make_runoff_recharge(recharge, runoff):
+    if ff.disable_multiprocessing:
+        if ff.use_natproc:
+            runoff_recharge = recharge.copy()
+        else:
+            runoff_recharge = runoff.copy()
+    else:
+        if ff.use_natproc:
+            runoff_recharge = np.frombuffer(recharge.get_obj(),
+                                            dtype=np.float32).copy()
+        else:
+            runoff_recharge = np.frombuffer(runoff.get_obj(),
+                                            dtype=np.float32).copy()
+    return runoff_recharge
+
+def _get_runoff_recharge_for_cat_output_purposes(recharge, runoff, runoff_recharge):
+    if ff.use_natproc:
+        if ff.disable_multiprocessing:
+            runoff_recharge = recharge
+        else:
+            runoff_recharge = np.frombuffer(recharge.get_obj(),
+                                            dtype=np.float32) - runoff_recharge
+    else:
+        if ff.disable_multiprocessing:
+            runoff_recharge -= runoff
+        else:
+            runoff_recharge -= np.frombuffer(runoff.get_obj(),
+                                             dtype=np.float32)
+    return runoff_recharge
