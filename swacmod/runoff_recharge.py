@@ -75,7 +75,9 @@ def _aggregate_amended_recharge_and_runoff_arrays_by_output_periods(data, days, 
 
     _amend_catchment_output_values(data, node, pond_area, ror_array, stuff)
 
-    # check for single node
+    _extract_node_for_output_individual(data, node, rch_array, ro_array, ror_array, stuff)
+
+def _extract_node_for_output_individual(data, node, rch_array, ro_array, ror_array, stuff):
     if node in data["params"]["output_individual"]:
         # amend single_node_output with ror values
         # this method required due to upstream bug
