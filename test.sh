@@ -1,1 +1,1 @@
-python3 run_test.py "$@"
+env/bin/python run_test.py "$@"

@@ -2,18 +2,18 @@
 
 set -e
 
-brew update
-brew install python
-brew install pandoc
+#brew update
+#brew install python
+#brew install pandoc
 
-python3 -m venv env
+/opt/homebrew/opt/python@3.13/libexec/bin/python -m venv env
 
 source env/bin/activate
 pip install -r requirements.txt
 pip list --outdated
 deactivate
 
-python3 -m venv env-lint
+/opt/homebrew/opt/python@3.13/libexec/bin/python -m venv env-lint
 
 source env-lint/bin/activate
 pip install -r requirements.txt
