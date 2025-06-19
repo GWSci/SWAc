@@ -256,8 +256,11 @@ def val_recharge_node_mapping(errors, data, name):
     c.validate_list_length(errors, param, name, data["specs"][name]["type"],[1],)
 
 def val_evt_parameters(errors, data, name):
+    validate_list_length([3], errors, data, name)
+
+def validate_list_length(expected_list_lengths, errors, data, name):
     param = data["params"][name]
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[3],)
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"] ,expected_list_lengths)
 
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
