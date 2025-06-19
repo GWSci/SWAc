@@ -235,9 +235,8 @@ def val_percolation_rejection(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
         return
     param = data["params"][name]
-    zone_names = data["params"]["landuse_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"],["percolation_rejection"],)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
+    validate_list_length_equals_zone_name_count("landuse_zone_names", errors, data, name)
     c.validate_min_inclusive(errors, list(param.values())[0], name, 0.0)
 
 def val_recharge_attenuation_params(errors, data, name):
