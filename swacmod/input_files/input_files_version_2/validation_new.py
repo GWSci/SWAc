@@ -145,11 +145,6 @@ def val_node_areas(errors, data, name):
     validate_keys_are_nodes(errors, data, name)
     c.validate_min_inclusive(errors, data["params"][name].values(), name, 0)
 
-# TODO This is never called. Should it be?
-def val_single_cell_swrecharge_zone_mapping(errors, data, name):
-    param_values = data["params"][name].values()
-    _validate_zone_mapping_helper("single_cell_swrecharge_zone_names", 0, "%s", param_values, errors, data, name)
-
 def val_free_throughfall(errors, data, name):
     param = data["params"][name]
     validate_keys_are_zone_name_numbers("canopy_zone_names", errors, data, name)
@@ -175,14 +170,6 @@ def val_rapid_runoff_params(errors, data, name):
 def val_single_cell_swrecharge_proportion(errors, data, name):
     zone_name_key = "single_cell_swrecharge_zone_names"
     validate_keys_length_min_max(zone_name_key, errors, data, name)
-
-# TODO This is never called. Should it be?
-def val_single_cell_swrecharge_limit(errors, data, name):
-    validate_months_and_zones("single_cell_swrecharge_zone_names", errors, data, name)
-
-# TODO This is never called. Should it be?
-def val_single_cell_swrecharge_activation(errors, data, name):
-    validate_months_and_zones("single_cell_swrecharge_zone_names", errors, data, name)
 
 def val_soil_static_params(errors, data, name):
     if (
@@ -271,6 +258,19 @@ def val_recharge_node_mapping(errors, data, name):
 def val_evt_parameters(errors, data, name):
     param = data["params"][name]
     c.validate_list_length(errors, param, name, data["specs"][name]["type"],[3],)
+
+# TODO This is never called. Should it be?
+def val_single_cell_swrecharge_zone_mapping(errors, data, name):
+    param_values = data["params"][name].values()
+    _validate_zone_mapping_helper("single_cell_swrecharge_zone_names", 0, "%s", param_values, errors, data, name)
+
+# TODO This is never called. Should it be?
+def val_single_cell_swrecharge_limit(errors, data, name):
+    validate_months_and_zones("single_cell_swrecharge_zone_names", errors, data, name)
+
+# TODO This is never called. Should it be?
+def val_single_cell_swrecharge_activation(errors, data, name):
+    validate_months_and_zones("single_cell_swrecharge_zone_names", errors, data, name)
 
 def validate_2(params, specs):
     data = {
