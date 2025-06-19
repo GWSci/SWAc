@@ -102,8 +102,7 @@ def validate_snow(process_name, list_length, errors, data, name):
     if data["params"][process_name] == "disabled":
         return
     param = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    validate_keys_are_nodes(errors, data, name)
     c.validate_list_length(errors, param, name, data["specs"][name]["type"], [list_length], )
     if type(param) == dict:
         c.validate_min_inclusive(errors, [i[0] for i in param.values() if len(i) > 0], "starting_snow_pack in %s" % name, 0)
