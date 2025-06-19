@@ -218,7 +218,7 @@ def val_percolation_rejection(errors, data, name):
     c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(lzn)],)
     c.validate_min_inclusive(errors, list(param.values())[0], name, 0.0)
 
-def val_subroot_leakage_fraction(errors, data, name):
+def validate_keys_are_nodes(errors, data, name):
     param = data["params"][name]
     tot = data["params"]["num_nodes"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
@@ -336,7 +336,7 @@ def _validate_params(errors, data):
     do_validation(errors, data, validate_fao_keys_and_list_length, "taw")
     do_validation(errors, data, validate_fao_keys_and_list_length, "raw")
     do_validation(errors, data, val_percolation_rejection, "percolation_rejection")
-    do_validation(errors, data, val_subroot_leakage_fraction, "subroot_leakage_fraction")
+    do_validation(errors, data, validate_keys_are_nodes, "subroot_leakage_fraction")
     do_validation(errors, data, validate_keys_and_min_values, "init_interflow_store")
     do_validation(errors, data, validate_keys_and_min_values, "interflow_store_bypass")
     do_validation(errors, data, validate_keys_and_min_values, "infiltration_limit")
