@@ -30,10 +30,10 @@ def validate_zone_mapping_b(zone_name, errors, data, name):
     _validate_zone_mapping_helper(zone_name, 0, "%s", param_values, errors, data, name)
 
 def _validate_zone_mapping_helper(zone_name, min_inclusive, message_format, param_values, errors, data, name):
-    tzn = data["params"][zone_name]
+    zone_names = data["params"][zone_name]
     validate_keys_are_nodes(errors, data, name)
     c.validate_min_inclusive(errors, param_values, message_format % name, min_inclusive)
-    c.validate_max_inclusive(errors, param_values, message_format % name, len(tzn))
+    c.validate_max_inclusive(errors, param_values, message_format % name, len(zone_names))
 
 def validate_constraints(errors, data, name):
     param = data["params"][name]
@@ -157,10 +157,10 @@ def val_max_canopy_storage(errors, data, name):
 
 def val_rapid_runoff_params(errors, data, name):
     param = data["params"][name]
-    rzn = data["params"]["rapid_runoff_zone_names"]
+    zone_names = data["params"]["rapid_runoff_zone_names"]
     c.validate_list_length(errors, 
         param, name, data["specs"][name]["type"],
-        [len(rzn)]
+        [len(zone_names)]
     )
     keys = ["class_smd", "class_ri", "values"]
     for zone in param:
@@ -189,15 +189,15 @@ def val_soil_static_params(errors, data, name):
     ):
         return
     param = data["params"][name]
-    szn = data["params"]["soil_zone_names"]
+    zone_names = data["params"]["soil_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"],["FC", "WP", "p"],)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(szn)],)
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
 
 def val_smd(errors, data, name):
     param = data["params"][name]
-    szn = data["params"]["soil_zone_names"]
+    zone_names = data["params"]["soil_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"],["starting_SMD"],)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(szn)],)
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
 
 def val_soil_spatial(errors, data, name):
     param = data["params"][name]
@@ -212,9 +212,9 @@ def val_lu_spatial(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
         return
     param = data["params"][name]
-    lzn = data["params"]["landuse_zone_names"]
+    zone_names = data["params"]["landuse_zone_names"]
     validate_keys_are_nodes(errors, data, name)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(lzn.values())],)
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names.values())],)
     if not all(abs(1 - sum(i)) < 1e-5 for i in param.values()):
         msg = ('Parameter "%s" requires the sum of its values '
                'to be 1.0 within a tolerance of 1e-5')
@@ -232,9 +232,9 @@ def val_percolation_rejection(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
         return
     param = data["params"][name]
-    lzn = data["params"]["landuse_zone_names"]
+    zone_names = data["params"]["landuse_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"],["percolation_rejection"],)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(lzn)],)
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
     c.validate_min_inclusive(errors, list(param.values())[0], name, 0.0)
 
 def val_recharge_attenuation_params(errors, data, name):
