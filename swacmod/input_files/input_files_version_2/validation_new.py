@@ -225,9 +225,8 @@ def val_percolation_rejection(errors, data, name):
     c.validate_min_inclusive(errors, list(param.values())[0], name, 0.0)
 
 def val_recharge_attenuation_params(errors, data, name):
-    param = data["params"][name]
     validate_keys_are_nodes(errors, data, name)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[3],)
+    validate_list_length([3], errors, data, name)
     validate_release_proportion_min_and_max(errors, data, name)
 
 def val_sw_zone_mapping(errors, data, name):
