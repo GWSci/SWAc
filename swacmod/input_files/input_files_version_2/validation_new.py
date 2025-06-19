@@ -247,10 +247,7 @@ def validate_ponding_keys_length_range(errors, data, name):
 
 def validate_ponding_keys_length(errors, data, name):
     if data["params"]["sw_ponding_process"] == "enabled":
-        rrp = data["params"][name]
-        rzn = data["params"]["sw_zone_names"]
-        c.validate_keys(errors, rrp, name, data["specs"][name]["type"], range(1, 13))
-        c.validate_list_length(errors, rrp, name, data["specs"][name]["type"],[len(rzn)],)
+        validate_months_and_zones("sw_zone_names", errors, data, name)
 
 def val_sw_ponding_area(errors, data, name):
     if data["params"]["sw_ponding_process"] == "enabled":
