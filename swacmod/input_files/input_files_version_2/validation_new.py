@@ -251,12 +251,8 @@ def val_routing_topology(errors, data, name):
     c.validate_list_length(errors, param, name, data["specs"][name]["type"],[10],)
 
 def val_recharge_node_mapping(errors, data, name):
-    param = data["params"][name]
     validate_keys_are_nodes(errors, data, name)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[1],)
-
-def val_evt_parameters(errors, data, name):
-    validate_list_length([3], errors, data, name)
+    validate_list_length([1], errors, data, name)
 
 def validate_list_length(expected_list_lengths, errors, data, name):
     param = data["params"][name]
@@ -349,7 +345,7 @@ def _validate_params(errors, data):
     do_validation(errors, data, val_routing_topology, "routing_topology")
     do_validation(errors, data, validate_constraints, "swdis_f")
     do_validation(errors, data, validate_constraints, "swabs_f")
-    do_validation(errors, data, val_evt_parameters, "evt_parameters")
+    do_validation(errors, data, partial(validate_list_length, [3]), "evt_parameters")
     do_validation(errors, data, validate_constraints, "nevtopt")
     do_validation(errors, data, partial(validate_zone_mapping_b, "interflow_zone_names"), "interflow_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_b, "canopy_zone_names"), "canopy_zone_mapping")
