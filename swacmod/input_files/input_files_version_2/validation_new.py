@@ -142,9 +142,9 @@ def val_single_cell_swrecharge_limit(errors, data, name):
 
 def validate_months_and_zones(zone_name, errors, data, name):
     param = data['params'][name]
-    rzn = data['params'][zone_name]
+    zone_names = data['params'][zone_name]
     c.validate_keys(errors, param, name, data['specs'][name]['type'], range(1, 13))
-    c.validate_list_length(errors, param, name, data['specs'][name]['type'], [len(rzn)])
+    c.validate_list_length(errors, param, name, data['specs'][name]['type'], [len(zone_names)])
 
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_activation(errors, data, name):
