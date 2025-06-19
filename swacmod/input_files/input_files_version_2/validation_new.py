@@ -133,12 +133,8 @@ def validate_mutually_exclusive_with_rapid_runoff_process(errors, data, name):
         errors.append(msg % (name, "rapid_runoff_process"))
 
 def val_single_cell_swrecharge_proportion(errors, data, name):
-    rrp = data['params'][name]
-    rzn = data['params']['single_cell_swrecharge_zone_names']
-    c.validate_keys(errors, rrp, name, data['specs'][name]['type'], range(1, 13))
-    c.validate_list_length(errors, rrp, name, data['specs'][name]['type'],[len(rzn)])
-    c.validate_min_inclusive(errors, [j for i in rrp.values() for j in i], name, 0)
-    c.validate_max_inclusive(errors, [j for i in rrp.values() for j in i], name, 1.0)
+    zone_name_key = "single_cell_swrecharge_zone_names"
+    validate_keys_length_min_max(zone_name_key, errors, data, name)
 
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_limit(errors, data, name):
@@ -158,7 +154,7 @@ def validate_keys_length_min_max(zone_name_key, errors, data, name):
     param = data["params"][name]
     zone_names = data["params"][zone_name_key]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(zone_names)], )
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(zone_names)])
     c.validate_min_inclusive(errors, [j for i in param.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in param.values() for j in i], name, 1.0)
 
