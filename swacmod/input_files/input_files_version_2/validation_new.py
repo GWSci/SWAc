@@ -78,8 +78,7 @@ def validate_keys_are_nodes(errors, data, name):
 
 def validate_keys_and_min_values(errors, data, name):
     param = data["params"][name]
-    tot = len(data["params"]["interflow_zone_names"])
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    validate_keys_are_zone_name_numbers("interflow_zone_names", errors, data, name)
     c.validate_min_inclusive(errors, param.values(), name, 0)
 
 def validate_release_proportion_min_and_max(errors, data, name):
