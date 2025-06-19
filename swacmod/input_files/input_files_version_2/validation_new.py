@@ -184,7 +184,6 @@ def val_lu_spatial(errors, data, name):
         return
     param = data["params"][name]
     lzn = data["params"]["landuse_zone_names"]
-    tot = data["params"]["num_nodes"]
     validate_keys_are_nodes(errors, data, name)
     c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(lzn.values())],)
     if not all(abs(1 - sum(i)) < 1e-5 for i in param.values()):
@@ -227,8 +226,7 @@ def validate_keys_and_min_values(errors, data, name):
 
 def val_recharge_attenuation_params(errors, data, name):
     param = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    validate_keys_are_nodes(errors, data, name)
     c.validate_list_length(errors, param, name, data["specs"][name]["type"],[3],)
     c.validate_min_inclusive(errors, [i[1] for i in param.values() if len(i) > 1], "release_proportion in %s" % name, 0.0)
     c.validate_max_inclusive(errors, [i[1] for i in param.values() if len(i) > 1], "release_proportion in %s" % name, 1.0)
@@ -254,8 +252,7 @@ def val_sw_ponding_area(errors, data, name):
 
 def val_sw_params(errors, data, name):
     param = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    validate_keys_are_nodes(errors, data, name)
     c.validate_list_length(errors, param, name, data["specs"][name]["type"],[2],)
     c.validate_min_inclusive(errors, [i[1] for i in param.values() if len(i) > 1], "release_proportion in %s" % name, 0.0)
     c.validate_max_inclusive(errors, [i[1] for i in param.values() if len(i) > 1], "release_proportion in %s" % name, 1.0)
