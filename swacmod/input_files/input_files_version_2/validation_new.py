@@ -241,9 +241,8 @@ def val_sw_ponding_area(errors, data, name):
         c.validate_min_exclusive(errors, values, name, 0)
 
 def val_sw_params(errors, data, name):
-    param = data["params"][name]
     validate_keys_are_nodes(errors, data, name)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[2],)
+    validate_list_length([2], errors, data, name)
     validate_release_proportion_min_and_max(errors, data, name)
 
 def val_routing_topology(errors, data, name):
