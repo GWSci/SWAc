@@ -126,9 +126,9 @@ def val_rapid_runoff_params(errors, data, name):
             c.validate_max_inclusive(errors, [i for j in zone["values"] for i in j], '"values" in "%s"' % name, 1)
 
 def val_rorecharge_process(errors, data, name):
-    rop = data['params'][name]
-    rrp = data['params']['rapid_runoff_process']
-    if rop == 'enabled' and rrp == 'disabled':
+    rop = data["params"][name]
+    rrp = data["params"]["rapid_runoff_process"]
+    if rop == "enabled" and rrp == "disabled":
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
         errors.append(msg % (name, 'rapid_runoff_process'))
 
