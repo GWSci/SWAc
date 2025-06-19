@@ -264,8 +264,7 @@ def val_routing_topology(errors, data, name):
 
 def val_recharge_node_mapping(errors, data, name):
     param = data["params"][name]
-    tot = data["params"]["num_nodes"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    validate_keys_are_nodes(errors, data, name)
     c.validate_list_length(errors, param, name, data["specs"][name]["type"],[1],)
 
 def val_evt_parameters(errors, data, name):
