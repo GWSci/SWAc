@@ -212,7 +212,7 @@ def val_lu_spatial(errors, data, name):
     param = data["params"][name]
     zone_names = data["params"]["landuse_zone_names"]
     validate_keys_are_nodes(errors, data, name)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names.values())],)
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
     if not all(abs(1 - sum(i)) < 1e-5 for i in param.values()):
         msg = ('Parameter "%s" requires the sum of its values '
                'to be 1.0 within a tolerance of 1e-5')
