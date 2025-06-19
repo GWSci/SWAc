@@ -246,9 +246,8 @@ def val_sw_params(errors, data, name):
     validate_release_proportion_min_and_max(errors, data, name)
 
 def val_routing_topology(errors, data, name):
-    param = data["params"][name]
     validate_keys_are_nodes(errors, data, name)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[10],)
+    validate_list_length([10], errors, data, name)
 
 def val_recharge_node_mapping(errors, data, name):
     validate_keys_are_nodes(errors, data, name)
