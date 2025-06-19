@@ -207,10 +207,7 @@ def val_zr(errors, data, name):
 def validate_fao_keys_and_list_length(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
         return
-    param = data["params"][name]
-    lzn = data["params"]["landuse_zone_names"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(lzn)])
+    validate_months_and_zones("landuse_zone_names", errors, data, name)
 
 def val_percolation_rejection(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
