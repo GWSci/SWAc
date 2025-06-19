@@ -71,10 +71,8 @@ def validate_zone_mapping_b(zone_name, errors, data, name):
     _validate_zone_mapping_helper(zone_name, 0, "%s", param_values, errors, data, name)
 
 def _validate_zone_mapping_helper(zone_name, min_inclusive, message_format, param_values, errors, data, name):
-    param = data["params"][name]
-    tot = data["params"]["num_nodes"]
     tzn = data["params"][zone_name]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    validate_keys_are_nodes(errors, data, name)
     c.validate_min_inclusive(errors, param_values, message_format % name, min_inclusive)
     c.validate_max_inclusive(errors, param_values, message_format % name, len(tzn))
 
