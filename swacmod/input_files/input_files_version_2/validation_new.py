@@ -173,8 +173,7 @@ def val_smd(errors, data, name):
 def val_soil_spatial(errors, data, name):
     param = data["params"][name]
     soz = data["params"]["soil_zone_names"]
-    tot = data["params"]["num_nodes"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    validate_keys_are_nodes(errors, data, name)
     c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(soz)],)
     if not all(sum(i) == 1.0 for i in param.values()):
         msg = 'Parameter "%s" requires the sum of its values to be 1.0'
