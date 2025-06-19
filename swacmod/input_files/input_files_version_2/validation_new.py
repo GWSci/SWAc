@@ -95,9 +95,8 @@ def validate_ponding_keys_length(errors, data, name):
         validate_months_and_zones("sw_zone_names", errors, data, name)
 
 def validate_list_length_equals_zone_name_count(zone_name_key, errors, data, name):
-    param = data["params"][name]
     zone_names = data["params"][zone_name_key]
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
+    validate_list_length([len(zone_names)], errors, data, name)
 
 def validate_keys_are_zone_name_numbers(zone_name_key, errors, data, name):
     param = data["params"][name]
