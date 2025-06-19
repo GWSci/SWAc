@@ -161,11 +161,7 @@ def val_max_canopy_storage(errors, data, name):
 
 def val_rapid_runoff_params(errors, data, name):
     param = data["params"][name]
-    zone_names = data["params"]["rapid_runoff_zone_names"]
-    c.validate_list_length(errors, 
-        param, name, data["specs"][name]["type"],
-        [len(zone_names)]
-    )
+    validate_list_length_equals_zone_name_count("rapid_runoff_zone_names", errors, data, name)
     keys = ["class_smd", "class_ri", "values"]
     for zone in param:
         c.validate_keys(errors, zone, name, [dict], keys)
