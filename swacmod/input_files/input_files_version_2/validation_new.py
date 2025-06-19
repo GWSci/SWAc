@@ -100,6 +100,11 @@ def validate_list_length_equals_zone_name_count(zone_name_key, errors, data, nam
     zone_names = data["params"][zone_name_key]
     c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
 
+def validate_keys_are_zone_name_numbers(zone_name_key, errors, data, name):
+    param = data["params"][name]
+    tot = len(data["params"][zone_name_key])
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+
 def val_num_cores(errors, data, name):
     validate_min_exclusive(0, errors, data, name)
     c.validate_max_inclusive(errors, [data["params"][name]], name, multiprocessing.cpu_count())
@@ -155,8 +160,7 @@ def val_free_throughfall(errors, data, name):
 
 def val_max_canopy_storage(errors, data, name):
     param = data["params"][name]
-    tot = len(data["params"]["canopy_zone_names"])
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    validate_keys_are_zone_name_numbers("canopy_zone_names", errors, data, name)
     c.validate_min_inclusive(errors, param.values(), name, 0)
 
 def val_rapid_runoff_params(errors, data, name):
