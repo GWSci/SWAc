@@ -104,6 +104,10 @@ def validate_keys_are_zone_name_numbers(zone_name_key, errors, data, name):
     tot = len(data["params"][zone_name_key])
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
 
+def validate_list_length(expected_list_lengths, errors, data, name):
+    param = data["params"][name]
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"] ,expected_list_lengths)
+
 def val_num_cores(errors, data, name):
     validate_min_exclusive(0, errors, data, name)
     c.validate_max_inclusive(errors, [data["params"][name]], name, multiprocessing.cpu_count())
@@ -253,10 +257,6 @@ def val_routing_topology(errors, data, name):
 def val_recharge_node_mapping(errors, data, name):
     validate_keys_are_nodes(errors, data, name)
     validate_list_length([1], errors, data, name)
-
-def validate_list_length(expected_list_lengths, errors, data, name):
-    param = data["params"][name]
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"] ,expected_list_lengths)
 
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
