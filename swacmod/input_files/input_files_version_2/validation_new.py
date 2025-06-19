@@ -96,6 +96,11 @@ def validate_ponding_keys_length(errors, data, name):
     if data["params"]["sw_ponding_process"] == "enabled":
         validate_months_and_zones("sw_zone_names", errors, data, name)
 
+def validate_list_length_equals_zone_name_count(zone_name_key, errors, data, name):
+    param = data["params"][name]
+    zone_names = data["params"][zone_name_key]
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
+
 def val_num_cores(errors, data, name):
     validate_min_exclusive(0, errors, data, name)
     c.validate_max_inclusive(errors, [data["params"][name]], name, multiprocessing.cpu_count())
@@ -189,15 +194,13 @@ def val_soil_static_params(errors, data, name):
     ):
         return
     param = data["params"][name]
-    zone_names = data["params"]["soil_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"],["FC", "WP", "p"],)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
+    validate_list_length_equals_zone_name_count("soil_zone_names", errors, data, name)
 
 def val_smd(errors, data, name):
     param = data["params"][name]
-    zone_names = data["params"]["soil_zone_names"]
     c.validate_keys(errors, param, name, data["specs"][name]["type"],["starting_SMD"],)
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"],[len(zone_names)],)
+    validate_list_length_equals_zone_name_count("soil_zone_names", errors, data, name)
 
 def val_soil_spatial(errors, data, name):
     param = data["params"][name]
