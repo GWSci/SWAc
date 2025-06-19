@@ -184,8 +184,7 @@ def val_soil_static_params(errors, data, name):
         or data["params"]["fao_input"] == "l"
     ):
         return
-    param = data["params"][name]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"],["FC", "WP", "p"],)
+    _validate_keys(["FC", "WP", "p"], errors, data, name)
     validate_list_length_equals_zone_name_count("soil_zone_names", errors, data, name)
 
 def val_smd(errors, data, name):
