@@ -107,6 +107,10 @@ def validate_list_length(expected_list_lengths, errors, data, name):
     param = data["params"][name]
     c.validate_list_length(errors, param, name, data["specs"][name]["type"] ,expected_list_lengths)
 
+def _validate_keys(expected_keys, errors, data, name):
+    param = data["params"][name]
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], expected_keys)
+
 def val_num_cores(errors, data, name):
     validate_min_exclusive(0, errors, data, name)
     c.validate_max_inclusive(errors, [data["params"][name]], name, multiprocessing.cpu_count())
@@ -164,7 +168,7 @@ def val_rapid_runoff_params(errors, data, name):
     validate_list_length_equals_zone_name_count("rapid_runoff_zone_names", errors, data, name)
     keys = ["class_smd", "class_ri", "values"]
     for zone in param:
-        c.validate_keys(errors, zone, name, [dict], keys)
+        _validate_keys(keys, errors, data, name)
         if "values" in zone:
             c.validate_list_length(errors, zone["values"], name,[list, list],[len(zone["class_ri"]), len(zone["class_smd"])],)
             c.validate_min_inclusive(errors, [i for j in zone["values"] for i in j], '"values" in "%s"' % name, 0)
@@ -220,7 +224,7 @@ def val_percolation_rejection(errors, data, name):
     if data["params"]["fao_process"] == "disabled":
         return
     param = data["params"][name]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"],["percolation_rejection"],)
+    _validate_keys(["percolation_rejection"], errors, data, name)
     validate_list_length_equals_zone_name_count("landuse_zone_names", errors, data, name)
     c.validate_min_inclusive(errors, list(param.values())[0], name, 0.0)
 
