@@ -57,9 +57,8 @@ def validate_mutually_exclusive_with_rapid_runoff_process(errors, data, name):
 
 def validate_months_and_zones(zone_name_key, errors, data, name):
     param = data["params"][name]
-    zone_names = data["params"][zone_name_key]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(zone_names)])
+    validate_list_length_equals_zone_name_count(zone_name_key, errors, data, name)
 
 def validate_keys_length_min_max(zone_name_key, errors, data, name):
     param = data["params"][name]
