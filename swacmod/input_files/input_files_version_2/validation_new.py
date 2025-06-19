@@ -10,7 +10,7 @@ def val_num_cores(errors, data, name):
 def val_start_date(errors, data, name):
     dat = data["params"][name]
     try:
-        dat.strftime('%d/%m/%Y')
+        dat.strftime("%d/%m/%Y")
     except:
         raise
 
@@ -138,17 +138,17 @@ def val_single_cell_swrecharge_proportion(errors, data, name):
 
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_limit(errors, data, name):
-    validate_months_and_zones('single_cell_swrecharge_zone_names', errors, data, name)
+    validate_months_and_zones("single_cell_swrecharge_zone_names", errors, data, name)
 
 def validate_months_and_zones(zone_name, errors, data, name):
-    param = data['params'][name]
-    zone_names = data['params'][zone_name]
-    c.validate_keys(errors, param, name, data['specs'][name]['type'], range(1, 13))
-    c.validate_list_length(errors, param, name, data['specs'][name]['type'], [len(zone_names)])
+    param = data["params"][name]
+    zone_names = data["params"][zone_name]
+    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
+    c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(zone_names)])
 
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_activation(errors, data, name):
-    validate_months_and_zones('single_cell_swrecharge_zone_names', errors, data, name)
+    validate_months_and_zones("single_cell_swrecharge_zone_names", errors, data, name)
 
 def validate_keys_length_min_max(zone_name_key, errors, data, name):
     param = data["params"][name]
@@ -246,22 +246,22 @@ def val_recharge_attenuation_params(errors, data, name):
     c.validate_max_inclusive(errors, [i[1] for i in rpn.values() if len(i) > 1], "release_proportion in %s" % name, 1.0)
 
 def val_sw_zone_mapping(errors, data, name):
-    if data["params"]['sw_ponding_process'] == "enabled":
+    if data["params"]["sw_ponding_process"] == "enabled":
         validate_zone_mapping_b("sw_zone_names", errors, data, name)
 
 def validate_ponding_keys_length_range(errors, data, name):
-    if data["params"]['sw_ponding_process'] == "enabled":
+    if data["params"]["sw_ponding_process"] == "enabled":
         validate_keys_length_min_max("sw_zone_names", errors, data, name)
 
 def validate_ponding_keys_length(errors, data, name):
-    if data["params"]['sw_ponding_process'] == "enabled":
+    if data["params"]["sw_ponding_process"] == "enabled":
         rrp = data["params"][name]
         rzn = data["params"]["sw_zone_names"]
         c.validate_keys(errors, rrp, name, data["specs"][name]["type"], range(1, 13))
         c.validate_list_length(errors, rrp, name, data["specs"][name]["type"],[len(rzn)],)
 
 def val_sw_ponding_area(errors, data, name):
-    if data["params"]['sw_ponding_process'] == "enabled":
+    if data["params"]["sw_ponding_process"] == "enabled":
         num = data["params"][name]
         values = [i for i in num.values()]
         c.validate_max_inclusive(errors, values, name, 1.0)
