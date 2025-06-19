@@ -140,9 +140,9 @@ def val_single_cell_swrecharge_proportion(errors, data, name):
 def val_single_cell_swrecharge_limit(errors, data, name):
     validate_months_and_zones("single_cell_swrecharge_zone_names", errors, data, name)
 
-def validate_months_and_zones(zone_name, errors, data, name):
+def validate_months_and_zones(zone_name_key, errors, data, name):
     param = data["params"][name]
-    zone_names = data["params"][zone_name]
+    zone_names = data["params"][zone_name_key]
     c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
     c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(zone_names)])
 
@@ -152,9 +152,7 @@ def val_single_cell_swrecharge_activation(errors, data, name):
 
 def validate_keys_length_min_max(zone_name_key, errors, data, name):
     param = data["params"][name]
-    zone_names = data["params"][zone_name_key]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, 13))
-    c.validate_list_length(errors, param, name, data["specs"][name]["type"], [len(zone_names)])
+    validate_months_and_zones(zone_name_key, errors, data, name)
     c.validate_min_inclusive(errors, [j for i in param.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in param.values() for j in i], name, 1.0)
 
