@@ -72,9 +72,8 @@ def validate_fao_keys_and_list_length(errors, data, name):
     validate_months_and_zones("landuse_zone_names", errors, data, name)
 
 def validate_keys_are_nodes(errors, data, name):
-    param = data["params"][name]
     tot = data["params"]["num_nodes"]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    _validate_keys(range(1, tot + 1), errors, data, name)
 
 def validate_keys_and_min_values(errors, data, name):
     param = data["params"][name]
@@ -99,9 +98,8 @@ def validate_list_length_equals_zone_name_count(zone_name_key, errors, data, nam
     validate_list_length([len(zone_names)], errors, data, name)
 
 def validate_keys_are_zone_name_numbers(zone_name_key, errors, data, name):
-    param = data["params"][name]
     tot = len(data["params"][zone_name_key])
-    c.validate_keys(errors, param, name, data["specs"][name]["type"], range(1, tot + 1))
+    _validate_keys(range(1, tot + 1), errors, data, name)
 
 def validate_list_length(expected_list_lengths, errors, data, name):
     param = data["params"][name]
@@ -188,8 +186,7 @@ def val_soil_static_params(errors, data, name):
     validate_list_length_equals_zone_name_count("soil_zone_names", errors, data, name)
 
 def val_smd(errors, data, name):
-    param = data["params"][name]
-    c.validate_keys(errors, param, name, data["specs"][name]["type"],["starting_SMD"],)
+    _validate_keys(["starting_SMD"], errors, data, name)
     validate_list_length_equals_zone_name_count("soil_zone_names", errors, data, name)
 
 def val_soil_spatial(errors, data, name):
