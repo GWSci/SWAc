@@ -125,12 +125,12 @@ def val_rapid_runoff_params(errors, data, name):
             c.validate_min_inclusive(errors, [i for j in zone["values"] for i in j], '"values" in "%s"' % name, 0)
             c.validate_max_inclusive(errors, [i for j in zone["values"] for i in j], '"values" in "%s"' % name, 1)
 
-def val_rorecharge_process(errors, data, name):
-    rop = data["params"][name]
-    rrp = data["params"]["rapid_runoff_process"]
-    if rop == "enabled" and rrp == "disabled":
+def validate_mutually_exclusive_with_rapid_runoff_process(errors, data, name):
+    param = data["params"][name]
+    other_process = data["params"]["rapid_runoff_process"]
+    if param == "enabled" and other_process == "disabled":
         msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
-        errors.append(msg % (name, 'rapid_runoff_process'))
+        errors.append(msg % (name, "rapid_runoff_process"))
 
 def val_single_cell_swrecharge_proportion(errors, data, name):
     rrp = data['params'][name]
@@ -153,20 +153,6 @@ def validate_months_and_zones(zone_name, errors, data, name):
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_activation(errors, data, name):
     validate_months_and_zones('single_cell_swrecharge_zone_names', errors, data, name)
-
-def val_swrecharge_process(errors, data, name):
-    rop = data["params"][name]
-    rrp = data["params"]["rapid_runoff_process"]
-    if rop == "enabled" and rrp == "disabled":
-        msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
-        errors.append(msg % (name, "rapid_runoff_process"))
-
-def val_macropore_process(errors, data, name):
-    mpp = data["params"][name]
-    rrp = data["params"]["rapid_runoff_process"]
-    if mpp == "enabled" and rrp == "disabled":
-        msg = 'Cannot set "%s" to "enabled" and "%s" to "disabled"'
-        errors.append(msg % (name, "rapid_runoff_process"))
 
 def validate_keys_length_min_max(zone_name_key, errors, data, name):
     param = data["params"][name]
@@ -348,10 +334,10 @@ def _validate_params(errors, data):
     do_validation(errors, data, partial(validate_snow, "snow_process_simple", 3), "snow_params_simple")
     do_validation(errors, data, partial(validate_snow, "snow_process_complex", 10), "snow_params_complex")
     do_validation(errors, data, val_rapid_runoff_params, "rapid_runoff_params")
-    do_validation(errors, data, val_swrecharge_process, "swrecharge_process")
+    do_validation(errors, data, validate_mutually_exclusive_with_rapid_runoff_process, "swrecharge_process")
     do_validation(errors, data, partial(validate_keys_length_min_max, "swrecharge_zone_names"), "swrecharge_proportion")
     do_validation(errors, data, partial(validate_months_and_zones, "swrecharge_zone_names"), "swrecharge_limit")
-    do_validation(errors, data, val_macropore_process, "macropore_process")
+    do_validation(errors, data, validate_mutually_exclusive_with_rapid_runoff_process, "macropore_process")
     do_validation(errors, data, partial(validate_keys_length_min_max, "macropore_zone_names"), "macropore_proportion")
     do_validation(errors, data, partial(validate_months_and_zones, "macropore_zone_names"), "macropore_limit")
     do_validation(errors, data, partial(validate_months_and_zones, "macropore_zone_names"), "macropore_activation")
