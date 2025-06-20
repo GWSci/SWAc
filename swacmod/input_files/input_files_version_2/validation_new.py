@@ -274,6 +274,7 @@ def validate_2(params, specs):
 
 def _validate_params(errors, data):
     factory = validation_context.Validation_Context_Factory(errors, data)
+    all_validation_contexts = []
     factory.make(val_num_cores, "num_cores").do_validation()
     factory.make(partial(validate_min_exclusive, 0), "num_nodes").do_validation()
     factory.make(val_node_areas, "node_areas").do_validation()
@@ -341,3 +342,6 @@ def _validate_params(errors, data):
     factory.make(validate_constraints, "nevtopt").do_validation()
     factory.make(partial(validate_zone_mapping_b, "interflow_zone_names"), "interflow_zone_mapping").do_validation()
     factory.make(partial(validate_zone_mapping_b, "canopy_zone_names"), "canopy_zone_mapping").do_validation()
+    
+    for vc in all_validation_contexts:
+        vc.do_validation()
