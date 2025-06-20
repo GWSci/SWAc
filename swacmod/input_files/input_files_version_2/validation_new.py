@@ -345,24 +345,3 @@ def do_validation(errors, data, function, param):
     factory = validation_context.Validation_Context_Factory(errors, data)
     context = factory.make(function, param)
     context.do_validation()
-    # if not is_param_skipped(data, param):
-    #     function(errors, data, param)
-
-def is_param_skipped(data, param):
-    params = data["params"]
-    specs = data["specs"]
-    is_skipped = (params[param] is None) or is_alt(specs, params, param)
-    return is_skipped
-
-def is_alt(specs, params, param):
-    value = params[param]
-
-    if not isinstance(value, str):
-        return False
-
-    alt_formats = specs[param].get("alt_format", [])
-    for alt in alt_formats:
-        suffix = f".{alt}"
-        if value.endswith(suffix):
-            return True
-    return False
