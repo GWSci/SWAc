@@ -158,10 +158,7 @@ def val_single_cell_swrecharge_proportion(errors, data, name):
     validate_keys_length_min_max(zone_name_key, errors, data, name)
 
 def val_soil_static_params(errors, data, name):
-    if (
-        data["params"]["fao_process"] == "disabled"
-        or data["params"]["fao_input"] == "l"
-    ):
+    if data["params"]["fao_input"] == "l":
         return
     _validate_keys(["FC", "WP", "p"], errors, data, name)
     validate_list_length_equals_zone_name_count("soil_zone_names", errors, data, name)
@@ -295,7 +292,7 @@ def _validate_params(errors, data):
         factory.make(partial(validate_months_and_zones, "macropore_zone_names"), "macropore_limit"),
         factory.make(partial(validate_months_and_zones, "macropore_zone_names"), "macropore_activation"),
         factory.make(partial(validate_keys_length_min_max, "macropore_zone_names"), "macropore_recharge"),
-        factory.make(val_soil_static_params, "soil_static_params"),
+        factory.make_with_process_guard(val_soil_static_params, "soil_static_params", "fao_process"),
         factory.make(val_smd, "smd"),
         factory.make(val_soil_spatial, "soil_spatial"),
         factory.make_with_process_guard(val_lu_spatial, "lu_spatial", "fao_process"),
