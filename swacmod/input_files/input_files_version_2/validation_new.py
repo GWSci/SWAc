@@ -274,74 +274,76 @@ def validate_2(params, specs):
 
 def _validate_params(errors, data):
     factory = validation_context.Validation_Context_Factory(errors, data)
-    all_validation_contexts = []
-    factory.make(val_num_cores, "num_cores").do_validation()
-    factory.make(partial(validate_min_exclusive, 0), "num_nodes").do_validation()
-    factory.make(val_node_areas, "node_areas").do_validation()
-    factory.make(val_start_date, "start_date").do_validation()
-    factory.make(val_time_periods, "time_periods").do_validation()
-    factory.make(val_output_individual, "output_individual").do_validation()
-    factory.make(partial(validate_min_exclusive, 0), "nodes_per_line").do_validation()
-    factory.make(partial(validate_min_exclusive, 0.0), "output_fac").do_validation()
-    # val_spatial_output_date,
-    factory.make(partial(validate_zone_mapping_b, "reporting_zone_names"), "reporting_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_a, "rainfall_zone_names", 1), "rainfall_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_b, "rapid_runoff_zone_names"), "rapid_runoff_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_a, "pe_zone_names", 0), "pe_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_b, "temperature_zone_names"), "temperature_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_b, "tmax_c_zone_names"), "tmax_c_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_b, "tmin_c_zone_names"), "tmin_c_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_b, "tmin_c_zone_names"), "windsp_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_a, "subroot_zone_names", 0), "subroot_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_b, "swrecharge_zone_names"), "swrecharge_zone_mapping").do_validation()
-    factory.make(val_sw_zone_mapping, "sw_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_b, "macropore_zone_names"), "macropore_zone_mapping").do_validation()
-    factory.make(val_recharge_node_mapping, "recharge_node_mapping").do_validation()
-    factory.make(validate_constraints, "macropore_activation_option").do_validation()
-    factory.make(val_free_throughfall, "free_throughfall").do_validation()
-    factory.make(val_max_canopy_storage, "max_canopy_storage").do_validation()
-    factory.make(partial(validate_snow, "snow_process_simple", 3), "snow_params_simple").do_validation()
-    factory.make(partial(validate_snow, "snow_process_complex", 10), "snow_params_complex").do_validation()
-    factory.make(val_rapid_runoff_params, "rapid_runoff_params").do_validation()
-    factory.make(validate_mutually_exclusive_with_rapid_runoff_process, "swrecharge_process").do_validation()
-    factory.make(partial(validate_keys_length_min_max, "swrecharge_zone_names"), "swrecharge_proportion").do_validation()
-    factory.make(partial(validate_months_and_zones, "swrecharge_zone_names"), "swrecharge_limit").do_validation()
-    factory.make(validate_mutually_exclusive_with_rapid_runoff_process, "macropore_process").do_validation()
-    factory.make(partial(validate_keys_length_min_max, "macropore_zone_names"), "macropore_proportion").do_validation()
-    factory.make(partial(validate_months_and_zones, "macropore_zone_names"), "macropore_limit").do_validation()
-    factory.make(partial(validate_months_and_zones, "macropore_zone_names"), "macropore_activation").do_validation()
-    factory.make(partial(validate_keys_length_min_max, "macropore_zone_names"), "macropore_recharge").do_validation()
-    factory.make(val_soil_static_params, "soil_static_params").do_validation()
-    factory.make(val_smd, "smd").do_validation()
-    factory.make(val_soil_spatial, "soil_spatial").do_validation()
-    factory.make(val_lu_spatial, "lu_spatial").do_validation()
-    factory.make(val_zr, "zr").do_validation()
-    factory.make(validate_fao_keys_and_list_length, "kc").do_validation()
-    factory.make(validate_fao_keys_and_list_length, "taw").do_validation()
-    factory.make(validate_fao_keys_and_list_length, "raw").do_validation()
-    factory.make(val_percolation_rejection, "percolation_rejection").do_validation()
-    factory.make(validate_keys_are_nodes, "subroot_leakage_fraction").do_validation()
-    factory.make(validate_keys_and_min_values, "init_interflow_store").do_validation()
-    factory.make(validate_keys_and_min_values, "interflow_store_bypass").do_validation()
-    factory.make(validate_keys_and_min_values, "infiltration_limit").do_validation()
-    factory.make(validate_keys_and_min_values, "interflow_decay").do_validation()
-    factory.make(val_recharge_attenuation_params, "recharge_attenuation_params").do_validation()
-    factory.make(validate_ponding_keys_length_range, "sw_downstream").do_validation()
-    factory.make(validate_ponding_keys_length, "sw_activation").do_validation()
-    factory.make(validate_ponding_keys_length_range, "sw_bed_infiltration").do_validation()
-    factory.make(validate_ponding_keys_length_range, "sw_direct_recharge").do_validation()
-    factory.make(validate_ponding_keys_length, "sw_pe_to_open_water").do_validation()
-    factory.make(val_sw_params, "sw_params").do_validation()
-    factory.make(val_sw_ponding_area, "sw_ponding_area").do_validation()
-    factory.make(validate_locs, "swdis_locs").do_validation()
-    factory.make(validate_locs, "swabs_locs").do_validation()
-    factory.make(val_routing_topology, "routing_topology").do_validation()
-    factory.make(validate_constraints, "swdis_f").do_validation()
-    factory.make(validate_constraints, "swabs_f").do_validation()
-    factory.make(partial(validate_list_length, [3]), "evt_parameters").do_validation()
-    factory.make(validate_constraints, "nevtopt").do_validation()
-    factory.make(partial(validate_zone_mapping_b, "interflow_zone_names"), "interflow_zone_mapping").do_validation()
-    factory.make(partial(validate_zone_mapping_b, "canopy_zone_names"), "canopy_zone_mapping").do_validation()
+    all_validation_contexts = [
+
+        factory.make(val_num_cores, "num_cores"),
+        factory.make(partial(validate_min_exclusive, 0), "num_nodes"),
+        factory.make(val_node_areas, "node_areas"),
+        factory.make(val_start_date, "start_date"),
+        factory.make(val_time_periods, "time_periods"),
+        factory.make(val_output_individual, "output_individual"),
+        factory.make(partial(validate_min_exclusive, 0), "nodes_per_line"),
+        factory.make(partial(validate_min_exclusive, 0.0), "output_fac"),
+        # val_spatial_output_date,
+        factory.make(partial(validate_zone_mapping_b, "reporting_zone_names"), "reporting_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_a, "rainfall_zone_names", 1), "rainfall_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_b, "rapid_runoff_zone_names"), "rapid_runoff_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_a, "pe_zone_names", 0), "pe_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_b, "temperature_zone_names"), "temperature_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_b, "tmax_c_zone_names"), "tmax_c_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_b, "tmin_c_zone_names"), "tmin_c_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_b, "tmin_c_zone_names"), "windsp_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_a, "subroot_zone_names", 0), "subroot_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_b, "swrecharge_zone_names"), "swrecharge_zone_mapping"),
+        factory.make(val_sw_zone_mapping, "sw_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_b, "macropore_zone_names"), "macropore_zone_mapping"),
+        factory.make(val_recharge_node_mapping, "recharge_node_mapping"),
+        factory.make(validate_constraints, "macropore_activation_option"),
+        factory.make(val_free_throughfall, "free_throughfall"),
+        factory.make(val_max_canopy_storage, "max_canopy_storage"),
+        factory.make(partial(validate_snow, "snow_process_simple", 3), "snow_params_simple"),
+        factory.make(partial(validate_snow, "snow_process_complex", 10), "snow_params_complex"),
+        factory.make(val_rapid_runoff_params, "rapid_runoff_params"),
+        factory.make(validate_mutually_exclusive_with_rapid_runoff_process, "swrecharge_process"),
+        factory.make(partial(validate_keys_length_min_max, "swrecharge_zone_names"), "swrecharge_proportion"),
+        factory.make(partial(validate_months_and_zones, "swrecharge_zone_names"), "swrecharge_limit"),
+        factory.make(validate_mutually_exclusive_with_rapid_runoff_process, "macropore_process"),
+        factory.make(partial(validate_keys_length_min_max, "macropore_zone_names"), "macropore_proportion"),
+        factory.make(partial(validate_months_and_zones, "macropore_zone_names"), "macropore_limit"),
+        factory.make(partial(validate_months_and_zones, "macropore_zone_names"), "macropore_activation"),
+        factory.make(partial(validate_keys_length_min_max, "macropore_zone_names"), "macropore_recharge"),
+        factory.make(val_soil_static_params, "soil_static_params"),
+        factory.make(val_smd, "smd"),
+        factory.make(val_soil_spatial, "soil_spatial"),
+        factory.make(val_lu_spatial, "lu_spatial"),
+        factory.make(val_zr, "zr"),
+        factory.make(validate_fao_keys_and_list_length, "kc"),
+        factory.make(validate_fao_keys_and_list_length, "taw"),
+        factory.make(validate_fao_keys_and_list_length, "raw"),
+        factory.make(val_percolation_rejection, "percolation_rejection"),
+        factory.make(validate_keys_are_nodes, "subroot_leakage_fraction"),
+        factory.make(validate_keys_and_min_values, "init_interflow_store"),
+        factory.make(validate_keys_and_min_values, "interflow_store_bypass"),
+        factory.make(validate_keys_and_min_values, "infiltration_limit"),
+        factory.make(validate_keys_and_min_values, "interflow_decay"),
+        factory.make(val_recharge_attenuation_params, "recharge_attenuation_params"),
+        factory.make(validate_ponding_keys_length_range, "sw_downstream"),
+        factory.make(validate_ponding_keys_length, "sw_activation"),
+        factory.make(validate_ponding_keys_length_range, "sw_bed_infiltration"),
+        factory.make(validate_ponding_keys_length_range, "sw_direct_recharge"),
+        factory.make(validate_ponding_keys_length, "sw_pe_to_open_water"),
+        factory.make(val_sw_params, "sw_params"),
+        factory.make(val_sw_ponding_area, "sw_ponding_area"),
+        factory.make(validate_locs, "swdis_locs"),
+        factory.make(validate_locs, "swabs_locs"),
+        factory.make(val_routing_topology, "routing_topology"),
+        factory.make(validate_constraints, "swdis_f"),
+        factory.make(validate_constraints, "swabs_f"),
+        factory.make(partial(validate_list_length, [3]), "evt_parameters"),
+        factory.make(validate_constraints, "nevtopt"),
+        factory.make(partial(validate_zone_mapping_b, "interflow_zone_names"), "interflow_zone_mapping"),
+        factory.make(partial(validate_zone_mapping_b, "canopy_zone_names"), "canopy_zone_mapping"),
+    ]
     
     for vc in all_validation_contexts:
         vc.do_validation()
