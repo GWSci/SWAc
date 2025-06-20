@@ -17,10 +17,6 @@ def validate_locs(errors, data, name):
         c.validate_min_inclusive(errors, param.keys(), "node in %s" % name, 1)
         c.validate_max_inclusive(errors, param.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
-def validate_zone_mapping_c(zone_name, errors, data, name):
-    param_values = data["params"][name].values()
-    _validate_zone_mapping_helper(zone_name, 0, param_values, errors, data, name)
-
 def validate_zone_mapping_a(zone_name, min_inclusive, errors, data, name):
     param_values = [i[0] for i in data["params"][name].values()]
     _validate_zone_mapping_helper(zone_name, min_inclusive, param_values, errors, data, name)
