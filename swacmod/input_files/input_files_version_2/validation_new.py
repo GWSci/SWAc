@@ -185,10 +185,7 @@ def val_lu_spatial(errors, data, name):
         errors.append(msg % name)
 
 def val_zr(errors, data, name):
-    if (
-        data["params"]["fao_process"] == "disabled"
-        or data["params"]["fao_input"] == "l"
-    ):
+    if data["params"]["fao_input"] == "l":
         return
     validate_months_and_zones("landuse_zone_names", errors, data, name)
 
@@ -296,7 +293,7 @@ def _validate_params(errors, data):
         factory.make(val_smd, "smd"),
         factory.make(val_soil_spatial, "soil_spatial"),
         factory.make_with_process_guard(val_lu_spatial, "lu_spatial", "fao_process"),
-        factory.make(val_zr, "zr"),
+        factory.make_with_process_guard(val_zr, "zr", "fao_process"),
         factory.make_with_process_guard(partial(validate_months_and_zones, "landuse_zone_names"), "kc", "fao_process"),
         factory.make_with_process_guard(partial(validate_months_and_zones, "landuse_zone_names"), "taw", "fao_process"),
         factory.make_with_process_guard(partial(validate_months_and_zones, "landuse_zone_names"), "raw", "fao_process"),
