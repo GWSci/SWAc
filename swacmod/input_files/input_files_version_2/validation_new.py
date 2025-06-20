@@ -75,8 +75,7 @@ def validate_release_proportion_min_and_max(errors, data, name):
     c.validate_max_inclusive(errors, [i[1] for i in param.values() if len(i) > 1], "release_proportion in %s" % name, 1.0)
 
 def validate_ponding_keys_length_range(errors, data, name):
-    if data["params"]["sw_ponding_process"] == "enabled":
-        validate_keys_length_min_max("sw_zone_names", errors, data, name)
+    validate_keys_length_min_max("sw_zone_names", errors, data, name)
 
 def validate_ponding_keys_length(errors, data, name):
     if data["params"]["sw_ponding_process"] == "enabled":
@@ -318,10 +317,10 @@ def _validate_params(errors, data):
         factory.make(validate_keys_and_min_values, "infiltration_limit"),
         factory.make(validate_keys_and_min_values, "interflow_decay"),
         factory.make(val_recharge_attenuation_params, "recharge_attenuation_params"),
-        factory.make(validate_ponding_keys_length_range, "sw_downstream"),
+        factory.make_with_process_guard(validate_ponding_keys_length_range, "sw_downstream", "sw_ponding_process"),
         factory.make(validate_ponding_keys_length, "sw_activation"),
-        factory.make(validate_ponding_keys_length_range, "sw_bed_infiltration"),
-        factory.make(validate_ponding_keys_length_range, "sw_direct_recharge"),
+        factory.make_with_process_guard(validate_ponding_keys_length_range, "sw_bed_infiltration", "sw_ponding_process"),
+        factory.make_with_process_guard(validate_ponding_keys_length_range, "sw_direct_recharge", "sw_ponding_process"),
         factory.make(validate_ponding_keys_length, "sw_pe_to_open_water"),
         factory.make(val_sw_params, "sw_params"),
         factory.make(val_sw_ponding_area, "sw_ponding_area"),
