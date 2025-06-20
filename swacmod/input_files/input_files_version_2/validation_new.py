@@ -60,9 +60,6 @@ def validate_keys_length_min_max(zone_name_key, errors, data, name):
     c.validate_min_inclusive(errors, [j for i in param.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in param.values() for j in i], name, 1.0)
 
-def validate_fao_keys_and_list_length(errors, data, name):
-    validate_months_and_zones("landuse_zone_names", errors, data, name)
-
 def validate_keys_are_nodes(errors, data, name):
     tot = data["params"]["num_nodes"]
     _validate_keys(range(1, tot + 1), errors, data, name)
