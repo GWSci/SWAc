@@ -277,9 +277,9 @@ def _validate_params(errors, data):
     factory.make(val_num_cores, "num_cores").do_validation()
     factory.make(partial(validate_min_exclusive, 0), "num_nodes").do_validation()
     factory.make(val_node_areas, "node_areas").do_validation()
-    do_validation(errors, data, val_start_date, "start_date")
-    do_validation(errors, data, val_time_periods, "time_periods")
-    do_validation(errors, data, val_output_individual, "output_individual")
+    factory.make(val_start_date, "start_date").do_validation()
+    factory.make(val_time_periods, "time_periods").do_validation()
+    factory.make(val_output_individual, "output_individual").do_validation()
     do_validation(errors, data, partial(validate_min_exclusive, 0), "nodes_per_line")
     do_validation(errors, data, partial(validate_min_exclusive, 0.0), "output_fac")
     # val_spatial_output_date,
