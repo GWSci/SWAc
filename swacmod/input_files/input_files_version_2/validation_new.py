@@ -190,8 +190,6 @@ def val_zr(errors, data, name):
     validate_months_and_zones("landuse_zone_names", errors, data, name)
 
 def val_percolation_rejection(errors, data, name):
-    if data["params"]["fao_process"] == "disabled":
-        return
     param = data["params"][name]
     _validate_keys(["percolation_rejection"], errors, data, name)
     validate_list_length_equals_zone_name_count("landuse_zone_names", errors, data, name)
@@ -297,7 +295,7 @@ def _validate_params(errors, data):
         factory.make_with_process_guard(partial(validate_months_and_zones, "landuse_zone_names"), "kc", "fao_process"),
         factory.make_with_process_guard(partial(validate_months_and_zones, "landuse_zone_names"), "taw", "fao_process"),
         factory.make_with_process_guard(partial(validate_months_and_zones, "landuse_zone_names"), "raw", "fao_process"),
-        factory.make(val_percolation_rejection, "percolation_rejection"),
+        factory.make_with_process_guard(val_percolation_rejection, "percolation_rejection", "fao_process"),
         factory.make(validate_keys_are_nodes, "subroot_leakage_fraction"),
         factory.make(validate_keys_and_min_values, "init_interflow_store"),
         factory.make(validate_keys_and_min_values, "interflow_store_bypass"),
