@@ -19,21 +19,21 @@ def validate_locs(errors, data, name):
 
 def validate_zone_mapping_c(zone_name, errors, data, name):
     param_values = data["params"][name].values()
-    _validate_zone_mapping_helper(zone_name, 0, "zone in %s", param_values, errors, data, name)
+    _validate_zone_mapping_helper(zone_name, 0, param_values, errors, data, name)
 
 def validate_zone_mapping_a(zone_name, min_inclusive, errors, data, name):
     param_values = [i[0] for i in data["params"][name].values()]
-    _validate_zone_mapping_helper(zone_name, min_inclusive, "zone in %s", param_values, errors, data, name)
+    _validate_zone_mapping_helper(zone_name, min_inclusive, param_values, errors, data, name)
 
 def validate_zone_mapping_b(zone_name, errors, data, name):
     param_values = data["params"][name].values()
-    _validate_zone_mapping_helper(zone_name, 0, "%s", param_values, errors, data, name)
+    _validate_zone_mapping_helper(zone_name, 0, param_values, errors, data, name)
 
-def _validate_zone_mapping_helper(zone_name, min_inclusive, message_format, param_values, errors, data, name):
+def _validate_zone_mapping_helper(zone_name, min_inclusive, param_values, errors, data, name):
     zone_names = data["params"][zone_name]
     validate_keys_are_nodes(errors, data, name)
-    c.validate_min_inclusive(errors, param_values, message_format % name, min_inclusive)
-    c.validate_max_inclusive(errors, param_values, message_format % name, len(zone_names))
+    c.validate_min_inclusive(errors, param_values, "zone in %s" % name, min_inclusive)
+    c.validate_max_inclusive(errors, param_values, "zone in %s" % name, len(zone_names))
 
 def validate_constraints(errors, data, name):
     param = data["params"][name]
