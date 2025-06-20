@@ -28,7 +28,8 @@ class Validation_Context:
         return is_skipped
 
     def is_required_process_disabled(self):
-        pass
+        key = self.required_process_key_or_none
+        return (key is not None) and (self.data["params"][key] == "disabled")
 
     def is_alt(self):
         value = self.data["params"][self.param]
