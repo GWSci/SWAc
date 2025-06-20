@@ -285,7 +285,7 @@ def _validate_params(errors, data):
     do_validation(errors, data, partial(validate_min_exclusive, 0), "nodes_per_line")
     do_validation(errors, data, partial(validate_min_exclusive, 0.0), "output_fac")
     # val_spatial_output_date,
-    do_validation(errors, data, partial(validate_zone_mapping_c, "reporting_zone_names"), "reporting_zone_mapping")
+    do_validation(errors, data, partial(validate_zone_mapping_b, "reporting_zone_names"), "reporting_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_a, "rainfall_zone_names", 1), "rainfall_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_b, "rapid_runoff_zone_names"), "rapid_runoff_zone_mapping")
     do_validation(errors, data, partial(validate_zone_mapping_a, "pe_zone_names", 0), "pe_zone_mapping")
