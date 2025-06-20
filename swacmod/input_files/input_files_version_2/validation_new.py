@@ -2,6 +2,7 @@ import multiprocessing
 import swacmod.input_files.input_files_version_2.checks as c
 from swacmod.input_files.parsed_input_data import ParsedInputData
 from functools import partial
+import swacmod.input_files.input_files_version_2.validation_context as validation_context
 
 def validate_min_exclusive(min_exclusive, errors, data, name):
     c.validate_min_exclusive(errors, [data["params"][name]], name, min_exclusive)
@@ -341,8 +342,11 @@ def _validate_params(errors, data):
     do_validation(errors, data, partial(validate_zone_mapping_b, "canopy_zone_names"), "canopy_zone_mapping")
 
 def do_validation(errors, data, function, param):
-    if not is_param_skipped(data, param):
-        function(errors, data, param)
+    factory = validation_context.Validation_Context_Factory(errors, data)
+    context = factory.make(function, param)
+    context.do_validation()
+    # if not is_param_skipped(data, param):
+    #     function(errors, data, param)
 
 def is_param_skipped(data, param):
     params = data["params"]
