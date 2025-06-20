@@ -200,9 +200,6 @@ def val_recharge_attenuation_params(errors, data, name):
     validate_list_length([3], errors, data, name)
     validate_release_proportion_min_and_max(errors, data, name)
 
-def val_sw_zone_mapping(errors, data, name):
-    validate_zone_mapping_b("sw_zone_names", errors, data, name)
-
 def val_sw_ponding_area(errors, data, name):
     if data["params"]["sw_ponding_process"] == "enabled":
         num = data["params"][name]
@@ -269,7 +266,7 @@ def _validate_params(errors, data):
         factory.make(partial(validate_zone_mapping_b, "tmin_c_zone_names"), "windsp_zone_mapping"),
         factory.make(partial(validate_zone_mapping_a, "subroot_zone_names", 0), "subroot_zone_mapping"),
         factory.make(partial(validate_zone_mapping_b, "swrecharge_zone_names"), "swrecharge_zone_mapping"),
-        factory.make_with_process_guard(val_sw_zone_mapping, "sw_zone_mapping", "sw_ponding_process"),
+        factory.make_with_process_guard(partial(validate_zone_mapping_b, "sw_zone_names"), "sw_zone_mapping", "sw_ponding_process"),
         factory.make(partial(validate_zone_mapping_b, "macropore_zone_names"), "macropore_zone_mapping"),
         factory.make(val_recharge_node_mapping, "recharge_node_mapping"),
         factory.make(validate_constraints, "macropore_activation_option"),
