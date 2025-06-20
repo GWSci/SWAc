@@ -201,11 +201,10 @@ def val_recharge_attenuation_params(errors, data, name):
     validate_release_proportion_min_and_max(errors, data, name)
 
 def val_sw_ponding_area(errors, data, name):
-    if data["params"]["sw_ponding_process"] == "enabled":
-        num = data["params"][name]
-        values = [i for i in num.values()]
-        c.validate_max_inclusive(errors, values, name, 1.0)
-        c.validate_min_exclusive(errors, values, name, 0)
+    num = data["params"][name]
+    values = [i for i in num.values()]
+    c.validate_max_inclusive(errors, values, name, 1.0)
+    c.validate_min_exclusive(errors, values, name, 0)
 
 def val_sw_params(errors, data, name):
     validate_keys_are_nodes(errors, data, name)
