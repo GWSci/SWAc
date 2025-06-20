@@ -37,8 +37,6 @@ def validate_constraints(errors, data, name):
     c.validate_constraints(errors, [param], name, data["specs"][name]["constraints"])
 
 def validate_snow(process_name, list_length, errors, data, name):
-    if data["params"][process_name] == "disabled":
-        return
     param = data["params"][name]
     validate_keys_are_nodes(errors, data, name)
     c.validate_list_length(errors, param, name, data["specs"][name]["type"], [list_length], )
