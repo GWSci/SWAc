@@ -344,6 +344,6 @@ def _validate_params(errors, data):
         factory.make(partial(validate_zone_mapping_b, "interflow_zone_names"), "interflow_zone_mapping"),
         factory.make(partial(validate_zone_mapping_b, "canopy_zone_names"), "canopy_zone_mapping"),
     ]
-    
+
     for vc in all_validation_contexts:
         vc.do_validation()
