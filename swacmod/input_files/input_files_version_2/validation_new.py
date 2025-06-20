@@ -304,7 +304,7 @@ def _validate_params(errors, data):
         factory.make_with_process_guard(partial(validate_keys_length_min_max, "sw_zone_names"), "sw_direct_recharge", "sw_ponding_process"),
         factory.make_with_process_guard(partial(validate_months_and_zones, "sw_zone_names"), "sw_pe_to_open_water", "sw_ponding_process"),
         factory.make(val_sw_params, "sw_params"),
-        factory.make(val_sw_ponding_area, "sw_ponding_area"),
+        factory.make_with_process_guard(val_sw_ponding_area, "sw_ponding_area", "sw_ponding_process"),
         factory.make(validate_locs, "swdis_locs"),
         factory.make(validate_locs, "swabs_locs"),
         factory.make(val_routing_topology, "routing_topology"),
