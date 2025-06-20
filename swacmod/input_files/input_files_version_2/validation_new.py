@@ -36,7 +36,7 @@ def validate_constraints(errors, data, name):
     param = data["params"][name]
     c.validate_constraints(errors, [param], name, data["specs"][name]["constraints"])
 
-def validate_snow(process_name, list_length, errors, data, name):
+def validate_snow(list_length, errors, data, name):
     param = data["params"][name]
     validate_keys_are_nodes(errors, data, name)
     c.validate_list_length(errors, param, name, data["specs"][name]["type"], [list_length], )
@@ -299,8 +299,8 @@ def _validate_params(errors, data):
         factory.make(validate_constraints, "macropore_activation_option"),
         factory.make(val_free_throughfall, "free_throughfall"),
         factory.make(val_max_canopy_storage, "max_canopy_storage"),
-        factory.make_with_process_guard(partial(validate_snow, "snow_process_simple", 3), "snow_params_simple", "snow_process_simple"),
-        factory.make_with_process_guard(partial(validate_snow, "snow_process_complex", 10), "snow_params_complex", "snow_process_complex"),
+        factory.make_with_process_guard(partial(validate_snow, 3), "snow_params_simple", "snow_process_simple"),
+        factory.make_with_process_guard(partial(validate_snow, 10), "snow_params_complex", "snow_process_complex"),
         factory.make(val_rapid_runoff_params, "rapid_runoff_params"),
         factory.make(validate_mutually_exclusive_with_rapid_runoff_process, "swrecharge_process"),
         factory.make(partial(validate_keys_length_min_max, "swrecharge_zone_names"), "swrecharge_proportion"),
