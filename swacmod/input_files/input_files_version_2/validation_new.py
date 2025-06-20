@@ -341,8 +341,3 @@ def _validate_params(errors, data):
     factory.make(validate_constraints, "nevtopt").do_validation()
     factory.make(partial(validate_zone_mapping_b, "interflow_zone_names"), "interflow_zone_mapping").do_validation()
     factory.make(partial(validate_zone_mapping_b, "canopy_zone_names"), "canopy_zone_mapping").do_validation()
-
-def do_validation(errors, data, function, param):
-    factory = validation_context.Validation_Context_Factory(errors, data)
-    context = factory.make(function, param)
-    context.do_validation()
