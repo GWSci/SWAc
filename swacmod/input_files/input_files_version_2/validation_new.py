@@ -61,8 +61,6 @@ def validate_keys_length_min_max(zone_name_key, errors, data, name):
     c.validate_max_inclusive(errors, [j for i in param.values() for j in i], name, 1.0)
 
 def validate_fao_keys_and_list_length(errors, data, name):
-    if data["params"]["fao_process"] == "disabled":
-        return
     validate_months_and_zones("landuse_zone_names", errors, data, name)
 
 def validate_keys_are_nodes(errors, data, name):
@@ -313,9 +311,9 @@ def _validate_params(errors, data):
         factory.make(val_soil_spatial, "soil_spatial"),
         factory.make_with_process_guard(val_lu_spatial, "lu_spatial", "fao_process"),
         factory.make(val_zr, "zr"),
-        factory.make(validate_fao_keys_and_list_length, "kc"),
-        factory.make(validate_fao_keys_and_list_length, "taw"),
-        factory.make(validate_fao_keys_and_list_length, "raw"),
+        factory.make_with_process_guard(validate_fao_keys_and_list_length, "kc", "fao_process"),
+        factory.make_with_process_guard(validate_fao_keys_and_list_length, "taw", "fao_process"),
+        factory.make_with_process_guard(validate_fao_keys_and_list_length, "raw", "fao_process"),
         factory.make(val_percolation_rejection, "percolation_rejection"),
         factory.make(validate_keys_are_nodes, "subroot_leakage_fraction"),
         factory.make(validate_keys_and_min_values, "init_interflow_store"),
