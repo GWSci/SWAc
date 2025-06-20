@@ -273,7 +273,8 @@ def validate_2(params, specs):
     return ParsedInputData(params, errors, warnings)
 
 def _validate_params(errors, data):
-    do_validation(errors, data, val_num_cores, "num_cores")
+    factory = validation_context.Validation_Context_Factory(errors, data)
+    factory.make(val_num_cores, "num_cores").do_validation()
     do_validation(errors, data, partial(validate_min_exclusive, 0), "num_nodes")
     do_validation(errors, data, val_node_areas, "node_areas")
     do_validation(errors, data, val_start_date, "start_date")
