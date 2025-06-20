@@ -43,7 +43,7 @@ def validate_snow(list_length, errors, data, name):
     if type(param) == dict:
         c.validate_min_inclusive(errors, [i[0] for i in param.values() if len(i) > 0], "starting_snow_pack in %s" % name, 0)
 
-def validate_mutually_exclusive_with_rapid_runoff_process(errors, data, name):
+def validate_cannot_be_enabled_without_rapid_runoff_process(errors, data, name):
     param = data["params"][name]
     other_process = data["params"]["rapid_runoff_process"]
     if param == "enabled" and other_process == "disabled":
@@ -274,10 +274,10 @@ def _validate_params(errors, data):
         factory.make_with_process_guard(partial(validate_snow, 3), "snow_params_simple", "snow_process_simple"),
         factory.make_with_process_guard(partial(validate_snow, 10), "snow_params_complex", "snow_process_complex"),
         factory.make(val_rapid_runoff_params, "rapid_runoff_params"),
-        factory.make(validate_mutually_exclusive_with_rapid_runoff_process, "swrecharge_process"),
+        factory.make(validate_cannot_be_enabled_without_rapid_runoff_process, "swrecharge_process"),
         factory.make(partial(validate_keys_length_min_max, "swrecharge_zone_names"), "swrecharge_proportion"),
         factory.make(partial(validate_months_and_zones, "swrecharge_zone_names"), "swrecharge_limit"),
-        factory.make(validate_mutually_exclusive_with_rapid_runoff_process, "macropore_process"),
+        factory.make(validate_cannot_be_enabled_without_rapid_runoff_process, "macropore_process"),
         factory.make(partial(validate_keys_length_min_max, "macropore_zone_names"), "macropore_proportion"),
         factory.make(partial(validate_months_and_zones, "macropore_zone_names"), "macropore_limit"),
         factory.make(partial(validate_months_and_zones, "macropore_zone_names"), "macropore_activation"),
