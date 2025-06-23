@@ -132,18 +132,18 @@ def val_spatial_output_date(errors, data, name):
 
 def val_node_areas(errors, data, name):
     validate_keys_are_nodes(errors, data, name)
-    c.validate_min_inclusive(errors, data["params"][name].values(), name, 0)
+    validate_param_values_min_inclusive(0, errors, data, name, name)
 
 def val_free_throughfall(errors, data, name):
     param = data["params"][name]
     validate_keys_are_zone_name_numbers("canopy_zone_names", errors, data, name)
-    c.validate_min_inclusive(errors, param.values(), name, 0)
+    validate_param_values_min_inclusive(0, errors, data, name, name)
     c.validate_max_inclusive(errors, param.values(), name, 1.0)
 
 def val_max_canopy_storage(errors, data, name):
     param = data["params"][name]
     validate_keys_are_zone_name_numbers("canopy_zone_names", errors, data, name)
-    c.validate_min_inclusive(errors, param.values(), name, 0)
+    validate_param_values_min_inclusive(0, errors, data, name, name)
 
 def val_rapid_runoff_params(errors, data, name):
     param = data["params"][name]
