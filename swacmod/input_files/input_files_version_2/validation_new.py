@@ -222,10 +222,6 @@ def val_routing_topology(errors, data, name):
     _validate_keys_are_nodes(errors, data, name)
     _validate_list_length([10], errors, data, name)
 
-def val_recharge_node_mapping(errors, data, name):
-    _validate_keys_are_nodes(errors, data, name)
-    _validate_list_length([1], errors, data, name)
-
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
     param_values = data["params"][name].values()
