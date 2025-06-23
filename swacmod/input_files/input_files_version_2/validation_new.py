@@ -17,7 +17,7 @@ def _validate_param_values_min_exclusive(min_inclusive, name_in_message, errors,
 
 def _validate_param_values_max_inclusive(max_inclusive, name_in_message, errors, data, name):
     param = data["params"][name]
-    c.validate_max_inclusive(errors, param.values(), name_in_message, max_inclusive)
+    c.validate_max_inclusive(errors, param.values(), f"values in {name}", max_inclusive)
 
 def _validate_locs(errors, data, name):
     param = data["params"][name]
