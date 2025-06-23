@@ -7,7 +7,7 @@ import swacmod.input_files.input_files_version_2.validation_context as validatio
 def _validate_min_exclusive(min_exclusive, errors, data, name):
     c.validate_min_exclusive(errors, [data["params"][name]], name, min_exclusive)
 
-def _validate_param_values_min_inclusive(min_inclusive, name_in_message, errors, data, name):
+def _validate_param_values_min_inclusive(min_inclusive, errors, data, name):
     param = data["params"][name]
     c.validate_min_inclusive(errors, param.values(), f"values in {name}", min_inclusive)
 
@@ -25,7 +25,7 @@ def _validate_locs(errors, data, name):
         tot = len(data["params"][name]) + 1
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
         # _validate_keys(range(1, tot), errors, data, name)
-        _validate_param_values_min_inclusive(1, "zone in %s" % name, errors, data, name)
+        _validate_param_values_min_inclusive(1, errors, data, name)
         _validate_param_values_max_inclusive(tot, errors, data, name)
         c.validate_min_inclusive(errors, param.keys(), "node in %s" % name, 1)
         c.validate_max_inclusive(errors, param.keys(), "node in %s" % name, data["params"]["num_nodes"])
@@ -78,7 +78,7 @@ def _validate_keys_are_nodes(errors, data, name):
 
 def _validate_keys_and_min_values(errors, data, name):
     _validate_keys_are_zone_name_numbers("interflow_zone_names", errors, data, name)
-    _validate_param_values_min_inclusive(0, name, errors, data, name)
+    _validate_param_values_min_inclusive(0, errors, data, name)
 
 def _validate_release_proportion_min_and_max(errors, data, name):
     param = data["params"][name]
@@ -140,16 +140,16 @@ def val_spatial_output_date(errors, data, name):
 
 def val_node_areas(errors, data, name):
     _validate_keys_are_nodes(errors, data, name)
-    _validate_param_values_min_inclusive(0, name, errors, data, name)
+    _validate_param_values_min_inclusive(0, errors, data, name)
 
 def val_free_throughfall(errors, data, name):
     _validate_keys_are_zone_name_numbers("canopy_zone_names", errors, data, name)
-    _validate_param_values_min_inclusive(0, name, errors, data, name)
+    _validate_param_values_min_inclusive(0, errors, data, name)
     _validate_param_values_max_inclusive(1.0, errors, data, name)
 
 def val_max_canopy_storage(errors, data, name):
     _validate_keys_are_zone_name_numbers("canopy_zone_names", errors, data, name)
-    _validate_param_values_min_inclusive(0, name, errors, data, name)
+    _validate_param_values_min_inclusive(0, errors, data, name)
 
 def val_rapid_runoff_params(errors, data, name):
     param = data["params"][name]
