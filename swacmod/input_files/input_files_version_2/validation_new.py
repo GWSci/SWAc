@@ -11,6 +11,10 @@ def validate_param_values_min_inclusive(min_inclusive, errors, data, name, name_
     param = data["params"][name]
     c.validate_min_inclusive(errors, param.values(), name_in_message, min_inclusive)
 
+def validate_param_values_max_inclusive(max_inclusive, errors, data, name, name_in_message):
+    param = data["params"][name]
+    c.validate_max_inclusive(errors, param.values(), name_in_message, max_inclusive)
+
 def validate_locs(errors, data, name):
     param = data["params"][name]
     if param != {0: 0}:
@@ -18,7 +22,7 @@ def validate_locs(errors, data, name):
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
         # _validate_keys(range(1, tot), errors, data, name)
         validate_param_values_min_inclusive(1, errors, data, name, "zone in %s" % name)
-        c.validate_max_inclusive(errors, param.values(), "zone in %s" % name, tot)
+        validate_param_values_max_inclusive(tot, errors, data, name, "zone in %s" % name)
         c.validate_min_inclusive(errors, param.keys(), "node in %s" % name, 1)
         c.validate_max_inclusive(errors, param.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
