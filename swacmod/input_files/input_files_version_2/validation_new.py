@@ -11,6 +11,10 @@ def validate_param_values_min_inclusive(min_inclusive, errors, data, name, name_
     param = data["params"][name]
     c.validate_min_inclusive(errors, param.values(), name_in_message, min_inclusive)
 
+def validate_param_values_min_exclusive(min_inclusive, errors, data, name, name_in_message):
+    param = data["params"][name]
+    c.validate_min_exclusive(errors, param.values(), name_in_message, min_inclusive)
+
 def validate_param_values_max_inclusive(max_inclusive, errors, data, name, name_in_message):
     param = data["params"][name]
     c.validate_max_inclusive(errors, param.values(), name_in_message, max_inclusive)
@@ -206,10 +210,8 @@ def val_recharge_attenuation_params(errors, data, name):
     validate_release_proportion_min_and_max(errors, data, name)
 
 def val_sw_ponding_area(errors, data, name):
-    num = data["params"][name]
-    values = [i for i in num.values()]
     validate_param_values_max_inclusive(1.0, errors, data, name, name)
-    c.validate_min_exclusive(errors, values, name, 0)
+    validate_param_values_min_exclusive(0, errors, data, name, name)
 
 def val_sw_params(errors, data, name):
     validate_keys_are_nodes(errors, data, name)
