@@ -15,7 +15,7 @@ def _validate_param_values_min_exclusive(min_inclusive, name_in_message, errors,
     param = data["params"][name]
     c.validate_min_exclusive(errors, param.values(), name_in_message, min_inclusive)
 
-def _validate_param_values_max_inclusive(max_inclusive, name_in_message, errors, data, name):
+def _validate_param_values_max_inclusive(max_inclusive, errors, data, name):
     param = data["params"][name]
     c.validate_max_inclusive(errors, param.values(), f"values in {name}", max_inclusive)
 
@@ -26,7 +26,7 @@ def _validate_locs(errors, data, name):
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
         # _validate_keys(range(1, tot), errors, data, name)
         _validate_param_values_min_inclusive(1, "zone in %s" % name, errors, data, name)
-        _validate_param_values_max_inclusive(tot, "zone in %s" % name, errors, data, name)
+        _validate_param_values_max_inclusive(tot, errors, data, name)
         c.validate_min_inclusive(errors, param.keys(), "node in %s" % name, 1)
         c.validate_max_inclusive(errors, param.keys(), "node in %s" % name, data["params"]["num_nodes"])
 
@@ -145,7 +145,7 @@ def val_node_areas(errors, data, name):
 def val_free_throughfall(errors, data, name):
     _validate_keys_are_zone_name_numbers("canopy_zone_names", errors, data, name)
     _validate_param_values_min_inclusive(0, name, errors, data, name)
-    _validate_param_values_max_inclusive(1.0, name, errors, data, name)
+    _validate_param_values_max_inclusive(1.0, errors, data, name)
 
 def val_max_canopy_storage(errors, data, name):
     _validate_keys_are_zone_name_numbers("canopy_zone_names", errors, data, name)
@@ -210,7 +210,7 @@ def val_recharge_attenuation_params(errors, data, name):
     _validate_release_proportion_min_and_max(errors, data, name)
 
 def val_sw_ponding_area(errors, data, name):
-    _validate_param_values_max_inclusive(1.0, name, errors, data, name)
+    _validate_param_values_max_inclusive(1.0, errors, data, name)
     _validate_param_values_min_exclusive(0, name, errors, data, name)  # TODO Is this a bug? It seems like it would be sensible for zero to be allowed.
 
 # TODO This is never called. Should it be?
