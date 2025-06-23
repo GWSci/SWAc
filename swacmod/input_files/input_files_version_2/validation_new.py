@@ -204,11 +204,6 @@ def val_percolation_rejection(errors, data, name):
     _validate_list_length_equals_zone_name_count("landuse_zone_names", errors, data, name)
     c.validate_min_inclusive(errors, list(param.values())[0], name, 0.0)
 
-def val_recharge_attenuation_params(errors, data, name):
-    _validate_keys_are_nodes(errors, data, name)
-    _validate_list_length([3], errors, data, name)
-    _validate_release_proportion_min_and_max(errors, data, name)
-
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
     param_values = data["params"][name].values()
@@ -287,7 +282,9 @@ def _validate_params(errors, data):
         factory.make(_validate_keys_and_min_values, "interflow_store_bypass"),
         factory.make(_validate_keys_and_min_values, "infiltration_limit"),
         factory.make(_validate_keys_and_min_values, "interflow_decay"),
-        factory.make(val_recharge_attenuation_params, "recharge_attenuation_params"),
+        factory.make(_validate_keys_are_nodes, "recharge_attenuation_params"),
+        factory.make(partial(_validate_list_length, [3]), "recharge_attenuation_params"),
+        factory.make(_validate_release_proportion_min_and_max, "recharge_attenuation_params"),
         factory.make_with_process_guard(partial(_validate_keys_length_min_max, "sw_zone_names"), "sw_downstream", "sw_ponding_process"),
         factory.make_with_process_guard(partial(_validate_months_and_zones, "sw_zone_names"), "sw_activation", "sw_ponding_process"),
         factory.make_with_process_guard(partial(_validate_keys_length_min_max, "sw_zone_names"), "sw_bed_infiltration", "sw_ponding_process"),
