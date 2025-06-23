@@ -7,13 +7,17 @@ import swacmod.input_files.input_files_version_2.validation_context as validatio
 def validate_min_exclusive(min_exclusive, errors, data, name):
     c.validate_min_exclusive(errors, [data["params"][name]], name, min_exclusive)
 
+def validate_param_values_min_inclusive(min_inclusive, errors, data, name, name_in_message):
+    param = data["params"][name]
+    c.validate_min_inclusive(errors, param.values(), name_in_message, min_inclusive)
+
 def validate_locs(errors, data, name):
     param = data["params"][name]
     if param != {0: 0}:
         tot = len(data["params"][name]) + 1
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
         # _validate_keys(range(1, tot), errors, data, name)
-        c.validate_min_inclusive(errors, param.values(), "zone in %s" % name, 1)
+        validate_param_values_min_inclusive(1, errors, data, name, "zone in %s" % name)
         c.validate_max_inclusive(errors, param.values(), "zone in %s" % name, tot)
         c.validate_min_inclusive(errors, param.keys(), "node in %s" % name, 1)
         c.validate_max_inclusive(errors, param.keys(), "node in %s" % name, data["params"]["num_nodes"])
