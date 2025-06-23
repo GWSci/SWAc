@@ -139,13 +139,11 @@ def val_node_areas(errors, data, name):
     validate_param_values_min_inclusive(0, errors, data, name, name)
 
 def val_free_throughfall(errors, data, name):
-    param = data["params"][name]
     validate_keys_are_zone_name_numbers("canopy_zone_names", errors, data, name)
     validate_param_values_min_inclusive(0, errors, data, name, name)
-    c.validate_max_inclusive(errors, param.values(), name, 1.0)
+    validate_param_values_max_inclusive(1.0, errors, data, name, name)
 
 def val_max_canopy_storage(errors, data, name):
-    param = data["params"][name]
     validate_keys_are_zone_name_numbers("canopy_zone_names", errors, data, name)
     validate_param_values_min_inclusive(0, errors, data, name, name)
 
@@ -210,7 +208,7 @@ def val_recharge_attenuation_params(errors, data, name):
 def val_sw_ponding_area(errors, data, name):
     num = data["params"][name]
     values = [i for i in num.values()]
-    c.validate_max_inclusive(errors, values, name, 1.0)
+    validate_param_values_max_inclusive(1.0, errors, data, name, name)
     c.validate_min_exclusive(errors, values, name, 0)
 
 def val_sw_params(errors, data, name):
