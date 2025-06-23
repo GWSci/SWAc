@@ -9,7 +9,7 @@ def _validate_min_exclusive(min_exclusive, errors, data, name):
 
 def _validate_param_values_min_inclusive(min_inclusive, name_in_message, errors, data, name):
     param = data["params"][name]
-    c.validate_min_inclusive(errors, param.values(), name_in_message, min_inclusive)
+    c.validate_min_inclusive(errors, param.values(), f"values in {name}", min_inclusive)
 
 def _validate_param_values_min_exclusive(min_inclusive, errors, data, name):
     param = data["params"][name]
