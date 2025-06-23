@@ -200,8 +200,6 @@ def val_zr(errors, data, name):
 
 def val_percolation_rejection(errors, data, name):
     param = data["params"][name]
-    _validate_keys(["percolation_rejection"], errors, data, name)
-    _validate_list_length_equals_zone_name_count("landuse_zone_names", errors, data, name)
     c.validate_min_inclusive(errors, list(param.values())[0], name, 0.0)
 
 # TODO This is never called. Should it be?
@@ -276,6 +274,8 @@ def _validate_params(errors, data):
         factory.make_with_process_guard(partial(_validate_months_and_zones, "landuse_zone_names"), "kc", "fao_process"),
         factory.make_with_process_guard(partial(_validate_months_and_zones, "landuse_zone_names"), "taw", "fao_process"),
         factory.make_with_process_guard(partial(_validate_months_and_zones, "landuse_zone_names"), "raw", "fao_process"),
+        factory.make_with_process_guard(partial(_validate_keys, ["percolation_rejection"]), "percolation_rejection", "fao_process"),
+        factory.make_with_process_guard(partial(_validate_list_length_equals_zone_name_count, "landuse_zone_names"), "percolation_rejection", "fao_process"),
         factory.make_with_process_guard(val_percolation_rejection, "percolation_rejection", "fao_process"),
         factory.make(_validate_keys_are_nodes, "subroot_leakage_fraction"),
         factory.make(_validate_keys_and_min_values, "init_interflow_store"),
