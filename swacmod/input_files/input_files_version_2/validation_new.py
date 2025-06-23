@@ -211,7 +211,7 @@ def val_recharge_attenuation_params(errors, data, name):
 
 def val_sw_ponding_area(errors, data, name):
     validate_param_values_max_inclusive(1.0, errors, data, name, name)
-    validate_param_values_min_exclusive(0, errors, data, name, name)
+    validate_param_values_min_exclusive(0, errors, data, name, name) # TODO Is this a bug? It seems like it would be sensible for zero to be allowed.
 
 def val_sw_params(errors, data, name):
     validate_keys_are_nodes(errors, data, name)
