@@ -218,10 +218,6 @@ def val_sw_params(errors, data, name):
     _validate_list_length([2], errors, data, name)
     _validate_release_proportion_min_and_max(errors, data, name)
 
-def val_routing_topology(errors, data, name):
-    _validate_keys_are_nodes(errors, data, name)
-    _validate_list_length([10], errors, data, name)
-
 # TODO This is never called. Should it be?
 def val_single_cell_swrecharge_zone_mapping(errors, data, name):
     param_values = data["params"][name].values()
@@ -310,7 +306,8 @@ def _validate_params(errors, data):
         factory.make_with_process_guard(val_sw_ponding_area, "sw_ponding_area", "sw_ponding_process"),
         factory.make(_validate_locs, "swdis_locs"),
         factory.make(_validate_locs, "swabs_locs"),
-        factory.make(val_routing_topology, "routing_topology"),
+        factory.make(_validate_keys_are_nodes, "routing_topology"),
+        factory.make(partial(_validate_list_length, [10]), "routing_topology"),
         factory.make(_validate_constraints, "swdis_f"),
         factory.make(_validate_constraints, "swabs_f"),
         factory.make(partial(_validate_list_length, [3]), "evt_parameters"),
