@@ -88,3 +88,8 @@ def validate_constraints(errors, values, name, constraints):
     if not all(i in constraints for i in values):
         msg = 'Parameter "%s" requires to be one in %s'
         errors.append(msg % (name, constraints))
+
+def validate_loc_keys(errors, name, param, num_nodes):
+    if not all(key in range(1, num_nodes+1) for key in param.keys()):
+        msg = 'Parameter "%s" contains nodes that are higher than "%s"'
+        errors.append(msg % (name, num_nodes))

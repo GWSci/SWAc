@@ -33,9 +33,7 @@ def _validate_locs(errors, data, name):
 def _validate_loc_keys(errors, data, name):
     param = data["params"][name]
     num_nodes = data["params"]["num_nodes"]
-    if not all(key in range(1, num_nodes+1) for key in param.keys()):
-        msg = 'Parameter "%s" contains nodes that are higher than "%s"'
-        errors.append(msg % (name, num_nodes))
+    c.validate_loc_keys(errors, name, param, num_nodes)
 
 def _validate_zone_mapping_a(zone_name, min_inclusive, errors, data, name):
     param_values = [i[0] for i in data["params"][name].values()]
