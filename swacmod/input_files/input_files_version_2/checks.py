@@ -91,5 +91,5 @@ def validate_constraints(errors, values, name, constraints):
 
 def validate_loc_keys(errors, name, param, num_nodes):
     if not all(key in range(1, num_nodes+1) for key in param.keys()):
-        msg = 'Parameter "%s" contains nodes that are higher than "%s"'
+        msg = 'Parameter "%s" contains nodes that are not between 1 and "%s"'
         errors.append(msg % (name, num_nodes))
