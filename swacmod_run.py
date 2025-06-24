@@ -354,10 +354,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     len_rch_agg = (nnodes * per) + 1
     if not ff.disable_multiprocessing:
         array_factory = lambda count: mp.Array("f", count)
+        array_factory_2 = lambda count: mp.sharedctypes.Array("f", count, lock=True)
         recharge_aggregate = array_factory(1)
         runoff_aggregate = array_factory(1)
         runoff_recharge_aggregate = np.zeros((1))
-        evtr_agg =array_factory(1)
+        evtr_agg = array_factory(1)
         solute_aggregation = solute.make_aggregation_array(data)
         stream_solute_aggregation = solute.make_aggregation_array(data)
         solute_mi_aggregation = solute.make_mi_aggregation_array(data)
@@ -381,10 +382,11 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         len_rch = (nnodes * days) + 1
 
         if params["swrecharge_process"] == "enabled":
-            recharge = mp.sharedctypes.Array("f", len_rch, lock=True)
-            runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
+            recharge = array_factory_2(len_rch)
+            runoff = array_factory_2(len_rch)
     else:
         array_factory = lambda count: np.zeros(count, dtype=np.single)
+        array_factory_2 = array_factory
         recharge_aggregate = array_factory(1)
         runoff_aggregate = array_factory(1)
         runoff_recharge_aggregate = np.zeros((1))
@@ -396,14 +398,14 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         runoff = array_factory(1)
         if params["swrecharge_process"] == "enabled" or data["params"][
                 "output_recharge"]:
-            recharge_aggregate = array_factory(len_rch_agg)  # recharge by output period (agg)
+            recharge_aggregate = array_factory(len_rch_agg) # recharge by output period (agg)
 
         if params["swrecharge_process"] == "enabled" or data["params"][
                 "output_sfr"]:
             runoff_aggregate = array_factory(len_rch_agg)
 
         if params["swrecharge_process"] == "enabled":
-            runoff_recharge_aggregate = array_factory(len_rch_agg)
+            runoff_recharge_aggregate = np.zeros((len_rch_agg))
 
         if data["params"]["output_evt"]:
             evtr_agg = array_factory(len_rch_agg)
@@ -412,8 +414,8 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         len_rch = (nnodes * days) + 1
 
         if params["swrecharge_process"] == "enabled":
-            recharge = np.zeros(len_rch, dtype=np.single)
-            runoff = np.zeros(len_rch, dtype=np.single)
+            recharge = array_factory_2(len_rch)
+            runoff = array_factory_2(len_rch)
 
     chunks = extract_random_chunks_of_ids(data, nnodes)
     times["end_of_input"] = time.time()
