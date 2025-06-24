@@ -44,7 +44,7 @@ def _validate_zone_mapping_b(zone_name, errors, data, name):
 
 def _validate_zone_mapping_helper(zone_name, min_inclusive, param_values, errors, data, name):
     zone_names = data["params"][zone_name]
-    _validate_keys_are_nodes(errors, data, name)
+    _validate_keys_are_all_nodes(errors, data, name)
     c.validate_min_inclusive(errors, param_values, "zone in %s" % name, min_inclusive)
     c.validate_max_inclusive(errors, param_values, "zone in %s" % name, len(zone_names))
 
@@ -54,7 +54,7 @@ def _validate_constraints(errors, data, name):
 
 def _validate_snow(list_length, errors, data, name):
     param = data["params"][name]
-    _validate_keys_are_nodes(errors, data, name)
+    _validate_keys_are_all_nodes(errors, data, name)
     c.validate_list_length(errors, param, name, data["specs"][name]["type"], [list_length], )
     if type(param) == dict:
         c.validate_min_inclusive(errors, [i[0] for i in param.values() if len(i) > 0], "starting_snow_pack in %s" % name, 0)
@@ -76,7 +76,7 @@ def _validate_keys_length_min_max(zone_name_key, errors, data, name):
     c.validate_min_inclusive(errors, [j for i in param.values() for j in i], name, 0)
     c.validate_max_inclusive(errors, [j for i in param.values() for j in i], name, 1.0)
 
-def _validate_keys_are_nodes(errors, data, name):
+def _validate_keys_are_all_nodes(errors, data, name):
     tot = data["params"]["num_nodes"]
     _validate_keys(range(1, tot + 1), errors, data, name)
 
@@ -143,7 +143,7 @@ def val_spatial_output_date(errors, data, name):
         return
 
 def val_node_areas(errors, data, name):
-    _validate_keys_are_nodes(errors, data, name)
+    _validate_keys_are_all_nodes(errors, data, name)
     _validate_param_values_min_inclusive(0, errors, data, name)
 
 def val_free_throughfall(errors, data, name):
@@ -182,7 +182,7 @@ def val_smd(errors, data, name):
 
 def val_soil_spatial(errors, data, name):
     param = data["params"][name]
-    _validate_keys_are_nodes(errors, data, name)
+    _validate_keys_are_all_nodes(errors, data, name)
     _validate_list_length_equals_zone_name_count("soil_zone_names", errors, data, name)
     if not all(sum(i) == 1.0 for i in param.values()):
         msg = 'Parameter "%s" requires the sum of its values to be 1.0'
@@ -190,7 +190,7 @@ def val_soil_spatial(errors, data, name):
 
 def val_lu_spatial(errors, data, name):
     param = data["params"][name]
-    _validate_keys_are_nodes(errors, data, name)
+    _validate_keys_are_all_nodes(errors, data, name)
     _validate_list_length_equals_zone_name_count("landuse_zone_names", errors, data, name)
     if not all(abs(1 - sum(i)) < 1e-5 for i in param.values()):
         msg = ('Parameter "%s" requires the sum of its values '
@@ -254,7 +254,7 @@ def _validate_params(errors, data):
         factory.make(partial(_validate_zone_mapping_b, "swrecharge_zone_names"), "swrecharge_zone_mapping"),
         factory.make_with_process_guard(partial(_validate_zone_mapping_b, "sw_zone_names"), "sw_zone_mapping", "sw_ponding_process"),
         factory.make(partial(_validate_zone_mapping_b, "macropore_zone_names"), "macropore_zone_mapping"),
-        factory.make(_validate_keys_are_nodes, "recharge_node_mapping"),
+        factory.make(_validate_keys_are_all_nodes, "recharge_node_mapping"),
         factory.make(partial(_validate_list_length, [1]), "recharge_node_mapping"),
         factory.make(_validate_constraints, "macropore_activation_option"),
         factory.make(val_free_throughfall, "free_throughfall"),
@@ -281,12 +281,12 @@ def _validate_params(errors, data):
         factory.make_with_process_guard(partial(_validate_keys, ["percolation_rejection"]), "percolation_rejection", "fao_process"),
         factory.make_with_process_guard(partial(_validate_list_length_equals_zone_name_count, "landuse_zone_names"), "percolation_rejection", "fao_process"),
         factory.make_with_process_guard(val_percolation_rejection, "percolation_rejection", "fao_process"),
-        factory.make(_validate_keys_are_nodes, "subroot_leakage_fraction"),
+        factory.make(_validate_keys_are_all_nodes, "subroot_leakage_fraction"),
         factory.make(_validate_keys_and_min_values, "init_interflow_store"),
         factory.make(_validate_keys_and_min_values, "interflow_store_bypass"),
         factory.make(_validate_keys_and_min_values, "infiltration_limit"),
         factory.make(_validate_keys_and_min_values, "interflow_decay"),
-        factory.make(_validate_keys_are_nodes, "recharge_attenuation_params"),
+        factory.make(_validate_keys_are_all_nodes, "recharge_attenuation_params"),
         factory.make(partial(_validate_list_length, [3]), "recharge_attenuation_params"),
         factory.make(_validate_release_proportion_min_and_max, "recharge_attenuation_params"),
         factory.make_with_process_guard(partial(_validate_keys_length_min_max, "sw_zone_names"), "sw_downstream", "sw_ponding_process"),
@@ -294,14 +294,14 @@ def _validate_params(errors, data):
         factory.make_with_process_guard(partial(_validate_keys_length_min_max, "sw_zone_names"), "sw_bed_infiltration", "sw_ponding_process"),
         factory.make_with_process_guard(partial(_validate_keys_length_min_max, "sw_zone_names"), "sw_direct_recharge", "sw_ponding_process"),
         factory.make_with_process_guard(partial(_validate_months_and_zones, "sw_zone_names"), "sw_pe_to_open_water", "sw_ponding_process"),
-        factory.make(_validate_keys_are_nodes, "sw_params"),
+        factory.make(_validate_keys_are_all_nodes, "sw_params"),
         factory.make(partial(_validate_list_length, [2]), "sw_params"),
         factory.make(_validate_release_proportion_min_and_max, "sw_params"),
         factory.make_with_process_guard(partial(_validate_param_values_max_inclusive, 1.0), "sw_ponding_area", "sw_ponding_process"),
         factory.make_with_process_guard(partial(_validate_param_values_min_exclusive, 0), "sw_ponding_area", "sw_ponding_process"), # TODO Is this a bug? It seems like it would be sensible for zero to be allowed.
         factory.make(_validate_locs, "swdis_locs"),
         factory.make(_validate_locs, "swabs_locs"),
-        factory.make(_validate_keys_are_nodes, "routing_topology"),
+        factory.make(_validate_keys_are_all_nodes, "routing_topology"),
         factory.make(partial(_validate_list_length, [10]), "routing_topology"),
         factory.make(_validate_constraints, "swdis_f"),
         factory.make(_validate_constraints, "swabs_f"),
