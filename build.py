@@ -65,7 +65,7 @@ def build():
         "--clean",
         "--noconfirm",
         "--add-data",
-        "./swacmod/specs.yml:./swacmod/",
+        "./swacmod/input_files/input_files_version_1/specs.yml:./swacmod/input_files/input_files_version_1/",
         "--hidden-import",
         "swacmod.snow_melt",
         "--hidden-import",
