@@ -23,7 +23,6 @@ def _validate_locs(errors, data, name):
     param = data["params"][name]
     if param != {0: 0}:
         tot = len(data["params"][name]) + 1
-        # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
         _validate_loc_keys( errors, data, name)
         _validate_param_values_min_inclusive(1, errors, data, name)
         _validate_param_values_max_inclusive(tot, errors, data, name)
