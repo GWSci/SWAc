@@ -163,7 +163,7 @@ def run_process(
         test,
         stuff,
         recharge_aggregate,
-        runoff_agg,
+        runoff_aggregate,
         evtr_agg,
         solute_aggregation,
         stream_solute_aggregation,
@@ -212,7 +212,7 @@ def run_process(
 
             logging.debug("RAM usage is %.2fMb", u.get_ram_usage_for_process())
             if not test:
-                aggregate_output(time_switcher, node, data, output, num, rep_zone, stuff, recharge_aggregate, nnodes, recharge, runoff, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, spatial_index, pond_area)
+                aggregate_output(time_switcher, node, data, output, num, rep_zone, stuff, recharge_aggregate, nnodes, recharge, runoff, runoff_aggregate, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, spatial_index, pond_area)
 
     logging.info("mp.Process %d ended", num)
 
@@ -236,7 +236,7 @@ def compare_lambdas(name, time_switcher, unoptimised, optimised):
 
     return optimised_result
 
-def aggregate_output(time_switcher, node, data, output, num, rep_zone, stuff, recharge_aggregate, nnodes, recharge, runoff, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, spatial_index, pond_area):
+def aggregate_output(time_switcher, node, data, output, num, rep_zone, stuff, recharge_aggregate, nnodes, recharge, runoff, runoff_aggregate, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, spatial_index, pond_area):
     if node in data["params"]["output_individual"]:
         timer.switch_to(time_switcher, "aggregate_output (output_individual)")
         # if this node for individual output then preserve
@@ -283,7 +283,7 @@ def aggregate_output(time_switcher, node, data, output, num, rep_zone, stuff, re
                                         ro,
                                         "runoff",
                                         method="average")):
-            runoff_agg[(nnodes * i) + int(node)] = p
+            runoff_aggregate[(nnodes * i) + int(node)] = p
         ro = None
 
     timer.switch_to(time_switcher, "aggregate_output > (output_evt)")
@@ -354,7 +354,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     len_rch_agg = (nnodes * per) + 1
     if not ff.disable_multiprocessing:
         recharge_aggregate = mp.Array("f", 1)
-        runoff_agg = mp.Array("f", 1)
+        runoff_aggregate = mp.Array("f", 1)
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = mp.Array("f", 1)
         solute_aggregation = solute.make_aggregation_array(data)
@@ -369,7 +369,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 
         if params["swrecharge_process"] == "enabled" or data["params"][
                 "output_sfr"]:
-            runoff_agg = mp.Array("f", len_rch_agg)
+            runoff_aggregate = mp.Array("f", len_rch_agg)
 
         if params["swrecharge_process"] == "enabled":
             runoff_recharge_agg = np.zeros((len_rch_agg))
@@ -385,7 +385,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
             runoff = mp.sharedctypes.Array("f", len_rch, lock=True)
     else:
         recharge_aggregate = np.zeros(1, dtype=np.single)
-        runoff_agg = np.zeros(1, dtype=np.single)
+        runoff_aggregate = np.zeros(1, dtype=np.single)
         runoff_recharge_agg = np.zeros((1))
         evtr_agg = np.zeros(1, dtype=np.single)
         solute_aggregation = solute.make_aggregation_array(data)
@@ -399,7 +399,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
 
         if params["swrecharge_process"] == "enabled" or data["params"][
                 "output_sfr"]:
-            runoff_agg = np.zeros(len_rch_agg, dtype=np.single)
+            runoff_aggregate = np.zeros(len_rch_agg, dtype=np.single)
 
         if params["swrecharge_process"] == "enabled":
             runoff_recharge_agg = np.zeros((len_rch_agg))
@@ -419,9 +419,9 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     spatial_index = make_spatial_index(data, days)
 
     if ff.disable_multiprocessing:
-        run_single_threaded(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_aggregate, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
+        run_single_threaded(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_aggregate, runoff_aggregate, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
     else:
-        run_multiprocessing(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_aggregate, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
+        run_multiprocessing(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_aggregate, runoff_aggregate, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index)
 
     timer.switch_to(timer_switcher_for_run, "run_main > run (output)")
     output_timer_token = timer.make_time_switcher()
@@ -435,7 +435,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         timer.switch_to(output_timer_token, "reporting_agg")
         stuff.reporting_agg = aggregate_reporting(stuff.reporting_agg)
         timer.switch_to(output_timer_token, "swrecharge_process")
-        runoff_recharge_module.calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_aggregate, runoff, runoff_agg, runoff_recharge_agg, stuff)
+        runoff_recharge_module.calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_aggregate, runoff, runoff_aggregate, runoff_recharge_agg, stuff)
 
         env.print("\nWriting output files:")
         timer.switch_to(output_timer_token, "checking open files")
@@ -458,10 +458,10 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         output_functions.output_spatial_output_date(reduced, env, stuff.spatial, data)
 
         timer.switch_to(output_timer_token, "output_sfr")
-        roff_agg = output_functions.output_sfr(env, data, runoff_agg)
+        roff_agg = output_functions.output_sfr(env, data, runoff_aggregate)
 
         timer.switch_to(output_timer_token, "output_evt")
-        output_functions.output_evt(env, data, runoff_agg, evtr_agg, output_timer_token)
+        output_functions.output_evt(env, data, runoff_aggregate, evtr_agg, output_timer_token)
 
         timer.switch_off(output_timer_token)
         timer.print_time_switcher_report(output_timer_token)
@@ -517,7 +517,7 @@ def make_spatial_index(data, days):
         spatial_index = None
     return spatial_index
 
-def run_single_threaded(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_aggregate, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
+def run_single_threaded(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_aggregate, runoff_aggregate, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
     q = queue.Queue()
     pbar = tqdm(total=nnodes, desc="SWAcMod Parallel        ")
 
@@ -535,7 +535,7 @@ def run_single_threaded(test, env, timer_switcher_for_run, stuff, level, log_pat
                 test,
                 stuff,
                 recharge_aggregate,
-                runoff_agg,
+                runoff_aggregate,
                 evtr_agg,
                 solute_aggregation,
                 stream_solute_aggregation,
@@ -552,7 +552,7 @@ def run_single_threaded(test, env, timer_switcher_for_run, stuff, level, log_pat
     q.put(None)
     pbar.close()
 
-def run_multiprocessing(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_aggregate, runoff_agg, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
+def run_multiprocessing(test, env, timer_switcher_for_run, stuff, level, log_path, data, nnodes, recharge_aggregate, runoff_aggregate, evtr_agg, solute_aggregation, stream_solute_aggregation, solute_mi_aggregation, recharge, runoff, chunks, spatial_index):
     workers = []
     q = mp.Queue()
     lproc = mp.Process(target=listener, args=(q, nnodes))
@@ -572,7 +572,7 @@ def run_multiprocessing(test, env, timer_switcher_for_run, stuff, level, log_pat
                     test,
                     stuff,
                     recharge_aggregate,
-                    runoff_agg,
+                    runoff_aggregate,
                     evtr_agg,
                     solute_aggregation,
                     stream_solute_aggregation,
