@@ -1,10 +1,7 @@
 import sys
 import shutil
-import os.path
 import subprocess
-from _version import version
 import ast
-import git
 import os
 import argparse
 import datetime
