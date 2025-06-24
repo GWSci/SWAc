@@ -355,7 +355,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     if not ff.disable_multiprocessing:
         recharge_aggregate = mp.Array("f", 1)
         runoff_aggregate = mp.Array("f", 1)
-        runoff_recharge_agg = np.zeros((1))
+        runoff_recharge_aggregate = np.zeros((1))
         evtr_agg = mp.Array("f", 1)
         solute_aggregation = solute.make_aggregation_array(data)
         stream_solute_aggregation = solute.make_aggregation_array(data)
@@ -372,7 +372,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
             runoff_aggregate = mp.Array("f", len_rch_agg)
 
         if params["swrecharge_process"] == "enabled":
-            runoff_recharge_agg = np.zeros((len_rch_agg))
+            runoff_recharge_aggregate = np.zeros((len_rch_agg))
 
         if data["params"]["output_evt"]:
             evtr_agg = mp.Array("f", len_rch_agg)
@@ -386,7 +386,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
     else:
         recharge_aggregate = np.zeros(1, dtype=np.single)
         runoff_aggregate = np.zeros(1, dtype=np.single)
-        runoff_recharge_agg = np.zeros((1))
+        runoff_recharge_aggregate = np.zeros((1))
         evtr_agg = np.zeros(1, dtype=np.single)
         solute_aggregation = solute.make_aggregation_array(data)
         stream_solute_aggregation = solute.make_aggregation_array(data)
@@ -402,7 +402,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
             runoff_aggregate = np.zeros(len_rch_agg, dtype=np.single)
 
         if params["swrecharge_process"] == "enabled":
-            runoff_recharge_agg = np.zeros((len_rch_agg))
+            runoff_recharge_aggregate = np.zeros((len_rch_agg))
 
         if data["params"]["output_evt"]:
             evtr_agg = np.zeros(len_rch_agg, dtype=np.single)
@@ -435,7 +435,7 @@ def run(test=False, debug=False, file_format=None, reduced=False, skip=False, en
         timer.switch_to(output_timer_token, "reporting_agg")
         stuff.reporting_agg = aggregate_reporting(stuff.reporting_agg)
         timer.switch_to(output_timer_token, "swrecharge_process")
-        runoff_recharge_module.calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_aggregate, runoff, runoff_aggregate, runoff_recharge_agg, stuff)
+        runoff_recharge_module.calculate_runoff_recharge(data, days, nnodes, params, recharge, recharge_aggregate, runoff, runoff_aggregate, runoff_recharge_aggregate, stuff)
 
         env.print("\nWriting output files:")
         timer.switch_to(output_timer_token, "checking open files")
