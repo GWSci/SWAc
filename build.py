@@ -94,11 +94,11 @@ def main(args):
         new_version = get_new_version(old_version)
         write_new_version(new_version)
 
-        repo = git.Repo(os.getcwd())
-        repo.git.add(version_filename)
-        repo.git.commit('-m', 'updated version number')
+        subprocess.run(['git', 'add', version_filename])
+        subprocess.run(['git', 'commit', '-m', 'updated version number'])
 
-        sha = repo.head.object.hexsha
+        sha = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout
+        sha = sha.rstrip()
         write_new_commit_id(sha)
 
         date = datetime.datetime.now()
@@ -107,16 +107,16 @@ def main(args):
 
         try:
             build()
-            repo.git.restore(commit_id_filename)
-            repo.git.restore(build_time_filename)
+            subprocess.run(['git', 'restore', commit_id_filename])
+            subprocess.run(['git', 'restore', build_time_filename])
             
-            repo.git.push()
+            subprocess.run(['git', 'push'])
 
         except Exception as err:
-            repo.git.reset('HEAD~')
-            repo.git.restore(version_filename)
-            repo.git.restore(commit_id_filename)
-            repo.git.restore(build_time_filename)
+            subprocess.run(['git', 'reset', 'HEAD~'])
+            subprocess.run(['git', 'restore', commit_id_filename])
+            subprocess.run(['git', 'restore', build_time_filename])
+            subprocess.run(['git', 'restore', version_filename])
             raise Exception(err)
     else:
         build()
