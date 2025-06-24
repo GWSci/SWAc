@@ -1,1 +1,1 @@
-python run.py %*
+.\env\Scripts\python run.py %*

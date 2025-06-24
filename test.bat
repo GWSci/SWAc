@@ -1,1 +1,1 @@
-python run_test.py %*
+.\env\Scripts\python run_test.py %*

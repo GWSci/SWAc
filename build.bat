@@ -1,1 +1,1 @@
-python build.py %*
+.\env\Scripts\python build.py %*
