@@ -24,11 +24,18 @@ def _validate_locs(errors, data, name):
     if param != {0: 0}:
         tot = len(data["params"][name]) + 1
         # TODO Issue #163. Bug with key validation for swabs_locs and swdis_locs.
-        # _validate_keys(range(1, tot), errors, data, name)
+        _validate_loc_keys( errors, data, name)
         _validate_param_values_min_inclusive(1, errors, data, name)
         _validate_param_values_max_inclusive(tot, errors, data, name)
         c.validate_min_inclusive(errors, param.keys(), "node in %s" % name, 1)
         c.validate_max_inclusive(errors, param.keys(), "node in %s" % name, data["params"]["num_nodes"])
+
+def _validate_loc_keys(errors, data, name):
+    param = data["params"][name]
+    num_nodes = data["params"]["num_nodes"]
+    if not all(key in range(1, num_nodes+1) for key in param.keys()):
+        msg = 'Parameter "%s" contains nodes that are higher than "%s"'
+        errors.append(msg % (name, num_nodes))
 
 def _validate_zone_mapping_a(zone_name, min_inclusive, errors, data, name):
     param_values = [i[0] for i in data["params"][name].values()]
