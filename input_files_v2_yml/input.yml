@@ -848,7 +848,7 @@ attenuate_sfr_flows: false
 # Column 2 is the zone number
 # Rows only need to be supplied for nodes that are part of a stream. There is no need to cover the whole model.
 # This parameter is optional.
-# sfr_flow_zones: sfr_flow_zones.yml
+sfr_flow_zones: sfr_flow_zones.yml
 
 # Release proportions for each zone and month.
 # Column 1 is the month number (January is 1)
