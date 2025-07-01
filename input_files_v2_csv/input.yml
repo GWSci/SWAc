@@ -853,7 +853,7 @@ sfr_flow_zones: sfr_flow_zones.csv
 # Release proportions for each zone and month.
 # Column 1 is the month number (January is 1)
 # The remaining columns are the release proportion, one for each zone.
-# sfr_flow_monthly_proportions: sfr_flow_monthly_proportions.csv
+sfr_flow_monthly_proportions: sfr_flow_monthly_proportions.csv
 
 # Modflow 6 sfr obs input file
 # This parameter is optional.
