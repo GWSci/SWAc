@@ -49,7 +49,7 @@ def make_specs():
         Input_Parameter('sfr_obs', required=False, alt_format=[], type=[str], constraints=None),
         Input_Parameter('istcb1', required=False, alt_format=[], type=[int], constraints=None),
         Input_Parameter('istcb2', required=False, alt_format=[], type=[int], constraints=None),
-        Input_Parameter('output_individual', required=False, alt_format=[], type=[set, int], constraints=None),
+        Input_Parameter('output_individual', required=False, alt_format=[], type=[str], constraints=None),
         Input_Parameter('irchcb', required=False, alt_format=[], type=[int], constraints=None),
         Input_Parameter('nodes_per_line', required=False, alt_format=[], type=[int], constraints=None),
         Input_Parameter('output_fac', required=False, alt_format=[], type=[float], constraints=None),
