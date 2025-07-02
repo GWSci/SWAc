@@ -129,14 +129,6 @@ def val_time_periods(errors, data, name):
             msg = 'Parameter "%s" requires start_date < end_date'
             errors.append(msg % name)
 
-def val_output_individual(errors, data, name):
-    param = data["params"][name]
-    ids = set(range(1, data["params"]["num_nodes"] + 1))
-    if not all(i in ids for i in param):
-        msg = ('Parameter "%s" requires all node ids to be'
-               + '1 <= x <= ' "num_nodes")
-        errors.append(msg % name)
-
 def val_spatial_output_date(errors, data, name):
     dat = data["params"][name]
     if dat is None or dat != "mean":
@@ -238,7 +230,6 @@ def _validate_params(errors, data):
         factory.make(val_node_areas, "node_areas"),
         factory.make(val_start_date, "start_date"),
         factory.make(val_time_periods, "time_periods"),
-        factory.make(val_output_individual, "output_individual"),
         factory.make(partial(_validate_min_exclusive, 0), "nodes_per_line"),
         factory.make(partial(_validate_min_exclusive, 0.0), "output_fac"),
         # val_spatial_output_date,

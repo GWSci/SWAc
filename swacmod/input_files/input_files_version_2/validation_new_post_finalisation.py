@@ -19,6 +19,14 @@ def val_time_periods(errors, data, name):
         )
         errors.append(msg % name)
 
+def val_output_individual(errors, data, name):
+    param = data["params"][name]
+    ids = set(range(1, data["params"]["num_nodes"] + 1))
+    if not all(i in ids for i in param):
+        msg = ('Parameter "%s" requires all node ids to be'
+               + '1 <= x <= ' "num_nodes")
+        errors.append(msg % name)
+
 def val_rainfall_ts(errors, data, name):
     rzn = data["params"]["rainfall_zone_names"]
     c.validate_list_length(errors, (data["series"][name]), name, data["specs"][name]["type"], [len(data["series"]["date"]), len(rzn)])
@@ -118,6 +126,7 @@ def validate_2(data, specs):
 def validate(data, specs):
     errors = []
     do_validation(errors, data, val_time_periods, "time_periods")
+    do_validation(errors, data, val_output_individual, "output_individual")
     do_validation(errors, data, val_rainfall_ts, "rainfall_ts")
     do_validation(errors, data, val_pe_ts, "pe_ts")
     do_validation(errors, data, val_temperature_ts, "temperature_ts")
