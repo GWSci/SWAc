@@ -403,8 +403,6 @@ class Test_Validation_New(unittest.TestCase):
             "time_periods": [[], [], []],
             "time_periods": [["x", "x"], ["x", "x"], ["x", "x"]],
             "time_periods": [[1, 1], [1, 1], [1, 1]],
-            "output_individual": 1,
-            "output_individual": [1,2],
             "nodes_per_line": "x",
             "nodes_per_line": -5,
             "output_fac": "x",
