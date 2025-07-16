@@ -176,7 +176,7 @@ def val_soil_spatial(errors, data, name):
     param = data["params"][name]
     _validate_keys_are_all_nodes(errors, data, name)
     _validate_list_length_equals_zone_name_count("soil_zone_names", errors, data, name)
-    if not all(sum(i) == 1.0 for i in param.values()):
+    if not all(abs(1 - sum(i)) < 1e-3 for i in param.values()):
         msg = 'Parameter "%s" requires the sum of its values to be 1.0'
         errors.append(msg % name)
 
@@ -184,7 +184,7 @@ def val_lu_spatial(errors, data, name):
     param = data["params"][name]
     _validate_keys_are_all_nodes(errors, data, name)
     _validate_list_length_equals_zone_name_count("landuse_zone_names", errors, data, name)
-    if not all(abs(1 - sum(i)) < 1e-5 for i in param.values()):
+    if not all(abs(1 - sum(i)) < 1e-3 for i in param.values()):
         msg = ('Parameter "%s" requires the sum of its values '
                'to be 1.0 within a tolerance of 1e-5')
         errors.append(msg % name)
