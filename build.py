@@ -75,6 +75,8 @@ def build():
     ])
 
     subprocess.run(["pandoc", "doc/getting-started.md", "-o", "dist/getting-started.html"])
+    shutil.copy("doc/SWAcUserGuide.pdf", "dist/SWAcUserGuide.pdf")
+    shutil.copy("doc/SWAcFlowChart.png", "dist/SWAcFlowChart.png")
 
     subprocess.run(zip_input_files_command, shell=True)
 
