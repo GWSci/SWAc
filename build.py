@@ -52,9 +52,11 @@ def build():
     if sys.platform == "win32":
         python_binary = "env/Scripts/python"
         zip_v2_csv_input_files_command = "powershell Compress-Archive input_files_v2_csv/*.* dist/input_files_v2_csv.zip"
+        zip_v2_yml_input_files_command = "powershell Compress-Archive input_files_v2_yml/*.* dist/input_files_v2_yml.zip"
     else:
         python_binary = "env/bin/python3"
         zip_v2_csv_input_files_command = "zip --quiet --recurse-paths dist/input_files_v2_csv.zip input_files_v2_csv/"
+        zip_v2_yml_input_files_command = "zip --quiet --recurse-paths dist/input_files_v2_yml.zip input_files_v2_yml/"
 
     subprocess.run([python_binary, "compile_model.py"])
 
@@ -79,6 +81,7 @@ def build():
     shutil.copy("doc/SWAcFlowChart.png", "dist/SWAcFlowChart.png")
 
     subprocess.run(zip_v2_csv_input_files_command, shell=True)
+    subprocess.run(zip_v2_yml_input_files_command, shell=True)
 
 def parse_arguments():
     PARSER = argparse.ArgumentParser()
