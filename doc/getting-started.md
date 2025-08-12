@@ -1,8 +1,8 @@
 # Getting Started
 
-1. Download the executable and test model available from [SWAc](https://groundwater-science.co.uk/SWAc/).
+1. Download the executable and test models available from the [Shop](https://groundwater-science.co.uk/shop/).
 
-2. Unzip the test model.
+2. Unzip the test models.
 
 3. Run one of the following commands:
 
