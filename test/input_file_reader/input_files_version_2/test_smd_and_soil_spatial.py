@@ -86,14 +86,12 @@ class Test_Input_File_With_Missing_Soil_Zone_Names(unittest.TestCase):
     def test_soil_zone_names_is_missing_and_is_finalised_correctly(self):
         params = {'fao_process': 'disabled',
                   'soil_zone_names': None, 
-                  'soil_spatial': None,
                   'num_nodes': 2}
         data = {'params': params}
         f.fin_soil_zone_names(data, 'soil_zone_names')
         expected = {1: 'Zone1'}
         actual = data['params']['soil_zone_names']
         self.assertEqual(expected, actual)
-
 
 class Test_Always_Validate_SMD(unittest.TestCase):
     def test_smd_is_validated_when_fao_process_is_enabled(self):
