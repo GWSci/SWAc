@@ -478,7 +478,7 @@ def fin_soil_zone_names(data, name):
     if params[name] is None:
         try:
             zones = len(list(params["soil_spatial"].items())[0][1])
-        except (TypeError, KeyError, IndexError):
+        except (TypeError, KeyError, IndexError, AttributeError):
             zones = 1
         params[name] = dict((k, "Zone%d" % k) for k in range(1, zones + 1))
 
@@ -658,8 +658,7 @@ def fin_smd(data, name):
     params = data["params"]
     if params[name] is None:
         zones = max(1,
-                    len(params["soil_zone_names"].values()), 
-                    len(list(params["soil_spatial"].items())[0][1]))
+                    len(params["soil_zone_names"].values()))
         params[name] = {'starting_SMD': [0. for zone in range(zones)]}
         logging.info('\t\tDefaulted "%s" to 0.0', name)
 

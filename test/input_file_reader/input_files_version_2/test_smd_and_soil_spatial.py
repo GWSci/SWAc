@@ -22,6 +22,20 @@ class Test_Input_File_With_Missing_SMD(unittest.TestCase):
         actual = data['params']['smd']['starting_SMD']
         self.assertEqual(expected,actual)
 
+    def test_soil_zone_names_and_soil_spatial_are_missing_and_smd_is_still_finalised_as_0(self):
+        filename = 'potato.yml'
+        input_dir = ''
+        input_file = MockFileResource.make_sample_input_file_with_data()
+        del input_file['smd']
+        del input_file['soil_spatial']
+        del input_file['soil_zone_names']
+        mock_file_open = make_mock_file_open_and_contents(filename, input_file)
+        parsed_input_data = input_data_v2.load_and_validate(filename, input_dir, mock_file_open)
+        data = parsed_input_data.data
+        expected = [0. for zone,smd in enumerate(data['params']['smd']['starting_SMD'])]
+        actual = data['params']['smd']['starting_SMD']
+        self.assertEqual(expected,actual)
+
     def test_smd_is_missing_and_model_runs(self):
         filename = 'potato.yml'
         input_file = MockFileResource.make_sample_input_file_with_data()
