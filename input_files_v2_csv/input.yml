@@ -902,7 +902,7 @@ swabs_ts: swabs_ts.csv
 #swabs_f: 0
 
 
-# Surface water discharges points
+# Surface water abstractions points
 # This parameter can accept a path to YAML or CSV
 # col #1: SWAc node number (integer, number of entries = number of nodes with SW abstractions)
 # col #2: Index number of abstraction from 1 to number of nodes with SW abstractions (integer, number of entries = number of nodes with SW abstractions)
