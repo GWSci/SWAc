@@ -11,3 +11,5 @@ jobs:
       script: bash test.sh
     - stage: all-tests
       script: bash test.sh --full
+    - stage: build
+      script: bash build.sh
