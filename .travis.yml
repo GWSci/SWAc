@@ -2,3 +2,5 @@ language: python
 
 python:
   - "3.13"
+
+script: test.sh
