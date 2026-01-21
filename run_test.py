@@ -13,7 +13,7 @@ if sys.platform == "win32":
 else:
     python_binary = "env/bin/python3"
     coverage_binary = "env/bin/coverage"
-    linter_binary = "env-lint/bin/Pylint"
+    linter_binary = "env-lint/bin/pylint"
     pip_binary = "env/bin/pip"
     linter_pip_binary = "env-lint/bin/pip"
 
