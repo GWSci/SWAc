@@ -2,6 +2,8 @@
 
 set -e
 
+sudo apt-get -y install pandoc
+
 python3 -m venv env
 
 source env/bin/activate
