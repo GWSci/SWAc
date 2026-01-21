@@ -2,7 +2,6 @@ language: python
 
 python:
   - "3.13"
-  - "3.14"
 
 install: bash setup_linux.sh
 
