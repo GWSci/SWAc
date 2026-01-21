@@ -5,4 +5,9 @@ python:
 
 install: bash setup_linux.sh
 
-script: bash test.sh
+jobs:
+  include:
+    stage: test
+    script: bash test.sh
+    stage: all-tests
+    script: bash test.sh --full
