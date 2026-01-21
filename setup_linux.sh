@@ -2,6 +2,7 @@
 
 set -e
 
+sudo apt-get update
 sudo apt-get -y install pandoc
 
 python3 -m venv env
