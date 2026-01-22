@@ -53,16 +53,18 @@ def build():
 
     os.mkdir("release/")
 
+    release_filename = conjure_release_filename()
+
     if sys.platform == "win32":
         python_binary = "env/Scripts/python"
         zip_v2_csv_input_files_command = "powershell Compress-Archive input_files_v2_csv/*.* dist/input_files_v2_csv.zip"
         zip_v2_yml_input_files_command = "powershell Compress-Archive input_files_v2_yml/*.* dist/input_files_v2_yml.zip"
-        zip_release_command = "powershell Compress-Archive dist/*.* release/this-release.zip"
+        zip_release_command = f"powershell Compress-Archive dist/*.* release/{release_filename}"
     else:
         python_binary = "env/bin/python3"
         zip_v2_csv_input_files_command = "zip --quiet --recurse-paths dist/input_files_v2_csv.zip input_files_v2_csv/"
         zip_v2_yml_input_files_command = "zip --quiet --recurse-paths dist/input_files_v2_yml.zip input_files_v2_yml/"
-        zip_release_command = "zip --quiet --recurse-paths release/this-release.zip dist/"
+        zip_release_command = f"zip --quiet --recurse-paths release/{release_filename} dist/"
 
     subprocess.run([python_binary, "compile_model.py"])
 
@@ -89,6 +91,12 @@ def build():
     subprocess.run(zip_v2_csv_input_files_command, shell=True)
     subprocess.run(zip_v2_yml_input_files_command, shell=True)
     subprocess.run(zip_release_command, shell=True)
+
+def conjure_release_filename():
+    build_time = "aardvark"
+    version = get_old_version()
+    commit_id = "cat"
+    return f"{build_time}-gws-swacmod-{version}-{commit_id}.zip"
 
 def parse_arguments():
     PARSER = argparse.ArgumentParser()
