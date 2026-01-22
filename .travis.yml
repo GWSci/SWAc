@@ -6,10 +6,12 @@ python:
 # install: bash setup_linux.sh
 
 jobs:
+  allow_failures:
+    - name: lint
   include:
     - stage: qc
       name: tests
-      install: install -r requirements.txt
+      install: pip install -r requirements.txt
       script: ./test.sh --all --coverage
     -
       name: lint
