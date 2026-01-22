@@ -9,5 +9,6 @@ jobs:
   include:
     - stage: test
       script: ./test.sh --full
+      script: ./test.sh --lint
     - stage: build
       script: ./build.sh
