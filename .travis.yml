@@ -9,9 +9,10 @@ jobs:
   include:
     - stage: qc
       name: all tests
+      install: bash setup_linux.sh
       script: ./test.sh --all --coverage --dependencies
     -
-      name: lint (just using linter)
+      name: lint
       install: pip install -r requirements-lint.txt
       script: python -m pylint --extension-pkg-allow-list=swacmod.model --disable=R,C,W --ignore=env,env-lint --generated-member=flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr.obs --ignored-modules=tqdm,swacmod.model,flopy,psutil,networkx,Cython.Build,h5py,yaml .
     # - stage: build
