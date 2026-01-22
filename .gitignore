@@ -4,6 +4,7 @@
 *.so
 *.c
 dist/
+release/
 *.coverage*
 deploy
 deploy.py

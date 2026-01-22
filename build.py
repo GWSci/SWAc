@@ -48,15 +48,21 @@ def build():
         shutil.rmtree("build/")
     if (os.path.exists("dist/")):
         shutil.rmtree("dist/")
+    if (os.path.exists("release/")):
+        shutil.rmtree("release/")
+
+    os.mkdir("release/")
 
     if sys.platform == "win32":
         python_binary = "env/Scripts/python"
         zip_v2_csv_input_files_command = "powershell Compress-Archive input_files_v2_csv/*.* dist/input_files_v2_csv.zip"
         zip_v2_yml_input_files_command = "powershell Compress-Archive input_files_v2_yml/*.* dist/input_files_v2_yml.zip"
+        zip_release_command = "powershell Compress-Archive dist/*.* release/this-release.zip"
     else:
         python_binary = "env/bin/python3"
         zip_v2_csv_input_files_command = "zip --quiet --recurse-paths dist/input_files_v2_csv.zip input_files_v2_csv/"
         zip_v2_yml_input_files_command = "zip --quiet --recurse-paths dist/input_files_v2_yml.zip input_files_v2_yml/"
+        zip_release_command = "zip --quiet --recurse-paths release/this-release.zip dist/"
 
     subprocess.run([python_binary, "compile_model.py"])
 
@@ -82,6 +88,7 @@ def build():
 
     subprocess.run(zip_v2_csv_input_files_command, shell=True)
     subprocess.run(zip_v2_yml_input_files_command, shell=True)
+    subprocess.run(zip_release_command, shell=True)
 
 def parse_arguments():
     PARSER = argparse.ArgumentParser()
