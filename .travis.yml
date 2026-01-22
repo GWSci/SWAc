@@ -7,9 +7,9 @@ install: bash setup_linux.sh
 
 jobs:
   include:
-    - stage: test
-      script: bash test.sh
-    - stage: all-tests
-      script: bash test.sh --full
+    # - stage: test
+    #   script: bash test.sh
+    # - stage: all-tests
+    #   script: bash test.sh --full
     - stage: build
-      script: bash build.sh
+      script: ./test.sh --full && ./build.sh
