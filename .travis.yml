@@ -21,6 +21,7 @@ jobs:
       language: bash
       install:
         - choco install python313 -yam
+        - python -m pip install --upgrade pip
         - pip install -r requirements.txt
       script: coverage run -m unittest discover --durations 10 -s .
       after_success: coverage report -m
