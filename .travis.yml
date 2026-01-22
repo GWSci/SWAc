@@ -3,6 +3,8 @@ language: python
 python:
   - "3.13"
 
+cache: pip
+
 jobs:
   allow_failures:
     - name: lint
