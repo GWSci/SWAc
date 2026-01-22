@@ -23,3 +23,4 @@ pip list --outdated
 deactivate
 
 printf "#!/bin/sh\n\npython3.13 increment_version.py\n" > .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
