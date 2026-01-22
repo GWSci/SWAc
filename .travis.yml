@@ -8,12 +8,16 @@ python:
 jobs:
   include:
     - stage: qc
-      name: all tests
-      install: bash setup_linux.sh
-      script: ./test.sh --all --coverage --dependencies
+      name: tests
+      install: install -r requirements.txt
+      script: ./test.sh --all --coverage
     -
       name: lint
       install: pip install -r requirements-lint.txt
       script: python -m pylint --extension-pkg-allow-list=swacmod.model --disable=R,C,W --ignore=env,env-lint --generated-member=flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr.obs --ignored-modules=tqdm,swacmod.model,flopy,psutil,networkx,Cython.Build,h5py,yaml .
+    -
+      name: dependencies
+      install: pip install -r requirements.txt && pip install -r requirements-lint.txt
+      script: pip list --outdated
     # - stage: build
     #   script: ./build.sh
