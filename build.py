@@ -2,9 +2,7 @@ import sys
 import shutil
 import subprocess
 import os
-import argparse
 import datetime
-from increment_version import increment_version
 
 version_filename = '_version.py'
 commit_id_filename = '_commit_id.py'
@@ -94,13 +92,6 @@ def conjure_release_filename(sha, date):
     commit_id = sha[:8]
     return f"SWAcMod-v{version}.{commit_id}-{build_time}.zip"
 
-def parse_arguments():
-    PARSER = argparse.ArgumentParser()
-    PARSER.add_argument('-f', '--final', action='store_true', 
-                        help='The build script will update the version number and push the change to GitHub?')
-
-    return PARSER.parse_args()
-
 def set_build_details():
     sha = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout
     sha = sha.rstrip()
@@ -116,27 +107,10 @@ def restore_build_details():
     subprocess.run(['git', 'restore', commit_id_filename])
     subprocess.run(['git', 'restore', build_time_filename])
 
-def main(args):
+def main():
     sha, date = set_build_details()
-
-    if args.final:
-        increment_version()
-        subprocess.run(['git', 'commit', '-m', 'updated version number'])
-
-        try:
-            build(sha, date)
-            restore_build_details()
-            subprocess.run(['git', 'push'])
-
-        except Exception as err:
-            subprocess.run(['git', 'reset', 'HEAD~'])
-            restore_build_details()
-            subprocess.run(['git', 'restore', version_filename])
-            raise Exception(err)
-    else:
-        build(sha, date)
-        restore_build_details()
+    build(sha, date)
+    restore_build_details()
 
 if __name__ == '__main__':
-    args = parse_arguments()
-    main(args)
+    main()
