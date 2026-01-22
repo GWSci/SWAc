@@ -44,6 +44,12 @@ class Test_Version_Information(unittest.TestCase):
         expected = "23 Mar 2020 10:30:00"
         self.assertEqual(expected, actual)
 
+    def test_format_date_time_for_file(self):
+        date = datetime.datetime(2020, 3, 23, 10, 30, 0)
+        actual = build.format_daytime_for_filename(date)
+        expected = "2020-03-23T10-30-00"
+        self.assertEqual(expected, actual)
+
 def make_mock_file_opener(filename_contents):
         return lambda filename, how : io.StringIO(filename_contents[filename])
 

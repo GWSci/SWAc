@@ -23,6 +23,18 @@ def get_old_version(filename=version_filename, file_open=_default_file_open):
     old_version = ast.literal_eval(old_version)
     return old_version
 
+def get_old_version_string(filename=version_filename, file_open=_default_file_open):
+    with file_open(filename, 'r') as file:
+        old_version = file.readlines()[0]
+    old_version = old_version.replace('\n', '')
+    old_version = old_version.replace(' ', '')
+    old_version = old_version.replace('[', '')
+    old_version = old_version.replace(']', '')
+    old_version = old_version.replace(',', '.')
+    old_version = old_version.replace('version', '')
+    old_version = old_version.replace('=', '')
+    return old_version
+
 def get_new_version(old_version):
     new_version = old_version.copy()
     new_version[-1] += 1
@@ -39,11 +51,14 @@ def write_new_commit_id(sha, filename=commit_id_filename, file_open=_default_fil
 def format_daytime(date):
     return date.strftime("%d %b %Y %H:%M:%S")
 
+def format_daytime_for_filename(date):
+    return date.strftime("%Y-%m-%dT%H-%M-%S")
+
 def write_new_build_time(formated_datetime, filename=build_time_filename, file_open=_default_file_open):
     with file_open(filename, 'w') as file:
         file.write(f'build_time = "{formated_datetime}"')
 
-def build():
+def build(sha, date):
     if (os.path.exists("build/")):
         shutil.rmtree("build/")
     if (os.path.exists("dist/")):
@@ -53,7 +68,7 @@ def build():
 
     os.mkdir("release/")
 
-    release_filename = conjure_release_filename()
+    release_filename = conjure_release_filename(sha, date)
 
     if sys.platform == "win32":
         python_binary = "env/Scripts/python"
@@ -92,11 +107,11 @@ def build():
     subprocess.run(zip_v2_yml_input_files_command, shell=True)
     subprocess.run(zip_release_command, shell=True)
 
-def conjure_release_filename():
-    build_time = "aardvark"
-    version = get_old_version()
-    commit_id = "cat"
-    return f"{build_time}-gws-swacmod-{version}-{commit_id}.zip"
+def conjure_release_filename(sha, date):
+    build_time = format_daytime_for_filename(date)
+    version = get_old_version_string()
+    commit_id = sha[:8]
+    return f"SWAcMod-v{version}.{commit_id}-{build_time}.zip"
 
 def parse_arguments():
     PARSER = argparse.ArgumentParser()
@@ -105,7 +120,24 @@ def parse_arguments():
 
     return PARSER.parse_args()
 
+def set_build_details():
+    sha = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout
+    sha = sha.rstrip()
+    write_new_commit_id(sha)
+
+    date = datetime.datetime.now()
+    formated_datetime = format_daytime(date)
+    write_new_build_time(formated_datetime)
+
+    return sha, date
+
+def restore_build_details():
+    subprocess.run(['git', 'restore', commit_id_filename])
+    subprocess.run(['git', 'restore', build_time_filename])
+
 def main(args):
+    sha, date = set_build_details()
+
     if args.final:
         old_version = get_old_version()
         new_version = get_new_version(old_version)
@@ -114,29 +146,19 @@ def main(args):
         subprocess.run(['git', 'add', version_filename])
         subprocess.run(['git', 'commit', '-m', 'updated version number'])
 
-        sha = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout
-        sha = sha.rstrip()
-        write_new_commit_id(sha)
-
-        date = datetime.datetime.now()
-        formated_datetime = format_daytime(date)
-        write_new_build_time(formated_datetime)
-
         try:
-            build()
-            subprocess.run(['git', 'restore', commit_id_filename])
-            subprocess.run(['git', 'restore', build_time_filename])
-            
+            build(sha, date)
+            restore_build_details()
             subprocess.run(['git', 'push'])
 
         except Exception as err:
             subprocess.run(['git', 'reset', 'HEAD~'])
-            subprocess.run(['git', 'restore', commit_id_filename])
-            subprocess.run(['git', 'restore', build_time_filename])
+            restore_build_details()
             subprocess.run(['git', 'restore', version_filename])
             raise Exception(err)
     else:
-        build()
+        build(sha, date)
+        restore_build_details()
 
 if __name__ == '__main__':
     args = parse_arguments()
