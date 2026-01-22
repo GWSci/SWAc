@@ -6,6 +6,7 @@ from _build_time import build_time
 import io
 import build
 import datetime
+import increment_version
 
 class Test_Version_Information(unittest.TestCase):
     def test_version_information_has_the_correct_version_number(self):
@@ -27,15 +28,15 @@ class Test_Version_Information(unittest.TestCase):
         filename = 'mock_version.py'
         contents = 'version = [1, 0, 0]'
         file_open = make_mock_file_opener({filename: contents})
-        old_version = build.get_old_version(filename, file_open)
+        old_version = increment_version.get_old_version(filename, file_open)
         self.assertIn(str(old_version), contents)
     
     def test_build_script_correctly_calculates_the_new_version(self):
         filename = 'mock_version.py'
         contents = 'version = [1, 0, 0]'
         file_open = make_mock_file_opener({filename: contents})
-        old_version = build.get_old_version(filename, file_open)
-        new_version = build.get_new_version(old_version)
+        old_version = increment_version.get_old_version(filename, file_open)
+        new_version = increment_version.get_new_version(old_version)
         self.assertEqual([1, 0, 1], new_version)
 
     def test_build_script_correctly_formats_the_datetime(self):
