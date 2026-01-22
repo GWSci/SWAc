@@ -13,16 +13,6 @@ build_time_filename = '_build_time.py'
 def _default_file_open(filename, how='r'):
         return open(filename, how)
 
-def get_old_version(filename=version_filename, file_open=_default_file_open):
-    with file_open(filename, 'r') as file:
-        old_version = file.readlines()[0]
-    old_version = old_version.replace('\n', '')
-    old_version = old_version.replace(' ', '')
-    old_version = old_version.replace('version', '')
-    old_version = old_version.replace('=', '')
-    old_version = ast.literal_eval(old_version)
-    return old_version
-
 def get_old_version_string(filename=version_filename, file_open=_default_file_open):
     with file_open(filename, 'r') as file:
         old_version = file.readlines()[0]
@@ -34,15 +24,6 @@ def get_old_version_string(filename=version_filename, file_open=_default_file_op
     old_version = old_version.replace('version', '')
     old_version = old_version.replace('=', '')
     return old_version
-
-def get_new_version(old_version):
-    new_version = old_version.copy()
-    new_version[-1] += 1
-    return new_version
-
-def write_new_version(new_version, filename=version_filename, file_open=_default_file_open):
-    with file_open(filename, 'w') as file:
-        file.write(f'version = {new_version}')
 
 def write_new_commit_id(sha, filename=commit_id_filename, file_open=_default_file_open):
     with file_open(filename, 'w') as file:
@@ -139,11 +120,7 @@ def main(args):
     sha, date = set_build_details()
 
     if args.final:
-        old_version = get_old_version()
-        new_version = get_new_version(old_version)
-        write_new_version(new_version)
-
-        subprocess.run(['git', 'add', version_filename])
+        increment_version()
         subprocess.run(['git', 'commit', '-m', 'updated version number'])
 
         try:
@@ -159,6 +136,31 @@ def main(args):
     else:
         build(sha, date)
         restore_build_details()
+
+def increment_version():
+    old_version = get_old_version()
+    new_version = get_new_version(old_version)
+    write_new_version(new_version)
+    subprocess.run(['git', 'add', version_filename])
+
+def get_old_version(filename=version_filename, file_open=_default_file_open):
+    with file_open(filename, 'r') as file:
+        old_version = file.readlines()[0]
+    old_version = old_version.replace('\n', '')
+    old_version = old_version.replace(' ', '')
+    old_version = old_version.replace('version', '')
+    old_version = old_version.replace('=', '')
+    old_version = ast.literal_eval(old_version)
+    return old_version
+
+def get_new_version(old_version):
+    new_version = old_version.copy()
+    new_version[-1] += 1
+    return new_version
+
+def write_new_version(new_version, filename=version_filename, file_open=_default_file_open):
+    with file_open(filename, 'w') as file:
+        file.write(f'version = {new_version}')
 
 if __name__ == '__main__':
     args = parse_arguments()
