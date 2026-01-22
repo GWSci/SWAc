@@ -3,8 +3,6 @@ language: python
 python:
   - "3.13"
 
-# install: bash setup_linux.sh
-
 jobs:
   allow_failures:
     - name: lint
@@ -25,5 +23,6 @@ jobs:
       name: dependencies
       install: pip install -r requirements.txt && pip install -r requirements-lint.txt
       script: pip list --outdated
-    # - stage: build
-    #   script: ./build.sh
+    - stage: build
+      install: ./setup_linux.sh
+      script: ./build.sh
