@@ -32,3 +32,6 @@ def get_new_version(old_version):
 def write_new_version(new_version, filename=version_filename, file_open=_default_file_open):
     with file_open(filename, 'w') as file:
         file.write(f'version = {new_version}')
+
+if (__name__ == "__main__"):
+    increment_version()
