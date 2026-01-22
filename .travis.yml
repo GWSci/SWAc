@@ -22,9 +22,8 @@ jobs:
       install:
         - choco install python313 -y
         - py -m pip install --upgrade pip
-        - pip install -r requirements.txt
+        - py -m pip install -r requirements.txt
       script: coverage run -m unittest discover --durations 10 -s .
-      # script: py --version && py -3.13 --version
       after_success: coverage report -m
     -
       name: lint
