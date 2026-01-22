@@ -21,3 +21,5 @@ pip install -r requirements.txt
 pip install -r requirements-lint.txt
 pip list --outdated
 deactivate
+
+printf "#!/bin/sh\n\npython3.13 increment_version.py\n" > .git/hooks/pre-commit
