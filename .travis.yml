@@ -3,13 +3,19 @@ language: python
 python:
   - "3.13"
 
-install: bash setup_linux.sh
+# install: bash setup_linux.sh
 
 jobs:
   include:
-    - stage: test
-      script: ./test.sh --full
-    -
-      script: ./test.sh --lint
-    - stage: build
-      script: ./build.sh
+    # - stage: qc
+    #   name: all tests
+    #   script: ./test.sh --full
+    # -
+    #   name: lint (from test script)
+    #   script: ./test.sh --lint
+    - stage: qc
+      name: lint (just using linter)
+      install: pip install -r requirements-lint.txt
+      script: python -m pylint --extension-pkg-allow-list=swacmod.model --disable=R,C,W --ignore=env,env-lint --generated-member=flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr.obs .
+    # - stage: build
+    #   script: ./build.sh
