@@ -8,13 +8,17 @@ jobs:
     - name: lint
   include:
     - stage: qc
-      name: tests
+      name: tests (Linux)
       env:
         - TQDM_DISABLE=true
       install: pip install -r requirements.txt
       before_script: python compile_model.py
       script: coverage run -m unittest discover --durations 10 -s .
       after_success: coverage report -m
+    -
+      name: tests (Windows)
+      os: windows
+      script: echo "Hello, World!"
     -
       name: lint
       install: pip install -r requirements-lint.txt
