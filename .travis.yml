@@ -17,6 +17,8 @@ jobs:
       after_success: coverage report -m
     -
       name: tests (Windows)
+      env:
+        - TQDM_DISABLE=true
       os: windows
       language: bash
       install:
