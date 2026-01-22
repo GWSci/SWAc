@@ -18,6 +18,7 @@ jobs:
     -
       name: tests (Windows)
       os: windows
+      language: bash
       script: echo "Hello, World!"
     -
       name: lint
