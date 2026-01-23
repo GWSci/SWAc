@@ -55,15 +55,17 @@ jobs:
     #   name: build (Windows)
       os: windows
       language: shell
-      install: ./setup_windows_travis.sh
-      script: ./env/Scripts/python build.py
+      # install: ./setup_windows_travis.sh
+      # script: ./env/Scripts/python build.py
+      script: echo "aardvark" > abc.txt
       before_deploy:
         - git config --local user.name "gwsci-machine-user"
         - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"
         - export TRAVIS_TAG=$(< _version.txt)
+        - echo $TRAVIS_TAG
         - git tag $TRAVIS_TAG || echo "New tag not created."
       deploy:
         provider: releases
         dpl_version: 1
-        file: release/*.zip
+        file: abc.txt
         skip_cleanup: true
