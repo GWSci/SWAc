@@ -17,6 +17,7 @@ def increment_version():
 
     semver_version_contents = f"v{new_version[0]}.{new_version[1]}.{new_version[2]}."
     spit(semver_version_filename, semver_version_contents)
+    subprocess.run(['git', 'add', semver_version_filename])
 
 def get_old_version(filename=version_filename, file_open=_default_file_open):
     with file_open(filename, 'r') as file:
