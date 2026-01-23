@@ -43,5 +43,3 @@ jobs:
         provider: releases
         file: release/*.zip
         edge: true
-        on:
-          tags: true
