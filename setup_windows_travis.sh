@@ -9,7 +9,5 @@ py -m venv env
 
 ls env/Scripts/
 
-source env/bin/activate
-pip install -r requirements.txt
-pip list --outdated
-deactivate
+env/Scripts/pip install -r requirements.txt
+env/Scripts/pip list --outdated
