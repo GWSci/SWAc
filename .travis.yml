@@ -20,7 +20,7 @@ jobs:
     #   env:
     #     - TQDM_DISABLE=true
     #   os: windows
-    #   language: bash
+    #   language: shell
     #   install:
     #     - choco install python313 -y
     #     - py -m pip install --upgrade pip
@@ -44,9 +44,10 @@ jobs:
     #     file: release/*.zip
     #     edge: true
     - stage: deploy-spike
-      language: bash
+      language: shell
       script: echo "Hello, World!" > release.txt
-      before_deploy:
+      # before_deploy:
+      after_script:
         - git config --local user.name "gwsci-machine-user"
         - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"
         - export TRAVIS_TAG=$(< _version.txt)
