@@ -7,7 +7,7 @@ choco install pandoc -y
 
 py -m venv env
 
-ls env/Scrpts/
+ls env/Scripts/
 
 source env/bin/activate
 pip install -r requirements.txt
