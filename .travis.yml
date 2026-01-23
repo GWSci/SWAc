@@ -36,10 +36,16 @@ jobs:
     #   name: dependencies
     #   install: pip install -r requirements.txt && pip install -r requirements-lint.txt
     #   script: pip list --outdated
-    - stage: build
-      install: ./setup_linux.sh
-      script: ./build.sh
+    # - stage: build
+    #   install: ./setup_linux.sh
+    #   script: ./build.sh
+    #   deploy:
+    #     provider: releases
+    #     file: release/*.zip
+    #     edge: true
+    - stage: deploy-spike
+      script: echo "Hello, World!" > release.txt
       deploy:
         provider: releases
-        file: release/*.zip
+        file: release.txt
         edge: true
