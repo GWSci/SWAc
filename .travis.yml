@@ -66,6 +66,6 @@ jobs:
         - git tag $TRAVIS_TAG || echo "New tag not created."
       deploy:
         provider: releases
-        dpl_version: 1.10.17
+        dpl_version: 1.10.16
         file: abc.txt
         skip_cleanup: true
