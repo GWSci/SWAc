@@ -55,14 +55,7 @@ jobs:
     #   name: build (Windows)
       os: windows
       language: shell
-      install:
-        - choco install python313 -y
-        - choco install pandoc -y
-        - py -3.13 -m venv env
-        - call env/Scripts/activate.bat
-        - python -m pip install --upgrade pip
-        - pip install -r requirements.txt
-        - call env/Scripts/deactivate.bat
+      install: ./setup_windows_travis.sh
       script: ./env/Scripts/python build.py
       before_deploy:
         - git config --local user.name "gwsci-machine-user"
