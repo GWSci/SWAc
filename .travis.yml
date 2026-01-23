@@ -3,6 +3,8 @@ language: python
 python:
   - "3.13"
 
+if: tag IS blank
+
 jobs:
   allow_failures:
     - name: lint
