@@ -39,3 +39,10 @@ jobs:
     - stage: build
       install: ./setup_linux.sh
       script: ./build.sh
+      # deploy:
+      #   provider: releases
+      #   token: <encrypted token>
+      #   file: release/*.zip
+      #   edge: true
+      #   on:
+      #     tags: true
