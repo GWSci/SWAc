@@ -71,7 +71,7 @@ jobs:
         - git config --local user.name "gwsci-machine-user"
         - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"
         - export TRAVIS_TAG=$(< _version.txt)
-        - git tag $TRAVIS_TAG
+        - git tag $TRAVIS_TAG || echo "New tag not created."
       deploy:
         provider: releases
         file: release-windows.txt
