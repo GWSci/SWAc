@@ -55,8 +55,8 @@ jobs:
     #   name: build (Windows)
       os: windows
       language: shell
-      install: cmd.exe /C setup_windows_travis.bat
-      script: cmd.exe /C build.bat
+      install: cmd.exe /C 'setup_windows_travis.bat'
+      script: cmd.exe /C 'build.bat'
       before_deploy:
         - git config --local user.name "gwsci-machine-user"
         - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"
