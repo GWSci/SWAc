@@ -38,13 +38,18 @@ jobs:
     #   name: dependencies
     #   install: pip install -r requirements.txt && pip install -r requirements-lint.txt
     #   script: pip list --outdated
-    # - stage: build
-    #   install: ./setup_linux.sh
-    #   script: ./build.sh
-    #   deploy:
-    #     provider: releases
-    #     file: release/*.zip
-    #     edge: true
+    - stage: build
+      install: ./setup_linux.sh
+      script: ./build.sh
+      before_deploy:
+        - git config --local user.name "gwsci-machine-user"
+        - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"
+        - export TRAVIS_TAG=$(< _version.txt)
+        - git tag $TRAVIS_TAG
+      deploy:
+        provider: releases
+        file: release/*.zip
+        edge: true
     - stage: deploy-spike
       name: spike build linux
       language: shell
