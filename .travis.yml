@@ -9,35 +9,35 @@ jobs:
   allow_failures:
     - name: lint
   include:
-    # - stage: qc
-    #   name: tests (Linux)
-    #   env:
-    #     - TQDM_DISABLE=true
-    #   install: pip install -r requirements.txt
-    #   before_script: python compile_model.py
-    #   script: coverage run -m unittest discover --durations 10 -s .
-    #   after_success: coverage report -m
-    # -
-    #   name: tests (Windows)
-    #   env:
-    #     - TQDM_DISABLE=true
-    #   os: windows
-    #   language: shell
-    #   install:
-    #     - choco install python313 -y
-    #     - py -m pip install --upgrade pip
-    #     - py -m pip install -r requirements.txt
-    #   before_script: py compile_model.py
-    #   script: C:/Python313/Scripts/coverage run -m unittest discover --durations 10 -s .
-    #   after_success: C:/Python313/Scripts/coverage report -m
-    # -
-    #   name: lint
-    #   install: pip install -r requirements-lint.txt
-    #   script: python -m pylint --extension-pkg-allow-list=swacmod.model --disable=R,C,W --ignore=env,env-lint --generated-member=flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr.obs --ignored-modules=tqdm,swacmod.model,flopy,psutil,networkx,Cython.Build,h5py,yaml .
-    # -
-    #   name: dependencies
-    #   install: pip install -r requirements.txt && pip install -r requirements-lint.txt
-    #   script: pip list --outdated
+    - stage: qc
+      name: tests (Linux)
+      env:
+        - TQDM_DISABLE=true
+      install: pip install -r requirements.txt
+      before_script: python compile_model.py
+      script: coverage run -m unittest discover --durations 10 -s .
+      after_success: coverage report -m
+    -
+      name: tests (Windows)
+      env:
+        - TQDM_DISABLE=true
+      os: windows
+      language: shell
+      install:
+        - choco install python313 -y
+        - py -m pip install --upgrade pip
+        - py -m pip install -r requirements.txt
+      before_script: py compile_model.py
+      script: C:/Python313/Scripts/coverage run -m unittest discover --durations 10 -s .
+      after_success: C:/Python313/Scripts/coverage report -m
+    -
+      name: lint
+      install: pip install -r requirements-lint.txt
+      script: python -m pylint --extension-pkg-allow-list=swacmod.model --disable=R,C,W --ignore=env,env-lint --generated-member=flopy.mf6.modflow.mfgwfsfr.ModflowGwfsfr.obs --ignored-modules=tqdm,swacmod.model,flopy,psutil,networkx,Cython.Build,h5py,yaml .
+    -
+      name: dependencies
+      install: pip install -r requirements.txt && pip install -r requirements-lint.txt
+      script: pip list --outdated
     - stage: build
       install: ./setup_linux.sh
       script: ./build.sh
@@ -49,30 +49,4 @@ jobs:
       deploy:
         provider: releases
         file: release/*.zip
-        edge: true
-    - stage: deploy-spike
-      name: spike build linux
-      language: shell
-      script: echo "Hello, Linux!" > release-linux.txt
-      before_deploy:
-        - git config --local user.name "gwsci-machine-user"
-        - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"
-        - export TRAVIS_TAG=$(< _version.txt)
-        - git tag $TRAVIS_TAG
-      deploy:
-        provider: releases
-        file: release-linux.txt
-        edge: true
-    -
-      name: spike build windows
-      language: shell
-      script: echo "Hello, Windows!" > release-windows.txt
-      before_deploy:
-        - git config --local user.name "gwsci-machine-user"
-        - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"
-        - export TRAVIS_TAG=$(< _version.txt)
-        - git tag $TRAVIS_TAG || echo "New tag not created."
-      deploy:
-        provider: releases
-        file: release-windows.txt
         edge: true
