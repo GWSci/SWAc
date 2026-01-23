@@ -64,4 +64,6 @@ jobs:
         - git tag $TRAVIS_TAG || echo "New tag not created."
       deploy:
         provider: releases
+        dpl_version: 1
         file: release/*.zip
+        skip_cleanup: true
