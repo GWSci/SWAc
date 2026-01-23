@@ -58,11 +58,11 @@ jobs:
       install:
         - choco install python313 -y
         - choco install pandoc -y
-        - py -3.13 -m venv env || exit /b
-        - call env/Scripts/activate.bat || exit /b
-        - python -m pip install --upgrade pip || exit /b
-        - pip install -r requirements.txt || exit /b
-        - call env/Scripts/deactivate.bat || exit /b
+        - py -3.13 -m venv env
+        - call env/Scripts/activate.bat
+        - python -m pip install --upgrade pip
+        - pip install -r requirements.txt
+        - call env/Scripts/deactivate.bat
       script: ./env/Scripts/python build.py
       before_deploy:
         - git config --local user.name "gwsci-machine-user"
