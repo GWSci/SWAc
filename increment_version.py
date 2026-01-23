@@ -15,7 +15,7 @@ def increment_version():
     write_new_version(new_version)
     subprocess.run(['git', 'add', version_filename])
 
-    semver_version_contents = f"v{new_version[0]}.{new_version[1]}.{new_version[2]}."
+    semver_version_contents = f"v{new_version[0]}.{new_version[1]}.{new_version[2]}"
     spit(semver_version_filename, semver_version_contents)
     subprocess.run(['git', 'add', semver_version_filename])
 

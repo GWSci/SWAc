@@ -46,14 +46,12 @@ jobs:
     - stage: deploy-spike
       language: shell
       script: echo "Hello, World!" > release.txt
-      # before_deploy:
-      after_script:
+      before_deploy:
         - git config --local user.name "gwsci-machine-user"
         - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"
         - export TRAVIS_TAG=$(< _version.txt)
-        - echo $TRAVIS_TAG
-      #   - git tag $TRAVIS_TAG
-      # deploy:
-      #   provider: releases
-      #   file: release.txt
-      #   edge: true
+        - git tag $TRAVIS_TAG
+      deploy:
+        provider: releases
+        file: release.txt
+        edge: true
