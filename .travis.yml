@@ -55,6 +55,8 @@ jobs:
     #   name: build (Windows)
       os: windows
       language: shell
+      before_install:
+        - gem update --system 1.8.30
       # install: ./setup_windows_travis.sh
       # script: ./env/Scripts/python build.py
       script: echo "aardvark" > abc.txt
