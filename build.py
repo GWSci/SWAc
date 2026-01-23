@@ -90,7 +90,8 @@ def conjure_release_filename(sha, date):
     build_time = format_daytime_for_filename(date)
     version = get_old_version_string()
     commit_id = sha[:8]
-    return f"SWAcMod-v{version}.{commit_id}-{build_time}.zip"
+    platform = sys.platform
+    return f"SWAcMod-v{version}.{commit_id}-{platform}-{build_time}.zip"
 
 def set_build_details():
     sha = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout
