@@ -38,7 +38,7 @@ jobs:
     #   name: dependencies
     #   install: pip install -r requirements.txt && pip install -r requirements-lint.txt
     #   script: pip list --outdated
-    # - stage: build
+    - stage: build
     #   name: build (Linux)
     #   install: ./setup_linux.sh
     #   script: ./build.sh
