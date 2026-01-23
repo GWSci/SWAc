@@ -65,4 +65,3 @@ jobs:
       deploy:
         provider: releases
         file: release/*.zip
-        edge: true
