@@ -1,5 +1,5 @@
 import unittest
-from github_release import convert_version_to_tag_name, parse_repo_slug
+from github_release_helper import parse_repo_slug, convert_version_to_tag_name
 
 class Test_Github_Release(unittest.TestCase):
     def test_convert_version_to_tag_name(self):
