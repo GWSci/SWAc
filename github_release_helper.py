@@ -16,12 +16,13 @@ class Create_Release:
 
 def convert_raw_inputs_to_create_release(raw_inputs):
     owner, repo = parse_repo_slug(raw_inputs.repo_slug)
+    tag_name = convert_version_to_tag_name(raw_inputs.version)
 
     return Create_Release(
         accept = "application/vnd.github+json",
         owner = owner,
         repo = repo,
-        tag_name = "",
+        tag_name = tag_name,
         target_commitish = "",
     )
 
