@@ -20,7 +20,7 @@ def convert_raw_inputs_to_create_release(raw_inputs):
     return Create_Release(
         accept = "application/vnd.github+json",
         owner = owner,
-        repo = "",
+        repo = repo,
         tag_name = "",
         target_commitish = "",
     )

@@ -27,7 +27,7 @@ class Test_Github_Release(unittest.TestCase):
         expected = Create_Release(
             accept = "application/vnd.github+json",
             owner = "aardvark_owner",
-            repo = "",
+            repo = "bat_repo",
             tag_name = "",
             target_commitish = "",
         )
