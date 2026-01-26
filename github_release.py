@@ -6,9 +6,9 @@ import pprint
 
 def create_github_release():
     raw_inputs = gather_create_release_raw_inputs()
-    create_release = convert_raw_inputs_to_create_release(raw_inputs)
-    print(create_release)
-    call_create_release()
+    release = convert_raw_inputs_to_create_release(raw_inputs)
+    print(release)
+    call_create_release(release)
 
 def gather_create_release_raw_inputs():
     repo_slug = os.environ.get("TRAVIS_REPO_SLUG", "/")
