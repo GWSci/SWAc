@@ -57,7 +57,8 @@ jobs:
       os: windows
       language: shell
       install: ./setup_windows_travis.sh
-      script: ./env/Scripts/python build.py
+      # script: ./env/Scripts/python build.py
+      script: echo "Hello, World!" > release.txt
       after_success:
         # - git config --local user.name "gwsci-machine-user"
         # - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"

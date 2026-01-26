@@ -1,1 +1,1 @@
-env/bin/python github_release.py "$@"
+py github_release.py "$@"
