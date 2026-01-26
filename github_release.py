@@ -26,7 +26,7 @@ def make_create_release():
 def parse_repo_slug(slug):
     tokens = slug.split("/")
     owner = tokens[0]
-    repo = "bat"
+    repo = tokens[1]
     return owner, repo
 
 def convert_version_to_tag_name(version):

@@ -16,3 +16,4 @@ class Test_Github_Release(unittest.TestCase):
 
         owner, repo = parse_repo_slug("cat/dog")
         self.assertEqual("cat", owner)
+        self.assertEqual("dog", repo)
