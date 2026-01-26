@@ -15,7 +15,13 @@ class Create_Release:
     target_commitish: str
 
 def convert_raw_inputs_to_create_release(raw_inputs):
-    pass
+    return Create_Release(
+        accept = "",
+        owner = "",
+        repo = "",
+        tag_name = "",
+        target_commitish = "",
+    )
 
 def parse_repo_slug(slug):
     tokens = slug.split("/")

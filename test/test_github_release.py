@@ -32,4 +32,4 @@ class Test_Github_Release(unittest.TestCase):
             target_commitish = "",
         )
         actual = convert_raw_inputs_to_create_release(raw_inputs)
-        self.assertEqual(1, 1)
+        self.assertEqual(expected, actual)
