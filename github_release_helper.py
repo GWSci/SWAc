@@ -16,7 +16,7 @@ class Create_Release:
 
 def convert_raw_inputs_to_create_release(raw_inputs):
     return Create_Release(
-        accept = "",
+        accept = "application/vnd.github+json",
         owner = "",
         repo = "",
         tag_name = "",
