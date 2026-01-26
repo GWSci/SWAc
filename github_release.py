@@ -23,7 +23,7 @@ def gather_create_release_raw_inputs():
 def call_create_release(release):
     url = f"https://api.github.com/repos/{release.owner}/{release.repo}/releases"
     headers = {
-        # "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
+        "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
         "accept": release.accept
     }
     body = {
