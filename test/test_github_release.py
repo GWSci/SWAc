@@ -8,3 +8,6 @@ class Test_Github_Release(unittest.TestCase):
         self.assertEqual("v0.1.0", convert_version_to_tag_name([0, 1, 0]))
         self.assertEqual("v1.0.0", convert_version_to_tag_name([1, 0, 0]))
         self.assertEqual("v2.3.5", convert_version_to_tag_name([2, 3, 5]))
+
+    def parse_repo_slug(self):
+        self.assertEqual(1, 2)
