@@ -1,9 +1,7 @@
 import unittest
-import github_release
+from github_release import convert_version_to_tag_name
 
 class Test_Github_Release(unittest.TestCase):
-    def test_x(self):
-        input_version = [0, 0, 0]
-        expected = "v0.0.0"
-        actual = github_release.convert_version_to_tag_name(input_version)
-        self.assertEqual(expected, actual)
+    def test_convert_version_to_tag_name(self):
+        actual = convert_version_to_tag_name([0, 0, 0])
+        self.assertEqual("v0.0.0", actual)
