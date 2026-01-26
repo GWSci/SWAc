@@ -23,7 +23,7 @@ def make_create_release():
         "body": body
     }
 
-def parse_repo_plug(slug):
+def parse_repo_slug(slug):
     return "a", "b"
 
 def convert_version_to_tag_name(version):
