@@ -15,9 +15,11 @@ class Create_Release:
     target_commitish: str
 
 def convert_raw_inputs_to_create_release(raw_inputs):
+    owner, repo = parse_repo_slug(raw_inputs.repo_slug)
+
     return Create_Release(
         accept = "application/vnd.github+json",
-        owner = "",
+        owner = owner,
         repo = "",
         tag_name = "",
         target_commitish = "",
