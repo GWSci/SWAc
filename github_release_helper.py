@@ -23,7 +23,7 @@ def convert_raw_inputs_to_create_release(raw_inputs):
         owner = owner,
         repo = repo,
         tag_name = tag_name,
-        target_commitish = "",
+        target_commitish = raw_inputs.commit_id,
     )
 
 def parse_repo_slug(slug):

@@ -29,7 +29,7 @@ class Test_Github_Release(unittest.TestCase):
             owner = "aardvark_owner",
             repo = "bat_repo",
             tag_name = "v2.3.5",
-            target_commitish = "",
+            target_commitish = "cat_commit_id",
         )
         actual = convert_raw_inputs_to_create_release(raw_inputs)
         self.assertEqual(expected, actual)
