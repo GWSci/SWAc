@@ -2,8 +2,10 @@ def create_github_release():
     print("Hello, World!")
 
 def convert_version_to_tag_name(version):
+    major = "0"
+    minor = "0"
     patch = str(version[2])
-    return f"v0.0.{patch}"
+    return f"v{major}.{minor}.{patch}"
 
 if (__name__ == "__main__"):
     create_github_release()
