@@ -12,3 +12,4 @@ class Test_Github_Release(unittest.TestCase):
     def test_parse_repo_slug(self):
         owner, repo = parse_repo_slug("aardvark/bat")
         self.assertEqual("aardvark", owner)
+        self.assertEqual("bat", repo)
