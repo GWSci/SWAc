@@ -1,3 +1,11 @@
+from dataclasses import dataclass
+
+@dataclass
+class Create_Release_Raw_Inputs:
+    repo_slug: str
+    version: str
+    commit_id: str
+
 def parse_repo_slug(slug):
     tokens = slug.split("/")
     owner = tokens[0]
