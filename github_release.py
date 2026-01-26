@@ -5,12 +5,12 @@ from github_release_helper import *
 def create_github_release():
     raw_inputs = gather_create_release_raw_inputs()
     create_release = convert_raw_inputs_to_create_release(raw_inputs)
-    print("Hello, World!")
+    print(create_release)
 
 def gather_create_release_raw_inputs():
-    repo_slug = os.environ["TRAVIS_REPO_SLUG"]
+    repo_slug = os.environ.get("TRAVIS_REPO_SLUG", "/")
     version = _version.version
-    commit_id = os.environ["TRAVIS_COMMIT"]
+    commit_id = os.environ.get("TRAVIS_COMMIT", "")
     return Create_Release_Raw_Inputs(
         repo_slug = repo_slug,
         version = version,
