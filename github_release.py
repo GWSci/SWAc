@@ -1,11 +1,14 @@
 import os
 import _version
 from github_release_helper import *
+import requests
+import pprint
 
 def create_github_release():
     raw_inputs = gather_create_release_raw_inputs()
     create_release = convert_raw_inputs_to_create_release(raw_inputs)
     print(create_release)
+    call_create_release()
 
 def gather_create_release_raw_inputs():
     repo_slug = os.environ.get("TRAVIS_REPO_SLUG", "/")
@@ -16,6 +19,22 @@ def gather_create_release_raw_inputs():
         version = version,
         commit_id = commit_id,
     )
+
+def call_create_release(release):
+    url = f"https://api.github.com/repos/{release.owner}/{release.repo}/releases"
+    headers = {
+        "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
+        "accept": release.accept
+    }
+    body = {
+        "tag_name": release.tag_name,
+        "target_commitish": release.target_commitish,
+    }
+    r = requests.post(url, headers = headers, data = body)
+    print(f"{r.status_code=}")
+    response_object = r.json()
+    pprint.pprint(response_object)
+    return response_object
 
 if (__name__ == "__main__"):
     create_github_release()
