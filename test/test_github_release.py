@@ -1,5 +1,5 @@
 import unittest
-from github_release_helper import parse_repo_slug, convert_version_to_tag_name
+from github_release_helper import *
 
 class Test_Github_Release(unittest.TestCase):
     def test_convert_version_to_tag_name(self):
@@ -17,3 +17,19 @@ class Test_Github_Release(unittest.TestCase):
         owner, repo = parse_repo_slug("cat/dog")
         self.assertEqual("cat", owner)
         self.assertEqual("dog", repo)
+
+    def test_convert_raw_inputs_to_create_release(self):
+        raw_inputs = Create_Release_Raw_Inputs(
+            repo_slug = "aardvark_owner/bat_repo",
+            version = [2, 3, 5],
+            commit_id = "cat_commit_id"
+        )
+        expected = Create_Release(
+            accept = "",
+            owner = "",
+            repo = "",
+            tag_name = "",
+            target_commitish = "",
+        )
+        actual = convert_raw_inputs_to_create_release(raw_inputs)
+        self.assertEqual(1, 1)

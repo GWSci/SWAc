@@ -6,6 +6,17 @@ class Create_Release_Raw_Inputs:
     version: str
     commit_id: str
 
+@dataclass
+class Create_Release:
+    accept: str
+    owner: str
+    repo: str
+    tag_name: str
+    target_commitish: str
+
+def convert_raw_inputs_to_create_release(raw_inputs):
+    pass
+
 def parse_repo_slug(slug):
     tokens = slug.split("/")
     owner = tokens[0]
