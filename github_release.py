@@ -32,7 +32,7 @@ def call_create_release(release):
     }
     print(f"{url=}")
     print(f"{body=}")
-    r = requests.post(url, headers = headers, data = body)
+    r = requests.post(url, headers = headers, json = body)
     print(f"{r.status_code=}")
     response_object = r.json()
     pprint.pprint(response_object)
