@@ -1,5 +1,30 @@
+import os
+import _version
+
 def create_github_release():
     print("Hello, World!")
+
+def make_create_release():
+    owner, repo = parse_repo_slug(os.environ["TRAVIS_REPO_SLUG"])
+    header = {
+        "accept": "application/vnd.github+json",
+    }
+    path = {
+        "owner": owner,
+        "repo": repo,
+    }
+    body = {
+        "tag_name": convert_version_to_tag_name(_version.version),
+        "target_commitish": os.environ["TRAVIS_COMMIT"]
+    }
+    return {
+        "header": header,
+        "path": path,
+        "body": body
+    }
+
+def parse_repo_plug(slug):
+    return "a", "b"
 
 def convert_version_to_tag_name(version):
     major = str(version[0])
