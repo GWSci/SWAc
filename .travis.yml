@@ -59,16 +59,17 @@ jobs:
       # install: ./setup_windows_travis.sh
       # script: ./env/Scripts/python build.py
       install: choco install python313 -y
-      script: echo "Hello, World!" > release.txt
-      after_success:
+      script:
+        - echo "Hello, World!" > release.txt
+        - py -m pip install --upgrade pip
+        - py -m pip install requests
+        - ./github_release.sh
+      # after_success:
         # - git config --local user.name "gwsci-machine-user"
         # - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"
         # - export TRAVIS_TAG=$(< _version.txt)
         # - echo $TRAVIS_TAG
         # - git tag $TRAVIS_TAG || echo "New tag not created."
-        - py -m pip install --upgrade pip
-        - py -m pip install requests
-        - ./github_release.sh
       # deploy:
       #   provider: releases
       #   dpl_version: 1.10.16
