@@ -14,7 +14,7 @@ def make_create_release():
     owner, repo = parse_repo_slug(repo_slug)
     tag_name = convert_version_to_tag_name(version)
 
-    # rganise
+    # organise
     header = {
         "accept": "application/vnd.github+json",
     }
