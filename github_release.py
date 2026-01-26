@@ -23,7 +23,7 @@ def gather_create_release_raw_inputs():
 def call_create_release(release):
     url = f"https://api.github.com/repos/{release.owner}/{release.repo}/releases"
     headers = {
-        "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
+        # "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
         "accept": release.accept
     }
     body = {
@@ -36,6 +36,8 @@ def call_create_release(release):
     print(f"{r.status_code=}")
     response_object = r.json()
     pprint.pprint(response_object)
+    if (r.status_code != 201):
+        raise Exception("API call to create release failed.")
     return response_object
 
 if (__name__ == "__main__"):
