@@ -5,7 +5,16 @@ def create_github_release():
     print("Hello, World!")
 
 def make_create_release():
-    owner, repo = parse_repo_slug(os.environ["TRAVIS_REPO_SLUG"])
+    # gather
+    repo_slug = os.environ["TRAVIS_REPO_SLUG"]
+    version = _version.version
+    commit_id = os.environ["TRAVIS_COMMIT"]
+
+    # parse
+    owner, repo = parse_repo_slug(repo_slug)
+    tag_name = convert_version_to_tag_name(version)
+
+    # rganise
     header = {
         "accept": "application/vnd.github+json",
     }
@@ -14,8 +23,8 @@ def make_create_release():
         "repo": repo,
     }
     body = {
-        "tag_name": convert_version_to_tag_name(_version.version),
-        "target_commitish": os.environ["TRAVIS_COMMIT"]
+        "tag_name": tag_name,
+        "target_commitish": commit_id
     }
     return {
         "header": header,
