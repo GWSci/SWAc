@@ -1,5 +1,5 @@
 import unittest
-from github_release import convert_version_to_tag_name
+from github_release import convert_version_to_tag_name, parse_repo_slug
 
 class Test_Github_Release(unittest.TestCase):
     def test_convert_version_to_tag_name(self):
@@ -9,5 +9,6 @@ class Test_Github_Release(unittest.TestCase):
         self.assertEqual("v1.0.0", convert_version_to_tag_name([1, 0, 0]))
         self.assertEqual("v2.3.5", convert_version_to_tag_name([2, 3, 5]))
 
-    def parse_repo_slug(self):
-        self.assertEqual(1, 2)
+    def test_parse_repo_slug(self):
+        owner, repo = parse_repo_slug("aardvark/bat")
+        self.assertEqual("aardvark", owner)

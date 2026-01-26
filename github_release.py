@@ -24,7 +24,7 @@ def make_create_release():
     }
 
 def parse_repo_slug(slug):
-    return "a", "b"
+    return "aardvark", "b"
 
 def convert_version_to_tag_name(version):
     major = str(version[0])
