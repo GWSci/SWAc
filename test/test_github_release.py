@@ -6,3 +6,4 @@ class Test_Github_Release(unittest.TestCase):
         self.assertEqual("v0.0.0", convert_version_to_tag_name([0, 0, 0]))
         self.assertEqual("v0.0.1", convert_version_to_tag_name([0, 0, 1]))
         self.assertEqual("v0.1.0", convert_version_to_tag_name([0, 1, 0]))
+        self.assertEqual("v1.0.0", convert_version_to_tag_name([1, 0, 0]))
