@@ -56,8 +56,9 @@ jobs:
       name: build (Windows)
       os: windows
       language: shell
-      install: ./setup_windows_travis.sh
+      # install: ./setup_windows_travis.sh
       # script: ./env/Scripts/python build.py
+      install: choco install python313 -y
       script: echo "Hello, World!" > release.txt
       after_success:
         # - git config --local user.name "gwsci-machine-user"

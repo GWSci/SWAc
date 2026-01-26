@@ -30,6 +30,8 @@ def call_create_release(release):
         "tag_name": release.tag_name,
         "target_commitish": release.target_commitish,
     }
+    print(f"{url=}")
+    print(f"{body=}")
     r = requests.post(url, headers = headers, data = body)
     print(f"{r.status_code=}")
     response_object = r.json()
