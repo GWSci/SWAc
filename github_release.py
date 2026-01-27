@@ -28,13 +28,14 @@ def call_create_release(params):
         "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
         "accept": params.accept,
     }
-    body = {
+    json = {
         "tag_name": params.tag_name,
         "target_commitish": params.target_commitish,
     }
+    data = None
     print(f"{url=}")
-    print(f"{body=}")
-    r = requests.post(url, headers = headers, json = body)
+    print(f"{json=}")
+    r = requests.post(url, headers = headers, json = json, data = data)
     print(f"{r.status_code=}")
     response_object = r.json()
     pprint.pprint(response_object)
@@ -67,10 +68,11 @@ def call_upload_asset(params):
         "Content-Type": params.content_type,
     }
     file_path = params.file_path
+    json = None
     data = data=open(file_path, 'rb')
     print(f"{url=}")
     print(f"{file_path=}")
-    r = requests.post(url, headers = headers, data = data)
+    r = requests.post(url, headers = headers, json = json, data = data)
     print(f"{r.status_code=}")
     response_object = r.json()
     pprint.pprint(response_object)
