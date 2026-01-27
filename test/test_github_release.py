@@ -41,7 +41,7 @@ class Test_Github_Release(unittest.TestCase):
             file_path = "dog/elephant/fox.txt",
         )
         expected = Upload_Asset(
-            content_type = "",
+            content_type = "application/zip",
             accept = "",
             owner = "",
             repo = "",
