@@ -22,15 +22,15 @@ def gather_create_release_raw_inputs():
         commit_id = commit_id,
     )
 
-def call_create_release(release):
-    url = f"https://api.github.com/repos/{release.owner}/{release.repo}/releases"
+def call_create_release(params):
+    url = f"https://api.github.com/repos/{params.owner}/{params.repo}/releases"
     headers = {
         "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
-        "accept": release.accept
+        "accept": params.accept,
     }
     body = {
-        "tag_name": release.tag_name,
-        "target_commitish": release.target_commitish,
+        "tag_name": params.tag_name,
+        "target_commitish": params.target_commitish,
     }
     print(f"{url=}")
     print(f"{body=}")
@@ -59,14 +59,14 @@ def gather_upload_asset_raw_inputs(release):
         file_path = file_path,
     )
 
-def call_upload_asset(upload):
-    url = f"https://uploads.github.com/repos/{upload.owner}/{upload.repo}/releases/{upload.release_id}/assets?name={upload.name}"
+def call_upload_asset(params):
+    url = f"https://uploads.github.com/repos/{params.owner}/{params.repo}/releases/{params.release_id}/assets?name={params.name}"
     headers = {
         "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
-        "accept": upload.accept,
-        "Content-Type": upload.content_type,
+        "accept": params.accept,
+        "Content-Type": params.content_type,
     }
-    file_path = upload.file_path
+    file_path = params.file_path
     data = data=open(file_path, 'rb')
     print(f"{url=}")
     print(f"{file_path=}")
