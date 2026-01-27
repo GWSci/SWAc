@@ -61,7 +61,7 @@ def call_upload_asset(upload):
         "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
         "accept": release.accept
     }
-    file_path = None # TODO
+    file_path = upload.file_path
     data = data=open(file_path, 'rb')
     print(f"{url=}")
     print(f"{file_path=}")
