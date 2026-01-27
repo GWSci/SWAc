@@ -60,7 +60,7 @@ def gather_upload_asset_raw_inputs(release):
     )
 
 def call_upload_asset(upload):
-    url = f"https://api.github.com/repos/{upload.owner}/{upload.repo}/releases/{upload.release_id}/assets?name={upload.name}"
+    url = f"https://uploads.github.com/repos/{upload.owner}/{upload.repo}/releases/{upload.release_id}/assets?name={upload.name}"
     headers = {
         "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
         "accept": upload.accept
@@ -74,7 +74,7 @@ def call_upload_asset(upload):
     response_object = r.json()
     pprint.pprint(response_object)
     if (r.status_code != 201):
-        raise Exception("API call to create release failed.")
+        raise Exception("API call to upload asset failed.")
     return response_object
 
 if (__name__ == "__main__"):
