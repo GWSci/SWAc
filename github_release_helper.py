@@ -18,6 +18,16 @@ class Create_Release:
 class Upload_Asset_Raw_Inputs:
     repo_slug: str
     release_id: str
+    file_path: str
+
+@dataclass
+class Upload_Asset:
+    content_type: str
+    accept: str
+    owner: str
+    repo: str
+    release_id: str
+    name: str
 
 def convert_raw_inputs_to_create_release(raw_inputs):
     owner, repo = parse_repo_slug(raw_inputs.repo_slug)
@@ -32,7 +42,14 @@ def convert_raw_inputs_to_create_release(raw_inputs):
     )
 
 def convert_raw_inputs_to_upload_release(raw_inputs):
-    pass
+    return Upload_Asset(
+        content_type = "",
+        accept = "",
+        owner = "",
+        repo = "",
+        release_id = "",
+        name = "",
+    )
 
 def parse_repo_slug(slug):
     tokens = slug.split("/")

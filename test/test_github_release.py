@@ -33,3 +33,20 @@ class Test_Github_Release(unittest.TestCase):
         )
         actual = convert_raw_inputs_to_create_release(raw_inputs)
         self.assertEqual(expected, actual)
+
+    def test_convert_raw_inputs_to_upload_release(self):
+        raw_inputs = Upload_Asset_Raw_Inputs(
+            repo_slug = "aardvark_owner/bat_repo",
+            release_id = "cat_release_id",
+            file_path = "dog/elephant/fox.txt",
+        )
+        expected = Upload_Asset(
+            content_type = "",
+            accept = "",
+            owner = "",
+            repo = "",
+            release_id = "",
+            name = "",
+        )
+        actual = convert_raw_inputs_to_upload_release(raw_inputs)
+        self.assertEqual(expected, actual)

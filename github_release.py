@@ -45,12 +45,13 @@ def call_upload_github_release_asset(release):
     raw_inputs = gather_upload_asset_raw_inputs(release)
     upload = convert_raw_inputs_to_upload_release(raw_inputs)
 
-def gather_upload_asset_raw_inputs(release):
+def gather_upload_asset_raw_inputs(release, file_path):
     repo_slug = os.environ.get("TRAVIS_REPO_SLUG", "/")
     release_id = release.get("id", None)
     return Upload_Asset_Raw_Inputs(
         repo_slug = repo_slug,
         release_id = release_id,
+        file_path = file_path,
     )
 
 if (__name__ == "__main__"):
