@@ -48,7 +48,7 @@ def convert_raw_inputs_to_upload_release(raw_inputs):
         accept = "application/vnd.github+json",
         owner = owner,
         repo = repo,
-        release_id = "",
+        release_id = raw_inputs.release_id,
         name = "",
     )
 

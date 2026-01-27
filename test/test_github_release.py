@@ -45,7 +45,7 @@ class Test_Github_Release(unittest.TestCase):
             accept = "application/vnd.github+json",
             owner = "aardvark_owner",
             repo = "bat_repo",
-            release_id = "",
+            release_id = "cat_release_id",
             name = "",
         )
         actual = convert_raw_inputs_to_upload_release(raw_inputs)
