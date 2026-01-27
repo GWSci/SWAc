@@ -44,7 +44,7 @@ class Test_Github_Release(unittest.TestCase):
             content_type = "application/zip",
             accept = "application/vnd.github+json",
             owner = "aardvark_owner",
-            repo = "",
+            repo = "bat_repo",
             release_id = "",
             name = "",
         )

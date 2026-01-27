@@ -47,7 +47,7 @@ def convert_raw_inputs_to_upload_release(raw_inputs):
         content_type = "application/zip",
         accept = "application/vnd.github+json",
         owner = owner,
-        repo = "",
+        repo = repo,
         release_id = "",
         name = "",
     )
