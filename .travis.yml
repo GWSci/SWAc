@@ -56,12 +56,9 @@ jobs:
       name: build (Windows)
       os: windows
       language: shell
-      # install: ./setup_windows_travis.sh
-      # script: ./env/Scripts/python build.py
-      install: choco install python313 -y
+      install: ./setup_windows_travis.sh
       script:
-        - mkdir release
-        - echo "Hello, World!" > release/release.zip
+        - ./env/Scripts/python build.py
         - py -m pip install --upgrade pip
         - py -m pip install requests
         - ./github_release.sh
