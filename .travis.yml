@@ -60,7 +60,7 @@ jobs:
       # script: ./env/Scripts/python build.py
       install: choco install python313 -y
       script:
-        - echo "Hello, World!" > release.txt
+        - echo "Hello, World!" > release/release.zip
         - py -m pip install --upgrade pip
         - py -m pip install requests
         - ./github_release.sh
