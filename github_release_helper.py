@@ -53,7 +53,7 @@ def convert_raw_inputs_to_upload_release(raw_inputs):
         repo = repo,
         release_id = raw_inputs.release_id,
         name = name,
-        file_path = "",
+        file_path = raw_inputs.file_path,
     )
 
 def parse_repo_slug(slug):
