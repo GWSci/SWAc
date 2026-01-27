@@ -45,7 +45,7 @@ jobs:
         - ./build.sh
         - pip install --upgrade pip
         - pip install requests
-        - ./github_release.sh
+        - python3 github_release.py
     -
       name: build (Windows)
       os: windows
