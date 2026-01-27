@@ -43,7 +43,7 @@ class Test_Github_Release(unittest.TestCase):
         expected = Upload_Asset(
             content_type = "application/zip",
             accept = "application/vnd.github+json",
-            owner = "",
+            owner = "aardvark_owner",
             repo = "",
             release_id = "",
             name = "",

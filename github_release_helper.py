@@ -42,10 +42,11 @@ def convert_raw_inputs_to_create_release(raw_inputs):
     )
 
 def convert_raw_inputs_to_upload_release(raw_inputs):
+    owner, repo = parse_repo_slug(raw_inputs.repo_slug)
     return Upload_Asset(
         content_type = "application/zip",
         accept = "application/vnd.github+json",
-        owner = "",
+        owner = owner,
         repo = "",
         release_id = "",
         name = "",
