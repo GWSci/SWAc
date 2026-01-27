@@ -93,6 +93,9 @@ def conjure_release_filename(sha, date):
     platform = sys.platform
     return f"SWAcMod-v{version}.{commit_id}-{platform}-{build_time}.zip"
 
+def convert_sys_platform_to_platform(sys_platform):
+    return "aardvark"
+
 def set_build_details():
     sha = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout
     sha = sha.rstrip()
