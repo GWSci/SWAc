@@ -63,7 +63,7 @@ def call_upload_asset(upload):
     url = f"https://api.github.com/repos/{upload.owner}/{upload.repo}/releases/{upload.release_id}/assets?name={upload.name}"
     headers = {
         "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
-        "accept": release.accept
+        "accept": upload.accept
     }
     file_path = upload.file_path
     data = data=open(file_path, 'rb')
