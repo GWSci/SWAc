@@ -38,7 +38,7 @@ class Test_Github_Release(unittest.TestCase):
         raw_inputs = Upload_Asset_Raw_Inputs(
             repo_slug = "aardvark_owner/bat_repo",
             release_id = "cat_release_id",
-            file_path = "dog/elephant/fox.txt",
+            file_path = "dog/elephant/fox.zip",
         )
         expected = Upload_Asset(
             content_type = "application/zip",
@@ -46,7 +46,7 @@ class Test_Github_Release(unittest.TestCase):
             owner = "aardvark_owner",
             repo = "bat_repo",
             release_id = "cat_release_id",
-            name = "",
+            name = "fox.zip",
         )
         actual = convert_raw_inputs_to_upload_release(raw_inputs)
         self.assertEqual(expected, actual)

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import os
 
 @dataclass
 class Create_Release_Raw_Inputs:
@@ -43,13 +44,14 @@ def convert_raw_inputs_to_create_release(raw_inputs):
 
 def convert_raw_inputs_to_upload_release(raw_inputs):
     owner, repo = parse_repo_slug(raw_inputs.repo_slug)
+    name = os.path.basename(raw_inputs.file_path)
     return Upload_Asset(
         content_type = "application/zip",
         accept = "application/vnd.github+json",
         owner = owner,
         repo = repo,
         release_id = raw_inputs.release_id,
-        name = "",
+        name = name,
     )
 
 def parse_repo_slug(slug):
