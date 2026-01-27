@@ -3,6 +3,7 @@ import _version
 from github_release_helper import *
 import requests
 import pprint
+import glob
 
 def create_github_release():
     raw_inputs = gather_create_release_raw_inputs()
@@ -46,7 +47,10 @@ def call_upload_github_release_asset(release):
     upload = convert_raw_inputs_to_upload_release(raw_inputs)
     response_objet = call_upload_asset(upload)
 
-def gather_upload_asset_raw_inputs(release, file_path):
+def gather_upload_asset_raw_inputs(release):
+    glob_match = glob.glob("release/*.zip")
+    print(f"{glob_match=}")
+    file_path = glob_match[0]
     repo_slug = os.environ.get("TRAVIS_REPO_SLUG", "/")
     release_id = release.get("id", None)
     return Upload_Asset_Raw_Inputs(
