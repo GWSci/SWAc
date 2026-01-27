@@ -29,6 +29,7 @@ class Upload_Asset:
     repo: str
     release_id: str
     name: str
+    file_path: str
 
 def convert_raw_inputs_to_create_release(raw_inputs):
     owner, repo = parse_repo_slug(raw_inputs.repo_slug)
@@ -52,6 +53,7 @@ def convert_raw_inputs_to_upload_release(raw_inputs):
         repo = repo,
         release_id = raw_inputs.release_id,
         name = name,
+        file_path = "",
     )
 
 def parse_repo_slug(slug):
