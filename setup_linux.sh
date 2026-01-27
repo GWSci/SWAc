@@ -2,7 +2,7 @@
 
 set -e
 
-sudo add-apt-repository ppa:deadsnakes/ppa
+sudo add-apt-repository -y ppa:deadsnakes/ppa
 
 sudo apt-get update
 
