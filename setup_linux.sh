@@ -2,10 +2,11 @@
 
 set -e
 
+sudo add-apt-repository ppa:deadsnakes/ppa
+
 sudo apt-get update
 
-apt list python*
-# sudo apt-get -y install python3.13
+sudo apt-get -y install python3.13
 sudo apt-get -y install pandoc
 
 python3.13 -m venv env
