@@ -94,6 +94,8 @@ def conjure_release_filename(sha, date):
     return f"SWAcMod-v{version}.{commit_id}-{platform}-{build_time}.zip"
 
 def convert_sys_platform_to_platform(sys_platform):
+    if (sys_platform == "win32"):
+        return "windows"
     return sys_platform
 
 def set_build_details():
