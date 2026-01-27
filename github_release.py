@@ -44,6 +44,7 @@ def call_create_release(release):
 def call_upload_github_release_asset(release):
     raw_inputs = gather_upload_asset_raw_inputs(release)
     upload = convert_raw_inputs_to_upload_release(raw_inputs)
+    response_objet = call_upload_asset(upload)
 
 def gather_upload_asset_raw_inputs(release, file_path):
     repo_slug = os.environ.get("TRAVIS_REPO_SLUG", "/")
@@ -53,6 +54,24 @@ def gather_upload_asset_raw_inputs(release, file_path):
         release_id = release_id,
         file_path = file_path,
     )
+
+def call_upload_asset(upload):
+    url = f"https://api.github.com/repos/{upload.owner}/{upload.repo}/releases/{upload.release_id}/assets?name={upload.name}"
+    headers = {
+        "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
+        "accept": release.accept
+    }
+    file_path = None # TODO
+    data = data=open(file_path, 'rb')
+    print(f"{url=}")
+    print(f"{file_path=}")
+    r = requests.post(url, headers = headers, data = data)
+    print(f"{r.status_code=}")
+    response_object = r.json()
+    pprint.pprint(response_object)
+    if (r.status_code != 201):
+        raise Exception("API call to create release failed.")
+    return response_object
 
 if (__name__ == "__main__"):
     release = create_github_release()
