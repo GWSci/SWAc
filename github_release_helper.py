@@ -11,8 +11,6 @@ class Create_Release_Raw_Inputs:
 class Create_Release:
     url: str
     accept: str
-    owner: str
-    repo: str
     tag_name: str
     target_commitish: str
 
@@ -40,8 +38,6 @@ def convert_raw_inputs_to_create_release(raw_inputs):
     return Create_Release(
         url = url,
         accept = "application/vnd.github+json",
-        owner = owner,
-        repo = repo,
         tag_name = tag_name,
         target_commitish = raw_inputs.commit_id,
     )
