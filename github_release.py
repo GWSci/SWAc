@@ -62,7 +62,6 @@ def gather_upload_asset_raw_inputs(release):
     )
 
 def call_upload_asset(params):
-    url = f"https://uploads.github.com/repos/{params.owner}/{params.repo}/releases/{params.release_id}/assets?name={params.name}"
     headers = {
         "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
         "accept": params.accept,
@@ -71,9 +70,9 @@ def call_upload_asset(params):
     file_path = params.file_path
     json = None
     data = data=open(file_path, 'rb')
-    print(f"{url=}")
+    print(f"{params.url=}")
     print(f"{file_path=}")
-    r = requests.post(url, headers = headers, json = json, data = data)
+    r = requests.post(params.url, headers = headers, json = json, data = data)
     print(f"{r.status_code=}")
     response_object = r.json()
     pprint.pprint(response_object)
