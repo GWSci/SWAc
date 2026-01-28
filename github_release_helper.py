@@ -46,8 +46,9 @@ def convert_raw_inputs_to_create_release(raw_inputs):
 def convert_raw_inputs_to_upload_release(raw_inputs):
     owner, repo = parse_repo_slug(raw_inputs.repo_slug)
     name = os.path.basename(raw_inputs.file_path)
+    url = f"https://uploads.github.com/repos/{owner}/{repo}/releases/{raw_inputs.release_id}/assets?name={name}"
     return Upload_Asset(
-        url = "",
+        url = url,
         content_type = "application/zip",
         accept = "application/vnd.github+json",
         owner = owner,
