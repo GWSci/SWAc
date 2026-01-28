@@ -40,6 +40,7 @@ class Test_Github_Release(unittest.TestCase):
             file_path = "dog/elephant/fox.zip",
         )
         expected = Upload_Asset(
+            url = "",
             content_type = "application/zip",
             accept = "application/vnd.github+json",
             owner = "aardvark_owner",

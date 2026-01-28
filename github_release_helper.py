@@ -22,6 +22,7 @@ class Upload_Asset_Raw_Inputs:
 
 @dataclass
 class Upload_Asset:
+    url: str
     content_type: str
     accept: str
     owner: str
@@ -46,6 +47,7 @@ def convert_raw_inputs_to_upload_release(raw_inputs):
     owner, repo = parse_repo_slug(raw_inputs.repo_slug)
     name = os.path.basename(raw_inputs.file_path)
     return Upload_Asset(
+        url = "",
         content_type = "application/zip",
         accept = "application/vnd.github+json",
         owner = owner,
