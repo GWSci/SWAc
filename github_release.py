@@ -23,7 +23,6 @@ def gather_create_release_raw_inputs():
     )
 
 def call_create_release(params):
-    url = f"https://api.github.com/repos/{params.owner}/{params.repo}/releases"
     headers = {
         "Authorization": f"Bearer {os.environ.get("RELEASES_TOKEN", "")}",
         "accept": params.accept,
@@ -33,9 +32,9 @@ def call_create_release(params):
         "target_commitish": params.target_commitish,
     }
     data = None
-    print(f"{url=}")
+    print(f"{params.url=}")
     print(f"{json=}")
-    r = requests.post(url, headers = headers, json = json, data = data)
+    r = requests.post(params.url, headers = headers, json = json, data = data)
     print(f"{r.status_code=}")
     response_object = r.json()
     pprint.pprint(response_object)
