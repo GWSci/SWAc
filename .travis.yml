@@ -41,16 +41,10 @@ jobs:
     - stage: build
       name: build (Linux)
       install: ./setup_linux.sh
-      script: ./build.sh
-      before_deploy:
-        - git config --local user.name "gwsci-machine-user"
-        - git config --local user.email "gwsci-github-machine-user@nice-code.co.uk"
-        - export TRAVIS_TAG=$(< _version.txt)
-        - git tag $TRAVIS_TAG || echo "New tag not created."
-      deploy:
-        provider: releases
-        file: release/*.zip
-        edge: true
+      script:
+        - ./build.sh
+        - pip install requests
+        - python github_release.py
     -
       name: build (Windows)
       os: windows
@@ -60,4 +54,4 @@ jobs:
         - ./env/Scripts/python build.py
         - py -m pip install --upgrade pip
         - py -m pip install requests
-        - ./github_release.sh
+        - py github_release.py
