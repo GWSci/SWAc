@@ -38,7 +38,12 @@ def call_create_release(params):
     print(f"{r.status_code=}")
     response_object = r.json()
     pprint.pprint(response_object)
-    if (r.status_code == 422 and response_object.get("errors", {}).get("code", None) == "already_exists"):
+
+    error_code = response_object.get("errors", {}).get("code", None)
+    is_422 = r.status_code == 422
+    is_already_exists = error_code == "already_exists"
+    print(f"{is_422=}, {error_code=}, {is_already_exists=}")
+    if (is_422 and is_already_exists):
         print("Release already exists. Proceeding on the assumption that another parallel process already created it.")
     elif (r.status_code != 201):
         raise Exception("API call to create release failed.")
