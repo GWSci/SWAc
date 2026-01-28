@@ -25,7 +25,7 @@ class Test_Github_Release(unittest.TestCase):
             commit_id = "cat_commit_id"
         )
         expected = Create_Release(
-            url = "",
+            url = "https://api.github.com/repos/aardvark_owner/bat_repo/releases",
             accept = "application/vnd.github+json",
             owner = "aardvark_owner",
             repo = "bat_repo",
