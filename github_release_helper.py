@@ -9,6 +9,7 @@ class Create_Release_Raw_Inputs:
 
 @dataclass
 class Create_Release:
+    url: str
     accept: str
     owner: str
     repo: str
@@ -36,6 +37,7 @@ def convert_raw_inputs_to_create_release(raw_inputs):
     tag_name = convert_version_to_tag_name(raw_inputs.version)
 
     return Create_Release(
+        url = "",
         accept = "application/vnd.github+json",
         owner = owner,
         repo = repo,

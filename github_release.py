@@ -48,7 +48,7 @@ def call_create_release(params):
 def call_upload_github_release_asset(release):
     raw_inputs = gather_upload_asset_raw_inputs(release)
     upload = convert_raw_inputs_to_upload_release(raw_inputs)
-    response_objet = call_upload_asset(upload)
+    call_upload_asset(upload)
 
 def gather_upload_asset_raw_inputs(release):
     glob_match = glob.glob("release/*.zip")
