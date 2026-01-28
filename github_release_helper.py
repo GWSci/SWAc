@@ -25,10 +25,6 @@ class Upload_Asset:
     url: str
     content_type: str
     accept: str
-    owner: str
-    repo: str
-    release_id: str
-    name: str
     file_path: str
 
 def convert_raw_inputs_to_create_release(raw_inputs):
@@ -51,10 +47,6 @@ def convert_raw_inputs_to_upload_release(raw_inputs):
         url = url,
         content_type = "application/zip",
         accept = "application/vnd.github+json",
-        owner = owner,
-        repo = repo,
-        release_id = raw_inputs.release_id,
-        name = name,
         file_path = raw_inputs.file_path,
     )
 

@@ -43,10 +43,6 @@ class Test_Github_Release(unittest.TestCase):
             url = f"https://uploads.github.com/repos/aardvark_owner/bat_repo/releases/cat_release_id/assets?name=fox.zip",
             content_type = "application/zip",
             accept = "application/vnd.github+json",
-            owner = "aardvark_owner",
-            repo = "bat_repo",
-            release_id = "cat_release_id",
-            name = "fox.zip",
             file_path = "dog/elephant/fox.zip",
         )
         actual = convert_raw_inputs_to_upload_release(raw_inputs)
